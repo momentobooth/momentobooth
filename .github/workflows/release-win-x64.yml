@@ -1,0 +1,75 @@
+name: Release - Windows x64
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+# Sets permissions to allow version tag
+permissions:
+  contents: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "release-win-x64"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Detect Flutter Version
+      uses: kuhnroyal/flutter-fvm-config-action@v1
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v1
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+
+    - name: Flutter Config
+      run: flutter config --enable-windows-desktop
+
+    - name: Install Dependencies
+      run: flutter packages get
+      
+    - name: Run Code Generation
+      run: flutter pub run build_runner build --delete-conflicting-outputs
+      
+    - name: Flutter Analyze
+      run: flutter analyze
+
+    - name: Build Project
+      run: flutter build windows --release
+
+    # Extract version from branch name
+    - name: Extract Release version
+      id: extract_release_version
+      shell: bash
+      run: |
+        release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
+        echo "release_version=$release_version" >> $GITHUB_OUTPUT
+
+    # Pack
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        path: build/windows/runner/Release
+        filename: 'diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-win-x64.zip'
+
+    # Create GitHub release
+    - name: Create GitHub Release
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        prerelease: true
+        replacesArtifacts: true
+        tag: ${{ steps.extract_release_version}}
+        artifacts: "build/windows/runner/Release/diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-win-x64.zip"
