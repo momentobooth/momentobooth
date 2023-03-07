@@ -1,0 +1,84 @@
+name: Release - macOS x64
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+# Sets permissions to allow version tag
+permissions:
+  contents: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: "release-macos-x64"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
+
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install build dependencies
+      run: brew install dylibbundler create-dmg
+
+    - name: Detect Flutter Version
+      uses: kuhnroyal/flutter-fvm-config-action@v1
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v1
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+
+    - name: Flutter Config
+      run: flutter config --enable-macos-desktop
+
+    - name: Install Dependencies
+      run: flutter packages get
+      
+    - name: Run Code Generation
+      run: flutter pub run build_runner build --delete-conflicting-outputs
+      
+    - name: Flutter Analyze
+      run: flutter analyze
+
+    - name: Build Project
+      run: flutter build macos --release
+
+    # Extract version from branch name
+    - name: Extract Release version
+      id: extract_release_version
+      shell: bash
+      run: |
+        release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
+        echo "release_version=$release_version" >> $GITHUB_OUTPUT
+
+    - name: Copy binary to bundle and bundle dependency dylibs
+      run: |
+        dylibbundler -od -b -x build/macos/Build/Products/Release/with_flutter.app/Contents/MacOS/with_flutter -d build/macos/Build/Products/Release/with_flutter.app/Contents/libs
+        mkdir macos_package
+        cp -R build/macos/Build/Products/Release/with_flutter.app macos_package/
+
+    # Pack
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: 'zip'
+        directory: macos_package
+        filename: 'diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-macos-x64.zip'
+
+    # Create GitHub release
+    - name: Create GitHub Release
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        prerelease: true
+        replacesArtifacts: true
+        tag: ${{ steps.extract_release_version.outputs.release_version }}
+        artifacts: "build/windows/runner/Release/diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-macos-x64.zip"
