@@ -472,18 +472,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "extend"
-version = "1.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c5216e387a76eebaaf11f6d871ec8a4aae0b25f05456ee21f228e024b1b3610"
-dependencies = [
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
 name = "fastrand"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -528,9 +516,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "1.65.0"
+version = "1.68.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34de89860ece6c7f6755a9253588f37ad233803a6c0456956106d4eb58d6c806"
+checksum = "54f0d71ff30fc2ae7c18508b517488a89051d81e3bfc4d48d4a6cf54b5dab789"
 dependencies = [
  "allo-isolate",
  "anyhow",
@@ -553,9 +541,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge_codegen"
-version = "1.65.0"
+version = "1.68.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f61201a532046606b888c44a98cfdb0c5eb1c4228519f8c56c8bced14578388d"
+checksum = "2a2a75a72411f0c5b480e4671417f52780172053128cf87d5614a9757d7680a0"
 dependencies = [
  "anyhow",
  "atty",
@@ -566,7 +554,6 @@ dependencies = [
  "convert_case",
  "delegate",
  "enum_dispatch",
- "extend",
  "fern",
  "itertools",
  "lazy_static",
