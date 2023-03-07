@@ -29,6 +29,7 @@
 		5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */; };
 		A379BA9527BFF7AF00A4CD85 /* flutter_rust_bridge_example.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; };
 		A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */ = {isa = PBXBuildFile; fileRef = A379BA8C27BFF75900A4CD85 /* bridge_generated.h */; };
+		C59EC41829B7F17000EB4368 /* flutter_rust_bridge_example.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,14 +57,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		33CC110E2044A8840003C045 /* Bundle Framework */ = {
+		C59EC41929B7F17000EB4368 /* Embed Libraries */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C59EC41829B7F17000EB4368 /* flutter_rust_bridge_example.dylib in Embed Libraries */,
 			);
-			name = "Bundle Framework";
+			name = "Embed Libraries";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -180,7 +182,6 @@
 				B95FCA28249E171BD83D6DAF /* Pods-Runner.release.xcconfig */,
 				842E5678ECBC61DFDDEEE2D5 /* Pods-Runner.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -211,8 +212,8 @@
 				33CC10E92044A3C60003C045 /* Sources */,
 				33CC10EA2044A3C60003C045 /* Frameworks */,
 				33CC10EB2044A3C60003C045 /* Resources */,
-				33CC110E2044A8840003C045 /* Bundle Framework */,
 				3399D490228B24CF009A79C7 /* ShellScript */,
+				C59EC41929B7F17000EB4368 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -405,6 +406,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -460,6 +462,7 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+					/usr/lib/swift,
 				);
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
@@ -479,6 +482,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -532,6 +536,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -587,6 +592,7 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+					/usr/lib/swift,
 				);
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
@@ -608,7 +614,9 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
+					/usr/lib/swift,
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
 				SWIFT_VERSION = 5.0;
