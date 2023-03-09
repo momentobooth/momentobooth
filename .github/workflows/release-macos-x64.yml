@@ -61,7 +61,7 @@ jobs:
 
     - name: Copy binary to bundle and bundle dependency dylibs
       run: |
-        dylibbundler -od -b -x build/macos/Build/Products/Release/with_flutter.app/Contents/MacOS/with_flutter -d build/macos/Build/Products/Release/with_flutter.app/Contents/libs
+        dylibbundler -od -b -x build/macos/Build/Products/Release/with_flutter.app/Contents/MacOS/with_flutter -d build/macos/Build/Products/Release/with_flutter.app/Contents/libs/ -s /usr/lib/swift/
         mkdir macos_package
         cp -R build/macos/Build/Products/Release/with_flutter.app macos_package/
 
