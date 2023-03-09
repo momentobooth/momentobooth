@@ -27,9 +27,9 @@
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */; };
-		A379BA9527BFF7AF00A4CD85 /* flutter_rust_bridge_example.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; };
+		A379BA9527BFF7AF00A4CD85 /* flutter_rust_bridge_example.dylib in Resources */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */ = {isa = PBXBuildFile; fileRef = A379BA8C27BFF75900A4CD85 /* bridge_generated.h */; };
-		C59EC41829B7F17000EB4368 /* flutter_rust_bridge_example.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; };
+		C59EC41829B7F17000EB4368 /* flutter_rust_bridge_example.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,7 +100,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A379BA9527BFF7AF00A4CD85 /* flutter_rust_bridge_example.dylib in Frameworks */,
 				5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -295,6 +294,7 @@
 				A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
+				A379BA9527BFF7AF00A4CD85 /* flutter_rust_bridge_example.dylib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
