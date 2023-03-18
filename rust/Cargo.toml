@@ -5,7 +5,7 @@ edition = "2021"
 
 [lib]
 name = "flutter_rust_bridge_example"
-crate-type = ["cdylib"]
+crate-type = ["lib", "staticlib", "cdylib"]
 
 [dependencies]
 anyhow = "1.0.69"

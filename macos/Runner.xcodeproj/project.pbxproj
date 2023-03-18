@@ -27,9 +27,8 @@
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */; };
-		A379BA9527BFF7AF00A4CD85 /* flutter_rust_bridge_example.dylib in Resources */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */ = {isa = PBXBuildFile; fileRef = A379BA8C27BFF75900A4CD85 /* bridge_generated.h */; };
-		C59EC41829B7F17000EB4368 /* flutter_rust_bridge_example.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		C5141FC429C60A540076DC88 /* libflutter_rust_bridge_example_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5141FC329C60A510076DC88 /* libflutter_rust_bridge_example_static.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,28 +46,21 @@
 			remoteGlobalIDString = CA60FBAABA3A2B3BABD1B908;
 			remoteInfo = "flutter_rust_bridge_example-cdylib";
 		};
-		A379BA9327BFF7AA00A4CD85 /* PBXContainerItemProxy */ = {
+		C5141FC229C60A510076DC88 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = CA60957939D1AD1E3DC02A5C;
+			remoteInfo = "flutter_rust_bridge_example-staticlib";
+		};
+		C5141FC529C60A690076DC88 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = CA60FBAABA3AEF9A9B28F6B9;
-			remoteInfo = "flutter_rust_bridge_example-cdylib";
+			remoteGlobalIDString = CA60957939D1C529DB9FC4E2;
+			remoteInfo = "flutter_rust_bridge_example-staticlib";
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		C59EC41929B7F17000EB4368 /* Embed Libraries */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				C59EC41829B7F17000EB4368 /* flutter_rust_bridge_example.dylib in Embed Libraries */,
-			);
-			name = "Embed Libraries";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5141FC429C60A540076DC88 /* libflutter_rust_bridge_example_static.a in Frameworks */,
 				5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -187,6 +180,7 @@
 		A379BA8E27BFF76900A4CD85 /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				C5141FC329C60A510076DC88 /* libflutter_rust_bridge_example_static.a */,
 				A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */,
 			);
 			name = Products;
@@ -211,13 +205,12 @@
 				33CC10E92044A3C60003C045 /* Sources */,
 				33CC10EA2044A3C60003C045 /* Frameworks */,
 				33CC10EB2044A3C60003C045 /* Resources */,
-				3399D490228B24CF009A79C7 /* ShellScript */,
-				C59EC41929B7F17000EB4368 /* Embed Libraries */,
+				3399D490228B24CF009A79C7 /* Run Script */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				A379BA9427BFF7AA00A4CD85 /* PBXTargetDependency */,
+				C5141FC629C60A690076DC88 /* PBXTargetDependency */,
 				33CC11202044C79F0003C045 /* PBXTargetDependency */,
 			);
 			name = Runner;
@@ -284,6 +277,13 @@
 			remoteRef = A379BA9127BFF76900A4CD85 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		C5141FC329C60A510076DC88 /* libflutter_rust_bridge_example_static.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libflutter_rust_bridge_example_static.a;
+			remoteRef = C5141FC229C60A510076DC88 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -294,14 +294,13 @@
 				A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
-				A379BA9527BFF7AF00A4CD85 /* flutter_rust_bridge_example.dylib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3399D490228B24CF009A79C7 /* ShellScript */ = {
+		3399D490228B24CF009A79C7 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -311,6 +310,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -382,10 +382,10 @@
 			target = 33CC111A2044C6BA0003C045 /* Flutter Assemble */;
 			targetProxy = 33CC111F2044C79F0003C045 /* PBXContainerItemProxy */;
 		};
-		A379BA9427BFF7AA00A4CD85 /* PBXTargetDependency */ = {
+		C5141FC629C60A690076DC88 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "flutter_rust_bridge_example-cdylib";
-			targetProxy = A379BA9327BFF7AA00A4CD85 /* PBXContainerItemProxy */;
+			name = "flutter_rust_bridge_example-staticlib";
+			targetProxy = C5141FC529C60A690076DC88 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
