@@ -80,4 +80,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "build/windows/runner/Release/diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-macos-x64.zip"
+        artifacts: "macos_package/diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-macos-x64.zip"
