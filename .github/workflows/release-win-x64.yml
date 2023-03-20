@@ -33,6 +33,9 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
 
+    - name: Setup Rust
+      run: rustup upgrade
+
     - name: Flutter Config
       run: flutter config --enable-windows-desktop
 

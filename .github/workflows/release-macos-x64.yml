@@ -36,6 +36,11 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
 
+    - name: Setup Rust
+      run: |
+        rustup upgrade
+        rustup target add x86_64-apple-darwin aarch64-apple-darwin
+
     - name: Flutter Config
       run: flutter config --enable-macos-desktop
 
