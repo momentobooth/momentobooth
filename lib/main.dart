@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart' hide Size;
-import 'bridge_definitions.dart';
 import 'package:flutter_rust_bridge_example/off_topic_code.dart';
-
-import 'ffi.io.dart' if (dart.library.html) 'ffi.web.dart';
-export 'ffi.io.dart' if (dart.library.html) 'ffi.web.dart' show api;
+import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
+import 'package:flutter_rust_bridge_example/rust_bridge/library_api.generated.dart';
 
 // Simple Flutter code. If you are not familiar with Flutter, this may sounds a bit long. But indeed
 // it is quite trivial and Flutter is just like that. Please refer to Flutter's tutorial to learn Flutter.
@@ -38,13 +36,13 @@ class _MyAppState extends State<MyApp> {
       );
 
   Future<void> _callExampleFfiOne() async {
-    final receivedImage = await api.drawMandelbrot(
+    final receivedImage = await rustLibraryApi.drawMandelbrot(
         imageSize: const Size(width: 50, height: 50), zoomPoint: examplePoint, scale: generateScale(), numThreads: 4);
     if (mounted) setState(() => exampleImage = receivedImage);
   }
 
   Future<void> _callExampleFfiTwo() async {
-    final receivedText = await api.passingComplexStructs(root: createExampleTree());
+    final receivedText = await rustLibraryApi.passingComplexStructs(root: createExampleTree());
     if (mounted) setState(() => exampleText = receivedText);
   }
 }

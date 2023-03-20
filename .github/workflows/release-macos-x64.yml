@@ -41,11 +41,20 @@ jobs:
         rustup upgrade
         rustup target add x86_64-apple-darwin aarch64-apple-darwin
 
+    - name: Install flutter_rust_bridge_codegen
+      uses: baptiste0928/cargo-install@v1
+      with:
+        crate: flutter_rust_bridge_codegen
+        version: "1.71.1"
+
     - name: Flutter Config
       run: flutter config --enable-macos-desktop
 
     - name: Install Dependencies
       run: flutter packages get
+
+    - name: Generate Dart-to-Rust bridging code
+      run: flutter_rust_bridge_codegen --rust-input rust/src/api.rs --dart-output lib/rust_bridge/library_api.generated.dart
       
     - name: Run Code Generation
       run: flutter pub run build_runner build --delete-conflicting-outputs

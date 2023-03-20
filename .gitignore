@@ -46,3 +46,6 @@ app.*.map.json
 
 # fvm
 .fvm/flutter_sdk
+
+# Generated Dart code
+*.generated.dart
