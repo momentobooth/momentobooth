@@ -1,3 +1,3 @@
 mod api;
-mod bridge_generated;
+mod dart_bridge;
 mod off_topic_code;
