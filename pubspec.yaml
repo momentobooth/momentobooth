@@ -2,7 +2,7 @@ name: flutter_rust_bridge_example
 description: A new Flutter project.
 
 publish_to: "none"
-version: 0.0.15+15
+version: 0.0.16+16
 
 environment:
   sdk: ">=2.19.0 <3.0.0"
