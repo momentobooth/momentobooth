@@ -7,9 +7,17 @@ edition = "2021"
 name = "flutter_rust_bridge_example"
 crate-type = ["lib", "staticlib", "cdylib"]
 
+[[bin]]
+name = "flutter_rust_bridge_example"
+
 [dependencies]
 anyhow = "1.0.69"
 flutter_rust_bridge = "1.72.2"
 num = "0.4"
 image = "0.24.3"
 crossbeam = "0.8"
+gphoto2 = "3.2.0"
+
+[dependencies.nokhwa]
+version = "0.10.3"
+features = ["input-native", "output-threaded"]
