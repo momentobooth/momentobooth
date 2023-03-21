@@ -31,10 +31,9 @@ jobs:
       uses: kuhnroyal/flutter-fvm-config-action@v1
 
     - name: Setup Flutter
-      uses: subosito/flutter-action@v1
+      uses: hrishikesh-kadam/setup-flutter@v1
       with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
-        channel: ${{ env.FLUTTER_CHANNEL }}
+        ref: ${{ env.FLUTTER_VERSION }}
 
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
@@ -64,10 +63,10 @@ jobs:
     - name: Generate Dart-to-Rust bridging code
       run: >
         flutter_rust_bridge_codegen
-          --rust-input rust/src/dart_bridge/api.rs
-          --dart-output lib/rust_bridge/library_api.generated.dart
-          --rust-output rust/src/dart_bridge/ffi_exports.rs
-          --skip-add-mod-to-lib --no-build-runner
+        --rust-input rust/src/dart_bridge/api.rs
+        --dart-output lib/rust_bridge/library_api.generated.dart
+        --rust-output rust/src/dart_bridge/ffi_exports.rs
+        --skip-add-mod-to-lib --no-build-runner
       
     - name: Run Code Generation
       run: flutter pub run build_runner build --delete-conflicting-outputs
