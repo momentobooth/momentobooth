@@ -31,6 +31,8 @@ jobs:
       uses: hrishikesh-kadam/setup-flutter@v1
       with:
         ref: ${{ env.FLUTTER_VERSION }}
+        setFlutterRootPath: 'true'
+        addPubCacheBinToPath: 'true'
 
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
@@ -62,7 +64,7 @@ jobs:
         --rust-input rust/src/dart_bridge/api.rs
         --dart-output lib/rust_bridge/library_api.generated.dart
         --rust-output rust/src/dart_bridge/ffi_exports.rs
-        --skip-add-mod-to-lib --no-build-runner
+        --skip-add-mod-to-lib --no-build-runner --verbose
       
     - name: Run Code Generation
       run: flutter pub run build_runner build --delete-conflicting-outputs
