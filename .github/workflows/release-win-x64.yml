@@ -33,8 +33,17 @@ jobs:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: ${{ env.FLUTTER_CHANNEL }}
 
-    - name: Setup Rust
-      run: rustup upgrade
+    - name: Install minimal Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        components: rustfmt, clippy
+
+    - name: Setup Rust build cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: "rust -> target"
       
     - name: Install flutter_rust_bridge_codegen
       uses: baptiste0928/cargo-install@v1
@@ -49,7 +58,12 @@ jobs:
       run: flutter packages get
 
     - name: Generate Dart-to-Rust bridging code
-      run: flutter_rust_bridge_codegen --rust-input rust/src/api.rs --dart-output lib/rust_bridge/library_api.generated.dart
+      run: >
+        flutter_rust_bridge_codegen
+          --rust-input rust/src/dart_bridge/api.rs
+          --dart-output lib/rust_bridge/library_api.generated.dart
+          --rust-output rust/src/dart_bridge/ffi_exports.rs
+          --skip-add-mod-to-lib --no-build-runner
       
     - name: Run Code Generation
       run: flutter pub run build_runner build --delete-conflicting-outputs

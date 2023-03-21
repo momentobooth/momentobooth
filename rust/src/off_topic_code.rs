@@ -10,7 +10,7 @@ use num::Complex;
 ///! Mandelbrot is copied and modified from
 ///! https://github.com/ProgrammingRust/mandelbrot/blob/task-queue/src/main.rs and
 ///! https://github.com/Ducolnd/rust-mandelbrot/blob/master/src/main.rs
-use crate::api::*;
+use crate::dart_bridge::api::*;
 
 /// Try to determine if `c` is in the Mandelbrot set, using at most `limit`
 /// iterations to decide.
