@@ -666,6 +666,7 @@ dependencies = [
  "gphoto2",
  "image",
  "nokhwa",
+ "nokhwa-bindings-macos",
  "num",
 ]
 
@@ -1057,8 +1058,6 @@ dependencies = [
 [[package]]
 name = "nokhwa-bindings-macos"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cb2044194c8cc0286a0bfae023caeb434c32900ffe3f3d08565362306437be8"
 dependencies = [
  "block",
  "cocoa-foundation",

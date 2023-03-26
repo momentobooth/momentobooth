@@ -13,6 +13,10 @@ pub struct NokhwaCameraInfo {
     pub friendly_name: String,
 }
 
+pub struct NokhwaCamera {
+    
+}
+
 impl NokhwaCameraInfo {
     pub fn from_camera_info(camera_info: &CameraInfo) -> Self {
         Self { id: camera_info.index().clone(), friendly_name: camera_info.human_name() }

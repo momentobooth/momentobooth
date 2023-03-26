@@ -20,7 +20,16 @@ flutter_rust_bridge = "1.72.2"
 num = "0.4"
 image = "0.24.3"
 crossbeam = "0.8"
+nokhwa-bindings-macos = "0.2.0"
+nokhwa = { version = "0.10.3", features = ["input-native", "output-threaded"] }
 
-[dependencies.nokhwa]
-version = "0.10.3"
-features = ["input-native", "output-threaded"]
+# Patch for https://github.com/l1npengtul/nokhwa/issues/98
+
+[patch.crates-io]
+nokhwa-bindings-macos = { path = './target/patch/nokhwa-bindings-macos-0.2.0' }
+
+[package.metadata.patch.nokhwa-bindings-macos]
+version = "0.2.0"
+patches = [
+    { path = "nokhwa-fix-issue-98.patch", source = "GithubPrDiff" }
+]
