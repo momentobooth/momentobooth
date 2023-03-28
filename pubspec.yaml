@@ -13,6 +13,7 @@ dependencies:
 
   # UI
   fluent_ui: ^4.4.1
+  go_router: ^6.5.0
 
   # MVC
   mobx: ^2.1.4
