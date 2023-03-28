@@ -1,4 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_rust_bridge_example/theme/momento_booth_theme.dart';
+import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_view.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_view_model.dart';
@@ -33,16 +35,24 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
-    return FluentApp.router(
-      routeInformationParser: _router.routeInformationParser,
-      routerDelegate: _router.routerDelegate,
-      color: Colors.green,
-      builder: (context, child) {
-        return ColoredBox(
-          color: Colors.white,
-          child: child,
-        );
-      },
+    return MomentoBoothTheme(
+      data: MomentoBoothThemeData.defaults(),
+      child: Builder(
+        builder: (BuildContext context) {
+          MomentoBoothThemeData themeData = MomentoBoothTheme.dataOf(context);
+          return WidgetsApp.router(
+            routeInformationParser: _router.routeInformationParser,
+            routerDelegate: _router.routerDelegate,
+            color: themeData.primaryColor,
+            builder: (context, child) {
+              return ColoredBox(
+                color: themeData.defaultPageBackgroundColor,
+                child: child,
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
