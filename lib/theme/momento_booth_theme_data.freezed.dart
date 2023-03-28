@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$MomentoBoothThemeData {
   Color get defaultPageBackgroundColor => throw _privateConstructorUsedError;
   Color get primaryColor => throw _privateConstructorUsedError;
+  TextStyle get titleStyle => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MomentoBoothThemeDataCopyWith<MomentoBoothThemeData> get copyWith =>
@@ -30,7 +31,10 @@ abstract class $MomentoBoothThemeDataCopyWith<$Res> {
           $Res Function(MomentoBoothThemeData) then) =
       _$MomentoBoothThemeDataCopyWithImpl<$Res, MomentoBoothThemeData>;
   @useResult
-  $Res call({Color defaultPageBackgroundColor, Color primaryColor});
+  $Res call(
+      {Color defaultPageBackgroundColor,
+      Color primaryColor,
+      TextStyle titleStyle});
 }
 
 /// @nodoc
@@ -49,6 +53,7 @@ class _$MomentoBoothThemeDataCopyWithImpl<$Res,
   $Res call({
     Object? defaultPageBackgroundColor = null,
     Object? primaryColor = null,
+    Object? titleStyle = null,
   }) {
     return _then(_value.copyWith(
       defaultPageBackgroundColor: null == defaultPageBackgroundColor
@@ -59,6 +64,10 @@ class _$MomentoBoothThemeDataCopyWithImpl<$Res,
           ? _value.primaryColor
           : primaryColor // ignore: cast_nullable_to_non_nullable
               as Color,
+      titleStyle: null == titleStyle
+          ? _value.titleStyle
+          : titleStyle // ignore: cast_nullable_to_non_nullable
+              as TextStyle,
     ) as $Val);
   }
 }
@@ -71,7 +80,10 @@ abstract class _$$_MomentoBoothThemeDataCopyWith<$Res>
       __$$_MomentoBoothThemeDataCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Color defaultPageBackgroundColor, Color primaryColor});
+  $Res call(
+      {Color defaultPageBackgroundColor,
+      Color primaryColor,
+      TextStyle titleStyle});
 }
 
 /// @nodoc
@@ -87,6 +99,7 @@ class __$$_MomentoBoothThemeDataCopyWithImpl<$Res>
   $Res call({
     Object? defaultPageBackgroundColor = null,
     Object? primaryColor = null,
+    Object? titleStyle = null,
   }) {
     return _then(_$_MomentoBoothThemeData(
       defaultPageBackgroundColor: null == defaultPageBackgroundColor
@@ -97,6 +110,10 @@ class __$$_MomentoBoothThemeDataCopyWithImpl<$Res>
           ? _value.primaryColor
           : primaryColor // ignore: cast_nullable_to_non_nullable
               as Color,
+      titleStyle: null == titleStyle
+          ? _value.titleStyle
+          : titleStyle // ignore: cast_nullable_to_non_nullable
+              as TextStyle,
     ));
   }
 }
@@ -105,16 +122,20 @@ class __$$_MomentoBoothThemeDataCopyWithImpl<$Res>
 
 class _$_MomentoBoothThemeData implements _MomentoBoothThemeData {
   const _$_MomentoBoothThemeData(
-      {required this.defaultPageBackgroundColor, required this.primaryColor});
+      {required this.defaultPageBackgroundColor,
+      required this.primaryColor,
+      required this.titleStyle});
 
   @override
   final Color defaultPageBackgroundColor;
   @override
   final Color primaryColor;
+  @override
+  final TextStyle titleStyle;
 
   @override
   String toString() {
-    return 'MomentoBoothThemeData(defaultPageBackgroundColor: $defaultPageBackgroundColor, primaryColor: $primaryColor)';
+    return 'MomentoBoothThemeData(defaultPageBackgroundColor: $defaultPageBackgroundColor, primaryColor: $primaryColor, titleStyle: $titleStyle)';
   }
 
   @override
@@ -127,12 +148,14 @@ class _$_MomentoBoothThemeData implements _MomentoBoothThemeData {
                 other.defaultPageBackgroundColor ==
                     defaultPageBackgroundColor) &&
             (identical(other.primaryColor, primaryColor) ||
-                other.primaryColor == primaryColor));
+                other.primaryColor == primaryColor) &&
+            (identical(other.titleStyle, titleStyle) ||
+                other.titleStyle == titleStyle));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, defaultPageBackgroundColor, primaryColor);
+  int get hashCode => Object.hash(
+      runtimeType, defaultPageBackgroundColor, primaryColor, titleStyle);
 
   @JsonKey(ignore: true)
   @override
@@ -145,12 +168,15 @@ class _$_MomentoBoothThemeData implements _MomentoBoothThemeData {
 abstract class _MomentoBoothThemeData implements MomentoBoothThemeData {
   const factory _MomentoBoothThemeData(
       {required final Color defaultPageBackgroundColor,
-      required final Color primaryColor}) = _$_MomentoBoothThemeData;
+      required final Color primaryColor,
+      required final TextStyle titleStyle}) = _$_MomentoBoothThemeData;
 
   @override
   Color get defaultPageBackgroundColor;
   @override
   Color get primaryColor;
+  @override
+  TextStyle get titleStyle;
   @override
   @JsonKey(ignore: true)
   _$$_MomentoBoothThemeDataCopyWith<_$_MomentoBoothThemeData> get copyWith =>

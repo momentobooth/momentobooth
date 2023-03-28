@@ -13,7 +13,7 @@ class MomentoBoothTheme extends InheritedWidget {
 
   static MomentoBoothThemeData dataOf(BuildContext context) {
     MomentoBoothTheme? theme = context.dependOnInheritedWidgetOfExactType<MomentoBoothTheme>();
-    assert(theme != null);
+    assert(theme != null, "MomentoBoothTheme is not available");
     return theme!.data;
   }
 
