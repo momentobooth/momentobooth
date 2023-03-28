@@ -1,6 +1,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
+import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample_background.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_view_model.dart';
 
@@ -14,7 +15,13 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
   
   @override
   Widget build(BuildContext context) {
-    return Text("Hello World");
+    return Stack(
+      fit: StackFit.expand,
+      children: const [
+        SampleBackground(),
+        Text("Hello World!"),
+      ],
+    );
   }
 
 }
