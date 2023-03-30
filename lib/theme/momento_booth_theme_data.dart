@@ -7,9 +7,16 @@ part 'momento_booth_theme_data.freezed.dart';
 class MomentoBoothThemeData with _$MomentoBoothThemeData {
 
   const factory MomentoBoothThemeData({
+    // App wide
     required Color defaultPageBackgroundColor,
     required Color primaryColor,
+
+    // Title
     required TextStyle titleStyle,
+
+    // Choose Capture Mode page
+    required Color chooseCaptureModeButtonIconColor,
+    required BoxShadow chooseCaptureModeButtonShadow,
   }) = _MomentoBoothThemeData;
 
   factory MomentoBoothThemeData.defaults() => const MomentoBoothThemeData(
@@ -30,6 +37,14 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
         ),
       ],
       color: Color(0xFFFFFFFF),
+    ),
+
+    // Choose Capture Mode page
+    chooseCaptureModeButtonIconColor: Color(0xE6FFFFFF),
+    chooseCaptureModeButtonShadow: BoxShadow(
+      color: Color(0x42000000),
+      offset: Offset(0, 3),
+      blurRadius: 8,
     ),
   );
 

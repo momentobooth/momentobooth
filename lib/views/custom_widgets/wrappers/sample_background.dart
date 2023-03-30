@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/stateless_widget_base.dart';
+import 'package:flutter_rust_bridge_example/views/base/stateless_widget_base.dart';
 
 class SampleBackground extends StatelessWidgetBase {
 

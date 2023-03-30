@@ -1,5 +1,5 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rust_bridge_example/theme/momento_booth_theme.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample_background.dart';
@@ -13,47 +13,58 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
     super.key,
     required super.viewModel,
     required super.controller,
+    required super.contextAccessor,
   });
   
   @override
-  Widget build(BuildContext context) {
-    MomentoBoothThemeData themeData = MomentoBoothTheme.dataOf(context);
-    return Stack(
-      fit: StackFit.expand,
+  Widget get body {
+    return GestureDetector(
+      onTap: controller.onPressedContinue,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          const SampleBackground(),
+          _foregroundElements,
+        ],
+      ),
+    );
+  }
+
+  Widget get _foregroundElements {
+    return Column(
       children: [
-        const SampleBackground(),
-        Column(
-          children: [
-            Flexible(
-              fit: FlexFit.tight,
-              child: SizedBox(),
+        Flexible(
+          fit: FlexFit.tight,
+          child: const SizedBox(),
+        ),
+        Expanded(
+          flex: 2,
+          child: Center(
+            child: AutoSizeText(
+              "Touch to start",
+              style: theme.titleStyle,
             ),
-            Expanded(
-              flex: 2,
-              child: Center(
-                child: Text(
-                  "Touch to start",
-                  style: themeData.titleStyle,
-                ),
-              ),
-            ),
-            Flexible(
-              fit: FlexFit.tight,
-              child: SizedBox(
-                width: 450,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 32),
-                  child: SvgPicture.asset(
-                    "assets/svg/logo.svg",
-                    colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),
-                    alignment: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
+        ),
+        Flexible(
+          fit: FlexFit.tight,
+          child: _getLogo(theme),
         ),
       ],
+    );
+  }
+
+  Widget _getLogo(MomentoBoothThemeData themeData) {
+    return SizedBox(
+      width: 450,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 32),
+        child: SvgPicture.asset(
+          "assets/svg/logo.svg",
+          colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),
+          alignment: Alignment.bottomCenter,
+        ),
+      ),
     );
   }
 

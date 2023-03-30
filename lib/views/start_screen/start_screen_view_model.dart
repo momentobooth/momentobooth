@@ -7,4 +7,6 @@ class StartScreenViewModel = StartScreenViewModelBase with _$StartScreenViewMode
 
 abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
 
+  StartScreenViewModelBase({required super.contextAccessor});
+
 }
