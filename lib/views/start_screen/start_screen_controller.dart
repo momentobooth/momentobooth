@@ -5,20 +5,15 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> {
 
   // Initialization/Deinitialization
 
-  StartScreenController({required super.viewModel});
+  StartScreenController({
+    required super.viewModel,
+    required super.contextAccessor,
+  });
 
   // User interaction methods
 
-  void onClickOnSinglePhoto() {
-    print("Single photo!");
-  }
-
-  void onClickOnPhotoCollage() {
-    print("Photo college!");
-  }
-
-  void onClickOnSettings() {
-    print("Settings!");
+  void onPressedContinue() {
+    router.push("/choose_capture_mode");
   }
 
 }
