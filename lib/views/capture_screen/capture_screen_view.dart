@@ -5,6 +5,7 @@ import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_view_model.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample_background.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureScreenController> {
 
@@ -14,7 +15,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
     required super.controller,
     required super.contextAccessor,
   });
-  
+
   @override
   Widget get body {
     return Stack(
@@ -49,12 +50,10 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
                       child: AnimatedTextKit(
                         pause: Duration.zero,
                         isRepeatingAnimation: false,
+                        onFinished: viewModel.onCounterFinished,
                         animatedTexts: [
-                          _getCounterAnimatedText('5'),
-                          _getCounterAnimatedText('4'),
-                          _getCounterAnimatedText('3'),
-                          _getCounterAnimatedText('2'),
-                          _getCounterAnimatedText('1'),
+                          for (int i = viewModel.counterStart; i > 0; i--)
+                            _getCounterAnimatedText(i.toString()),
                         ],
                       ),
                     ),
@@ -68,6 +67,14 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
             ),
           ],
         ),
+        Observer(builder: (_) {
+          return AnimatedOpacity(
+            opacity: viewModel.opacity,
+            duration: viewModel.flashAnimationDuration,
+            curve: viewModel.flashAnimationCurve,
+            child: ColoredBox(color: Color(0xFFFFFFFF)),
+          );
+        }),
       ],
     );
   }
