@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_controller.dart';
@@ -33,6 +34,15 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
                 ),
               ),
             ),
+            Flexible(
+              child: FluentTheme(
+                data: FluentThemeData(),
+                child: Button(
+                  onPressed: controller.captureAndGetPhoto,
+                  child: Text("Capture photo")
+                ),
+              ),
+            )
           ],
         ),
       ],
