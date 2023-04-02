@@ -1,3 +1,5 @@
+# Capturing from Sony Remote
+
 # The following works but is quite slow
 #WinActivate("Remote")
 #WinWaitActive("Remote") # A wait is not even necessary
