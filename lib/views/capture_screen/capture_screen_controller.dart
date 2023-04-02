@@ -14,7 +14,7 @@ class CaptureScreenController extends ScreenControllerBase<CaptureScreenViewMode
   void captureAndGetPhoto() async {
     final capturer = SonyRemotePhotoCapture(r"C:\Users\caspe\Pictures");
     final image = await capturer.captureAndGetPhoto();
-    print("Captured photo using AutoIT");
+    viewModel.imageData = image;
   }
 
 }
