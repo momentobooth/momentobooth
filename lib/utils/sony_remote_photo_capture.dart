@@ -9,8 +9,15 @@ class SonyRemotePhotoCapture extends CaptureMethod {
 
   SonyRemotePhotoCapture(this.directoryPath);
 
+  // Testing with camera gave ~165 ms with manual focus, ~220 with good autofocus
+  // and up to 500 ms in bad light. This should be avoided anyway because the (short)
+  // button press will not trigger the camera then. 
+  @override
+  Duration get captureDelay => Duration(milliseconds: 200);
+
   @override
   void capture() {
+    print("Sending capture command to Sony Remote");
     // AutoIt script line
     // https://ss64.com/nt/syntax-esc.html
     var autoItScript = "ControlClick('Remote', '', 1001)";
@@ -54,5 +61,4 @@ class SonyRemotePhotoCapture extends CaptureMethod {
     }
     throw TimeoutException('Timed out while waiting for file to exist');
   }
-
 }
