@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_rust_bridge_example/model/photo_state.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_view_model.dart';
@@ -45,7 +46,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
                 padding: EdgeInsets.symmetric(vertical: 40.0),
                 child: Observer(
                   builder: (context) {
-                    Uint8List? imageData = viewModel.imageData;
+                    Uint8List? imageData = PhotoStateBase.instance.photos.isNotEmpty ? PhotoStateBase.instance.photos.last : null;
                     if (imageData != null) {
                       return Image.memory(imageData);
                     } 
