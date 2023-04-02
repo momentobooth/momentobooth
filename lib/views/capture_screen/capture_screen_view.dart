@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
@@ -16,7 +17,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
   
   @override
   Widget get body {
-    
+    TextStyle counterStyle = theme.titleStyle;
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -32,6 +33,30 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
                   maxLines: 1,
                 ),
               ),
+            ),
+            Expanded(
+              child: FittedBox(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: theme.captureCounterContainerBackground,
+                    border: theme.captureCounterContainerBorder,
+                    borderRadius: theme.captureCounterContainerBorderRadius,
+                  ),
+                  child: AnimatedTextKit(
+                    animatedTexts: [
+                      RotateAnimatedText('5'),
+                      RotateAnimatedText('4'),
+                      RotateAnimatedText('3'),
+                      RotateAnimatedText('2'),
+                      RotateAnimatedText('1'),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              child: const SizedBox(),
             ),
           ],
         ),
