@@ -17,7 +17,6 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
   
   @override
   Widget get body {
-    TextStyle counterStyle = theme.titleStyle;
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -35,21 +34,30 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
               ),
             ),
             Expanded(
-              child: FittedBox(
+              child: AspectRatio(
+                aspectRatio: 1,
                 child: Container(
                   decoration: BoxDecoration(
                     color: theme.captureCounterContainerBackground,
                     border: theme.captureCounterContainerBorder,
                     borderRadius: theme.captureCounterContainerBorderRadius,
+                    boxShadow: [theme.captureCounterContainerShadow],
                   ),
-                  child: AnimatedTextKit(
-                    animatedTexts: [
-                      RotateAnimatedText('5'),
-                      RotateAnimatedText('4'),
-                      RotateAnimatedText('3'),
-                      RotateAnimatedText('2'),
-                      RotateAnimatedText('1'),
-                    ],
+                  child: FittedBox(
+                    child: DefaultTextStyle(
+                      style: theme.captureCounterTextStyle,
+                      child: AnimatedTextKit(
+                        pause: Duration.zero,
+                        isRepeatingAnimation: false,
+                        animatedTexts: [
+                          _getCounterAnimatedText('5'),
+                          _getCounterAnimatedText('4'),
+                          _getCounterAnimatedText('3'),
+                          _getCounterAnimatedText('2'),
+                          _getCounterAnimatedText('1'),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -61,6 +69,16 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
           ],
         ),
       ],
+    );
+  }
+
+  RotateAnimatedText _getCounterAnimatedText(String text) {
+    TextStyle textStyle = theme.captureCounterTextStyle;
+    return RotateAnimatedText(
+      text,
+      textStyle: textStyle,
+      duration: const Duration(seconds: 1),
+      transitionHeight: (textStyle.fontSize ?? 0) * 10 / 4,
     );
   }
 

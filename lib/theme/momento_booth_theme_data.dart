@@ -23,7 +23,7 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
     required BoxBorder captureCounterContainerBorder,
     required BorderRadius captureCounterContainerBorderRadius,
     required Color captureCounterContainerBackground,
-    required Shadow captureCounterContainerShadow,
+    required BoxShadow captureCounterContainerShadow,
   }) = _MomentoBoothThemeData;
 
   factory MomentoBoothThemeData.defaults() => MomentoBoothThemeData(
@@ -69,7 +69,7 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
       color: Color(0xFFFFFFFF),
     ),
     captureCounterContainerBorder: Border.all(width: 10, color: Color(0xFFFFFFFF)),
-    captureCounterContainerBorderRadius: BorderRadius.circular(double.maxFinite),
+    captureCounterContainerBorderRadius: BorderRadius.circular(999),
     captureCounterContainerBackground: Color(0xAA000000),
     captureCounterContainerShadow: BoxShadow(
       color: Color(0x29000000),
