@@ -104,6 +104,13 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               value: () => viewModel.captureMethodSetting,
               onChanged: controller.onCaptureMethodChanged,
             ),
+            _getTextInput(
+              icon: FluentIcons.folder,
+              title: "Capture location",
+              subtitle: "Location to look for captured images",
+              controller: controller.captureLocationController,
+              onChanged: controller.onCaptureLocationChanged,
+            ),
           ],
         ),
       ],

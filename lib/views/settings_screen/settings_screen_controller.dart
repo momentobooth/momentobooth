@@ -7,6 +7,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
+  TextEditingController? _captureLocationController;
+  TextEditingController get captureLocationController => _captureLocationController ??= TextEditingController(text: viewModel.captureLocationSetting);
+
   // Initialization/Deinitialization
 
   SettingsScreenController({
@@ -33,6 +36,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCaptureMethodChanged(CaptureMethod? captureMethod) {
     if (captureMethod != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureMethod: captureMethod));
+    }
+  }
+
+  void onCaptureLocationChanged(String? captureLocation) {
+    if (captureLocation != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(captureLocation: captureLocation));
     }
   }
 
