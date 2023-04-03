@@ -14,13 +14,16 @@ FluentSettingCard _getComboBoxCard<TValue>({
     icon: icon,
     title: title,
     subtitle: subtitle,
-    child: Observer(builder: (_) {
-      return ComboBox<TValue>(
-        items: items,
-        value: value(),
-        onChanged: onChanged,
-      );
-    }),
+    child: ConstrainedBox(
+      constraints: BoxConstraints(minWidth: 150),
+      child: Observer(builder: (_) {
+        return ComboBox<TValue>(
+          items: items,
+          value: value(),
+          onChanged: onChanged,
+        );
+      }),
+    ),
   );
 }
 
