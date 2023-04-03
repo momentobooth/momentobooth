@@ -6,6 +6,8 @@ import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_
 
 class CaptureScreen extends ScreenBase<CaptureScreenViewModel, CaptureScreenController, CaptureScreenView> {
 
+  static const String defaultRoute = "/capture";
+
   const CaptureScreen({super.key});
 
   @override

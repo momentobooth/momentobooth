@@ -1,4 +1,5 @@
 import 'package:flutter_rust_bridge_example/views/base/screen_controller_base.dart';
+import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_view_model.dart';
 
 class StartScreenController extends ScreenControllerBase<StartScreenViewModel> {
@@ -13,7 +14,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> {
   // User interaction methods
 
   void onPressedContinue() {
-    router.push("/choose_capture_mode");
+    router.push(ChooseCaptureModeScreen.defaultRoute);
   }
 
 }

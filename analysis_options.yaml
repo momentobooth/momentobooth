@@ -3,6 +3,7 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     prefer_const_constructors: false # Enable again later
+    prefer_const_literals_to_create_immutables: false # Enable again later
 
 analyzer:
   exclude:

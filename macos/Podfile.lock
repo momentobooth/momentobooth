@@ -1,15 +1,28 @@
 PODS:
   - FlutterMacOS (1.0.0)
+  - HotKey (0.1.2)
+  - hotkey_manager (0.0.1):
+    - FlutterMacOS
+    - HotKey
 
 DEPENDENCIES:
   - FlutterMacOS (from `Flutter/ephemeral`)
+  - hotkey_manager (from `Flutter/ephemeral/.symlinks/plugins/hotkey_manager/macos`)
+
+SPEC REPOS:
+  trunk:
+    - HotKey
 
 EXTERNAL SOURCES:
   FlutterMacOS:
     :path: Flutter/ephemeral
+  hotkey_manager:
+    :path: Flutter/ephemeral/.symlinks/plugins/hotkey_manager/macos
 
 SPEC CHECKSUMS:
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  HotKey: ad59450195936c10992438c4210f673de5aee43e
+  hotkey_manager: ad673457691f4d39e481be04a61da2ae07d81c62
 
 PODFILE CHECKSUM: 8d40c19d3cbdb380d870685c3a564c989f1efa52
 
