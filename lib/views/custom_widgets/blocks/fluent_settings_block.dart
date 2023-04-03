@@ -3,13 +3,11 @@ import 'package:flutter_rust_bridge_example/views/custom_widgets/cards/fluent_se
 
 class FluentSettingsBlock extends StatelessWidget {
 
-  final IconData icon;
   final String title;
   final List<FluentSettingCard> settings;
 
   const FluentSettingsBlock({
     super.key,
-    required this.icon,
     required this.title,
     required this.settings,
   });

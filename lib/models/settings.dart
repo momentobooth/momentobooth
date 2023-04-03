@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path/path.dart';
 import 'package:toml/toml.dart';
 
 part 'settings.freezed.dart';
@@ -23,11 +24,13 @@ class Settings with _$Settings implements TomlEncodableValue {
     required OutputSettings output,
   }) = _Settings;
 
-  factory Settings.withDefaults() => Settings(
-        captureDelaySeconds: 5,
-        hardware: HardwareSettings.withDefaults(),
-        output: OutputSettings.withDefaults(),
-      );
+  factory Settings.withDefaults() {
+    return Settings(
+      captureDelaySeconds: 5,
+      hardware: HardwareSettings.withDefaults(),
+      output: OutputSettings.withDefaults(),
+    );
+  }
 
   factory Settings.fromJson(Map<String, Object?> json) => _$SettingsFromJson(json);
   
@@ -52,19 +55,11 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
   }) = _HardwareSettings;
 
   factory HardwareSettings.withDefaults() {
-    String home = "";
-    Map<String, String> envVars = Platform.environment;
-    if (Platform.isMacOS || Platform.isLinux) {
-      home = envVars['HOME']!;
-    } else if (Platform.isWindows) {
-      home = envVars['UserProfile']!;
-    }
-    
     return HardwareSettings(
-        liveViewMethod: LiveViewMethod.fakeImage,
-        captureMethod: CaptureMethod.liveViewSource,
-        captureLocation: home
-      );
+      liveViewMethod: LiveViewMethod.fakeImage,
+      captureMethod: CaptureMethod.liveViewSource,
+      captureLocation: _getHome(),
+    );
   }
 
   factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
@@ -84,16 +79,30 @@ class OutputSettings with _$OutputSettings implements TomlEncodableValue {
   const OutputSettings._();
 
   const factory OutputSettings({
+    required String localFolder,
     required String firefoxSendServerUrl,
   }) = _OutputSettings;
 
-  factory OutputSettings.withDefaults() => OutputSettings(
-        firefoxSendServerUrl: "https://send.vis.ee/",
-      );
+  factory OutputSettings.withDefaults() {
+    return OutputSettings(
+      localFolder: join(_getHome(), "Pictures"),
+      firefoxSendServerUrl: "https://send.vis.ee/",
+    );
+  }
 
   factory OutputSettings.fromJson(Map<String, Object?> json) => _$OutputSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
+}
+
+String _getHome() {
+  Map<String, String> envVars = Platform.environment;
+  if (Platform.isMacOS || Platform.isLinux) {
+    return envVars['HOME']!;
+  } else if (Platform.isWindows) {
+    return envVars['UserProfile']!;
+  }
+  throw 'Could not find the user\'s home folder: Platform unsupported';
 }

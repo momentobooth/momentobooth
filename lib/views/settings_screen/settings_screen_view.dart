@@ -55,7 +55,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
             body: _hardwareSettings,
           ),
           PaneItem(
-            icon: Icon(FluentIcons.public_email),
+            icon: Icon(FluentIcons.send),
             title: Text("Output"),
             body: _outputSettings,
           ),
@@ -69,7 +69,6 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
       title: "General",
       blocks: [
         FluentSettingsBlock(
-          icon: FluentIcons.camera,
           title: "Settings",
           settings: [
             _getInput(
@@ -90,7 +89,6 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
       title: "Hardware",
       blocks: [
         FluentSettingsBlock(
-          icon: FluentIcons.camera,
           title: "Camera settings",
           settings: [
             _getComboBoxCard(
@@ -127,7 +125,18 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
       title: "Output",
       blocks: [
         FluentSettingsBlock(
-          icon: FluentIcons.internet_sharing,
+          title: "Local",
+          settings: [
+            _getTextInput(
+              icon: FluentIcons.folder,
+              title: "Local photo storage location",
+              subtitle: "Location where the output images will be stores",
+              controller: controller.localFolderSettingController,
+              onChanged: controller.onLocalFolderChanged,
+            ),
+          ],
+        ),
+        FluentSettingsBlock(
           title: "Share using internet",
           settings: [
             _getTextInput(

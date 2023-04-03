@@ -10,6 +10,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _captureLocationController;
   TextEditingController get captureLocationController => _captureLocationController ??= TextEditingController(text: viewModel.captureLocationSetting);
 
+  TextEditingController? _localFolderController;
+  TextEditingController get localFolderSettingController => _localFolderController ??= TextEditingController(text: viewModel.localFolderSetting);
+
   TextEditingController? _firefoxSendServerUrlController;
   TextEditingController get firefoxSendServerUrlController => _firefoxSendServerUrlController ??= TextEditingController(text: viewModel.firefoxSendServerUrlSetting);
 
@@ -45,6 +48,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCaptureLocationChanged(String? captureLocation) {
     if (captureLocation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureLocation: captureLocation));
+    }
+  }
+
+  void onLocalFolderChanged(String? localFolder) {
+    if (localFolder != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.output(localFolder: localFolder));
     }
   }
 

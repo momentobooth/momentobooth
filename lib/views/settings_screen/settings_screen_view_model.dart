@@ -26,6 +26,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
   CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
   String get captureLocationSetting => SettingsManagerBase.instance.settings.hardware.captureLocation;
+  String get localFolderSetting => SettingsManagerBase.instance.settings.output.localFolder;
   String get firefoxSendServerUrlSetting => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
 
   // Initializers/Deinitializers
