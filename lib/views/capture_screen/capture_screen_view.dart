@@ -10,7 +10,6 @@ import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample
 class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureScreenController> {
 
   const CaptureScreenView({
-    super.key,
     required super.viewModel,
     required super.controller,
     required super.contextAccessor,

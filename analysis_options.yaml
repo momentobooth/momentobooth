@@ -3,3 +3,10 @@ include: package:flutter_lints/flutter.yaml
 linter:
   rules:
     prefer_const_constructors: false # Enable again later
+
+analyzer:
+  exclude:
+    - '**/*.g.dart'
+    - '**/*.freezed.dart'
+    - '**/*.generated.dart'
+    - '**/*.json.dart'

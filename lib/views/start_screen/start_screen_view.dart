@@ -10,7 +10,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenController> {
 
   const StartScreenView({
-    super.key,
     required super.viewModel,
     required super.controller,
     required super.contextAccessor,

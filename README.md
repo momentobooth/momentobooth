@@ -34,7 +34,7 @@ For all tools, we support the latest versions.
 1. Make sure to have the [Template](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) extension installed
 2. Right click the `views` folder in VS Code Explorer
 3. Click _Template: Create New (with rename)_, pick the `view` template
-4. Pick a name, enter it in `snake_case`, press Enter
+4. Pick a name, enter it in `{snake_case}_screen` format (e.g. `settings_screen` or `email_photo_screen`), press Enter
 5. Your new view should be available!
 
 ## Features

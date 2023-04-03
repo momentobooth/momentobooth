@@ -1,6 +1,7 @@
 import 'package:flutter_rust_bridge_example/views/base/build_context_accessor.dart';
 import 'package:flutter_rust_bridge_example/views/base/build_context_abstractor.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
+import 'package:meta/meta.dart';
 
 abstract class ScreenControllerBase<T extends ScreenViewModelBase> with BuildContextAbstractor {
 
@@ -13,5 +14,9 @@ abstract class ScreenControllerBase<T extends ScreenViewModelBase> with BuildCon
     required this.viewModel,
     required this.contextAccessor,
   });
+
+  @mustCallSuper
+  void dispose() {
+  }
 
 }
