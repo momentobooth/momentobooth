@@ -8,6 +8,8 @@ import 'package:flutter_rust_bridge_example/views/custom_widgets/pages/fluent_se
 import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_view_model.dart';
 
+part 'settings_screen_view.helpers.dart';
+
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
   const SettingsScreenView({
     required super.viewModel,
@@ -65,19 +67,12 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           icon: FluentIcons.camera,
           title: "Settings",
           settings: [
-            FluentSettingCard(
+            _getInput(
               icon: FluentIcons.timer,
               title: "Capture delay",
               subtitle: 'In seconds',
-              child: SizedBox(
-                width: 150,
-                child: Observer(builder: (_) {
-                  return NumberBox(
-                    value: viewModel.captureDelaySecondsSetting,
-                    onChanged: controller.onCaptureDelaySecondsChanged,
-                  );
-                }),
-              ),
+              value: () => viewModel.captureDelaySecondsSetting,
+              onChanged: controller.onCaptureDelaySecondsChanged,
             ),
           ],
         ),
@@ -93,33 +88,26 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           icon: FluentIcons.camera,
           title: "Camera settings",
           settings: [
-            FluentSettingCard(
+            _getComboBoxCard(
               icon: FluentIcons.camera,
               title: "Live view method",
               subtitle: "Method used for live previewing",
-              child: Observer(builder: (_) {
-                return ComboBox<LiveViewMethod>(
-                  items: viewModel.liveViewMethods,
-                  value: viewModel.liveViewMethodSetting,
-                  onChanged: controller.onLiveViewMethodChanged,
-                );
-              }),
+              items: viewModel.liveViewMethods,
+              value: () => viewModel.liveViewMethodSetting,
+              onChanged: controller.onLiveViewMethodChanged,
             ),
-            FluentSettingCard(
+            _getComboBoxCard(
               icon: FluentIcons.camera,
               title: "Capture method",
               subtitle: "Method used for capturing final images",
-              child: Observer(builder: (_) {
-                return ComboBox<CaptureMethod>(
-                  items: viewModel.captureMethods,
-                  value: viewModel.captureMethodSetting,
-                  onChanged: controller.onCaptureMethodChanged,
-                );
-              }),
+              items: viewModel.captureMethods,
+              value: () => viewModel.captureMethodSetting,
+              onChanged: controller.onCaptureMethodChanged,
             ),
           ],
         ),
       ],
     );
   }
+
 }
