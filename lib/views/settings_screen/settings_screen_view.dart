@@ -54,6 +54,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
             title: Text("Hardware"),
             body: _hardwareSettings,
           ),
+          PaneItem(
+            icon: Icon(FluentIcons.public_email),
+            title: Text("Output"),
+            body: _outputSettings,
+          ),
         ],
       ),
     );
@@ -110,6 +115,27 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               subtitle: "Location to look for captured images",
               controller: controller.captureLocationController,
               onChanged: controller.onCaptureLocationChanged,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget get _outputSettings {
+    return FluentSettingsPage(
+      title: "Output",
+      blocks: [
+        FluentSettingsBlock(
+          icon: FluentIcons.internet_sharing,
+          title: "Share using internet",
+          settings: [
+            _getTextInput(
+              icon: FluentIcons.folder,
+              title: "Firefox Send URL",
+              subtitle: "Firefox Send Server URL",
+              controller: controller.firefoxSendServerUrlController,
+              onChanged: controller.onFirefoxSendServerUrlChanged,
             ),
           ],
         ),
