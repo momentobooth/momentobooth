@@ -49,3 +49,27 @@ FluentSettingCard _getInput({
     ),
   );
 }
+
+
+
+FluentSettingCard _getTextInput({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required TextEditingController controller,
+  required ValueChanged<String?> onChanged,
+}) {
+  return FluentSettingCard(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    child: SizedBox(
+      width: 250,
+      child: TextBox(
+        controller: controller,
+        onChanged: onChanged,
+        // Todo: See if there is a better way to fire onChanged instead of every button press.
+      ),
+    ),
+  );
+}

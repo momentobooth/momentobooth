@@ -48,7 +48,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     }
 
     if (SettingsManagerBase.instance.settings.hardware.captureMethod == CaptureMethod.sonyImagingEdgeDesktop){
-      capturer = SonyRemotePhotoCapture("$home\\Pictures");
+      capturer = SonyRemotePhotoCapture(SettingsManagerBase.instance.settings.hardware.captureLocation);
   	} else {
       capturer = FakeCaptureMethod();
     }

@@ -25,6 +25,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
   LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
   CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
+  String get captureLocationSetting => SettingsManagerBase.instance.settings.hardware.captureLocation;
+
 
   // Initializers/Deinitializers
 
