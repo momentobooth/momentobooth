@@ -326,9 +326,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "1.71.1"
+version = "1.72.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08359c8042886dc6e3391d10bf96d80177a6ea091025174519da55a72d86aa25"
+checksum = "a85cf0e90d520425ac9bfca66e97b400782475d3091f4b75cadc210897c098c2"
 dependencies = [
  "allo-isolate",
  "anyhow",

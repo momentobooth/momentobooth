@@ -17,9 +17,16 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
     // Choose Capture Mode page
     required Color chooseCaptureModeButtonIconColor,
     required BoxShadow chooseCaptureModeButtonShadow,
+
+    // Capture page
+    required TextStyle captureCounterTextStyle,
+    required BoxBorder captureCounterContainerBorder,
+    required BorderRadius captureCounterContainerBorderRadius,
+    required Color captureCounterContainerBackground,
+    required BoxShadow captureCounterContainerShadow,
   }) = _MomentoBoothThemeData;
 
-  factory MomentoBoothThemeData.defaults() => const MomentoBoothThemeData(
+  factory MomentoBoothThemeData.defaults() => MomentoBoothThemeData(
     // App wide
     defaultPageBackgroundColor: Color(0xFFFFFFFF),
     primaryColor: Color(0xFF00FF00), // Green
@@ -29,7 +36,7 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
       fontFamily: "Brandon Grotesque",
       fontSize: 120,
       fontWeight: FontWeight.w300,
-      shadows: [
+      shadows: const [
         BoxShadow(
           color: Color(0x66000000),
           offset: Offset(0, 3),
@@ -46,6 +53,29 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
       offset: Offset(0, 3),
       blurRadius: 8,
     ),
+
+    // Capture page
+    captureCounterTextStyle: TextStyle(
+      fontFamily: "Brandon Grotesque",
+      fontSize: 280,
+      fontWeight: FontWeight.w300,
+      shadows: const [
+        BoxShadow(
+          color: Color(0x66000000),
+          offset: Offset(0, 3),
+          blurRadius: 4,
+        ),
+      ],
+      color: Color(0xFFFFFFFF),
+    ),
+    captureCounterContainerBorder: Border.all(width: 10, color: Color(0xFFFFFFFF)),
+    captureCounterContainerBorderRadius: BorderRadius.circular(999),
+    captureCounterContainerBackground: Color(0xAA000000),
+    captureCounterContainerShadow: BoxShadow(
+      color: Color(0x29000000),
+      offset: Offset(0, 3),
+      blurRadius: 16,
+    )
   );
 
 }
