@@ -131,7 +131,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           title: "Share using internet",
           settings: [
             _getTextInput(
-              icon: FluentIcons.folder,
+              icon: FluentIcons.my_network,
               title: "Firefox Send URL",
               subtitle: "Firefox Send Server URL",
               controller: controller.firefoxSendServerUrlController,
