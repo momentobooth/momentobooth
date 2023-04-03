@@ -19,7 +19,10 @@ abstract class SettingsManagerBase with Store {
   late File _settingsFile;
 
   @observable
-  Settings? settings;
+  Settings? _settings;
+
+  @computed
+  Settings get settings => _settings!;
 
   SettingsManagerBase._internal();
   
@@ -30,7 +33,7 @@ abstract class SettingsManagerBase with Store {
 
     if (!await _settingsFile.exists()) {
       // File does not exist, load defaults and create settings file
-      settings = Settings.withDefaults();
+      _settings = Settings.withDefaults();
       await save();
       return;
     }
@@ -39,14 +42,22 @@ abstract class SettingsManagerBase with Store {
     String settingsAsToml = await _settingsFile.readAsString();
     TomlDocument settingsDocument = TomlDocument.parse(settingsAsToml);
     Map<String, dynamic> settingsMap = settingsDocument.toMap();
-    Settings.fromJson(settingsMap);
+    try {
+      Settings.fromJson(settingsMap);
+    } catch (_) {
+      // FIXME: Failed to parse, load defaults and create settings file
+      print("Settings parse failed, using defaults");
+      _settings = Settings.withDefaults();
+      await save();
+      return;
+    }
     print("Settings loaded from: ${_settingsFile.path}");
   }
 
   Future<void> save() async {
     await _ensureSettingsFileIsSet();
 
-    Map<String, dynamic> settingsMap = settings!.toJson();
+    Map<String, dynamic> settingsMap = _settings!.toJson();
     TomlDocument settingsDocument = TomlDocument.fromMap(settingsMap);
     String settingsAsToml = settingsDocument.toString();
     _settingsFile.writeAsString(settingsAsToml);

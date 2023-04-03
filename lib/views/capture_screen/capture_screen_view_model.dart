@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/animation.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
+import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:flutter_rust_bridge_example/utils/capture_method.dart';
 import 'package:flutter_rust_bridge_example/utils/sony_remote_photo_capture.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
@@ -13,8 +14,9 @@ class CaptureScreenViewModel = CaptureScreenViewModelBase with _$CaptureScreenVi
 
 abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store {
 
-  final int counterStart = 2;
   late final CaptureMethod capturer;
+
+  int get counterStart => SettingsManagerBase.instance.settings.captureDelaySeconds;
 
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay;
