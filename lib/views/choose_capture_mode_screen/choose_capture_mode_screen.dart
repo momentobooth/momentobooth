@@ -6,6 +6,8 @@ import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/cho
 
 class ChooseCaptureModeScreen extends ScreenBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController, ChooseCaptureModeScreenView> {
 
+  static const String defaultRoute = "/choose_capture_mode";
+
   const ChooseCaptureModeScreen({super.key});
 
   @override

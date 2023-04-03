@@ -4,10 +4,11 @@ List<GoRoute> rootRoutes = [
   _startRoute,
   _chooseCaptureModeRoute,
   _captureRoute,
+  _settingsRoute,
 ];
 
 GoRoute _startRoute = GoRoute(
-  path: '/',
+  path: StartScreen.defaultRoute,
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
@@ -17,7 +18,7 @@ GoRoute _startRoute = GoRoute(
 );
 
 GoRoute _chooseCaptureModeRoute = GoRoute(
-  path: '/choose_capture_mode',
+  path: ChooseCaptureModeScreen.defaultRoute,
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
@@ -27,11 +28,21 @@ GoRoute _chooseCaptureModeRoute = GoRoute(
 );
 
 GoRoute _captureRoute = GoRoute(
-  path: '/capture',
+  path: CaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
       child: CaptureScreen(),
+    );
+  },
+);
+
+GoRoute _settingsRoute = GoRoute(
+  path: SettingsScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return FadeTransitionPage(
+      key: state.pageKey,
+      child: SettingsScreen(),
     );
   },
 );

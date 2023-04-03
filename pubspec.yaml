@@ -17,6 +17,8 @@ dependencies:
   go_router: ^6.5.0
   flutter_svg: ^2.0.4
   animated_text_kit: ^4.2.2
+  hotkey_manager: ^0.1.7
+  flutter_scroll_shadow: ^1.1.0
 
   # MVC
   mobx: ^2.1.4
@@ -24,13 +26,19 @@ dependencies:
 
   # Models
   freezed_annotation: ^2.2.0
+  json_annotation: ^4.8.0
 
   # Interop
   ffi: ^2.0.1
   flutter_rust_bridge: ^1.72.1
 
+  # System
+  path_provider: ^2.0.14
+  path: ^1.8.2
+
   # Misc
   meta: ^1.8.0
+  toml: ^0.14.0
 
 dev_dependencies:
   flutter_test:
@@ -46,6 +54,7 @@ dev_dependencies:
 
   # Models
   freezed: ^2.3.2
+  json_serializable: ^6.6.1
 
   # Code generation
   build_runner: ^2.2.0

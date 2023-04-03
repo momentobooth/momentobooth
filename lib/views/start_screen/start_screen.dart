@@ -6,6 +6,8 @@ import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_view
 
 class StartScreen extends ScreenBase<StartScreenViewModel, StartScreenController, StartScreenView> {
 
+  static const String defaultRoute = "/";
+
   const StartScreen({super.key});
 
   @override
