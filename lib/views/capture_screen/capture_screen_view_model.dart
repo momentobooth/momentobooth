@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/animation.dart';
-import 'package:flutter_rust_bridge_example/model/photo_state.dart';
+import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/utils/capture_method.dart';
 import 'package:flutter_rust_bridge_example/utils/sony_remote_photo_capture.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
@@ -55,7 +55,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   void captureAndGetPhoto() async {
     final image = await capturer.captureAndGetPhoto();
-    PhotoStateBase.instance.photos.add(image);
+    PhotosManagerBase.instance.photos.add(image);
   }
 
 }

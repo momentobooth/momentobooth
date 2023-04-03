@@ -8,6 +8,7 @@ import 'package:flutter_rust_bridge_example/views/settings_screen/settings_scree
 import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_view_model.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
+
   const SettingsScreenView({
     required super.viewModel,
     required super.controller,

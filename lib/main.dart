@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_rust_bridge_example/extensions/build_context_extension.dart';
+import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter_rust_bridge_example/views/base/fade_transition_page.dart';
@@ -14,7 +15,12 @@ part 'main.routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Hotkeys
   await hotKeyManager.unregisterAll();
+
+  // Settings
+  await SettingsManagerBase.instance.load();
 
   runApp(const App());
 }
