@@ -8,7 +8,6 @@ import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample
 class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController> {
 
   const ChooseCaptureModeScreenView({
-    super.key,
     required super.viewModel,
     required super.controller,
     required super.contextAccessor,
