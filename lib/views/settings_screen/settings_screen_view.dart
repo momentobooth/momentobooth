@@ -130,7 +130,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
             _getTextInput(
               icon: FluentIcons.folder,
               title: "Local photo storage location",
-              subtitle: "Location where the output images will be stores",
+              subtitle: "Location where the output images will be stored",
               controller: controller.localFolderSettingController,
               onChanged: controller.onLocalFolderChanged,
             ),
