@@ -1,8 +1,9 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/blocks/fluent_settings_block.dart';
+import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
-class FluentSettingsPage extends StatelessWidget {
+class FluentSettingsPage extends StatefulWidget {
 
   final String title;
   final List<FluentSettingsBlock> blocks;
@@ -14,6 +15,20 @@ class FluentSettingsPage extends StatelessWidget {
   });
 
   @override
+  State<FluentSettingsPage> createState() => _FluentSettingsPageState();
+}
+
+class _FluentSettingsPageState extends State<FluentSettingsPage> {
+
+  late ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = ScrollController();
+  }
+
+  @override
   Widget build(BuildContext context) {
     FluentThemeData theme = FluentTheme.of(context);
     return Padding(
@@ -23,11 +38,16 @@ class FluentSettingsPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(title, style: theme.typography.title),
+            child: Text(widget.title, style: theme.typography.title),
           ),
           Expanded(
-            child: ListView(
-              children: blocks,
+            child: ScrollShadow(
+              color: theme.micaBackgroundColor.toAccentColor().lightest,
+              controller: _controller,
+              child: ListView(
+                controller: _controller,
+                children: widget.blocks,
+              ),
             ),
           ),
           Padding(
@@ -40,28 +60,6 @@ class FluentSettingsPage extends StatelessWidget {
         ],
       ),
     );
-  }
-
-}
-
-class OuterBoxShadow extends BoxShadow {
-  
-  const OuterBoxShadow({
-    Color color = const Color(0xFF000000),
-    Offset offset = Offset.zero,
-    double blurRadius = 0.0,
-  }) : super(color: color, offset: offset, blurRadius: blurRadius);
-
-  @override
-  Paint toPaint() {
-    final Paint result = Paint()
-      ..color = color
-      ..maskFilter = MaskFilter.blur(BlurStyle.outer, blurSigma);
-    assert(() {
-      if (debugDisableShadows) result.maskFilter = null;
-      return true;
-    }());
-    return result;
   }
 
 }
