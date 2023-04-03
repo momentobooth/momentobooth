@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rust_bridge_example/extensions/build_context_extension.dart';
 import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme.dart';
@@ -50,6 +51,7 @@ class _AppState extends State<App> {
     hotKeyManager.register(
       HotKey(
         KeyCode.keyS,
+        modifiers: [KeyModifier.control],
         scope: HotKeyScope.inapp,
       ),
       keyDownHandler: (hotKey) {
