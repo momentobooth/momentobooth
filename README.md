@@ -1,4 +1,4 @@
-# Flutter + Rust example for `flutter_rust_bridge`
+# MomentoBooth
 
 ## Development
 

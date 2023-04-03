@@ -15,15 +15,24 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   int paneIndex = 0;
 
-  int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
+  // Option lists
+
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
-  LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
+
+  // Current values
+
+  int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
+  LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
   CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
+
+  // Initializers/Deinitializers
 
   SettingsScreenViewModelBase({
     required super.contextAccessor,
   });
+
+  // Methods
 
   Future<void> updateSettings(UpdateSettingsCallback updateCallback) async {
     Settings currentSettings = SettingsManagerBase.instance.settings;

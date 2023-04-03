@@ -14,7 +14,7 @@ abstract class SettingsManagerBase with Store {
 
   static final SettingsManager instance = SettingsManager._internal();
 
-  static const _fileName = "Settings.toml";
+  static const _fileName = "MomentoBooth_Settings.toml";
 
   late File _settingsFile;
 
