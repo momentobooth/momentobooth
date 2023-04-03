@@ -64,13 +64,10 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return MomentoBoothTheme(
       data: MomentoBoothThemeData.defaults(),
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: Builder(
-          builder: (BuildContext context) {
-            return _getWidgetsApp(context);
-          },
-        ),
+      child: Builder(
+        builder: (BuildContext context) {
+          return _getWidgetsApp(context);
+        },
       ),
     );
   }
