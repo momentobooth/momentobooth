@@ -12,7 +12,7 @@ class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
 abstract class SettingsManagerBase with Store {
 
-  static final SettingsManagerBase instance = SettingsManager._internal();
+  static final SettingsManager instance = SettingsManager._internal();
 
   static const _fileName = "Settings.toml";
 
@@ -25,6 +25,14 @@ abstract class SettingsManagerBase with Store {
   Settings get settings => _settings!;
 
   SettingsManagerBase._internal();
+
+  // Mutate
+
+  @action
+  Future<void> updateAndSave(Settings settings) async {
+    _settings = settings;
+    await _save();
+  }
   
   // Load from/Save to disk
 
@@ -34,7 +42,7 @@ abstract class SettingsManagerBase with Store {
     if (!await _settingsFile.exists()) {
       // File does not exist, load defaults and create settings file
       _settings = Settings.withDefaults();
-      await save();
+      await _save();
       return;
     }
 
@@ -43,25 +51,22 @@ abstract class SettingsManagerBase with Store {
     TomlDocument settingsDocument = TomlDocument.parse(settingsAsToml);
     Map<String, dynamic> settingsMap = settingsDocument.toMap();
     try {
-      Settings.fromJson(settingsMap);
+      _settings = Settings.fromJson(settingsMap);
     } catch (_) {
-      // FIXME: Failed to parse, load defaults and create settings file
-      print("Settings parse failed, using defaults");
+      // Fixme: Failed to parse, load defaults and create settings file
       _settings = Settings.withDefaults();
-      await save();
+      await _save();
       return;
     }
-    print("Settings loaded from: ${_settingsFile.path}");
   }
 
-  Future<void> save() async {
+  Future<void> _save() async {
     await _ensureSettingsFileIsSet();
 
     Map<String, dynamic> settingsMap = _settings!.toJson();
     TomlDocument settingsDocument = TomlDocument.fromMap(settingsMap);
     String settingsAsToml = settingsDocument.toString();
     _settingsFile.writeAsString(settingsAsToml);
-    print("Settings written to: ${_settingsFile.path}");
   }
 
   // Helpers

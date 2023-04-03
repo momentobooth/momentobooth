@@ -17,6 +17,7 @@ class FluentSettingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FluentThemeData theme = FluentTheme.of(context);
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 2),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -27,7 +28,11 @@ class FluentSettingCard extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(title), Text(subtitle)],
+              children: [
+                Text(title, style: theme.typography.bodyStrong),
+                const SizedBox(height: 4),
+                Text(subtitle),
+              ],
             ),
           ),
           const SizedBox(width: 16),

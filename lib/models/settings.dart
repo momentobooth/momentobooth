@@ -1,21 +1,30 @@
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:toml/toml.dart';
 
 part 'settings.freezed.dart';
 part 'settings.g.dart';
+part 'settings.enums.dart';
+
+// ///////////// //
+// Root settings //
+// ///////////// //
 
 @freezed
 class Settings with _$Settings implements TomlEncodableValue {
+  
   const Settings._();
 
   const factory Settings({
     required int captureDelaySeconds,
     required HardwareSettings hardware,
+    required OutputSettings output,
   }) = _Settings;
 
   factory Settings.withDefaults() => Settings(
         captureDelaySeconds: 5,
         hardware: HardwareSettings.withDefaults(),
+        output: OutputSettings.withDefaults(),
       );
 
   factory Settings.fromJson(Map<String, Object?> json) => _$SettingsFromJson(json);
@@ -25,8 +34,13 @@ class Settings with _$Settings implements TomlEncodableValue {
 
 }
 
+// ///////////////// //
+// Hardware Settings //
+// ///////////////// //
+
 @freezed
 class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
+
   const HardwareSettings._();
 
   const factory HardwareSettings({
@@ -46,26 +60,26 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
 }
 
-// Enums
+// /////////////// //
+// Output Settings //
+// /////////////// //
 
-enum LiveViewMethod {
-  fakeImage(0),
-  webcam(1);
+@freezed
+class OutputSettings with _$OutputSettings implements TomlEncodableValue {
 
-  // can add more properties or getters/methods if needed
-  final int value;
+  const OutputSettings._();
 
-  // can use named parameters if you want
-  const LiveViewMethod(this.value);
-}
+  const factory OutputSettings({
+    required String firefoxSendServerUrl,
+  }) = _OutputSettings;
 
-enum CaptureMethod {
-  liveViewSource(0),
-  sonyImagingEdgeDesktop(1);
+  factory OutputSettings.withDefaults() => OutputSettings(
+        firefoxSendServerUrl: "https://send.vis.ee/",
+      );
 
-  // can add more properties or getters/methods if needed
-  final int value;
+  factory OutputSettings.fromJson(Map<String, Object?> json) => _$OutputSettingsFromJson(json);
 
-  // can use named parameters if you want
-  const CaptureMethod(this.value);
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
 }

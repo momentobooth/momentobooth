@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_rust_bridge_example/models/settings.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/cards/fluent_setting_card.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_rust_bridge_example/views/settings_screen/settings_scree
 import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_view_model.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
-
   const SettingsScreenView({
     required super.viewModel,
     required super.controller,
@@ -24,7 +24,8 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           return Observer(builder: (_) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [                  
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 Expanded(child: _navigationView),
               ],
             );
@@ -40,13 +41,14 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
         selected: viewModel.paneIndex,
         onChanged: controller.onNavigationPaneIndexChanged,
         items: [
+          PaneItemSeparator(color: Colors.transparent),
           PaneItem(
             icon: Icon(FluentIcons.settings),
             title: Text("General"),
             body: _generalSettings,
           ),
           PaneItem(
-            icon: Icon(FluentIcons.camera),
+            icon: Icon(FluentIcons.devices4),
             title: Text("Hardware"),
             body: _hardwareSettings,
           ),
@@ -64,10 +66,18 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           title: "Settings",
           settings: [
             FluentSettingCard(
-              icon: FluentIcons.camera,
-              title: "I'm testing!",
-              subtitle: 'I am subtitle <3',
-              child: Text("Blah!"),
+              icon: FluentIcons.timer,
+              title: "Capture delay",
+              subtitle: 'In seconds',
+              child: SizedBox(
+                width: 150,
+                child: Observer(builder: (_) {
+                  return NumberBox(
+                    value: viewModel.captureDelaySecondsSetting,
+                    onChanged: controller.onCaptureDelaySecondsChanged,
+                  );
+                }),
+              ),
             ),
           ],
         ),
@@ -85,14 +95,31 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           settings: [
             FluentSettingCard(
               icon: FluentIcons.camera,
-              title: "I'm testing!",
-              subtitle: 'I am subtitle <3',
-              child: Text("Blah!"),
+              title: "Live view method",
+              subtitle: "Method used for live previewing",
+              child: Observer(builder: (_) {
+                return ComboBox<LiveViewMethod>(
+                  items: viewModel.liveViewMethods,
+                  value: viewModel.liveViewMethodSetting,
+                  onChanged: controller.onLiveViewMethodChanged,
+                );
+              }),
+            ),
+            FluentSettingCard(
+              icon: FluentIcons.camera,
+              title: "Capture method",
+              subtitle: "Method used for capturing final images",
+              child: Observer(builder: (_) {
+                return ComboBox<CaptureMethod>(
+                  items: viewModel.captureMethods,
+                  value: viewModel.captureMethodSetting,
+                  onChanged: controller.onCaptureMethodChanged,
+                );
+              }),
             ),
           ],
         ),
       ],
     );
   }
-
 }

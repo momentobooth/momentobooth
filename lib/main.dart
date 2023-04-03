@@ -37,7 +37,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
 
   final GoRouter _router = GoRouter(routes: rootRoutes);
-  final PageStorageBucket _pageStorageBucket = PageStorageBucket();
 
   bool _settingsOpen = false;
 
@@ -95,9 +94,8 @@ class _AppState extends State<App> {
   }
 
   Widget get _settingsScreen {
-    return PageStorage(
-      bucket: _pageStorageBucket,
-      child: Container(
+    return FluentApp(
+      home: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
