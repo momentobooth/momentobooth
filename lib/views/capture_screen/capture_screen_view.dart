@@ -22,9 +22,14 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
       children: [
         const SampleBackground(),
         Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _getReadyText,
-            Expanded(child: _counter),
+            Flexible(child: Container(
+              padding: EdgeInsets.all(40.0),
+              constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
+              child: _counter
+            )),
           ],
         ),
         _flashAnimation
