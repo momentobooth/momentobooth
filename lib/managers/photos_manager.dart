@@ -6,6 +6,18 @@ part 'photos_manager.g.dart';
 
 class PhotosManager = PhotosManagerBase with _$PhotosManager;
 
+enum CaptureMode {
+  single(0, "Single"),
+  collage(1, "Collage");
+
+  // can add more properties or getters/methods if needed
+  final int value;
+  final String name;
+
+  // can use named parameters if you want
+  const CaptureMode(this.value, this.name);
+}
+
 /// Class containing global state for photos in the app
 abstract class PhotosManagerBase with Store {
 
@@ -13,6 +25,8 @@ abstract class PhotosManagerBase with Store {
 
   @observable
   ObservableList<Uint8List> photos = ObservableList<Uint8List>();
+
+  CaptureMode captureMode = CaptureMode.single;
 
   PhotosManagerBase._internal();
 
