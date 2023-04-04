@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -47,10 +48,16 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
 
   Widget get _getReadyText {
     return Center(
-      child: AutoSizeText(
-        "Get Ready!",
-        style: theme.titleStyle,
-        maxLines: 1,
+      child: SizedBox(
+        height: 300,
+        child: AnimatedTextKit(
+                pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
+                isRepeatingAnimation: false,
+                animatedTexts: [
+                    RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: Duration(milliseconds: 1000)),
+                    RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: Duration(milliseconds: 1000)),
+                ],
+              ),
       ),
     );
   }
