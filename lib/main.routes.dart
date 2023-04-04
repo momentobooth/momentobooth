@@ -4,6 +4,7 @@ List<GoRoute> rootRoutes = [
   _startRoute,
   _chooseCaptureModeRoute,
   _captureRoute,
+  _shareRoute,
   _settingsRoute,
 ];
 
@@ -33,6 +34,16 @@ GoRoute _captureRoute = GoRoute(
     return FadeTransitionPage(
       key: state.pageKey,
       child: CaptureScreen(),
+    );
+  },
+);
+
+GoRoute _shareRoute = GoRoute(
+  path: ShareScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return FadeTransitionPage(
+      key: state.pageKey,
+      child: ShareScreen(),
     );
   },
 );

@@ -17,6 +17,8 @@ class CaptureScreenViewModel = CaptureScreenViewModelBase with _$CaptureScreenVi
 abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store {
 
   late final x.CaptureMethod capturer;
+  bool flashComplete = false;
+  bool captureComplete = false;
 
   int get counterStart => SettingsManagerBase.instance.settings.captureDelaySeconds;
 
@@ -38,15 +40,6 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   CaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    // Fixme: This should be a setting
-    String home = "";
-    Map<String, String> envVars = Platform.environment;
-    if (Platform.isMacOS || Platform.isLinux) {
-      home = envVars['HOME']!;
-    } else if (Platform.isWindows) {
-      home = envVars['UserProfile']!;
-    }
-
     if (SettingsManagerBase.instance.settings.hardware.captureMethod == CaptureMethod.sonyImagingEdgeDesktop){
       capturer = SonyRemotePhotoCapture(SettingsManagerBase.instance.settings.hardware.captureLocation);
   	} else {
@@ -59,11 +52,25 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     showFlash = true;
     await Future.delayed(flashAnimationDuration);
     showFlash = false;
+    await Future.delayed(flashAnimationDuration);
+    flashComplete = true;
+    navigateAfterCapture();
   }
 
   void captureAndGetPhoto() async {
     final image = await capturer.captureAndGetPhoto();
     PhotosManagerBase.instance.photos.add(image);
+    captureComplete = true;
+    navigateAfterCapture();
+  }
+
+  void navigateAfterCapture() {
+    if (!flashComplete || !captureComplete) { return; }
+    if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
+      router.push("/share");
+    } else {
+      router.push("/quick-review");
+    }
   }
 
 }
