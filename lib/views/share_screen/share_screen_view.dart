@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
@@ -14,14 +16,37 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
     required super.controller,
     required super.contextAccessor,
   });
+
+  static const String _assetPath = "assets/bitmap/sample-background.jpg";
   
   @override
   Widget get body {
     return Stack(
       fit: StackFit.expand,
       children: [
-        const SampleBackground(),
-        _foregroundElements,
+        ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Image.asset(_assetPath, fit: BoxFit.cover),
+        ),
+        Padding(
+          padding: EdgeInsets.all(30),
+          child: Center(
+            child: Container(
+              decoration: BoxDecoration(
+                border: theme.captureCounterContainerBorder,
+                boxShadow: [theme.captureCounterContainerShadow],
+              ),
+              child: AspectRatio(
+                aspectRatio: 1.5,
+                child: Image.asset(_assetPath, fit: BoxFit.contain)
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 30),
+          child: _foregroundElements,
+        ),
       ],
     );
   }
