@@ -28,7 +28,13 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
             Flexible(child: Container(
               padding: EdgeInsets.all(40.0),
               constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
-              child: _counter
+              child: Observer(builder: (_) {
+                return AnimatedOpacity(
+                  duration: Duration(milliseconds: 50),
+                  opacity: viewModel.showCounter ? 1.0 : 0.0,
+                  child: _counter
+                );
+              })
             )),
           ],
         ),

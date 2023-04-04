@@ -26,6 +26,9 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay;
 
   @observable
+  bool showCounter = true;
+
+  @observable
   bool showFlash = false;
 
   @computed
@@ -50,6 +53,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   void onCounterFinished() async {
     showFlash = true;
+    showCounter = false;
     await Future.delayed(flashAnimationDuration);
     showFlash = false;
     await Future.delayed(flashAnimationDuration);
