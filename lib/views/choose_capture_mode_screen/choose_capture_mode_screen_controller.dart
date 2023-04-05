@@ -20,8 +20,7 @@ class ChooseCaptureModeScreenController extends ScreenControllerBase<ChooseCaptu
 
   void onClickOnPhotoCollage() {
     PhotosManagerBase.instance.captureMode = CaptureMode.collage;
-    router.push("/capture");
-    //print("Photo college!");
+    router.push("/multi-capture");
   }
 
 }

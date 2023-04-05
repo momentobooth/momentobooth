@@ -7,6 +7,7 @@ import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart'
 import 'package:flutter_rust_bridge_example/views/base/fade_transition_page.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen.dart';
 import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
+import 'package:flutter_rust_bridge_example/views/multi_capture_screen/multi_capture_screen.dart';
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen.dart';
 import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen.dart';
