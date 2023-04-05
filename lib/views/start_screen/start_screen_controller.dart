@@ -1,3 +1,4 @@
+import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_controller_base.dart';
 import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen_view_model.dart';
@@ -15,6 +16,9 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> {
 
   void onPressedContinue() {
     router.push(ChooseCaptureModeScreen.defaultRoute);
+    // Remove images in memory
+    // Fixme: maybe somewhere else is nicer, but for now it's here.
+    PhotosManagerBase.instance.photos.clear();
   }
 
 }

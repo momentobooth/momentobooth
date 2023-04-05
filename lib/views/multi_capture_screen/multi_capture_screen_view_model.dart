@@ -70,11 +70,11 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
-    // if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
-    //   router.push("/share");
-    // } else {
-    //   router.push("/quick-review");
-    // }
+    if (PhotosManagerBase.instance.photos.length >= 4) {
+      router.push("/share");
+    } else {
+      router.push("/multi-capture");
+    }
   }
 
 }
