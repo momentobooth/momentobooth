@@ -54,7 +54,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: flutter_rust_bridge_codegen
-        version: "1.72.1"
+        version: "1.72.2"
 
     - name: Flutter Config
       run: flutter config --enable-macos-desktop

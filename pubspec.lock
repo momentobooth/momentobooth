@@ -237,10 +237,10 @@ packages:
     dependency: "direct dev"
     description:
       name: ffigen
-      sha256: "53f0fefd81be07f5722b71d3e1588e8a7cb9bcfd03d758319ea28e1eedb27296"
+      sha256: "94587f4c9699a4d0a25da95dc0b41903ddc69201d9bac3ca128ade8e67d56015"
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.9"
+    version: "7.2.10"
   file:
     dependency: transitive
     description:
@@ -275,6 +275,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_layout_grid:
+    dependency: "direct main"
+    description:
+      name: flutter_layout_grid
+      sha256: "1df27a2e9cd34faa0c0a33148c8bb9d9259e87cc5b934c989a59a77e1a4c0d6b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -300,10 +308,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "34f5becca2df35955b2ec5e875349028ea609a826de7aade4de80534cf876b27"
+      sha256: "1a0adba913e47142057ff64680171497c167de7fef9b42cda090a55f59db3773"
       url: "https://pub.dev"
     source: hosted
-    version: "1.72.1"
+    version: "1.72.2"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
@@ -371,10 +379,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "7f25c4bb371b74b6f32f74946707db4595fa66e68ddc7f0da4a4dafb18a21480"
+      sha256: feab99a20fd248c658c923ba98f4449ca6e575c3dee9fdf07146f4f33482c6bc
       url: "https://pub.dev"
     source: hosted
-    version: "6.5.1"
+    version: "6.5.5"
   graphs:
     dependency: transitive
     description:
@@ -496,10 +504,10 @@ packages:
     dependency: transitive
     description:
       name: math_expressions
-      sha256: "6cec3bb1f5a78701cc25d63705ddfa807062d00bc0d85ba8b2d13daed9fe61c5"
+      sha256: "3576593617c3870d75728a751f6ec6e606706d44e363f088ac394b5a28a98064"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.1"
+    version: "2.4.0"
   meta:
     dependency: "direct main"
     description:
