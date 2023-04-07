@@ -42,43 +42,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AutoSizeText("Pictures shot", style: theme.titleStyle,),
-                    LayoutGrid(
-                      areas: '''
-                          content1 content2
-                          content3 content4
-                        ''',
-                      rowSizes: [auto, auto],
-                      columnSizes: [1.fr, 1.fr],
-                      columnGap: 12,
-                      rowGap: 12,
-                      children: [
-                        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++)
-                          GestureDetector(
-                            onTap: () => controller.togglePicture(i),
-                            child: Observer(
-                              builder: (BuildContext context) {
-                                return Stack(
-                                  children: [
-                                    Image.memory(PhotosManagerBase.instance.photos[i]),
-                                    AnimatedOpacity(
-                                      opacity: PhotosManagerBase.instance.chosen.contains(i) ? 1 : 0,
-                                      duration: Duration(milliseconds: 200),
-                                      curve: Curves.easeInOut,
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: [
-                                          ColoredBox(color: Color(0x80000000)),
-                                          Center(child: Icon(Icons.check, size: 80, color: Color(0xFFFFFFFF),),),
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                );
-                              }
-                            ),
-                          ).inGridArea('content${i+1}'),
-                      ],
-                    ),
+                    _photoSelector,
                     Observer(
                       builder: (BuildContext context) { return AutoSizeText("${PhotosManagerBase.instance.chosen.length} chosen", style: theme.titleStyle,); },
                     ),
@@ -107,6 +71,46 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             ),
           ],
         ),
+      ],
+    );
+  }
+
+  Widget get _photoSelector {
+    return LayoutGrid(
+      areas: '''
+          content1 content2
+          content3 content4
+        ''',
+      rowSizes: [auto, auto],
+      columnSizes: [1.fr, 1.fr],
+      columnGap: 12,
+      rowGap: 12,
+      children: [
+        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++)
+          GestureDetector(
+            onTap: () => controller.togglePicture(i),
+            child: Observer(
+              builder: (BuildContext context) {
+                return Stack(
+                  children: [
+                    Image.memory(PhotosManagerBase.instance.photos[i]),
+                    AnimatedOpacity(
+                      opacity: PhotosManagerBase.instance.chosen.contains(i) ? 1 : 0,
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          ColoredBox(color: Color(0x80000000)),
+                          Center(child: Icon(Icons.check, size: 80, color: Color(0xFFFFFFFF),),),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              }
+            ),
+          ).inGridArea('content${i+1}'),
       ],
     );
   }
