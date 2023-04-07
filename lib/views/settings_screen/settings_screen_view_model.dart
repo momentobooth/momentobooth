@@ -24,16 +24,33 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   ObservableList<ComboBoxItem<String>> printerOptions = ObservableList<ComboBoxItem<String>>();
 
-  Future<List<ComboBoxItem<String>>> printersList() async {
+  void setPrinterList() async {
     final info = await Printing.info();
     final printers = await Printing.listPrinters();
     print(printers);
-    final items = printers.map((e) => ComboBoxItem(value: e.name, child: Text(e.name)));
     printerOptions.clear();
-    for (var element in items) {
-      printerOptions.add(element);
+    for (var printer in printers) {
+      final icon = printer.isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
+      final text = RichText(
+        text: TextSpan(
+          style: TextStyle(color: Color(0xFF000000)),
+          children: [
+            TextSpan(text: "${printer.name}  "),
+            if (printer.isDefault) ...[
+              WidgetSpan(child: Icon(FluentIcons.default_settings),),
+              TextSpan(text: "  "),
+            ],
+            WidgetSpan(child: Icon(icon),),
+          ],
+        ),
+      );
+      printerOptions.add(ComboBoxItem(value: printer.name, child: text));
+      
+      // If there is no setting yet, set it to the default printer.
+      if (printer.isDefault && printerSetting == "") {
+        updateSettings((settings) => settings.copyWith.hardware(printerName: printer.name));
+      }
     }
-    return items.toList();
   }
 
   // Current values
@@ -51,7 +68,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   SettingsScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    printersList();
+    setPrinterList();
   }
 
   // Methods
