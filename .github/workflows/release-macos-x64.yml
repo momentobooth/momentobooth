@@ -77,6 +77,7 @@ jobs:
         --rust-input rust/src/dart_bridge/api.rs
         --dart-output lib/rust_bridge/library_api.generated.dart
         --rust-output rust/src/dart_bridge/ffi_exports.rs
+        --c-output macos/Runner/bridge_generated.h
         --skip-add-mod-to-lib --no-build-runner
       
     - name: Run Code Generation
