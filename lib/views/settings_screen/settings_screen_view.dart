@@ -119,13 +119,38 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
         FluentSettingsBlock(
           title: "Printing",
           settings: [
-            _getComboBoxCard(
+            FluentSettingCard(
               icon: FluentIcons.print,
               title: "Printer",
               subtitle: "Which printer to use for printing photos",
-              items: viewModel.printerOptions,
-              value: () => viewModel.printerSetting,
-              onChanged: controller.onPrinterChanged,
+              child: Row(
+                children: [
+                  Button(
+                    onPressed: viewModel.setPrinterList,
+                    // style: ButtonStyle(backgroundColor: ButtonState.all(Colors.white)),
+                    child: const Text('Refresh'),
+                  ),
+                  SizedBox(width: 10,),
+                  IconButton(
+                    onPressed: viewModel.setPrinterList,
+                    style: ButtonStyle(
+                      border: ButtonState.all(BorderSide(color: Color(0xfff0f0f0))),
+                    ),
+                    icon: const Icon(FluentIcons.refresh),
+                  ),
+                  SizedBox(width: 10,),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(minWidth: 150),
+                    child: Observer(builder: (_) {
+                      return ComboBox<String>(
+                        items: viewModel.printerOptions,
+                        value: viewModel.printerSetting,
+                        onChanged: controller.onPrinterChanged,
+                      );
+                    }),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

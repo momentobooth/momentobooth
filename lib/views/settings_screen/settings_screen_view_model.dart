@@ -27,6 +27,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   void setPrinterList() async {
     final info = await Printing.info();
     final printers = await Printing.listPrinters();
+    print("Getting printers:");
     print(printers);
     printerOptions.clear();
     for (var printer in printers) {
