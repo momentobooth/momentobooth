@@ -5,6 +5,7 @@ List<GoRoute> rootRoutes = [
   _chooseCaptureModeRoute,
   _captureRoute,
   _multiCaptureRoute,
+  _collageMakerRoute,
   _shareRoute,
   _settingsRoute,
 ];
@@ -45,6 +46,16 @@ GoRoute _multiCaptureRoute = GoRoute(
     return FadeTransitionPage(
       key: state.pageKey,
       child: MultiCaptureScreen(),
+    );
+  },
+);
+
+GoRoute _collageMakerRoute = GoRoute(
+  path: CollageMakerScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return FadeTransitionPage(
+      key: state.pageKey,
+      child: CollageMakerScreen(),
     );
   },
 );
