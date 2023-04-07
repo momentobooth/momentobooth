@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_controller_base.dart';
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view_model.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
@@ -39,8 +43,26 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
 
     // Get photo and print it.
     final photoToPrint = PhotosManagerBase.instance.photos.first;
+    final image = pw.MemoryImage(photoToPrint);
+    const pageFormat = PdfPageFormat(100.0 * PdfPageFormat.mm, 150.0 * PdfPageFormat.mm);
+
+    final doc = pw.Document(title: "MomentoBooth image");
+    doc.addPage(pw.Page(
+      pageFormat: pageFormat,
+      build: (pw.Context context) {
+        return pw.Transform.rotateBox(
+          angle: 0.5*pi,
+          child: pw.Image(image, fit: pw.BoxFit.contain, height: pageFormat.width, width: pageFormat.height),
+        );
+      })
+    );
+
     await Printing.directPrintPdf(
-        printer: selected, name: "MomentoBooth image", onLayout: (_) => photoToPrint);
+        printer: selected,
+        name: "MomentoBooth image",
+        format: pageFormat,
+        onLayout: (PdfPageFormat pageFormat) => doc.save()
+    );
   }
 
 }
