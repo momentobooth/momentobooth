@@ -32,16 +32,18 @@ class PhotoCollageState extends State<PhotoCollage> {
   final GlobalKey _globalKey = GlobalKey();
 
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
+  static const double gap = 8.0;
 
   @override
   Widget build(BuildContext context) {
     return RepaintBoundary(
       key: _globalKey,
-      child: Align(
-        child: AspectRatio(
-          aspectRatio: widget.aspectRatio,
-          child: Observer(builder: (BuildContext context) { return _layout; },)
-        ),
+      child: AspectRatio(
+        aspectRatio: widget.aspectRatio,
+        child: Padding(
+          padding: const EdgeInsets.all(gap),
+          child: Observer(builder: (BuildContext context) { return _layout; },),
+        )
       ),
     );
   }
@@ -73,10 +75,10 @@ class PhotoCollageState extends State<PhotoCollage> {
         ''',
       rowSizes: [1.fr, 6.fr],
       columnSizes: [1.fr],
-      columnGap: 12,
-      rowGap: 12,
+      columnGap: gap,
+      rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.white)).inGridArea('header'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
         Center(child: RotatedBox(
           quarterTurns: 1,
           child: Image.memory(PhotosManagerBase.instance.photos[0])),
@@ -94,10 +96,10 @@ class PhotoCollageState extends State<PhotoCollage> {
         ''',
       rowSizes: [1.fr, 3.fr, 3.fr],
       columnSizes: [1.fr],
-      columnGap: 12,
-      rowGap: 12,
+      columnGap: gap,
+      rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.white)).inGridArea('header'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
         for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
           Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+1}'),
         ]
@@ -115,11 +117,11 @@ class PhotoCollageState extends State<PhotoCollage> {
         ''',
       rowSizes: [auto, auto, auto, auto],
       columnSizes: [1.fr, 1.fr],
-      columnGap: 12,
-      rowGap: 12,
+      columnGap: 2*gap,
+      rowGap: gap,
       children: [
         Center(child: Text("Powered by Casper die echt teringsnel Flutter geleerd heeft")).inGridArea('header1'),
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.white)).inGridArea('header2'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header2'),
         for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
           Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+1}'),
           Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+4}'),
@@ -135,12 +137,12 @@ class PhotoCollageState extends State<PhotoCollage> {
           header   header
           content3 content4
         ''',
-      rowSizes: [3.fr, 1.fr, 3.fr],
+      rowSizes: [5.fr, 1.fr, 5.fr],
       columnSizes: [1.fr, 1.fr],
-      columnGap: 12,
-      rowGap: 12,
+      columnGap: gap,
+      rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.white)).inGridArea('header'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
         for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
           Center(child: RotatedBox(
             quarterTurns: 1,

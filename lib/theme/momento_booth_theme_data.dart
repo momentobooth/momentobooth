@@ -13,6 +13,7 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
 
     // Title
     required TextStyle titleStyle,
+    required TextStyle subTitleStyle,
 
     // Choose Capture Mode page
     required Color chooseCaptureModeButtonIconColor,
@@ -35,6 +36,21 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
     titleStyle: TextStyle(
       fontFamily: "Brandon Grotesque",
       fontSize: 120,
+      fontWeight: FontWeight.w300,
+      shadows: const [
+        BoxShadow(
+          color: Color(0x66000000),
+          offset: Offset(0, 3),
+          blurRadius: 4,
+        ),
+      ],
+      color: Color(0xFFFFFFFF),
+    ),
+
+    // Title
+    subTitleStyle: TextStyle(
+      fontFamily: "Brandon Grotesque",
+      fontSize: 80,
       fontWeight: FontWeight.w300,
       shadows: const [
         BoxShadow(

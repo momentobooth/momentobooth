@@ -32,7 +32,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
         ),
         Row(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Flexible(
               flex: 2,
@@ -41,10 +41,10 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AutoSizeText("Pictures shot", style: theme.titleStyle,),
+                    AutoSizeText("Pictures shot", style: theme.titleStyle, maxLines: 1,),
                     _photoSelector,
                     Observer(
-                      builder: (BuildContext context) { return AutoSizeText("${PhotosManagerBase.instance.chosen.length} chosen", style: theme.titleStyle,); },
+                      builder: (BuildContext context) { return AutoSizeText("${PhotosManagerBase.instance.chosen.length} chosen", style: theme.titleStyle, maxLines: 1,); },
                     ),
                   ],
                 ),
@@ -52,24 +52,49 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             ),
             Flexible(
               flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(child: AutoSizeText("Collage", style: theme.titleStyle,)),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(color: Color.fromARGB(255, 161, 161, 161)),
-                      child: PhotoCollage(aspectRatio: 2/3)
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Flexible(
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: AutoSizeText("Collage", style: theme.titleStyle,),
+                      )
                     ),
-                  ),
-                  Flexible(child: GestureDetector(
-                    onTap: controller.onContinueTap,
-                    child: AutoSizeText("Continue  →", style: theme.titleStyle,)
-                  )),
-                ],
+                    Expanded(
+                      flex: 10,
+                      child: SizedBox(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 255, 255, 255),
+                            boxShadow: [theme.chooseCaptureModeButtonShadow],
+                          ),
+                          child: PhotoCollage(aspectRatio: 2/3)
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: SizedBox()),
+                  ],
+                ),
               ),
             ),
           ],
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: GestureDetector(
+              onTap: controller.onContinueTap,
+              child: AutoSizeText("Continue  →", style: theme.subTitleStyle, maxLines: 1,)
+            ),
+          ),
         ),
       ],
     );
