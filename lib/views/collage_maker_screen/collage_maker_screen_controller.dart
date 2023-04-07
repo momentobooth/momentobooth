@@ -19,4 +19,9 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     }
   }
 
+  void onContinueTap() {
+    // Todo: a whole lot of stuff
+    router.push("/share");
+  }
+
 }

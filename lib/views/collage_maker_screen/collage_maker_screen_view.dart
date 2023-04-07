@@ -98,7 +98,10 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                       child: PhotoCollage(aspectRatio: 2/3)
                     ),
                   ),
-                  Flexible(child: AutoSizeText("Continue  →", style: theme.titleStyle,)),
+                  Flexible(child: GestureDetector(
+                    onTap: controller.onContinueTap,
+                    child: AutoSizeText("Continue  →", style: theme.titleStyle,)
+                  )),
                 ],
               ),
             ),
