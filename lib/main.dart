@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_rust_bridge_example/extensions/build_context_extension.dart';
 import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
+import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter_rust_bridge_example/views/base/fade_transition_page.dart';
@@ -22,6 +22,9 @@ void main() async {
 
   // Settings
   await SettingsManagerBase.instance.load();
+
+  // Native library init
+  init();
 
   runApp(const App());
 }

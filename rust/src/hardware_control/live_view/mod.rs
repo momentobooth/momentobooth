@@ -1,1 +1,1 @@
-pub(crate) mod nokhwa_capture_device;
+pub(crate) mod nokhwa;
