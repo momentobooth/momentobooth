@@ -3,11 +3,13 @@ import 'dart:ui';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/collage_maker_screen/collage_maker_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/photo_collage.dart';
+import 'package:flutter/material.dart' show Icons;
 
 class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel, CollageMakerScreenController> {
 
@@ -51,12 +53,35 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                       rowGap: 12,
                       children: [
                         for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++)
-                          Center(
-                            child: Image.memory(PhotosManagerBase.instance.photos[i])
+                          GestureDetector(
+                            onTap: () => controller.togglePicture(i),
+                            child: Observer(
+                              builder: (BuildContext context) {
+                                return Stack(
+                                  children: [
+                                    Image.memory(PhotosManagerBase.instance.photos[i]),
+                                    AnimatedOpacity(
+                                      opacity: PhotosManagerBase.instance.chosen.contains(i) ? 1 : 0,
+                                      duration: Duration(milliseconds: 200),
+                                      curve: Curves.easeInOut,
+                                      child: Stack(
+                                        fit: StackFit.expand,
+                                        children: [
+                                          ColoredBox(color: Color(0x80000000)),
+                                          Center(child: Icon(Icons.check, size: 80, color: Color(0xFFFFFFFF),),),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                );
+                              }
+                            ),
                           ).inGridArea('content${i+1}'),
                       ],
                     ),
-                    AutoSizeText("${PhotosManagerBase.instance.chosen.length} chosen", style: theme.titleStyle,),
+                    Observer(
+                      builder: (BuildContext context) { return AutoSizeText("${PhotosManagerBase.instance.chosen.length} chosen", style: theme.titleStyle,); },
+                    ),
                   ],
                 ),
               ),
