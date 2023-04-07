@@ -38,12 +38,33 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                 children: [
                   Flexible(child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: AutoSizeText("Photos: ${PhotosManagerBase.instance.photos.length}/4", style: theme.titleStyle, maxLines: 1,),
+                    child: AutoSizeText("Photo ${PhotosManagerBase.instance.photos.length+1}/4", style: theme.titleStyle, maxLines: 1,),
                   )),
                   for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++)
                     Flexible(
+                      flex: 0,
                       child: Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Image.memory(PhotosManagerBase.instance.photos[i]),
+                        child: AspectRatio(
+                          aspectRatio: 1.5,
+                          child: Image.memory(PhotosManagerBase.instance.photos[i])
+                        ),
+                      ),
+                    ),
+                  for (int i = PhotosManagerBase.instance.photos.length; i < 4; i++)
+                    Flexible(
+                      flex: 0,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: AspectRatio(
+                          aspectRatio: 1.5,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              border: theme.captureCounterContainerBorder,
+                              // boxShadow: [theme.captureCounterContainerShadow],
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                 ],
