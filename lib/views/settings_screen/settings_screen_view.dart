@@ -131,14 +131,6 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                     child: const Text('Refresh'),
                   ),
                   SizedBox(width: 10,),
-                  IconButton(
-                    onPressed: viewModel.setPrinterList,
-                    style: ButtonStyle(
-                      border: ButtonState.all(BorderSide(color: Color(0xfff0f0f0))),
-                    ),
-                    icon: const Icon(FluentIcons.refresh),
-                  ),
-                  SizedBox(width: 10,),
                   ConstrainedBox(
                     constraints: BoxConstraints(minWidth: 150),
                     child: Observer(builder: (_) {
