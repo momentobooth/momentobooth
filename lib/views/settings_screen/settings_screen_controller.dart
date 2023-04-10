@@ -51,6 +51,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onPrinterChanged(String? printerName) {
+    if (printerName != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerName: printerName));
+    }
+  }
+
   void onLocalFolderChanged(String? localFolder) {
     if (localFolder != null) {
       viewModel.updateSettings((settings) => settings.copyWith.output(localFolder: localFolder));

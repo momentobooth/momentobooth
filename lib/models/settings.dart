@@ -52,6 +52,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     required LiveViewMethod liveViewMethod,
     required CaptureMethod captureMethod,
     required String captureLocation,
+    required String printerName,
   }) = _HardwareSettings;
 
   factory HardwareSettings.withDefaults() {
@@ -59,6 +60,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
       liveViewMethod: LiveViewMethod.fakeImage,
       captureMethod: CaptureMethod.liveViewSource,
       captureLocation: _getHome(),
+      printerName: "",
     );
   }
 
