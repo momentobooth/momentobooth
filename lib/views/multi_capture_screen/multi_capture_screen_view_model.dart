@@ -10,11 +10,11 @@ import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.da
 import 'package:flutter_rust_bridge_example/models/settings.dart';
 import 'package:mobx/mobx.dart';
 
-part 'capture_screen_view_model.g.dart';
+part 'multi_capture_screen_view_model.g.dart';
 
-class CaptureScreenViewModel = CaptureScreenViewModelBase with _$CaptureScreenViewModel;
+class MultiCaptureScreenViewModel = MultiCaptureScreenViewModelBase with _$MultiCaptureScreenViewModel;
 
-abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store {
+abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with Store {
 
   late final x.CaptureMethod capturer;
   bool flashComplete = false;
@@ -40,7 +40,12 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   @computed
   Duration get flashAnimationDuration => showFlash ? const Duration(milliseconds: 50) : const Duration(milliseconds: 2500);
 
-  CaptureScreenViewModelBase({
+  @computed
+  int get photoNumber => PhotosManagerBase.instance.photos.length+1;
+
+  final int maxPhotos = 4;
+
+  MultiCaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
     if (SettingsManagerBase.instance.settings.hardware.captureMethod == CaptureMethod.sonyImagingEdgeDesktop){
@@ -70,10 +75,10 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
-    if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
-      router.push("/share");
+    if (PhotosManagerBase.instance.photos.length >= maxPhotos) {
+      router.push("/collage-maker");
     } else {
-      router.push("/quick-review");
+      router.push("/multi-capture");
     }
   }
 
