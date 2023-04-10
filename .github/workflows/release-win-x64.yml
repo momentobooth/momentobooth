@@ -52,11 +52,20 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "1.72.2"
 
+    - name: Install cargo-patch
+      uses: baptiste0928/cargo-install@v1
+      with:
+        crate: cargo-patch
+
     - name: Flutter Config
       run: flutter config --enable-windows-desktop
 
     - name: Install Dependencies
       run: flutter packages get
+
+    - name: Patch nokhwa-bindings-macos
+      working-directory: rust
+      run: cargo patch
 
     - name: Generate Dart-to-Rust bridging code
       run: >
