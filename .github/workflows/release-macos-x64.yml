@@ -56,11 +56,20 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "1.72.2"
 
+    - name: Install cargo-patch
+      uses: baptiste0928/cargo-install@v1
+      with:
+        crate: cargo-patch
+
     - name: Flutter Config
       run: flutter config --enable-macos-desktop
 
     - name: Install Dependencies
       run: flutter packages get
+
+    - name: Patch nokhwa-bindings-macos
+      working-directory: rust
+      run: cargo patch
 
     - name: Generate Dart-to-Rust bridging code
       run: >
@@ -68,6 +77,7 @@ jobs:
         --rust-input rust/src/dart_bridge/api.rs
         --dart-output lib/rust_bridge/library_api.generated.dart
         --rust-output rust/src/dart_bridge/ffi_exports.rs
+        --c-output macos/Runner/bridge_generated.h
         --skip-add-mod-to-lib --no-build-runner
       
     - name: Run Code Generation

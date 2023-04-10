@@ -29,6 +29,7 @@
 		5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */; };
 		A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */ = {isa = PBXBuildFile; fileRef = A379BA8C27BFF75900A4CD85 /* bridge_generated.h */; };
 		C5141FC429C60A540076DC88 /* libflutter_rust_bridge_example_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5141FC329C60A510076DC88 /* libflutter_rust_bridge_example_static.a */; };
+		C5D459D129E032700041A948 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D459CF29E032700041A948 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = flutter_rust_bridge_example.xcodeproj; path = ../rust/flutter_rust_bridge_example.xcodeproj; sourceTree = "<group>"; };
 		A3B8EE939F14F5AA947E7DDE /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		B95FCA28249E171BD83D6DAF /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		C5D459CF29E032700041A948 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 			files = (
 				C5141FC429C60A540076DC88 /* libflutter_rust_bridge_example_static.a in Frameworks */,
 				5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */,
+				C5D459D129E032700041A948 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +192,7 @@
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5D459CF29E032700041A948 /* AVFoundation.framework */,
 				2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
