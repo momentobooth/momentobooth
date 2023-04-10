@@ -42,7 +42,7 @@ class PhotoCollageState extends State<PhotoCollage> {
         aspectRatio: widget.aspectRatio,
         child: Padding(
           padding: const EdgeInsets.all(gap),
-          child: Observer(builder: (BuildContext context) { return _layout; },),
+          child: Observer(builder: (context) => _layout),
         )
       ),
     );

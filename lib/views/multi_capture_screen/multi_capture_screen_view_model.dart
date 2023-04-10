@@ -40,6 +40,11 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   @computed
   Duration get flashAnimationDuration => showFlash ? const Duration(milliseconds: 50) : const Duration(milliseconds: 2500);
 
+  @computed
+  int get photoNumber => PhotosManagerBase.instance.photos.length+1;
+
+  final int maxPhotos = 4;
+
   MultiCaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
@@ -70,7 +75,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
-    if (PhotosManagerBase.instance.photos.length >= 4) {
+    if (PhotosManagerBase.instance.photos.length >= maxPhotos) {
       router.push("/collage-maker");
     } else {
       router.push("/multi-capture");
