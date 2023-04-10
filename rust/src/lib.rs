@@ -4,6 +4,7 @@ use once_cell::sync::OnceCell;
 
 mod dart_bridge;
 mod hardware_control;
+mod utils;
 
 static LOG_STREAM: OnceCell<StreamSink<LogEvent>> = OnceCell::new();
 
