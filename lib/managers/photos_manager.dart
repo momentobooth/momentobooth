@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:mobx/mobx.dart';
 
@@ -33,6 +34,9 @@ abstract class PhotosManagerBase with Store {
   ObservableList<int> chosen = ObservableList<int>();
 
   CaptureMode captureMode = CaptureMode.single;
+
+  @observable
+  Image? currentWebcamImage;
 
   PhotosManagerBase._internal();
 

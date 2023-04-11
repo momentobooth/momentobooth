@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample_background.dart';
 
 class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController> {
 
@@ -15,38 +14,31 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
   
   @override
   Widget get body {
-    
-    return Stack(
-      fit: StackFit.expand,
+    return Column(
       children: [
-        const SampleBackground(),
-        Column(
-          children: [
-            Flexible(
-              fit: FlexFit.tight,
-              child: Center(
-                child: AutoSizeText(
-                  "Choose Capture Mode",
-                  style: theme.titleStyle,
-                  maxLines: 1,
-                ),
-              ),
+        Flexible(
+          fit: FlexFit.tight,
+          child: Center(
+            child: AutoSizeText(
+              "Choose Capture Mode",
+              style: theme.titleStyle,
+              maxLines: 1,
             ),
-            Expanded(
-              flex: 2,
-              child: Row(
-                children: [
-                  Expanded(child: _singlePictureButton),
-                  const SizedBox(width: 32),
-                  Expanded(child: _collageButton),
-                ],
-              ),
-            ),
-            Flexible(
-              fit: FlexFit.tight,
-              child: const SizedBox(),
-            ),
-          ],
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Row(
+            children: [
+              Expanded(child: _singlePictureButton),
+              const SizedBox(width: 32),
+              Expanded(child: _collageButton),
+            ],
+          ),
+        ),
+        Flexible(
+          fit: FlexFit.tight,
+          child: const SizedBox(),
         ),
       ],
     );
@@ -64,7 +56,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
             group: viewModel.autoSizeGroup,
             style: theme.titleStyle,
             maxLines: 1,
-          )
+          ),
         ],
       ),
     );

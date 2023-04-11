@@ -17,18 +17,12 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
     required super.controller,
     required super.contextAccessor,
   });
-
-  static const String _assetPath = "assets/bitmap/sample-background.jpg";
   
   @override
   Widget get body {
     return Stack(
       fit: StackFit.expand,
       children: [
-        ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Image.asset(_assetPath, fit: BoxFit.cover),
-        ),
         Padding(
           padding: EdgeInsets.all(30),
           child: Center(

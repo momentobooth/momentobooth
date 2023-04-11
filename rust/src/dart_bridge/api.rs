@@ -1,4 +1,4 @@
-use flutter_rust_bridge::StreamSink;
+use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 
 use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::ffsend_client::{self, FfSendTransferProgress}, LogEvent, HardwareInitializationFinishedEvent};
 
@@ -11,7 +11,14 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
 }
 
 pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
-    return nokhwa::get_cameras();
+    nokhwa::get_cameras()
+}
+
+pub fn nokhwa_open_camera(camera_info: NokhwaCameraInfo, new_image_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+    nokhwa::open_camera(camera_info, new_image_event_sink)
+}
+
+pub fn nokhwa_close_camera() {
 }
 
 // ////// //

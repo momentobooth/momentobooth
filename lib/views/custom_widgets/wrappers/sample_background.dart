@@ -1,28 +1,41 @@
 import 'dart:ui';
 
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/stateless_widget_base.dart';
 
-class SampleBackground extends StatelessWidgetBase {
+class CameraBackground extends StatelessWidgetBase {
+  final Widget child;
 
-  static const String _assetPath = "assets/bitmap/sample-background.jpg";
-
-  const SampleBackground({super.key});
+  const CameraBackground({
+    super.key,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
       children: [
+        ColoredBox(color: Colors.green),
         ImageFiltered(
           imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Image.asset(_assetPath, fit: BoxFit.cover),
+          child: Observer(builder: (_) {
+            return RawImage(
+              image: PhotosManagerBase.instance.currentWebcamImage,
+              fit: BoxFit.cover,
+            );
+          }),
         ),
-        Image.asset(_assetPath, fit: BoxFit.contain),
-        
-        
+        Observer(builder: (_) {
+          return RawImage(
+            image: PhotosManagerBase.instance.currentWebcamImage,
+            fit: BoxFit.contain,
+          );
+        }),
+        child,
       ],
     );
   }
-
 }

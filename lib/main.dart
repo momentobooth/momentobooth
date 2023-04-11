@@ -8,6 +8,7 @@ import 'package:flutter_rust_bridge_example/views/base/fade_transition_page.dart
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen.dart';
 import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:flutter_rust_bridge_example/views/collage_maker_screen/collage_maker_screen.dart';
+import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample_background.dart';
 import 'package:flutter_rust_bridge_example/views/multi_capture_screen/multi_capture_screen.dart';
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen.dart';
 import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen.dart';
@@ -88,11 +89,13 @@ class _AppState extends State<App> {
       ],
       builder: (context, child) {
         // This stack allows us to put the Settings screen on top
-        return Stack(
-          children: [
-            child!,
-            _settingsOpen ? _settingsScreen : const SizedBox(),
-          ],
+        return CameraBackground(
+          child: Stack(
+            children: [
+              child!,
+              _settingsOpen ? _settingsScreen : const SizedBox(),
+            ],
+          ),
         );
       },
     );

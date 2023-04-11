@@ -18,17 +18,11 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
     required super.contextAccessor,
   });
 
-  static const String _assetPath = "assets/bitmap/sample-background.jpg";
-
   @override
   Widget get body {
     return Stack(
       fit: StackFit.expand,
       children: [
-        ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Image.asset(_assetPath, fit: BoxFit.cover),
-        ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -77,7 +71,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.asset(_assetPath, fit: BoxFit.contain),
+                    //Image.asset(_assetPath, fit: BoxFit.contain),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

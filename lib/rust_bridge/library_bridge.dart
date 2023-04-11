@@ -1,7 +1,10 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter_rust_bridge_example/managers/native_library_initialization_manager.dart';
+import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/rust_bridge/library_api.generated.dart';
 
 const _base = 'flutter_rust_bridge_example';
@@ -26,12 +29,27 @@ void processLogEvent(LogEvent event) {
   print("Native Lib: ${event.message}");
 }
 
-void processHardwareInitEvent(HardwareInitializationFinishedEvent event) {
+void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
   switch (event.step) {
     
     case HardwareInitializationStep.Nokhwa:
       HardwareStateManagerBase.instance.nokhwaIsInitialized = event.hasSucceeded;
       HardwareStateManagerBase.instance.nokhwaInitializationMessage = event.message;
+
+      var x = await rustLibraryApi.nokhwaGetCameras();
+
+      NokhwaCameraInfo camera = NokhwaCameraInfo(id: 1, friendlyName: "Microsoft® LifeCam HD-5000");
+      Stream<Uint8List> testing = rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
+      testing.listen((event) async {
+        print("Camera image length: ${event.length}");
+        ImmutableBuffer buffer = await ImmutableBuffer.fromUint8List(event);
+        ImageDescriptor descriptor = ImageDescriptor.raw(buffer, width: 1280, height: 800, pixelFormat: PixelFormat.rgba8888);
+        Codec x = await descriptor.instantiateCodec();
+        FrameInfo y = await x.getNextFrame();
+        PhotosManagerBase.instance.currentWebcamImage = y.image;
+      }).onError((error) {
+        print(error);
+      });
       break;
 
   }
