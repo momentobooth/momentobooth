@@ -1,34 +1,42 @@
 use std::{path::PathBuf, str::FromStr, sync::{Arc, Mutex}};
 
-use ffsend_api::{action::upload::Upload, url::Url, client::{Client, ClientConfig}, pipe::ProgressReporter};
+use ffsend_api::{action::{upload::Upload, params::ParamsData, delete::Delete}, url::Url, client::{Client, ClientConfig}, pipe::ProgressReporter, file::remote_file::RemoteFile};
 use flutter_rust_bridge::StreamSink;
 
 // ///////// //
 // Functions //
 // ///////// //
 
-pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, update_sink: StreamSink<FfSendTransferProgress>) {
+pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, max_downloads: Option<u8>, expires_after_seconds: Option<usize>, update_sink: StreamSink<FfSendTransferProgress>) {
+    // Prepare upload
     let version = ffsend_api::api::Version::V3;
     let url = Url::parse(host_url.as_str()).unwrap();
     let file = PathBuf::from_str(file_path.as_str()).unwrap();
     let name = download_filename;
-    let password = Option::None;
-    let params = Option::None;
+    let password = None;
+    let params = Some(ParamsData::from(max_downloads, expires_after_seconds));
 
     let action = Upload::new(version, url, file, name, password, params);
     let client = Client::new(ClientConfig::default(), true);
 
+    // Initialize reporting and start upload
     let transfer_progress_reporter = Arc::new(Mutex::new(FfSendTransferProgressReporter::new(update_sink.clone())));
     let clone = transfer_progress_reporter.clone();
     let progress_reporter: Arc<Mutex<dyn ProgressReporter>> = transfer_progress_reporter;
-    let action_result = action.invoke(&client, Option::Some(&progress_reporter));
+    let action_result = action.invoke(&client, Some(&progress_reporter));
 
     // Send final progress report containing URL
     let file = action_result.expect("Could not upload file");
-    let mut progress = clone.lock().expect("Could not acquire lock on ProgressReporter").current_progress.clone();
-    progress.is_finished = true;
-    progress.download_url = file.download_url(true).to_string();
-    update_sink.add(progress);
+    let mut progress = clone.lock().expect("Could not acquire lock on ProgressReporter");
+    progress.update_from_remote_file(file);
+}
+
+pub fn delete_file(file_id: String) {
+    let file = serde_json::from_str(file_id.as_str()).expect("Could not deserialize UploadFile from JSON");
+    let action = Delete::new(&file, None);
+    let client = Client::new(ClientConfig::default(), false);
+    let action_result = action.invoke(&client);
+    action_result.expect("Could not delete file");
 }
 
 // /////// //
@@ -40,7 +48,9 @@ pub struct FfSendTransferProgress {
     pub is_finished: bool,
     pub total_bytes: u64,
     pub transferred_bytes: u64,
-    pub download_url: String,
+    pub download_url: Option<String>,
+
+    pub file_id: Option<String>,
 }
 
 pub struct FfSendTransferProgressReporter {
@@ -56,9 +66,17 @@ impl FfSendTransferProgressReporter {
                 is_finished: false,
                 total_bytes: 0,
                 transferred_bytes: 0,
-                download_url: "".to_string(),
+                download_url: None,
+                file_id: None,
             },
         }
+    }
+
+    fn update_from_remote_file(&mut self, file: RemoteFile) {
+        self.current_progress.is_finished = true;
+        self.current_progress.download_url = Some(file.download_url(true).to_string());
+        self.current_progress.file_id = Some(serde_json::to_string(&file).expect("Could not serialize UploadFile to JSON"));
+        self.stream_sink.add(self.current_progress.clone());
     }
 }
 

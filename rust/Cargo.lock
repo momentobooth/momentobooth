@@ -805,6 +805,7 @@ dependencies = [
  "nokhwa",
  "nokhwa-bindings-macos",
  "once_cell",
+ "serde_json",
 ]
 
 [[package]]
