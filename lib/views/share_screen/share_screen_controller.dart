@@ -26,18 +26,25 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
   String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
 
   void onClickGetQR() {
+    if (viewModel.uploadState != UploadState.notStarted) return;
+
     print("Requesting QR code");
     var file = File('assets/bitmap/sample-background.jpg');
 
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.jpg");
+    viewModel.qrText = "Uploading";
+    viewModel.uploadState = UploadState.uploading;
     stream.listen((event) {
       if (event.isFinished) {
         print("Upload complete. Download URL: ${event.downloadUrl}");
+        viewModel.uploadState = UploadState.done;
+        viewModel.qrText = "Show QR";
       } else {
         print("${event.transferredBytes}/${event.totalBytes}");
       }
     }).onError((x) {
       print(x);
+      viewModel.uploadState = UploadState.errored;
     });
   }
 

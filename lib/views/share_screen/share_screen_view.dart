@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample_background.dart';
@@ -93,9 +94,11 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             // Get QR button
             onTap: controller.onClickGetQR,
             behavior: HitTestBehavior.translucent,
-            child: AutoSizeText(
-              "Get QR",
-              style: theme.titleStyle,
+            child: Observer(
+              builder: (context) => AutoSizeText(
+                viewModel.qrText,
+                style: theme.titleStyle,
+              ),
             ),
           ),
         ),
