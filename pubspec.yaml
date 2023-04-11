@@ -41,6 +41,7 @@ dependencies:
   meta: ^1.8.0
   toml: ^0.14.0
   printing: ^5.10.3
+  pretty_qr_code: ^2.0.3
 
 dev_dependencies:
   flutter_test:
