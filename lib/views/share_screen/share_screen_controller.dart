@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
+import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_controller_base.dart';
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view_model.dart';
 import 'package:pdf/pdf.dart';
@@ -21,8 +23,22 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     router.push("/");
   }
 
+  String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
+
   void onClickGetQR() {
     print("Requesting QR code");
+    var file = File('assets/bitmap/sample-background.jpg');
+
+    var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.jpg");
+    stream.listen((event) {
+      if (event.isFinished) {
+        print("Upload complete. Download URL: ${event.downloadUrl}");
+      } else {
+        print("${event.transferredBytes}/${event.totalBytes}");
+      }
+    }).onError((x) {
+      print(x);
+    });
   }
 
   Future<void> onClickPrint() async {
