@@ -25,9 +25,15 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
 
   String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
 
+  void onClickCloseQR() {
+    viewModel.qrShown = false;
+    viewModel.sliderKey.currentState!.animateBackward();
+  }
+  
   void onClickGetQR() {
     if (viewModel.uploadState == UploadState.done) {
       viewModel.qrShown = true;
+      viewModel.sliderKey.currentState!.animateForward();
     }
     if (viewModel.uploadState != UploadState.notStarted) return;
 
@@ -44,6 +50,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
         viewModel.qrText = "Show QR";
         viewModel.qrUrl = event.downloadUrl;
         viewModel.qrShown = true;
+        viewModel.sliderKey.currentState!.animateForward();
       } else {
         print("${event.transferredBytes}/${event.totalBytes}");
       }

@@ -6,12 +6,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/extensions/build_context_extension.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample_background.dart';
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view_model.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
-import 'package:qr/qr.dart';
 
 class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenController> {
 
@@ -127,7 +124,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       return IgnorePointer(
         ignoring: !viewModel.qrShown,
         child: GestureDetector(
-          onTap: () => viewModel.qrShown = false,
+          onTap: controller.onClickCloseQR,
           child: AnimatedOpacity(
             opacity: viewModel.qrShown ? 0.5 : 0.0,
             duration: Duration(milliseconds: 300),
@@ -141,10 +138,8 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
 
   Widget get _qrCode {
     return Observer(builder: (context) {
-      if (!viewModel.qrShown) {
-        return SizedBox();
-      }
       return SliderWidget(
+        key: viewModel.sliderKey,
         child: Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -175,17 +170,25 @@ class SliderWidget extends StatefulWidget {
   });
 
   @override
-  State<SliderWidget> createState() => _SliderWidgetState();
+  State<SliderWidget> createState() => SliderWidgetState();
 }
 
-class _SliderWidgetState extends State<SliderWidget>
+class SliderWidgetState extends State<SliderWidget>
     with SingleTickerProviderStateMixin {
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 600),
     vsync: this,
-  )..forward();
+  );
+
+  void animateForward() {
+    _controller.forward();
+  }
   
+  void animateBackward() {
+    _controller.reverse();
+  }
+
   late final Animation<Offset> _offsetAnimation = Tween<Offset>(
     begin: const Offset(0.0, 1.5),
     end: Offset.zero,
