@@ -12,6 +12,7 @@ import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 class PhotoCollage extends StatefulWidget {
 
@@ -29,15 +30,15 @@ class PhotoCollage extends StatefulWidget {
 
 class PhotoCollageState extends State<PhotoCollage> {
 
-  final GlobalKey _globalKey = GlobalKey();
+  ScreenshotController screenshotController = ScreenshotController(); 
 
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
   static const double gap = 8.0;
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      key: _globalKey,
+    return Screenshot(
+      controller: screenshotController,
       child: AspectRatio(
         aspectRatio: widget.aspectRatio,
         child: Padding(
@@ -153,31 +154,8 @@ class PhotoCollageState extends State<PhotoCollage> {
     );
   }
 
-  Object? export() async {
-    try {
-      print('export: start');
-      RenderRepaintBoundary? boundary = _globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) {
-        //print('export: boundary == null');
-        throw 'Could not retrieve RenderRepaintBoundary';
-      }
-
-      ui.Image image = await boundary.toImage(pixelRatio: 4.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData == null) {
-        //print('export: byteData == null');
-        throw 'Could not get ByteData from Image';
-      }
-
-      var dir1 = await getApplicationDocumentsDirectory();
-      var dir2 = join(dir1.path, 'export.png');
-      print(dir2);
-      File(dir2).writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
-      //print("Data has ${byteData.lengthInBytes} length!");
-    } catch (e) {
-      //print(e);
-    }
+  Future<Uint8List?> getCollageImage() {
+    return screenshotController.capture();
   }
 
 }

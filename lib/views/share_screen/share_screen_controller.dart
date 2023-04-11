@@ -53,7 +53,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
         print("Upload complete. Download URL: ${event.downloadUrl}");
         viewModel.uploadState = UploadState.done;
         viewModel.qrText = "Show QR";
-        viewModel.qrUrl = event.downloadUrl!;
+        viewModel.qrUrl = event.downloadUrl;
         viewModel.qrShown = true;
         viewModel.sliderKey.currentState!.animateForward();
       } else {

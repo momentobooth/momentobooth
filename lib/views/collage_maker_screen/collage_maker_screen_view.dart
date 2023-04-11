@@ -73,7 +73,10 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                             color: Color.fromARGB(255, 255, 255, 255),
                             boxShadow: [theme.chooseCaptureModeButtonShadow],
                           ),
-                          child: PhotoCollage(aspectRatio: 2/3)
+                          child: PhotoCollage(
+                            key: controller.collageKey,
+                            aspectRatio: 2/3
+                          ),
                         ),
                       ),
                     ),
