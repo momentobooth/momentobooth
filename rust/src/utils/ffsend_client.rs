@@ -1,5 +1,6 @@
 use std::{path::PathBuf, str::FromStr, sync::{Arc, Mutex}};
 
+use chrono::{DateTime, Utc};
 use ffsend_api::{action::{upload::Upload, params::ParamsData, delete::Delete}, url::Url, client::{Client, ClientConfig}, pipe::ProgressReporter, file::remote_file::RemoteFile};
 use flutter_rust_bridge::StreamSink;
 
@@ -46,9 +47,10 @@ pub fn delete_file(file_id: String) {
 #[derive(Debug, Clone)]
 pub struct FfSendTransferProgress {
     pub is_finished: bool,
-    pub total_bytes: u64,
     pub transferred_bytes: u64,
+    pub total_bytes: Option<u64>,
     pub download_url: Option<String>,
+    pub expire_date: Option<DateTime<Utc>>,
 
     pub file_id: Option<String>,
 }
@@ -64,9 +66,10 @@ impl FfSendTransferProgressReporter {
             stream_sink: update_sink,
             current_progress: FfSendTransferProgress {
                 is_finished: false,
-                total_bytes: 0,
                 transferred_bytes: 0,
+                total_bytes: None,
                 download_url: None,
+                expire_date: None,
                 file_id: None,
             },
         }
@@ -75,6 +78,7 @@ impl FfSendTransferProgressReporter {
     fn update_from_remote_file(&mut self, file: RemoteFile) {
         self.current_progress.is_finished = true;
         self.current_progress.download_url = Some(file.download_url(true).to_string());
+        self.current_progress.expire_date = if file.expire_uncertain() { None } else { Some(file.expire_at()) };
         self.current_progress.file_id = Some(serde_json::to_string(&file).expect("Could not serialize UploadFile to JSON"));
         self.stream_sink.add(self.current_progress.clone());
     }
@@ -82,7 +86,7 @@ impl FfSendTransferProgressReporter {
 
 impl ProgressReporter for FfSendTransferProgressReporter {
     fn start(&mut self, total: u64) {
-        self.current_progress.total_bytes = total;
+        self.current_progress.total_bytes = Some(total);
         self.stream_sink.add(self.current_progress.clone());
     }
 
