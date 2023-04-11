@@ -26,6 +26,9 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
   String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
 
   void onClickGetQR() {
+    if (viewModel.uploadState == UploadState.done) {
+      viewModel.qrShown = true;
+    }
     if (viewModel.uploadState != UploadState.notStarted) return;
 
     print("Requesting QR code");
@@ -40,6 +43,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
         viewModel.uploadState = UploadState.done;
         viewModel.qrText = "Show QR";
         viewModel.qrUrl = event.downloadUrl;
+        viewModel.qrShown = true;
       } else {
         print("${event.transferredBytes}/${event.totalBytes}");
       }

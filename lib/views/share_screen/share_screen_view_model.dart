@@ -25,6 +25,9 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   UploadState uploadState = UploadState.notStarted;
 
   @observable
+  bool qrShown = false;
+
+  @observable
   String qrUrl = "";
 
 }

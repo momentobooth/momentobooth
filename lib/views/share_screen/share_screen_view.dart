@@ -51,6 +51,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: _foregroundElements,
         ),
+        _qrCodeBackdrop,
         _qrCode
       ],
     );
@@ -121,9 +122,26 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
     );
   }
 
+  Widget get _qrCodeBackdrop {
+    return Observer(builder: (_) {
+      return IgnorePointer(
+        ignoring: !viewModel.qrShown,
+        child: GestureDetector(
+          onTap: () => viewModel.qrShown = false,
+          child: AnimatedOpacity(
+            opacity: viewModel.qrShown ? 0.5 : 0.0,
+            duration: Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            child: ColoredBox(color: Color(0xFF000000)),
+          ),
+        ),
+      );
+    });
+  }
+
   Widget get _qrCode {
     return Observer(builder: (context) {
-      if (viewModel.uploadState != UploadState.done) {
+      if (!viewModel.qrShown) {
         return SizedBox();
       }
       return SliderWidget(
