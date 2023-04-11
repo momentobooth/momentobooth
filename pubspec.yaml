@@ -33,6 +33,10 @@ dependencies:
   ffi: ^2.0.1
   flutter_rust_bridge: ^1.72.2
 
+  # Printing
+  printing: ^5.10.3
+  pdf: ^3.10.1
+
   # System
   path_provider: ^2.0.14
   path: ^1.8.2
@@ -40,7 +44,6 @@ dependencies:
   # Misc
   meta: ^1.8.0
   toml: ^0.14.0
-  printing: ^5.10.3
   pretty_qr_code: ^2.0.3
 
 dev_dependencies:
