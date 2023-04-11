@@ -64,17 +64,14 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   void captureAndGetPhoto() async {
     final image = await capturer.captureAndGetPhoto();
     PhotosManagerBase.instance.photos.add(image);
+    PhotosManagerBase.instance.outputImage = image;
     captureComplete = true;
     navigateAfterCapture();
   }
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
-    if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
-      router.push("/share");
-    } else {
-      router.push("/quick-review");
-    }
+    router.push("/share");
   }
 
 }

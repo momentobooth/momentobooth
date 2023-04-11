@@ -39,7 +39,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
               ),
               child: AspectRatio(
                 aspectRatio: 1.5,
-                child: Image.asset(_assetPath, fit: BoxFit.contain)
+                child: Image.memory(viewModel.outputImage, fit: BoxFit.contain)
               ),
             ),
           ),

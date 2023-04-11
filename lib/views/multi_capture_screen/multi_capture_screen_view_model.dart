@@ -70,6 +70,8 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     final image = await capturer.captureAndGetPhoto();
     PhotosManagerBase.instance.photos.add(image);
     captureComplete = true;
+    // Fixme, should be replaced with the output of the collage later.
+    PhotosManagerBase.instance.outputImage = image;
     navigateAfterCapture();
   }
 
