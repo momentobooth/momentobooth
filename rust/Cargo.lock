@@ -799,12 +799,14 @@ name = "flutter_rust_bridge_example"
 version = "0.1.0"
 dependencies = [
  "atom_table",
+ "chrono",
  "derive_more",
  "ffsend-api",
  "flutter_rust_bridge",
  "nokhwa",
  "nokhwa-bindings-macos",
  "once_cell",
+ "serde_json",
 ]
 
 [[package]]
