@@ -9,6 +9,8 @@ import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/sample
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view_model.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:qr/qr.dart';
 
 class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenController> {
 
@@ -48,6 +50,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: _foregroundElements,
         ),
+        _qrCode
       ],
     );
   }
@@ -114,6 +117,31 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           ),
         ),
       ],
+    );
+  }
+
+  Widget get _qrCode {
+    return Observer(builder: (context) =>
+      Padding(
+        padding: EdgeInsets.all(30),
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Color(0xffffffff),
+              borderRadius: BorderRadius.circular(10),
+              border: theme.captureCounterContainerBorder,
+              boxShadow: [theme.captureCounterContainerShadow],
+            ),
+            child: PrettyQr(
+              size: 500,
+              data: viewModel.qrUrl,
+              errorCorrectLevel: QrErrorCorrectLevel.L,
+              roundEdges: true,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
