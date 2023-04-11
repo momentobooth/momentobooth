@@ -21,7 +21,7 @@ pub fn upload_file(host_url: String, file_path: String, download_filename: Optio
     let client = Client::new(ClientConfig::default(), true);
 
     // Initialize reporting and start upload
-    let transfer_progress_reporter = Arc::new(Mutex::new(FfSendTransferProgressReporter::new(update_sink.clone())));
+    let transfer_progress_reporter = Arc::new(Mutex::new(FfSendTransferProgressReporter::new(update_sink)));
     let clone = transfer_progress_reporter.clone();
     let progress_reporter: Arc<Mutex<dyn ProgressReporter>> = transfer_progress_reporter;
     let action_result = action.invoke(&client, Some(&progress_reporter));

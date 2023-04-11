@@ -7,10 +7,6 @@ edition = "2021"
 name = "flutter_rust_bridge_example"
 crate-type = ["lib", "staticlib", "cdylib"]
 
-[[bin]]
-name = "flutter_rust_bridge_example_debug_bin"
-path = "src/main.rs"
-
 [dependencies]
 derive_more = "0.99.17"
 once_cell = "1.17.1"
