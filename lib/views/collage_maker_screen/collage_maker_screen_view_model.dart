@@ -1,3 +1,4 @@
+import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
 
@@ -11,7 +12,8 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
     required super.contextAccessor,
   });
 
-  @observable
-  int rotation = 0;
+  int get numSelected => PhotosManagerBase.instance.chosen.length;
+
+  int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
 
 }

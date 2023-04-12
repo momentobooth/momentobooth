@@ -44,7 +44,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                     AutoSizeText("Pictures shot", style: theme.titleStyle, maxLines: 1,),
                     _photoSelector,
                     Observer(
-                      builder: (BuildContext context) { return AutoSizeText("${PhotosManagerBase.instance.chosen.length} chosen", style: theme.titleStyle, maxLines: 1,); },
+                      builder: (BuildContext context) { return AutoSizeText("${viewModel.numSelected} chosen", style: theme.titleStyle, maxLines: 1,); },
                     ),
                   ],
                 ),
@@ -71,18 +71,15 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                           builder: (context) => AnimatedRotation(
                             duration: Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
-                            turns: 0.25 * viewModel.rotation,
-                            child: GestureDetector(
-                              onTap: () => viewModel.rotation++,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 255, 255, 255),
-                                  boxShadow: [theme.chooseCaptureModeButtonShadow],
-                                ),
-                                child: PhotoCollage(
-                                  key: controller.collageKey,
-                                  aspectRatio: 2/3
-                                ),
+                            turns: -0.25 * viewModel.rotation,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                                boxShadow: [theme.chooseCaptureModeButtonShadow],
+                              ),
+                              child: PhotoCollage(
+                                key: controller.collageKey,
+                                aspectRatio: 2/3
                               ),
                             ),
                           ),

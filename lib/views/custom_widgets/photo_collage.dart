@@ -65,7 +65,13 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Widget get _zeroLayout {
-    return Center(child: AutoSizeText("Select some photos :)", style: theme.titleStyle,),);
+    return RotatedBox(
+      quarterTurns: 1,
+      child: Center(
+      child: AutoSizeText("Select some photos :)",
+        style: theme.titleStyle, textAlign: TextAlign.center,),
+      ),
+    );
   }
 
   Widget get _oneLayout {
