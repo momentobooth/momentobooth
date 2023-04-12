@@ -34,7 +34,7 @@ class PhotoCollageState extends State<PhotoCollage> {
   ScreenshotController screenshotController = ScreenshotController(); 
 
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
-  static const double gap = 12.0;
+  static const double gap = 20.0;
 
   ObservableList<int> get chosen => PhotosManagerBase.instance.chosen;
   ObservableList<Uint8List> get photos => PhotosManagerBase.instance.photos;
@@ -86,15 +86,15 @@ class PhotoCollageState extends State<PhotoCollage> {
           l1header
           l1content
         ''',
-      rowSizes: [1.fr, 6.fr],
+      rowSizes: [1.fr, 8.fr],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
       children: [
         Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l1header'),
-        Center(child: RotatedBox(
+        SizedBox.expand(child: RotatedBox(
           quarterTurns: 1,
-          child: Image.memory(photos[chosen[0]])),
+          child: Image.memory(photos[chosen[0]], fit: BoxFit.cover,),),
         ).inGridArea('l1content'),
       ],
     );
