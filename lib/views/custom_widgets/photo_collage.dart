@@ -161,7 +161,7 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Future<Uint8List?> getCollageImage() {
-    return screenshotController.capture();
+    return screenshotController.capture(pixelRatio: 6.0);
   }
 
 }
