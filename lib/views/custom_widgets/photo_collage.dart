@@ -14,6 +14,7 @@ import 'package:mobx/src/api/observable_collections.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:image/image.dart' as img;
 
 class PhotoCollage extends StatefulWidget {
 
@@ -170,8 +171,15 @@ class PhotoCollageState extends State<PhotoCollage> {
     );
   }
 
-  Future<Uint8List?> getCollageImage() {
-    return screenshotController.capture(pixelRatio: 6.0);
+  Future<Uint8List?> getCollageImage() async {
+    // return screenshotController.capture(pixelRatio: 6.0);
+    final image = await screenshotController.captureAsUiImage(pixelRatio: 6.0);
+    // Lib by default uses ui.ImageByteFormat.png for capture, encoding is what takes long.
+    final byteData = await image!.toByteData(format: ui.ImageByteFormat.rawRgba);
+    // Create an image lib image instance from ui image instance.
+    final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
+    final jpg = img.encodeJpg(dartImage, quality: 80);
+    return jpg;
   }
 
 }
