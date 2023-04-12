@@ -11,4 +11,7 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
     required super.contextAccessor,
   });
 
+  @observable
+  int rotation = 0;
+
 }

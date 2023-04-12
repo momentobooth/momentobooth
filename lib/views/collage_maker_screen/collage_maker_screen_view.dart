@@ -67,18 +67,26 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                     ),
                     Expanded(
                       flex: 10,
-                      child: SizedBox(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 255, 255, 255),
-                            boxShadow: [theme.chooseCaptureModeButtonShadow],
-                          ),
-                          child: PhotoCollage(
-                            key: controller.collageKey,
-                            aspectRatio: 2/3
+                        child: Observer(
+                          builder: (context) => AnimatedRotation(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            turns: 0.25 * viewModel.rotation,
+                            child: GestureDetector(
+                              onTap: () => viewModel.rotation++,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                  boxShadow: [theme.chooseCaptureModeButtonShadow],
+                                ),
+                                child: PhotoCollage(
+                                  key: controller.collageKey,
+                                  aspectRatio: 2/3
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
                     ),
                     Flexible(
                       flex: 1,
