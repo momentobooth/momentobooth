@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
+import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -177,8 +178,9 @@ class PhotoCollageState extends State<PhotoCollage> {
     // Lib by default uses ui.ImageByteFormat.png for capture, encoding is what takes long.
     final byteData = await image!.toByteData(format: ui.ImageByteFormat.rawRgba);
     // Create an image lib image instance from ui image instance.
-    final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
-    final jpg = img.encodeJpg(dartImage, quality: 80);
+    //final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
+    final jpg = await rustLibraryApi.jpegEncode(width: image.width, height: image.height, data: byteData!.buffer.asUint8List(), quality: 80);
+    //final jpg = img.encodeJpg(dartImage, quality: 80);
     return jpg;
   }
 
