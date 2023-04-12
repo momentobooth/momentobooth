@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobx/src/api/observable_collections.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -33,7 +34,12 @@ class PhotoCollageState extends State<PhotoCollage> {
   ScreenshotController screenshotController = ScreenshotController(); 
 
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
-  static const double gap = 8.0;
+  static const double gap = 12.0;
+
+  ObservableList<int> get chosen => PhotosManagerBase.instance.chosen;
+  ObservableList<Uint8List> get photos => PhotosManagerBase.instance.photos;
+  Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
+  int get nChosen => PhotosManagerBase.instance.chosen.length;
 
   @override
   Widget build(BuildContext context) {
@@ -52,13 +58,13 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _layout {
     if (PhotosManagerBase.instance.chosen.isEmpty) {
       return _zeroLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 1) {
+    } else if (nChosen == 1) {
       return _oneLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 2) {
+    } else if (nChosen == 2) {
       return _twoLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 3) {
+    } else if (nChosen == 3) {
       return _threeLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 4) {
+    } else if (nChosen == 4) {
       return _fourLayout;
     }
     return Container();
@@ -77,19 +83,19 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _oneLayout {
     return LayoutGrid(
       areas: '''
-          header
-          content
+          l1header
+          l1content
         ''',
       rowSizes: [1.fr, 6.fr],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l1header'),
         Center(child: RotatedBox(
           quarterTurns: 1,
-          child: Image.memory(PhotosManagerBase.instance.photos[0])),
-        ).inGridArea('content'),
+          child: Image.memory(photos[chosen[0]])),
+        ).inGridArea('l1content'),
       ],
     );
   }
@@ -97,18 +103,18 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _twoLayout {
     return LayoutGrid(
       areas: '''
-          header
-          content1
-          content2
+          l2header
+          l2content1
+          l2content2
         ''',
-      rowSizes: [1.fr, 3.fr, 3.fr],
+      rowSizes: [1.fr, auto, auto],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
-          Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+1}'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l2header'),
+        for (int i = 0; i < nChosen; i++) ...[
+          Image.memory(photos[chosen[i]]).inGridArea('l2content${i+1}'),
         ]
       ],
     );
@@ -117,21 +123,25 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _threeLayout {
     return LayoutGrid(
       areas: '''
-          header1 header2
-          content1 content4
-          content2 content5
-          content3 content6
+          l3header1 l3header2
+          l3content1 l3content4
+          l3content2 l3content5
+          l3content3 l3content6
         ''',
-      rowSizes: [auto, auto, auto, auto],
+      rowSizes: [1.fr, auto, auto, auto],
       columnSizes: [1.fr, 1.fr],
       columnGap: 2*gap,
       rowGap: gap,
       children: [
-        Center(child: Text("Powered by Casper die echt teringsnel Flutter geleerd heeft")).inGridArea('header1'),
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header2'),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
-          Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+1}'),
-          Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+4}'),
+        Container(
+          alignment: Alignment.center,
+          color: Colors.blue,
+          child: Text("Powered by Casper die echt teringsnel Flutter geleerd heeft", textAlign: TextAlign.center,)
+        ).inGridArea('l3header1'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header2'),
+        for (int i = 0; i < nChosen; i++) ...[
+          Image.memory(photos[chosen[i]]).inGridArea('l3content${i+1}'),
+          Image.memory(photos[chosen[i]]).inGridArea('l3content${i+4}'),
         ]
       ],
     );
@@ -140,21 +150,21 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _fourLayout {
     return LayoutGrid(
       areas: '''
-          content1 content2
-          header   header
-          content3 content4
+          l4content1 l4content2
+          l4header   l4header
+          l4content3 l4content4
         ''',
       rowSizes: [5.fr, 1.fr, 5.fr],
       columnSizes: [1.fr, 1.fr],
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l4header'),
+        for (int i = 0; i < nChosen; i++) ...[
           Center(child: RotatedBox(
             quarterTurns: 1,
-            child: Image.memory(PhotosManagerBase.instance.photos[i])),
-          ).inGridArea('content${i+1}'),
+            child: Image.memory(photos[chosen[i]])),
+          ).inGridArea('l4content${i+1}'),
         ]
       ],
     );

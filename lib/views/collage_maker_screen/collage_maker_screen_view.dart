@@ -77,8 +77,8 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
   Widget get _photoSelector {
     return LayoutGrid(
       areas: '''
-          content1 content2
-          content3 content4
+          picture1 picture2
+          picture3 picture4
         ''',
       rowSizes: [auto, auto],
       columnSizes: [1.fr, 1.fr],
@@ -109,7 +109,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                 );
               }
             ),
-          ).inGridArea('content${i+1}'),
+          ).inGridArea('picture${i+1}'),
       ],
     );
   }
