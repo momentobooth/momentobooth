@@ -21,6 +21,8 @@ serde_json = "1.0.95"
 chrono = "0.4.24"
 nokhwa-bindings-macos = "0.2.0"
 nokhwa = { version = "0.10.3", features = ["input-native", "output-threaded"] }
+zune-jpeg = "0.3.16"
+jpeg-encoder = "0.5.1"
 
 # Patch for https://github.com/l1npengtul/nokhwa/issues/98
 
