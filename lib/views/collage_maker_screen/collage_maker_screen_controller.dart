@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
+import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_controller_base.dart';
 import 'package:flutter_rust_bridge_example/views/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/photo_collage.dart';
@@ -27,12 +28,14 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     captureCollage();
   }
 
+  String get outputFolder => SettingsManagerBase.instance.settings.output.localFolder;
+
   void captureCollage() async {
     final stopwatch = Stopwatch()..start();
     PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage();
     print('captureCollage() executed in ${stopwatch.elapsed}');
     print("Written collage image to output image memory");
-    File file = await File(r'K:\Pictures\MomentoBooth-image.jpg').create();
+    File file = await File('$outputFolder/MomentoBooth-image.jpg').create();
     await file.writeAsBytes(PhotosManagerBase.instance.outputImage!);
   }
 
