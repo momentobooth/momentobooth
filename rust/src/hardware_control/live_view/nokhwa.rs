@@ -1,11 +1,7 @@
-use std::{sync::Mutex};
-
-use atom_table::AtomTable;
 use derive_more::{From, Into};
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::{RgbFormat, RgbAFormat}};
 use nokhwa::utils::CameraIndex::Index;
-use once_cell::sync::Lazy;
 
 use crate::log;
 
@@ -25,33 +21,37 @@ pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
     device_names
 }
 
-pub fn open_camera(camera_info: NokhwaCameraInfo, new_image_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+pub fn open_camera(camera_info: NokhwaCameraInfo) -> *mut CallbackCamera {
     let format = RequestedFormat::<'static>::new::<RgbFormat>(RequestedFormatType::AbsoluteHighestResolution);
 
-    let mut camera = CallbackCamera::new(Index(camera_info.id), format, move |buffer| {
-        let image = buffer.decode_image::<RgbAFormat>().unwrap();
-        let event_buffer = ZeroCopyBuffer(image.to_vec());
-        new_image_event_sink.add(event_buffer);
-    }).unwrap();
+    let mut camera = CallbackCamera::new(Index(camera_info.id), format, move |_| {}).expect("Could not create CallbackCamera");
 
-    let camera_open_result = camera.open_stream();
-    if camera_open_result.is_err() {
-        let err = camera_open_result.unwrap_err();
-        log("Camera open error: ".to_string() + &err.to_string());
-    } else {
-        log("Opened camera successfully; ".to_string() + "Camera format: " + &camera.camera_format().unwrap().to_string());
+    camera.open_stream().expect("Could not open camera stream");
+    log("Opened camera successfully; ".to_string() + "Camera format: " + &camera.camera_format().expect("Could not get camera format").to_string());
+
+    // Return camera handle
+    let camera = Box::new(camera);
+    Box::into_raw(camera)
+}
+
+pub fn set_camera_callback(camera_ptr: *mut CallbackCamera, new_frame_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+    unsafe { 
+        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr);
+        camera.set_callback(move |buffer| {
+            let image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
+            let event_buffer = ZeroCopyBuffer(image.to_vec());
+            new_frame_event_sink.add(event_buffer);
+        }).expect("Failed setting the callback");
+        Box::into_raw(camera)
+    };
+}
+
+pub fn close_camera(camera_ptr: *mut CallbackCamera) {
+    unsafe { 
+        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr);
+        camera.set_callback(|_| {}).expect("Could not set callback")
     }
 }
-
-pub fn close_camera() {
-
-}
-
-// //////////////////////// //
-// Nokhwa handle management //
-// //////////////////////// //
-
-static OPEN_CAMERAS: Lazy<Mutex<AtomTable<String, Id>>> = Lazy::new(|| Mutex::new(AtomTable::new()));
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, From, Into)]
 struct Id(usize);
@@ -67,6 +67,6 @@ pub struct NokhwaCameraInfo {
 
 impl NokhwaCameraInfo {
     pub fn from_camera_info(camera_info: &CameraInfo) -> Self {
-        Self { id: camera_info.index().as_index().unwrap(), friendly_name: camera_info.human_name() }
+        Self { id: camera_info.index().as_index().expect("Could not get camera index"), friendly_name: camera_info.human_name() }
     }
 }
