@@ -38,13 +38,13 @@ void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
 
       var x = await rustLibraryApi.nokhwaGetCameras();
 
-      NokhwaCameraInfo camera = NokhwaCameraInfo(id: 1, friendlyName: "Microsoft® LifeCam HD-5000");
-      var ptr = await rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
-      var testing = rustLibraryApi.setCameraCallback(cameraPtr: ptr);
+      NokhwaCameraInfo camera = NokhwaCameraInfo(id: 2, friendlyName: "Microsoft® LifeCam HD-5000");
+      var openCameraResult = await rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
+      var testing = rustLibraryApi.setCameraCallback(cameraPtr: openCameraResult.cameraPtr);
       testing.listen((event) async {
         print("Camera image length: ${event.length}");
         ImmutableBuffer buffer = await ImmutableBuffer.fromUint8List(event);
-        ImageDescriptor descriptor = ImageDescriptor.raw(buffer, width: 1280, height: 800, pixelFormat: PixelFormat.rgba8888);
+        ImageDescriptor descriptor = ImageDescriptor.raw(buffer, width: openCameraResult.width, height: openCameraResult.height, pixelFormat: PixelFormat.rgba8888);
         Codec x = await descriptor.instantiateCodec();
         FrameInfo y = await x.getNextFrame();
         PhotosManagerBase.instance.currentWebcamImage = y.image;
@@ -52,10 +52,10 @@ void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
       }).onError((error) {
         print(error);
       });
-      print("Wait 3s");
+      print("Wait 60s");
       await Future.delayed(Duration(seconds: 60));
       print("Await close");
-      await rustLibraryApi.nokhwaCloseCamera(cameraPtr: ptr);
+      await rustLibraryApi.nokhwaCloseCamera(cameraPtr: openCameraResult.cameraPtr);
       print("Closed!");
       break;
 

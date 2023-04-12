@@ -1,6 +1,6 @@
 use derive_more::{From, Into};
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
-use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::{RgbFormat, RgbAFormat}};
+use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 use nokhwa::utils::CameraIndex::Index;
 
 use crate::log;
@@ -21,8 +21,8 @@ pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
     device_names
 }
 
-pub fn open_camera(camera_info: NokhwaCameraInfo) -> *mut CallbackCamera {
-    let format = RequestedFormat::<'static>::new::<RgbFormat>(RequestedFormatType::AbsoluteHighestResolution);
+pub fn open_camera(camera_info: NokhwaCameraInfo) -> CameraOpenResult {
+    let format = RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestResolution);
 
     let mut camera = CallbackCamera::new(Index(camera_info.id), format, move |_| {}).expect("Could not create CallbackCamera");
 
@@ -31,12 +31,17 @@ pub fn open_camera(camera_info: NokhwaCameraInfo) -> *mut CallbackCamera {
 
     // Return camera handle
     let camera = Box::new(camera);
-    Box::into_raw(camera)
+    let format = camera.camera_format().expect("Could not get camera format");
+    CameraOpenResult {
+        width: format.width(),
+        height: format.height(),
+        camera_ptr: Box::into_raw(camera) as usize,
+    }
 }
 
-pub fn set_camera_callback(camera_ptr: *mut CallbackCamera, new_frame_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+pub fn set_camera_callback(camera_ptr: usize, new_frame_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
     unsafe { 
-        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr);
+        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr as *mut CallbackCamera);
         camera.set_callback(move |buffer| {
             let image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
             let event_buffer = ZeroCopyBuffer(image.to_vec());
@@ -46,9 +51,9 @@ pub fn set_camera_callback(camera_ptr: *mut CallbackCamera, new_frame_event_sink
     };
 }
 
-pub fn close_camera(camera_ptr: *mut CallbackCamera) {
+pub fn close_camera(camera_ptr: usize) {
     unsafe { 
-        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr);
+        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr as *mut CallbackCamera);
         camera.set_callback(|_| {}).expect("Could not set callback")
     }
 }
@@ -63,6 +68,12 @@ struct Id(usize);
 pub struct NokhwaCameraInfo {
     pub id: u32,
     pub friendly_name: String,
+}
+
+pub struct CameraOpenResult {
+    pub width: u32,
+    pub height: u32,
+    pub camera_ptr: usize,
 }
 
 impl NokhwaCameraInfo {
