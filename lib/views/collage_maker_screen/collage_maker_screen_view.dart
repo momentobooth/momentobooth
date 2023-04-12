@@ -36,61 +36,11 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           children: [
             Flexible(
               flex: 2,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AutoSizeText("Pictures shot", style: theme.titleStyle, maxLines: 1,),
-                    _photoSelector,
-                    Observer(
-                      builder: (BuildContext context) { return AutoSizeText("${viewModel.numSelected} chosen", style: theme.titleStyle, maxLines: 1,); },
-                    ),
-                  ],
-                ),
-              ),
+              child: _leftColumn
             ),
             Flexible(
               flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Flexible(
-                      flex: 2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: AutoSizeText("Collage", style: theme.titleStyle,),
-                      )
-                    ),
-                    Expanded(
-                      flex: 10,
-                        child: Observer(
-                          builder: (context) => AnimatedRotation(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                            turns: -0.25 * viewModel.rotation,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                boxShadow: [theme.chooseCaptureModeButtonShadow],
-                              ),
-                              child: PhotoCollage(
-                                key: controller.collageKey,
-                                aspectRatio: 2/3
-                              ),
-                            ),
-                          ),
-                        ),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: SizedBox()),
-                  ],
-                ),
-              ),
+              child: _rightColumn,
             ),
           ],
         ),
@@ -105,6 +55,22 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           ),
         ),
       ],
+    );
+  }
+
+  Widget get _leftColumn {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AutoSizeText("Pictures shot", style: theme.titleStyle, maxLines: 1,),
+          _photoSelector,
+          Observer(
+            builder: (context) => AutoSizeText("${viewModel.numSelected} chosen", style: theme.titleStyle, maxLines: 1,),
+          ),
+        ],
+      ),
     );
   }
 
@@ -145,6 +111,52 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             ),
           ).inGridArea('content${i+1}'),
       ],
+    );
+  }
+
+  Widget get _rightColumn {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Flexible(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: AutoSizeText("Collage", style: theme.titleStyle,),
+            )
+          ),
+          Expanded(
+            flex: 10,
+            child: _collage,
+          ),
+          Flexible(
+            flex: 1,
+            child: SizedBox()),
+        ],
+      ),
+    );
+  }
+
+  Widget get _collage {
+    return Observer(
+      builder: (context) => AnimatedRotation(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        turns: -0.25 * viewModel.rotation,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 255, 255, 255),
+            boxShadow: [theme.chooseCaptureModeButtonShadow],
+          ),
+          child: PhotoCollage(
+            key: controller.collageKey,
+            aspectRatio: 2/3
+          ),
+        ),
+      ),
     );
   }
 
