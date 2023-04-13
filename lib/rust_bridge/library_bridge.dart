@@ -1,6 +1,5 @@
 import 'dart:ffi';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter_rust_bridge_example/managers/native_library_initialization_manager.dart';
@@ -38,7 +37,7 @@ void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
 
       var x = await rustLibraryApi.nokhwaGetCameras();
 
-      NokhwaCameraInfo camera = NokhwaCameraInfo(id: 2, friendlyName: "Microsoft® LifeCam HD-5000");
+      NokhwaCameraInfo camera = NokhwaCameraInfo(id: 1, friendlyName: "Microsoft® LifeCam HD-5000");
       var openCameraResult = await rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
       var testing = rustLibraryApi.setCameraCallback(cameraPtr: openCameraResult.cameraPtr);
       testing.listen((event) async {

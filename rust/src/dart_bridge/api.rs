@@ -1,6 +1,7 @@
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
+use ::nokhwa::CallbackCamera;
 
-use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo, CameraOpenResult}, utils::ffsend_client::{self, FfSendTransferProgress}, LogEvent, HardwareInitializationFinishedEvent};
+use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::ffsend_client::{self, FfSendTransferProgress}, LogEvent, HardwareInitializationFinishedEvent};
 
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     crate::initialize_log(log_sink);
@@ -15,15 +16,35 @@ pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
 }
 
 pub fn nokhwa_open_camera(camera_info: NokhwaCameraInfo) -> CameraOpenResult {
-    nokhwa::open_camera(camera_info)
+    let camera = nokhwa::open_camera(camera_info);
+    let format = camera.camera_format().expect("Could not get camera format");
+    let camera_box = Box::new(camera);
+    CameraOpenResult {
+        width: format.width(),
+        height: format.height(),
+        camera_ptr: Box::into_raw(camera_box) as usize,
+    }
 }
 
 pub fn set_camera_callback(camera_ptr: usize, new_frame_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
-    nokhwa::set_camera_callback(camera_ptr, new_frame_event_sink)
+    unsafe { 
+        let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
+        nokhwa::set_camera_callback(&mut camera, new_frame_event_sink);
+        Box::into_raw(camera)
+    };
 }
 
 pub fn nokhwa_close_camera(camera_ptr: usize) {
-    nokhwa::close_camera(camera_ptr)
+    unsafe { 
+        let camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
+        nokhwa::close_camera(*camera)
+    }
+}
+
+pub struct CameraOpenResult {
+    pub width: u32,
+    pub height: u32,
+    pub camera_ptr: usize,
 }
 
 // ////// //

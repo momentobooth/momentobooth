@@ -21,41 +21,27 @@ pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
     device_names
 }
 
-pub fn open_camera(camera_info: NokhwaCameraInfo) -> CameraOpenResult {
+pub fn open_camera(camera_info: NokhwaCameraInfo) -> CallbackCamera {
     let format = RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestResolution);
 
-    let mut camera = CallbackCamera::new(Index(camera_info.id), format, move |_| {}).expect("Could not create CallbackCamera");
+    let mut camera = CallbackCamera::new(Index(camera_info.id), format, |_| {}).expect("Could not create CallbackCamera");
 
     camera.open_stream().expect("Could not open camera stream");
     log("Opened camera successfully; ".to_string() + "Camera format: " + &camera.camera_format().expect("Could not get camera format").to_string());
 
-    // Return camera handle
-    let camera = Box::new(camera);
-    let format = camera.camera_format().expect("Could not get camera format");
-    CameraOpenResult {
-        width: format.width(),
-        height: format.height(),
-        camera_ptr: Box::into_raw(camera) as usize,
-    }
+    camera
 }
 
-pub fn set_camera_callback(camera_ptr: usize, new_frame_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
-    unsafe { 
-        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr as *mut CallbackCamera);
-        camera.set_callback(move |buffer| {
-            let image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
-            let event_buffer = ZeroCopyBuffer(image.to_vec());
-            new_frame_event_sink.add(event_buffer);
-        }).expect("Failed setting the callback");
-        Box::into_raw(camera)
-    };
+pub fn set_camera_callback(camera: &mut CallbackCamera, new_frame_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+    camera.set_callback(move |buffer| {
+        let image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
+        let event_buffer = ZeroCopyBuffer(image.to_vec());
+        new_frame_event_sink.add(event_buffer);
+    }).expect("Failed setting the callback");
 }
 
-pub fn close_camera(camera_ptr: usize) {
-    unsafe { 
-        let mut camera: Box<CallbackCamera> = Box::from_raw(camera_ptr as *mut CallbackCamera);
-        camera.set_callback(|_| {}).expect("Could not set callback")
-    }
+pub fn close_camera(mut camera: CallbackCamera) {
+    camera.set_callback(|_| {}).expect("Could not set callback")
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, From, Into)]
@@ -68,12 +54,6 @@ struct Id(usize);
 pub struct NokhwaCameraInfo {
     pub id: u32,
     pub friendly_name: String,
-}
-
-pub struct CameraOpenResult {
-    pub width: u32,
-    pub height: u32,
-    pub camera_ptr: usize,
 }
 
 impl NokhwaCameraInfo {

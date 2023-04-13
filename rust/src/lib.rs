@@ -35,7 +35,7 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
 
 pub fn log(message: String) {
     let message = LogEvent { message };
-    LOG_STREAM.get().unwrap().add(message);
+    LOG_STREAM.get().expect("Could not get log stream").add(message);
 }
 
 // /////// //
