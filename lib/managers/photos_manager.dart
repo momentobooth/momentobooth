@@ -32,6 +32,8 @@ abstract class PhotosManagerBase with Store {
   @observable
   ObservableList<int> chosen = ObservableList<int>();
 
+  Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
+
   CaptureMode captureMode = CaptureMode.single;
 
   PhotosManagerBase._internal();

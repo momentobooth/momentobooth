@@ -5,13 +5,18 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
+import 'package:flutter_rust_bridge_example/models/settings.dart';
+import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobx/src/api/observable_collections.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:image/image.dart' as img;
 
 class PhotoCollage extends StatefulWidget {
 
@@ -29,15 +34,20 @@ class PhotoCollage extends StatefulWidget {
 
 class PhotoCollageState extends State<PhotoCollage> {
 
-  final GlobalKey _globalKey = GlobalKey();
+  ScreenshotController screenshotController = ScreenshotController(); 
 
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
-  static const double gap = 8.0;
+  static const double gap = 20.0;
+
+  ObservableList<int> get chosen => PhotosManagerBase.instance.chosen;
+  ObservableList<Uint8List> get photos => PhotosManagerBase.instance.photos;
+  Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
+  int get nChosen => PhotosManagerBase.instance.chosen.length;
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      key: _globalKey,
+    return Screenshot(
+      controller: screenshotController,
       child: AspectRatio(
         aspectRatio: widget.aspectRatio,
         child: Padding(
@@ -51,38 +61,44 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _layout {
     if (PhotosManagerBase.instance.chosen.isEmpty) {
       return _zeroLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 1) {
+    } else if (nChosen == 1) {
       return _oneLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 2) {
+    } else if (nChosen == 2) {
       return _twoLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 3) {
+    } else if (nChosen == 3) {
       return _threeLayout;
-    } else if (PhotosManagerBase.instance.chosen.length == 4) {
+    } else if (nChosen == 4) {
       return _fourLayout;
     }
     return Container();
   }
 
   Widget get _zeroLayout {
-    return Center(child: AutoSizeText("Select some photos :)", style: theme.titleStyle,),);
+    return RotatedBox(
+      quarterTurns: 1,
+      child: Center(
+      child: AutoSizeText("Select some photos :)",
+        style: theme.titleStyle, textAlign: TextAlign.center,),
+      ),
+    );
   }
 
   Widget get _oneLayout {
     return LayoutGrid(
       areas: '''
-          header
-          content
+          l1header
+          l1content
         ''',
-      rowSizes: [1.fr, 6.fr],
+      rowSizes: [1.fr, 8.fr],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
-        Center(child: RotatedBox(
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l1header'),
+        SizedBox.expand(child: RotatedBox(
           quarterTurns: 1,
-          child: Image.memory(PhotosManagerBase.instance.photos[0])),
-        ).inGridArea('content'),
+          child: Image.memory(photos[chosen[0]], fit: BoxFit.cover,),),
+        ).inGridArea('l1content'),
       ],
     );
   }
@@ -90,18 +106,18 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _twoLayout {
     return LayoutGrid(
       areas: '''
-          header
-          content1
-          content2
+          l2header
+          l2content1
+          l2content2
         ''',
-      rowSizes: [1.fr, 3.fr, 3.fr],
+      rowSizes: [1.fr, auto, auto],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
-          Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+1}'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l2header'),
+        for (int i = 0; i < nChosen; i++) ...[
+          Image.memory(photos[chosen[i]]).inGridArea('l2content${i+1}'),
         ]
       ],
     );
@@ -110,21 +126,25 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _threeLayout {
     return LayoutGrid(
       areas: '''
-          header1 header2
-          content1 content4
-          content2 content5
-          content3 content6
+          l3header1 l3header2
+          l3content1 l3content4
+          l3content2 l3content5
+          l3content3 l3content6
         ''',
-      rowSizes: [auto, auto, auto, auto],
+      rowSizes: [1.fr, auto, auto, auto],
       columnSizes: [1.fr, 1.fr],
       columnGap: 2*gap,
       rowGap: gap,
       children: [
-        Center(child: Text("Powered by Casper die echt teringsnel Flutter geleerd heeft")).inGridArea('header1'),
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header2'),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
-          Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+1}'),
-          Center(child: Image.memory(PhotosManagerBase.instance.photos[i])).inGridArea('content${i+4}'),
+        Container(
+          alignment: Alignment.center,
+          color: Colors.blue,
+          child: Text("Powered by Casper die echt teringsnel Flutter geleerd heeft", textAlign: TextAlign.center,)
+        ).inGridArea('l3header1'),
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header2'),
+        for (int i = 0; i < nChosen; i++) ...[
+          Image.memory(photos[chosen[i]]).inGridArea('l3content${i+1}'),
+          Image.memory(photos[chosen[i]]).inGridArea('l3content${i+4}'),
         ]
       ],
     );
@@ -133,51 +153,38 @@ class PhotoCollageState extends State<PhotoCollage> {
   Widget get _fourLayout {
     return LayoutGrid(
       areas: '''
-          content1 content2
-          header   header
-          content3 content4
+          l4content1 l4content2
+          l4header   l4header
+          l4content3 l4content4
         ''',
       rowSizes: [5.fr, 1.fr, 5.fr],
       columnSizes: [1.fr, 1.fr],
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('header'),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++) ...[
+        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l4header'),
+        for (int i = 0; i < nChosen; i++) ...[
           Center(child: RotatedBox(
             quarterTurns: 1,
-            child: Image.memory(PhotosManagerBase.instance.photos[i])),
-          ).inGridArea('content${i+1}'),
+            child: Image.memory(photos[chosen[i]])),
+          ).inGridArea('l4content${i+1}'),
         ]
       ],
     );
   }
 
-  Object? export() async {
-    try {
-      print('export: start');
-      RenderRepaintBoundary? boundary = _globalKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) {
-        //print('export: boundary == null');
-        throw 'Could not retrieve RenderRepaintBoundary';
-      }
-
-      ui.Image image = await boundary.toImage(pixelRatio: 4.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      if (byteData == null) {
-        //print('export: byteData == null');
-        throw 'Could not get ByteData from Image';
-      }
-
-      var dir1 = await getApplicationDocumentsDirectory();
-      var dir2 = join(dir1.path, 'export.png');
-      print(dir2);
-      File(dir2).writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
-      //print("Data has ${byteData.lengthInBytes} length!");
-    } catch (e) {
-      //print(e);
+  Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
+    if (format == ExportFormat.pngFormat) {
+      return screenshotController.capture(pixelRatio: pixelRatio);
     }
+    final image = await screenshotController.captureAsUiImage(pixelRatio: pixelRatio);
+    // Lib by default uses ui.ImageByteFormat.png for capture, encoding is what takes long.
+    final byteData = await image!.toByteData(format: ui.ImageByteFormat.rawRgba);
+    // Create an image lib image instance from ui image instance.
+    //final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
+    //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
+    final jpg = await rustLibraryApi.jpegEncode(width: image.width, height: image.height, data: byteData!.buffer.asUint8List(), quality: jpgQuality);
+    return jpg;
   }
 
 }

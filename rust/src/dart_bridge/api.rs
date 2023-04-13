@@ -1,6 +1,6 @@
-use flutter_rust_bridge::StreamSink;
+use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 
-use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::ffsend_client::{self, FfSendTransferProgress}, LogEvent, HardwareInitializationFinishedEvent};
+use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg_encoder}, LogEvent, HardwareInitializationFinishedEvent};
 
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     crate::initialize_log(log_sink);
@@ -24,4 +24,12 @@ pub fn ffsend_upload_file(host_url: String, file_path: String, download_filename
 
 pub fn ffsend_delete_file(file_id: String) {
     ffsend_client::delete_file(file_id)
+}
+
+// //// //
+// JPEG //
+// //// //
+
+pub fn jpeg_encode(width: u16, height: u16, data: Vec<u8>, quality: u8) -> ZeroCopyBuffer<Vec<u8>> {
+    jpeg_encoder::encode_rgba(width, height, data, quality)
 }

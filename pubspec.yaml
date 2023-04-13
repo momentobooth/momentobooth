@@ -45,6 +45,8 @@ dependencies:
   meta: 1.8.0
   toml: 0.14.0
   pretty_qr_code: 2.0.3
+  screenshot: 1.3.0
+  image: 4.0.15
 
 dev_dependencies:
   flutter_test:

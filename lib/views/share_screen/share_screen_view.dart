@@ -23,23 +23,26 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
   @override
   Widget get body {
     return Stack(
-      fit: StackFit.expand,
       children: [
-        ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Image.asset(_assetPath, fit: BoxFit.cover),
+        SizedBox.expand(
+          child: ImageFiltered(
+            imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Image.asset(_assetPath, fit: BoxFit.cover),
+          ),
         ),
         Padding(
           padding: EdgeInsets.all(30),
           child: Center(
-            child: Container(
-              decoration: BoxDecoration(
-                border: theme.captureCounterContainerBorder,
-                boxShadow: [theme.captureCounterContainerShadow],
-              ),
-              child: AspectRatio(
-                aspectRatio: 1.5,
-                child: Image.memory(viewModel.outputImage, fit: BoxFit.contain)
+            // This SizedBox is only necessary when the image used is smaller than what would be displayed.
+            child: SizedBox(
+              height: double.infinity,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFFF0F0F0),
+                  border: theme.captureCounterContainerBorder,
+                  boxShadow: [theme.captureCounterContainerShadow],
+                ),
+                child: Image.memory(viewModel.outputImage, fit: BoxFit.contain),
               ),
             ),
           ),

@@ -4,7 +4,7 @@ import 'package:flutter_rust_bridge_example/views/custom_widgets/cards/fluent_se
 class FluentSettingsBlock extends StatelessWidget {
 
   final String title;
-  final List<FluentSettingCard> settings;
+  final List<Widget> settings;
 
   const FluentSettingsBlock({
     super.key,

@@ -35,3 +35,21 @@ enum CaptureMethod {
   static List<ComboBoxItem<CaptureMethod>> asComboBoxItems() => CaptureMethod.values.map((value) => value.toComboBoxItem()).toList();
 
 }
+
+enum ExportFormat {
+
+  jpgFormat(0, "JPG"),
+  pngFormat(1, "PNG");
+
+  // can add more properties or getters/methods if needed
+  final int value;
+  final String name;
+
+  // can use named parameters if you want
+  const ExportFormat(this.value, this.name);
+
+  ComboBoxItem<ExportFormat> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<ExportFormat>> asComboBoxItems() => ExportFormat.values.map((value) => value.toComboBoxItem()).toList();
+
+}
