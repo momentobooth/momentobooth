@@ -1,11 +1,11 @@
 import 'dart:ffi';
 import 'dart:io';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter_rust_bridge_example/managers/native_library_initialization_manager.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/rust_bridge/library_api.generated.dart';
-import 'package:flutter_rust_bridge_example/utils/image_processing.dart';
+import 'package:flutter_rust_bridge_example/utils/image.dart' as imageUtils;
 
 const _base = 'flutter_rust_bridge_example';
 final _path = Platform.isWindows ? '$_base.dll' : 'lib$_base.so';
@@ -39,24 +39,17 @@ void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
       var cameras = await rustLibraryApi.nokhwaGetCameras();
 
       NokhwaCameraInfo camera = NokhwaCameraInfo(id: 1, friendlyName: "Microsoft® LifeCam HD-5000");
-      var openCameraResult = await rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
-      var frameStream = rustLibraryApi.setCameraCallback(cameraPtr: openCameraResult.cameraPtr);
+      var cameraPointer = await rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
+      var frameStream = rustLibraryApi.setCameraCallback(cameraPtr: cameraPointer, operations: [ImageOperation.cropToAspectRatio(3/2)]);
       var lastFrame = DateTime.now();
       frameStream.listen((event) async {
-        AppImage img = AppImage.fromRawRgbaData(event, openCameraResult.width, openCameraResult.height);
-        img.cropToAspectRatio(3/2);
-        PhotosManagerBase.instance.currentWebcamImage = await img.toRawDartImage();
+        PhotosManagerBase.instance.currentWebcamImage = await imageUtils.fromUint8ListRgba(event.width, event.height, event.rawRgbaData);
         var thisFrame = DateTime.now();
         print("${1E6/thisFrame.difference(lastFrame).inMicroseconds} FPS - $thisFrame");
         lastFrame = thisFrame;
       }).onError((error) {
         print(error);
       });
-      print("Wait 60s");
-      await Future.delayed(Duration(seconds: 60));
-      print("Await close");
-      await rustLibraryApi.nokhwaCloseCamera(cameraPtr: openCameraResult.cameraPtr);
-      print("Closed!");
       break;
 
   }

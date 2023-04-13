@@ -1,9 +1,8 @@
 use derive_more::{From, Into};
-use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 use nokhwa::utils::CameraIndex::Index;
 
-use crate::log;
+use crate::{log, utils::image_processing::RawImage};
 
 pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
     if cfg!(target_os = "macos") {
@@ -32,11 +31,15 @@ pub fn open_camera(camera_info: NokhwaCameraInfo) -> CallbackCamera {
     camera
 }
 
-pub fn set_camera_callback(camera: &mut CallbackCamera, new_frame_event_sink: StreamSink<ZeroCopyBuffer<Vec<u8>>>) {
+pub fn set_camera_callback<F>(camera: &mut CallbackCamera, frame_callback: F) where F: Fn(RawImage) + Send + Sync + 'static {
     camera.set_callback(move |buffer| {
         let image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
-        let event_buffer = ZeroCopyBuffer(image.to_vec());
-        new_frame_event_sink.add(event_buffer);
+        let frame = RawImage {
+            width: buffer.resolution().width() as usize,
+            height: buffer.resolution().height() as usize,
+            raw_rgba_data: image.to_vec(),
+        };
+        frame_callback(frame);
     }).expect("Failed setting the callback");
 }
 
