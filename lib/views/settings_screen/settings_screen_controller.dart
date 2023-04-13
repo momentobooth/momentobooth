@@ -69,4 +69,22 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onExportFormatChanged(ExportFormat? exportFormat) {
+    if (exportFormat != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.output(exportFormat: exportFormat));
+    }
+  }
+
+  void onJpgQualityChanged(int? jpgQuality) {
+    if (jpgQuality != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.output(jpgQuality: jpgQuality));
+    }
+  }
+
+  void onResolutionMultiplierChanged(double? resolutionMultiplier) {
+    if (resolutionMultiplier != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.output(resolutionMultiplier: resolutionMultiplier));
+    }
+  }
+
 }

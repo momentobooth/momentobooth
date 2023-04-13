@@ -27,12 +27,13 @@ FluentSettingCard _getComboBoxCard<TValue>({
   );
 }
 
-FluentSettingCard _getInput({
+FluentSettingCard _getInput<T extends num>({
   required IconData icon,
   required String title,
   required String subtitle,
-  required GetValueCallback<int> value,
-  required ValueChanged<int?> onChanged,
+  required GetValueCallback<T> value,
+  required ValueChanged<T?> onChanged,
+  num smallChange = 1,
 }) {
   return FluentSettingCard(
     icon: icon,
@@ -41,9 +42,10 @@ FluentSettingCard _getInput({
     child: SizedBox(
       width: 150,
       child: Observer(builder: (_) {
-        return NumberBox(
+        return NumberBox<T>(
           value: value(),
           onChanged: onChanged,
+          smallChange: smallChange,
         );
       }),
     ),

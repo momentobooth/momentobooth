@@ -82,12 +82,18 @@ class OutputSettings with _$OutputSettings implements TomlEncodableValue {
 
   const factory OutputSettings({
     required String localFolder,
+    required int jpgQuality,
+    required double resolutionMultiplier,
+    required ExportFormat exportFormat,
     required String firefoxSendServerUrl,
   }) = _OutputSettings;
 
   factory OutputSettings.withDefaults() {
     return OutputSettings(
       localFolder: join(_getHome(), "Pictures"),
+      jpgQuality: 80,
+      resolutionMultiplier: 4.0,
+      exportFormat: ExportFormat.jpgFormat,
       firefoxSendServerUrl: "https://send.vis.ee/",
     );
   }
