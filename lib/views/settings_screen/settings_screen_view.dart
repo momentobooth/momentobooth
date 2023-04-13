@@ -78,6 +78,10 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               value: () => viewModel.captureDelaySecondsSetting,
               onChanged: controller.onCaptureDelaySecondsChanged,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
+            ),
           ],
         ),
       ],
