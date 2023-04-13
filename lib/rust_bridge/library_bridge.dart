@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter_rust_bridge_example/managers/native_library_initialization_manager.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/rust_bridge/library_api.generated.dart';
+import 'package:flutter_rust_bridge_example/utils/image_processing.dart';
 
 const _base = 'flutter_rust_bridge_example';
 final _path = Platform.isWindows ? '$_base.dll' : 'lib$_base.so';
@@ -35,19 +36,16 @@ void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
       HardwareStateManagerBase.instance.nokhwaIsInitialized = event.hasSucceeded;
       HardwareStateManagerBase.instance.nokhwaInitializationMessage = event.message;
 
-      var x = await rustLibraryApi.nokhwaGetCameras();
+      var cameras = await rustLibraryApi.nokhwaGetCameras();
 
       NokhwaCameraInfo camera = NokhwaCameraInfo(id: 1, friendlyName: "Microsoft® LifeCam HD-5000");
-      var ptr = await rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
-      var testing = rustLibraryApi.setCameraCallback(cameraPtr: ptr);
+      var openCameraResult = await rustLibraryApi.nokhwaOpenCamera(cameraInfo: camera);
+      var frameStream = rustLibraryApi.setCameraCallback(cameraPtr: openCameraResult.cameraPtr);
       var lastFrame = DateTime.now();
-      testing.listen((event) async {
-        print("Camera image length: ${event.length}");
-        ImmutableBuffer buffer = await ImmutableBuffer.fromUint8List(event);
-        ImageDescriptor descriptor = ImageDescriptor.raw(buffer, width: openCameraResult.width, height: openCameraResult.height, pixelFormat: PixelFormat.rgba8888);
-        Codec x = await descriptor.instantiateCodec();
-        FrameInfo y = await x.getNextFrame();
-        PhotosManagerBase.instance.currentWebcamImage = y.image;
+      frameStream.listen((event) async {
+        AppImage img = AppImage.fromRawRgbaData(event, openCameraResult.width, openCameraResult.height);
+        img.cropToAspectRatio(3/2);
+        PhotosManagerBase.instance.currentWebcamImage = await img.toRawDartImage();
         var thisFrame = DateTime.now();
         print("${1E6/thisFrame.difference(lastFrame).inMicroseconds} FPS - $thisFrame");
         lastFrame = thisFrame;
