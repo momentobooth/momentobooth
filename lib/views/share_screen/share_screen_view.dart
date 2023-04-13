@@ -51,7 +51,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: _foregroundElements,
         ),
-        _qrCodeBackdrop,
+        SizedBox.expand(child: _qrCodeBackdrop),
         _qrCode
       ],
     );
