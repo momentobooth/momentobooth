@@ -32,10 +32,13 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   void captureCollage() async {
     final stopwatch = Stopwatch()..start();
-    PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage();
+    final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
+    final format = SettingsManagerBase.instance.settings.output.exportFormat;
+    final jpgQuality = SettingsManagerBase.instance.settings.output.jpgQuality;
+    PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
     print('captureCollage() executed in ${stopwatch.elapsed}');
     print("Written collage image to output image memory");
-    File file = await File('$outputFolder/MomentoBooth-image.jpg').create();
+    File file = await File('$outputFolder/MomentoBooth-image.${format.name.toLowerCase()}').create();
     await file.writeAsBytes(PhotosManagerBase.instance.outputImage!);
   }
 

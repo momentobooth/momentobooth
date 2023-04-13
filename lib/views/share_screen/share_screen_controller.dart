@@ -42,10 +42,11 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     print("Requesting QR code");
     final Uint8List imageData = PhotosManagerBase.instance.outputImage!;
     final Directory tempDir = await getTemporaryDirectory();
-    File file = await File('${tempDir.path}/image.png').create();
+    final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
+    File file = await File('${tempDir.path}/image.$ext').create();
     await file.writeAsBytes(imageData);
 
-    var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.jpg");
+    var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
     viewModel.qrText = "Uploading";
     viewModel.uploadState = UploadState.uploading;
     stream.listen((event) {
