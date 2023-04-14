@@ -12,8 +12,8 @@ pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std
 }
 
 pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
-    let backend = native_api_backend().unwrap();
-    let devices = query(backend).unwrap();
+    let backend = native_api_backend().expect("Could not get backend");
+    let devices = query(backend).expect("Could not query backend");
 
     let device_names: Vec<NokhwaCameraInfo> = devices.iter().map(NokhwaCameraInfo::from_camera_info).collect();
     device_names
@@ -23,8 +23,8 @@ pub fn open_camera(friendly_name: String) -> CallbackCamera {
     let format = RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestResolution);
     
     // Look up device name
-    let backend = native_api_backend().unwrap();
-    let devices = query(backend).unwrap();
+    let backend = native_api_backend().expect("Could not get backend");
+    let devices = query(backend).expect("Could not query backend");
     let camera_info = devices.into_iter().find(|device| device.human_name() == friendly_name).expect("Could not find camera");
 
     let mut camera = CallbackCamera::new(camera_info.index().clone(), format, |_| {}).expect("Could not create CallbackCamera");
@@ -48,7 +48,8 @@ pub fn set_camera_callback<F>(camera: &mut CallbackCamera, frame_callback: F) wh
 }
 
 pub fn close_camera(mut camera: CallbackCamera) {
-    camera.set_callback(|_| {}).expect("Could not set callback")
+    camera.set_callback(|_| {}).expect("Could not set callback");
+    camera.stop_stream().expect("Failed to stop stream")
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, From, Into)]
