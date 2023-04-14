@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_rust_bridge_example/utils/capture_method.dart';
+import 'package:flutter_rust_bridge_example/hardware_control/photo_capturing/photo_capture_method.dart';
 
-class FakeCaptureMethod implements CaptureMethod {
+class LiveViewStreamSnapshotCapturer implements PhotoCaptureMethod {
 
   @override
   Duration get captureDelay => Duration(milliseconds: 500);

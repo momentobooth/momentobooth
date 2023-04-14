@@ -39,6 +39,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onLiveViewWebcamIdChanged(String? liveViewWebcamId) {
+    if (liveViewWebcamId != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewWebcamId: liveViewWebcamId));
+    }
+  }
+
   void onCaptureMethodChanged(CaptureMethod? captureMethod) {
     if (captureMethod != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureMethod: captureMethod));

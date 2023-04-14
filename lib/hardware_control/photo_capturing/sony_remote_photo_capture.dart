@@ -2,9 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'capture_method.dart';
+import 'package:flutter_rust_bridge_example/hardware_control/photo_capturing/photo_capture_method.dart';
 
-class SonyRemotePhotoCapture extends CaptureMethod {
+/// Capture method that captures an image by automating the Sony Imaging Edge Desktop application (Windows only).
+/// This solution exists because gPhoto2 and other possibly better solutions require driver overrides on Windows or
+/// require bundling shared libraries which we do not support at the moment.
+class SonyRemotePhotoCapture extends PhotoCaptureMethod {
+
   final String directoryPath;
 
   SonyRemotePhotoCapture(this.directoryPath);
@@ -15,8 +19,7 @@ class SonyRemotePhotoCapture extends CaptureMethod {
   @override
   Duration get captureDelay => Duration(milliseconds: 200);
 
-  @override
-  void capture() {
+  void _capture() {
     print("Sending capture command to Sony Remote");
     // AutoIt script line
     // https://ss64.com/nt/syntax-esc.html
@@ -26,8 +29,7 @@ class SonyRemotePhotoCapture extends CaptureMethod {
     Process.run('autoit3.exe', ['/AutoIt3ExecuteLine', autoItScript]);
   }
 
-  @override
-  Future<Uint8List> getPhoto() async {
+  Future<Uint8List> _getPhoto() async {
     try {
       final file = await waitForFile(directoryPath, ".jpg");
       final img = await file.readAsBytes();
@@ -40,8 +42,8 @@ class SonyRemotePhotoCapture extends CaptureMethod {
 
   @override
   Future<Uint8List> captureAndGetPhoto() {
-    capture();
-    return getPhoto();
+    _capture();
+    return _getPhoto();
   }
 
   Future<File> waitForFile(String directoryPath, String fileExtension) async {
@@ -61,4 +63,5 @@ class SonyRemotePhotoCapture extends CaptureMethod {
     }
     throw TimeoutException('Timed out while waiting for file to exist');
   }
+
 }

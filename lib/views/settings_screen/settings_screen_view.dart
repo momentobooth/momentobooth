@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_rust_bridge_example/models/settings.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/cards/fluent_setting_card.dart';
@@ -99,6 +100,8 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               value: () => viewModel.liveViewMethodSetting,
               onChanged: controller.onLiveViewMethodChanged,
             ),
+            if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam)
+              _webcamCard,
             _getComboBoxCard(
               icon: FluentIcons.camera,
               title: "Capture method",
@@ -119,34 +122,64 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
         FluentSettingsBlock(
           title: "Printing",
           settings: [
-            FluentSettingCard(
-              icon: FluentIcons.print,
-              title: "Printer",
-              subtitle: "Which printer to use for printing photos",
-              child: Row(
-                children: [
-                  Button(
-                    onPressed: viewModel.setPrinterList,
-                    // style: ButtonStyle(backgroundColor: ButtonState.all(Colors.white)),
-                    child: const Text('Refresh'),
-                  ),
-                  SizedBox(width: 10,),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: 150),
-                    child: Observer(builder: (_) {
-                      return ComboBox<String>(
-                        items: viewModel.printerOptions,
-                        value: viewModel.printerSetting,
-                        onChanged: controller.onPrinterChanged,
-                      );
-                    }),
-                  ),
-                ],
-              ),
-            ),
+            _printerCard,
           ],
         ),
       ],
+    );
+  }
+
+  FluentSettingCard get _webcamCard {
+    return FluentSettingCard(
+      icon: FluentIcons.camera,
+      title: "Webcam",
+      subtitle: "Pick the webcam to use for live view",
+      child: Row(
+        children: [
+          Button(
+            onPressed: viewModel.setWebcamList,
+            child: const Text('Refresh'),
+          ),
+          SizedBox(width: 10),
+          ConstrainedBox(
+            constraints: BoxConstraints(minWidth: 150),
+            child: Observer(builder: (_) {
+              return ComboBox<String>(
+                items: viewModel.webcams,
+                value: viewModel.liveViewWebcamId,
+                onChanged: controller.onLiveViewWebcamIdChanged,
+              );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  FluentSettingCard get _printerCard {
+    return FluentSettingCard(
+      icon: FluentIcons.print,
+      title: "Printer",
+      subtitle: "Which printer to use for printing photos",
+      child: Row(
+        children: [
+          Button(
+            onPressed: viewModel.setPrinterList,
+            child: const Text('Refresh'),
+          ),
+          SizedBox(width: 10),
+          ConstrainedBox(
+            constraints: BoxConstraints(minWidth: 150),
+            child: Observer(builder: (_) {
+              return ComboBox<String>(
+                items: viewModel.printerOptions,
+                value: viewModel.printerSetting,
+                onChanged: controller.onPrinterChanged,
+              );
+            }),
+          ),
+        ],
+      ),
     );
   }
 

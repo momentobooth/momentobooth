@@ -1,6 +1,5 @@
 use derive_more::{From, Into};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
-use nokhwa::utils::CameraIndex::Index;
 
 use crate::{log, utils::image_processing::RawImage};
 
@@ -20,10 +19,15 @@ pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
     device_names
 }
 
-pub fn open_camera(camera_info: NokhwaCameraInfo) -> CallbackCamera {
+pub fn open_camera(friendly_name: String) -> CallbackCamera {
     let format = RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestResolution);
+    
+    // Look up device name
+    let backend = native_api_backend().unwrap();
+    let devices = query(backend).unwrap();
+    let camera_info = devices.into_iter().find(|device| device.human_name() == friendly_name).expect("Could not find camera");
 
-    let mut camera = CallbackCamera::new(Index(camera_info.id), format, |_| {}).expect("Could not create CallbackCamera");
+    let mut camera = CallbackCamera::new(camera_info.index().clone(), format, |_| {}).expect("Could not create CallbackCamera");
 
     camera.open_stream().expect("Could not open camera stream");
     log("Opened camera successfully; ".to_string() + "Camera format: " + &camera.camera_format().expect("Could not get camera format").to_string());

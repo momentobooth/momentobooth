@@ -15,13 +15,13 @@ pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
     nokhwa::get_cameras()
 }
 
-pub fn nokhwa_open_camera(camera_info: NokhwaCameraInfo) -> usize {
-    let camera = nokhwa::open_camera(camera_info);
+pub fn nokhwa_open_camera(friendly_name: String) -> usize {
+    let camera = nokhwa::open_camera(friendly_name);
     let camera_box = Box::new(camera);
     Box::into_raw(camera_box) as usize
 }
 
-pub fn set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperation>, new_frame_event_sink: StreamSink<RawImage>) {
+pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperation>, new_frame_event_sink: StreamSink<RawImage>) {
     unsafe { 
         let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
         nokhwa::set_camera_callback(&mut camera, move |raw_frame| {

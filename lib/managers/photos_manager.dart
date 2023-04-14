@@ -8,6 +8,7 @@ part 'photos_manager.g.dart';
 class PhotosManager = PhotosManagerBase with _$PhotosManager;
 
 enum CaptureMode {
+
   single(0, "Single"),
   collage(1, "Collage");
 
@@ -17,6 +18,7 @@ enum CaptureMode {
 
   // can use named parameters if you want
   const CaptureMode(this.value, this.name);
+
 }
 
 /// Class containing global state for photos in the app
@@ -34,18 +36,6 @@ abstract class PhotosManagerBase with Store {
   ObservableList<int> chosen = ObservableList<int>();
 
   CaptureMode captureMode = CaptureMode.single;
-
-  @observable
-  Image? currentWebcamImage;
-
-  @action
-  void setNewImage(Image image) {
-    Image? oldImage = currentWebcamImage;
-    currentWebcamImage = image;
-    if (oldImage != null) {
-      oldImage.dispose();
-    }
-  }
 
   PhotosManagerBase._internal();
 
