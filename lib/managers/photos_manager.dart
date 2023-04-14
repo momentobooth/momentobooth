@@ -38,6 +38,15 @@ abstract class PhotosManagerBase with Store {
   @observable
   Image? currentWebcamImage;
 
+  @action
+  void setNewImage(Image image) {
+    Image? oldImage = currentWebcamImage;
+    currentWebcamImage = image;
+    if (oldImage != null) {
+      oldImage.dispose();
+    }
+  }
+
   PhotosManagerBase._internal();
 
 }
