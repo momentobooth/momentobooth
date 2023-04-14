@@ -1,20 +1,48 @@
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/managers/live_view_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/stateless_widget_base.dart';
 
-class CameraBackground extends StatelessWidgetBase {
+class LiveViewBackground extends StatelessWidgetBase {
+
   final Widget child;
 
-  const CameraBackground({
+  const LiveViewBackground({
     super.key,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
+    return Observer(builder: (context) {
+      switch (LiveViewManagerBase.instance.liveViewState) {
+        
+        case LiveViewState.initializing:
+          return _initializingState;
+        case LiveViewState.error:
+          return _errorState;
+        case LiveViewState.streaming:
+          return _streamingState;
+
+      }
+    });
+  }
+
+  Widget get _initializingState {
+    return FluentTheme(
+      data: FluentThemeData(),
+      child: Center(child: ProgressRing()),
+    );
+  }
+
+  Widget get _errorState {
+    return AutoSizeText("Camera could not be found\r\n\r\nor\r\n\r\nconnection broken!");
+  }
+
+  Widget get _streamingState {
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -38,4 +66,5 @@ class CameraBackground extends StatelessWidgetBase {
       ],
     );
   }
+
 }

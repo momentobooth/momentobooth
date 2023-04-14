@@ -11,8 +11,7 @@ abstract class LiveViewStream {
   Stream<LiveViewFrame> getStream();
 
   @mustCallSuper
-  void dispose() {
-
+  Future dispose() async {
   }
 
 }

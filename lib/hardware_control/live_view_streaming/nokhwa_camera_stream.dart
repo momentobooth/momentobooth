@@ -37,8 +37,8 @@ class NokhwaCameraStream extends LiveViewStream {
   // //////////////// //
 
   @override
-  void dispose() {
-    rustLibraryApi.nokhwaCloseCamera(cameraPtr: _cameraPointer);
+  Future dispose() async {
+    await rustLibraryApi.nokhwaCloseCamera(cameraPtr: _cameraPointer);
     super.dispose();
   }
 

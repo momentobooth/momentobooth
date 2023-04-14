@@ -2,9 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter_rust_bridge_example/hardware_control/live_view_streaming/live_view_stream.dart';
 import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:flutter_rust_bridge_example/models/hardware/live_view_streaming/nokhwa_camera.dart';
-import 'package:flutter_rust_bridge_example/models/settings.dart';
 import 'package:mobx/mobx.dart';
 
 part 'live_view_manager.g.dart';
@@ -18,6 +16,9 @@ abstract class LiveViewManagerBase with Store {
 
   @readonly
   ui.Image? _lastFrameImage;
+
+  @readonly
+  LiveViewState _liveViewState = LiveViewState.initializing;
 
   // ////////////// //
   // Initialization //
@@ -33,23 +34,36 @@ abstract class LiveViewManagerBase with Store {
 
   final ReactionDisposer onSettingsChangedDisposer = autorun((_) async {
     LiveViewStream? liveViewStream = LiveViewManagerBase.instance._liveViewStream;
-    Settings settings = SettingsManagerBase.instance.settings;
-    String webcamId = settings.hardware.liveViewWebcamId;
+    String webcamIdSetting = SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
 
-    if (liveViewStream == null || liveViewStream.friendlyName != webcamId) {
-      liveViewStream?.dispose();
+    if (liveViewStream == null || liveViewStream.friendlyName != webcamIdSetting) {
+      // Webcam was not initialized yet or webcam ID setting changed
+      LiveViewManagerBase.instance._liveViewState = LiveViewState.initializing;
+      await liveViewStream?.dispose();
 
       var cameras = await NokhwaCamera.getAllCameras();
-      NokhwaCamera? camera = cameras.cast<NokhwaCamera?>().firstWhere((camera) => camera!.friendlyName == webcamId, orElse: () => null);
-      LiveViewManagerBase.instance._liveViewStream = await camera?.openStream()
-        ?..getStream().listen((frame) async {
-          // New frame arrived
-          LiveViewManagerBase.instance._lastFrameImage = await frame.toImage()
-        }).onError(() {
-          // Error
-          
-        });
+      NokhwaCamera? camera = cameras.cast<NokhwaCamera?>().firstWhere((camera) => camera!.friendlyName == webcamIdSetting, orElse: () => null);
+      try {
+        LiveViewManagerBase.instance._liveViewStream = await camera?.openStream()
+          ?..getStream().listen((frame) async {
+            // New frame arrived
+            LiveViewManagerBase.instance._lastFrameImage = await frame.toImage();
+            LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
+          }).onError((error) {
+            // Error
+            LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
+          });
+      }
+      catch (error) {
+        LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
+      }
     }
   });
 
+}
+
+enum LiveViewState {
+  initializing,
+  error,
+  streaming,
 }
