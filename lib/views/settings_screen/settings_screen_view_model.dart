@@ -21,6 +21,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
+  List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   
   @observable
   ObservableList<ComboBoxItem<String>> printerOptions = ObservableList<ComboBoxItem<String>>();
@@ -69,6 +70,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get printerSetting => SettingsManagerBase.instance.settings.hardware.printerName;
   String get localFolderSetting => SettingsManagerBase.instance.settings.output.localFolder;
   String get firefoxSendServerUrlSetting => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
+  ExportFormat get exportFormat => SettingsManagerBase.instance.settings.output.exportFormat;
+  int get jpgQuality => SettingsManagerBase.instance.settings.output.jpgQuality;
+  double get resolutionMultiplier => SettingsManagerBase.instance.settings.output.resolutionMultiplier;
 
   // Initializers/Deinitializers
 

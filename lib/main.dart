@@ -15,6 +15,7 @@ import 'package:flutter_rust_bridge_example/views/settings_screen/settings_scree
 import 'package:flutter_rust_bridge_example/views/start_screen/start_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:window_manager/window_manager.dart';
 
 part 'main.routes.dart';
 
@@ -26,6 +27,10 @@ void main() async {
 
   // Settings
   await SettingsManagerBase.instance.load();
+
+  WidgetsFlutterBinding.ensureInitialized();
+  // Must add this line.
+  await windowManager.ensureInitialized();
 
   // Native library init
   init();
@@ -47,14 +52,21 @@ class _AppState extends State<App> {
   final GoRouter _router = GoRouter(routes: rootRoutes);
 
   bool _settingsOpen = false;
+  bool _isFullScreen = false;
 
   @override
   void initState() {
-    _initSettingsHotKey();
+    _initHotKeys();
     super.initState();
   }
 
-  void _initSettingsHotKey() {
+  void _toggleFullscreen() {
+    _isFullScreen = !_isFullScreen;
+    print("Setting fullscreen to $_isFullScreen");
+    windowManager.setFullScreen(_isFullScreen);
+  }
+
+  void _initHotKeys() {
     hotKeyManager.register(
       HotKey(
         KeyCode.keyS,
@@ -63,6 +75,26 @@ class _AppState extends State<App> {
       ),
       keyDownHandler: (hotKey) {
         setState(() => _settingsOpen = !_settingsOpen);
+      },
+    );
+    hotKeyManager.register(
+      HotKey(
+        KeyCode.enter,
+        modifiers: [KeyModifier.alt],
+        scope: HotKeyScope.inapp,
+      ),
+      keyDownHandler: (hotKey) {
+        setState(_toggleFullscreen);
+      },
+    );
+    hotKeyManager.register(
+      HotKey(
+        KeyCode.keyF,
+        modifiers: [KeyModifier.control],
+        scope: HotKeyScope.inapp,
+      ),
+      keyDownHandler: (hotKey) {
+        setState(_toggleFullscreen);
       },
     );
   }

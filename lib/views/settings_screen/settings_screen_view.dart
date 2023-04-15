@@ -79,6 +79,10 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               value: () => viewModel.captureDelaySecondsSetting,
               onChanged: controller.onCaptureDelaySecondsChanged,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
+            ),
           ],
         ),
       ],
@@ -191,7 +195,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           title: "Local",
           settings: [
             _getTextInput(
-              icon: FluentIcons.folder,
+              icon: FluentIcons.fabric_picture_library,
               title: "Local photo storage location",
               subtitle: "Location where the output images will be stored",
               controller: controller.localFolderSettingController,
@@ -208,6 +212,38 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               subtitle: "Firefox Send Server URL",
               controller: controller.firefoxSendServerUrlController,
               onChanged: controller.onFirefoxSendServerUrlChanged,
+            ),
+          ],
+        ),
+        FluentSettingsBlock(
+          title: "Image settings",
+          settings: [
+            _getComboBoxCard(
+              icon: FluentIcons.file_image,
+              title: "Image file type",
+              subtitle: "What kind of file to generate",
+              items: viewModel.exportFormats,
+              value: () => viewModel.exportFormat,
+              onChanged: controller.onExportFormatChanged,
+            ),
+            _getInput(
+              icon: FluentIcons.equalizer,
+              title: "JPG quality",
+              subtitle: 'Export quality (higher is bigger files)',
+              value: () => viewModel.jpgQuality,
+              onChanged: controller.onJpgQualityChanged,
+            ),
+            _getInput(
+              icon: FluentIcons.picture_stretch,
+              title: "Output resolution multiplier",
+              subtitle: 'Controls image resolution',
+              value: () => viewModel.resolutionMultiplier,
+              onChanged: controller.onResolutionMultiplierChanged,
+              smallChange: 0.1,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("Output resolution will be ${(viewModel.resolutionMultiplier*1000).round()}×${(viewModel.resolutionMultiplier*2000/3).round()}"),
             ),
           ],
         ),

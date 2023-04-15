@@ -5,6 +5,8 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   hotkey_manager
   printing
+  screen_retriever
+  window_manager
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
