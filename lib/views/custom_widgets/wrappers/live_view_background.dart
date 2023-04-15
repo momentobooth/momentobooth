@@ -17,6 +17,16 @@ class LiveViewBackground extends StatelessWidgetBase {
 
   @override
   Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        _viewState,
+        child,
+      ]
+    );
+  }
+
+  Widget get _viewState {
     return Observer(builder: (context) {
       switch (LiveViewManagerBase.instance.liveViewState) {
         
@@ -34,12 +44,22 @@ class LiveViewBackground extends StatelessWidgetBase {
   Widget get _initializingState {
     return FluentTheme(
       data: FluentThemeData(),
-      child: Center(child: ProgressRing()),
+      child: Center(
+        child: ProgressRing(),
+      ),
     );
   }
 
   Widget get _errorState {
-    return AutoSizeText("Camera could not be found\r\n\r\nor\r\n\r\nconnection broken!");
+    return ColoredBox(
+      color: Colors.green,
+      child: Center(
+        child: AutoSizeText(
+          "Camera could not be found\r\n\r\nor\r\n\r\nconnection broken!",
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
   }
 
   Widget get _streamingState {
@@ -49,20 +69,15 @@ class LiveViewBackground extends StatelessWidgetBase {
         ColoredBox(color: Colors.green),
         ImageFiltered(
           imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Observer(builder: (_) {
-            return RawImage(
-              image: LiveViewManagerBase.instance.lastFrameImage,
-              fit: BoxFit.cover,
-            );
-          }),
-        ),
-        Observer(builder: (_) {
-          return RawImage(
+          child: RawImage(
             image: LiveViewManagerBase.instance.lastFrameImage,
-            fit: BoxFit.contain,
-          );
-        }),
-        child,
+            fit: BoxFit.cover,
+          ),
+        ),
+        RawImage(
+          image: LiveViewManagerBase.instance.lastFrameImage,
+          fit: BoxFit.contain,
+        ),
       ],
     );
   }

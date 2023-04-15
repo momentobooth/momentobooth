@@ -28,8 +28,7 @@ void main() async {
   // Settings
   await SettingsManagerBase.instance.load();
 
-  WidgetsFlutterBinding.ensureInitialized();
-  // Must add this line.
+  // Windows manager (used for full screen)
   await windowManager.ensureInitialized();
 
   // Native library init
