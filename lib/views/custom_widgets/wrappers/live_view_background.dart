@@ -74,11 +74,29 @@ class LiveViewBackground extends StatelessWidgetBase {
             fit: BoxFit.cover,
           ),
         ),
-        RawImage(
-          image: LiveViewManagerBase.instance.lastFrameImage,
-          fit: BoxFit.contain,
-        ),
+        // RawImage(
+        //   image: LiveViewManagerBase.instance.lastFrameImage,
+        //   fit: BoxFit.contain,
+        // ),
       ],
+    );
+  }
+
+}
+
+class LiveView extends StatelessWidgetBase {
+
+  const LiveView({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Observer(
+      builder: (context) => RawImage(
+        image: LiveViewManagerBase.instance.lastFrameImage,
+        fit: BoxFit.contain,
+      ),
     );
   }
 

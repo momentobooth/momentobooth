@@ -5,6 +5,7 @@ import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_view_model.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/capture_counter.dart';
+import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/live_view_background.dart';
 
 class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureScreenController> {
 
@@ -19,6 +20,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
     return Stack(
       fit: StackFit.expand,
       children: [
+        LiveView(),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
