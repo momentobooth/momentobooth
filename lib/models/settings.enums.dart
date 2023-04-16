@@ -53,3 +53,24 @@ enum ExportFormat {
   static List<ComboBoxItem<ExportFormat>> asComboBoxItems() => ExportFormat.values.map((value) => value.toComboBoxItem()).toList();
 
 }
+
+enum Flip {
+
+  none(false, false, "None"),
+  horizontally(true, false, "Horizontally"),
+  vertically(false, true, "Vertically"),
+  both(true, true, "Both");
+
+  // can add more properties or getters/methods if needed
+  final bool flipX;
+  final bool flipY;
+  final String name;
+
+  // can use named parameters if you want
+  const Flip(this.flipX, this.flipY, this.name);
+
+  ComboBoxItem<Flip> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<Flip>> asComboBoxItems() => Flip.values.map((value) => value.toComboBoxItem()).toList();
+
+}

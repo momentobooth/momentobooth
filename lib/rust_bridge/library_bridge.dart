@@ -26,13 +26,12 @@ void processLogEvent(LogEvent event) {
   print("Native Lib: ${event.message}");
 }
 
-void processHardwareInitEvent(HardwareInitializationFinishedEvent event) {
+void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
   switch (event.step) {
     
     case HardwareInitializationStep.Nokhwa:
       HardwareStateManagerBase.instance.nokhwaIsInitialized = event.hasSucceeded;
       HardwareStateManagerBase.instance.nokhwaInitializationMessage = event.message;
-      break;
 
   }
 }

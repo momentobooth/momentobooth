@@ -12,8 +12,6 @@ class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
 abstract class SettingsManagerBase with Store {
 
-  static final SettingsManager instance = SettingsManager._internal();
-
   static const _fileName = "MomentoBooth_Settings.toml";
 
   late File _settingsFile;
@@ -24,9 +22,17 @@ abstract class SettingsManagerBase with Store {
   @computed
   Settings get settings => _settings!;
 
+  // ////////////// //
+  // Initialization //
+  // ////////////// //
+
   SettingsManagerBase._internal();
 
-  // Mutate
+  static final SettingsManager instance = SettingsManager._internal();
+
+  // ////// //
+  // Mutate //
+  // ////// //
 
   @action
   Future<void> updateAndSave(Settings settings) async {
@@ -34,8 +40,11 @@ abstract class SettingsManagerBase with Store {
     await _save();
   }
   
-  // Load from/Save to disk
+  // /////////// //
+  // Persistence //
+  // /////////// //
 
+  @action
   Future<void> load() async {
     await _ensureSettingsFileIsSet();
 
@@ -69,7 +78,9 @@ abstract class SettingsManagerBase with Store {
     _settingsFile.writeAsString(settingsAsToml);
   }
 
-  // Helpers
+  // /////// //
+  // Helpers //
+  // /////// //
 
   Future<void> _ensureSettingsFileIsSet() async {
     // Find path

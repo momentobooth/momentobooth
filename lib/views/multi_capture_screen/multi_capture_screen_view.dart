@@ -6,6 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
+import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/live_view_background.dart';
 import 'package:flutter_rust_bridge_example/views/multi_capture_screen/multi_capture_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/multi_capture_screen/multi_capture_screen_view_model.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/capture_counter.dart';
@@ -18,17 +19,11 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
     required super.contextAccessor,
   });
 
-  static const String _assetPath = "assets/bitmap/sample-background.jpg";
-
   @override
   Widget get body {
     return Stack(
       fit: StackFit.expand,
       children: [
-        ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Image.asset(_assetPath, fit: BoxFit.cover),
-        ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -77,24 +72,27 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.asset(_assetPath, fit: BoxFit.contain),
+                    LiveView(),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _getReadyText,
-                        Flexible(child: Container(
-                          padding: EdgeInsets.all(40.0),
-                          constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
-                          child: Observer(builder: (_) {
-                            return AnimatedOpacity(
-                              duration: Duration(milliseconds: 50),
-                              opacity: viewModel.showCounter ? 1.0 : 0.0,
-                              child: CaptureCounter(
-                                onCounterFinished: viewModel.onCounterFinished,
-                                counterStart: viewModel.counterStart,),
-                            );
-                          })
-                        )),
+                        Flexible(
+                          child: Container(
+                            padding: EdgeInsets.all(40.0),
+                            constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
+                            child: Observer(builder: (_) {
+                              return AnimatedOpacity(
+                                duration: Duration(milliseconds: 50),
+                                opacity: viewModel.showCounter ? 1.0 : 0.0,
+                                child: CaptureCounter(
+                                  onCounterFinished: viewModel.onCounterFinished,
+                                  counterStart: viewModel.counterStart,
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
                       ],
                     ),
                   ],

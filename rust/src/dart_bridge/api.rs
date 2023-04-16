@@ -1,6 +1,7 @@
+use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 
-use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg_encoder}, LogEvent, HardwareInitializationFinishedEvent};
+use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg_encoder, image_processing::{self, ImageOperation, RawImage}}, LogEvent, HardwareInitializationFinishedEvent};
 
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     crate::initialize_log(log_sink);
@@ -11,7 +12,31 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
 }
 
 pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
-    return nokhwa::get_cameras();
+    nokhwa::get_cameras()
+}
+
+pub fn nokhwa_open_camera(friendly_name: String) -> usize {
+    let camera = nokhwa::open_camera(friendly_name);
+    let camera_box = Box::new(camera);
+    Box::into_raw(camera_box) as usize
+}
+
+pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperation>, new_frame_event_sink: StreamSink<RawImage>) {
+    unsafe { 
+        let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
+        nokhwa::set_camera_callback(&mut camera, move |raw_frame| {
+            let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+            new_frame_event_sink.add(processed_frame);
+        });
+        Box::into_raw(camera)
+    };
+}
+
+pub fn nokhwa_close_camera(camera_ptr: usize) {
+    unsafe { 
+        let camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
+        nokhwa::close_camera(*camera)
+    }
 }
 
 // ////// //

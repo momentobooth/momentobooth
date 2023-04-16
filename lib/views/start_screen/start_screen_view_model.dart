@@ -1,3 +1,4 @@
+import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
 
@@ -7,6 +8,8 @@ class StartScreenViewModel = StartScreenViewModelBase with _$StartScreenViewMode
 
 abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
 
-  StartScreenViewModelBase({required super.contextAccessor});
+  StartScreenViewModelBase({required super.contextAccessor}) {
+    PhotosManagerBase.instance.reset();
+  }
 
 }

@@ -23,20 +23,19 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
     log("Initializing Rust library".to_string());
 
     // Nokhwa initialize
-    let ready_sink_clone = ready_sink.clone();
     nokhwa::initialize(move |success| {
         let step = HardwareInitializationFinishedEvent {
             step: HardwareInitializationStep::Nokhwa,
             has_succeeded: success,
             message: String::new(),
         };
-        ready_sink_clone.add(step);
+        ready_sink.add(step);
     });
 }
 
-fn log(message: String) {
+pub fn log(message: String) {
     let message = LogEvent { message };
-    LOG_STREAM.get().unwrap().add(message);
+    LOG_STREAM.get().expect("Could not get log stream").add(message);
 }
 
 // /////// //

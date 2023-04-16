@@ -19,17 +19,11 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
     required super.contextAccessor,
   });
   
-  static const String _assetPath = "assets/bitmap/sample-background.jpg";
-  
   @override
   Widget get body {
     return Stack(
       fit: StackFit.expand,
       children: [
-        ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Image.asset(_assetPath, fit: BoxFit.cover),
-        ),
         Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,

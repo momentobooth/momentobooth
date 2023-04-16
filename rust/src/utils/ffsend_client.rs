@@ -11,8 +11,8 @@ use flutter_rust_bridge::StreamSink;
 pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, max_downloads: Option<u8>, expires_after_seconds: Option<usize>, update_sink: StreamSink<FfSendTransferProgress>) {
     // Prepare upload
     let version = ffsend_api::api::Version::V3;
-    let url = Url::parse(host_url.as_str()).unwrap();
-    let file = PathBuf::from_str(file_path.as_str()).unwrap();
+    let url = Url::parse(host_url.as_str()).expect("Could not parse host URL");
+    let file = PathBuf::from_str(file_path.as_str()).expect("Could not parse upload file path");
     let name = download_filename;
     let password = None;
     let params = Some(ParamsData::from(max_downloads, expires_after_seconds));
@@ -21,7 +21,7 @@ pub fn upload_file(host_url: String, file_path: String, download_filename: Optio
     let client = Client::new(ClientConfig::default(), true);
 
     // Initialize reporting and start upload
-    let transfer_progress_reporter = Arc::new(Mutex::new(FfSendTransferProgressReporter::new(update_sink.clone())));
+    let transfer_progress_reporter = Arc::new(Mutex::new(FfSendTransferProgressReporter::new(update_sink)));
     let clone = transfer_progress_reporter.clone();
     let progress_reporter: Arc<Mutex<dyn ProgressReporter>> = transfer_progress_reporter;
     let action_result = action.invoke(&client, Some(&progress_reporter));

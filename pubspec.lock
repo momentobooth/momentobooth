@@ -324,10 +324,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "2ef2bbe058323b50f72ba69dc7b1888628e6a77756b04376af46ffcf0ad79403"
+      sha256: befa7633a40d5895df989d9795f796478e0708aed93f64b9156997bc5a0b3ae6
       url: "https://pub.dev"
     source: hosted
-    version: "1.73.0"
+    version: "1.75.0"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
@@ -560,10 +560,10 @@ packages:
     dependency: "direct dev"
     description:
       name: mobx_codegen
-      sha256: "86122e410d8ea24dda0c69adb5c2a6ccadd5ce02ad46e144764e0d0184a06181"
+      sha256: "2748bf457e845af5bae47dceee93eb7336892e9dad811271630eccbb63a10ae7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.0"
   package_config:
     dependency: transitive
     description:

@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
+import 'package:flutter_rust_bridge_example/models/hardware/live_view_streaming/nokhwa_camera.dart';
 import 'package:flutter_rust_bridge_example/models/settings.dart';
 import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
@@ -19,14 +20,17 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   // Option lists
 
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
+  List<ComboBoxItem<Flip>> get liveViewFlipImageChoices => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   
   @observable
   ObservableList<ComboBoxItem<String>> printerOptions = ObservableList<ComboBoxItem<String>>();
 
+  @observable
+  List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
+
   void setPrinterList() async {
-    final info = await Printing.info();
     final printers = await Printing.listPrinters();
     print("Getting printers:");
     print(printers);
@@ -39,10 +43,10 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
           children: [
             TextSpan(text: "${printer.name}  "),
             if (printer.isDefault) ...[
-              WidgetSpan(child: Icon(FluentIcons.default_settings),),
+              WidgetSpan(child: Icon(FluentIcons.default_settings)),
               TextSpan(text: "  "),
             ],
-            WidgetSpan(child: Icon(icon),),
+            WidgetSpan(child: Icon(icon)),
           ],
         ),
       );
@@ -54,11 +58,15 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
       }
     }
   }
+  
+  void setWebcamList() async => webcams = await NokhwaCamera.asComboBoxItems();
 
   // Current values
 
   int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
   LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
+  String get liveViewWebcamId => SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
+  Flip get liveViewFlipImage => SettingsManagerBase.instance.settings.hardware.liveViewFlipImage;
   CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
   String get captureLocationSetting => SettingsManagerBase.instance.settings.hardware.captureLocation;
   String get printerSetting => SettingsManagerBase.instance.settings.hardware.printerName;
@@ -74,6 +82,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     required super.contextAccessor,
   }) {
     setPrinterList();
+    setWebcamList();
   }
 
   // Methods

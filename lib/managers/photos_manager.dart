@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:mobx/mobx.dart';
 
@@ -7,6 +8,7 @@ part 'photos_manager.g.dart';
 class PhotosManager = PhotosManagerBase with _$PhotosManager;
 
 enum CaptureMode {
+
   single(0, "Single"),
   collage(1, "Collage");
 
@@ -16,6 +18,7 @@ enum CaptureMode {
 
   // can use named parameters if you want
   const CaptureMode(this.value, this.name);
+
 }
 
 /// Class containing global state for photos in the app
@@ -32,10 +35,21 @@ abstract class PhotosManagerBase with Store {
   @observable
   ObservableList<int> chosen = ObservableList<int>();
 
-  Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
-
+  @observable
   CaptureMode captureMode = CaptureMode.single;
 
+  @computed
+  bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single;
+
+  Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
+
   PhotosManagerBase._internal();
+
+  @action
+  void reset() {
+    photos.clear();
+    chosen.clear();
+    captureMode = CaptureMode.single;
+  }
 
 }
