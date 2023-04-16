@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/models/settings.dart';
@@ -127,10 +128,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               value: () => viewModel.captureMethodSetting,
               onChanged: controller.onCaptureMethodChanged,
             ),
-            _getTextInput(
+            _getFolderPickerCard(
               icon: FluentIcons.folder,
               title: "Capture location",
               subtitle: "Location to look for captured images",
+              dialogTitle: "Select location to look for captured images",
               controller: controller.captureLocationController,
               onChanged: controller.onCaptureLocationChanged,
             ),
@@ -207,10 +209,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
         FluentSettingsBlock(
           title: "Local",
           settings: [
-            _getTextInput(
+            _getFolderPickerCard(
               icon: FluentIcons.fabric_picture_library,
               title: "Local photo storage location",
               subtitle: "Location where the output images will be stored",
+              dialogTitle: "Select local output storage location",
               controller: controller.localFolderSettingController,
               onChanged: controller.onLocalFolderChanged,
             ),
