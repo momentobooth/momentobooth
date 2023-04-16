@@ -81,8 +81,21 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               onChanged: controller.onCaptureDelaySecondsChanged,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
+            ),
+          ],
+        ),
+        FluentSettingsBlock(
+          title: "Creative",
+          settings: [
+            _getFolderPickerCard(
+              icon: FluentIcons.fabric_report_library,
+              title: "Collage background templates location",
+              subtitle: "Location to look for template files",
+              dialogTitle: "Select templates location",
+              controller: controller.templatesFolderSettingController,
+              onChanged: controller.onTemplatesFolderChanged,
             ),
           ],
         ),

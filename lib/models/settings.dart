@@ -20,6 +20,7 @@ class Settings with _$Settings implements TomlEncodableValue {
 
   const factory Settings({
     required int captureDelaySeconds,
+    required String templatesFolder,
     required HardwareSettings hardware,
     required OutputSettings output,
   }) = _Settings;
@@ -27,6 +28,7 @@ class Settings with _$Settings implements TomlEncodableValue {
   factory Settings.withDefaults() {
     return Settings(
       captureDelaySeconds: 5,
+      templatesFolder: _getHome(),
       hardware: HardwareSettings.withDefaults(),
       output: OutputSettings.withDefaults(),
     );
