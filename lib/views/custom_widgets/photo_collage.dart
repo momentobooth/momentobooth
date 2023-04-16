@@ -34,10 +34,12 @@ enum TemplateKind {
 class PhotoCollage extends StatefulWidget {
 
   final double aspectRatio;
+  final bool showLogo;
 
   const PhotoCollage({
     super.key,
     required this.aspectRatio,
+    this.showLogo = false,
   });
 
   @override
@@ -87,14 +89,23 @@ class PhotoCollageState extends State<PhotoCollage> {
   Uint8List? get frontTemplate => templates[TemplateKind.front]?[nChosen];
   Uint8List? get backTemplate => templates[TemplateKind.back]?[nChosen];
 
-  Future<File?> _templateResolver(TemplateKind kind, int numPhotos) async {
-    String name = "${kind.name}-template-$numPhotos.jpg";
-    var template = File(join(templatesFolder, name));
-    if (await template.exists()) { return template; }
-    name = "${kind.name}-template.jpg";
-    template = File(join(templatesFolder, name));
+  /// Checks if a given template file exists and returns it if it does.
+  Future<File?> _templateTest(String fileName) async {
+    var template = File(join(templatesFolder, fileName));
     if (await template.exists()) { return template; }
     return null;
+  }
+
+  /// Resolve the template for a given kind (backtground, foreground) and number of photos.
+  Future<File?> _templateResolver(TemplateKind kind, int numPhotos) async {
+    final filesToCheck = [
+      _templateTest("${kind.name}-template-$numPhotos.png"),
+      _templateTest("${kind.name}-template-$numPhotos.jpg"),
+      _templateTest("${kind.name}-template.png"),
+      _templateTest("${kind.name}-template.jpg"),
+    ];
+    final checkedFiles = await Future.wait(filesToCheck);
+    return checkedFiles.firstWhere((element) => element != null, orElse: () => null);
   }
 
   @override
@@ -109,8 +120,8 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Widget get _layout {
-    print("backTemplate: ${backTemplate != null}");
-    print("frontTemplate: ${frontTemplate != null}");
+    // print("backTemplate: ${backTemplate != null}");
+    // print("frontTemplate: ${frontTemplate != null}");
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -162,7 +173,8 @@ class PhotoCollageState extends State<PhotoCollage> {
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l1header'),
+        if (widget.showLogo)
+          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l1header'),
         SizedBox.expand(child: RotatedBox(
           quarterTurns: 1,
           child: Image.memory(photos[chosen[0]], fit: BoxFit.cover,),),
@@ -183,7 +195,8 @@ class PhotoCollageState extends State<PhotoCollage> {
       columnGap: gap,
       rowGap: gap,
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l2header'),
+        if (widget.showLogo)
+          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l2header'),
         for (int i = 0; i < nChosen; i++) ...[
           Image.memory(photos[chosen[i]]).inGridArea('l2content${i+1}'),
         ]
@@ -204,12 +217,10 @@ class PhotoCollageState extends State<PhotoCollage> {
       columnGap: 2*gap,
       rowGap: gap,
       children: [
-        Container(
-          alignment: Alignment.center,
-          color: Colors.blue,
-          child: Text("Powered by Casper die echt teringsnel Flutter geleerd heeft", textAlign: TextAlign.center,)
-        ).inGridArea('l3header1'),
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header2'),
+        if (widget.showLogo) ...[
+          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header1'),
+          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header2'),
+        ],
         for (int i = 0; i < nChosen; i++) ...[
           Image.memory(photos[chosen[i]]).inGridArea('l3content${i+1}'),
           Image.memory(photos[chosen[i]]).inGridArea('l3content${i+4}'),
@@ -219,30 +230,42 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Widget get _fourLayout {
-    return LayoutGrid(
-      areas: '''
-          l4content1 l4content2
-          l4header   l4header
-          l4content3 l4content4
-        ''',
-      rowSizes: [5.fr, 1.fr, 5.fr],
-      columnSizes: [1.fr, 1.fr],
-      columnGap: gap,
-      rowGap: gap,
+    return Stack(
       children: [
-        Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l4header'),
-        for (int i = 0; i < nChosen; i++) ...[
-          Center(child: RotatedBox(
-            quarterTurns: 1,
-            child: Image.memory(photos[chosen[i]])),
-          ).inGridArea('l4content${i+1}'),
-        ]
+        LayoutGrid(
+          areas: '''
+              l4content3 l4content1
+              l4content4 l4content2
+            ''',
+          rowSizes: [auto, auto],
+          columnSizes: [auto, auto],
+          columnGap: gap,
+          rowGap: gap,
+          children: [
+            for (int i = 0; i < nChosen; i++) ...[
+              RotatedBox(
+                quarterTurns: 1,
+                child: SizedBox.expand(
+                  child: Image.memory(photos[chosen[i]], fit: BoxFit.cover,)
+                )
+              ).inGridArea('l4content${i+1}'),
+            ]
+          ],
+        ),
+        if (widget.showLogo)
+          Padding(
+            padding: const EdgeInsets.all(250),
+            child: RotatedBox(
+              quarterTurns: 1,
+              child: Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black))
+            ),
+          ),
       ],
     );
   }
 
   Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
-    final delay = Duration(milliseconds: 500);
+    final delay = Duration(milliseconds: 800);
     if (format == ExportFormat.pngFormat) {
       return screenshotController.capture(pixelRatio: pixelRatio, delay: delay);
     }
