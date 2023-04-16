@@ -44,7 +44,8 @@ abstract class PhotosManagerBase with Store {
   bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single;
 
   Directory get outputDir => Directory(SettingsManagerBase.instance.settings.output.localFolder);
-  int? photoNumber;
+  int photoNumber = 0;
+  bool photoNumberChecked = false;
   String baseName = "MomentoBooth-image";
  
   Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
@@ -52,16 +53,20 @@ abstract class PhotosManagerBase with Store {
   PhotosManagerBase._internal();
 
   @action
-  void reset() {
+  void reset({bool advance = true}) {
     photos.clear();
     chosen.clear();
     captureMode = CaptureMode.single;
+    if (advance) { photoNumber++; }
   }
 
   @action
   Future<File?> writeOutput() async {
     if (instance.outputImage == null) return null;
-    photoNumber ??= await findLastImageNumber()+1;
+    if (!photoNumberChecked) {
+      photoNumber = await findLastImageNumber()+1;
+      photoNumberChecked = true;
+    }
     final extension = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
     final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$extension');
     File file = await File(filePath).create();
