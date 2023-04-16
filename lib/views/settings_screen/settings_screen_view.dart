@@ -94,7 +94,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
       title: "Hardware",
       blocks: [
         FluentSettingsBlock(
-          title: "Camera settings",
+          title: "Live view",
           settings: [
             _getComboBoxCard(
               icon: FluentIcons.camera,
@@ -106,6 +106,19 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
             ),
             if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam)
               _webcamCard,
+            _getComboBoxCard(
+              icon: FluentIcons.camera,
+              title: "Flip image",
+              subtitle: "Whether the image should be flipped in none, one or both axis",
+              items: viewModel.liveViewFlipImageChoices,
+              value: () => viewModel.liveViewFlipImage,
+              onChanged: controller.onLiveViewFlipImageChanged,
+            ),
+          ],
+        ),
+        FluentSettingsBlock(
+          title: "Photo capture",
+          settings: [
             _getComboBoxCard(
               icon: FluentIcons.camera,
               title: "Capture method",

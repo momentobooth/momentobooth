@@ -51,6 +51,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
   const factory HardwareSettings({
     required LiveViewMethod liveViewMethod,
     required String liveViewWebcamId,
+    required Flip liveViewFlipImage,
     required CaptureMethod captureMethod,
     required String captureLocation,
     required String printerName,
@@ -58,8 +59,9 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
   factory HardwareSettings.withDefaults() {
     return HardwareSettings(
-      liveViewMethod: LiveViewMethod.fakeImage,
+      liveViewMethod: LiveViewMethod.webcam,
       liveViewWebcamId: "",
+      liveViewFlipImage: Flip.horizontally,
       captureMethod: CaptureMethod.liveViewSource,
       captureLocation: _getHome(),
       printerName: "",

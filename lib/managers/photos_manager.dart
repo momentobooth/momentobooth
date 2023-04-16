@@ -35,10 +35,21 @@ abstract class PhotosManagerBase with Store {
   @observable
   ObservableList<int> chosen = ObservableList<int>();
 
-  Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
-
+  @observable
   CaptureMode captureMode = CaptureMode.single;
 
+  @computed
+  bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single;
+
+  Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
+
   PhotosManagerBase._internal();
+
+  @action
+  void reset() {
+    photos.clear();
+    chosen.clear();
+    captureMode = CaptureMode.single;
+  }
 
 }
