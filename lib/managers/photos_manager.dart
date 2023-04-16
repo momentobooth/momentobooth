@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 
+import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:mobx/mobx.dart';
+import 'package:path/path.dart' show basename, join; // Without show mobx complains
 
 part 'photos_manager.g.dart';
 
@@ -41,6 +43,10 @@ abstract class PhotosManagerBase with Store {
   @computed
   bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single;
 
+  Directory get outputDir => Directory(SettingsManagerBase.instance.settings.output.localFolder);
+  int? photoNumber;
+  String baseName = "MomentoBooth-image";
+ 
   Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
 
   PhotosManagerBase._internal();
@@ -50,6 +56,32 @@ abstract class PhotosManagerBase with Store {
     photos.clear();
     chosen.clear();
     captureMode = CaptureMode.single;
+  }
+
+  @action
+  Future<File?> writeOutput() async {
+    if (instance.outputImage == null) return null;
+    photoNumber ??= await findLastImageNumber()+1;
+    final extension = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
+    final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$extension');
+    File file = await File(filePath).create();
+    return await file.writeAsBytes(instance.outputImage!);
+  }
+  
+  @action
+  Future<int> findLastImageNumber() async {
+    final fileListBefore = await outputDir.list().toList();
+    final matchingFiles = fileListBefore.whereType<File>().where((file) => basename(file.path).startsWith(baseName));
+    
+    if (matchingFiles.isEmpty) { return 0; }
+
+    final lastImg = matchingFiles.last;
+    final pattern = RegExp(r'\d+');
+    final match = pattern.firstMatch(basename(lastImg.path));
+    if (match != null) {
+      return int.parse(match.group(0) ?? "0");
+    }
+    return 0;
   }
 
 }

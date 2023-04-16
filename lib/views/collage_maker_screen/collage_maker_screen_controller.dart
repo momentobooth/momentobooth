@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/widgets.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
 import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
@@ -38,8 +36,8 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
     print('captureCollage() executed in ${stopwatch.elapsed}');
     print("Written collage image to output image memory");
-    File file = await File('$outputFolder/MomentoBooth-image.${format.name.toLowerCase()}').create();
-    await file.writeAsBytes(PhotosManagerBase.instance.outputImage!);
+    
+    PhotosManagerBase.instance.writeOutput();
   }
 
   void onContinueTap() {
