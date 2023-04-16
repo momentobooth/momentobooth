@@ -61,27 +61,31 @@ class PhotoCollageState extends State<PhotoCollage> {
   Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
   int get nChosen => PhotosManagerBase.instance.chosen.length;
 
+  @observable
+  var initialized = false;
+
   String get templatesFolder => SettingsManagerBase.instance.settings.templatesFolder;
 
   var templates = {
-    TemplateKind.front: <int, File?>{},
-    TemplateKind.back: <int, File?>{},
+    TemplateKind.front: <int, Uint8List?>{},
+    TemplateKind.back: <int, Uint8List?>{},
   };
 
   void findTemplates() async {
     print("Finding templates");
     for (int i = 0; i <= 4; i++) {
-      templates[TemplateKind.front]?[i] = await _templateResolver(TemplateKind.front, i);
-      templates[TemplateKind.back]?[i] = await _templateResolver(TemplateKind.back, i);
+      final frontTemplate = await _templateResolver(TemplateKind.front, i);
+      final backTemplate = await _templateResolver(TemplateKind.back, i);
+      templates[TemplateKind.front]?[i] = await frontTemplate?.readAsBytes();
+      templates[TemplateKind.back]?[i] = await backTemplate?.readAsBytes();
     }
     print("Concluded template search");
-    print(templates);
+    // print(templates);
+    initialized = true;
   }
 
-  @observable
-  File? get frontTemplate => templates[TemplateKind.front]?[nChosen];
-  @observable
-  File? get backTemplate => templates[TemplateKind.back]?[nChosen];
+  Uint8List? get frontTemplate => templates[TemplateKind.front]?[nChosen];
+  Uint8List? get backTemplate => templates[TemplateKind.back]?[nChosen];
 
   Future<File?> _templateResolver(TemplateKind kind, int numPhotos) async {
     String name = "${kind.name}-template-$numPhotos.jpg";
@@ -105,18 +109,19 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Widget get _layout {
-    print("backTemplate: $backTemplate");
-    print("frontTemplate: $frontTemplate");
+    print("backTemplate: ${backTemplate != null}");
+    print("frontTemplate: ${frontTemplate != null}");
     return Stack(
+      fit: StackFit.expand,
       children: [
-        if (backTemplate != null)
-          Image.file(backTemplate!, fit: BoxFit.cover),
+        if (initialized && backTemplate != null)
+          Image.memory(backTemplate!, fit: BoxFit.cover),
         Padding(
           padding: const EdgeInsets.all(gap),
           child: _innerLayout,
         ),
-        if (frontTemplate != null)
-          Image.file(frontTemplate!, fit: BoxFit.cover), 
+        if (initialized && frontTemplate != null)
+          Image.memory(frontTemplate!, fit: BoxFit.cover), 
       ]
     );
   }
