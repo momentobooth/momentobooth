@@ -5,18 +5,31 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
+import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:flutter_rust_bridge_example/models/settings.dart';
 import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mobx/mobx.dart';
 import 'package:mobx/src/api/observable_collections.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:image/image.dart' as img;
+
+enum TemplateKind {
+
+  front(0, "front"),
+  back(1, "back");
+
+  // can add more properties or getters/methods if needed
+  final int value;
+  final String name;
+
+  // can use named parameters if you want
+  const TemplateKind(this.value, this.name);
+
+}
 
 class PhotoCollage extends StatefulWidget {
 
@@ -34,6 +47,10 @@ class PhotoCollage extends StatefulWidget {
 
 class PhotoCollageState extends State<PhotoCollage> {
 
+  PhotoCollageState() {
+    findTemplates();
+  }
+
   ScreenshotController screenshotController = ScreenshotController(); 
 
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
@@ -44,21 +61,67 @@ class PhotoCollageState extends State<PhotoCollage> {
   Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
   int get nChosen => PhotosManagerBase.instance.chosen.length;
 
+  String get templatesFolder => SettingsManagerBase.instance.settings.templatesFolder;
+
+  var templates = {
+    TemplateKind.front: <int, File?>{},
+    TemplateKind.back: <int, File?>{},
+  };
+
+  void findTemplates() async {
+    print("Finding templates");
+    for (int i = 0; i <= 4; i++) {
+      templates[TemplateKind.front]?[i] = await _templateResolver(TemplateKind.front, i);
+      templates[TemplateKind.back]?[i] = await _templateResolver(TemplateKind.back, i);
+    }
+    print("Concluded template search");
+    print(templates);
+  }
+
+  @observable
+  File? get frontTemplate => templates[TemplateKind.front]?[nChosen];
+  @observable
+  File? get backTemplate => templates[TemplateKind.back]?[nChosen];
+
+  Future<File?> _templateResolver(TemplateKind kind, int numPhotos) async {
+    String name = "${kind.name}-template-$numPhotos.jpg";
+    var template = File(join(templatesFolder, name));
+    if (await template.exists()) { return template; }
+    name = "${kind.name}-template.jpg";
+    template = File(join(templatesFolder, name));
+    if (await template.exists()) { return template; }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Screenshot(
       controller: screenshotController,
       child: AspectRatio(
         aspectRatio: widget.aspectRatio,
-        child: Padding(
-          padding: const EdgeInsets.all(gap),
-          child: Observer(builder: (context) => _layout),
-        )
+        child: Observer(builder: (context) => _layout)
       ),
     );
   }
 
   Widget get _layout {
+    print("backTemplate: $backTemplate");
+    print("frontTemplate: $frontTemplate");
+    return Stack(
+      children: [
+        if (backTemplate != null)
+          Image.file(backTemplate!, fit: BoxFit.cover),
+        Padding(
+          padding: const EdgeInsets.all(gap),
+          child: _innerLayout,
+        ),
+        if (frontTemplate != null)
+          Image.file(frontTemplate!, fit: BoxFit.cover), 
+      ]
+    );
+  }
+
+  Widget get _innerLayout {
     if (PhotosManagerBase.instance.chosen.isEmpty) {
       return _zeroLayout;
     } else if (nChosen == 1) {
@@ -174,10 +237,11 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
+    final delay = Duration(milliseconds: 500);
     if (format == ExportFormat.pngFormat) {
-      return screenshotController.capture(pixelRatio: pixelRatio);
+      return screenshotController.capture(pixelRatio: pixelRatio, delay: delay);
     }
-    final image = await screenshotController.captureAsUiImage(pixelRatio: pixelRatio);
+    final image = await screenshotController.captureAsUiImage(pixelRatio: pixelRatio, delay: delay);
     // Lib by default uses ui.ImageByteFormat.png for capture, encoding is what takes long.
     final byteData = await image!.toByteData(format: ui.ImageByteFormat.rawRgba);
     // Create an image lib image instance from ui image instance.
