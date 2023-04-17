@@ -97,6 +97,13 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               controller: controller.templatesFolderSettingController,
               onChanged: controller.onTemplatesFolderChanged,
             ),
+            _getBooleanInput(
+              icon: FluentIcons.picture_center,
+              title: "Treat single photo as collage",
+              subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
+              value: () => viewModel.singlePhotoIsCollageSetting,
+              onChanged: controller.onSinglePhotoIsCollageChanged,
+            ),
           ],
         ),
       ],

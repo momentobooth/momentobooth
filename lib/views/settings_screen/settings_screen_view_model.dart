@@ -62,6 +62,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   // Current values
 
   int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
+  bool get singlePhotoIsCollageSetting => SettingsManagerBase.instance.settings.singlePhotoIsCollage;
   String get templatesFolderSetting => SettingsManagerBase.instance.settings.templatesFolder;
   LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
   String get liveViewWebcamId => SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;

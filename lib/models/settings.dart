@@ -20,6 +20,7 @@ class Settings with _$Settings implements TomlEncodableValue {
 
   const factory Settings({
     required int captureDelaySeconds,
+    required bool singlePhotoIsCollage,
     required String templatesFolder,
     required HardwareSettings hardware,
     required OutputSettings output,
@@ -28,6 +29,7 @@ class Settings with _$Settings implements TomlEncodableValue {
   factory Settings.withDefaults() {
     return Settings(
       captureDelaySeconds: 5,
+      singlePhotoIsCollage: true,
       templatesFolder: _getHome(),
       hardware: HardwareSettings.withDefaults(),
       output: OutputSettings.withDefaults(),

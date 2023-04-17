@@ -74,6 +74,26 @@ FluentSettingCard _getTextInput({
   );
 }
 
+FluentSettingCard _getBooleanInput({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required GetValueCallback<bool> value,
+  required ValueChanged<bool> onChanged,
+}) {
+  return FluentSettingCard(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    child: Observer(builder: (_) {
+      return ToggleSwitch(
+        checked: value(),
+        onChanged: onChanged,
+      );
+    }),
+  );
+}
+
 FluentSettingCard _getFolderPickerCard<TValue>({
   required IconData icon,
   required String title,
