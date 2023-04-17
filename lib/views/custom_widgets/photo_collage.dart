@@ -9,11 +9,10 @@ import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
 import 'package:flutter_rust_bridge_example/models/settings.dart';
 import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
 import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
-import 'package:mobx/src/api/observable_collections.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -50,8 +49,15 @@ class PhotoCollage extends StatefulWidget {
 class PhotoCollageState extends State<PhotoCollage> {
 
   PhotoCollageState() {
+    setInitialized = Action(_setInitialized);
     findTemplates();
   }
+
+  void _setInitialized(bool value) => _initialized.value = value;
+
+  final Observable<bool> _initialized = Observable(false);
+  bool get initialized => _initialized.value;
+  late Action setInitialized;
 
   ScreenshotController screenshotController = ScreenshotController(); 
 
@@ -63,31 +69,28 @@ class PhotoCollageState extends State<PhotoCollage> {
   Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
   int get nChosen => PhotosManagerBase.instance.chosen.length;
 
-  @observable
-  var initialized = false;
-
   String get templatesFolder => SettingsManagerBase.instance.settings.templatesFolder;
 
   var templates = {
-    TemplateKind.front: <int, Uint8List?>{},
-    TemplateKind.back: <int, Uint8List?>{},
+    TemplateKind.front: <int, File?>{},
+    TemplateKind.back: <int, File?>{},
   };
-
+  
   void findTemplates() async {
     print("Finding templates");
     for (int i = 0; i <= 4; i++) {
       final frontTemplate = await _templateResolver(TemplateKind.front, i);
       final backTemplate = await _templateResolver(TemplateKind.back, i);
-      templates[TemplateKind.front]?[i] = await frontTemplate?.readAsBytes();
-      templates[TemplateKind.back]?[i] = await backTemplate?.readAsBytes();
+      templates[TemplateKind.front]?[i] = frontTemplate;
+      templates[TemplateKind.back]?[i] = backTemplate;
     }
     print("Concluded template search");
     // print(templates);
-    initialized = true;
+    setInitialized([true]);
   }
 
-  Uint8List? get frontTemplate => templates[TemplateKind.front]?[nChosen];
-  Uint8List? get backTemplate => templates[TemplateKind.back]?[nChosen];
+  File? get frontTemplate => templates[TemplateKind.front]?[nChosen];
+  File? get backTemplate => templates[TemplateKind.back]?[nChosen];
 
   /// Checks if a given template file exists and returns it if it does.
   Future<File?> _templateTest(String fileName) async {
@@ -120,19 +123,29 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Widget get _layout {
-    // print("backTemplate: ${backTemplate != null}");
+    print("Rendering layout; initialized: $initialized; nChosen: $nChosen");
     // print("frontTemplate: ${frontTemplate != null}");
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (initialized && backTemplate != null)
-          Image.memory(backTemplate!, fit: BoxFit.cover),
+        for (int i = 0; i <= 4; i++) ...[
+          if (initialized && templates[TemplateKind.back]?[i] != null)
+            Opacity(
+              opacity: i == nChosen ? 1 : 0,
+              child: Image.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
+            ),
+        ],
         Padding(
           padding: const EdgeInsets.all(gap),
           child: _innerLayout,
         ),
-        if (initialized && frontTemplate != null)
-          Image.memory(frontTemplate!, fit: BoxFit.cover), 
+        for (int i = 0; i <= 4; i++) ...[
+          if (initialized && templates[TemplateKind.front]?[i] != null)
+            Opacity(
+              opacity: i == nChosen ? 1 : 0,
+              child: Image.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
+            ),
+        ],
       ]
     );
   }
@@ -265,7 +278,7 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
-    final delay = Duration(milliseconds: 800);
+    final delay = Duration(milliseconds: 20);
     if (format == ExportFormat.pngFormat) {
       return screenshotController.capture(pixelRatio: pixelRatio, delay: delay);
     }
