@@ -77,15 +77,12 @@ class PhotoCollageState extends State<PhotoCollage> {
   };
   
   void findTemplates() async {
-    print("Finding templates");
     for (int i = 0; i <= 4; i++) {
       final frontTemplate = await _templateResolver(TemplateKind.front, i);
       final backTemplate = await _templateResolver(TemplateKind.back, i);
       templates[TemplateKind.front]?[i] = frontTemplate;
       templates[TemplateKind.back]?[i] = backTemplate;
     }
-    print("Concluded template search");
-    // print(templates);
     setInitialized([true]);
   }
 
@@ -123,8 +120,6 @@ class PhotoCollageState extends State<PhotoCollage> {
   }
 
   Widget get _layout {
-    print("Rendering layout; initialized: $initialized; nChosen: $nChosen");
-    // print("frontTemplate: ${frontTemplate != null}");
     return Stack(
       fit: StackFit.expand,
       children: [

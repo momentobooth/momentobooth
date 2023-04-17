@@ -5,6 +5,7 @@ import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_controller.dart';
 import 'package:flutter_rust_bridge_example/views/capture_screen/capture_screen_view_model.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/capture_counter.dart';
+import 'package:flutter_rust_bridge_example/views/custom_widgets/photo_collage.dart';
 import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/live_view_background.dart';
 
 class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureScreenController> {
@@ -20,6 +21,16 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
     return Stack(
       fit: StackFit.expand,
       children: [
+        // Is this very pretty? No. But it works 😅
+        FittedBox(
+          child: SizedBox(
+            height: 1000,
+            child: PhotoCollage(
+              key: viewModel.collageKey,
+              aspectRatio: 2/3
+            ),
+          ),
+        ),
         LiveView(),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
