@@ -13,6 +13,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _localFolderController;
   TextEditingController get localFolderSettingController => _localFolderController ??= TextEditingController(text: viewModel.localFolderSetting);
 
+  TextEditingController? _templatesFolderController;
+  TextEditingController get templatesFolderSettingController => _templatesFolderController ??= TextEditingController(text: viewModel.templatesFolderSetting);
+
   TextEditingController? _firefoxSendServerUrlController;
   TextEditingController get firefoxSendServerUrlController => _firefoxSendServerUrlController ??= TextEditingController(text: viewModel.firefoxSendServerUrlSetting);
 
@@ -30,6 +33,18 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCaptureDelaySecondsChanged(int? captureDelaySeconds) {
     if (captureDelaySeconds != null) {
       viewModel.updateSettings((settings) => settings.copyWith(captureDelaySeconds: captureDelaySeconds));
+    }
+  }
+
+  void onSinglePhotoIsCollageChanged(bool? singlePhotoIsCollage) {
+    if (singlePhotoIsCollage != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(singlePhotoIsCollage: singlePhotoIsCollage));
+    }
+  }
+
+  void onTemplatesFolderChanged(String? templatesFolder) {
+    if (templatesFolder != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(templatesFolder: templatesFolder));
     }
   }
 

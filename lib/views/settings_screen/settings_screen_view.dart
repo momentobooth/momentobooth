@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_rust_bridge_example/models/settings.dart';
@@ -80,8 +81,28 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               onChanged: controller.onCaptureDelaySecondsChanged,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              padding: const EdgeInsets.only(top: 8.0),
               child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
+            ),
+          ],
+        ),
+        FluentSettingsBlock(
+          title: "Creative",
+          settings: [
+            _getFolderPickerCard(
+              icon: FluentIcons.fabric_report_library,
+              title: "Collage background templates location",
+              subtitle: "Location to look for template files",
+              dialogTitle: "Select templates location",
+              controller: controller.templatesFolderSettingController,
+              onChanged: controller.onTemplatesFolderChanged,
+            ),
+            _getBooleanInput(
+              icon: FluentIcons.picture_center,
+              title: "Treat single photo as collage",
+              subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
+              value: () => viewModel.singlePhotoIsCollageSetting,
+              onChanged: controller.onSinglePhotoIsCollageChanged,
             ),
           ],
         ),
@@ -127,10 +148,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               value: () => viewModel.captureMethodSetting,
               onChanged: controller.onCaptureMethodChanged,
             ),
-            _getTextInput(
+            _getFolderPickerCard(
               icon: FluentIcons.folder,
               title: "Capture location",
               subtitle: "Location to look for captured images",
+              dialogTitle: "Select location to look for captured images",
               controller: controller.captureLocationController,
               onChanged: controller.onCaptureLocationChanged,
             ),
@@ -207,10 +229,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
         FluentSettingsBlock(
           title: "Local",
           settings: [
-            _getTextInput(
+            _getFolderPickerCard(
               icon: FluentIcons.fabric_picture_library,
               title: "Local photo storage location",
               subtitle: "Location where the output images will be stored",
+              dialogTitle: "Select local output storage location",
               controller: controller.localFolderSettingController,
               onChanged: controller.onLocalFolderChanged,
             ),

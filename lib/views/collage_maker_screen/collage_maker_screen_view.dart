@@ -95,7 +95,9 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                         fit: StackFit.expand,
                         children: [
                           ColoredBox(color: Color(0x80000000)),
-                          Center(child: Icon(Icons.check, size: 80, color: Color(0xFFFFFFFF),),),
+                          Center(
+                            child: Text((PhotosManagerBase.instance.chosen.indexOf(i)+1).toString(), style: theme.subTitleStyle,),
+                          ),
                         ],
                       ),
                     )

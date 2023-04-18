@@ -32,8 +32,6 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   void setPrinterList() async {
     final printers = await Printing.listPrinters();
-    print("Getting printers:");
-    print(printers);
     printerOptions.clear();
     for (var printer in printers) {
       final icon = printer.isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
@@ -64,6 +62,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   // Current values
 
   int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
+  bool get singlePhotoIsCollageSetting => SettingsManagerBase.instance.settings.singlePhotoIsCollage;
+  String get templatesFolderSetting => SettingsManagerBase.instance.settings.templatesFolder;
   LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
   String get liveViewWebcamId => SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
   Flip get liveViewFlipImage => SettingsManagerBase.instance.settings.hardware.liveViewFlipImage;

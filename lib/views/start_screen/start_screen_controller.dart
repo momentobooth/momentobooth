@@ -16,10 +16,6 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> {
 
   void onPressedContinue() {
     router.push(ChooseCaptureModeScreen.defaultRoute);
-    // Remove images in memory
-    // Fixme: maybe somewhere else is nicer, but for now it's here.
-    PhotosManagerBase.instance.photos.clear();
-    PhotosManagerBase.instance.chosen.clear();
   }
 
 }
