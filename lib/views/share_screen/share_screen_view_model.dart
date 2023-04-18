@@ -37,6 +37,9 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   @observable
   String qrUrl = "";
 
+  CaptureMode get captureMode => PhotosManagerBase.instance.captureMode;
+  String get backText => captureMode == CaptureMode.single ? "Retake" : "Change";
+
   /// Global key for controlling the slider widget.
   GlobalKey<SliderWidgetState> sliderKey = GlobalKey<SliderWidgetState>();
 

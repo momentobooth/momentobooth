@@ -61,17 +61,29 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         ),
         Expanded(
           flex: 3,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: GestureDetector(
-              // Next button
-              onTap: controller.onClickNext,
-              behavior: HitTestBehavior.translucent,
-              child: AutoSizeText(
-                "→ ",
-                style: theme.titleStyle,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              GestureDetector(
+                // Next button
+                onTap: controller.onClickPrev,
+                behavior: HitTestBehavior.translucent,
+                child: AutoSizeText(
+                  " ↺ ${viewModel.backText}",
+                  style: theme.subTitleStyle,
+                ),
               ),
-            ),
+              GestureDetector(
+                // Next button
+                onTap: controller.onClickNext,
+                behavior: HitTestBehavior.translucent,
+                child: AutoSizeText(
+                  "→ ",
+                  style: theme.titleStyle,
+                ),
+              ),
+            ],
           ),
         ),
         Flexible(

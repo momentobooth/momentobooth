@@ -24,6 +24,16 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
   void onClickNext() {
     router.push("/");
   }
+  
+  void onClickPrev() {
+    print("clicking prev");
+    if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
+      PhotosManagerBase.instance.reset(advance: false);
+      router.push('/capture');
+    } else {
+      router.pop();
+    }
+  }
 
   String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
 
