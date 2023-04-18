@@ -21,11 +21,13 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   late final PhotoCaptureMethod capturer;
   bool flashComplete = false;
   bool captureComplete = false;
+  static const flashStartDuration = Duration(milliseconds: 50);
+  static const flashEndDuration = Duration(milliseconds: 2500);
 
   int get counterStart => SettingsManagerBase.instance.settings.captureDelaySeconds;
 
   @computed
-  Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay;
+  Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
 
   @observable
   bool showCounter = true;
@@ -40,7 +42,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   Curve get flashAnimationCurve => Curves.easeOutQuart;
 
   @computed
-  Duration get flashAnimationDuration => showFlash ? const Duration(milliseconds: 50) : const Duration(milliseconds: 2500);
+  Duration get flashAnimationDuration => showFlash ? flashStartDuration : flashEndDuration;
   
   /// Global key for controlling the slider widget.
   final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
