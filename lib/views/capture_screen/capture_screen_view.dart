@@ -23,15 +23,17 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
       children: [
         // Is this very pretty? No. But it works 😅
         FittedBox(
-          child: SizedBox(
-            height: 1000,
-            child: PhotoCollage(
-              key: viewModel.collageKey,
-              aspectRatio: 2/3
+          child: Transform.translate(
+            offset: Offset(3000, 0),
+            child: SizedBox(
+              height: 1000,
+              child: PhotoCollage(
+                key: viewModel.collageKey,
+                aspectRatio: 2/3
+              ),
             ),
           ),
         ),
-        LiveView(),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
