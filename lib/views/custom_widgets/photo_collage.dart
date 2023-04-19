@@ -4,11 +4,11 @@ import 'dart:ui' as ui;
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/models/settings.dart';
-import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
-import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';

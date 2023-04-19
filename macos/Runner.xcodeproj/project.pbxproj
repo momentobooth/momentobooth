@@ -28,7 +28,7 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */; };
 		A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */ = {isa = PBXBuildFile; fileRef = A379BA8C27BFF75900A4CD85 /* bridge_generated.h */; };
-		C5141FC429C60A540076DC88 /* libflutter_rust_bridge_example_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5141FC329C60A510076DC88 /* libflutter_rust_bridge_example_static.a */; };
+		C5141FC429C60A540076DC88 /* libmomento_booth_native_helpers_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5141FC329C60A510076DC88 /* libmomento_booth_native_helpers_static.a */; };
 		C5D459D129E032700041A948 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D459CF29E032700041A948 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -42,24 +42,24 @@
 		};
 		A379BA9127BFF76900A4CD85 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */;
+			containerPortal = A379BA8D27BFF76900A4CD85 /* momento_booth_native_helpers.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CA60FBAABA3A2B3BABD1B908;
-			remoteInfo = "flutter_rust_bridge_example-cdylib";
+			remoteInfo = "momento_booth_native_helpers-cdylib";
 		};
 		C5141FC229C60A510076DC88 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */;
+			containerPortal = A379BA8D27BFF76900A4CD85 /* momento_booth_native_helpers.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = CA60957939D1AD1E3DC02A5C;
-			remoteInfo = "flutter_rust_bridge_example-staticlib";
+			remoteInfo = "momento_booth_native_helpers-staticlib";
 		};
 		C5141FC529C60A690076DC88 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */;
+			containerPortal = A379BA8D27BFF76900A4CD85 /* momento_booth_native_helpers.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = CA60957939D1C529DB9FC4E2;
-			remoteInfo = "flutter_rust_bridge_example-staticlib";
+			remoteInfo = "momento_booth_native_helpers-staticlib";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -67,7 +67,7 @@
 		2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedPluginRegistrant.swift; sourceTree = "<group>"; };
-		33CC10ED2044A3C60003C045 /* with_flutter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = with_flutter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		33CC10ED2044A3C60003C045 /* momento_booth.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = momento_booth.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33CC10F02044A3C60003C045 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33CC10F22044A3C60003C045 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Runner/Assets.xcassets; sourceTree = "<group>"; };
 		33CC10F52044A3C60003C045 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 		842E5678ECBC61DFDDEEE2D5 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		A379BA8C27BFF75900A4CD85 /* bridge_generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bridge_generated.h; sourceTree = "<group>"; };
-		A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = flutter_rust_bridge_example.xcodeproj; path = ../rust/flutter_rust_bridge_example.xcodeproj; sourceTree = "<group>"; };
+		A379BA8D27BFF76900A4CD85 /* momento_booth_native_helpers.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = momento_booth_native_helpers.xcodeproj; path = ../rust/momento_booth_native_helpers.xcodeproj; sourceTree = "<group>"; };
 		A3B8EE939F14F5AA947E7DDE /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		B95FCA28249E171BD83D6DAF /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		C5D459CF29E032700041A948 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -94,7 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C5141FC429C60A540076DC88 /* libflutter_rust_bridge_example_static.a in Frameworks */,
+				C5141FC429C60A540076DC88 /* libmomento_booth_native_helpers_static.a in Frameworks */,
 				5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */,
 				C5D459D129E032700041A948 /* AVFoundation.framework in Frameworks */,
 			);
@@ -117,7 +117,7 @@
 		33CC10E42044A3C60003C045 = {
 			isa = PBXGroup;
 			children = (
-				A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */,
+				A379BA8D27BFF76900A4CD85 /* momento_booth_native_helpers.xcodeproj */,
 				33FAB671232836740065AC1E /* Runner */,
 				33CEB47122A05771004F2AC0 /* Flutter */,
 				33CC10EE2044A3C60003C045 /* Products */,
@@ -129,7 +129,7 @@
 		33CC10EE2044A3C60003C045 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				33CC10ED2044A3C60003C045 /* with_flutter.app */,
+				33CC10ED2044A3C60003C045 /* momento_booth.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -183,8 +183,8 @@
 		A379BA8E27BFF76900A4CD85 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C5141FC329C60A510076DC88 /* libflutter_rust_bridge_example_static.a */,
-				A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */,
+				C5141FC329C60A510076DC88 /* libmomento_booth_native_helpers_static.a */,
+				A379BA9227BFF76900A4CD85 /* momento_booth_native_helpers.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -220,7 +220,7 @@
 			);
 			name = Runner;
 			productName = Runner;
-			productReference = 33CC10ED2044A3C60003C045 /* with_flutter.app */;
+			productReference = 33CC10ED2044A3C60003C045 /* momento_booth.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -263,7 +263,7 @@
 			projectReferences = (
 				{
 					ProductGroup = A379BA8E27BFF76900A4CD85 /* Products */;
-					ProjectRef = A379BA8D27BFF76900A4CD85 /* flutter_rust_bridge_example.xcodeproj */;
+					ProjectRef = A379BA8D27BFF76900A4CD85 /* momento_booth_native_helpers.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -275,17 +275,17 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		A379BA9227BFF76900A4CD85 /* flutter_rust_bridge_example.dylib */ = {
+		A379BA9227BFF76900A4CD85 /* momento_booth_native_helpers.dylib */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.dylib";
-			path = flutter_rust_bridge_example.dylib;
+			path = momento_booth_native_helpers.dylib;
 			remoteRef = A379BA9127BFF76900A4CD85 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C5141FC329C60A510076DC88 /* libflutter_rust_bridge_example_static.a */ = {
+		C5141FC329C60A510076DC88 /* libmomento_booth_native_helpers_static.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			path = libflutter_rust_bridge_example_static.a;
+			path = libmomento_booth_native_helpers_static.a;
 			remoteRef = C5141FC229C60A510076DC88 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -406,7 +406,7 @@
 		};
 		C5141FC629C60A690076DC88 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "flutter_rust_bridge_example-staticlib";
+			name = "momento_booth_native_helpers-staticlib";
 			targetProxy = C5141FC529C60A690076DC88 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */

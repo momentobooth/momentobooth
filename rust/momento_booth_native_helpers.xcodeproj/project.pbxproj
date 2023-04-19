@@ -32,8 +32,8 @@
 /* Begin PBXFileReference section */
 		ADDEDBA66A6E1 /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		CA600C2AD4303EF4668187A5 /* Cargo.toml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cargo.toml; sourceTree = "<group>"; };
-		CA604C5554ED2B3BABD1B908 /* flutter_rust_bridge_example.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = flutter_rust_bridge_example.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
-		CA60957939D1AD1E3DC02A5C /* libflutter_rust_bridge_example_static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libflutter_rust_bridge_example_static.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA604C5554ED2B3BABD1B908 /* momento_booth_native_helpers.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = momento_booth_native_helpers.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA60957939D1AD1E3DC02A5C /* libmomento_booth_native_helpers_static.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libmomento_booth_native_helpers_static.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -48,8 +48,8 @@
 		CA600C2AD43022869D176AE5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CA60957939D1AD1E3DC02A5C /* libflutter_rust_bridge_example_static.a */,
-				CA604C5554ED2B3BABD1B908 /* flutter_rust_bridge_example.dylib */,
+				CA60957939D1AD1E3DC02A5C /* libmomento_booth_native_helpers_static.a */,
+				CA604C5554ED2B3BABD1B908 /* momento_booth_native_helpers.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,9 +74,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CA604C5554EDF7EA7C7D19F9 /* flutter_rust_bridge_example-cdylib */ = {
+		CA604C5554EDF7EA7C7D19F9 /* momento_booth_native_helpers-cdylib */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CA60DB5CCEC7F7EA7C7D19F9 /* Build configuration list for PBXNativeTarget "flutter_rust_bridge_example-cdylib" */;
+			buildConfigurationList = CA60DB5CCEC7F7EA7C7D19F9 /* Build configuration list for PBXNativeTarget "momento_booth_native_helpers-cdylib" */;
 			buildPhases = (
 				CA609E8FAC9FF7EA7C7D19F9 /* Sources */,
 				CA600C2AD430AF6EBB7F357C /* Universal Binary lipo */,
@@ -86,14 +86,14 @@
 			);
 			dependencies = (
 			);
-			name = "flutter_rust_bridge_example-cdylib";
-			productName = flutter_rust_bridge_example.dylib;
-			productReference = CA604C5554ED2B3BABD1B908 /* flutter_rust_bridge_example.dylib */;
+			name = "momento_booth_native_helpers-cdylib";
+			productName = momento_booth_native_helpers.dylib;
+			productReference = CA604C5554ED2B3BABD1B908 /* momento_booth_native_helpers.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
-		CA60957939D1C529DB9FC4E2 /* flutter_rust_bridge_example-staticlib */ = {
+		CA60957939D1C529DB9FC4E2 /* momento_booth_native_helpers-staticlib */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CA60DB5CCEC7C529DB9FC4E2 /* Build configuration list for PBXNativeTarget "flutter_rust_bridge_example-staticlib" */;
+			buildConfigurationList = CA60DB5CCEC7C529DB9FC4E2 /* Build configuration list for PBXNativeTarget "momento_booth_native_helpers-staticlib" */;
 			buildPhases = (
 				CA609E8FAC9FC529DB9FC4E2 /* Sources */,
 				CA600C2AD430AF6EBB7F357C /* Universal Binary lipo */,
@@ -103,9 +103,9 @@
 			);
 			dependencies = (
 			);
-			name = "flutter_rust_bridge_example-staticlib";
-			productName = libflutter_rust_bridge_example_static.a;
-			productReference = CA60957939D1AD1E3DC02A5C /* libflutter_rust_bridge_example_static.a */;
+			name = "momento_booth_native_helpers-staticlib";
+			productName = libmomento_booth_native_helpers_static.a;
+			productReference = CA60957939D1AD1E3DC02A5C /* libmomento_booth_native_helpers_static.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -126,7 +126,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CA600C2AD43080E02D6C7F57 /* Build configuration list for PBXProject "flutter_rust_bridge_example" */;
+			buildConfigurationList = CA600C2AD43080E02D6C7F57 /* Build configuration list for PBXProject "momento_booth_native_helpers" */;
 			compatibilityVersion = "Xcode 11.4";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -139,8 +139,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CA60957939D1C529DB9FC4E2 /* flutter_rust_bridge_example-staticlib */,
-				CA604C5554EDF7EA7C7D19F9 /* flutter_rust_bridge_example-cdylib */,
+				CA60957939D1C529DB9FC4E2 /* momento_booth_native_helpers-staticlib */,
+				CA604C5554EDF7EA7C7D19F9 /* momento_booth_native_helpers-cdylib */,
 			);
 		};
 /* End PBXProject section */
@@ -191,12 +191,12 @@
 		CA604AE1B390C529DB9FC4E2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CARGO_XCODE_CARGO_DEP_FILE_NAME = libflutter_rust_bridge_example.d;
-				CARGO_XCODE_CARGO_FILE_NAME = libflutter_rust_bridge_example.a;
+				CARGO_XCODE_CARGO_DEP_FILE_NAME = libmomento_booth_native_helpers.d;
+				CARGO_XCODE_CARGO_FILE_NAME = libmomento_booth_native_helpers.a;
 				INSTALL_GROUP = "";
 				INSTALL_MODE_FLAG = "";
 				INSTALL_OWNER = "";
-				PRODUCT_NAME = flutter_rust_bridge_example_static;
+				PRODUCT_NAME = momento_booth_native_helpers_static;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos appletvsimulator appletvos";
 			};
@@ -205,10 +205,10 @@
 		CA604AE1B390F7EA7C7D19F9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CARGO_XCODE_CARGO_DEP_FILE_NAME = libflutter_rust_bridge_example.d;
-				CARGO_XCODE_CARGO_FILE_NAME = libflutter_rust_bridge_example.dylib;
+				CARGO_XCODE_CARGO_DEP_FILE_NAME = libmomento_booth_native_helpers.d;
+				CARGO_XCODE_CARGO_FILE_NAME = libmomento_booth_native_helpers.dylib;
 				DYLIB_COMPATIBILITY_VERSION = 0;
-				PRODUCT_NAME = flutter_rust_bridge_example;
+				PRODUCT_NAME = momento_booth_native_helpers;
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Debug;
@@ -234,7 +234,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.1.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = flutter_rust_bridge_example;
+				PRODUCT_NAME = momento_booth_native_helpers;
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = YES;
 				TVOS_DEPLOYMENT_TARGET = 15.0;
@@ -261,7 +261,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 0.1.0;
-				PRODUCT_NAME = flutter_rust_bridge_example;
+				PRODUCT_NAME = momento_booth_native_helpers;
 				SDKROOT = macosx;
 				SUPPORTS_MACCATALYST = YES;
 				TVOS_DEPLOYMENT_TARGET = 15.0;
@@ -271,12 +271,12 @@
 		CA60F047D9CCC529DB9FC4E2 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CARGO_XCODE_CARGO_DEP_FILE_NAME = libflutter_rust_bridge_example.d;
-				CARGO_XCODE_CARGO_FILE_NAME = libflutter_rust_bridge_example.a;
+				CARGO_XCODE_CARGO_DEP_FILE_NAME = libmomento_booth_native_helpers.d;
+				CARGO_XCODE_CARGO_FILE_NAME = libmomento_booth_native_helpers.a;
 				INSTALL_GROUP = "";
 				INSTALL_MODE_FLAG = "";
 				INSTALL_OWNER = "";
-				PRODUCT_NAME = flutter_rust_bridge_example_static;
+				PRODUCT_NAME = momento_booth_native_helpers_static;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos appletvsimulator appletvos";
 			};
@@ -285,10 +285,10 @@
 		CA60F047D9CCF7EA7C7D19F9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CARGO_XCODE_CARGO_DEP_FILE_NAME = libflutter_rust_bridge_example.d;
-				CARGO_XCODE_CARGO_FILE_NAME = libflutter_rust_bridge_example.dylib;
+				CARGO_XCODE_CARGO_DEP_FILE_NAME = libmomento_booth_native_helpers.d;
+				CARGO_XCODE_CARGO_FILE_NAME = libmomento_booth_native_helpers.dylib;
 				DYLIB_COMPATIBILITY_VERSION = 0;
-				PRODUCT_NAME = flutter_rust_bridge_example;
+				PRODUCT_NAME = momento_booth_native_helpers;
 				SUPPORTED_PLATFORMS = macosx;
 			};
 			name = Release;
@@ -296,7 +296,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CA600C2AD43080E02D6C7F57 /* Build configuration list for PBXProject "flutter_rust_bridge_example" */ = {
+		CA600C2AD43080E02D6C7F57 /* Build configuration list for PBXProject "momento_booth_native_helpers" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA607CDAE2223CC16B37690B /* Release */,
@@ -305,7 +305,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CA60DB5CCEC7C529DB9FC4E2 /* Build configuration list for PBXNativeTarget "flutter_rust_bridge_example-staticlib" */ = {
+		CA60DB5CCEC7C529DB9FC4E2 /* Build configuration list for PBXNativeTarget "momento_booth_native_helpers-staticlib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA60F047D9CCC529DB9FC4E2 /* Release */,
@@ -314,7 +314,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CA60DB5CCEC7F7EA7C7D19F9 /* Build configuration list for PBXNativeTarget "flutter_rust_bridge_example-cdylib" */ = {
+		CA60DB5CCEC7F7EA7C7D19F9 /* Build configuration list for PBXNativeTarget "momento_booth_native_helpers-cdylib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA60F047D9CCF7EA7C7D19F9 /* Release */,

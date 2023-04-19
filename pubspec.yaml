@@ -1,5 +1,5 @@
-name: flutter_rust_bridge_example
-description: A new Flutter project.
+name: momento_booth
+description: Opensource photobooth application
 
 publish_to: "none"
 version: 0.0.23+23

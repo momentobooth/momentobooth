@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter_rust_bridge_example/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 
 /// Capture method that captures an image by automating the Sony Imaging Edge Desktop application (Windows only).
 /// This solution exists because gPhoto2 and other possibly better solutions require driver overrides on Windows or

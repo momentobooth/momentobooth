@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:flutter_rust_bridge_example/utils/image.dart';
+import 'package:momento_booth/utils/image.dart';
 
 class LiveViewFrame {
 

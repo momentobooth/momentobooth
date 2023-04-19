@@ -2,11 +2,11 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_controller_base.dart';
-import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view_model.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;

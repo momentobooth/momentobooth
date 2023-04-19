@@ -1,7 +1,7 @@
-import 'package:flutter_rust_bridge_example/hardware_control/live_view_streaming/live_view_stream.dart';
-import 'package:flutter_rust_bridge_example/models/hardware/live_view_streaming/live_view_frame.dart';
-import 'package:flutter_rust_bridge_example/rust_bridge/library_api.generated.dart';
-import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream.dart';
+import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
+import 'package:momento_booth/rust_bridge/library_api.generated.dart';
+import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
 class NokhwaCameraStream extends LiveViewStream {
 

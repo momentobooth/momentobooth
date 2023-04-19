@@ -1,6 +1,6 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/blocks/fluent_settings_block.dart';
+import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
 class FluentSettingsPage extends StatefulWidget {

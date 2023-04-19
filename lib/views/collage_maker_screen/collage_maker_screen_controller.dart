@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_controller_base.dart';
-import 'package:flutter_rust_bridge_example/views/collage_maker_screen/collage_maker_screen_view_model.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/photo_collage.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_view_model.dart';
+import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 
 class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScreenViewModel> {
 

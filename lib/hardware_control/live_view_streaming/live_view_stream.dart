@@ -1,4 +1,4 @@
-import 'package:flutter_rust_bridge_example/models/hardware/live_view_streaming/live_view_frame.dart';
+import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:meta/meta.dart';
 
 abstract class LiveViewStream {

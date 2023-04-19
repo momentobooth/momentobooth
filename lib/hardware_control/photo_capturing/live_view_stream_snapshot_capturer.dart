@@ -1,9 +1,9 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/services.dart';
-import 'package:flutter_rust_bridge_example/hardware_control/photo_capturing/photo_capture_method.dart';
-import 'package:flutter_rust_bridge_example/managers/live_view_manager.dart';
-import 'package:flutter_rust_bridge_example/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
 class LiveViewStreamSnapshotCapturer implements PhotoCaptureMethod {
 

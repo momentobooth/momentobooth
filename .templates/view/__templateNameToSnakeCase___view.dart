@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
-import 'package:flutter_rust_bridge_example/views/__templateNameToSnakeCase__/__templateNameToSnakeCase___controller.dart';
-import 'package:flutter_rust_bridge_example/views/__templateNameToSnakeCase__/__templateNameToSnakeCase___view_model.dart';
+import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/__templateNameToSnakeCase__/__templateNameToSnakeCase___controller.dart';
+import 'package:momento_booth/views/__templateNameToSnakeCase__/__templateNameToSnakeCase___view_model.dart';
 
 class __templateNameToPascalCase__View extends ScreenViewBase<__templateNameToPascalCase__ViewModel, __templateNameToPascalCase__Controller> {
 

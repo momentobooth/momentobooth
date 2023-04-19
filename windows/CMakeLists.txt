@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(with_flutter LANGUAGES CXX)
+project(momento_booth LANGUAGES CXX)
 
-set(BINARY_NAME "with_flutter")
+set(BINARY_NAME "momento_booth")
 
 cmake_policy(SET CMP0063 NEW)
 

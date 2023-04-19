@@ -4,12 +4,12 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/wrappers/live_view_background.dart';
-import 'package:flutter_rust_bridge_example/views/multi_capture_screen/multi_capture_screen_controller.dart';
-import 'package:flutter_rust_bridge_example/views/multi_capture_screen/multi_capture_screen_view_model.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/capture_counter.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
+import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_controller.dart';
+import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_view_model.dart';
+import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
 
 class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel, MultiCaptureScreenController> {
 

@@ -3,11 +3,11 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_rust_bridge_example/managers/live_view_manager.dart';
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/models/settings.dart';
-import 'package:flutter_rust_bridge_example/views/base/stateless_widget_base.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/views/base/stateless_widget_base.dart';
 
 class LiveViewBackground extends StatelessWidgetBase {
 

@@ -1,8 +1,8 @@
-import 'package:flutter_rust_bridge_example/views/base/build_context_accessor.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_base.dart';
-import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
-import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen_view.dart';
-import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
+import 'package:momento_booth/views/base/build_context_accessor.dart';
+import 'package:momento_booth/views/base/screen_base.dart';
+import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
+import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen_view.dart';
+import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
 
 class ChooseCaptureModeScreen extends ScreenBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController, ChooseCaptureModeScreenView> {
 
