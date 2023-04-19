@@ -51,6 +51,7 @@ dependencies:
   meta: 1.8.0
   toml: 0.14.0
   file_picker: ^5.2.9
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:

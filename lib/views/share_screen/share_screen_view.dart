@@ -1,9 +1,12 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/share_screen/share_screen_controller.dart';
@@ -43,9 +46,62 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: _foregroundElements,
         ),
+        if (viewModel.displayConfetti)
+          ... _confettiStack,
         SizedBox.expand(child: _qrCodeBackdrop),
         _qrCode
       ],
+    );
+  }
+
+  List<Widget> get _confettiStack {
+    return [
+      Align(
+          alignment: Alignment.bottomLeft,
+          child: _confetti(-0.25*pi, 45), // top right
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: _confetti(-0.325*pi, 42), // top right
+        ),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: _confetti(-0.4*pi, 30), // top right
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: _confetti(-0.75*pi, 45), // top left
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: _confetti(-0.675*pi, 42), // top left
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: _confetti(-0.6*pi, 30), // top left
+        ),
+    ];
+  }
+
+  Widget _confetti(double direction, double force) {
+    return ConfettiWidget(
+      confettiController: viewModel.confettiController,
+      blastDirection: direction,
+      maximumSize: Size(60, 30),
+      minimumSize: Size(40, 20),
+      minBlastForce: force,
+      maxBlastForce: force*2,
+      particleDrag: 0.01, // apply drag to the confetti
+      emissionFrequency: 0.6, // how often it should emit
+      numberOfParticles: 10, // number of particles to emit
+      gravity: 0.3, // gravity - or fall speed
+      shouldLoop: false,
+      displayTarget: false,
+      // colors: const [
+      //   Colors.green,
+      //   Colors.blue,
+      //   Colors.pink
+      // ], // manually specify the colors to be used
     );
   }
 
