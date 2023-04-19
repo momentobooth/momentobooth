@@ -99,6 +99,7 @@ jobs:
       run: |
         release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
+        echo "distributor_version=${$release_version#-/+/}" >> $GITHUB_OUTPUT
 
     - name: Build and package as AppImage
       run: flutter_distributor package --platform linux --targets appimage
@@ -108,7 +109,7 @@ jobs:
       uses: thedoctor0/zip-release@0.7.1
       with:
         type: 'zip'
-        directory: dist/${{ steps.extract_release_version.outputs.release_version }}
+        directory: dist/${{ steps.extract_release_version.outputs.distributor_version }}
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip'
 
     # Create GitHub release
