@@ -33,6 +33,7 @@ jobs:
         ref: ${{ env.FLUTTER_VERSION }}
         setFlutterRootPath: 'true'
         addPubCacheBinToPath: 'true'
+        flutterPrecache: '--windows'
 
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
