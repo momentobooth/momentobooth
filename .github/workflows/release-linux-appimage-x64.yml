@@ -36,6 +36,7 @@ jobs:
         ref: ${{ env.FLUTTER_VERSION }}
         setFlutterRootPath: 'true'
         addPubCacheBinToPath: 'true'
+        flutterPrecache: '--linux'
 
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
@@ -107,7 +108,7 @@ jobs:
       uses: thedoctor0/zip-release@0.7.1
       with:
         type: 'zip'
-        directory: dist/${{ steps.extract_release_version.outputs.release_version }}/momento_booth-${{ steps.extract_release_version.outputs.release_version }}-linux.AppImage
+        directory: dist/${{ steps.extract_release_version.outputs.release_version }}
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip'
 
     # Create GitHub release
