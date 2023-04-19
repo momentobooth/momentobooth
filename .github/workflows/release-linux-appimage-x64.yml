@@ -120,4 +120,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "build/windows/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip"
+        artifacts: "dist/${{ steps.extract_release_version.outputs.distributor_version }}/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip"
