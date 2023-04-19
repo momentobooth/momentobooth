@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
-import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/views/base/screen_view_model_base.dart';
+import 'package:momento_booth/views/share_screen/share_screen_view.dart';
 import 'package:mobx/mobx.dart';
 
 part 'share_screen_view_model.g.dart';

@@ -912,24 +912,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "flutter_rust_bridge_example"
-version = "0.1.0"
-dependencies = [
- "atom_table",
- "chrono",
- "derive_more",
- "ffsend-api",
- "flutter_rust_bridge",
- "image",
- "jpeg-encoder",
- "nokhwa",
- "nokhwa-bindings-macos",
- "once_cell",
- "serde_json",
- "zune-jpeg",
-]
-
-[[package]]
 name = "flutter_rust_bridge_macros"
 version = "1.75.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1668,6 +1650,24 @@ dependencies = [
  "net2",
  "winapi 0.2.8",
  "ws2_32-sys",
+]
+
+[[package]]
+name = "momento_booth_native_helpers"
+version = "0.1.0"
+dependencies = [
+ "atom_table",
+ "chrono",
+ "derive_more",
+ "ffsend-api",
+ "flutter_rust_bridge",
+ "image",
+ "jpeg-encoder",
+ "nokhwa",
+ "nokhwa-bindings-macos",
+ "once_cell",
+ "serde_json",
+ "zune-jpeg",
 ]
 
 [[package]]

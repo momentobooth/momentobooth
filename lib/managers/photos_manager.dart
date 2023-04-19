@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 

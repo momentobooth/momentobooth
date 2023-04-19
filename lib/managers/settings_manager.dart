@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:flutter_rust_bridge_example/models/settings.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' hide context;

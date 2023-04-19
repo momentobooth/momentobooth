@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/models/hardware/live_view_streaming/nokhwa_camera.dart';
-import 'package:flutter_rust_bridge_example/models/settings.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/hardware/live_view_streaming/nokhwa_camera.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
 import 'package:printing/printing.dart';
 

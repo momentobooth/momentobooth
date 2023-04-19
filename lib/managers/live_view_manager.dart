@@ -1,8 +1,8 @@
 import 'dart:ui' as ui;
 
-import 'package:flutter_rust_bridge_example/hardware_control/live_view_streaming/live_view_stream.dart';
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/models/hardware/live_view_streaming/nokhwa_camera.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/hardware/live_view_streaming/nokhwa_camera.dart';
 import 'package:mobx/mobx.dart';
 
 part 'live_view_manager.g.dart';

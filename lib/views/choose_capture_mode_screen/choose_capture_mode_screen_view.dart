@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
-import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
-import 'package:flutter_rust_bridge_example/views/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
+import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
+import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
 
 class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController> {
 

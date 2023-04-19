@@ -4,11 +4,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
-import 'package:flutter_rust_bridge_example/views/collage_maker_screen/collage_maker_screen_controller.dart';
-import 'package:flutter_rust_bridge_example/views/collage_maker_screen/collage_maker_screen_view_model.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/photo_collage.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_controller.dart';
+import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_view_model.dart';
+import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:flutter/material.dart' show Icons;
 
 class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel, CollageMakerScreenController> {

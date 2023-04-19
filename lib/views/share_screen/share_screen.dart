@@ -1,8 +1,8 @@
-import 'package:flutter_rust_bridge_example/views/base/build_context_accessor.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_base.dart';
-import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_controller.dart';
-import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view_model.dart';
-import 'package:flutter_rust_bridge_example/views/share_screen/share_screen_view.dart';
+import 'package:momento_booth/views/base/build_context_accessor.dart';
+import 'package:momento_booth/views/base/screen_base.dart';
+import 'package:momento_booth/views/share_screen/share_screen_controller.dart';
+import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
+import 'package:momento_booth/views/share_screen/share_screen_view.dart';
 
 class ShareScreen extends ScreenBase<ShareScreenViewModel, ShareScreenController, ShareScreenView> {
   

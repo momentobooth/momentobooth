@@ -57,6 +57,9 @@ jobs:
       with:
         crate: cargo-patch
 
+    - name: Install flutter_distributor
+      run: dart pub global activate flutter_distributor
+
     - name: Flutter Config
       run: flutter config --enable-windows-desktop
 
@@ -99,7 +102,7 @@ jobs:
       with:
         type: 'zip'
         directory: build/windows/runner/Release
-        filename: 'diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-win-x64.zip'
+        filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip'
 
     # Create GitHub release
     - name: Create GitHub Release
@@ -109,4 +112,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "build/windows/runner/Release/diy-photobooth-${{ steps.extract_release_version.outputs.release_version }}-win-x64.zip"
+        artifacts: "build/windows/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip"

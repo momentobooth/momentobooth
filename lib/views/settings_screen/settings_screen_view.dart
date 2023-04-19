@@ -1,13 +1,13 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_rust_bridge_example/models/settings.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_base.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/blocks/fluent_settings_block.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/cards/fluent_setting_card.dart';
-import 'package:flutter_rust_bridge_example/views/custom_widgets/pages/fluent_settings_page.dart';
-import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_controller.dart';
-import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_view_model.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
+import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
+import 'package:momento_booth/views/custom_widgets/pages/fluent_settings_page.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
 part 'settings_screen_view.helpers.dart';
 

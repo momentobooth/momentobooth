@@ -1,11 +1,11 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter_rust_bridge_example/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
-import 'package:flutter_rust_bridge_example/hardware_control/photo_capturing/photo_capture_method.dart';
-import 'package:flutter_rust_bridge_example/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
-import 'package:flutter_rust_bridge_example/managers/photos_manager.dart';
-import 'package:flutter_rust_bridge_example/managers/settings_manager.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_view_model_base.dart';
-import 'package:flutter_rust_bridge_example/models/settings.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/views/base/screen_view_model_base.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:mobx/mobx.dart';
 
 part 'multi_capture_screen_view_model.g.dart';

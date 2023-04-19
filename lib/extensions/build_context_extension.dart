@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_rust_bridge_example/theme/momento_booth_theme.dart';
-import 'package:flutter_rust_bridge_example/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/theme/momento_booth_theme.dart';
+import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:go_router/go_router.dart';
 
 extension BuildContextExtension on BuildContext {

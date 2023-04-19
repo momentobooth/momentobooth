@@ -1,8 +1,8 @@
-import 'package:flutter_rust_bridge_example/views/base/build_context_accessor.dart';
-import 'package:flutter_rust_bridge_example/views/base/screen_base.dart';
-import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_controller.dart';
-import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_view_model.dart';
-import 'package:flutter_rust_bridge_example/views/settings_screen/settings_screen_view.dart';
+import 'package:momento_booth/views/base/build_context_accessor.dart';
+import 'package:momento_booth/views/base/screen_base.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen_view.dart';
 
 class SettingsScreen extends ScreenBase<SettingsScreenViewModel, SettingsScreenController, SettingsScreenView> {
 
