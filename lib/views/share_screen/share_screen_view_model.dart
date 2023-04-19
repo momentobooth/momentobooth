@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/widgets.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view.dart';
 import 'package:mobx/mobx.dart';
@@ -24,6 +25,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
     required super.contextAccessor,
   });
 
+  bool get displayConfetti => SettingsManagerBase.instance.settings.displayConfetti;
   late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
   Uint8List get outputImage => PhotosManagerBase.instance.outputImage!;

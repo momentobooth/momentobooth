@@ -36,6 +36,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onDisplayConfettiChanged(bool? displayConfetti) {
+    if (displayConfetti != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(displayConfetti: displayConfetti));
+    }
+  }
+
   void onSinglePhotoIsCollageChanged(bool? singlePhotoIsCollage) {
     if (singlePhotoIsCollage != null) {
       viewModel.updateSettings((settings) => settings.copyWith(singlePhotoIsCollage: singlePhotoIsCollage));

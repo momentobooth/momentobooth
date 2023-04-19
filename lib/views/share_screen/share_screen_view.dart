@@ -6,6 +6,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/share_screen/share_screen_controller.dart';
@@ -45,7 +46,8 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: _foregroundElements,
         ),
-        ... _confettiStack,
+        if (viewModel.displayConfetti)
+          ... _confettiStack,
         SizedBox.expand(child: _qrCodeBackdrop),
         _qrCode
       ],
