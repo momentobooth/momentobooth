@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:confetti/confetti.dart';
 import 'package:flutter/widgets.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
@@ -22,6 +23,8 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   ShareScreenViewModelBase({
     required super.contextAccessor,
   });
+
+  late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
   Uint8List get outputImage => PhotosManagerBase.instance.outputImage!;
 
