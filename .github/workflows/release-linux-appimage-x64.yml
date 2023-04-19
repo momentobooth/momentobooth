@@ -99,7 +99,7 @@ jobs:
       run: |
         release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
-        echo "distributor_version=${$release_version#-/+/}" >> $GITHUB_OUTPUT
+        echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
     - name: Build and package as AppImage
       run: flutter_distributor package --platform linux --targets appimage
