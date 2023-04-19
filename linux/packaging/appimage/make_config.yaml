@@ -1,0 +1,20 @@
+display_name: MomentoBooth
+
+icon: assets/svg/logo.svg
+
+keywords:
+  - photobooth
+  - webcam
+  - camera
+
+generic_name: MomentoBooth
+
+categories:
+  - Graphics
+  - 2DGraphics
+  - RasterGraphics
+  - Photography
+
+startup_notify: true
+
+include: []
