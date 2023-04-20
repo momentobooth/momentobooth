@@ -25,8 +25,6 @@ On Linux:
   - Install using `rustup` is recommended, to keep all components up to date
 
 All platforms:
-- `cargo-patch`
-  - Install using Cargo: `cargo install cargo-patch`
 - `flutter_rust_bridge_codegen`
   - Install using Cargo: `cargo install flutter_rust_bridge_codegen`
 - Flutter SDK 3.7+
@@ -41,15 +39,13 @@ For all tools, we support the latest versions.
 
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
-1. Patch `nokhwa-bindings-macos` by running `cargo patch` from the `rust` folder
-    - Note: Although this step only seems to be needed for macOS, the Windows and Linux builds also seem to fail if skipped
-2. Run `flutter_rust_bridge_codegen`:
+1. Run `flutter_rust_bridge_codegen`:
     - Windows/Linux: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner`
     - macOS: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --c-output macos/Runner/bridge_generated.h --skip-add-mod-to-lib --no-build-runner`
     - Note: Make sure to re-run this command if you changed anything in the Rust subproject
-3. Run `flutter pub run build_runner build --delete-conflicting-outputs`
+2. Run `flutter pub run build_runner build --delete-conflicting-outputs`
     - Note: During development, it may be convenient to run `watch` instead of `build` to keep the script running to process any new or changes files
-4. Run `flutter run` or use your IDE to run the application
+3. Run `flutter run` or use your IDE to run the application
     - Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
 ### Adding a new screen using the VS Code extension Template

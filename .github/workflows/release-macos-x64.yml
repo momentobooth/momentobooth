@@ -57,11 +57,6 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "1.75.1"
 
-    - name: Install cargo-patch
-      uses: baptiste0928/cargo-install@v1
-      with:
-        crate: cargo-patch
-
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
 
@@ -70,10 +65,6 @@ jobs:
 
     - name: Install Dependencies
       run: flutter packages get
-
-    - name: Patch nokhwa-bindings-macos
-      working-directory: rust
-      run: cargo patch
 
     - name: Generate Dart-to-Rust bridging code
       run: >
