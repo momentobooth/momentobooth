@@ -55,7 +55,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: flutter_rust_bridge_codegen
-        version: "1.75.0"
+        version: "1.75.1"
 
     - name: Install cargo-patch
       uses: baptiste0928/cargo-install@v1
