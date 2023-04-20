@@ -3,6 +3,10 @@ use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 
 use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg_encoder, image_processing::{self, ImageOperation, RawImage}}, LogEvent, HardwareInitializationFinishedEvent};
 
+// ////////////// //
+// Initialization //
+// ////////////// //
+
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     crate::initialize_log(log_sink);
 }
@@ -10,6 +14,10 @@ pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     crate::initialize_hardware(ready_sink);
 }
+
+// ////// //
+// Webcam //
+// ////// //
 
 pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
     nokhwa::get_cameras()
@@ -55,6 +63,14 @@ pub fn ffsend_delete_file(file_id: String) {
 // JPEG //
 // //// //
 
-pub fn jpeg_encode(width: u16, height: u16, data: Vec<u8>, quality: u8) -> ZeroCopyBuffer<Vec<u8>> {
-    jpeg_encoder::encode_rgba(width, height, data, quality)
+pub fn jpeg_encode(raw_image: RawImage, quality: u8) -> ZeroCopyBuffer<Vec<u8>> {
+    jpeg_encoder::encode_rgba(raw_image, quality)
+}
+
+// ///////////////////// //
+// RGBA image processing //
+// ///////////////////// //
+
+pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) -> RawImage {
+    image_processing::execute_operations(raw_image, &operations)
 }

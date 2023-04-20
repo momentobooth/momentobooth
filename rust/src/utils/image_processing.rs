@@ -12,6 +12,14 @@ pub struct RawImage {
 
 pub enum ImageOperation {
     CropToAspectRatio(f64),
+    Rotate(Rotation),
+}
+
+#[derive(Clone, Copy)]
+pub enum Rotation {
+    Rotate90,
+    Rotate180,
+    Rotate270,
 }
 
 pub fn execute_operations(image: RawImage, operations: &Vec<ImageOperation>) -> RawImage {
@@ -19,6 +27,7 @@ pub fn execute_operations(image: RawImage, operations: &Vec<ImageOperation>) -> 
     for op in operations {
         match op {
             ImageOperation::CropToAspectRatio(aspect_ratio) => current_image = crop_to_aspect_ratio(current_image, *aspect_ratio),
+            ImageOperation::Rotate(rotation) => current_image = rotate(current_image, *rotation),
         }
     }
     current_image
@@ -57,5 +66,22 @@ fn crop_to_aspect_ratio(src_raw_image: RawImage, aspect_ratio: f64) -> RawImage 
         raw_rgba_data: dst_vec,
         width: dst_width,
         height: dst_height,
+    }
+}
+
+fn rotate(src_raw_image: RawImage, rotation: Rotation) -> RawImage {
+    // Rotate image
+    let src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.raw_rgba_data).expect("Could not create ImageBuffer from raw source image");
+    let ding = match rotation {
+        Rotation::Rotate90 => imageops::rotate90(&src_img),
+        Rotation::Rotate180 => imageops::rotate180(&src_img),
+        Rotation::Rotate270 => imageops::rotate270(&src_img),
+    };
+
+    // Return rotate image
+    RawImage {
+        raw_rgba_data: ding.to_vec(),
+        width: ding.width() as usize,
+        height: ding.height() as usize,
     }
 }
