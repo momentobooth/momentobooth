@@ -32,12 +32,13 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   void captureCollage() async {
     viewModel.readyToContinue = false;
-    if (viewModel.numSelected < 1) return;
     
     // It can happen that a previous capture takes longer than the latest one.
     // Therefore, keep track of which is the latest invocation.
     final thisCapture = DateTime.now();
     latestCapture = thisCapture;
+    
+    if (viewModel.numSelected < 1) return;
 
     final stopwatch = Stopwatch()..start();
     final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
