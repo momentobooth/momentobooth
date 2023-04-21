@@ -42,9 +42,15 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
           child: Align(
             alignment: Alignment.bottomRight,
-            child: GestureDetector(
-              onTap: controller.onContinueTap,
-              child: AutoSizeText("Continue  →", style: theme.subTitleStyle, maxLines: 1,)
+            child: Observer(
+              builder: (context) => AnimatedOpacity(
+                duration: viewModel.opacityDuraction,
+                opacity: viewModel.readyToContinue ? 1 : 0.5,
+                child: GestureDetector(
+                  onTap: controller.onContinueTap,
+                  child: AutoSizeText("Continue  →", style: theme.subTitleStyle, maxLines: 1,)
+                ),
+              ),
             ),
           ),
         ),

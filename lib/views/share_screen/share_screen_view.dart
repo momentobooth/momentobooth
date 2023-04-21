@@ -172,9 +172,11 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             // Print button
             onTap: controller.onClickPrint,
             behavior: HitTestBehavior.translucent,
-            child: AutoSizeText(
-              "Print",
-              style: theme.titleStyle,
+            child: Observer(
+              builder: (context) => AutoSizeText(
+                viewModel.printText,
+                style: theme.titleStyle,
+              ),
             ),
           ),
         ),

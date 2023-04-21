@@ -28,7 +28,11 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   String get outputFolder => SettingsManagerBase.instance.settings.output.localFolder;
 
+  int imageProcessing = 0;
+
   void captureCollage() async {
+    viewModel.readyToContinue = false;
+    imageProcessing++; // To deal with concurrent processes
     final stopwatch = Stopwatch()..start();
     final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
     final format = SettingsManagerBase.instance.settings.output.exportFormat;
@@ -38,10 +42,12 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     print("Written collage image to output image memory");
     
     PhotosManagerBase.instance.writeOutput();
+    imageProcessing--;
+    viewModel.readyToContinue = imageProcessing == 0;
   }
 
   void onContinueTap() {
-    // Todo: a whole lot of stuff
+    if (!viewModel.readyToContinue) return;
     router.push("/share");
   }
 

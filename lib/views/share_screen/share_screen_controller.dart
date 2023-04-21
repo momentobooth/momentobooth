@@ -116,12 +116,15 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
       })
     );
 
-    await Printing.directPrintPdf(
+    bool success = await Printing.directPrintPdf(
         printer: selected,
         name: "MomentoBooth image",
         format: pageFormat,
         onLayout: (PdfPageFormat pageFormat) => doc.save()
     );
+
+    viewModel.printText = success ? "Printing..." : "Print canceled";
+    Future.delayed(Duration(seconds: 2), () => viewModel.printText = "Print");
   }
 
 }
