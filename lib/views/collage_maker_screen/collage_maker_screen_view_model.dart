@@ -15,5 +15,10 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
   int get numSelected => PhotosManagerBase.instance.chosen.length;
 
   int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
+  
+  @observable
+  bool readyToContinue = false;
+
+  final Duration opacityDuraction = Duration(milliseconds: 300);
 
 }

@@ -18,6 +18,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
   Widget get body {
     return GestureDetector(
       onTap: controller.onPressedContinue,
+      behavior: HitTestBehavior.opaque,
       child: _foregroundElements,
     );
   }

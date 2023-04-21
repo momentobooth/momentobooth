@@ -34,6 +34,9 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   String qrText = "Get QR";
 
   @observable
+  String printText = "Print";
+
+  @observable
   UploadState uploadState = UploadState.notStarted;
 
   @observable

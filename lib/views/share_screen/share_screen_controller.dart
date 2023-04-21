@@ -93,27 +93,38 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     }
 
     // Get photo and print it.
-    final photoToPrint = PhotosManagerBase.instance.photos.first;
+    final photoToPrint = PhotosManagerBase.instance.outputImage!;
     final image = pw.MemoryImage(photoToPrint);
     const pageFormat = PdfPageFormat(100.0 * PdfPageFormat.mm, 150.0 * PdfPageFormat.mm);
+    const fit = pw.BoxFit.contain;
+
+    // Check if photo should be rotated
+    // Do not assume any prior knowledge about the image.
+    final bool rotate = image.width! > image.height!;
+    late final pw.Image imageWidget;
+    if (rotate) {
+      imageWidget = pw.Image(image, fit: fit, height: pageFormat.width, width: pageFormat.height);
+    } else {
+      imageWidget = pw.Image(image, fit: fit, height: pageFormat.height, width: pageFormat.width);
+    }
 
     final doc = pw.Document(title: "MomentoBooth image");
     doc.addPage(pw.Page(
       pageFormat: pageFormat,
       build: (pw.Context context) {
-        return pw.Transform.rotateBox(
-          angle: 0.5*pi,
-          child: pw.Image(image, fit: pw.BoxFit.contain, height: pageFormat.width, width: pageFormat.height),
-        );
+        return rotate ? pw.Transform.rotateBox(angle: 0.5*pi, child: imageWidget,) : imageWidget;
       })
     );
 
-    await Printing.directPrintPdf(
+    bool success = await Printing.directPrintPdf(
         printer: selected,
         name: "MomentoBooth image",
         format: pageFormat,
         onLayout: (PdfPageFormat pageFormat) => doc.save()
     );
+
+    viewModel.printText = success ? "Printing..." : "Print canceled";
+    Future.delayed(Duration(seconds: 2), () => viewModel.printText = "Print");
   }
 
 }

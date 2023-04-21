@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -53,9 +55,16 @@ class _AppState extends State<App> {
   bool _settingsOpen = false;
   bool _isFullScreen = false;
 
+  static final returnHomeTimeout = Duration(seconds: 45);
+  late Timer _returnHome;
+
   @override
   void initState() {
     _initHotKeys();
+    // Check if the window is fullscreen from the start.
+    windowManager.isFullScreen().then((value) => _isFullScreen = value);
+    _returnHome = Timer(returnHomeTimeout, _goHome);
+    _router.addListener(() { onActivity(null); });
     super.initState();
   }
 
@@ -98,6 +107,18 @@ class _AppState extends State<App> {
     );
   }
 
+  void _goHome() {
+    print("No activity in $returnHomeTimeout, returning to homescreen");
+    _router.push('/');
+  }
+
+  /// Method that is fired when a user does any kind of touch or the route changes.
+  /// This resets the return home timer.
+  void onActivity(PointerEvent? event) {
+    _returnHome.cancel();
+    _returnHome = Timer(returnHomeTimeout, _goHome);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MomentoBoothTheme(
@@ -123,7 +144,11 @@ class _AppState extends State<App> {
         return LiveViewBackground(
           child: Stack(
             children: [
-              child!,
+              Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: onActivity,
+                child: child!,
+              ),
               _settingsOpen ? _settingsScreen : const SizedBox(),
             ],
           ),
