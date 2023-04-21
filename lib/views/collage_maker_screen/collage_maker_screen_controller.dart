@@ -28,22 +28,30 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   String get outputFolder => SettingsManagerBase.instance.settings.output.localFolder;
 
-  int imageProcessing = 0;
+  DateTime? latestCapture;
 
   void captureCollage() async {
     viewModel.readyToContinue = false;
-    imageProcessing++; // To deal with concurrent processes
+    if (viewModel.numSelected < 1) return;
+    
+    // It can happen that a previous capture takes longer than the latest one.
+    // Therefore, keep track of which is the latest invocation.
+    final thisCapture = DateTime.now();
+    latestCapture = thisCapture;
+
     final stopwatch = Stopwatch()..start();
     final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
     final format = SettingsManagerBase.instance.settings.output.exportFormat;
     final jpgQuality = SettingsManagerBase.instance.settings.output.jpgQuality;
-    PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
+    final exportImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
     print('captureCollage() executed in ${stopwatch.elapsed}');
-    print("Written collage image to output image memory");
-    
-    PhotosManagerBase.instance.writeOutput();
-    imageProcessing--;
-    viewModel.readyToContinue = imageProcessing == 0;
+
+    if (latestCapture == thisCapture) {
+      PhotosManagerBase.instance.outputImage = exportImage;
+      print("Written collage image to output image memory");
+      PhotosManagerBase.instance.writeOutput();
+      viewModel.readyToContinue = true;
+    }
   }
 
   void onContinueTap() {
