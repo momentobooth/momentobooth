@@ -69,6 +69,7 @@ class PhotoCollageState extends State<PhotoCollage> {
   ObservableList<Uint8List> get photos => PhotosManagerBase.instance.photos;
   Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
   int get nChosen => PhotosManagerBase.instance.chosen.length;
+  int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
 
   String get templatesFolder => SettingsManagerBase.instance.settings.templatesFolder;
 
@@ -285,7 +286,8 @@ class PhotoCollageState extends State<PhotoCollage> {
     //final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
     final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
-    final jpg = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality, operationsBeforeEncoding: []);
+    final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [ImageOperation.rotate(Rotation.Rotate270)] : [];
+    final jpg = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality, operationsBeforeEncoding: operationsBeforeEncoding);
     return jpg;
   }
 
