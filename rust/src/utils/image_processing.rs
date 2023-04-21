@@ -1,17 +1,21 @@
 use image::{imageops, RgbaImage};
 
+use crate::dart_bridge::api::RawImage;
+
 // /////////////////////////// //
 // Structs and Main Operations //
 // /////////////////////////// //
 
-pub struct RawImage {
-    pub raw_rgba_data: Vec<u8>,
-    pub width: usize,
-    pub height: usize,
-}
-
 pub enum ImageOperation {
     CropToAspectRatio(f64),
+    Rotate(Rotation),
+}
+
+#[derive(Clone, Copy)]
+pub enum Rotation {
+    Rotate90,
+    Rotate180,
+    Rotate270,
 }
 
 pub fn execute_operations(image: RawImage, operations: &Vec<ImageOperation>) -> RawImage {
@@ -19,6 +23,7 @@ pub fn execute_operations(image: RawImage, operations: &Vec<ImageOperation>) -> 
     for op in operations {
         match op {
             ImageOperation::CropToAspectRatio(aspect_ratio) => current_image = crop_to_aspect_ratio(current_image, *aspect_ratio),
+            ImageOperation::Rotate(rotation) => current_image = rotate(current_image, *rotation),
         }
     }
     current_image
@@ -48,14 +53,23 @@ fn crop_to_aspect_ratio(src_raw_image: RawImage, aspect_ratio: f64) -> RawImage 
     let y = ((src_raw_image.height - dst_height) as f64 / 2f64).round() as usize;
 
     // Crop image
-    let mut src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.raw_rgba_data).expect("Could not create ImageBuffer from raw source image");
+    let mut src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.data).expect("Could not create ImageBuffer from raw source image");
     let dst_img = imageops::crop(&mut src_img, x as u32, y as u32, dst_width as u32, dst_height as u32).to_image();
     let dst_vec = image::ImageBuffer::into_vec(dst_img);
 
     // Return cropped image
-    RawImage {
-        raw_rgba_data: dst_vec,
-        width: dst_width,
-        height: dst_height,
-    }
+    RawImage::new_from_rgba_data(dst_vec, dst_width, dst_height)
+}
+
+fn rotate(src_raw_image: RawImage, rotation: Rotation) -> RawImage {
+    // Rotate image
+    let src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.data).expect("Could not create ImageBuffer from raw source image");
+    let ding = match rotation {
+        Rotation::Rotate90 => imageops::rotate90(&src_img),
+        Rotation::Rotate180 => imageops::rotate180(&src_img),
+        Rotation::Rotate270 => imageops::rotate270(&src_img),
+    };
+
+    // Return rotate image
+    RawImage::new_from_rgba_data(ding.to_vec(), ding.width() as usize, ding.height() as usize)
 }

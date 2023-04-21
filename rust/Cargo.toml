@@ -11,23 +11,16 @@ crate-type = ["lib", "staticlib", "cdylib"]
 derive_more = "0.99.17"
 once_cell = "1.17.1"
 atom_table = "1.1.0"
-flutter_rust_bridge = "1.75.0"
+flutter_rust_bridge = "1.75.1"
 ffsend-api = "0.7.3"
 serde_json = "1.0.95"
 chrono = "0.4.24"
 image = "0.24.6"
 nokhwa-bindings-macos = "0.2.0"
-nokhwa = { version = "0.10.3", features = ["input-native", "output-threaded"] }
+nokhwa = { git = "https://github.com/RReverser/nokhwa.git", branch="fix-callback-camera-deadlock", features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.3.16"
 jpeg-encoder = "0.5.1"
 
-# Patch for https://github.com/l1npengtul/nokhwa/issues/98
-
-[patch.crates-io]
-nokhwa-bindings-macos = { path = './target/patch/nokhwa-bindings-macos-0.2.0' }
-
-[package.metadata.patch.nokhwa-bindings-macos]
-version = "0.2.0"
-patches = [
-    { path = "nokhwa-fix-issue-98.patch", source = "GithubPrDiff" }
-]
+# Make debug builds as fast as release
+[profile.dev.package."*"]
+opt-level = 3

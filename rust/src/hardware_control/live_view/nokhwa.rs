@@ -1,7 +1,7 @@
 use derive_more::{From, Into};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 
-use crate::{log, utils::image_processing::RawImage};
+use crate::{log, dart_bridge::api::RawImage};
 
 pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
     if cfg!(target_os = "macos") {
@@ -37,13 +37,13 @@ pub fn open_camera(friendly_name: String) -> CallbackCamera {
 
 pub fn set_camera_callback<F>(camera: &mut CallbackCamera, frame_callback: F) where F: Fn(RawImage) + Send + Sync + 'static {
     camera.set_callback(move |buffer| {
-        let image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
-        let frame = RawImage {
-            width: buffer.resolution().width() as usize,
-            height: buffer.resolution().height() as usize,
-            raw_rgba_data: image.to_vec(),
-        };
-        frame_callback(frame);
+        let raw_rgba_image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
+        let image = RawImage::new_from_rgba_data(
+            raw_rgba_image.to_vec(),
+            buffer.resolution().width() as usize,
+            buffer.resolution().height() as usize,
+        );
+        frame_callback(image);
     }).expect("Failed setting the callback");
 }
 

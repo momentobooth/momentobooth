@@ -7,9 +7,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
-import 'package:flutter/material.dart' hide Action;
+import 'package:flutter/material.dart' hide Action, RawImage;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
@@ -283,7 +284,8 @@ class PhotoCollageState extends State<PhotoCollage> {
     // Create an image lib image instance from ui image instance.
     //final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
-    final jpg = await rustLibraryApi.jpegEncode(width: image.width, height: image.height, data: byteData!.buffer.asUint8List(), quality: jpgQuality);
+    final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
+    final jpg = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality, operationsBeforeEncoding: []);
     return jpg;
   }
 
