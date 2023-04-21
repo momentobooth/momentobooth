@@ -4,6 +4,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
+import 'package:momento_booth/views/share_screen/share_screen.dart';
 
 class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScreenViewModel> {
 
@@ -57,7 +58,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   void onContinueTap() {
     if (!viewModel.readyToContinue) return;
-    router.push("/share");
+    router.push(ShareScreen.defaultRoute);
   }
 
 }

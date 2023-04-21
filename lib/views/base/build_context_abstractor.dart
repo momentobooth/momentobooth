@@ -12,4 +12,7 @@ mixin BuildContextAbstractor {
   MomentoBoothThemeData get theme => _context.theme;
   GoRouter get router => _context.router;
 
+  NavigatorState get navigator => _context.navigator;
+  NavigatorState get rootNavigator => _context.rootNavigator;
+
 }
