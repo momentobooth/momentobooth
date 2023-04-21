@@ -1,7 +1,7 @@
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 
-use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg_encoder, image_processing::{self, ImageOperation, RawImage}}, LogEvent, HardwareInitializationFinishedEvent};
+use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}}, LogEvent, HardwareInitializationFinishedEvent};
 
 // ////////////// //
 // Initialization //
@@ -63,8 +63,14 @@ pub fn ffsend_delete_file(file_id: String) {
 // JPEG //
 // //// //
 
-pub fn jpeg_encode(raw_image: RawImage, quality: u8) -> ZeroCopyBuffer<Vec<u8>> {
-    jpeg_encoder::encode_rgba(raw_image, quality)
+pub fn jpeg_encode(raw_image: RawImage, quality: u8, operations_before_encoding: Vec<ImageOperation>) -> ZeroCopyBuffer<Vec<u8>> {
+    let processed_image = image_processing::execute_operations(raw_image, &operations_before_encoding);
+    jpeg::encode_raw_to_jpeg(processed_image, quality)
+}
+
+pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOperation>) -> RawImage {
+    let image = jpeg::decode_jpeg_to_rgba(jpeg_data);
+    image_processing::execute_operations(image, &operations_after_decoding)
 }
 
 // ///////////////////// //
@@ -73,4 +79,30 @@ pub fn jpeg_encode(raw_image: RawImage, quality: u8) -> ZeroCopyBuffer<Vec<u8>> 
 
 pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) -> RawImage {
     image_processing::execute_operations(raw_image, &operations)
+}
+
+// /////// //
+// Structs //
+// /////// //
+
+pub struct RawImage {
+    pub format: RawImageFormat,
+    pub data: Vec<u8>,
+    pub width: usize,
+    pub height: usize,
+}
+
+impl RawImage {
+    pub(crate) fn new_from_rgba_data(data: Vec<u8>, width: usize, height: usize) -> RawImage {
+        Self {
+            format: RawImageFormat::Rgba,
+            data,
+            width,
+            height,
+        }
+    }
+}
+
+pub enum RawImageFormat {
+    Rgba,
 }

@@ -1,14 +1,10 @@
 use image::{imageops, RgbaImage};
 
+use crate::dart_bridge::api::RawImage;
+
 // /////////////////////////// //
 // Structs and Main Operations //
 // /////////////////////////// //
-
-pub struct RawImage {
-    pub raw_rgba_data: Vec<u8>,
-    pub width: usize,
-    pub height: usize,
-}
 
 pub enum ImageOperation {
     CropToAspectRatio(f64),
@@ -57,21 +53,17 @@ fn crop_to_aspect_ratio(src_raw_image: RawImage, aspect_ratio: f64) -> RawImage 
     let y = ((src_raw_image.height - dst_height) as f64 / 2f64).round() as usize;
 
     // Crop image
-    let mut src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.raw_rgba_data).expect("Could not create ImageBuffer from raw source image");
+    let mut src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.data).expect("Could not create ImageBuffer from raw source image");
     let dst_img = imageops::crop(&mut src_img, x as u32, y as u32, dst_width as u32, dst_height as u32).to_image();
     let dst_vec = image::ImageBuffer::into_vec(dst_img);
 
     // Return cropped image
-    RawImage {
-        raw_rgba_data: dst_vec,
-        width: dst_width,
-        height: dst_height,
-    }
+    RawImage::new_from_rgba_data(dst_vec, dst_width, dst_height)
 }
 
 fn rotate(src_raw_image: RawImage, rotation: Rotation) -> RawImage {
     // Rotate image
-    let src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.raw_rgba_data).expect("Could not create ImageBuffer from raw source image");
+    let src_img = RgbaImage::from_vec(src_raw_image.width as u32, src_raw_image.height as u32, src_raw_image.data).expect("Could not create ImageBuffer from raw source image");
     let ding = match rotation {
         Rotation::Rotate90 => imageops::rotate90(&src_img),
         Rotation::Rotate180 => imageops::rotate180(&src_img),
@@ -79,9 +71,5 @@ fn rotate(src_raw_image: RawImage, rotation: Rotation) -> RawImage {
     };
 
     // Return rotate image
-    RawImage {
-        raw_rgba_data: ding.to_vec(),
-        width: ding.width() as usize,
-        height: ding.height() as usize,
-    }
+    RawImage::new_from_rgba_data(ding.to_vec(), ding.width() as usize, ding.height() as usize)
 }

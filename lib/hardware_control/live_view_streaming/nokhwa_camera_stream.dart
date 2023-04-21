@@ -29,7 +29,7 @@ class NokhwaCameraStream extends LiveViewStream {
   Stream<LiveViewFrame> getStream() {
     return rustLibraryApi
       .nokhwaSetCameraCallback(cameraPtr: _cameraPointer, operations: [ImageOperation.cropToAspectRatio(3/2)])
-      .map((rawImage) => LiveViewFrame(rawRgbaData: rawImage.rawRgbaData, width: rawImage.width, height: rawImage.height));
+      .map((rawImage) => LiveViewFrame(rawRgbaData: rawImage.data, width: rawImage.width, height: rawImage.height));
   }
 
   // //////////////// //

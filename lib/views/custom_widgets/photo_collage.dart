@@ -284,8 +284,8 @@ class PhotoCollageState extends State<PhotoCollage> {
     // Create an image lib image instance from ui image instance.
     //final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
-    final rawImage = RawImage(rawRgbaData: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
-    final jpg = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality);
+    final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
+    final jpg = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality, operationsBeforeEncoding: []);
     return jpg;
   }
 

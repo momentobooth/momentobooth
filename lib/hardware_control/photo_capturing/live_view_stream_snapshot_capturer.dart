@@ -22,8 +22,8 @@ class LiveViewStreamSnapshotCapturer implements PhotoCaptureMethod {
       throw "Could not encode frame to byte data";
     }
 
-    final rawImage = RawImage(rawRgbaData: byteData.buffer.asUint8List(), width: image.width, height: image.height);
-    return await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: 80);
+    final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData.buffer.asUint8List(), width: image.width, height: image.height);
+    return await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: 80, operationsBeforeEncoding: []);
   }
 
 }
