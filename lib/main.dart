@@ -56,6 +56,8 @@ class _AppState extends State<App> {
   @override
   void initState() {
     _initHotKeys();
+    // Check if the window is fullscreen from the start.
+    windowManager.isFullScreen().then((value) => _isFullScreen = value);
     super.initState();
   }
 
