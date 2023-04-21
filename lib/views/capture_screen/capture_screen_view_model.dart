@@ -101,7 +101,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
-    router.push(ShareScreen.defaultRoute);
+    router.go(ShareScreen.defaultRoute);
   }
 
 }

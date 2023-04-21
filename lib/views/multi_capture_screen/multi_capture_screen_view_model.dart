@@ -80,9 +80,9 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
     if (PhotosManagerBase.instance.photos.length >= maxPhotos) {
-      router.push(CollageMakerScreen.defaultRoute);
+      router.go(CollageMakerScreen.defaultRoute);
     } else {
-      router.push(MultiCaptureScreen.defaultRoute);
+      router.go(MultiCaptureScreen.defaultRoute);
     }
   }
 

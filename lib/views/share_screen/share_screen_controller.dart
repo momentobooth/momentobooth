@@ -24,14 +24,14 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
   });
 
   void onClickNext() {
-    router.push(StartScreen.defaultRoute);
+    router.go(StartScreen.defaultRoute);
   }
   
   void onClickPrev() {
     print("clicking prev");
     if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
       PhotosManagerBase.instance.reset(advance: false);
-      router.push(CaptureScreen.defaultRoute);
+      router.go(CaptureScreen.defaultRoute);
     } else {
       router.pop();
     }

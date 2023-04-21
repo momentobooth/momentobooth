@@ -58,7 +58,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   void onContinueTap() {
     if (!viewModel.readyToContinue) return;
-    router.push(ShareScreen.defaultRoute);
+    router.go(ShareScreen.defaultRoute);
   }
 
 }

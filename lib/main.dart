@@ -109,7 +109,7 @@ class _AppState extends State<App> {
 
   void _goHome() {
     print("No activity in $returnHomeTimeout, returning to homescreen");
-    _router.push(StartScreen.defaultRoute);
+    _router.go(StartScreen.defaultRoute);
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.
