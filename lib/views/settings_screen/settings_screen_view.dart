@@ -165,9 +165,90 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           title: "Printing",
           settings: [
             _printerCard,
+            _getInput(
+              icon: FluentIcons.page,
+              title: "Page height",
+              subtitle: 'Page format height used for printing [mm]',
+              value: () => viewModel.pageHeightSetting,
+              onChanged: controller.onPageHeightChanged,
+              smallChange: 0.1,
+            ),
+            _getInput(
+              icon: FluentIcons.page,
+              title: "Page width",
+              subtitle: 'Page format width used for printing [mm]',
+              value: () => viewModel.pageWidthSetting,
+              onChanged: controller.onPageWidthChanged,
+              smallChange: 0.1,
+            ),
+            _printerMargins,
+            _getBooleanInput(
+              icon: FluentIcons.settings,
+              title: "usePrinterSettings for printing",
+              subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
+              value: () => viewModel.usePrinterSettingsSetting,
+              onChanged: controller.onUsePrinterSettingsChanged,
+            ),
           ],
         ),
       ],
+    );
+  }
+
+  FluentSettingCard get _printerMargins {
+    const double numberWidth = 100;
+    const double padding = 10;
+    return FluentSettingCard(
+      icon: FluentIcons.page,
+      title: "Page margins used for printing",
+      subtitle: "Some printers cut off some part of the image. Use this to compensate.\nOrder: top, right, bottom, left [mm]",
+      child: Row(
+        children: [
+          SizedBox(
+            width: numberWidth,
+            child: Observer(builder: (_) {
+              return NumberBox<double>(
+                value: viewModel.printerMarginTopSetting,
+                onChanged: controller.onPrinterMarginTopChanged,
+                smallChange: 0.1,
+              );
+            }),
+          ),
+          SizedBox(width: padding,),
+          SizedBox(
+            width: numberWidth,
+            child: Observer(builder: (_) {
+              return NumberBox<double>(
+                value: viewModel.printerMarginRightSetting,
+                onChanged: controller.onPrinterMarginRightChanged,
+                smallChange: 0.1,
+              );
+            }),
+          ),
+          SizedBox(width: padding,),
+          SizedBox(
+            width: numberWidth,
+            child: Observer(builder: (_) {
+              return NumberBox<double>(
+                value: viewModel.printerMarginBottomSetting,
+                onChanged: controller.onPrinterMarginBottomChanged,
+                smallChange: 0.1,
+              );
+            }),
+          ),
+          SizedBox(width: padding,),
+          SizedBox(
+            width: numberWidth,
+            child: Observer(builder: (_) {
+              return NumberBox<double>(
+                value: viewModel.printerMarginLeftSetting,
+                onChanged: controller.onPrinterMarginLeftChanged,
+                smallChange: 0.1,
+              );
+            }),
+          ),
+        ],
+      ),
     );
   }
 

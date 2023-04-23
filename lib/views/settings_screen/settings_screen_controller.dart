@@ -90,6 +90,48 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onPageHeightChanged(double? pageHeight) {
+    if (pageHeight != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(pageHeight: pageHeight));
+    }
+  }
+
+  void onPageWidthChanged(double? pageWidth) {
+    if (pageWidth != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(pageHeight: pageWidth));
+    }
+  }
+
+  void onUsePrinterSettingsChanged(bool? usePrinterSettings) {
+    if (usePrinterSettings != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(usePrinterSettings: usePrinterSettings));
+    }
+  }
+
+  void onPrinterMarginTopChanged(double? marginTop) {
+    if (marginTop != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginTop: marginTop));
+    }
+  }
+
+  void onPrinterMarginRightChanged(double? marginRight) {
+    if (marginRight != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginRight: marginRight));
+    }
+  }
+
+  void onPrinterMarginBottomChanged(double? marginBottom) {
+    if (marginBottom != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginBottom: marginBottom));
+    }
+  }
+
+  void onPrinterMarginLeftChanged(double? marginLeft) {
+    if (marginLeft != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginLeft: marginLeft));
+    }
+  }
+
   void onLocalFolderChanged(String? localFolder) {
     if (localFolder != null) {
       viewModel.updateSettings((settings) => settings.copyWith.output(localFolder: localFolder));

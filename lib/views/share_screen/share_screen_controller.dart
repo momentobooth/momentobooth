@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -100,8 +101,12 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     final photoToPrint = PhotosManagerBase.instance.outputImage!;
     final image = pw.MemoryImage(photoToPrint);
     const mm = PdfPageFormat.mm;
-    const pageFormat = PdfPageFormat(100.0 * mm, 148.0 * mm,
-                                     marginBottom: 3.5 * mm, marginLeft: 2.5 * mm, marginRight: 2.5 * mm, marginTop: 2.0 * mm);
+    final settings = SettingsManagerBase.instance.settings.hardware;
+    final pageFormat = PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
+                                     marginBottom: settings.printerMarginBottom * mm,
+                                     marginLeft: settings.printerMarginLeft * mm,
+                                     marginRight: settings.printerMarginRight * mm,
+                                     marginTop: settings.printerMarginTop * mm,);
     const fit = pw.BoxFit.contain;
 
     // Check if photo should be rotated
@@ -131,7 +136,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
         name: "MomentoBooth image",
         format: pageFormat,
         onLayout: (PdfPageFormat pageFormat) => pdfData,
-        usePrinterSettings: true,
+        usePrinterSettings: settings.usePrinterSettings,
     );
 
     Directory outputDir = Directory(SettingsManagerBase.instance.settings.output.localFolder);
