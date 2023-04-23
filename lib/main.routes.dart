@@ -44,7 +44,7 @@ GoRoute _multiCaptureRoute = GoRoute(
   path: MultiCaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
     return FadeTransitionPage(
-      key: state.pageKey,
+      key: UniqueKey(),
       child: MultiCaptureScreen(),
     );
   },

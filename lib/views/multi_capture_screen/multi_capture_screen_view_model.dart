@@ -82,7 +82,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     if (PhotosManagerBase.instance.photos.length >= maxPhotos) {
       router.go(CollageMakerScreen.defaultRoute);
     } else {
-      router.go(MultiCaptureScreen.defaultRoute);
+      router.go("${MultiCaptureScreen.defaultRoute}?n=${PhotosManagerBase.instance.photos.length}");
     }
   }
 
