@@ -25,44 +25,40 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
       data: FluentThemeData(),
       child: Builder(
         builder: (context) {
-          return Observer(builder: (_) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Expanded(child: _navigationView),
-              ],
-            );
-          });
+          return _navigationView;
         },
       ),
     );
   }
 
   Widget get _navigationView {
-    return NavigationView(
-      pane: NavigationPane(
-        selected: viewModel.paneIndex,
-        onChanged: controller.onNavigationPaneIndexChanged,
-        items: [
-          PaneItemSeparator(color: Colors.transparent),
-          PaneItem(
-            icon: Icon(FluentIcons.settings),
-            title: Text("General"),
-            body: Builder(builder: (_) => _generalSettings),
+    return Observer(
+      builder: (context) {
+        return NavigationView(
+          pane: NavigationPane(
+            selected: viewModel.paneIndex,
+            onChanged: controller.onNavigationPaneIndexChanged,
+            items: [
+              PaneItemSeparator(color: Colors.transparent),
+              PaneItem(
+                icon: Icon(FluentIcons.settings),
+                title: Text("General"),
+                body: Builder(builder: (_) => _generalSettings),
+              ),
+              PaneItem(
+                icon: Icon(FluentIcons.devices4),
+                title: Text("Hardware"),
+                body: Builder(builder: (_) => _hardwareSettings),
+              ),
+              PaneItem(
+                icon: Icon(FluentIcons.send),
+                title: Text("Output"),
+                body: Builder(builder: (_) => _outputSettings),
+              ),
+            ],
           ),
-          PaneItem(
-            icon: Icon(FluentIcons.devices4),
-            title: Text("Hardware"),
-            body: Builder(builder: (_) => _hardwareSettings),
-          ),
-          PaneItem(
-            icon: Icon(FluentIcons.send),
-            title: Text("Output"),
-            body: Builder(builder: (_) => _outputSettings),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
