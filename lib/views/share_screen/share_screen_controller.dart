@@ -99,7 +99,9 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     // Get photo and print it.
     final photoToPrint = PhotosManagerBase.instance.outputImage!;
     final image = pw.MemoryImage(photoToPrint);
-    const pageFormat = PdfPageFormat(100.0 * PdfPageFormat.mm, 148.0 * PdfPageFormat.mm);
+    const mm = PdfPageFormat.mm;
+    const pageFormat = PdfPageFormat(100.0 * mm, 148.0 * mm,
+                                     marginBottom: 3.5 * mm, marginLeft: 2.5 * mm, marginRight: 2.5 * mm, marginTop: 2.0 * mm);
     const fit = pw.BoxFit.contain;
 
     // Check if photo should be rotated
@@ -107,9 +109,9 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     final bool rotate = image.width! > image.height!;
     late final pw.Image imageWidget;
     if (rotate) {
-      imageWidget = pw.Image(image, fit: fit, height: pageFormat.width, width: pageFormat.height);
+      imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight);
     } else {
-      imageWidget = pw.Image(image, fit: fit, height: pageFormat.height, width: pageFormat.width);
+      imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
     }
 
     final doc = pw.Document(title: "MomentoBooth image");
