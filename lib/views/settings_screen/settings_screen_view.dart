@@ -49,24 +49,24 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           PaneItem(
             icon: Icon(FluentIcons.settings),
             title: Text("General"),
-            body: _generalSettings,
+            body: Builder(builder: (_) => _generalSettings),
           ),
           PaneItem(
             icon: Icon(FluentIcons.devices4),
             title: Text("Hardware"),
-            body: _hardwareSettings,
+            body: Builder(builder: (_) => _hardwareSettings),
           ),
           PaneItem(
             icon: Icon(FluentIcons.send),
             title: Text("Output"),
-            body: _outputSettings,
+            body: Builder(builder: (_) => _outputSettings),
           ),
         ],
       ),
     );
   }
 
-  Widget get _generalSettings {
+  Widget get _generalSettings { 
     return FluentSettingsPage(
       title: "General",
       blocks: [
