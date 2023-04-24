@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:mobx/mobx.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,7 +11,7 @@ part 'settings_manager.g.dart';
 
 class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
-abstract class SettingsManagerBase with Store {
+abstract class SettingsManagerBase with Store, UiLoggy {
 
   static const _fileName = "MomentoBooth_Settings.toml";
 
@@ -46,6 +47,7 @@ abstract class SettingsManagerBase with Store {
 
   @action
   Future<void> load() async {
+    loggy.debug("Loading settings");
     await _ensureSettingsFileIsSet();
 
     if (!await _settingsFile.exists()) {
@@ -67,15 +69,19 @@ abstract class SettingsManagerBase with Store {
       await _save();
       return;
     }
+    loggy.debug("Loaded settings: ${_settings?.toJson().toString() ?? "null"}");
   }
 
   Future<void> _save() async {
+    loggy.debug("Saving settings");
     await _ensureSettingsFileIsSet();
 
     Map<String, dynamic> settingsMap = _settings!.toJson();
     TomlDocument settingsDocument = TomlDocument.fromMap(settingsMap);
     String settingsAsToml = settingsDocument.toString();
     _settingsFile.writeAsString(settingsAsToml);
+
+    loggy.debug("Saved settings");
   }
 
   // /////// //

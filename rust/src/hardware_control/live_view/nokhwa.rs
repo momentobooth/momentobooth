@@ -1,7 +1,7 @@
 use derive_more::{From, Into};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 
-use crate::{log, dart_bridge::api::RawImage};
+use crate::{dart_bridge::api::RawImage, log_debug, log_info};
 
 pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
     if cfg!(target_os = "macos") {
@@ -20,6 +20,7 @@ pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
 }
 
 pub fn open_camera(friendly_name: String) -> CallbackCamera {
+    log_debug("nokhwa::open_camera() opening '".to_string() + &friendly_name + &"'".to_string());
     let format = RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestResolution);
     
     // Look up device name
@@ -30,12 +31,14 @@ pub fn open_camera(friendly_name: String) -> CallbackCamera {
     let mut camera = CallbackCamera::new(camera_info.index().clone(), format, |_| {}).expect("Could not create CallbackCamera");
 
     camera.open_stream().expect("Could not open camera stream");
-    log("Opened camera successfully; ".to_string() + "Camera format: " + &camera.camera_format().expect("Could not get camera format").to_string());
+    let camera_format_str = &camera.camera_format().expect("Could not get camera format").to_string();
+    log_info("nokhwa::open_camera() opened '".to_string() + &friendly_name + &"' (".to_string() + camera_format_str + ")");
 
     camera
 }
 
 pub fn set_camera_callback<F>(camera: &mut CallbackCamera, frame_callback: F) where F: Fn(RawImage) + Send + Sync + 'static {
+    log_debug("nokhwa::set_camera_callback() setting callback for '".to_string() + &camera.info().human_name() + "'");
     camera.set_callback(move |buffer| {
         let raw_rgba_image = buffer.decode_image::<RgbAFormat>().expect("Could not decode image to RGBA");
         let image = RawImage::new_from_rgba_data(
@@ -45,11 +48,14 @@ pub fn set_camera_callback<F>(camera: &mut CallbackCamera, frame_callback: F) wh
         );
         frame_callback(image);
     }).expect("Failed setting the callback");
+    log_debug("nokhwa::set_camera_callback() callback set for '".to_string() + &camera.info().human_name() + "'");
 }
 
 pub fn close_camera(mut camera: CallbackCamera) {
+    log_debug("nokhwa::close_camera() closing '".to_string() + &camera.info().human_name() + "'");
     camera.set_callback(|_| {}).expect("Could not set callback");
-    camera.stop_stream().expect("Failed to stop stream")
+    camera.stop_stream().expect("Failed to stop stream");
+    log_info("nokhwa::close_camera() closed '".to_string() + &camera.info().human_name() + "'");
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, From, Into)]

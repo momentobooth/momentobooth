@@ -14,7 +14,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.5.0
-  go_router: 6.5.7
+  go_router: 6.5.8
   flutter_svg: 2.0.5
   animated_text_kit: 4.2.2
   hotkey_manager: 0.1.7
@@ -45,13 +45,15 @@ dependencies:
   # System
   path_provider: 2.0.14
   path: 1.8.2
-  window_manager: ^0.3.2
+  window_manager: 0.3.2
 
   # Misc
   meta: 1.8.0
   toml: 0.14.0
-  file_picker: ^5.2.9
-  confetti: ^0.7.0
+  file_picker: 5.2.9
+  confetti: 0.7.0
+  loggy: 2.0.3
+  flutter_loggy: 2.0.2
 
 dev_dependencies:
   flutter_test:

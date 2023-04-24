@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/animation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
@@ -17,7 +18,7 @@ part 'capture_screen_view_model.g.dart';
 
 class CaptureScreenViewModel = CaptureScreenViewModelBase with _$CaptureScreenViewModel;
 
-abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store {
+abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
 
   late final PhotoCaptureMethod capturer;
   bool flashComplete = false;
@@ -58,8 +59,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     final jpgQuality = SettingsManagerBase.instance.settings.output.jpgQuality;
     await Future.delayed(Duration(milliseconds: 100));
     PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
-    print('captureCollage() executed in ${stopwatch.elapsed}');
-    print("Written collage image to output image memory");
+    loggy.debug('captureCollage took ${stopwatch.elapsed}');
     
     return await PhotosManagerBase.instance.writeOutput();
   }
