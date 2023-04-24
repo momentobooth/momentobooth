@@ -21,6 +21,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   bool captureComplete = false;
   static const flashStartDuration = Duration(milliseconds: 50);
   static const flashEndDuration = Duration(milliseconds: 2500);
+  static const minimumContinueWait = Duration(milliseconds: 1500);
 
   int get counterStart => SettingsManagerBase.instance.settings.captureDelaySeconds;
 
@@ -63,8 +64,8 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     showCounter = false;
     await Future.delayed(flashAnimationDuration);
     showFlash = false;
-    await Future.delayed(flashAnimationDuration);
-    flashComplete = true;
+    await Future.delayed(minimumContinueWait);
+    flashComplete = true; // Flash is now not actually complete, but after this time we do not care about it anymore.
     navigateAfterCapture();
   }
 
