@@ -28,7 +28,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Logging
-  Loggy.initLoggy(logPrinter: const PrettyDeveloperPrinter());
+  Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 
   // Hotkeys
   await hotKeyManager.unregisterAll();

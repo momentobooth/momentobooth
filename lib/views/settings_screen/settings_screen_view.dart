@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
@@ -54,6 +55,13 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: Icon(FluentIcons.send),
                 title: Text("Output"),
                 body: Builder(builder: (_) => _outputSettings),
+              ),
+            ],
+            footerItems: [
+              PaneItem(
+                icon: Icon(FluentIcons.data_flow),
+                title: Text("Log"),
+                body: Builder(builder: (_) => _log),
               ),
             ],
           ),
@@ -368,6 +376,13 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
           ],
         ),
       ],
+    );
+  }
+
+  Widget get _log {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: LoggyStreamWidget(),
     );
   }
 
