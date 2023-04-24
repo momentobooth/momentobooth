@@ -35,11 +35,13 @@ class PhotoCollage extends StatefulWidget {
 
   final double aspectRatio;
   final bool showLogo;
+  final bool singleMode;
 
   const PhotoCollage({
     super.key,
     required this.aspectRatio,
     this.showLogo = false,
+    this.singleMode = false,
   });
 
   @override
@@ -49,7 +51,11 @@ class PhotoCollage extends StatefulWidget {
 
 class PhotoCollageState extends State<PhotoCollage> {
 
-  PhotoCollageState() {
+  PhotoCollageState();
+
+  @override
+  void initState() {
+    super.initState();
     setInitialized = Action(_setInitialized);
     findTemplates();
   }
@@ -79,17 +85,19 @@ class PhotoCollageState extends State<PhotoCollage> {
   };
   
   void findTemplates() async {
-    for (int i = 0; i <= 4; i++) {
-      final frontTemplate = await _templateResolver(TemplateKind.front, i);
-      final backTemplate = await _templateResolver(TemplateKind.back, i);
-      templates[TemplateKind.front]?[i] = frontTemplate;
-      templates[TemplateKind.back]?[i] = backTemplate;
+    if (widget.singleMode) {
+      templates[TemplateKind.front]?[1] = await _templateResolver(TemplateKind.front, 1);
+      templates[TemplateKind.back]?[1] = await _templateResolver(TemplateKind.back, 1);
+    } else {
+      for (int i = 0; i <= 4; i++) {
+        final frontTemplate = await _templateResolver(TemplateKind.front, i);
+        final backTemplate = await _templateResolver(TemplateKind.back, i);
+        templates[TemplateKind.front]?[i] = frontTemplate;
+        templates[TemplateKind.back]?[i] = backTemplate;
+      }
     }
     setInitialized([true]);
   }
-
-  File? get frontTemplate => templates[TemplateKind.front]?[nChosen];
-  File? get backTemplate => templates[TemplateKind.back]?[nChosen];
 
   /// Checks if a given template file exists and returns it if it does.
   Future<File?> _templateTest(String fileName) async {
