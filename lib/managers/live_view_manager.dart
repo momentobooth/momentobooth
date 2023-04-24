@@ -17,8 +17,17 @@ abstract class LiveViewManagerBase with Store {
   LiveViewStream? _liveViewStream;
   StreamSubscription<LiveViewFrame>? _liveViewSubscription;
 
-  @readonly
+  @observable
   ui.Image? _lastFrameImage;
+
+  @computed
+  ui.Image? get lastFrameImage => _lastFrameImage;
+
+  set lastFrameImage(ui.Image? image) {
+    ui.Image? previousLastFrameImage = _lastFrameImage;
+    _lastFrameImage = image;
+    previousLastFrameImage?.dispose();
+  }
 
   @readonly
   LiveViewState _liveViewState = LiveViewState.initializing;
@@ -58,11 +67,7 @@ abstract class LiveViewManagerBase with Store {
 
         LiveViewManagerBase.instance._liveViewSubscription = stream.getStream().listen((frame) async {
           // New frame arrived
-          var oldFrame = LiveViewManagerBase.instance._lastFrameImage;
-          LiveViewManagerBase.instance._lastFrameImage = await frame.toImage();
-          if (oldFrame != null) {
-            oldFrame.dispose();
-          }
+          LiveViewManagerBase.instance.lastFrameImage = await frame.toImage();
           LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
         }, onError: (error) {
           // Error
