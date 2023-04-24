@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
 
+import 'package:loggy/loggy.dart' as loggy;
 import 'package:momento_booth/managers/native_library_initialization_manager.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 
@@ -23,7 +24,20 @@ void init() {
 }
 
 void processLogEvent(LogEvent event) {
-  print("Native Lib: ${event.message}");
+  switch (event.level) {
+    case LogLevel.Debug:
+      loggy.logDebug("Lib: ${event.message}");
+      break;
+    case LogLevel.Info:
+      loggy.logInfo("Lib: ${event.message}");
+      break;
+    case LogLevel.Warning:
+      loggy.logWarning("Lib: ${event.message}");
+      break;
+    case LogLevel.Error:
+      loggy.logError("Lib: ${event.message}");
+      break;
+  }
 }
 
 void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {

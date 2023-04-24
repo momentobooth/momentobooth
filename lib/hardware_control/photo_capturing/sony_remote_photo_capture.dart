@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 
 /// Capture method that captures an image by automating the Sony Imaging Edge Desktop application (Windows only).
 /// This solution exists because gPhoto2 and other possibly better solutions require driver overrides on Windows or
 /// require bundling shared libraries which we do not support at the moment.
-class SonyRemotePhotoCapture extends PhotoCaptureMethod {
+class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
 
   final String directoryPath;
 
@@ -20,7 +21,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod {
   Duration get captureDelay => Duration(milliseconds: 200);
 
   void _capture() {
-    print("Sending capture command to Sony Remote");
+    loggy.debug("Sending capture command to Sony Remote");
     // AutoIt script line
     // https://ss64.com/nt/syntax-esc.html
     var autoItScript = "ControlClick('Remote', '', 1001)";
@@ -33,7 +34,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod {
     try {
       final file = await waitForFile(directoryPath, ".jpg");
       final img = await file.readAsBytes();
-      print('File found: ${file.path}');
+      loggy.debug('Photo found: ${file.path}');
       return img;
     } on TimeoutException {
       throw 'File not found within 5 seconds';
@@ -47,7 +48,8 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod {
   }
 
   Future<File> waitForFile(String directoryPath, String fileExtension) async {
-    print("Checking for new $fileExtension files");
+    loggy.debug("Checking for new $fileExtension files");
+    
     final stopTime = DateTime.now().add(Duration(seconds: 5));
     final dir = Directory(directoryPath);
     final fileListBefore = await dir.list().toList();

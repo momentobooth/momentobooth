@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -17,7 +18,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
+class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with UiLoggy {
 
   // Initialization/Deinitialization
 
@@ -31,7 +32,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
   }
   
   void onClickPrev() {
-    print("clicking prev");
+    loggy.debug("Clicked prev");
     if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
       PhotosManagerBase.instance.reset(advance: false);
       router.go(CaptureScreen.defaultRoute);
@@ -54,35 +55,35 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     }
     if (viewModel.uploadState != UploadState.notStarted) return;
 
-    print("Requesting QR code");
     final Uint8List imageData = PhotosManagerBase.instance.outputImage!;
     final Directory tempDir = await getTemporaryDirectory();
     final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
     File file = await File('${tempDir.path}/image.$ext').create();
     await file.writeAsBytes(imageData);
 
+    loggy.debug("Uploading ${file.path}");
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
     viewModel.qrText = "Uploading";
     viewModel.uploadState = UploadState.uploading;
     stream.listen((event) {
       if (event.isFinished) {
-        print("Upload complete. Download URL: ${event.downloadUrl}");
+        loggy.debug("Upload complete: ${event.downloadUrl}");
         viewModel.uploadState = UploadState.done;
         viewModel.qrText = "Show QR";
         viewModel.qrUrl = event.downloadUrl!;
         viewModel.qrShown = true;
         viewModel.sliderKey.currentState!.animateForward();
       } else {
-        print("${event.transferredBytes}/${event.totalBytes}");
+        loggy.debug("Uploading: ${file.path} (${event.transferredBytes}/${event.totalBytes})");
       }
     }).onError((x) {
-      print(x);
+      loggy.error("Upload failed, file path: ${file.path}", x);
       viewModel.uploadState = UploadState.errored;
     });
   }
 
   Future<void> onClickPrint() async {
-    print("Requesting photo print");
+    loggy.debug("Printing photo");
     // Find printer that was set in settings in available printers.
     final printers = await Printing.listPrinters();
     Printer? selected;
@@ -93,7 +94,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
       }
     }
     if (selected == null) {
-      print("Could not find set printer");
+      loggy.error("Could not find selected printer");
       return;
     }
 

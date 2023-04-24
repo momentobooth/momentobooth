@@ -53,7 +53,7 @@ class App extends StatefulWidget {
 
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with UiLoggy {
 
   final GoRouter _router = GoRouter(routes: rootRoutes);
 
@@ -75,7 +75,7 @@ class _AppState extends State<App> {
 
   void _toggleFullscreen() {
     _isFullScreen = !_isFullScreen;
-    print("Setting fullscreen to $_isFullScreen");
+    loggy.debug("Setting fullscreen to $_isFullScreen");
     windowManager.setFullScreen(_isFullScreen);
   }
 
@@ -113,7 +113,7 @@ class _AppState extends State<App> {
   }
 
   void _goHome() {
-    print("No activity in $returnHomeTimeout, returning to homescreen");
+    loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
   }
 
