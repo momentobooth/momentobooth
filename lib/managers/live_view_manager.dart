@@ -47,7 +47,11 @@ abstract class LiveViewManagerBase with Store {
         LiveViewManagerBase.instance._liveViewStream = await camera?.openStream()
           ?..getStream().listen((frame) async {
             // New frame arrived
+            var oldFrame = LiveViewManagerBase.instance._lastFrameImage;
             LiveViewManagerBase.instance._lastFrameImage = await frame.toImage();
+            if (oldFrame != null) {
+              oldFrame.dispose();
+            }
             LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
           }).onError((error) {
             // Error
