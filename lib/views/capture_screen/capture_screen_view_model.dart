@@ -11,6 +11,7 @@ import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/views/share_screen/share_screen.dart';
 
 part 'capture_screen_view_model.g.dart';
 
@@ -100,7 +101,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
-    router.push("/share");
+    router.go(ShareScreen.defaultRoute);
   }
 
 }

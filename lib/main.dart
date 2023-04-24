@@ -109,7 +109,7 @@ class _AppState extends State<App> {
 
   void _goHome() {
     print("No activity in $returnHomeTimeout, returning to homescreen");
-    _router.push('/');
+    _router.go(StartScreen.defaultRoute);
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.
@@ -133,8 +133,7 @@ class _AppState extends State<App> {
 
   Widget _getWidgetsApp(BuildContext context) {
     return WidgetsApp.router(
-      routeInformationParser: _router.routeInformationParser,
-      routerDelegate: _router.routerDelegate,
+      routerConfig: _router,
       color: context.theme.primaryColor,
       localizationsDelegates: [
         FluentLocalizations.delegate,

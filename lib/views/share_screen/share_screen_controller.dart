@@ -6,7 +6,10 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/capture_screen/capture_screen.dart';
+import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
+import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -22,16 +25,16 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
   });
 
   void onClickNext() {
-    router.push("/");
+    router.go(StartScreen.defaultRoute);
   }
   
   void onClickPrev() {
     print("clicking prev");
     if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
       PhotosManagerBase.instance.reset(advance: false);
-      router.push('/capture');
+      router.go(CaptureScreen.defaultRoute);
     } else {
-      router.pop();
+      router.go(CollageMakerScreen.defaultRoute);
     }
   }
 

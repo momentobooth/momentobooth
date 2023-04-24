@@ -15,7 +15,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> {
   // User interaction methods
 
   void onPressedContinue() {
-    router.push(ChooseCaptureModeScreen.defaultRoute);
+    router.go(ChooseCaptureModeScreen.defaultRoute);
   }
 
 }

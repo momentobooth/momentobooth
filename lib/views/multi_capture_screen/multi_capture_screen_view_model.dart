@@ -7,6 +7,8 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
+import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
 
 part 'multi_capture_screen_view_model.g.dart';
 
@@ -78,9 +80,9 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) { return; }
     if (PhotosManagerBase.instance.photos.length >= maxPhotos) {
-      router.push("/collage-maker");
+      router.go(CollageMakerScreen.defaultRoute);
     } else {
-      router.push("/multi-capture");
+      router.go("${MultiCaptureScreen.defaultRoute}?n=${PhotosManagerBase.instance.photos.length}");
     }
   }
 
