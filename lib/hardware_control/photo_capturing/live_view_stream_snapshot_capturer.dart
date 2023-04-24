@@ -1,12 +1,13 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/services.dart';
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
-class LiveViewStreamSnapshotCapturer implements PhotoCaptureMethod {
+class LiveViewStreamSnapshotCapturer with UiLoggy implements PhotoCaptureMethod {
 
   @override
   Duration get captureDelay => Duration.zero;
@@ -23,7 +24,12 @@ class LiveViewStreamSnapshotCapturer implements PhotoCaptureMethod {
     }
 
     final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData.buffer.asUint8List(), width: image.width, height: image.height);
-    return await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: 80, operationsBeforeEncoding: []);
+
+    final stopwatch = Stopwatch()..start();
+    final jpegData = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: 80, operationsBeforeEncoding: []);
+    loggy.debug('JPEG encoding took ${stopwatch.elapsed}');
+
+    return jpegData;
   }
 
 }

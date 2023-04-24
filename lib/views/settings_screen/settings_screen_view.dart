@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
@@ -10,6 +11,9 @@ import 'package:momento_booth/views/settings_screen/settings_screen_controller.d
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
 part 'settings_screen_view.helpers.dart';
+part 'settings_screen_view.general.dart';
+part 'settings_screen_view.hardware.dart';
+part 'settings_screen_view.output.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
 
@@ -43,17 +47,24 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               PaneItem(
                 icon: Icon(FluentIcons.settings),
                 title: Text("General"),
-                body: Builder(builder: (_) => _generalSettings),
+                body: Builder(builder: (_) => _getGeneralSettings(viewModel, controller)),
               ),
               PaneItem(
                 icon: Icon(FluentIcons.devices4),
                 title: Text("Hardware"),
-                body: Builder(builder: (_) => _hardwareSettings),
+                body: Builder(builder: (_) => _getHardwareSettings(viewModel, controller)),
               ),
               PaneItem(
                 icon: Icon(FluentIcons.send),
                 title: Text("Output"),
-                body: Builder(builder: (_) => _outputSettings),
+                body: Builder(builder: (_) => _getOutputSettings(viewModel, controller)),
+              ),
+            ],
+            footerItems: [
+              PaneItem(
+                icon: Icon(FluentIcons.data_flow),
+                title: Text("Log"),
+                body: Builder(builder: (_) => _log),
               ),
             ],
           ),
@@ -62,312 +73,10 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
     );
   }
 
-  Widget get _generalSettings { 
-    return FluentSettingsPage(
-      title: "General",
-      blocks: [
-        FluentSettingsBlock(
-          title: "Settings",
-          settings: [
-            _getInput(
-              icon: FluentIcons.timer,
-              title: "Capture delay",
-              subtitle: 'In seconds',
-              value: () => viewModel.captureDelaySecondsSetting,
-              onChanged: controller.onCaptureDelaySecondsChanged,
-            ),
-            _getBooleanInput(
-              icon: FluentIcons.favorite_star,
-              title: "Display confetti 🎉",
-              subtitle: "If enabled, confetti will shower the share screen!",
-              value: () => viewModel.displayConfettiSetting,
-              onChanged: controller.onDisplayConfettiChanged,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
-            ),
-          ],
-        ),
-        FluentSettingsBlock(
-          title: "Creative",
-          settings: [
-            _getFolderPickerCard(
-              icon: FluentIcons.fabric_report_library,
-              title: "Collage background templates location",
-              subtitle: "Location to look for template files",
-              dialogTitle: "Select templates location",
-              controller: controller.templatesFolderSettingController,
-              onChanged: controller.onTemplatesFolderChanged,
-            ),
-            _getBooleanInput(
-              icon: FluentIcons.picture_center,
-              title: "Treat single photo as collage",
-              subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
-              value: () => viewModel.singlePhotoIsCollageSetting,
-              onChanged: controller.onSinglePhotoIsCollageChanged,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget get _hardwareSettings {
-    return FluentSettingsPage(
-      title: "Hardware",
-      blocks: [
-        FluentSettingsBlock(
-          title: "Live view",
-          settings: [
-            _getComboBoxCard(
-              icon: FluentIcons.camera,
-              title: "Live view method",
-              subtitle: "Method used for live previewing",
-              items: viewModel.liveViewMethods,
-              value: () => viewModel.liveViewMethodSetting,
-              onChanged: controller.onLiveViewMethodChanged,
-            ),
-            if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam)
-              _webcamCard,
-            _getComboBoxCard(
-              icon: FluentIcons.camera,
-              title: "Flip image",
-              subtitle: "Whether the image should be flipped in none, one or both axis",
-              items: viewModel.liveViewFlipImageChoices,
-              value: () => viewModel.liveViewFlipImage,
-              onChanged: controller.onLiveViewFlipImageChanged,
-            ),
-          ],
-        ),
-        FluentSettingsBlock(
-          title: "Photo capture",
-          settings: [
-            _getComboBoxCard(
-              icon: FluentIcons.camera,
-              title: "Capture method",
-              subtitle: "Method used for capturing final images",
-              items: viewModel.captureMethods,
-              value: () => viewModel.captureMethodSetting,
-              onChanged: controller.onCaptureMethodChanged,
-            ),
-            _getFolderPickerCard(
-              icon: FluentIcons.folder,
-              title: "Capture location",
-              subtitle: "Location to look for captured images",
-              dialogTitle: "Select location to look for captured images",
-              controller: controller.captureLocationController,
-              onChanged: controller.onCaptureLocationChanged,
-            ),
-          ],
-        ),
-        FluentSettingsBlock(
-          title: "Printing",
-          settings: [
-            _printerCard,
-            _getInput(
-              icon: FluentIcons.page,
-              title: "Page height",
-              subtitle: 'Page format height used for printing [mm]',
-              value: () => viewModel.pageHeightSetting,
-              onChanged: controller.onPageHeightChanged,
-              smallChange: 0.1,
-            ),
-            _getInput(
-              icon: FluentIcons.page,
-              title: "Page width",
-              subtitle: 'Page format width used for printing [mm]',
-              value: () => viewModel.pageWidthSetting,
-              onChanged: controller.onPageWidthChanged,
-              smallChange: 0.1,
-            ),
-            _printerMargins,
-            _getBooleanInput(
-              icon: FluentIcons.settings,
-              title: "usePrinterSettings for printing",
-              subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
-              value: () => viewModel.usePrinterSettingsSetting,
-              onChanged: controller.onUsePrinterSettingsChanged,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  FluentSettingCard get _printerMargins {
-    const double numberWidth = 100;
-    const double padding = 10;
-    return FluentSettingCard(
-      icon: FluentIcons.page,
-      title: "Page margins used for printing",
-      subtitle: "Some printers cut off some part of the image. Use this to compensate.\nOrder: top, right, bottom, left [mm]",
-      child: Row(
-        children: [
-          SizedBox(
-            width: numberWidth,
-            child: Observer(builder: (_) {
-              return NumberBox<double>(
-                value: viewModel.printerMarginTopSetting,
-                onChanged: controller.onPrinterMarginTopChanged,
-                smallChange: 0.1,
-              );
-            }),
-          ),
-          SizedBox(width: padding,),
-          SizedBox(
-            width: numberWidth,
-            child: Observer(builder: (_) {
-              return NumberBox<double>(
-                value: viewModel.printerMarginRightSetting,
-                onChanged: controller.onPrinterMarginRightChanged,
-                smallChange: 0.1,
-              );
-            }),
-          ),
-          SizedBox(width: padding,),
-          SizedBox(
-            width: numberWidth,
-            child: Observer(builder: (_) {
-              return NumberBox<double>(
-                value: viewModel.printerMarginBottomSetting,
-                onChanged: controller.onPrinterMarginBottomChanged,
-                smallChange: 0.1,
-              );
-            }),
-          ),
-          SizedBox(width: padding,),
-          SizedBox(
-            width: numberWidth,
-            child: Observer(builder: (_) {
-              return NumberBox<double>(
-                value: viewModel.printerMarginLeftSetting,
-                onChanged: controller.onPrinterMarginLeftChanged,
-                smallChange: 0.1,
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  FluentSettingCard get _webcamCard {
-    return FluentSettingCard(
-      icon: FluentIcons.camera,
-      title: "Webcam",
-      subtitle: "Pick the webcam to use for live view",
-      child: Row(
-        children: [
-          Button(
-            onPressed: viewModel.setWebcamList,
-            child: const Text('Refresh'),
-          ),
-          SizedBox(width: 10),
-          ConstrainedBox(
-            constraints: BoxConstraints(minWidth: 150),
-            child: Observer(builder: (_) {
-              return ComboBox<String>(
-                items: viewModel.webcams,
-                value: viewModel.liveViewWebcamId,
-                onChanged: controller.onLiveViewWebcamIdChanged,
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  FluentSettingCard get _printerCard {
-    return FluentSettingCard(
-      icon: FluentIcons.print,
-      title: "Printer",
-      subtitle: "Which printer to use for printing photos",
-      child: Row(
-        children: [
-          Button(
-            onPressed: viewModel.setPrinterList,
-            child: const Text('Refresh'),
-          ),
-          SizedBox(width: 10),
-          ConstrainedBox(
-            constraints: BoxConstraints(minWidth: 150),
-            child: Observer(builder: (_) {
-              return ComboBox<String>(
-                items: viewModel.printerOptions,
-                value: viewModel.printerSetting,
-                onChanged: controller.onPrinterChanged,
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget get _outputSettings {
-    return FluentSettingsPage(
-      title: "Output",
-      blocks: [
-        FluentSettingsBlock(
-          title: "Local",
-          settings: [
-            _getFolderPickerCard(
-              icon: FluentIcons.fabric_picture_library,
-              title: "Local photo storage location",
-              subtitle: "Location where the output images will be stored",
-              dialogTitle: "Select local output storage location",
-              controller: controller.localFolderSettingController,
-              onChanged: controller.onLocalFolderChanged,
-            ),
-          ],
-        ),
-        FluentSettingsBlock(
-          title: "Share using internet",
-          settings: [
-            _getTextInput(
-              icon: FluentIcons.my_network,
-              title: "Firefox Send URL",
-              subtitle: "Firefox Send Server URL",
-              controller: controller.firefoxSendServerUrlController,
-              onChanged: controller.onFirefoxSendServerUrlChanged,
-            ),
-          ],
-        ),
-        FluentSettingsBlock(
-          title: "Image settings",
-          settings: [
-            _getComboBoxCard(
-              icon: FluentIcons.file_image,
-              title: "Image file type",
-              subtitle: "What kind of file to generate",
-              items: viewModel.exportFormats,
-              value: () => viewModel.exportFormat,
-              onChanged: controller.onExportFormatChanged,
-            ),
-            _getInput(
-              icon: FluentIcons.equalizer,
-              title: "JPG quality",
-              subtitle: 'Export quality (higher is bigger files)',
-              value: () => viewModel.jpgQuality,
-              onChanged: controller.onJpgQualityChanged,
-            ),
-            _getInput(
-              icon: FluentIcons.picture_stretch,
-              title: "Output resolution multiplier",
-              subtitle: 'Controls image resolution',
-              value: () => viewModel.resolutionMultiplier,
-              onChanged: controller.onResolutionMultiplierChanged,
-              smallChange: 0.1,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text("Output resolution will be ${(viewModel.resolutionMultiplier*1000).round()}×${(viewModel.resolutionMultiplier*2000/3).round()}"),
-            ),
-          ],
-        ),
-      ],
+  Widget get _log {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: LoggyStreamWidget(),
     );
   }
 

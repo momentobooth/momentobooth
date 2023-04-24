@@ -1,11 +1,14 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/fade_transition_page.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
@@ -23,6 +26,9 @@ part 'main.routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Logging
+  Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 
   // Hotkeys
   await hotKeyManager.unregisterAll();
@@ -48,9 +54,9 @@ class App extends StatefulWidget {
 
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with UiLoggy {
 
-  final GoRouter _router = GoRouter(routes: rootRoutes);
+  final GoRouter _router = GoRouter(routes: rootRoutes, observers: [GoRouterObserver()]);
 
   bool _settingsOpen = false;
   bool _isFullScreen = false;
@@ -70,7 +76,7 @@ class _AppState extends State<App> {
 
   void _toggleFullscreen() {
     _isFullScreen = !_isFullScreen;
-    print("Setting fullscreen to $_isFullScreen");
+    loggy.debug("Setting fullscreen to $_isFullScreen");
     windowManager.setFullScreen(_isFullScreen);
   }
 
@@ -83,6 +89,7 @@ class _AppState extends State<App> {
       ),
       keyDownHandler: (hotKey) {
         setState(() => _settingsOpen = !_settingsOpen);
+        loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
       },
     );
     hotKeyManager.register(
@@ -108,7 +115,7 @@ class _AppState extends State<App> {
   }
 
   void _goHome() {
-    print("No activity in $returnHomeTimeout, returning to homescreen");
+    loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
   }
 

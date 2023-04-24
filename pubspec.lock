@@ -277,10 +277,10 @@ packages:
     dependency: "direct main"
     description:
       name: file_picker
-      sha256: b85eb92b175767fdaa0c543bf3b0d1f610fe966412ea72845fe5ba7801e763ff
+      sha256: dcde5ad1a0cebcf3715ea3f24d0db1888bf77027a26c77d7779e8ef63b8ade62
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.10"
+    version: "5.2.9"
   fixnum:
     dependency: transitive
     description:
@@ -328,6 +328,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_loggy:
+    dependency: "direct main"
+    description:
+      name: flutter_loggy
+      sha256: "21b515977deefe37817cce35b0e420c7cde930b9dcfdcbeb05730ed24ee74e3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   flutter_mobx:
     dependency: "direct main"
     description:
@@ -419,10 +427,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "99c7fbd4f73da5268046374576af2f6fef970088038d626c5c689a359479af40"
+      sha256: "4d141302e68dcdec0949ac798b5a8cf307eb6f79c70830ef1a2aec9b31827c28"
       url: "https://pub.dev"
     source: hosted
-    version: "6.5.7"
+    version: "6.5.8"
   graphs:
     dependency: transitive
     description:
@@ -532,6 +540,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  loggy:
+    dependency: "direct main"
+    description:
+      name: loggy
+      sha256: "981e03162bbd3a5a843026f75f73d26e4a0d8aa035ae060456ca7b30dfd1e339"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   matcher:
     dependency: transitive
     description:
@@ -772,6 +788,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.27.7"
   screen_retriever:
     dependency: transitive
     description:
