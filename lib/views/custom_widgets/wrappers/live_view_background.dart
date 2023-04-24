@@ -77,8 +77,12 @@ class LiveViewBackground extends StatelessWidgetBase {
           imageFilter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
           child: LiveView(fit: BoxFit.cover),
         ),
-        if (_showLiveViewBackground)
-          LiveView(),
+        AnimatedOpacity(
+          duration: Duration(milliseconds: 300),
+          opacity: _showLiveViewBackground ? 1 : 0,
+          curve: Curves.ease,
+          child: LiveView(),
+        ),
       ],
     );
   }
