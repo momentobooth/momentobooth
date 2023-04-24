@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -47,7 +48,7 @@ class PhotoCollage extends StatefulWidget {
 
 }
 
-class PhotoCollageState extends State<PhotoCollage> {
+class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
 
   PhotoCollageState() {
     setInitialized = Action(_setInitialized);
@@ -287,8 +288,12 @@ class PhotoCollageState extends State<PhotoCollage> {
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
     final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
     final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [ImageOperation.rotate(Rotation.Rotate270)] : [];
-    final jpg = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality, operationsBeforeEncoding: operationsBeforeEncoding);
-    return jpg;
+
+    final stopwatch = Stopwatch()..start();
+    final jpegData = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality, operationsBeforeEncoding: operationsBeforeEncoding);
+    loggy.debug('JPEG encoding took ${stopwatch.elapsed}');
+
+    return jpegData;
   }
 
 }

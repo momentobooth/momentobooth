@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -74,7 +73,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
         viewModel.qrShown = true;
         viewModel.sliderKey.currentState!.animateForward();
       } else {
-        loggy.debug("Uploading: ${file.path} (${event.transferredBytes}/${event.totalBytes})");
+        loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
       }
     }).onError((x) {
       loggy.error("Upload failed, file path: ${file.path}", x);
