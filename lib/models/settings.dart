@@ -61,6 +61,13 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     required CaptureMethod captureMethod,
     required String captureLocation,
     required String printerName,
+    required double pageHeight,
+    required double pageWidth,
+    required bool usePrinterSettings,
+    required double printerMarginTop,
+    required double printerMarginRight,
+    required double printerMarginBottom,
+    required double printerMarginLeft,
   }) = _HardwareSettings;
 
   factory HardwareSettings.withDefaults() {
@@ -71,6 +78,13 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
       captureMethod: CaptureMethod.liveViewSource,
       captureLocation: _getHome(),
       printerName: "",
+      pageHeight: 148,
+      pageWidth: 100,
+      usePrinterSettings: true,
+      printerMarginTop: 0,
+      printerMarginRight: 0,
+      printerMarginBottom: 0,
+      printerMarginLeft: 0,
     );
   }
 

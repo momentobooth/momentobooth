@@ -4,12 +4,14 @@ import 'dart:typed_data';
 
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -98,7 +100,13 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     // Get photo and print it.
     final photoToPrint = PhotosManagerBase.instance.outputImage!;
     final image = pw.MemoryImage(photoToPrint);
-    const pageFormat = PdfPageFormat(100.0 * PdfPageFormat.mm, 150.0 * PdfPageFormat.mm);
+    const mm = PdfPageFormat.mm;
+    final settings = SettingsManagerBase.instance.settings.hardware;
+    final pageFormat = PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
+                                     marginBottom: settings.printerMarginBottom * mm,
+                                     marginLeft: settings.printerMarginLeft * mm,
+                                     marginRight: settings.printerMarginRight * mm,
+                                     marginTop: settings.printerMarginTop * mm,);
     const fit = pw.BoxFit.contain;
 
     // Check if photo should be rotated
@@ -106,25 +114,35 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> {
     final bool rotate = image.width! > image.height!;
     late final pw.Image imageWidget;
     if (rotate) {
-      imageWidget = pw.Image(image, fit: fit, height: pageFormat.width, width: pageFormat.height);
+      imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight);
     } else {
-      imageWidget = pw.Image(image, fit: fit, height: pageFormat.height, width: pageFormat.width);
+      imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
     }
 
     final doc = pw.Document(title: "MomentoBooth image");
     doc.addPage(pw.Page(
       pageFormat: pageFormat,
       build: (pw.Context context) {
-        return rotate ? pw.Transform.rotateBox(angle: 0.5*pi, child: imageWidget,) : imageWidget;
+        return pw.Center(
+          child: rotate ? pw.Transform.rotateBox(angle: 0.5*pi, child: imageWidget,) : imageWidget,
+        );
       })
     );
+
+    final pdfData = await doc.save();
 
     bool success = await Printing.directPrintPdf(
         printer: selected,
         name: "MomentoBooth image",
         format: pageFormat,
-        onLayout: (PdfPageFormat pageFormat) => doc.save()
+        onLayout: (PdfPageFormat pageFormat) => pdfData,
+        usePrinterSettings: settings.usePrinterSettings,
     );
+
+    Directory outputDir = Directory(SettingsManagerBase.instance.settings.output.localFolder);
+    final filePath = join(outputDir.path, 'latest-print.pdf');
+    File file = await File(filePath).create();
+    await file.writeAsBytes(pdfData);
 
     viewModel.printText = success ? "Printing..." : "Print canceled";
     Future.delayed(Duration(seconds: 2), () => viewModel.printText = "Print");

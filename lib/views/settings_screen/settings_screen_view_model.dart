@@ -71,6 +71,13 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
   String get captureLocationSetting => SettingsManagerBase.instance.settings.hardware.captureLocation;
   String get printerSetting => SettingsManagerBase.instance.settings.hardware.printerName;
+  double get pageHeightSetting => SettingsManagerBase.instance.settings.hardware.pageHeight;
+  double get pageWidthSetting => SettingsManagerBase.instance.settings.hardware.pageWidth;
+  bool get usePrinterSettingsSetting => SettingsManagerBase.instance.settings.hardware.usePrinterSettings;
+  double get printerMarginTopSetting => SettingsManagerBase.instance.settings.hardware.printerMarginTop;
+  double get printerMarginRightSetting => SettingsManagerBase.instance.settings.hardware.printerMarginRight;
+  double get printerMarginBottomSetting => SettingsManagerBase.instance.settings.hardware.printerMarginBottom;
+  double get printerMarginLeftSetting => SettingsManagerBase.instance.settings.hardware.printerMarginLeft;
   String get localFolderSetting => SettingsManagerBase.instance.settings.output.localFolder;
   String get firefoxSendServerUrlSetting => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
   ExportFormat get exportFormat => SettingsManagerBase.instance.settings.output.exportFormat;
