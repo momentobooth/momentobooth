@@ -36,11 +36,13 @@ class PhotoCollage extends StatefulWidget {
 
   final double aspectRatio;
   final bool showLogo;
+  final bool singleMode;
 
   const PhotoCollage({
     super.key,
     required this.aspectRatio,
     this.showLogo = false,
+    this.singleMode = false,
   });
 
   @override
@@ -50,15 +52,19 @@ class PhotoCollage extends StatefulWidget {
 
 class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
 
-  PhotoCollageState() {
+  PhotoCollageState();
+
+  @override
+  void initState() {
+    super.initState();
     setInitialized = Action(_setInitialized);
     findTemplates();
   }
 
-  void _setInitialized(bool value) => _initialized.value = value;
+  void _setInitialized(int value) => _initialized.value = value;
 
-  final Observable<bool> _initialized = Observable(false);
-  bool get initialized => _initialized.value;
+  final Observable<int> _initialized = Observable(0);
+  int get initialized => _initialized.value;
   late Action setInitialized;
 
   ScreenshotController screenshotController = ScreenshotController(); 
@@ -80,17 +86,21 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   };
   
   void findTemplates() async {
-    for (int i = 0; i <= 4; i++) {
-      final frontTemplate = await _templateResolver(TemplateKind.front, i);
-      final backTemplate = await _templateResolver(TemplateKind.back, i);
-      templates[TemplateKind.front]?[i] = frontTemplate;
-      templates[TemplateKind.back]?[i] = backTemplate;
+    if (widget.singleMode) {
+      templates[TemplateKind.front]?[1] = await _templateResolver(TemplateKind.front, 1);
+      templates[TemplateKind.back]?[1] = await _templateResolver(TemplateKind.back, 1);
+      setInitialized([1]);
+    } else {
+      for (int i = 0; i <= 4; i++) {
+        final frontTemplate = await _templateResolver(TemplateKind.front, i);
+        final backTemplate = await _templateResolver(TemplateKind.back, i);
+        templates[TemplateKind.front]?[i] = frontTemplate;
+        templates[TemplateKind.back]?[i] = backTemplate;
+        setInitialized([i+1]);
+        await Future.delayed(Duration(milliseconds: 100));
+      }
     }
-    setInitialized([true]);
   }
-
-  File? get frontTemplate => templates[TemplateKind.front]?[nChosen];
-  File? get backTemplate => templates[TemplateKind.back]?[nChosen];
 
   /// Checks if a given template file exists and returns it if it does.
   Future<File?> _templateTest(String fileName) async {
@@ -127,7 +137,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       fit: StackFit.expand,
       children: [
         for (int i = 0; i <= 4; i++) ...[
-          if (initialized && templates[TemplateKind.back]?[i] != null)
+          if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
             Opacity(
               opacity: i == nChosen ? 1 : 0,
               child: Image.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
@@ -138,7 +148,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           child: _innerLayout,
         ),
         for (int i = 0; i <= 4; i++) ...[
-          if (initialized && templates[TemplateKind.front]?[i] != null)
+          if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
             Opacity(
               opacity: i == nChosen ? 1 : 0,
               child: Image.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
