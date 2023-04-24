@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
@@ -12,7 +13,7 @@ part 'live_view_manager.g.dart';
 class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 
 /// Class containing global state for photos in the app
-abstract class LiveViewManagerBase with Store {
+abstract class LiveViewManagerBase with Store, UiLoggy {
   
   LiveViewStream? _liveViewStream;
   StreamSubscription<LiveViewFrame>? _liveViewSubscription;
@@ -72,10 +73,12 @@ abstract class LiveViewManagerBase with Store {
         }, onError: (error) {
           // Error
           LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
+          LiveViewManagerBase.instance.loggy.error("Error while streaming from '$webcamIdSetting'", error);
         }, cancelOnError: true);
       }
       catch (error) {
         LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
+        LiveViewManagerBase.instance.loggy.error("Failed to open camera '$webcamIdSetting'", error);
       }
     }
   });
