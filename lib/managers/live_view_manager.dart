@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/nokhwa_camera.dart';
 import 'package:mobx/mobx.dart';
 
@@ -13,6 +15,7 @@ class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 abstract class LiveViewManagerBase with Store {
   
   LiveViewStream? _liveViewStream;
+  StreamSubscription<LiveViewFrame>? _liveViewSubscription;
 
   @readonly
   ui.Image? _lastFrameImage;
@@ -39,24 +42,32 @@ abstract class LiveViewManagerBase with Store {
     if (liveViewStream == null || liveViewStream.friendlyName != webcamIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
       LiveViewManagerBase.instance._liveViewState = LiveViewState.initializing;
-      await liveViewStream?.dispose();
+      await LiveViewManagerBase.instance._liveViewSubscription?.cancel();
+      await LiveViewManagerBase.instance._liveViewStream?.dispose();
+
+      LiveViewManagerBase.instance._liveViewSubscription = null;
+      LiveViewManagerBase.instance._liveViewStream = null;
 
       var cameras = await NokhwaCamera.getAllCameras();
       NokhwaCamera? camera = cameras.cast<NokhwaCamera?>().firstWhere((camera) => camera!.friendlyName == webcamIdSetting, orElse: () => null);
       try {
-        LiveViewManagerBase.instance._liveViewStream = await camera?.openStream()
-          ?..getStream().listen((frame) async {
-            // New frame arrived
-            var oldFrame = LiveViewManagerBase.instance._lastFrameImage;
-            LiveViewManagerBase.instance._lastFrameImage = await frame.toImage();
-            if (oldFrame != null) {
-              oldFrame.dispose();
-            }
-            LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
-          }).onError((error) {
-            // Error
-            LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
-          });
+        var stream = LiveViewManagerBase.instance._liveViewStream = await camera?.openStream();
+        if (stream == null) {
+          return;
+        }
+
+        LiveViewManagerBase.instance._liveViewSubscription = stream.getStream().listen((frame) async {
+          // New frame arrived
+          var oldFrame = LiveViewManagerBase.instance._lastFrameImage;
+          LiveViewManagerBase.instance._lastFrameImage = await frame.toImage();
+          if (oldFrame != null) {
+            oldFrame.dispose();
+          }
+          LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
+        }, onError: (error) {
+          // Error
+          LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
+        }, cancelOnError: true);
       }
       catch (error) {
         LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
