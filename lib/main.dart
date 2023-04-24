@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
@@ -23,6 +25,9 @@ part 'main.routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Logging
+  Loggy.initLoggy(logPrinter: const PrettyDeveloperPrinter());
 
   // Hotkeys
   await hotKeyManager.unregisterAll();
