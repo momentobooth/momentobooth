@@ -50,10 +50,11 @@ dependencies:
   # Misc
   meta: 1.8.0
   toml: 0.14.0
-  file_picker: 5.2.9
+  file_picker: 5.2.10
   confetti: 0.7.0
   loggy: 2.0.3
   flutter_loggy: 2.0.2
+  synchronized: 3.1.0
 
 dev_dependencies:
   flutter_test:

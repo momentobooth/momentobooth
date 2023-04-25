@@ -1,9 +1,11 @@
-import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream.dart';
+import 'dart:async';
+
+import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream_factory.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
-class NokhwaCameraStream extends LiveViewStream {
+class NokhwaCameraStreamFactory extends LiveViewStreamFactory {
 
   final int _cameraPointer;
 
@@ -11,10 +13,10 @@ class NokhwaCameraStream extends LiveViewStream {
   // Initialization //
   // ////////////// //
 
-  NokhwaCameraStream._({required super.id, required super.friendlyName, required int cameraHandle}) : _cameraPointer = cameraHandle;
+  NokhwaCameraStreamFactory._({required super.id, required super.friendlyName, required int cameraHandle}) : _cameraPointer = cameraHandle;
 
-  static Future<NokhwaCameraStream> createAndOpen({required String id, required String friendlyName}) async {
-    return NokhwaCameraStream._(
+  static Future<NokhwaCameraStreamFactory> createAndOpen({required String id, required String friendlyName}) async {
+    return NokhwaCameraStreamFactory._(
       id: id,
       friendlyName: friendlyName,
       cameraHandle: await rustLibraryApi.nokhwaOpenCamera(friendlyName: friendlyName),
@@ -39,7 +41,7 @@ class NokhwaCameraStream extends LiveViewStream {
   @override
   Future dispose() async {
     await rustLibraryApi.nokhwaCloseCamera(cameraPtr: _cameraPointer);
-    super.dispose();
+    await super.dispose();
   }
 
 }
