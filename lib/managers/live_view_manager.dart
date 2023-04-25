@@ -49,6 +49,8 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
   // ///////// //
 
   final ReactionDisposer onSettingsChangedDisposer = autorun((_) {
+    // To make sure mobx detects that we are responding to changed to this property
+    SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
     LiveViewManagerBase.instance._lock.synchronized(() async {
       LiveViewStreamFactory? liveViewStream = LiveViewManagerBase.instance._liveViewStream;
       String webcamIdSetting = SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
