@@ -33,8 +33,15 @@ pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperat
     unsafe { 
         let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
         nokhwa::set_camera_callback(&mut camera, move |raw_frame| {
-            let processed_frame = image_processing::execute_operations(raw_frame, &operations);
-            new_frame_event_sink.add(processed_frame);
+            match raw_frame {
+                Some(raw_frame) => {
+                    let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+                    new_frame_event_sink.add(processed_frame);
+                },
+                None => {
+                    new_frame_event_sink.close();
+                },
+            }
         });
         Box::into_raw(camera)
     };

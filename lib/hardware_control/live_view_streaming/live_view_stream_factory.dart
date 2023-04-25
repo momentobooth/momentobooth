@@ -1,12 +1,12 @@
 import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:meta/meta.dart';
 
-abstract class LiveViewStream {
+abstract class LiveViewStreamFactory {
 
   final String id;
   final String friendlyName;
 
-  LiveViewStream({required this.id, required this.friendlyName});
+  LiveViewStreamFactory({required this.id, required this.friendlyName});
 
   Stream<LiveViewFrame> getStream();
 

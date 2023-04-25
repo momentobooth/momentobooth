@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera_stream.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera_stream_factory.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
@@ -16,7 +16,8 @@ class NokhwaCamera extends LiveViewSource {
     )).toList();
   }
 
-  Future<NokhwaCameraStream> openStream() => NokhwaCameraStream.createAndOpen(id: id, friendlyName: friendlyName);
+  @override
+  Future<NokhwaCameraStreamFactory> openStream() => NokhwaCameraStreamFactory.createAndOpen(id: id, friendlyName: friendlyName);
 
   ComboBoxItem<String> toComboBoxItem() => ComboBoxItem(value: friendlyName, child: Text(friendlyName));
 

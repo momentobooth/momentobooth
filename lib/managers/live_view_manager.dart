@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:loggy/loggy.dart';
-import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream_factory.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/nokhwa_camera.dart';
@@ -18,7 +18,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
 
   final Lock _lock = Lock();
   
-  LiveViewStream? _liveViewStream;
+  LiveViewStreamFactory? _liveViewStream;
   StreamSubscription<LiveViewFrame>? _liveViewSubscription;
 
   @observable
@@ -50,7 +50,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
 
   final ReactionDisposer onSettingsChangedDisposer = autorun((_) {
     LiveViewManagerBase.instance._lock.synchronized(() async {
-      LiveViewStream? liveViewStream = LiveViewManagerBase.instance._liveViewStream;
+      LiveViewStreamFactory? liveViewStream = LiveViewManagerBase.instance._liveViewStream;
       String webcamIdSetting = SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
 
       if (liveViewStream == null || liveViewStream.friendlyName != webcamIdSetting) {
