@@ -78,6 +78,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onCaptureDelaySonyChanged(int? captureDelaySony) {
+    if (captureDelaySony != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(captureDelaySony: captureDelaySony));
+    }
+  }
+
   void onCaptureLocationChanged(String? captureLocation) {
     if (captureLocation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureLocation: captureLocation));

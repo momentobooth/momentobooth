@@ -1,0 +1,6 @@
+Opt("SendKeyDownDelay", 400)
+Opt("WinWaitDelay", 0)
+$hWnd = WinWait("Remote", "")
+WinSetTrans($hWnd, "", 0)
+WinActivate($hWnd)
+Send("1")

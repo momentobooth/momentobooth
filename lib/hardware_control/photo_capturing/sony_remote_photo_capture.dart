@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 
 /// Capture method that captures an image by automating the Sony Imaging Edge Desktop application (Windows only).
 /// This solution exists because gPhoto2 and other possibly better solutions require driver overrides on Windows or
@@ -15,20 +16,19 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
   SonyRemotePhotoCapture(this.directoryPath);
 
   // Testing with camera gave ~165 ms with manual focus, ~220 with good autofocus
-  // and up to 500 ms in bad light. This should be avoided anyway because the (short)
-  // button press will not trigger the camera then. 
+  // and up to 500 ms in bad light. Differs per lens as well. 
+  // Short button presses will not trigger the capture when focussing is not complete.
   @override
-  Duration get captureDelay => Duration(milliseconds: 200);
+  Duration get captureDelay => Duration(milliseconds: SettingsManagerBase.instance.settings.hardware.captureDelaySony);
 
   void _capture() {
     loggy.debug("Sending capture command to Sony Remote");
     // AutoIt script line
     // https://ss64.com/nt/syntax-esc.html
-    var keyPressLength = 400;
-    var autoItScript = "Opt('SendKeyDownDelay', $keyPressLength)\nOpt('WinWaitDelay', 0)\n\$hWnd = WinWait('Remote', '')\nWinSetTrans(\$hWnd, '', 0)\nWinActivate(\$hWnd)\nSend('1')";
+    var autoItScript = File('lib/hardware_control/photo_capturing/sony_remote_capture_script.au3');
 
     // Execute the AutoIt script using the AutoIt executable
-    Process.run('autoit3.exe', ['/AutoIt3ExecuteLine', autoItScript]);
+    Process.run('autoit3.exe', ['/AutoIt3ExecuteScript', autoItScript.path]);
   }
 
   Future<Uint8List> _getPhoto() async {

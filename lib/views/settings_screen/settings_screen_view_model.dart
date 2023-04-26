@@ -69,6 +69,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get liveViewWebcamId => SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
   Flip get liveViewFlipImage => SettingsManagerBase.instance.settings.hardware.liveViewFlipImage;
   CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
+  int get captureDelaySonySetting => SettingsManagerBase.instance.settings.hardware.captureDelaySony;
   String get captureLocationSetting => SettingsManagerBase.instance.settings.hardware.captureLocation;
   String get printerSetting => SettingsManagerBase.instance.settings.hardware.printerName;
   double get pageHeightSetting => SettingsManagerBase.instance.settings.hardware.pageHeight;
