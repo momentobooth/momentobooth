@@ -24,7 +24,8 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
     loggy.debug("Sending capture command to Sony Remote");
     // AutoIt script line
     // https://ss64.com/nt/syntax-esc.html
-    var autoItScript = "ControlClick('Remote', '', 1001)";
+    var keyPressLength = 400;
+    var autoItScript = "Opt('SendKeyDownDelay', $keyPressLength)\nOpt('WinWaitDelay', 0)\n\$hWnd = WinWait('Remote', '')\nWinSetTrans(\$hWnd, '', 0)\nWinActivate(\$hWnd)\nSend('1')";
 
     // Execute the AutoIt script using the AutoIt executable
     Process.run('autoit3.exe', ['/AutoIt3ExecuteLine', autoItScript]);
