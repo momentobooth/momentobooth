@@ -30,7 +30,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
               child: PhotoCollage(
                 key: viewModel.collageKey,
                 singleMode: true,
-                aspectRatio: 2/3,
+                aspectRatio: 1/viewModel.collageAspectRatio,
                 decodeCallback: viewModel.collageReady,
               ),
             ),

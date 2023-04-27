@@ -21,6 +21,13 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
             value: () => viewModel.displayConfettiSetting,
             onChanged: controller.onDisplayConfettiChanged,
           ),
+          _getInput(
+            icon: FluentIcons.aspect_ratio,
+            title: "Collage aspect ratio",
+            subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
+            value: () => viewModel.collageAspectRatioSetting,
+            onChanged: controller.onCollageAspectRatioChanged,
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),

@@ -159,7 +159,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
               height: 1000,
               child: PhotoCollage(
                 key: controller.collageKey,
-                aspectRatio: 2/3
+                aspectRatio: 1/viewModel.collageAspectRatio,
               ),
             ),
           ),

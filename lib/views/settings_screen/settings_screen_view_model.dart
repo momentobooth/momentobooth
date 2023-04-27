@@ -63,6 +63,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
   bool get displayConfettiSetting => SettingsManagerBase.instance.settings.displayConfetti;
+  double get collageAspectRatioSetting => SettingsManagerBase.instance.settings.collageAspectRatio;
   bool get singlePhotoIsCollageSetting => SettingsManagerBase.instance.settings.singlePhotoIsCollage;
   String get templatesFolderSetting => SettingsManagerBase.instance.settings.templatesFolder;
   LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;

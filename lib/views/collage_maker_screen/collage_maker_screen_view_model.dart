@@ -1,4 +1,5 @@
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
 
@@ -13,6 +14,8 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
   });
 
   int get numSelected => PhotosManagerBase.instance.chosen.length;
+  
+  double get collageAspectRatio => SettingsManagerBase.instance.settings.collageAspectRatio;
 
   int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
   
