@@ -183,14 +183,16 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     return RotatedBox(
       quarterTurns: 1,
       child: Center(
-      child: AutoSizeText("Select some photos :)",
-        style: theme.titleStyle, textAlign: TextAlign.center,),
+        child: AutoSizeText("Select some photos :)",
+          style: theme.titleStyle,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
 
   Widget get _oneLayout {
-    var img = Image.memory(photos[chosen[0]], fit: BoxFit.cover,);
+    var img = Image.memory(photos[chosen[0]], fit: BoxFit.cover);
     img.image
        .resolve(ImageConfiguration.empty)
        .addListener(ImageStreamListener((image, synchronousCall) {
