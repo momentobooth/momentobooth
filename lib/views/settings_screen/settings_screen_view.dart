@@ -25,14 +25,6 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
 
   @override
   Widget get body {
-    return Builder(
-      builder: (context) {
-        return _navigationView;
-      },
-    );
-  }
-
-  Widget get _navigationView {
     return Observer(
       builder: (context) {
         return NavigationView(
