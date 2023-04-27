@@ -139,17 +139,17 @@ class _AppState extends State<App> with UiLoggy {
   }
 
   Widget _getWidgetsApp(BuildContext context) {
-    return WidgetsApp.router(
-      routerConfig: _router,
-      color: context.theme.primaryColor,
-      localizationsDelegates: [
-        FluentLocalizations.delegate,
-      ],
-      builder: (context, child) {
-        // This stack allows us to put the Settings screen on top
-        return LiveViewBackground(
-          child: FluentTheme(
-            data: FluentThemeData(),
+    return FluentTheme(
+      data: FluentThemeData(),
+      child: WidgetsApp.router(
+        routerConfig: _router,
+        color: context.theme.primaryColor,
+        localizationsDelegates: [
+          FluentLocalizations.delegate,
+        ],
+        builder: (context, child) {
+          // This stack allows us to put the Settings screen on top
+          return LiveViewBackground(
             child: Center(
               child: Stack(
                 children: [
@@ -162,9 +162,9 @@ class _AppState extends State<App> with UiLoggy {
                 ],
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
