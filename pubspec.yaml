@@ -83,6 +83,7 @@ flutter:
     - assets/bitmap/
     - assets/svg/
     - assets/fonts/brandon_grotesque/
+    - assets/scripts/
 
   fonts:
     - family: Brandon Grotesque
