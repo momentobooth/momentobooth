@@ -97,8 +97,8 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
         PhotosManagerBase.instance.outputImage = image;
         await PhotosManagerBase.instance.writeOutput();
       }
-    } catch (on) {
-      loggy.warning(on);
+    } catch (error) {
+      loggy.warning(error);
       final errorFile = File('assets/bitmap/capture-error.png');
       PhotosManagerBase.instance.outputImage = await errorFile.readAsBytes();
     } finally {

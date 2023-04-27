@@ -76,8 +76,8 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     try {
       final image = await capturer.captureAndGetPhoto();
       PhotosManagerBase.instance.photos.add(image);
-    } catch (on) {
-      loggy.warning(on);
+    } catch (error) {
+      loggy.warning(error);
       final errorFile = File('assets/bitmap/capture-error.png');
       PhotosManagerBase.instance.photos.add(await errorFile.readAsBytes());
     } finally {
