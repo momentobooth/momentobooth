@@ -25,13 +25,10 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
 
   @override
   Widget get body {
-    return FluentTheme(
-      data: FluentThemeData(),
-      child: Builder(
-        builder: (context) {
-          return _navigationView;
-        },
-      ),
+    return Builder(
+      builder: (context) {
+        return _navigationView;
+      },
     );
   }
 

@@ -6,6 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_controller.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_view_model.dart';
@@ -41,7 +42,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                       child: Padding(padding: EdgeInsets.symmetric(vertical: 10),
                         child: AspectRatio(
                           aspectRatio: 1.5,
-                          child: Image.memory(PhotosManagerBase.instance.photos[i])
+                          child: ImageWithLoaderFallback.memory(PhotosManagerBase.instance.photos[i]),
                         ),
                       ),
                     ),

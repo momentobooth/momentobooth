@@ -148,15 +148,20 @@ class _AppState extends State<App> with UiLoggy {
       builder: (context, child) {
         // This stack allows us to put the Settings screen on top
         return LiveViewBackground(
-          child: Stack(
-            children: [
-              Listener(
-                behavior: HitTestBehavior.translucent,
-                onPointerDown: onActivity,
-                child: child!,
+          child: FluentTheme(
+            data: FluentThemeData(),
+            child: Center(
+              child: Stack(
+                children: [
+                  Listener(
+                    behavior: HitTestBehavior.translucent,
+                    onPointerDown: onActivity,
+                    child: child!,
+                  ),
+                  _settingsOpen ? _settingsScreen : const SizedBox(),
+                ],
               ),
-              _settingsOpen ? _settingsScreen : const SizedBox(),
-            ],
+            ),
           ),
         );
       },

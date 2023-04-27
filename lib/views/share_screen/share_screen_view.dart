@@ -9,6 +9,7 @@ import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -37,7 +38,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
                   border: theme.captureCounterContainerBorder,
                   boxShadow: [theme.captureCounterContainerShadow],
                 ),
-                child: Image.memory(viewModel.outputImage, fit: BoxFit.contain),
+                child: ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain),
               ),
             ),
           ),

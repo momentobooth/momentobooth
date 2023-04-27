@@ -15,6 +15,7 @@ import 'package:flutter/material.dart' hide Action, RawImage;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -233,7 +234,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         if (widget.showLogo)
           Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l2header'),
         for (int i = 0; i < nChosen; i++) ...[
-          Image.memory(photos[chosen[i]]).inGridArea('l2content${i+1}'),
+          ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l2content${i+1}'),
         ]
       ],
     );
@@ -257,8 +258,8 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header2'),
         ],
         for (int i = 0; i < nChosen; i++) ...[
-          Image.memory(photos[chosen[i]]).inGridArea('l3content${i+1}'),
-          Image.memory(photos[chosen[i]]).inGridArea('l3content${i+4}'),
+          ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l3content${i+1}'),
+          ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l3content${i+4}'),
         ]
       ],
     );
@@ -281,7 +282,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               RotatedBox(
                 quarterTurns: 1,
                 child: SizedBox.expand(
-                  child: Image.memory(photos[chosen[i]], fit: BoxFit.cover,)
+                  child: ImageWithLoaderFallback.memory(photos[chosen[i]], fit: BoxFit.cover)
                 )
               ).inGridArea('l4content${i+1}'),
             ]
