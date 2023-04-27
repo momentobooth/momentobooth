@@ -10,7 +10,7 @@ import 'package:momento_booth/rust_bridge/library_bridge.dart';
 class LiveViewStreamSnapshotCapturer with UiLoggy implements PhotoCaptureMethod {
 
   @override
-  Duration get captureDelay => Duration.zero;
+  Duration get captureDelay => Duration(milliseconds: -17);
 
   @override
   Future<Uint8List> captureAndGetPhoto() async {

@@ -38,6 +38,14 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             value: () => viewModel.captureMethodSetting,
             onChanged: controller.onCaptureMethodChanged,
           ),
+          if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop)
+            _getInput(
+              icon: FluentIcons.timer,
+              title: "Capture delay for Sony camera",
+              subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
+              value: () => viewModel.captureDelaySonySetting,
+              onChanged: controller.onCaptureDelaySonyChanged,
+            ),
           _getFolderPickerCard(
             icon: FluentIcons.folder,
             title: "Capture location",

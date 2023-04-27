@@ -50,7 +50,7 @@ dependencies:
   # Misc
   meta: 1.8.0
   toml: 0.14.0
-  file_picker: 5.2.10
+  file_picker: 5.2.11
   confetti: 0.7.0
   loggy: 2.0.3
   flutter_loggy: 2.0.2
@@ -74,7 +74,7 @@ dev_dependencies:
 
   # Code generation
   build_runner: 2.3.3
-  ffigen: 7.2.10
+  ffigen: 7.2.11
 
 flutter:
   uses-material-design: true
@@ -83,6 +83,7 @@ flutter:
     - assets/bitmap/
     - assets/svg/
     - assets/fonts/brandon_grotesque/
+    - assets/scripts/
 
   fonts:
     - family: Brandon Grotesque

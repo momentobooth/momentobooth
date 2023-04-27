@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/animation.dart';
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
@@ -14,7 +17,7 @@ part 'multi_capture_screen_view_model.g.dart';
 
 class MultiCaptureScreenViewModel = MultiCaptureScreenViewModelBase with _$MultiCaptureScreenViewModel;
 
-abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with Store {
+abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
 
   late final PhotoCaptureMethod capturer;
   bool flashComplete = false;
@@ -70,12 +73,17 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   }
 
   void captureAndGetPhoto() async {
-    final image = await capturer.captureAndGetPhoto();
-    PhotosManagerBase.instance.photos.add(image);
-    captureComplete = true;
-    // Fixme, should be replaced with the output of the collage later.
-    PhotosManagerBase.instance.outputImage = image;
-    navigateAfterCapture();
+    try {
+      final image = await capturer.captureAndGetPhoto();
+      PhotosManagerBase.instance.photos.add(image);
+    } catch (error) {
+      loggy.warning(error);
+      final errorFile = File('assets/bitmap/capture-error.png');
+      PhotosManagerBase.instance.photos.add(await errorFile.readAsBytes());
+    } finally {
+      captureComplete = true;
+      navigateAfterCapture();
+    }
   }
 
   void navigateAfterCapture() {
