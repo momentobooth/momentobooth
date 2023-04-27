@@ -32,17 +32,21 @@ enum TemplateKind {
 
 }
 
+void baseCallback() {}
+
 class PhotoCollage extends StatefulWidget {
 
   final double aspectRatio;
   final bool showLogo;
   final bool singleMode;
+  final Function decodeCallback;
 
   const PhotoCollage({
     super.key,
     required this.aspectRatio,
     this.showLogo = false,
     this.singleMode = false,
+    this.decodeCallback = baseCallback,
   });
 
   @override
@@ -77,6 +81,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
   int get nChosen => PhotosManagerBase.instance.chosen.length;
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
+  bool firstImageDecoded = false;
 
   String get templatesFolder => SettingsManagerBase.instance.settings.templatesFolder;
 
@@ -184,6 +189,15 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget get _oneLayout {
+    var img = Image.memory(photos[chosen[0]], fit: BoxFit.cover,);
+    img.image
+       .resolve(ImageConfiguration.empty)
+       .addListener(ImageStreamListener((image, synchronousCall) {
+          if (firstImageDecoded) return;
+          firstImageDecoded = true;
+          loggy.debug("_oneLayout image decoded!");
+          widget.decodeCallback();
+       }));
     return LayoutGrid(
       areas: '''
           l1header
@@ -198,8 +212,8 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l1header'),
         SizedBox.expand(child: RotatedBox(
           quarterTurns: 1,
-          child: Image.memory(photos[chosen[0]], fit: BoxFit.cover,),),
-        ).inGridArea('l1content'),
+          child: img,
+        ),).inGridArea('l1content'),
       ],
     );
   }

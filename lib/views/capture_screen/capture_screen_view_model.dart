@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/animation.dart';
@@ -50,6 +51,12 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   /// Global key for controlling the slider widget.
   final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
 
+  final Completer<void> completer = Completer<void>();
+
+  void collageReady() {
+    completer.complete();
+  }
+
   Future<File?> captureCollage() async {
     PhotosManagerBase.instance.chosen.clear();
     PhotosManagerBase.instance.chosen.add(0);
@@ -57,7 +64,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
     final format = SettingsManagerBase.instance.settings.output.exportFormat;
     final jpgQuality = SettingsManagerBase.instance.settings.output.jpgQuality;
-    await Future.delayed(Duration(milliseconds: 100));
+    await completer.future;
     PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
     
