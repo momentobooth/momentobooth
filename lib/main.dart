@@ -37,6 +37,9 @@ void main() async {
   // Settings
   await SettingsManagerBase.instance.load();
 
+  // Stats
+  await StatsManagerBase.instance.load();
+
   // Windows manager (used for full screen)
   await windowManager.ensureInitialized();
 
