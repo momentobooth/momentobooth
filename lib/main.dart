@@ -122,7 +122,7 @@ class _AppState extends State<App> with UiLoggy {
   }
 
   void _updateLastAliveTime(Timer timer) {
-    rustLibraryApi.updateFlutterAppAlive();
+    rustLibraryApi.updateFlutterAppLastAliveTime();
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.
