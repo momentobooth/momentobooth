@@ -9,6 +9,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         settings: [
           Observer(
             builder: (context) => _getTextDisplay(
+              context: context,
               icon: FluentIcons.front_camera,
               title: "Live view frames",
               subtitle: "The amount of live view frames that have been shown",
@@ -17,6 +18,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
           Observer(
             builder: (context) => _getTextDisplay(
+              context: context,
               icon: FluentIcons.print,
               title: "Printed pictures",
               subtitle: "The amount of prints (e.g. 2 prints of the same pictures will count as 2 as well)",
@@ -25,6 +27,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
           Observer(
             builder: (context) => _getTextDisplay(
+              context: context,
               icon: FluentIcons.upload,
               title: "Uploaded pictures",
               subtitle: "The amount of uploaded pictures",
@@ -33,6 +36,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
           Observer(
             builder: (context) => _getTextDisplay(
+              context: context,
               icon: FluentIcons.camera,
               title: "Captured photos",
               subtitle: "The amount of photo captures (e.g. a multi capture picture would increase this by 4)",
@@ -41,6 +45,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
           Observer(
             builder: (context) => _getTextDisplay(
+              context: context,
               icon: FluentIcons.photo2,
               title: "Created single shot pictures",
               subtitle: "The amount of single capture pictures created",
@@ -49,6 +54,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
           Observer(
             builder: (context) => _getTextDisplay(
+              context: context,
               icon: FluentIcons.photo_collection,
               title: "Created multi shot pictures",
               subtitle: "The amount of multi shot pictures created",
