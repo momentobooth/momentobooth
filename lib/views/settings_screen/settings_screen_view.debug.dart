@@ -9,7 +9,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         settings: [
           Observer(
             builder: (context) => _getTextDisplay(
-              icon: FluentIcons.camera,
+              icon: FluentIcons.front_camera,
               title: "Live view frames",
               subtitle: "The amount of live view frames that have been shown",
               text: StatsManagerBase.instance.liveViewFrames.toString(),
@@ -41,7 +41,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
           Observer(
             builder: (context) => _getTextDisplay(
-              icon: FluentIcons.camera,
+              icon: FluentIcons.photo2,
               title: "Created single shot pictures",
               subtitle: "The amount of single capture pictures created",
               text: StatsManagerBase.instance.createdSinglePhotos.toString(),
@@ -49,7 +49,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
           Observer(
             builder: (context) => _getTextDisplay(
-              icon: FluentIcons.camera,
+              icon: FluentIcons.photo_collection,
               title: "Created multi shot pictures",
               subtitle: "The amount of multi shot pictures created",
               text: StatsManagerBase.instance.createdMultiCapturePhotos.toString(),
