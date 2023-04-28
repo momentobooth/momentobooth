@@ -146,7 +146,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
             Opacity(
               opacity: i == nChosen ? 1 : 0,
-              child: Image.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
             ),
         ],
         Padding(
@@ -157,7 +157,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
             Opacity(
               opacity: i == nChosen ? 1 : 0,
-              child: Image.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
             ),
         ],
       ]
