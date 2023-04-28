@@ -1,5 +1,7 @@
+use chrono::{Utc, DateTime};
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
+use static_init::dynamic;
 
 use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}}, LogEvent, HardwareInitializationFinishedEvent};
 
@@ -33,6 +35,10 @@ pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperat
     unsafe { 
         let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
         nokhwa::set_camera_callback(&mut camera, move |raw_frame| {
+            if !is_flutter_app_alive() {
+                return
+            }
+
             match raw_frame {
                 Some(raw_frame) => {
                     let processed_frame = image_processing::execute_operations(raw_frame, &operations);
@@ -86,6 +92,27 @@ pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOpera
 
 pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) -> RawImage {
     image_processing::execute_operations(raw_image, &operations)
+}
+
+// //// //
+// Misc //
+// //// //
+
+#[dynamic] 
+static mut APP_LAST_ALIVE_TIME: DateTime<Utc> = Utc::now();
+
+const MAX_APP_NOT_ALIVE_TIME_MS: i64 = 200;
+
+pub fn update_flutter_app_last_alive_time() {
+    let mut lock = APP_LAST_ALIVE_TIME.write(); 
+    *lock = Utc::now();
+}
+
+fn is_flutter_app_alive() -> bool {
+    let then = *APP_LAST_ALIVE_TIME.read();
+    let now = Utc::now();
+    let diff = now - then;
+    diff.num_milliseconds() <= MAX_APP_NOT_ALIVE_TIME_MS
 }
 
 // /////// //
