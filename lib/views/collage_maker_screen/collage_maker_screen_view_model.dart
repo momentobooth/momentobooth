@@ -16,6 +16,7 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
   int get numSelected => PhotosManagerBase.instance.chosen.length;
   
   double get collageAspectRatio => SettingsManagerBase.instance.settings.collageAspectRatio;
+  double get collagePadding => SettingsManagerBase.instance.settings.collagePadding;
 
   int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
   

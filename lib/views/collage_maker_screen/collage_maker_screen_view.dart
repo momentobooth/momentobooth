@@ -155,12 +155,10 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             boxShadow: [theme.chooseCaptureModeButtonShadow],
           ),
           child: FittedBox(
-            child: SizedBox(
-              height: 1000,
-              child: PhotoCollage(
-                key: controller.collageKey,
-                aspectRatio: 1/viewModel.collageAspectRatio,
-              ),
+            child: PhotoCollage(
+              key: controller.collageKey,
+              aspectRatio: 1/viewModel.collageAspectRatio,
+              padding: viewModel.collagePadding,
             ),
           ),
         ),
