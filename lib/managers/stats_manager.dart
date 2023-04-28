@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' hide context;
 import 'package:path_provider/path_provider.dart';
 import 'package:toml/toml.dart';
 
@@ -23,7 +23,7 @@ enum StatFields {
 
 abstract class StatsManagerBase with Store, UiLoggy {
   
-  ObservableMap<StatFields, int> stats = {
+  ObservableMap<StatFields, int> stats = ObservableMap<StatFields, int>.of({
     StatFields.taps: 0,
     StatFields.liveViewFrames: 0,
     StatFields.printedPhotos: 0,
@@ -32,7 +32,7 @@ abstract class StatsManagerBase with Store, UiLoggy {
     StatFields.createdSinglePhotos: 0,
     StatFields.retakes: 0,
     StatFields.createdMultiCapturePhotos: 0,
-  } as ObservableMap<StatFields, int>;
+  });
 
   // ////////////// //
   // Initialization //
