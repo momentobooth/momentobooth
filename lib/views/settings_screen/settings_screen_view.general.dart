@@ -21,13 +21,6 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
             value: () => viewModel.displayConfettiSetting,
             onChanged: controller.onDisplayConfettiChanged,
           ),
-          _getInput(
-            icon: FluentIcons.aspect_ratio,
-            title: "Collage aspect ratio",
-            subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
-            value: () => viewModel.collageAspectRatioSetting,
-            onChanged: controller.onCollageAspectRatioChanged,
-          ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
@@ -37,6 +30,26 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
       FluentSettingsBlock(
         title: "Creative",
         settings: [
+          _getInput(
+            icon: FluentIcons.aspect_ratio,
+            title: "Collage aspect ratio",
+            subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
+            value: () => viewModel.collageAspectRatioSetting,
+            onChanged: controller.onCollageAspectRatioChanged,
+          ),
+          _getInput(
+            icon: FluentIcons.field_filled,
+            title: "Collage padding",
+            subtitle: "Controls the padding around the aspect ratio of the generated collages. Think about this together with paper print size.",
+            value: () => viewModel.collagePaddingSetting,
+            onChanged: controller.onCollagePaddingChanged,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Observer(
+              builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting/1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height.")
+            ),
+          ),
           _getFolderPickerCard(
             icon: FluentIcons.fabric_report_library,
             title: "Collage background templates location",

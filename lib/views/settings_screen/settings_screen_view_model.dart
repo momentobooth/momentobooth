@@ -64,6 +64,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
   bool get displayConfettiSetting => SettingsManagerBase.instance.settings.displayConfetti;
   double get collageAspectRatioSetting => SettingsManagerBase.instance.settings.collageAspectRatio;
+  double get collagePaddingSetting => SettingsManagerBase.instance.settings.collagePadding;
   bool get singlePhotoIsCollageSetting => SettingsManagerBase.instance.settings.singlePhotoIsCollage;
   String get templatesFolderSetting => SettingsManagerBase.instance.settings.templatesFolder;
   LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
@@ -85,6 +86,11 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ExportFormat get exportFormat => SettingsManagerBase.instance.settings.output.exportFormat;
   int get jpgQuality => SettingsManagerBase.instance.settings.output.jpgQuality;
   double get resolutionMultiplier => SettingsManagerBase.instance.settings.output.resolutionMultiplier;
+
+  double get outputResHeightExcl => resolutionMultiplier * 1000;
+  double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;
+  double get outputResHeightIncl => outputResHeightExcl + collagePaddingSetting * 2 * resolutionMultiplier;
+  double get outputResWidthIncl => outputResWidthExcl + collagePaddingSetting * 2 * resolutionMultiplier;
 
   // Initializers/Deinitializers
 
