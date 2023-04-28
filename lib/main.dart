@@ -5,6 +5,7 @@ import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
@@ -70,7 +71,7 @@ class _AppState extends State<App> with UiLoggy {
     // Check if the window is fullscreen from the start.
     windowManager.isFullScreen().then((value) => _isFullScreen = value);
     _returnHome = Timer(returnHomeTimeout, _goHome);
-    _router.addListener(() { onActivity(null); });
+    _router.addListener(() { onActivity(); });
     super.initState();
   }
 
@@ -121,7 +122,8 @@ class _AppState extends State<App> with UiLoggy {
 
   /// Method that is fired when a user does any kind of touch or the route changes.
   /// This resets the return home timer.
-  void onActivity(PointerEvent? event) {
+  void onActivity({bool isTap=false}) {
+    if (isTap) { StatsManagerBase.instance.addTap(); }
     _returnHome.cancel();
     _returnHome = Timer(returnHomeTimeout, _goHome);
   }
@@ -152,7 +154,7 @@ class _AppState extends State<App> with UiLoggy {
             children: [
               Listener(
                 behavior: HitTestBehavior.translucent,
-                onPointerDown: onActivity,
+                onPointerDown: (_) => onActivity(isTap: true),
                 child: child!,
               ),
               _settingsOpen ? _settingsScreen : const SizedBox(),

@@ -35,6 +35,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     loggy.debug("Clicked prev");
     if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
       PhotosManagerBase.instance.reset(advance: false);
+      StatsManagerBase.instance.addRetake();
       router.go(CaptureScreen.defaultRoute);
     } else {
       router.go(CollageMakerScreen.defaultRoute);

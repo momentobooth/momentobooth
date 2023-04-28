@@ -7,6 +7,9 @@ class StatsManager = StatsManagerBase with _$StatsManager;
 abstract class StatsManagerBase with Store {
 
   @readonly
+  int _taps = 0;
+
+  @readonly
   int _liveViewFrames = 0;
 
   @readonly
@@ -20,6 +23,9 @@ abstract class StatsManagerBase with Store {
 
   @readonly
   int _createdSinglePhotos = 0;
+
+  @readonly
+  int _retakes = 0;
 
   @readonly
   int _createdMultiCapturePhotos = 0;
@@ -37,6 +43,9 @@ abstract class StatsManagerBase with Store {
   // /////// //
 
   @action
+  void addTap() => _taps++;
+
+  @action
   void addLiveViewFrame() => _liveViewFrames++;
 
   @action
@@ -50,6 +59,9 @@ abstract class StatsManagerBase with Store {
 
   @action
   void addCreatedSinglePhoto() => _createdSinglePhotos++;
+
+  @action
+  void addRetake() => _retakes++;
 
   @action
   void addCreatedMultiCapturePhoto() => _createdMultiCapturePhotos++;
