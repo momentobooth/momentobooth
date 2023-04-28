@@ -1,12 +1,11 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
 class FluentSettingsPage extends StatefulWidget {
 
   final String title;
-  final List<FluentSettingsBlock> blocks;
+  final List<Widget> blocks;
 
   const FluentSettingsPage({
     super.key,

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
@@ -59,6 +60,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   void onContinueTap() {
     if (!viewModel.readyToContinue) return;
+    StatsManagerBase.instance.addCreatedMultiCapturePhoto();
     router.go(ShareScreen.defaultRoute);
   }
 

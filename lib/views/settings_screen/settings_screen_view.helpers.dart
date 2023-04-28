@@ -133,3 +133,20 @@ FluentSettingCard _getFolderPickerCard<TValue>({
     ),
   );
 }
+
+FluentSettingCard _getTextDisplay({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required String text,
+}) {
+  return FluentSettingCard(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    child: SizedBox(
+      width: 250,
+      child: Text(text),
+    ),
+  );
+}

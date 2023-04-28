@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream_factory.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/nokhwa_camera.dart';
 import 'package:mobx/mobx.dart';
@@ -31,6 +32,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
     ui.Image? previousLastFrameImage = _lastFrameImage;
     _lastFrameImage = image;
     previousLastFrameImage?.dispose();
+    StatsManagerBase.instance.addLiveViewFrame();
   }
 
   @readonly

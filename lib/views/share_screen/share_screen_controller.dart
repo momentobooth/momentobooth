@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -72,6 +73,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
         viewModel.qrUrl = event.downloadUrl!;
         viewModel.qrShown = true;
         viewModel.sliderKey.currentState!.animateForward();
+        StatsManagerBase.instance.addUploadedPhoto();
       } else {
         loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
       }
@@ -138,6 +140,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
         onLayout: (PdfPageFormat pageFormat) => pdfData,
         usePrinterSettings: settings.usePrinterSettings,
     );
+    StatsManagerBase.instance.addPrintedPhoto();
 
     Directory outputDir = Directory(SettingsManagerBase.instance.settings.output.localFolder);
     final filePath = join(outputDir.path, 'latest-print.pdf');
