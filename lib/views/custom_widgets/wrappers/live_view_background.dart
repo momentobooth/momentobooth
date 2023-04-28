@@ -48,11 +48,8 @@ class LiveViewBackground extends StatelessWidgetBase {
   }
 
   Widget get _initializingState {
-    return FluentTheme(
-      data: FluentThemeData(),
-      child: Center(
-        child: ProgressRing(),
-      ),
+    return Center(
+      child: ProgressRing(),
     );
   }
 

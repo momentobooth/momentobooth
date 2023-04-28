@@ -8,6 +8,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_controller.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_view_model.dart';
+import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:flutter/material.dart' show Icons;
 
@@ -92,7 +93,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
               builder: (BuildContext context) {
                 return Stack(
                   children: [
-                    Image.memory(PhotosManagerBase.instance.photos[i]),
+                    ImageWithLoaderFallback.memory(PhotosManagerBase.instance.photos[i]),
                     AnimatedOpacity(
                       opacity: PhotosManagerBase.instance.chosen.contains(i) ? 1 : 0,
                       duration: Duration(milliseconds: 200),
@@ -154,12 +155,10 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             boxShadow: [theme.chooseCaptureModeButtonShadow],
           ),
           child: FittedBox(
-            child: SizedBox(
-              height: 1000,
-              child: PhotoCollage(
-                key: controller.collageKey,
-                aspectRatio: 2/3
-              ),
+            child: PhotoCollage(
+              key: controller.collageKey,
+              aspectRatio: 1/viewModel.collageAspectRatio,
+              padding: viewModel.collagePadding,
             ),
           ),
         ),

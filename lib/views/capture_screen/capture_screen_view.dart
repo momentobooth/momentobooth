@@ -25,14 +25,12 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
         FittedBox(
           child: Transform.translate(
             offset: Offset(3000, 0),
-            child: SizedBox(
-              height: 1000,
-              child: PhotoCollage(
-                key: viewModel.collageKey,
-                singleMode: true,
-                aspectRatio: 2/3,
-                decodeCallback: viewModel.collageReady,
-              ),
+            child: PhotoCollage(
+              key: viewModel.collageKey,
+              singleMode: true,
+              aspectRatio: 1/viewModel.collageAspectRatio,
+              padding: viewModel.collagePadding,
+              decodeCallback: viewModel.collageReady,
             ),
           ),
         ),

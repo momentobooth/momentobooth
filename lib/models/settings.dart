@@ -21,6 +21,8 @@ class Settings with _$Settings implements TomlEncodableValue {
   const factory Settings({
     required int captureDelaySeconds,
     required bool displayConfetti,
+    required double collageAspectRatio,
+    required double collagePadding,
     required bool singlePhotoIsCollage,
     required String templatesFolder,
     required HardwareSettings hardware,
@@ -30,6 +32,8 @@ class Settings with _$Settings implements TomlEncodableValue {
   factory Settings.withDefaults() {
     return Settings(
       captureDelaySeconds: 5,
+      collageAspectRatio: 1.5,
+      collagePadding: 0,
       displayConfetti: true,
       singlePhotoIsCollage: true,
       templatesFolder: _getHome(),

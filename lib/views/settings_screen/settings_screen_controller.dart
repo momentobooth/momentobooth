@@ -36,6 +36,18 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onCollageAspectRatioChanged(double? collageAspectRatio) {
+    if (collageAspectRatio != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(collageAspectRatio: collageAspectRatio));
+    }
+  }
+
+  void onCollagePaddingChanged(double? collagePadding) {
+    if (collagePadding != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(collagePadding: collagePadding));
+    }
+  }
+
   void onDisplayConfettiChanged(bool? displayConfetti) {
     if (displayConfetti != null) {
       viewModel.updateSettings((settings) => settings.copyWith(displayConfetti: displayConfetti));

@@ -6,6 +6,7 @@ use crate::dart_bridge::api::RawImage;
 // Structs and Main Operations //
 // /////////////////////////// //
 
+#[derive(Clone, Copy)]
 pub enum ImageOperation {
     CropToAspectRatio(f64),
     Rotate(Rotation),
