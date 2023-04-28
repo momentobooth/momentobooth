@@ -38,6 +38,7 @@ void baseCallback() {}
 class PhotoCollage extends StatefulWidget {
 
   final double aspectRatio;
+  final double padding;
   final bool showLogo;
   final bool singleMode;
   final Function decodeCallback;
@@ -45,6 +46,7 @@ class PhotoCollage extends StatefulWidget {
   const PhotoCollage({
     super.key,
     required this.aspectRatio,
+    this.padding = 0,
     this.showLogo = false,
     this.singleMode = false,
     this.decodeCallback = baseCallback,
@@ -131,9 +133,10 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   Widget build(BuildContext context) {
     return Screenshot(
       controller: screenshotController,
-      child: AspectRatio(
-        aspectRatio: widget.aspectRatio,
-        child: Observer(builder: (context) => _layout)
+      child: SizedBox(
+        height: 1000 + 2*widget.padding,
+        width: 1000*widget.aspectRatio + 2*widget.padding,
+        child: Observer(builder: (context) => _layout),
       ),
     );
   }
@@ -150,7 +153,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
             ),
         ],
         Padding(
-          padding: const EdgeInsets.all(gap),
+          padding: EdgeInsets.all(gap + widget.padding),
           child: _innerLayout,
         ),
         for (int i = 0; i <= 4; i++) ...[

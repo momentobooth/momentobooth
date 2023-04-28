@@ -30,6 +30,9 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   int get counterStart => SettingsManagerBase.instance.settings.captureDelaySeconds;
 
+  double get collageAspectRatio => SettingsManagerBase.instance.settings.collageAspectRatio;
+  double get collagePadding => SettingsManagerBase.instance.settings.collagePadding;
+
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
 
