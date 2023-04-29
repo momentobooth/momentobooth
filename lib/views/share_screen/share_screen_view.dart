@@ -153,17 +153,18 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
 
   Widget _getBottomRow(MomentoBoothThemeData themeData) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Flexible(
-          child: GestureDetector(
-            // Get QR button
-            onTap: controller.onClickGetQR,
-            behavior: HitTestBehavior.translucent,
-            child: Observer(
-              builder: (context) => AutoSizeText(
-                viewModel.qrText,
-                style: theme.titleStyle,
+          child: Center(
+            child: GestureDetector(
+              // Get QR button
+              onTap: controller.onClickGetQR,
+              behavior: HitTestBehavior.translucent,
+              child: Observer(
+                builder: (context) => AutoSizeText(
+                  viewModel.qrText,
+                  style: theme.titleStyle,
+                ),
               ),
             ),
           ),
@@ -173,10 +174,16 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             // Print button
             onTap: controller.onClickPrint,
             behavior: HitTestBehavior.translucent,
-            child: Observer(
-              builder: (context) => AutoSizeText(
-                viewModel.printText,
-                style: theme.titleStyle,
+            child: Center(
+              child: Observer(
+                builder: (context) => AnimatedOpacity(
+                  duration: Duration(milliseconds: 300),
+                  opacity: viewModel.printEnabled ? 1 : 0.5,
+                  child: AutoSizeText(
+                    viewModel.printText,
+                    style: theme.titleStyle,
+                  ),
+                ),
               ),
             ),
           ),

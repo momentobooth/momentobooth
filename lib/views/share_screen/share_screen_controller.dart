@@ -84,8 +84,21 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     });
   }
 
+  int successfulPrints = 0;
+  static const _printTextDuration = Duration(seconds: 4);
+
+  void resetPrint() {
+    viewModel.printText = successfulPrints > 0 ? "Print +1" : "Print";
+    viewModel.printEnabled = true;
+  }
+
   Future<void> onClickPrint() async {
+    if (!viewModel.printEnabled) return;
+
     loggy.debug("Printing photo");
+    viewModel.printEnabled = false;
+    viewModel.printText = "Printing...";
+    
     // Find printer that was set in settings in available printers.
     final printers = await Printing.listPrinters();
     Printer? selected;
@@ -97,6 +110,8 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     }
     if (selected == null) {
       loggy.error("Could not find selected printer");
+      viewModel.printText = "Print error";
+      Future.delayed(_printTextDuration, resetPrint);
       return;
     }
 
@@ -149,7 +164,8 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     await file.writeAsBytes(pdfData);
 
     viewModel.printText = success ? "Printing..." : "Print canceled";
-    Future.delayed(Duration(seconds: 2), () => viewModel.printText = "Print");
+    successfulPrints += success ? 1 : 0;
+    Future.delayed(_printTextDuration, resetPrint);
   }
 
 }

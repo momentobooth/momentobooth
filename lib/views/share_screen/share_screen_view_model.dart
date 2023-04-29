@@ -37,6 +37,9 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   String printText = "Print";
 
   @observable
+  bool printEnabled = true;
+
+  @observable
   UploadState uploadState = UploadState.notStarted;
 
   @observable
