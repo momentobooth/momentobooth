@@ -13,7 +13,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.touch,
               title: "Taps",
               subtitle: "The number of taps in the app (outside settings)",
-              text: StatsManagerBase.instance.taps.toString(),
+              text: StatsManagerBase.instance.stats.taps.toString(),
             ),
           ),
           Observer(
@@ -22,7 +22,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.front_camera,
               title: "Live view frames",
               subtitle: "The number of live view frames that have been shown",
-              text: StatsManagerBase.instance.liveViewFrames.toString(),
+              text: StatsManagerBase.instance.stats.liveViewFrames.toString(),
             ),
           ),
           Observer(
@@ -31,7 +31,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.print,
               title: "Printed pictures",
               subtitle: "The number of prints (e.g. 2 prints of the same pictures will count as 2 as well)",
-              text: StatsManagerBase.instance.printedPhotos.toString(),
+              text: StatsManagerBase.instance.stats.printedPhotos.toString(),
             ),
           ),
           Observer(
@@ -40,7 +40,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.upload,
               title: "Uploaded pictures",
               subtitle: "The number of uploaded pictures",
-              text: StatsManagerBase.instance.uploadedPhotos.toString(),
+              text: StatsManagerBase.instance.stats.uploadedPhotos.toString(),
             ),
           ),
           Observer(
@@ -49,7 +49,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.camera,
               title: "Captured photos",
               subtitle: "The number of photo captures (e.g. a multi capture picture would increase this by 4)",
-              text: StatsManagerBase.instance.capturedPhotos.toString(),
+              text: StatsManagerBase.instance.stats.capturedPhotos.toString(),
             ),
           ),
           Observer(
@@ -58,7 +58,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.photo2,
               title: "Created single shot pictures",
               subtitle: "The number of single capture pictures created",
-              text: StatsManagerBase.instance.createdSinglePhotos.toString(),
+              text: StatsManagerBase.instance.stats.createdSinglePhotos.toString(),
             ),
           ),
           Observer(
@@ -67,7 +67,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.undo,
               title: "Retakes",
               subtitle: "The number of retakes for (single) photo captures",
-              text: StatsManagerBase.instance.retakes.toString(),
+              text: StatsManagerBase.instance.stats.retakes.toString(),
             ),
           ),
           Observer(
@@ -76,7 +76,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.photo_collection,
               title: "Created multi shot pictures",
               subtitle: "The number of multi shot pictures created",
-              text: StatsManagerBase.instance.createdMultiCapturePhotos.toString(),
+              text: StatsManagerBase.instance.stats.createdMultiCapturePhotos.toString(),
             ),
           ),
         ],
