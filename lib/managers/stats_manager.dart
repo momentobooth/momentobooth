@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/models/stats.dart';
 import 'package:path/path.dart' hide context;
 import 'package:path_provider/path_provider.dart';
 import 'package:toml/toml.dart';
@@ -22,17 +23,12 @@ enum StatFields {
 }
 
 abstract class StatsManagerBase with Store, UiLoggy {
-  
-  ObservableMap<StatFields, int> stats = ObservableMap<StatFields, int>.of({
-    StatFields.taps: 0,
-    StatFields.liveViewFrames: 0,
-    StatFields.printedPhotos: 0,
-    StatFields.uploadedPhotos: 0,
-    StatFields.capturedPhotos: 0,
-    StatFields.createdSinglePhotos: 0,
-    StatFields.retakes: 0,
-    StatFields.createdMultiCapturePhotos: 0,
-  });
+
+  @observable
+  Stats? _stats;
+
+  @computed
+  Stats get stats => _stats!;
 
   // ////////////// //
   // Initialization //
@@ -47,28 +43,28 @@ abstract class StatsManagerBase with Store, UiLoggy {
   // /////// //
 
   @action
-  void addTap() => stats[StatFields.taps] = stats[StatFields.taps]! + 1;
+  void addTap() { _stats = _stats!.copyWith(taps: _stats!.taps+1); }
 
   @action
-  void addLiveViewFrame() => stats[StatFields.liveViewFrames] = stats[StatFields.liveViewFrames]! + 1;
+  void addLiveViewFrame() { _stats = _stats!.copyWith(liveViewFrames: _stats!.liveViewFrames+1); }
 
   @action
-  void addPrintedPhoto() => stats[StatFields.printedPhotos] = stats[StatFields.printedPhotos]! + 1;
+  void addPrintedPhoto() { _stats = _stats!.copyWith(printedPhotos: _stats!.printedPhotos+1); }
 
   @action
-  void addUploadedPhoto() => stats[StatFields.uploadedPhotos] = stats[StatFields.uploadedPhotos]! + 1;
+  void addUploadedPhoto() { _stats = _stats!.copyWith(uploadedPhotos: _stats!.uploadedPhotos+1); }
 
   @action
-  void addCapturedPhoto() => stats[StatFields.capturedPhotos] = stats[StatFields.capturedPhotos]! + 1;
+  void addCapturedPhoto() { _stats = _stats!.copyWith(capturedPhotos: _stats!.capturedPhotos+1); }
 
   @action
-  void addCreatedSinglePhoto() => stats[StatFields.createdSinglePhotos] = stats[StatFields.createdSinglePhotos]! + 1;
+  void addCreatedSinglePhoto() { _stats = _stats!.copyWith(createdSinglePhotos: _stats!.createdSinglePhotos+1); }
 
   @action
-  void addRetake() => stats[StatFields.retakes] = stats[StatFields.retakes]! + 1;
+  void addRetake() { _stats = _stats!.copyWith(retakes: _stats!.retakes+1); }
 
   @action
-  void addCreatedMultiCapturePhoto() => stats[StatFields.createdMultiCapturePhotos] = stats[StatFields.createdMultiCapturePhotos]! + 1;
+  void addCreatedMultiCapturePhoto() { _stats = _stats!.copyWith(createdMultiCapturePhotos: _stats!.createdMultiCapturePhotos+1); }
   
   // /////////// //
   // Persistence //
@@ -92,7 +88,8 @@ abstract class StatsManagerBase with Store, UiLoggy {
     String statisticsAsToml = await _statsFile.readAsString();
     TomlDocument statisticsDocument = TomlDocument.parse(statisticsAsToml);
     try {
-      stats = statisticsDocument.toMap() as ObservableMap<StatFields, int>;
+      var mapWithStringKey = statisticsDocument.toMap().map((key, value) => MapEntry(key, value as int));
+      stats =  as ObservableMap<StatFields, int>;
     } catch (_) {
       // Fixme: Failed to parse
       return;
@@ -104,7 +101,8 @@ abstract class StatsManagerBase with Store, UiLoggy {
     loggy.debug("Saving statistics");
     await _ensureStatsFileIsSet();
 
-    TomlDocument statisticsDocument = TomlDocument.fromMap(stats);
+    var mapWithStringKey = stats.map((key, value) => MapEntry(key.toString(), value));
+    TomlDocument statisticsDocument = TomlDocument.fromMap(mapWithStringKey);
     String statisticsAsToml = statisticsDocument.toString();
     _statsFile.writeAsString(statisticsAsToml);
 
