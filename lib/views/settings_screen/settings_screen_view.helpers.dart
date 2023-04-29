@@ -133,3 +133,31 @@ FluentSettingCard _getFolderPickerCard<TValue>({
     ),
   );
 }
+
+FluentSettingCard _getTextDisplay({
+  required BuildContext context,
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required String text,
+}) {
+  FluentThemeData themeData = FluentTheme.of(context);
+  return FluentSettingCard(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    child: Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: themeData.accentColor,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        text,
+        textAlign: TextAlign.right,
+        style: TextStyle(color: Colors.white),
+      ),
+    ),
+  );
+}

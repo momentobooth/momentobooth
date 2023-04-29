@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
@@ -14,6 +15,7 @@ part 'settings_screen_view.helpers.dart';
 part 'settings_screen_view.general.dart';
 part 'settings_screen_view.hardware.dart';
 part 'settings_screen_view.output.dart';
+part 'settings_screen_view.debug.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
 
@@ -50,6 +52,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               ),
             ],
             footerItems: [
+              PaneItem(
+                icon: Icon(FluentIcons.device_bug),
+                title: Text("Debug"),
+                body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
+              ),
               PaneItem(
                 icon: Icon(FluentIcons.data_flow),
                 title: Text("Log"),

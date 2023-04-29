@@ -5,6 +5,7 @@ import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
@@ -35,6 +36,9 @@ void main() async {
 
   // Settings
   await SettingsManagerBase.instance.load();
+
+  // Stats
+  await StatsManagerBase.instance.load();
 
   // Windows manager (used for full screen)
   await windowManager.ensureInitialized();
@@ -72,7 +76,7 @@ class _AppState extends State<App> with UiLoggy {
     windowManager.isFullScreen().then((value) => _isFullScreen = value);
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
     _updateLastAliveTimeTimer = Timer.periodic(updateLastAliveTimeout, _updateLastAliveTime);
-    _router.addListener(() { onActivity(null); });
+    _router.addListener(() => onActivity(isTap: false));
     super.initState();
   }
 
@@ -127,7 +131,8 @@ class _AppState extends State<App> with UiLoggy {
 
   /// Method that is fired when a user does any kind of touch or the route changes.
   /// This resets the return home timer.
-  void onActivity(PointerEvent? event) {
+  void onActivity({bool isTap = false}) {
+    if (isTap) { StatsManagerBase.instance.addTap(); }
     _returnHomeTimer.cancel();
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
   }
@@ -161,7 +166,7 @@ class _AppState extends State<App> with UiLoggy {
                 children: [
                   Listener(
                     behavior: HitTestBehavior.translucent,
-                    onPointerDown: onActivity,
+                    onPointerDown: (_) => onActivity(isTap: true),
                     child: child!,
                   ),
                   _settingsOpen ? _settingsScreen : const SizedBox(),
