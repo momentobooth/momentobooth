@@ -13,36 +13,38 @@ part 'settings.enums.dart';
 // Root settings //
 // ///////////// //
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class Settings with _$Settings implements TomlEncodableValue {
   
   const Settings._();
 
   const factory Settings({
-    required int captureDelaySeconds,
-    required bool displayConfetti,
-    required double collageAspectRatio,
-    required double collagePadding,
-    required bool singlePhotoIsCollage,
-    required String templatesFolder,
-    required HardwareSettings hardware,
-    required OutputSettings output,
+    @Default(5) int captureDelaySeconds,
+    @Default(1.5) double collageAspectRatio,
+    @Default(0) double collagePadding,
+    @Default(true) bool displayConfetti,
+    @Default(true) bool singlePhotoIsCollage,
+    @Default("") String templatesFolder,
+    @Default(HardwareSettings()) HardwareSettings hardware,
+    @Default(OutputSettings()) OutputSettings output,
   }) = _Settings;
 
-  factory Settings.withDefaults() {
-    return Settings(
-      captureDelaySeconds: 5,
-      collageAspectRatio: 1.5,
-      collagePadding: 0,
-      displayConfetti: true,
-      singlePhotoIsCollage: true,
-      templatesFolder: _getHome(),
-      hardware: HardwareSettings.withDefaults(),
-      output: OutputSettings.withDefaults(),
-    );
-  }
+  factory Settings.withDefaults() => Settings.fromJson({});
 
-  factory Settings.fromJson(Map<String, Object?> json) => _$SettingsFromJson(json);
+  factory Settings.fromJson(Map<String, Object?> json) {
+    // Default settings
+    if (!json.containsKey("templatesFolder")) {
+      json["templatesFolder"] = _getHome();
+    }
+    if (!json.containsKey("hardware")) {
+      json["hardware"] = HardwareSettings.withDefaults().toJson();
+    }
+    if (!json.containsKey("output")) {
+      json["output"] = OutputSettings.withDefaults().toJson();
+    }
+
+    return _$SettingsFromJson(json);
+  }
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -53,48 +55,38 @@ class Settings with _$Settings implements TomlEncodableValue {
 // Hardware Settings //
 // ///////////////// //
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
   const HardwareSettings._();
 
   const factory HardwareSettings({
-    required LiveViewMethod liveViewMethod,
-    required String liveViewWebcamId,
-    required Flip liveViewFlipImage,
-    required CaptureMethod captureMethod,
-    required int captureDelaySony,
-    required String captureLocation,
-    required String printerName,
-    required double pageHeight,
-    required double pageWidth,
-    required bool usePrinterSettings,
-    required double printerMarginTop,
-    required double printerMarginRight,
-    required double printerMarginBottom,
-    required double printerMarginLeft,
+    @Default(LiveViewMethod.webcam) LiveViewMethod liveViewMethod,
+    @Default("") String liveViewWebcamId,
+    @Default(Flip.horizontally) Flip liveViewFlipImage,
+    @Default(CaptureMethod.liveViewSource) CaptureMethod captureMethod,
+    @Default(200) int captureDelaySony,
+    @Default("") String captureLocation,
+    @Default("") String printerName,
+    @Default(148) double pageHeight,
+    @Default(100) double pageWidth,
+    @Default(true) bool usePrinterSettings,
+    @Default(0) double printerMarginTop,
+    @Default(0) double printerMarginRight,
+    @Default(0) double printerMarginBottom,
+    @Default(0) double printerMarginLeft,
   }) = _HardwareSettings;
 
-  factory HardwareSettings.withDefaults() {
-    return HardwareSettings(
-      liveViewMethod: LiveViewMethod.webcam,
-      liveViewWebcamId: "",
-      liveViewFlipImage: Flip.horizontally,
-      captureMethod: CaptureMethod.liveViewSource,
-      captureDelaySony: 200,
-      captureLocation: _getHome(),
-      printerName: "",
-      pageHeight: 148,
-      pageWidth: 100,
-      usePrinterSettings: true,
-      printerMarginTop: 0,
-      printerMarginRight: 0,
-      printerMarginBottom: 0,
-      printerMarginLeft: 0,
-    );
-  }
+  factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});
 
-  factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
+  factory HardwareSettings.fromJson(Map<String, Object?> json) {
+    // Default settings
+    if (!json.containsKey("captureLocation")) {
+      json["captureLocation"] = _getHome();
+    }
+
+    return _$HardwareSettingsFromJson(json);
+  }
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -105,30 +97,29 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 // Output Settings //
 // /////////////// //
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class OutputSettings with _$OutputSettings implements TomlEncodableValue {
 
   const OutputSettings._();
 
   const factory OutputSettings({
-    required String localFolder,
-    required int jpgQuality,
-    required double resolutionMultiplier,
-    required ExportFormat exportFormat,
-    required String firefoxSendServerUrl,
+    @Default("") String localFolder,
+    @Default(80)  int jpgQuality,
+    @Default(4.0)  double resolutionMultiplier,
+    @Default(ExportFormat.jpgFormat)  ExportFormat exportFormat,
+    @Default("https://send.vis.ee/")  String firefoxSendServerUrl,
   }) = _OutputSettings;
 
-  factory OutputSettings.withDefaults() {
-    return OutputSettings(
-      localFolder: join(_getHome(), "Pictures"),
-      jpgQuality: 80,
-      resolutionMultiplier: 4.0,
-      exportFormat: ExportFormat.jpgFormat,
-      firefoxSendServerUrl: "https://send.vis.ee/",
-    );
-  }
+  factory OutputSettings.withDefaults() => OutputSettings.fromJson({});
 
-  factory OutputSettings.fromJson(Map<String, Object?> json) => _$OutputSettingsFromJson(json);
+  factory OutputSettings.fromJson(Map<String, Object?> json) {
+    // Default settings
+    if (!json.containsKey("localFolder")) {
+      json["localFolder"] = join(_getHome(), "Pictures");
+    }
+
+    return _$OutputSettingsFromJson(json);
+  }
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
