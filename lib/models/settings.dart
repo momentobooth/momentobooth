@@ -13,7 +13,7 @@ part 'settings.enums.dart';
 // Root settings //
 // ///////////// //
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class Settings with _$Settings implements TomlEncodableValue {
   
   const Settings._();
@@ -29,15 +29,22 @@ class Settings with _$Settings implements TomlEncodableValue {
     @Default(OutputSettings()) OutputSettings output,
   }) = _Settings;
 
-  factory Settings.withDefaults() {
-    return Settings(
-      templatesFolder: _getHome(),
-      hardware: HardwareSettings.withDefaults(),
-      output: OutputSettings.withDefaults(),
-    );
-  }
+  factory Settings.withDefaults() => Settings.fromJson({});
 
-  factory Settings.fromJson(Map<String, Object?> json) => _$SettingsFromJson(json);
+  factory Settings.fromJson(Map<String, Object?> json) {
+    // Default settings
+    if (!json.containsKey("templatesFolder")) {
+      json["templatesFolder"] = _getHome();
+    }
+    if (!json.containsKey("hardware")) {
+      json["hardware"] = HardwareSettings.withDefaults().toJson();
+    }
+    if (!json.containsKey("output")) {
+      json["output"] = OutputSettings.withDefaults().toJson();
+    }
+
+    return _$SettingsFromJson(json);
+  }
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -48,7 +55,7 @@ class Settings with _$Settings implements TomlEncodableValue {
 // Hardware Settings //
 // ///////////////// //
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
   const HardwareSettings._();
@@ -70,13 +77,16 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default(0) double printerMarginLeft,
   }) = _HardwareSettings;
 
-  factory HardwareSettings.withDefaults() {
-    return HardwareSettings(
-      captureLocation: _getHome(),
-    );
-  }
+  factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});
 
-  factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
+  factory HardwareSettings.fromJson(Map<String, Object?> json) {
+    // Default settings
+    if (!json.containsKey("captureLocation")) {
+      json["captureLocation"] = _getHome();
+    }
+
+    return _$HardwareSettingsFromJson(json);
+  }
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -87,7 +97,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 // Output Settings //
 // /////////////// //
 
-@freezed
+@Freezed(fromJson: true, toJson: true)
 class OutputSettings with _$OutputSettings implements TomlEncodableValue {
 
   const OutputSettings._();
@@ -100,13 +110,16 @@ class OutputSettings with _$OutputSettings implements TomlEncodableValue {
     @Default("https://send.vis.ee/")  String firefoxSendServerUrl,
   }) = _OutputSettings;
 
-  factory OutputSettings.withDefaults() {
-    return OutputSettings(
-      localFolder: join(_getHome(), "Pictures"),
-    );
-  }
+  factory OutputSettings.withDefaults() => OutputSettings.fromJson({});
 
-  factory OutputSettings.fromJson(Map<String, Object?> json) => _$OutputSettingsFromJson(json);
+  factory OutputSettings.fromJson(Map<String, Object?> json) {
+    // Default settings
+    if (!json.containsKey("localFolder")) {
+      json["localFolder"] = join(_getHome(), "Pictures");
+    }
+
+    return _$OutputSettingsFromJson(json);
+  }
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
