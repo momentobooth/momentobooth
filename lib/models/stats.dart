@@ -16,7 +16,8 @@ class Stats with _$Stats implements TomlEncodableValue {
   const factory Stats({
     @Default(0) int taps,
     @Default(0) int liveViewFrames,
-    @Default(0) int liveViewFramesDroppedByApp,
+    @Default(0) int liveViewFramesDroppedByConsumer,
+    @Default(0) int liveViewFramesDroppedByCameraImplementation,
     @Default(0) int printedPhotos,
     @Default(0) int uploadedPhotos,
     @Default(0) int capturedPhotos,

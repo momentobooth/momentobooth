@@ -1,3 +1,5 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use chrono::{Utc, DateTime};
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
@@ -31,18 +33,22 @@ pub fn nokhwa_open_camera(friendly_name: String) -> usize {
     Box::into_raw(camera_box) as usize
 }
 
-pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperation>, new_frame_event_sink: StreamSink<RawImage>) {
+pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperation>, new_frame_event_sink: StreamSink<LiveCameraFrame>) {
     unsafe { 
         let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
         nokhwa::set_camera_callback(&mut camera, move |raw_frame| {
             if !is_flutter_app_alive() {
+                SKIPPED_LIVE_CAMERA_FRAMES.fetch_add(1, Ordering::SeqCst);
                 return
             }
 
             match raw_frame {
                 Some(raw_frame) => {
                     let processed_frame = image_processing::execute_operations(raw_frame, &operations);
-                    new_frame_event_sink.add(processed_frame);
+                    new_frame_event_sink.add(LiveCameraFrame {
+                        raw_image: processed_frame,
+                        skipped_frames: SKIPPED_LIVE_CAMERA_FRAMES.swap(0, Ordering::SeqCst),
+                    });
                 },
                 None => {
                     new_frame_event_sink.close();
@@ -101,6 +107,8 @@ pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) 
 #[dynamic] 
 static mut APP_LAST_ALIVE_TIME: DateTime<Utc> = Utc::now();
 
+static SKIPPED_LIVE_CAMERA_FRAMES: AtomicUsize = AtomicUsize::new(0);
+
 const MAX_APP_NOT_ALIVE_TIME_MS: i64 = 200;
 
 pub fn update_flutter_app_last_alive_time() {
@@ -118,6 +126,11 @@ fn is_flutter_app_alive() -> bool {
 // /////// //
 // Structs //
 // /////// //
+
+pub struct LiveCameraFrame {
+    pub raw_image: RawImage,
+    pub skipped_frames: usize,
+}
 
 pub struct RawImage {
     pub format: RawImageFormat,

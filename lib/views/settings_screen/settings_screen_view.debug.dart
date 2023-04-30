@@ -20,9 +20,9 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             builder: (context) => _getTextDisplay(
               context: context,
               icon: FluentIcons.front_camera,
-              title: "Live view frames (total/dropped by app)",
-              subtitle: "The number of live view frames that have been shown",
-              text: "${StatsManagerBase.instance.stats.liveViewFrames} / ${StatsManagerBase.instance.stats.liveViewFramesDroppedByApp}",
+              title: "Live view frames",
+              subtitle: "The number of live view frames processed\nValue shows: Total shown / Dropped by consumer / Dropped by camera implementation",
+              text: "${StatsManagerBase.instance.stats.liveViewFrames} / ${StatsManagerBase.instance.stats.liveViewFramesDroppedByConsumer} / ${StatsManagerBase.instance.stats.liveViewFramesDroppedByCameraImplementation}",
             ),
           ),
           Observer(

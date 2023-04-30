@@ -85,7 +85,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
           LiveViewManagerBase.instance._liveViewSubscription = stream.getStream().listen((frame) async {
             // New frame arrived
             if (LiveViewManagerBase.instance._timeFromLastReceivedFrame.elapsedMilliseconds < LiveViewManagerBase._minimumFrameTimeMs) {
-              StatsManagerBase.instance.addLiveViewFrameDroppedByApp();
+              StatsManagerBase.instance.addLiveViewFrameDroppedByConsumer();
             } else {
               frameOrderLock.synchronized(() async {
                 LiveViewManagerBase.instance.lastFrameImage = await frame.toImage();
