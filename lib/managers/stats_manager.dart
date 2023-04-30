@@ -48,6 +48,9 @@ abstract class StatsManagerBase with Store, UiLoggy {
   void addLiveViewFrame() { _stats = _stats.copyWith(liveViewFrames: _stats.liveViewFrames+1); }
 
   @action
+  void addLiveViewFrameDroppedByApp() { _stats = _stats.copyWith(liveViewFramesDroppedByApp: _stats.liveViewFramesDroppedByApp+1); }
+
+  @action
   void addPrintedPhoto() { _stats = _stats.copyWith(printedPhotos: _stats.printedPhotos+1); }
 
   @action
