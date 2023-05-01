@@ -46,7 +46,7 @@ abstract class PhotosManagerBase with Store {
   Directory get outputDir => Directory(SettingsManagerBase.instance.settings.output.localFolder);
   int photoNumber = 0;
   bool photoNumberChecked = false;
-  String baseName = "MomentoBooth-image";
+  static String baseName = "MomentoBooth-image";
  
   Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
 
