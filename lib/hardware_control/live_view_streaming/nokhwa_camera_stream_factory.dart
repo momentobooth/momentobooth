@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_stream_factory.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/hardware/live_view_streaming/live_view_frame.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
@@ -29,9 +30,16 @@ class NokhwaCameraStreamFactory extends LiveViewStreamFactory {
 
   @override
   Stream<LiveViewFrame> getStream() {
-    return rustLibraryApi
-      .nokhwaSetCameraCallback(cameraPtr: _cameraPointer, operations: [ImageOperation.cropToAspectRatio(3/2)])
-      .map((rawImage) => LiveViewFrame(rawRgbaData: rawImage.data, width: rawImage.width, height: rawImage.height));
+    return rustLibraryApi.nokhwaSetCameraCallback(cameraPtr: _cameraPointer, operations: [
+      ImageOperation.cropToAspectRatio(3 / 2)
+    ]).map((liveCameraFrame) {
+      StatsManagerBase.instance.addLiveViewFramesDroppedByCameraImplementation(liveCameraFrame.skippedFrames);
+      return LiveViewFrame(
+        rawRgbaData: liveCameraFrame.rawImage.data,
+        width: liveCameraFrame.rawImage.width,
+        height: liveCameraFrame.rawImage.height,
+      );
+    });
   }
 
   // //////////////// //

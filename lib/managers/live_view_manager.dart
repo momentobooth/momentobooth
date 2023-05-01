@@ -38,6 +38,10 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
   @readonly
   LiveViewState _liveViewState = LiveViewState.initializing;
 
+  static const int _fps = 60; // TDDO: detect from screen instead of guessing
+  static const double _minimumFrameTimeMs = 1000 / _fps;
+  Stopwatch _timeFromLastReceivedFrame = Stopwatch()..start();
+
   // ////////////// //
   // Initialization //
   // ////////////// //
@@ -76,10 +80,19 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
             return;
           }
 
+          Lock frameOrderLock = Lock();
+
           LiveViewManagerBase.instance._liveViewSubscription = stream.getStream().listen((frame) async {
             // New frame arrived
-            LiveViewManagerBase.instance.lastFrameImage = await frame.toImage();
-            LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
+            if (LiveViewManagerBase.instance._timeFromLastReceivedFrame.elapsedMilliseconds < LiveViewManagerBase._minimumFrameTimeMs) {
+              StatsManagerBase.instance.addLiveViewFrameDroppedByConsumer();
+            } else {
+              frameOrderLock.synchronized(() async {
+                LiveViewManagerBase.instance.lastFrameImage = await frame.toImage();
+                LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
+              });
+            }
+            LiveViewManagerBase.instance._timeFromLastReceivedFrame.reset();
           }, onError: (error) {
             // Error
             LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
