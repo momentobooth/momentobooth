@@ -17,6 +17,7 @@ import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.da
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
+import 'package:momento_booth/views/photo_details_screen/photo_details_screen.dart';
 import 'package:momento_booth/views/share_screen/share_screen.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';

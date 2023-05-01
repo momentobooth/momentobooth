@@ -24,7 +24,10 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
         crossAxisCount: 4,
         children: [
           for (var file in viewModel.fileList)
-            ImageWithLoaderFallback.file(file, fit: BoxFit.contain,),
+            GestureDetector(
+              onTap: () => controller.openPhoto(file),
+              child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain,),
+            ),
         ],
       ),
     );
