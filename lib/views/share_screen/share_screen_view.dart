@@ -1,15 +1,13 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/extensions/build_context_extension.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/slider_widget.dart';
 import 'package:momento_booth/views/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
@@ -145,13 +143,13 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         ),
         Flexible(
           fit: FlexFit.tight,
-          child: _getBottomRow(theme),
+          child: _getBottomRow(),
         ),
       ],
     );
   }
 
-  Widget _getBottomRow(MomentoBoothThemeData themeData) {
+  Widget _getBottomRow() {
     return Row(
       children: [
         Flexible(
@@ -232,63 +230,4 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
     });
   }
 
-}
-
-class SliderWidget extends StatefulWidget {
-  final Widget child; 
-
-  const SliderWidget({
-    super.key,
-    required this.child,
-  });
-
-  @override
-  State<SliderWidget> createState() => SliderWidgetState();
-}
-
-class SliderWidgetState extends State<SliderWidget>
-    with SingleTickerProviderStateMixin {
-
-  late final AnimationController _controller = AnimationController(
-    duration: const Duration(milliseconds: 600),
-    vsync: this,
-  );
-
-  void animateForward() {
-    _controller.forward();
-  }
-  
-  void animateBackward() {
-    _controller.reverse();
-  }
-
-  late final Animation<Offset> _offsetAnimation = Tween<Offset>(
-    begin: const Offset(0.0, 1.5),
-    end: Offset.zero,
-  ).animate(CurvedAnimation(
-    parent: _controller,
-    curve: Curves.easeOut,
-  ));
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _offsetAnimation,
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Padding(
-          padding: EdgeInsets.all(30),
-          child: Center(
-            child: widget.child,
-          ),
-        ),
-      ),
-    );
-  }
 }

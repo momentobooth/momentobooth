@@ -18,7 +18,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   void openPhoto(File file) {
     final String filename = basename(file.path);
     loggy.debug("Opening photo $filename");
-    router.go("${PhotoDetailsScreen.defaultRoute}/$filename");
+    router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
   }
 
 }
