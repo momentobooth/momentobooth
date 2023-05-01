@@ -77,7 +77,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     viewModel.printText = "Printing...";
 
     // Get photo and print it.
-    final pdfData = await PhotosManagerBase.instance.getOutputPDF();
+    final pdfData = await getImagePDF(await viewModel.file.readAsBytes());
     final bool success = await printPDF(pdfData);
 
     viewModel.printText = success ? "Printing..." : "Print unsuccessful";

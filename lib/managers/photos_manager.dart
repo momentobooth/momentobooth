@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/utils/hardware.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 import 'package:path_provider/path_provider.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 
 part 'photos_manager.g.dart';
 
@@ -103,37 +100,7 @@ abstract class PhotosManagerBase with Store {
   }
 
   Future<Uint8List> getOutputPDF() async {
-    final image = pw.MemoryImage(outputImage!);
-    const mm = PdfPageFormat.mm;
-    final settings = SettingsManagerBase.instance.settings.hardware;
-    final pageFormat = PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
-                                     marginBottom: settings.printerMarginBottom * mm,
-                                     marginLeft: settings.printerMarginLeft * mm,
-                                     marginRight: settings.printerMarginRight * mm,
-                                     marginTop: settings.printerMarginTop * mm,);
-    const fit = pw.BoxFit.contain;
-
-    // Check if photo should be rotated
-    // Do not assume any prior knowledge about the image.
-    final bool rotate = image.width! > image.height!;
-    late final pw.Image imageWidget;
-    if (rotate) {
-      imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight);
-    } else {
-      imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
-    }
-
-    final doc = pw.Document(title: "MomentoBooth image");
-    doc.addPage(pw.Page(
-      pageFormat: pageFormat,
-      build: (pw.Context context) {
-        return pw.Center(
-          child: rotate ? pw.Transform.rotateBox(angle: 0.5*pi, child: imageWidget,) : imageWidget,
-        );
-      })
-    );
-
-    return await doc.save();
+    return getImagePDF(outputImage!);
   }
 
 }
