@@ -7,6 +7,7 @@ List<GoRoute> rootRoutes = [
   _multiCaptureRoute,
   _collageMakerRoute,
   _shareRoute,
+  _galleryRoute,
   _settingsRoute,
 ];
 
@@ -66,6 +67,16 @@ GoRoute _shareRoute = GoRoute(
     return FadeTransitionPage(
       key: state.pageKey,
       child: ShareScreen(),
+    );
+  },
+);
+
+GoRoute _galleryRoute = GoRoute(
+  path: GalleryScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return FadeTransitionPage(
+      key: state.pageKey,
+      child: GalleryScreen(),
     );
   },
 );

@@ -15,6 +15,7 @@ import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
+import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
 import 'package:momento_booth/views/share_screen/share_screen.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
