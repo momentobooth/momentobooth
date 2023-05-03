@@ -2,7 +2,7 @@ use std::ffi::{c_int, c_void};
 
 use dlopen::{symbor::{Library, Symbol}, Error as LibError};
 
-use crate::dart_bridge::api::RawImage;
+use crate::{dart_bridge::api::RawImage, log_error};
 
 #[cfg(all(target_os = "windows"))]
 lazy_static::lazy_static! {
@@ -29,16 +29,15 @@ pub type FlutterRgbaRendererPluginOnRgba = unsafe extern "C" fn(
 );
 
 #[derive(Clone)]
-struct VideoRenderer {
-    // TextureRgba pointer in flutter native.
-    ptr: usize,
+pub struct FlutterTexture {
+    ptr: usize, // TextureRgba pointer in flutter native.
     width: usize,
     height: usize,
     on_rgba_func: Option<Symbol<'static, FlutterRgbaRendererPluginOnRgba>>,
 }
 
-impl Default for VideoRenderer {
-    fn default() -> Self {
+impl FlutterTexture {
+    pub fn new(ptr: usize, width: usize, height: usize) -> Self {
         let on_rgba_func = match &*TEXTURE_RGBA_RENDERER_PLUGIN {
             Ok(lib) => {
                 let find_sym_res = unsafe {
@@ -46,40 +45,38 @@ impl Default for VideoRenderer {
                 };
                 match find_sym_res {
                     Ok(sym) => Some(sym),
-                    Err(e) => {
-                        //log::error!("Failed to find symbol FlutterRgbaRendererPluginOnRgba, {e}");
+                    Err(error) => {
+                        log_error("Failed to find symbol FlutterRgbaRendererPluginOnRgba: ".to_string() + &error.to_string());
                         None
                     }
                 }
             }
-            Err(e) => {
-                //log::error!("Failed to load texture rgba renderer plugin, {e}");
+            Err(error) => {
+                log_error("Failed to load texture rgba renderer plugin: ".to_string() + &error.to_string());
                 None
             }
         };
         Self {
-            ptr: 0,
-            width: 0,
-            height: 0,
+            ptr,
+            width,
+            height,
             on_rgba_func,
         }
     }
 }
 
-impl VideoRenderer {
-    #[inline]
+impl FlutterTexture {
     pub fn set_size(&mut self, width: usize, height: usize) {
         self.width = width;
         self.height = height;
     }
 
-    pub fn on_rgba(&self, rgba: RawImage) {
+    pub fn on_rgba(&self, raw_image: RawImage) {
         if self.ptr == usize::default() {
             return;
         }
 
-        // It is also Ok to skip this check.
-        if self.width != rgba.width || self.height != rgba.height {
+        if self.width != raw_image.width || self.height != raw_image.height {
             return;
         }
 
@@ -87,10 +84,10 @@ impl VideoRenderer {
             unsafe {
                 func(
                     self.ptr as _,
-                    rgba.data.as_ptr() as _,
-                    rgba.data.len() as _,
-                    rgba.width as _,
-                    rgba.height as _,
+                    raw_image.data.as_ptr() as _,
+                    raw_image.data.len() as _,
+                    raw_image.width as _,
+                    raw_image.height as _,
                     0,
                 )
             };

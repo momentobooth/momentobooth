@@ -1,11 +1,9 @@
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::Mutex;
 
-use chrono::{Utc, DateTime};
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
-use static_init::dynamic;
 
-use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}}, LogEvent, HardwareInitializationFinishedEvent};
+use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent};
 
 // ////////////// //
 // Initialization //
@@ -27,36 +25,24 @@ pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
     nokhwa::get_cameras()
 }
 
-pub fn nokhwa_open_camera(friendly_name: String) -> usize {
-    let camera = nokhwa::open_camera(friendly_name);
+pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize) -> usize {
+    let renderer = FlutterTexture::new(texture_ptr, 0, 0);
+    let renderer_mutex = Mutex::new(renderer);
+    let camera = nokhwa::open_camera(friendly_name, move |raw_frame| {
+        match raw_frame {
+            Some(raw_frame) => {
+                let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+                let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
+                renderer.set_size(processed_frame.width, processed_frame.height);
+                renderer.on_rgba(processed_frame)
+            },
+            None => {
+                // TODO: Handle? Maybe send a green frame?
+            },
+        }
+    });
     let camera_box = Box::new(camera);
     Box::into_raw(camera_box) as usize
-}
-
-pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperation>, new_frame_event_sink: StreamSink<LiveCameraFrame>) {
-    unsafe { 
-        let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
-        nokhwa::set_camera_callback(&mut camera, move |raw_frame| {
-            if !is_flutter_app_alive() {
-                SKIPPED_LIVE_CAMERA_FRAMES.fetch_add(1, Ordering::SeqCst);
-                return
-            }
-
-            match raw_frame {
-                Some(raw_frame) => {
-                    let processed_frame = image_processing::execute_operations(raw_frame, &operations);
-                    new_frame_event_sink.add(LiveCameraFrame {
-                        raw_image: processed_frame,
-                        skipped_frames: SKIPPED_LIVE_CAMERA_FRAMES.swap(0, Ordering::SeqCst),
-                    });
-                },
-                None => {
-                    new_frame_event_sink.close();
-                },
-            }
-        });
-        Box::into_raw(camera)
-    };
 }
 
 pub fn nokhwa_close_camera(camera_ptr: usize) {
@@ -88,7 +74,7 @@ pub fn jpeg_encode(raw_image: RawImage, quality: u8, operations_before_encoding:
 }
 
 pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOperation>) -> RawImage {
-    let image = jpeg::decode_jpeg_to_rgba(jpeg_data);
+    let image = jpeg::decode_jpeg_to_rgba(&jpeg_data);
     image_processing::execute_operations(image, &operations_after_decoding)
 }
 
@@ -100,37 +86,9 @@ pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) 
     image_processing::execute_operations(raw_image, &operations)
 }
 
-// //// //
-// Misc //
-// //// //
-
-#[dynamic] 
-static mut APP_LAST_ALIVE_TIME: DateTime<Utc> = Utc::now();
-
-static SKIPPED_LIVE_CAMERA_FRAMES: AtomicUsize = AtomicUsize::new(0);
-
-const MAX_APP_NOT_ALIVE_TIME_MS: i64 = 200;
-
-pub fn update_flutter_app_last_alive_time() {
-    let mut lock = APP_LAST_ALIVE_TIME.write(); 
-    *lock = Utc::now();
-}
-
-fn is_flutter_app_alive() -> bool {
-    let then = *APP_LAST_ALIVE_TIME.read();
-    let now = Utc::now();
-    let diff = now - then;
-    diff.num_milliseconds() <= MAX_APP_NOT_ALIVE_TIME_MS
-}
-
 // /////// //
 // Structs //
 // /////// //
-
-pub struct LiveCameraFrame {
-    pub raw_image: RawImage,
-    pub skipped_frames: usize,
-}
 
 pub struct RawImage {
     pub format: RawImageFormat,

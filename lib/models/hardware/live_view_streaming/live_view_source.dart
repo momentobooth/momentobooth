@@ -7,6 +7,6 @@ abstract class LiveViewSource {
 
   LiveViewSource({required this.id, required this.friendlyName});
 
-  Future<LiveViewStreamFactory> openStream();
+  Future<LiveViewStreamFactory> openStream({required int texturePtr});
 
 }

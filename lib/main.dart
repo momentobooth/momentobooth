@@ -69,7 +69,6 @@ class _AppState extends State<App> with UiLoggy {
   bool _isFullScreen = false;
 
   static const returnHomeTimeout = Duration(seconds: 45);
-  static const updateLastAliveTimeout = Duration(milliseconds: 100);
   late Timer _returnHomeTimer;
 
   @override
@@ -78,7 +77,6 @@ class _AppState extends State<App> with UiLoggy {
     // Check if the window is fullscreen from the start.
     windowManager.isFullScreen().then((value) => _isFullScreen = value);
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
-    Timer.periodic(updateLastAliveTimeout, _updateLastAliveTime);
     _router.addListener(() => onActivity(isTap: false));
     super.initState();
   }
@@ -144,10 +142,6 @@ class _AppState extends State<App> with UiLoggy {
   void _returnHome() {
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
-  }
-
-  void _updateLastAliveTime(Timer timer) {
-    rustLibraryApi.updateFlutterAppLastAliveTime();
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.

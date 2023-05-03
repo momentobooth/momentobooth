@@ -17,7 +17,7 @@ class NokhwaCamera extends LiveViewSource {
   }
 
   @override
-  Future<NokhwaCameraStreamFactory> openStream() => NokhwaCameraStreamFactory.createAndOpen(id: id, friendlyName: friendlyName);
+  Future<NokhwaCameraStreamFactory> openStream({required int texturePtr}) => NokhwaCameraStreamFactory.createAndOpen(id: id, friendlyName: friendlyName, texturePtr: texturePtr);
 
   ComboBoxItem<String> toComboBoxItem() => ComboBoxItem(value: friendlyName, child: Text(friendlyName));
 

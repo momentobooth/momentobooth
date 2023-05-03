@@ -62,37 +62,19 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
       _liveViewSubscription = null;
       _liveViewStream = null;
 
+      const int textureKey = 0;
+      var textureRenderer = TextureRgbaRenderer();
+      await textureRenderer.closeTexture(textureKey); // Don't care if it failed or succeeded
+      _textureId = await textureRenderer.createTexture(textureKey);
+      final texturePtr = await textureRenderer.getTexturePtr(textureKey);
+
       var cameras = await NokhwaCamera.getAllCameras();
       NokhwaCamera? camera = cameras
           .cast<NokhwaCamera?>()
           .firstWhere((camera) => camera!.friendlyName == webcamIdSetting, orElse: () => null);
-      try {
-        var stream = _liveViewStream = await camera?.openStream();
-        if (stream == null) {
-          return;
-        }
 
-        Lock frameOrderLock = Lock();
-
-        var textureRenderer = TextureRgbaRenderer();
-        await textureRenderer.closeTexture(0); // Don't care if it failed or succeeded
-        _textureId = await textureRenderer.createTexture(0);
-
-        _liveViewSubscription = stream.getStream().listen((frame) async {
-          // New frame arrived
-          frameOrderLock.synchronized(() async {
-            _liveViewState = LiveViewState.streaming;
-            await textureRenderer.onRgba(0, frame.rawRgbaData, frame.height, frame.width, 0);
-          });
-        }, onError: (error) {
-          // Error
-          _liveViewState = LiveViewState.error;
-          loggy.error("Error while streaming from '$webcamIdSetting'", error);
-        }, cancelOnError: true);
-      } catch (error) {
-        _liveViewState = LiveViewState.error;
-        loggy.error("Failed to open camera '$webcamIdSetting'", error);
-      }
+      _liveViewStream = await camera?.openStream(texturePtr: texturePtr);
+      _liveViewState = LiveViewState.streaming;
     }
   }
 
