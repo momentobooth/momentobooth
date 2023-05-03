@@ -14,7 +14,7 @@ class LiveViewStreamSnapshotCapturer with UiLoggy implements PhotoCaptureMethod 
 
   @override
   Future<Uint8List> captureAndGetPhoto() async {
-    ui.Image? image = LiveViewManagerBase.instance.lastFrameImage;
+    ui.Image? image = null; // TODO: Restore this
     if (image == null) {
       throw "No frame available for capture";
     }

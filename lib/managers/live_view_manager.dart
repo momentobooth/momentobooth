@@ -9,6 +9,7 @@ import 'package:momento_booth/models/hardware/live_view_streaming/live_view_fram
 import 'package:momento_booth/models/hardware/live_view_streaming/nokhwa_camera.dart';
 import 'package:mobx/mobx.dart';
 import 'package:synchronized/synchronized.dart';
+import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
 part 'live_view_manager.g.dart';
 
@@ -22,25 +23,11 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
   LiveViewStreamFactory? _liveViewStream;
   StreamSubscription<LiveViewFrame>? _liveViewSubscription;
 
-  @observable
-  ui.Image? _lastFrameImage;
-
-  @computed
-  ui.Image? get lastFrameImage => _lastFrameImage;
-
-  set lastFrameImage(ui.Image? image) {
-    ui.Image? previousLastFrameImage = _lastFrameImage;
-    _lastFrameImage = image;
-    previousLastFrameImage?.dispose();
-    StatsManagerBase.instance.addLiveViewFrame();
-  }
+  @readonly
+  int? _textureId;
 
   @readonly
   LiveViewState _liveViewState = LiveViewState.initializing;
-
-  static const int _fps = 60; // TDDO: detect from screen instead of guessing
-  static const double _minimumFrameTimeMs = 1000 / _fps;
-  final Stopwatch _timeFromLastReceivedFrame = Stopwatch()..start();
 
   // ////////////// //
   // Initialization //
@@ -87,17 +74,15 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
 
         Lock frameOrderLock = Lock();
 
+        var textureRenderer = TextureRgbaRenderer();
+        _textureId = await textureRenderer.createTexture(0);
+
         _liveViewSubscription = stream.getStream().listen((frame) async {
           // New frame arrived
-          if (_timeFromLastReceivedFrame.elapsedMilliseconds < LiveViewManagerBase._minimumFrameTimeMs) {
-            StatsManagerBase.instance.addLiveViewFrameDroppedByConsumer();
-          } else {
-            frameOrderLock.synchronized(() async {
-              lastFrameImage = await frame.toImage();
-              _liveViewState = LiveViewState.streaming;
-            });
-          }
-          _timeFromLastReceivedFrame.reset();
+          frameOrderLock.synchronized(() async {
+            _liveViewState = LiveViewState.streaming;
+            await textureRenderer.onRgba(0, frame.rawRgbaData, frame.height, frame.width, 0);
+          });
         }, onError: (error) {
           // Error
           _liveViewState = LiveViewState.error;

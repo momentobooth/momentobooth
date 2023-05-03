@@ -96,7 +96,6 @@ class LiveView extends StatelessWidgetBase {
   });
 
   Flip get _flip => SettingsManagerBase.instance.settings.hardware.liveViewFlipImage;
-  ui.Image? get _lastFrameImage => LiveViewManagerBase.instance.lastFrameImage;
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +103,16 @@ class LiveView extends StatelessWidgetBase {
       builder: (context) => Transform(
         transform: Matrix4.diagonal3Values(_flip.flipX ? -1.0 : 1.0, _flip.flipY ? -1.0 : 1.0, 1.0),
         alignment: Alignment.center,
-        child: RawImage(
-          image: _lastFrameImage,
-          fit: fit,
+        child: AspectRatio(
+          aspectRatio: 3/2,
+          child: FittedBox(
+            fit: fit,
+            child: SizedBox(
+              width: 3,
+              height: 2,
+              child: Texture(textureId: LiveViewManagerBase.instance.textureId ?? 0),
+            ),
+          ),
         ),
       ),
     );
