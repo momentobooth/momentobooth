@@ -75,6 +75,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
         Lock frameOrderLock = Lock();
 
         var textureRenderer = TextureRgbaRenderer();
+        await textureRenderer.closeTexture(0); // Don't care if it failed or succeeded
         _textureId = await textureRenderer.createTexture(0);
 
         _liveViewSubscription = stream.getStream().listen((frame) async {
