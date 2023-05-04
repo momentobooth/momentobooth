@@ -3,7 +3,9 @@ import 'dart:typed_data';
 
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/utils/hardware.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
+import 'package:path_provider/path_provider.dart';
 
 part 'photos_manager.g.dart';
 
@@ -46,7 +48,7 @@ abstract class PhotosManagerBase with Store {
   Directory get outputDir => Directory(SettingsManagerBase.instance.settings.output.localFolder);
   int photoNumber = 0;
   bool photoNumberChecked = false;
-  String baseName = "MomentoBooth-image";
+  static String baseName = "MomentoBooth-image";
  
   Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
 
@@ -87,6 +89,18 @@ abstract class PhotosManagerBase with Store {
       return int.parse(match.group(0) ?? "0");
     }
     return 0;
+  }
+
+  Future<File> getOutputImageAsTempFile() async {
+    final Directory tempDir = await getTemporaryDirectory();
+    final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
+    File file = await File('${tempDir.path}/image.$ext').create();
+    await file.writeAsBytes(outputImage!);
+    return file;
+  }
+
+  Future<Uint8List> getOutputPDF() async {
+    return getImagePDF(outputImage!);
   }
 
 }

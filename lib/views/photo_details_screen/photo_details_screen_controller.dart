@@ -7,33 +7,19 @@ import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
-import 'package:momento_booth/views/capture_screen/capture_screen.dart';
-import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
-import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
-import 'package:momento_booth/views/start_screen/start_screen.dart';
+import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
 
-class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with UiLoggy {
+class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScreenViewModel> with UiLoggy {
 
   // Initialization/Deinitialization
 
-  ShareScreenController({
+  PhotoDetailsScreenController({
     required super.viewModel,
     required super.contextAccessor,
   });
 
-  void onClickNext() {
-    router.go(StartScreen.defaultRoute);
-  }
-  
   void onClickPrev() {
-    loggy.debug("Clicked prev");
-    if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
-      PhotosManagerBase.instance.reset(advance: false);
-      StatsManagerBase.instance.addRetake();
-      router.go(CaptureScreen.defaultRoute);
-    } else {
-      router.go(CollageMakerScreen.defaultRoute);
-    }
+    router.pop();
   }
 
   String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
@@ -50,7 +36,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     }
     if (viewModel.uploadState != UploadState.notStarted) return;
 
-    File file = await PhotosManagerBase.instance.getOutputImageAsTempFile();
+    final File file = viewModel.file; // Just take the file that we're viewing anyway
     final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
 
     loggy.debug("Uploading ${file.path}");
@@ -89,9 +75,9 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     loggy.debug("Printing photo");
     viewModel.printEnabled = false;
     viewModel.printText = "Printing...";
-    
+
     // Get photo and print it.
-    final pdfData = await PhotosManagerBase.instance.getOutputPDF();
+    final pdfData = await getImagePDF(await viewModel.file.readAsBytes());
     final bool success = await printPDF(pdfData);
 
     viewModel.printText = success ? "Printing..." : "Print unsuccessful";

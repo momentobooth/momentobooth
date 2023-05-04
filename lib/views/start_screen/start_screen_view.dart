@@ -16,10 +16,27 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
   
   @override
   Widget get body {
-    return GestureDetector(
-      onTap: controller.onPressedContinue,
-      behavior: HitTestBehavior.opaque,
-      child: _foregroundElements,
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: controller.onPressedContinue,
+          behavior: HitTestBehavior.opaque,
+          child: _foregroundElements,
+        ),
+        Padding(
+          padding: EdgeInsets.all(30),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: GestureDetector(
+              onTap: controller.onPressedGallery,
+              child: AutoSizeText(
+                "Gallery",
+                style: theme.subTitleStyle,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
