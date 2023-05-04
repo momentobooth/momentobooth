@@ -21,4 +21,8 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
     router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
   }
 
+  void onPressedBack() {
+    router.pop();
+  }
+
 }

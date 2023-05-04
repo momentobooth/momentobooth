@@ -36,7 +36,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     }
     if (viewModel.uploadState != UploadState.notStarted) return;
 
-    File file = await PhotosManagerBase.instance.getOutputImageAsTempFile();
+    final File file = viewModel.file; // Just take the file that we're viewing anyway
     final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
 
     loggy.debug("Uploading ${file.path}");

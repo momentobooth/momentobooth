@@ -20,7 +20,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> {
   }
 
   void onPressedGallery() {
-    router.go(GalleryScreen.defaultRoute);
+    router.push(GalleryScreen.defaultRoute);
   }
 
 }

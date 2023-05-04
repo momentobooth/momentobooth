@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -16,20 +17,37 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
   
   @override
   Widget get body {
-    return Observer(
-      builder: (context) => GridView.count(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-        mainAxisSpacing: 20,
-        crossAxisSpacing: 20,
-        crossAxisCount: 4,
-        children: [
-          for (var file in viewModel.fileList)
-            GestureDetector(
-              onTap: () => controller.openPhoto(file),
-              child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain,),
+    return Stack(
+      children: [
+        Observer(
+          builder: (context) => GridView.count(
+            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+            crossAxisCount: 4,
+            children: [
+              for (var file in viewModel.fileList)
+                GestureDetector(
+                  onTap: () => controller.openPhoto(file),
+                  child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain,),
+                ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(30),
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: GestureDetector(
+              onTap: controller.onPressedBack,
+              child: AutoSizeText(
+                "← Start",
+                style: theme.subTitleStyle,
+              ),
             ),
-        ],
-      ),
+          ),
+        ),
+      ],
     );
   }
 
