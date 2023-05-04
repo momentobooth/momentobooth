@@ -3,7 +3,13 @@ import 'package:go_router/go_router.dart';
 
 class FadeTransitionPage extends CustomTransitionPage<void> {
 
-  static final CurveTween _curveTween = CurveTween(curve: Curves.easeInOutCubicEmphasized);
+  static CurvedAnimation _curvedAnimation(Animation<double> parent) {
+    return CurvedAnimation(
+      parent: parent,
+      curve: Curves.easeInOutCubicEmphasized,
+      reverseCurve: Curves.easeInExpo,
+    );
+  }
 
   /// Creates a [FadeTransitionPage].
   FadeTransitionPage({
@@ -14,13 +20,13 @@ class FadeTransitionPage extends CustomTransitionPage<void> {
           reverseTransitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
-              opacity: Tween<double>(begin: 0.0, end: 1.0).animate(animation.drive(_curveTween)),
+              opacity: Tween<double>(begin: 0.0, end: 1.0).animate(_curvedAnimation(animation)),
               child: ScaleTransition(
-                scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation.drive(_curveTween)),
+                scale: Tween<double>(begin: 0.95, end: 1.0).animate(_curvedAnimation(animation)),
                 child: FadeTransition(
-                  opacity: Tween<double>(begin: 1.0, end: 0.0).animate(secondaryAnimation.drive(_curveTween)),
+                  opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_curvedAnimation(secondaryAnimation)),
                   child: ScaleTransition(
-                    scale: Tween<double>(begin: 1.0, end: 1.3).animate(secondaryAnimation.drive(_curveTween)),
+                    scale: Tween<double>(begin: 1.0, end: 1.3).animate(_curvedAnimation(secondaryAnimation)),
                     child: child,
                   ),
                 ),
