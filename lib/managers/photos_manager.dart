@@ -63,7 +63,7 @@ abstract class PhotosManagerBase with Store {
   }
 
   @action
-  Future<File?> writeOutput() async {
+  Future<File?> writeOutput({bool advance = false}) async {
     if (instance.outputImage == null) return null;
     if (!photoNumberChecked) {
       photoNumber = await findLastImageNumber()+1;
@@ -72,7 +72,9 @@ abstract class PhotosManagerBase with Store {
     final extension = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
     final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$extension');
     File file = await File(filePath).create();
-    return await file.writeAsBytes(instance.outputImage!);
+    await file.writeAsBytes(instance.outputImage!);
+    if (advance) { photoNumber++; }
+    return file;
   }
   
   @action

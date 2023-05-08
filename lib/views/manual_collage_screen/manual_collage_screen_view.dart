@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
@@ -31,29 +28,27 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
     );
   }
 
-  Widget _photoInst(File file, int i) {
+  Widget _photoInst(SelectableImage image) {
     return Observer(
-      builder: (BuildContext context) {
-        return Stack(
-          children: [
-            ImageWithLoaderFallback.file(file, fit: BoxFit.contain),
-            AnimatedOpacity(
-              opacity: PhotosManagerBase.instance.chosen.contains(i) ? 1 : 0,
-              duration: Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  ColoredBox(color: Color(0x80000000)),
-                  Center(
-                    child: Text((PhotosManagerBase.instance.chosen.indexOf(i)+1).toString(), style: theme.subTitleStyle,),
-                  ),
-                ],
-              ),
-            )
-          ],
-        );
-      }
+      builder: (context) => Stack(
+        children: [
+          ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+          AnimatedOpacity(
+            opacity: image.isSelected ? 1 : 0,
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                ColoredBox(color: Color(0x80000000)),
+                Center(
+                  child: Text("${image.selectedIndex+1}/${viewModel.numSelected}", style: theme.subTitleStyle,),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -66,10 +61,10 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         crossAxisCount: 4,
         childAspectRatio: 1.5,
         children: [
-          for (var file in viewModel.fileList)
+          for (var image in viewModel.fileList)
             GestureDetector(
-              onTap: () => controller.tapPhoto(file),
-              child: _photoInst(file, 0),
+              onTap: () => controller.tapPhoto(image),
+              child: _photoInst(image),
             ),
         ],
       ),
@@ -93,12 +88,18 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
           ),
           Flexible(
             flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: GestureDetector(
-                onTap: controller.captureCollage,
-                child: AutoSizeText("Save", style: theme.titleStyle,)
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                  onTap: controller.clearSelection,
+                  child: AutoSizeText("Clear", style: theme.titleStyle,)
+                ),
+                GestureDetector(
+                  onTap: controller.saveCollage,
+                  child: AutoSizeText("Save", style: theme.titleStyle,)
+                ),
+              ],
             )
           ),
         ],

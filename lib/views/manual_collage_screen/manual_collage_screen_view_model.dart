@@ -8,6 +8,18 @@ part 'manual_collage_screen_view_model.g.dart';
 
 class ManualCollageScreenViewModel = ManualCollageScreenViewModelBase with _$ManualCollageScreenViewModel;
 
+class SelectableImage {
+  late final File file;
+  bool isSelected = false;
+  int selectedIndex = 0;
+  late final int index;
+
+  SelectableImage({
+    required this.file,
+    required this.index,
+  });
+}
+
 abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with Store {
 
   ManualCollageScreenViewModelBase({
@@ -32,14 +44,18 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
   Directory get outputDir => Directory(directoryString);
   
   @observable
-  ObservableList<File> fileList = ObservableList<File>();
+  ObservableList<SelectableImage> fileList = ObservableList<SelectableImage>();
 
   @action
   Future<void> findImages() async {
     fileList.clear();
     final fileListBefore = await outputDir.list().toList();
     final matchingFiles = fileListBefore.whereType<File>().where((file) => file.path.toLowerCase().endsWith('.jpg'));
-    for (var file in matchingFiles) { fileList.add(file); }
+
+    int i = 0;
+    for (var file in matchingFiles) {
+      fileList.add(SelectableImage(file: file, index: i++));
+    }
   }
 
 }
