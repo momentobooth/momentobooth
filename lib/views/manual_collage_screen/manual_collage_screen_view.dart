@@ -66,6 +66,12 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
               onTap: () => controller.tapPhoto(image),
               child: _photoInst(image),
             ),
+          Center(
+            child: GestureDetector(
+              onTap: controller.refreshImageList,
+              child: AutoSizeText("Refresh", style: theme.titleStyle),
+            ),
+          ),
         ],
       ),
     );

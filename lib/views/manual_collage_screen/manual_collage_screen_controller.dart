@@ -23,6 +23,11 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
 
   final selectedPhotos = <SelectableImage>[];
 
+  void refreshImageList() {
+    clearSelection();
+    viewModel.findImages();
+  }
+
   void clearSelection() {
     for (var photo in selectedPhotos) {
       photo.isSelected= false;

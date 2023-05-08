@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
@@ -20,7 +21,7 @@ class SelectableImage {
   });
 }
 
-abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with Store {
+abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
 
   ManualCollageScreenViewModelBase({
     required super.contextAccessor,
@@ -51,14 +52,16 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
 
   @action
   Future<void> findImages() async {
-    fileList.clear();
+    loggy.debug("Searching for images");
     final fileListBefore = await outputDir.list().toList();
     final matchingFiles = fileListBefore.whereType<File>().where((file) => file.path.toLowerCase().endsWith('.jpg'));
 
+    fileList.clear();
     int i = 0;
     for (var file in matchingFiles) {
       fileList.add(SelectableImage(file: file, index: i++));
     }
+    loggy.debug("Found ${matchingFiles.length} images");
   }
 
 }
