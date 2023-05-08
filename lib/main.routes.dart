@@ -9,6 +9,7 @@ List<GoRoute> rootRoutes = [
   _shareRoute,
   _galleryRoute,
   _photoDetailsRoute,
+  _manualCollageRoute,
   _settingsRoute,
 ];
 
@@ -88,6 +89,16 @@ GoRoute _photoDetailsRoute = GoRoute(
     return FadeTransitionPage(
       key: state.pageKey,
       child: PhotoDetailsScreen(photoId: state.pathParameters['pid']!),
+    );
+  },
+);
+
+GoRoute _manualCollageRoute = GoRoute(
+  path: "${ManualCollageScreen.defaultRoute}",
+  pageBuilder: (context, state) {
+    return FadeTransitionPage(
+      key: state.pageKey,
+      child: ManualCollageScreen(),
     );
   },
 );
