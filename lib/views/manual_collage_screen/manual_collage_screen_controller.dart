@@ -58,19 +58,14 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
       PhotosManagerBase.instance.chosen.add(index);
       viewModel.numSelected = index+1;
     }
-    captureCollage();
   }
 
   String get outputFolder => SettingsManagerBase.instance.settings.output.localFolder;
 
-  DateTime? latestCapture;
-
-  late Completer captureComplete;
-
   void captureCollage() async {
-    if (viewModel.numSelected < 1) return;
+    if (viewModel.numSelected < 1 || viewModel.isSaving) return;
 
-    captureComplete = Completer();
+    viewModel.isSaving = true;
     final stopwatch = Stopwatch()..start();
     final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
     final format = SettingsManagerBase.instance.settings.output.exportFormat;
@@ -79,14 +74,9 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
   
     PhotosManagerBase.instance.outputImage = exportImage;
-    loggy.debug("Written collage image to output image memory");
-    captureComplete.complete();
-  }
-
-  void saveCollage() async {
-    await captureComplete.future;
     PhotosManagerBase.instance.writeOutput(advance: true);
     loggy.debug("Saved collage image to disk");
+    viewModel.isSaving = false;
   }
 
 }

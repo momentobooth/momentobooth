@@ -95,9 +95,15 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
                   onTap: controller.clearSelection,
                   child: AutoSizeText("Clear", style: theme.titleStyle,)
                 ),
-                GestureDetector(
-                  onTap: controller.saveCollage,
-                  child: AutoSizeText("Save", style: theme.titleStyle,)
+                Observer(
+                  builder: (context) => AnimatedOpacity(
+                    duration: viewModel.opacityDuraction,
+                    opacity: viewModel.isSaving ? 0.5 : 1,
+                    child: GestureDetector(
+                      onTap: controller.captureCollage,
+                      child: AutoSizeText(viewModel.isSaving ? "Saving..." : "Save", style: theme.titleStyle,)
+                    ),
+                  ),
                 ),
               ],
             )

@@ -42,6 +42,9 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
   String directoryString = SettingsManagerBase.instance.settings.hardware.captureLocation;
 
   Directory get outputDir => Directory(directoryString);
+
+  @observable
+  bool isSaving = false;
   
   @observable
   ObservableList<SelectableImage> fileList = ObservableList<SelectableImage>();
