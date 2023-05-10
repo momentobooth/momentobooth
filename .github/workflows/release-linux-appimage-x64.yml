@@ -68,13 +68,13 @@ jobs:
     - name: Install Dependencies
       run: flutter packages get
 
-    # - name: Generate Dart-to-Rust bridging code
-    #   run: >
-    #     flutter_rust_bridge_codegen
-    #     --rust-input rust/src/dart_bridge/api.rs
-    #     --dart-output lib/rust_bridge/library_api.generated.dart
-    #     --rust-output rust/src/dart_bridge/ffi_exports.rs
-    #     --skip-add-mod-to-lib --no-build-runner
+    - name: Generate Dart-to-Rust bridging code
+      run: >
+        flutter_rust_bridge_codegen
+        --rust-input rust/src/dart_bridge/api.rs
+        --dart-output tmp/lib/rust_bridge/library_api.generated.dart
+        --rust-output rust/src/dart_bridge/ffi_exports.rs
+        --skip-add-mod-to-lib --no-build-runner
       
     - name: Run Code Generation
       run: flutter pub run build_runner build --delete-conflicting-outputs
