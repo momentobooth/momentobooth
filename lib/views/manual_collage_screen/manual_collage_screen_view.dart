@@ -32,7 +32,9 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
     return Observer(
       builder: (context) => Stack(
         children: [
-          ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+          Center(
+            child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+          ),
           AnimatedOpacity(
             opacity: image.isSelected ? 1 : 0,
             duration: Duration(milliseconds: 200),
