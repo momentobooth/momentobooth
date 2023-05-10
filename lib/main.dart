@@ -16,6 +16,7 @@ import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mo
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
+import 'package:momento_booth/views/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen.dart';
 import 'package:momento_booth/views/share_screen/share_screen.dart';
@@ -89,6 +90,7 @@ class _AppState extends State<App> with UiLoggy {
   }
 
   void _initHotKeys() {
+    // Ctrl + S opens/closes settings
     hotKeyManager.register(
       HotKey(
         KeyCode.keyS,
@@ -100,6 +102,22 @@ class _AppState extends State<App> with UiLoggy {
         loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
       },
     );
+    // Ctrl + M opens manual collage maker screen
+    hotKeyManager.register(
+      HotKey(
+        KeyCode.keyM,
+        modifiers: [KeyModifier.control],
+        scope: HotKeyScope.inapp,
+      ),
+      keyDownHandler: (hotKey) {
+        if (_router.location == ManualCollageScreen.defaultRoute) {
+          _router.go(StartScreen.defaultRoute);
+        } else {
+          _router.go(ManualCollageScreen.defaultRoute);
+        }
+      },
+    );
+    // Alt + enter toggles full-screen
     hotKeyManager.register(
       HotKey(
         KeyCode.enter,
@@ -110,6 +128,7 @@ class _AppState extends State<App> with UiLoggy {
         setState(_toggleFullscreen);
       },
     );
+    // Ctrl + F toggles full-screen
     hotKeyManager.register(
       HotKey(
         KeyCode.keyF,
