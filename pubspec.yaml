@@ -42,11 +42,7 @@ dependencies:
   flutter_rust_bridge: 1.75.2
 
   # Printing
-  printing:
-    git:
-      url: https://github.com/mhbdev/dart_pdf
-      ref: flutter-master-renderview
-      path: printing
+  printing: 5.10.4
   pdf: 3.10.2
 
   # System
