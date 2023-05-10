@@ -47,7 +47,7 @@ dependencies:
       url: https://github.com/mhbdev/dart_pdf
       ref: flutter-master-renderview
       path: printing
-  pdf: 3.10.1
+  pdf: 3.10.2
 
   # System
   path_provider: 2.0.15
