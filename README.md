@@ -48,6 +48,14 @@ Please note: Run all commands from the root folder of the repository, unless men
 3. Run `flutter run` or use your IDE to run the application
     - Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
+### Current workarounds which should be removed ASAP
+
+- `screenshot` and `printing` are imported from git due to being incompatible with Flutter 3.10.x
+- Pods `MACOSX_DEPLOYMENT_TARGET` is overridden to 10.13 due to macOS build error which seems to come from the `hotkey_manager` package
+- `*.generated.dart` is temporarily un-ignored from source control (and `library_api.generated.dart` is included) due to `ffigen` generating code which doesn't directly compile on Flutter 3.10.x
+  - If you have to regenerate it, make sure to add `final` to all classes that inherit from `ffi.Struct`
+  - For CI/CD the build step is temporarily disabled
+
 ### Adding a new screen using the VS Code extension Template
 
 1. Make sure to have the [Template](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) extension installed
