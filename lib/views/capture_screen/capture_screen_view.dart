@@ -6,7 +6,6 @@ import 'package:momento_booth/views/capture_screen/capture_screen_controller.dar
 import 'package:momento_booth/views/capture_screen/capture_screen_view_model.dart';
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
-import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
 
 class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureScreenController> {
 

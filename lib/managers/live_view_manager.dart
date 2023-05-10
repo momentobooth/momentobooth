@@ -40,7 +40,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
 
   static const int _fps = 60; // TDDO: detect from screen instead of guessing
   static const double _minimumFrameTimeMs = 1000 / _fps;
-  Stopwatch _timeFromLastReceivedFrame = Stopwatch()..start();
+  final Stopwatch _timeFromLastReceivedFrame = Stopwatch()..start();
 
   // ////////////// //
   // Initialization //
@@ -58,53 +58,57 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
     // To make sure mobx detects that we are responding to changed to this property
     SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
     LiveViewManagerBase.instance._lock.synchronized(() async {
-      LiveViewStreamFactory? liveViewStream = LiveViewManagerBase.instance._liveViewStream;
-      String webcamIdSetting = SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
-
-      if (liveViewStream == null || liveViewStream.friendlyName != webcamIdSetting) {
-        // Webcam was not initialized yet or webcam ID setting changed
-        LiveViewManagerBase.instance._liveViewState = LiveViewState.initializing;
-        await LiveViewManagerBase.instance._liveViewSubscription?.cancel();
-        await LiveViewManagerBase.instance._liveViewStream?.dispose();
-
-        LiveViewManagerBase.instance._liveViewSubscription = null;
-        LiveViewManagerBase.instance._liveViewStream = null;
-
-        var cameras = await NokhwaCamera.getAllCameras();
-        NokhwaCamera? camera = cameras
-            .cast<NokhwaCamera?>()
-            .firstWhere((camera) => camera!.friendlyName == webcamIdSetting, orElse: () => null);
-        try {
-          var stream = LiveViewManagerBase.instance._liveViewStream = await camera?.openStream();
-          if (stream == null) {
-            return;
-          }
-
-          Lock frameOrderLock = Lock();
-
-          LiveViewManagerBase.instance._liveViewSubscription = stream.getStream().listen((frame) async {
-            // New frame arrived
-            if (LiveViewManagerBase.instance._timeFromLastReceivedFrame.elapsedMilliseconds < LiveViewManagerBase._minimumFrameTimeMs) {
-              StatsManagerBase.instance.addLiveViewFrameDroppedByConsumer();
-            } else {
-              frameOrderLock.synchronized(() async {
-                LiveViewManagerBase.instance.lastFrameImage = await frame.toImage();
-                LiveViewManagerBase.instance._liveViewState = LiveViewState.streaming;
-              });
-            }
-            LiveViewManagerBase.instance._timeFromLastReceivedFrame.reset();
-          }, onError: (error) {
-            // Error
-            LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
-            LiveViewManagerBase.instance.loggy.error("Error while streaming from '$webcamIdSetting'", error);
-          }, cancelOnError: true);
-        } catch (error) {
-          LiveViewManagerBase.instance._liveViewState = LiveViewState.error;
-          LiveViewManagerBase.instance.loggy.error("Failed to open camera '$webcamIdSetting'", error);
-        }
-      }
+      await LiveViewManagerBase.instance._updateConfig();
     });
   });
+
+  Future<void> _updateConfig() async {
+    LiveViewStreamFactory? liveViewStream = _liveViewStream;
+    String webcamIdSetting = SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
+
+    if (liveViewStream == null || liveViewStream.friendlyName != webcamIdSetting) {
+      // Webcam was not initialized yet or webcam ID setting changed
+      _liveViewState = LiveViewState.initializing;
+      await _liveViewSubscription?.cancel();
+      await _liveViewStream?.dispose();
+
+      _liveViewSubscription = null;
+      _liveViewStream = null;
+
+      var cameras = await NokhwaCamera.getAllCameras();
+      NokhwaCamera? camera = cameras
+          .cast<NokhwaCamera?>()
+          .firstWhere((camera) => camera!.friendlyName == webcamIdSetting, orElse: () => null);
+      try {
+        var stream = _liveViewStream = await camera?.openStream();
+        if (stream == null) {
+          return;
+        }
+
+        Lock frameOrderLock = Lock();
+
+        _liveViewSubscription = stream.getStream().listen((frame) async {
+          // New frame arrived
+          if (_timeFromLastReceivedFrame.elapsedMilliseconds < LiveViewManagerBase._minimumFrameTimeMs) {
+            StatsManagerBase.instance.addLiveViewFrameDroppedByConsumer();
+          } else {
+            frameOrderLock.synchronized(() async {
+              lastFrameImage = await frame.toImage();
+              _liveViewState = LiveViewState.streaming;
+            });
+          }
+          _timeFromLastReceivedFrame.reset();
+        }, onError: (error) {
+          // Error
+          _liveViewState = LiveViewState.error;
+          loggy.error("Error while streaming from '$webcamIdSetting'", error);
+        }, cancelOnError: true);
+      } catch (error) {
+        _liveViewState = LiveViewState.error;
+        loggy.error("Failed to open camera '$webcamIdSetting'", error);
+      }
+    }
+  }
 
 }
 

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:loggy/loggy.dart';
-import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';

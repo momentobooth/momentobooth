@@ -94,7 +94,7 @@ GoRoute _photoDetailsRoute = GoRoute(
 );
 
 GoRoute _manualCollageRoute = GoRoute(
-  path: "${ManualCollageScreen.defaultRoute}",
+  path: ManualCollageScreen.defaultRoute,
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,

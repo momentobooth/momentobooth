@@ -28,8 +28,9 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   Future<void> findImages() async {
     final fileListBefore = await outputDir.list().toList();
     final matchingFiles = fileListBefore.whereType<File>().where((file) => basename(file.path).startsWith(baseName));
-    for (var file in matchingFiles) { fileList.add(file); }
-    print("Concluded image search");
+    for (var file in matchingFiles) {
+      fileList.add(file);
+    }
   }
 
 }

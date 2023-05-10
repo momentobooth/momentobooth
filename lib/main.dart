@@ -70,7 +70,7 @@ class _AppState extends State<App> with UiLoggy {
 
   static const returnHomeTimeout = Duration(seconds: 45);
   static const updateLastAliveTimeout = Duration(milliseconds: 100);
-  late Timer _returnHomeTimer, _updateLastAliveTimeTimer;
+  late Timer _returnHomeTimer;
 
   @override
   void initState() {
@@ -78,7 +78,7 @@ class _AppState extends State<App> with UiLoggy {
     // Check if the window is fullscreen from the start.
     windowManager.isFullScreen().then((value) => _isFullScreen = value);
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
-    _updateLastAliveTimeTimer = Timer.periodic(updateLastAliveTimeout, _updateLastAliveTime);
+    Timer.periodic(updateLastAliveTimeout, _updateLastAliveTime);
     _router.addListener(() => onActivity(isTap: false));
     super.initState();
   }

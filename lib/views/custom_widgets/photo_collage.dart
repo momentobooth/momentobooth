@@ -215,7 +215,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       rowGap: gap,
       children: [
         if (widget.showLogo)
-          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l1header'),
+          Center(
+            child: SvgPicture.asset(
+              "assets/svg/logo.svg",
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+            ).inGridArea('l1header')
+          ),
         SizedBox.expand(child: RotatedBox(
           quarterTurns: 1,
           child: img,
@@ -237,7 +242,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       rowGap: gap,
       children: [
         if (widget.showLogo)
-          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l2header'),
+          Center(
+            child: SvgPicture.asset(
+              "assets/svg/logo.svg",
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+            ).inGridArea('l2header'),
+          ),
         for (int i = 0; i < nChosen; i++) ...[
           ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l2content${i+1}'),
         ]
@@ -259,8 +269,18 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       rowGap: gap,
       children: [
         if (widget.showLogo) ...[
-          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header1'),
-          Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black)).inGridArea('l3header2'),
+          Center(
+            child: SvgPicture.asset(
+              "assets/svg/logo.svg",
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+            ),
+          ).inGridArea('l3header1'),
+          Center(
+            child: SvgPicture.asset(
+              "assets/svg/logo.svg",
+              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+            ),
+          ).inGridArea('l3header2'),
         ],
         for (int i = 0; i < nChosen; i++) ...[
           ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l3content${i+1}'),
@@ -298,7 +318,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
             padding: const EdgeInsets.all(250),
             child: RotatedBox(
               quarterTurns: 1,
-              child: Center(child: SvgPicture.asset("assets/svg/logo.svg", color: Colors.black))
+              child: Center(
+                child: SvgPicture.asset(
+                  "assets/svg/logo.svg",
+                  colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                ),
+              ),
             ),
           ),
       ],
