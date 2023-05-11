@@ -25,8 +25,8 @@ dependencies:
   # Printscreen/Image processing
   screenshot:
     git:
-      url: https://github.com/h3x4d3c1m4l/screenshot
-      ref: feat/update-for-flutter-beta
+      url: https://github.com/SachinGanesh/screenshot
+      ref: master
   image: 4.0.17
 
   # MVC
@@ -39,7 +39,7 @@ dependencies:
 
   # Interop
   ffi: 2.0.2
-  flutter_rust_bridge: 1.75.2
+  flutter_rust_bridge: 1.75.3
 
   # Printing
   printing: 5.10.4
