@@ -23,10 +23,7 @@ dependencies:
   pretty_qr_code: 2.0.3
 
   # Printscreen/Image processing
-  screenshot:
-    git:
-      url: https://github.com/SachinGanesh/screenshot
-      ref: master
+  screenshot: 2.0.0
   image: 4.0.17
 
   # MVC
@@ -76,7 +73,7 @@ dev_dependencies:
   json_serializable: 6.6.2
 
   # Code generation
-  build_runner: 2.4.2
+  build_runner: 2.4.4
   ffigen: 7.2.11
 
 flutter:
