@@ -53,7 +53,9 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
 
   final Lock _lock = Lock();
 
+  @readonly
   LiveViewSource? _currentLiveViewSource;
+
   LiveViewMethod? _currentLiveViewMethodSetting;
   String? _currentLiveViewWebcamId;
 

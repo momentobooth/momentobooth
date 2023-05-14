@@ -3,6 +3,7 @@ use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}}};
 use dashmap::DashMap;
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
+use turborand::rng::Rng;
 
 use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug};
 
@@ -38,16 +39,17 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
 
     let handle_id = NOKHWA_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
     let camera = nokhwa::open_camera(friendly_name, move |raw_frame| {
-        let handle = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+        let mut handle = NOKHWA_HANDLES.get_mut(&handle_id).expect("Invalid nokhwa handle ID");
         match raw_frame {
             Some(raw_frame) => {
                 let processed_frame = image_processing::execute_operations(raw_frame, &operations);
                 let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
                 renderer.set_size(processed_frame.width, processed_frame.height);
-                renderer.on_rgba(processed_frame);
+                renderer.on_rgba(&processed_frame);
 
                 handle.valid_frame_count.fetch_add(1, Ordering::SeqCst);
                 handle.last_frame_was_valid.store(true, Ordering::SeqCst);
+                handle.last_valid_frame = Some(processed_frame);
             },
             None => {
                 handle.error_frame_count.fetch_add(1, Ordering::SeqCst);
@@ -73,6 +75,11 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
     }
 }
 
+pub fn nokhwa_get_last_frame(handle_id: usize) -> Option<RawImage> {
+    let handle = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    handle.last_valid_frame.clone()
+}
+
 pub fn nokhwa_close_camera(handle_id: usize) {
     let handle = NOKHWA_HANDLES.remove(&handle_id).expect("Invalid nokhwa handle ID");
     nokhwa::close_camera(handle.1.camera)
@@ -88,14 +95,14 @@ lazy_static::lazy_static! {
 
 static NOISE_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
 
-pub fn noise_open(texture_ptr: usize) -> usize {
-    let width = 1280;
-    let height = 720;
+const NOISE_DEFAULT_WIDTH: usize = 1280;
+const NOISE_DEFAULT_HEIGHT: usize = 720;
 
+pub fn noise_open(texture_ptr: usize) -> usize {
     // Initialize noise and push noise frames to Flutter texture
-    let renderer = FlutterTexture::new(texture_ptr, width, height);
-    let join_handle = white_noise::start_and_get_handle(width, height, move |raw_frame| {
-        renderer.on_rgba(raw_frame)
+    let renderer = FlutterTexture::new(texture_ptr, NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT);
+    let join_handle = white_noise::start_and_get_handle(NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT, move |raw_frame| {
+        renderer.on_rgba(&raw_frame)
     });
 
     // Store handle
@@ -103,6 +110,10 @@ pub fn noise_open(texture_ptr: usize) -> usize {
     NOISE_HANDLES.insert(handle_id, join_handle);
 
     handle_id
+}
+
+pub fn noise_get_frame() -> RawImage {
+    white_noise::generate_frame(&Rng::new(), NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT)
 }
 
 pub fn noise_close(handle_id: usize) {
@@ -152,6 +163,7 @@ pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) 
 // Structs //
 // /////// //
 
+#[derive(Clone)]
 pub struct RawImage {
     pub format: RawImageFormat,
     pub data: Vec<u8>,
@@ -170,6 +182,7 @@ impl RawImage {
     }
 }
 
+#[derive(Clone)]
 pub enum RawImageFormat {
     Rgba,
 }
@@ -180,6 +193,7 @@ pub struct NokhwaCameraHandle {
     pub valid_frame_count: AtomicUsize,
     pub error_frame_count: AtomicUsize,
     pub last_frame_was_valid: AtomicBool,
+    pub last_valid_frame: Option<RawImage>,
 }
 
 impl NokhwaCameraHandle {
@@ -190,6 +204,7 @@ impl NokhwaCameraHandle {
             valid_frame_count: AtomicUsize::new(0),
             error_frame_count: AtomicUsize::new(0),
             last_frame_was_valid: AtomicBool::new(false),
+            last_valid_frame: None,
         }
     }
 }

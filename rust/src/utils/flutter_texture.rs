@@ -71,7 +71,7 @@ impl FlutterTexture {
         self.height = height;
     }
 
-    pub fn on_rgba(&self, raw_image: RawImage) {
+    pub fn on_rgba(&self, raw_image: &RawImage) {
         if self.ptr == usize::default() {
             return;
         }

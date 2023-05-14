@@ -10,19 +10,9 @@ pub fn start_and_get_handle<F>(width: usize, height: usize, frame_callback: F) -
     let should_stop_clone = should_stop.clone();
 
     let join_handle = thread::spawn(move || {
-        let rand = Rng::new();
+        let rng = Rng::new();
         while !should_stop_clone.load(Ordering::SeqCst) {
-            let mut noise = Vec::with_capacity(width*height*4);
-
-            for _ in 0..width*height {
-                let pixel_value: u8 = rand.gen_u8();
-                noise.push(pixel_value);
-                noise.push(pixel_value);
-                noise.push(pixel_value);
-                noise.push(255); // Opaque alpha channel
-            }
-
-            let frame = RawImage::new_from_rgba_data(noise, width, height);
+            let frame = generate_frame(&rng, width, height);
             frame_callback(frame);
 
             thread::sleep(ten_millis)
@@ -35,7 +25,18 @@ pub fn start_and_get_handle<F>(width: usize, height: usize, frame_callback: F) -
     }
 }
 
+pub fn generate_frame(rng: &Rng, width: usize, height: usize) -> RawImage {
+    let mut noise = Vec::with_capacity(width*height*4);
+    for _ in 0..width*height {
+        let pixel_value: u8 = rng.gen_u8();
+        noise.push(pixel_value);
+        noise.push(pixel_value);
+        noise.push(pixel_value);
+        noise.push(255); // Opaque alpha channel
+    }
 
+    RawImage::new_from_rgba_data(noise, width, height)
+}
 
 pub struct WhiteNoiseGeneratorHandle {
     thread_join_handle: JoinHandle<()>,

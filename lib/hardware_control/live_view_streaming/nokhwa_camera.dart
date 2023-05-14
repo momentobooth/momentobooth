@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
@@ -37,7 +37,10 @@ class NokhwaCamera extends LiveViewSource {
     ], texturePtr: texturePtr);
   }
 
-  Future<CameraState> getCamaraState() => rustLibraryApi.nokhwaGetCameraStatus(handleId: handleId);
+  Future<CameraState> getCameraState() => rustLibraryApi.nokhwaGetCameraStatus(handleId: handleId);
+
+  @override
+  Future<RawImage?> getLastFrame() => rustLibraryApi.nokhwaGetLastFrame(handleId: handleId);
 
   @override
   Future<void> dispose() => rustLibraryApi.nokhwaCloseCamera(handleId: handleId);

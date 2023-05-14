@@ -1,3 +1,5 @@
+import 'package:momento_booth/rust_bridge/library_api.generated.dart';
+
 abstract class LiveViewSource {
 
   final String id;
@@ -7,7 +9,8 @@ abstract class LiveViewSource {
 
   Future<void> openStream({required int texturePtr});
 
-  Future<void> dispose() async {
-  }
+  Future<RawImage?> getLastFrame();
+
+  Future<void> dispose() async {}
 
 }
