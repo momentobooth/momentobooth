@@ -11,6 +11,8 @@ abstract class LiveViewSource {
 
   Future<RawImage?> getLastFrame();
 
+  Future<CameraState?> getCameraState();
+
   Future<void> dispose() async {}
 
 }

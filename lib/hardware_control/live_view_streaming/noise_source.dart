@@ -15,6 +15,9 @@ class NoiseSource extends LiveViewSource {
   Future<RawImage> getLastFrame() => rustLibraryApi.noiseGetFrame();
 
   @override
+  Future<CameraState?> getCameraState() async => null;
+
+  @override
   Future<void> dispose() => rustLibraryApi.noiseClose(handleId: _handleId);
 
 }

@@ -21,8 +21,8 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               context: context,
               icon: FluentIcons.front_camera,
               title: "Live view frames",
-              subtitle: "The number of live view frames processed\nValue shows: Total shown / Dropped by consumer / Dropped by camera implementation",
-              text: "${StatsManagerBase.instance.stats.liveViewFrames} / ${StatsManagerBase.instance.stats.liveViewFramesDroppedByConsumer} / ${StatsManagerBase.instance.stats.liveViewFramesDroppedByCameraImplementation}",
+              subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames",
+              text: "${StatsManagerBase.instance.validLiveViewFrames} / ${StatsManagerBase.instance.validLiveViewFrames}",
             ),
           ),
           Observer(

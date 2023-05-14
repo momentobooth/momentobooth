@@ -37,21 +37,22 @@ abstract class StatsManagerBase with Store, UiLoggy {
 
   static final StatsManager instance = StatsManager._internal();
 
+  // /////////// //
+  // Local stats //
+  // /////////// //
+
+  @observable
+  int validLiveViewFrames = 0;
+
+  @observable
+  int invalidLiveViewFrames = 0;
+
   // /////// //
   // Updates //
   // /////// //
 
   @action
   void addTap() { _stats = _stats.copyWith(taps: _stats.taps+1); }
-
-  @action
-  void addLiveViewFrame() { _stats = _stats.copyWith(liveViewFrames: _stats.liveViewFrames+1); }
-
-  @action
-  void addLiveViewFrameDroppedByConsumer() { _stats = _stats.copyWith(liveViewFramesDroppedByConsumer: _stats.liveViewFramesDroppedByConsumer+1); }
-
-  @action
-  void addLiveViewFramesDroppedByCameraImplementation(int count) { _stats = _stats.copyWith(liveViewFramesDroppedByCameraImplementation: _stats.liveViewFramesDroppedByCameraImplementation+count); }
 
   @action
   void addPrintedPhoto() { _stats = _stats.copyWith(printedPhotos: _stats.printedPhotos+1); }

@@ -39,7 +39,7 @@ class LiveViewBackground extends StatelessWidgetBase {
         case LiveViewState.initializing:
           return _initializingState;
         case LiveViewState.error:
-          return _errorState;
+          return _errorState(Colors.red, null);
         case LiveViewState.streaming:
           return _streamingState;
 
@@ -53,12 +53,12 @@ class LiveViewBackground extends StatelessWidgetBase {
     );
   }
 
-  Widget get _errorState {
+  Widget _errorState(Color color, String? message) {
     return ColoredBox(
-      color: Colors.green,
+      color: color,
       child: Center(
         child: AutoSizeText(
-          "Camera could not be found\r\n\r\nor\r\n\r\nconnection broken!",
+          message ?? "Camera could not be found\r\n\r\nor\r\n\r\nconnection broken!",
           textAlign: TextAlign.center,
         ),
       ),
@@ -66,6 +66,10 @@ class LiveViewBackground extends StatelessWidgetBase {
   }
 
   Widget get _streamingState {
+    if (LiveViewManagerBase.instance.lastFrameWasInvalid) {
+      return _errorState(Colors.green, "Could not decode webcam data");
+    }
+
     return Stack(
       fit: StackFit.expand,
       children: [

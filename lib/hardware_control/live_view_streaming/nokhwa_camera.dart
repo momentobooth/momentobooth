@@ -37,10 +37,11 @@ class NokhwaCamera extends LiveViewSource {
     ], texturePtr: texturePtr);
   }
 
-  Future<CameraState> getCameraState() => rustLibraryApi.nokhwaGetCameraStatus(handleId: handleId);
-
   @override
   Future<RawImage?> getLastFrame() => rustLibraryApi.nokhwaGetLastFrame(handleId: handleId);
+
+  @override
+  Future<CameraState> getCameraState() => rustLibraryApi.nokhwaGetCameraStatus(handleId: handleId);
 
   @override
   Future<void> dispose() => rustLibraryApi.nokhwaCloseCamera(handleId: handleId);
