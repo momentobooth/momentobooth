@@ -1,4 +1,25 @@
 # MomentoBooth
+MomentoBooth is a cross-platform open source photo booth software. Capture your events in an easy and fun way!
+
+## Features
+* Single capture
+* Multi-capture  
+  Shoot 4 photos and then select the ones you like to for a collage of 1, 2, 3, or 4 photos
+* User friendly touch-centered interface
+* Photo printing  
+  Lots of settings included to size and position your print well
+* Photo sharing using [`ffsend`](https://github.com/timvisee/ffsend) QR code
+* Theming with collage template images (background and foreground)
+* Webcam live view and capture support
+* Camera capture support
+  * With Sony Imaging Edge Remote using AutoIt
+  * `gphoto2` support planned
+* Statistics
+* Clear settings panel
+* Gallery with created images
+  * Re-print or -share
+* Manual collage creation for untethered handheld shooting
+* Beautiful animations
 
 ## Development
 
