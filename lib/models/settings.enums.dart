@@ -2,7 +2,7 @@ part of 'settings.dart';
 
 enum LiveViewMethod {
 
-  fakeImage(0, "Fake image"),
+  debugNoise(0, "Debug - Static noise"),
   webcam(1, "Webcam");
 
   // can add more properties or getters/methods if needed

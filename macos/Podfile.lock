@@ -11,6 +11,8 @@ PODS:
     - FlutterMacOS
   - screen_retriever (0.0.1):
     - FlutterMacOS
+  - texture_rgba_renderer (0.0.1):
+    - FlutterMacOS
   - window_manager (0.2.0):
     - FlutterMacOS
 
@@ -20,6 +22,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - printing (from `Flutter/ephemeral/.symlinks/plugins/printing/macos`)
   - screen_retriever (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos`)
+  - texture_rgba_renderer (from `Flutter/ephemeral/.symlinks/plugins/texture_rgba_renderer/macos`)
   - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 SPEC REPOS:
@@ -37,6 +40,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/printing/macos
   screen_retriever:
     :path: Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos
+  texture_rgba_renderer:
+    :path: Flutter/ephemeral/.symlinks/plugins/texture_rgba_renderer/macos
   window_manager:
     :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
@@ -47,6 +52,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: eaf5b3e458fc0e5fbb9940fb09980e853fe058b8
   printing: 1dd6a1fce2209ec240698e2439a4adbb9b427637
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
+  texture_rgba_renderer: cbed959a3c127122194a364e14b8577bd62dc8f2
   window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
 PODFILE CHECKSUM: e368f5b446c74a5b7235d162046da8fe4db99175

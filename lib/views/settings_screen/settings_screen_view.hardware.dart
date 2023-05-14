@@ -15,8 +15,10 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             value: () => viewModel.liveViewMethodSetting,
             onChanged: controller.onLiveViewMethodChanged,
           ),
-          if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam)
-            _webcamCard(viewModel, controller),
+          Observer(builder: (_) {
+            if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam) return _webcamCard(viewModel, controller);
+            return const SizedBox();
+          }),
           _getComboBoxCard(
             icon: FluentIcons.camera,
             title: "Flip image",
@@ -109,7 +111,7 @@ FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScr
             );
           }),
         ),
-        SizedBox(width: padding,),
+        SizedBox(width: padding),
         SizedBox(
           width: numberWidth,
           child: Observer(builder: (_) {
@@ -120,7 +122,7 @@ FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScr
             );
           }),
         ),
-        SizedBox(width: padding,),
+        SizedBox(width: padding),
         SizedBox(
           width: numberWidth,
           child: Observer(builder: (_) {
