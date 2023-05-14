@@ -1,4 +1,4 @@
-use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}}};
+use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}}, time::Instant};
 
 use dashmap::DashMap;
 use ::nokhwa::CallbackCamera;
@@ -56,6 +56,7 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
                 handle.last_frame_was_valid.store(false, Ordering::SeqCst);
             },
         }
+        handle.last_frame_timestamp = Some(Instant::now());
     });
 
     // Store handle
@@ -68,7 +69,7 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
     let handle = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
     
     CameraState {
-        is_streaming: handle.camera.is_stream_open().expect("Could not get Nokhwa stream status"),
+        is_streaming: true,
         valid_frame_count: handle.valid_frame_count.load(Ordering::SeqCst),
         error_frame_count: handle.error_frame_count.load(Ordering::SeqCst),
         last_frame_was_valid: handle.last_frame_was_valid.load(Ordering::SeqCst),
@@ -194,6 +195,7 @@ pub struct NokhwaCameraHandle {
     pub error_frame_count: AtomicUsize,
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
+    pub last_frame_timestamp: Option<Instant>,
 }
 
 impl NokhwaCameraHandle {
@@ -205,6 +207,7 @@ impl NokhwaCameraHandle {
             error_frame_count: AtomicUsize::new(0),
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
+            last_frame_timestamp: None,
         }
     }
 }
