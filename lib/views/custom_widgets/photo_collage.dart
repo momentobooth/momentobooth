@@ -105,7 +105,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         templates[TemplateKind.front]?[i] = frontTemplate;
         templates[TemplateKind.back]?[i] = backTemplate;
         setInitialized([i+1]);
-        await Future.delayed(Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
       }
     }
   }
@@ -218,7 +218,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           Center(
             child: SvgPicture.asset(
               "assets/svg/logo.svg",
-              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
             ).inGridArea('l1header')
           ),
         SizedBox.expand(child: RotatedBox(
@@ -245,7 +245,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           Center(
             child: SvgPicture.asset(
               "assets/svg/logo.svg",
-              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
             ).inGridArea('l2header'),
           ),
         for (int i = 0; i < nChosen; i++) ...[
@@ -272,13 +272,13 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           Center(
             child: SvgPicture.asset(
               "assets/svg/logo.svg",
-              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
             ),
           ).inGridArea('l3header1'),
           Center(
             child: SvgPicture.asset(
               "assets/svg/logo.svg",
-              colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
             ),
           ).inGridArea('l3header2'),
         ],
@@ -298,8 +298,8 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               l4content3 l4content1
               l4content4 l4content2
             ''',
-          rowSizes: [auto, auto],
-          columnSizes: [auto, auto],
+          rowSizes: const [auto, auto],
+          columnSizes: const [auto, auto],
           columnGap: gap,
           rowGap: gap,
           children: [
@@ -321,7 +321,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               child: Center(
                 child: SvgPicture.asset(
                   "assets/svg/logo.svg",
-                  colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
                 ),
               ),
             ),
@@ -331,7 +331,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
-    final delay = Duration(milliseconds: 20);
+    const delay = Duration(milliseconds: 20);
     if (format == ExportFormat.pngFormat) {
       return screenshotController.capture(pixelRatio: pixelRatio, delay: delay);
     }
@@ -342,7 +342,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     //final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
     final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
-    final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [ImageOperation.rotate(Rotation.Rotate270)] : [];
+    final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [const ImageOperation.rotate(Rotation.Rotate270)] : [];
 
     final stopwatch = Stopwatch()..start();
     final jpegData = await rustLibraryApi.jpegEncode(rawImage: rawImage, quality: jpgQuality, operationsBeforeEncoding: operationsBeforeEncoding);

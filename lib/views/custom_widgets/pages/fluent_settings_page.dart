@@ -49,8 +49,8 @@ class _FluentSettingsPageState extends State<FluentSettingsPage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+          const Padding(
+            padding: EdgeInsets.only(top: 16.0),
             child: SizedBox(
               width: double.maxFinite,
               child: InfoBar(title: Text('Changes will be saved automatically')),

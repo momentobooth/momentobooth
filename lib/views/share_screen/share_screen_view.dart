@@ -24,14 +24,14 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
     return Stack(
       children: [
         Padding(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Center(
             // This SizedBox is only necessary when the image used is smaller than what would be displayed.
             child: SizedBox(
               height: double.infinity,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Color(0xFFF0F0F0),
+                  color: const Color(0xFFF0F0F0),
                   border: theme.captureCounterContainerBorder,
                   boxShadow: [theme.captureCounterContainerShadow],
                 ),
@@ -85,8 +85,8 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
     return ConfettiWidget(
       confettiController: viewModel.confettiController,
       blastDirection: direction,
-      maximumSize: Size(60, 30),
-      minimumSize: Size(40, 20),
+      maximumSize: const Size(60, 30),
+      minimumSize: const Size(40, 20),
       minBlastForce: force,
       maxBlastForce: force*2,
       particleDrag: 0.01, // apply drag to the confetti
@@ -174,7 +174,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             child: Center(
               child: Observer(
                 builder: (context) => AnimatedOpacity(
-                  duration: Duration(milliseconds: 300),
+                  duration: const Duration(milliseconds: 300),
                   opacity: viewModel.printEnabled ? 1 : 0.5,
                   child: AutoSizeText(
                     viewModel.printText,
@@ -197,9 +197,9 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           onTap: controller.onClickCloseQR,
           child: AnimatedOpacity(
             opacity: viewModel.qrShown ? 0.5 : 0.0,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            child: ColoredBox(color: Color(0xFF000000)),
+            child: const ColoredBox(color: Color(0xFF000000)),
           ),
         ),
       );
@@ -211,9 +211,9 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       return SliderWidget(
         key: viewModel.sliderKey,
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Color(0xffffffff),
+            color: const Color(0xffffffff),
             borderRadius: BorderRadius.circular(10),
             border: theme.captureCounterContainerBorder,
             boxShadow: [theme.captureCounterContainerShadow],

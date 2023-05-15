@@ -30,7 +30,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
   static final LiveViewManager instance = LiveViewManager._internal();
 
   LiveViewManagerBase._internal() {
-    Timer.periodic(Duration(seconds: 1), (_) => _checkLiveViewState());
+    Timer.periodic(const Duration(seconds: 1), (_) => _checkLiveViewState());
   }
 
   // /////// //

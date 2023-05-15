@@ -37,7 +37,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           ],
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 35, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 10),
           child: Align(
             alignment: Alignment.bottomRight,
             child: Observer(
@@ -58,7 +58,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
 
   Widget get _leftColumn {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -78,7 +78,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           picture1 picture2
           picture3 picture4
         ''',
-      rowSizes: [auto, auto],
+      rowSizes: const [auto, auto],
       columnSizes: [1.fr, 1.fr],
       columnGap: 12,
       rowGap: 12,
@@ -93,12 +93,12 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                     ImageWithLoaderFallback.memory(PhotosManagerBase.instance.photos[i]),
                     AnimatedOpacity(
                       opacity: PhotosManagerBase.instance.chosen.contains(i) ? 1 : 0,
-                      duration: Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 200),
                       curve: Curves.easeInOut,
                       child: Stack(
                         fit: StackFit.expand,
                         children: [
-                          ColoredBox(color: Color(0x80000000)),
+                          const ColoredBox(color: Color(0x80000000)),
                           Center(
                             child: Text((PhotosManagerBase.instance.chosen.indexOf(i)+1).toString(), style: theme.subTitleStyle,),
                           ),
@@ -132,7 +132,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             flex: 10,
             child: _collage,
           ),
-          Flexible(
+          const Flexible(
             flex: 1,
             child: SizedBox()),
         ],
@@ -143,12 +143,12 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
   Widget get _collage {
     return Observer(
       builder: (context) => AnimatedRotation(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         turns: -0.25 * viewModel.rotation, // could also use controller.collageKey.currentState!.rotation
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 255, 255, 255),
             boxShadow: [theme.chooseCaptureModeButtonShadow],
           ),
           child: FittedBox(

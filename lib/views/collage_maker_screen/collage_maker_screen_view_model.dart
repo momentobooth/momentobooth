@@ -23,6 +23,6 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
   @observable
   bool readyToContinue = false;
 
-  final Duration opacityDuraction = Duration(milliseconds: 300);
+  final Duration opacityDuraction = const Duration(milliseconds: 300);
 
 }

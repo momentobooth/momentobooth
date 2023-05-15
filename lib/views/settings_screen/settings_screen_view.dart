@@ -36,30 +36,30 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
             items: [
               PaneItemSeparator(color: Colors.transparent),
               PaneItem(
-                icon: Icon(FluentIcons.settings),
-                title: Text("General"),
+                icon: const Icon(FluentIcons.settings),
+                title: const Text("General"),
                 body: Builder(builder: (_) => _getGeneralSettings(viewModel, controller)),
               ),
               PaneItem(
-                icon: Icon(FluentIcons.devices4),
-                title: Text("Hardware"),
+                icon: const Icon(FluentIcons.devices4),
+                title: const Text("Hardware"),
                 body: Builder(builder: (_) => _getHardwareSettings(viewModel, controller)),
               ),
               PaneItem(
-                icon: Icon(FluentIcons.send),
-                title: Text("Output"),
+                icon: const Icon(FluentIcons.send),
+                title: const Text("Output"),
                 body: Builder(builder: (_) => _getOutputSettings(viewModel, controller)),
               ),
             ],
             footerItems: [
               PaneItem(
-                icon: Icon(FluentIcons.device_bug),
-                title: Text("Debug"),
+                icon: const Icon(FluentIcons.device_bug),
+                title: const Text("Debug"),
                 body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
               ),
               PaneItem(
-                icon: Icon(FluentIcons.data_flow),
-                title: Text("Log"),
+                icon: const Icon(FluentIcons.data_flow),
+                title: const Text("Log"),
                 body: Builder(builder: (_) => _log),
               ),
             ],
@@ -70,8 +70,8 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
   }
 
   Widget get _log {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
       child: LoggyStreamWidget(),
     );
   }

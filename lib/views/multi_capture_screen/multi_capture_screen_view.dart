@@ -37,7 +37,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                   for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++)
                     Flexible(
                       flex: 0,
-                      child: Padding(padding: EdgeInsets.symmetric(vertical: 10),
+                      child: Padding(padding: const EdgeInsets.symmetric(vertical: 10),
                         child: AspectRatio(
                           aspectRatio: 1.5,
                           child: ImageWithLoaderFallback.memory(PhotosManagerBase.instance.photos[i]),
@@ -48,11 +48,11 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                     Flexible(
                       flex: 0,
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
                         child: AspectRatio(
                           aspectRatio: 1.5,
                           child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
                             decoration: BoxDecoration(
                               border: theme.captureCounterContainerBorder,
                               // boxShadow: [theme.captureCounterContainerShadow],
@@ -71,18 +71,18 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    LiveView(),
+                    const LiveView(),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _getReadyText,
                         Flexible(
                           child: Container(
-                            padding: EdgeInsets.all(40.0),
-                            constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
+                            padding: const EdgeInsets.all(40.0),
+                            constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
                             child: Observer(builder: (_) {
                               return AnimatedOpacity(
-                                duration: Duration(milliseconds: 50),
+                                duration: const Duration(milliseconds: 50),
                                 opacity: viewModel.showCounter ? 1.0 : 0.0,
                                 child: CaptureCounter(
                                   onCounterFinished: viewModel.onCounterFinished,
@@ -113,8 +113,8 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                 pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
                 isRepeatingAnimation: false,
                 animatedTexts: [
-                    RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: Duration(milliseconds: 1000)),
-                    RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: Duration(milliseconds: 1000)),
+                    RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+                    RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
                 ],
               ),
       ),
@@ -127,7 +127,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
         opacity: viewModel.opacity,
         duration: viewModel.flashAnimationDuration,
         curve: viewModel.flashAnimationCurve,
-        child: ColoredBox(color: Color(0xFFFFFFFF)),
+        child: const ColoredBox(color: Color(0xFFFFFFFF)),
       );
     });
   }

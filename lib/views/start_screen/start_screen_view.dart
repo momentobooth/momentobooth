@@ -24,7 +24,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
           child: _foregroundElements,
         ),
         Padding(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Align(
             alignment: Alignment.bottomLeft,
             child: GestureDetector(
@@ -43,9 +43,9 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
   Widget get _foregroundElements {
     return Column(
       children: [
-        Flexible(
+        const Flexible(
           fit: FlexFit.tight,
-          child: const SizedBox(),
+          child: SizedBox(),
         ),
         Expanded(
           flex: 2,
@@ -68,7 +68,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
     return SizedBox(
       width: 450,
       child: Padding(
-        padding: EdgeInsets.only(bottom: 32),
+        padding: const EdgeInsets.only(bottom: 32),
         child: SvgPicture.asset(
           "assets/svg/logo.svg",
           colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),

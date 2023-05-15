@@ -37,12 +37,12 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
       final icon = printer.isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
       final text = RichText(
         text: TextSpan(
-          style: TextStyle(color: Color(0xFF000000)),
+          style: const TextStyle(color: Color(0xFF000000)),
           children: [
             TextSpan(text: "${printer.name}  "),
             if (printer.isDefault) ...[
-              WidgetSpan(child: Icon(FluentIcons.default_settings)),
-              TextSpan(text: "  "),
+              const WidgetSpan(child: Icon(FluentIcons.default_settings)),
+              const TextSpan(text: "  "),
             ],
             WidgetSpan(child: Icon(icon)),
           ],

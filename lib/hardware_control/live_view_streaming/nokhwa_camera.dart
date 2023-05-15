@@ -33,7 +33,7 @@ class NokhwaCamera extends LiveViewSource {
   @override
   Future<void> openStream({required int texturePtr}) async {
     handleId = await rustLibraryApi.nokhwaOpenCamera(friendlyName: friendlyName, operations: [
-      ImageOperation.cropToAspectRatio(3 / 2),
+      const ImageOperation.cropToAspectRatio(3 / 2),
     ], texturePtr: texturePtr);
   }
 

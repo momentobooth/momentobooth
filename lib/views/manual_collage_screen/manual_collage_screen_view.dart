@@ -37,12 +37,12 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
           ),
           AnimatedOpacity(
             opacity: image.isSelected ? 1 : 0,
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             child: Stack(
               fit: StackFit.expand,
               children: [
-                ColoredBox(color: Color(0x80000000)),
+                const ColoredBox(color: Color(0x80000000)),
                 Center(
                   child: Text("${image.selectedIndex+1}/${viewModel.numSelected}", style: theme.subTitleStyle,),
                 ),
@@ -57,7 +57,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
   Widget get _photoGrid {
     return Observer(
       builder: (context) => GridView.count(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
         mainAxisSpacing: 20,
         crossAxisSpacing: 20,
         crossAxisCount: 4,
@@ -86,7 +86,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Flexible(
+          const Flexible(
             flex: 1,
             child: SizedBox()
           ),
@@ -124,12 +124,12 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
   Widget get _collage {
     return Observer(
       builder: (context) => AnimatedRotation(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         turns: -0.25 * viewModel.rotation, // could also use controller.collageKey.currentState!.rotation
         child: Container(
           decoration: BoxDecoration(
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: const Color.fromARGB(255, 255, 255, 255),
             boxShadow: [theme.chooseCaptureModeButtonShadow],
           ),
           child: FittedBox(

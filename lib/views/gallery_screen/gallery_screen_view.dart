@@ -20,7 +20,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
       children: [
         Observer(
           builder: (context) => GridView.count(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
             mainAxisSpacing: 20,
             crossAxisSpacing: 20,
             crossAxisCount: 4,
@@ -34,7 +34,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Align(
             alignment: Alignment.bottomLeft,
             child: GestureDetector(

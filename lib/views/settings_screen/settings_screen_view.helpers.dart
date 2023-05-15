@@ -15,7 +15,7 @@ FluentSettingCard _getComboBoxCard<TValue>({
     title: title,
     subtitle: subtitle,
     child: ConstrainedBox(
-      constraints: BoxConstraints(minWidth: 150),
+      constraints: const BoxConstraints(minWidth: 150),
       child: Observer(builder: (_) {
         return ComboBox<TValue>(
           items: items,
@@ -117,9 +117,9 @@ FluentSettingCard _getFolderPickerCard<TValue>({
             onChanged(selectedDirectory);
           },
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 150),
+          constraints: const BoxConstraints(minWidth: 150),
           child: SizedBox(
             width: 250,
             child: TextBox(
@@ -148,7 +148,7 @@ FluentSettingCard _getTextDisplay({
     subtitle: subtitle,
     child: Container(
       alignment: Alignment.centerRight,
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: themeData.accentColor,
         borderRadius: BorderRadius.circular(999),
@@ -156,7 +156,7 @@ FluentSettingCard _getTextDisplay({
       child: Text(
         text,
         textAlign: TextAlign.right,
-        style: TextStyle(color: Colors.white),
+        style: const TextStyle(color: Colors.white),
       ),
     ),
   );

@@ -27,7 +27,7 @@ enum StatFields {
 abstract class StatsManagerBase with Store, UiLoggy {
 
   @readonly
-  Stats _stats = Stats();
+  Stats _stats = const Stats();
 
   // ////////////// //
   // Initialization //
@@ -88,7 +88,7 @@ abstract class StatsManagerBase with Store, UiLoggy {
 
     if (!await _statsFile.exists()) {
       // File does not exist
-      _stats = Stats();
+      _stats = const Stats();
       loggy.warning("Persisted statistics file not found"); 
     } else {
       // File does exist

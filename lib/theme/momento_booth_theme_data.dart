@@ -29,15 +29,15 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
 
   factory MomentoBoothThemeData.defaults() => MomentoBoothThemeData(
     // App wide
-    defaultPageBackgroundColor: Color(0xFFFFFFFF),
-    primaryColor: Color(0xFF00FF00), // Green
+    defaultPageBackgroundColor: const Color(0xFFFFFFFF),
+    primaryColor: const Color(0xFF00FF00), // Green
 
     // Title
-    titleStyle: TextStyle(
+    titleStyle: const TextStyle(
       fontFamily: "Brandon Grotesque",
       fontSize: 120,
       fontWeight: FontWeight.w300,
-      shadows: const [
+      shadows: [
         BoxShadow(
           color: Color(0x66000000),
           offset: Offset(0, 3),
@@ -48,11 +48,11 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
     ),
 
     // Title
-    subTitleStyle: TextStyle(
+    subTitleStyle: const TextStyle(
       fontFamily: "Brandon Grotesque",
       fontSize: 80,
       fontWeight: FontWeight.w300,
-      shadows: const [
+      shadows: [
         BoxShadow(
           color: Color(0x66000000),
           offset: Offset(0, 3),
@@ -63,19 +63,19 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
     ),
 
     // Choose Capture Mode page
-    chooseCaptureModeButtonIconColor: Color(0xE6FFFFFF),
-    chooseCaptureModeButtonShadow: BoxShadow(
+    chooseCaptureModeButtonIconColor: const Color(0xE6FFFFFF),
+    chooseCaptureModeButtonShadow: const BoxShadow(
       color: Color(0x42000000),
       offset: Offset(0, 3),
       blurRadius: 8,
     ),
 
     // Capture page
-    captureCounterTextStyle: TextStyle(
+    captureCounterTextStyle: const TextStyle(
       fontFamily: "Brandon Grotesque",
       fontSize: 280,
       fontWeight: FontWeight.w300,
-      shadows: const [
+      shadows: [
         BoxShadow(
           color: Color(0x66000000),
           offset: Offset(0, 3),
@@ -84,10 +84,10 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
       ],
       color: Color(0xFFFFFFFF),
     ),
-    captureCounterContainerBorder: Border.all(width: 10, color: Color(0xFFFFFFFF)),
+    captureCounterContainerBorder: Border.all(width: 10, color: const Color(0xFFFFFFFF)),
     captureCounterContainerBorderRadius: BorderRadius.circular(999),
-    captureCounterContainerBackground: Color(0xAA000000),
-    captureCounterContainerShadow: BoxShadow(
+    captureCounterContainerBackground: const Color(0xAA000000),
+    captureCounterContainerShadow: const BoxShadow(
       color: Color(0x29000000),
       offset: Offset(0, 3),
       blurRadius: 16,

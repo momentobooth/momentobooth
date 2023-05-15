@@ -70,6 +70,8 @@ dev_dependencies:
 
   # Code quality
   flutter_lints: 2.0.1
+  dart_code_metrics: 5.7.4
+  dart_code_metrics_presets: 1.8.0
 
   # Models
   freezed: 2.3.4

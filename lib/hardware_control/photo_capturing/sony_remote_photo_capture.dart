@@ -53,7 +53,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
   Future<File> waitForFile(String directoryPath, String fileExtension) async {
     loggy.debug("Checking for new $fileExtension files");
 
-    final stopTime = DateTime.now().add(Duration(seconds: 5));
+    final stopTime = DateTime.now().add(const Duration(seconds: 5));
     final dir = Directory(directoryPath);
     final fileListBefore = await dir.list().toList();
     final matchingFilesBefore =
@@ -65,7 +65,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
       if (matchingFiles.length > matchingFilesBefore.length) {
         return matchingFiles.last;
       }
-      await Future.delayed(Duration(milliseconds: 250));
+      await Future.delayed(const Duration(milliseconds: 250));
     }
     throw TimeoutException('Timed out while waiting for file to exist');
   }

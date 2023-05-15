@@ -18,7 +18,7 @@ GoRoute _startRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: StartScreen(),
+      child: const StartScreen(),
     );
   },
 );
@@ -28,7 +28,7 @@ GoRoute _chooseCaptureModeRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: ChooseCaptureModeScreen(),
+      child: const ChooseCaptureModeScreen(),
     );
   },
 );
@@ -38,7 +38,7 @@ GoRoute _captureRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: CaptureScreen(),
+      child: const CaptureScreen(),
     );
   },
 );
@@ -48,7 +48,7 @@ GoRoute _multiCaptureRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: UniqueKey(),
-      child: MultiCaptureScreen(),
+      child: const MultiCaptureScreen(),
     );
   },
 );
@@ -58,7 +58,7 @@ GoRoute _collageMakerRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: CollageMakerScreen(),
+      child: const CollageMakerScreen(),
     );
   },
 );
@@ -68,7 +68,7 @@ GoRoute _shareRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: ShareScreen(),
+      child: const ShareScreen(),
     );
   },
 );
@@ -78,7 +78,7 @@ GoRoute _galleryRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: GalleryScreen(),
+      child: const GalleryScreen(),
     );
   },
 );
@@ -98,7 +98,7 @@ GoRoute _manualCollageRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: ManualCollageScreen(),
+      child: const ManualCollageScreen(),
     );
   },
 );
@@ -108,7 +108,7 @@ GoRoute _settingsRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
-      child: SettingsScreen(),
+      child: const SettingsScreen(),
     );
   },
 );
