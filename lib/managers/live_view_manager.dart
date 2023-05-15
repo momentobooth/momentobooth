@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/extensions/camera_state_extension.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -42,9 +43,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
   int? _texturePointer;
 
   Future<void> _ensureTextureAvailable() async {
-    if (_textureId != null) {
-      return;
-    }
+    if (_textureId != null) return;
 
     // Initialize texture
     const int textureKey = 0;
@@ -102,28 +101,27 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
       await _currentLiveViewSource?.openStream(texturePtr: _texturePointer!);
 
       _liveViewState = LiveViewState.streaming;
+      _lastFrameWasInvalid = false;
     }
   }
 
   Future<void> _checkLiveViewState() async {
     _lock.synchronized(() async {
-      var liveViewSource = await _currentLiveViewSource?.getCameraState();
-      if (liveViewSource == null) {
-        return;
-      }
+      var liveViewState = await _currentLiveViewSource?.getCameraState();
+      if (liveViewState == null) return;
 
-      if (!liveViewSource.isStreaming) {
+      if (liveViewState.streamHasProbablyFailed) {
         // Stop live view source and set error state
         await _currentLiveViewSource?.dispose();
         _liveViewState = LiveViewState.error;
         // TODO: restart automatically?
-      } else if (!liveViewSource.lastFrameWasValid) {
+      } else if (!liveViewState.lastFrameWasValid) {
         // Camera still running but last frame could not be decoded
         _lastFrameWasInvalid = true;
       } else {
         // Everything seems to be fine
-        StatsManagerBase.instance.validLiveViewFrames = liveViewSource.validFrameCount;
-        StatsManagerBase.instance.invalidLiveViewFrames = liveViewSource.errorFrameCount;
+        StatsManagerBase.instance.validLiveViewFrames = liveViewState.validFrameCount;
+        StatsManagerBase.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
         _lastFrameWasInvalid = false;
       }
     });

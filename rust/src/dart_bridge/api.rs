@@ -1,5 +1,6 @@
 use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}}, time::Instant};
 
+use chrono::Duration;
 use dashmap::DashMap;
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
@@ -56,7 +57,7 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
                 handle.last_frame_was_valid.store(false, Ordering::SeqCst);
             },
         }
-        handle.last_frame_timestamp = Some(Instant::now());
+        handle.last_received_frame_timestamp = Some(Instant::now());
     });
 
     // Store handle
@@ -73,6 +74,7 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
         valid_frame_count: handle.valid_frame_count.load(Ordering::SeqCst),
         error_frame_count: handle.error_frame_count.load(Ordering::SeqCst),
         last_frame_was_valid: handle.last_frame_was_valid.load(Ordering::SeqCst),
+        time_since_last_received_frame: handle.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
     }
 }
 
@@ -195,7 +197,7 @@ pub struct NokhwaCameraHandle {
     pub error_frame_count: AtomicUsize,
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
-    pub last_frame_timestamp: Option<Instant>,
+    pub last_received_frame_timestamp: Option<Instant>,
 }
 
 impl NokhwaCameraHandle {
@@ -207,7 +209,7 @@ impl NokhwaCameraHandle {
             error_frame_count: AtomicUsize::new(0),
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
-            last_frame_timestamp: None,
+            last_received_frame_timestamp: None,
         }
     }
 }
@@ -217,4 +219,5 @@ pub struct CameraState {
     pub valid_frame_count: usize,
     pub error_frame_count: usize,
     pub last_frame_was_valid: bool,
+    pub time_since_last_received_frame: Option<Duration>,
 }
