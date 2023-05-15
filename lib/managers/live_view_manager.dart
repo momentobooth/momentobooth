@@ -113,6 +113,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
       if (liveViewState.streamHasProbablyFailed) {
         // Stop live view source and set error state
         await _currentLiveViewSource?.dispose();
+        _currentLiveViewSource = null;
         _liveViewState = LiveViewState.error;
         // TODO: restart automatically?
       } else if (!liveViewState.lastFrameWasValid) {

@@ -22,7 +22,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
               icon: FluentIcons.front_camera,
               title: "Live view frames",
               subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames",
-              text: "${StatsManagerBase.instance.validLiveViewFrames} / ${StatsManagerBase.instance.validLiveViewFrames}",
+              text: "${StatsManagerBase.instance.validLiveViewFrames} / ${StatsManagerBase.instance.invalidLiveViewFrames}",
             ),
           ),
           Observer(
