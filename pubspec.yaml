@@ -13,7 +13,7 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.6.0
+  fluent_ui: 4.6.1
   go_router: 7.0.1
   flutter_svg: 2.0.5
   animated_text_kit: 4.2.2
@@ -26,7 +26,7 @@ dependencies:
     git: https://github.com/h3x4d3c1m4l/flutter_texture_rgba_renderer
 
   # Printscreen/Image processing
-  screenshot: 2.0.0
+  screenshot: 2.1.0
   image: 4.0.17
 
   # MVC
