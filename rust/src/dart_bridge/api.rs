@@ -12,12 +12,27 @@ use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, whit
 // Initialization //
 // ////////////// //
 
+static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
+
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     crate::initialize_log(log_sink);
 }
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
-    crate::initialize_hardware(ready_sink);
+    if !HARDWARE_INITIALIZED.load(Ordering::SeqCst) {
+        // Hardware has not been initialized yet
+        crate::initialize_hardware(ready_sink);
+        HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
+    } else {
+        // Hardware has already been initialized (possible due to Hot Reload)
+        log_debug("Possible Hot Reload: Closing any open cameras and noise generators".to_string());
+        for key_value in NOKHWA_HANDLES.iter() {
+            nokhwa_close_camera(*key_value.key())
+        }
+        for key_value in NOISE_HANDLES.iter() {
+            noise_close(*key_value.key())
+        }
+    }
 }
 
 // ////// //

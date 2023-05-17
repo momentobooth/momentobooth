@@ -46,9 +46,16 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
     if (_textureId != null) return;
 
     // Initialize texture
-    const int textureKey = 0;
+    int textureKey = 0;
     var textureRenderer = TextureRgbaRenderer();
+    await textureRenderer.closeTexture(textureKey);
     _textureId = await textureRenderer.createTexture(textureKey);
+    while (_textureId == -1) {
+      // Hack for Hot Restart
+      await textureRenderer.closeTexture(textureKey);
+      textureKey++;
+      _textureId = await textureRenderer.createTexture(textureKey);
+    }
     _texturePointer = await textureRenderer.getTexturePtr(textureKey);
   }
 
