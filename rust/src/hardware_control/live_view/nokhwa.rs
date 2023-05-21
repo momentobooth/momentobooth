@@ -61,11 +61,8 @@ pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamer
     camera
 }
 
-pub fn close_camera(mut camera: CallbackCamera) {
-    let camera_name = camera.info().human_name();
+pub fn close_camera(camera: &mut CallbackCamera) {
     camera.set_callback(|_| {}).expect("Cannot set callback to dummy callback");
-    drop(camera);
-    log_info("nokhwa::close_camera() dropped '".to_string() + &camera_name + "'");
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, From, Into)]

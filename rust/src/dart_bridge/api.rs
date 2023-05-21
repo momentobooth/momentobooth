@@ -1,4 +1,4 @@
-use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}}, time::Instant};
+use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time::Instant};
 
 use chrono::Duration;
 use dashmap::DashMap;
@@ -26,11 +26,12 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
     } else {
         // Hardware has already been initialized (possible due to Hot Reload)
         log_debug("Possible Hot Reload: Closing any open cameras and noise generators".to_string());
-        for key_value in NOKHWA_HANDLES.iter() {
-            nokhwa_close_camera(*key_value.key())
+        for map_entry in NOKHWA_HANDLES.iter() {
+            map_entry.value().lock().expect("Could not lock on handle").camera.set_callback(|_| {}).expect("Stream close error");
         }
-        for key_value in NOISE_HANDLES.iter() {
-            noise_close(*key_value.key())
+        NOKHWA_HANDLES.clear();
+        for map_entry in NOISE_HANDLES.iter() {
+            noise_close(*map_entry.key())
         }
     }
 }
@@ -44,7 +45,7 @@ pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
 }
 
 lazy_static::lazy_static! {
-    pub static ref NOKHWA_HANDLES: DashMap<usize, NokhwaCameraHandle> = DashMap::<usize, NokhwaCameraHandle>::new();
+    pub static ref NOKHWA_HANDLES: DashMap<usize, Arc<Mutex<NokhwaCameraHandle>>> = DashMap::<usize, Arc<Mutex<NokhwaCameraHandle>>>::new();
 }
 
 static NOKHWA_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
@@ -55,7 +56,8 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
 
     let handle_id = NOKHWA_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
     let camera = nokhwa::open_camera(friendly_name, move |raw_frame| {
-        let mut handle = NOKHWA_HANDLES.get_mut(&handle_id).expect("Invalid nokhwa handle ID");
+        let camera_ref = NOKHWA_HANDLES.get_mut(&handle_id).expect("Invalid nokhwa handle ID");
+        let mut handle = camera_ref.lock().expect("Could not lock on handle");
         match raw_frame {
             Some(raw_frame) => {
                 let processed_frame = image_processing::execute_operations(raw_frame, &operations);
@@ -76,13 +78,14 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
     });
 
     // Store handle
-    NOKHWA_HANDLES.insert(handle_id, NokhwaCameraHandle::new(camera));
+    NOKHWA_HANDLES.insert(handle_id, Arc::new(Mutex::new(NokhwaCameraHandle::new(camera))));
 
     handle_id
 }
 
 pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
-    let handle = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let camera_ref = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let handle = camera_ref.lock().expect("Could not lock on handle");
     
     CameraState {
         is_streaming: true,
@@ -94,13 +97,14 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
 }
 
 pub fn nokhwa_get_last_frame(handle_id: usize) -> Option<RawImage> {
-    let handle = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let entry = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let handle = entry.lock().expect("Could not lock on handle");
     handle.last_valid_frame.clone()
 }
 
 pub fn nokhwa_close_camera(handle_id: usize) {
     let handle = NOKHWA_HANDLES.remove(&handle_id).expect("Invalid nokhwa handle ID");
-    nokhwa::close_camera(handle.1.camera)
+    nokhwa::close_camera(&mut handle.1.lock().expect("Could not lock on handle").camera);
 }
 
 // ///// //
@@ -226,6 +230,12 @@ impl NokhwaCameraHandle {
             last_valid_frame: None,
             last_received_frame_timestamp: None,
         }
+    }
+}
+
+impl Drop for NokhwaCameraHandle {
+    fn drop(&mut self) {
+        log_debug("Dropping NokhwaCameraHandle".to_string());
     }
 }
 
