@@ -119,7 +119,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   }
 
   void navigateAfterCapture() {
-    if (!flashComplete || !captureComplete) { return; }
+    if (!flashComplete || !captureComplete) return;
     StatsManagerBase.instance.addCreatedSinglePhoto();
     router.go(ShareScreen.defaultRoute);
   }

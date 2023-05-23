@@ -1,6 +1,6 @@
 use flutter_rust_bridge::ZeroCopyBuffer;
 use jpeg_encoder::{Encoder, ColorType};
-use zune_jpeg::JpegDecoder;
+use zune_jpeg::{JpegDecoder, zune_core::{options::DecoderOptions, colorspace::ColorSpace}};
 
 use crate::dart_bridge::api::RawImage;
 
@@ -13,10 +13,14 @@ pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8) -> ZeroCopyBuffer<Ve
     ZeroCopyBuffer(output_buf)
 }
 
-pub fn decode_jpeg_to_rgba(jpeg_data: Vec<u8>) -> RawImage {
-    let mut decoder = JpegDecoder::new( & jpeg_data);
-    let image_info = decoder.info().expect("Could not extract JPEG info");
+lazy_static::lazy_static! {
+    static ref JPEG_TO_RGBA_DECODER_OPTIONS: DecoderOptions = DecoderOptions::new_fast().jpeg_set_out_colorspace(ColorSpace::RGBA);
+}
+
+pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
+    let mut decoder = JpegDecoder::new_with_options(*JPEG_TO_RGBA_DECODER_OPTIONS, jpeg_data);
     let pixels = decoder.decode().expect("Could not decode JPEG data");
+    let image_info = decoder.info().expect("Could not extract JPEG info");
 
     RawImage::new_from_rgba_data(
         pixels,

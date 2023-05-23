@@ -1,22 +1,39 @@
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time::Instant};
 
-use chrono::{Utc, DateTime};
+use chrono::Duration;
+use dashmap::DashMap;
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
-use static_init::dynamic;
+use turborand::rng::Rng;
 
-use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}}, LogEvent, HardwareInitializationFinishedEvent};
+use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug};
 
 // ////////////// //
 // Initialization //
 // ////////////// //
+
+static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
 
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     crate::initialize_log(log_sink);
 }
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
-    crate::initialize_hardware(ready_sink);
+    if !HARDWARE_INITIALIZED.load(Ordering::SeqCst) {
+        // Hardware has not been initialized yet
+        crate::initialize_hardware(ready_sink);
+        HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
+    } else {
+        // Hardware has already been initialized (possible due to Hot Reload)
+        log_debug("Possible Hot Reload: Closing any open cameras and noise generators".to_string());
+        for map_entry in NOKHWA_HANDLES.iter() {
+            map_entry.value().lock().expect("Could not lock on handle").camera.set_callback(|_| {}).expect("Stream close error");
+        }
+        NOKHWA_HANDLES.clear();
+        for map_entry in NOISE_HANDLES.iter() {
+            noise_close(*map_entry.key())
+        }
+    }
 }
 
 // ////// //
@@ -27,43 +44,107 @@ pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
     nokhwa::get_cameras()
 }
 
-pub fn nokhwa_open_camera(friendly_name: String) -> usize {
-    let camera = nokhwa::open_camera(friendly_name);
-    let camera_box = Box::new(camera);
-    Box::into_raw(camera_box) as usize
+lazy_static::lazy_static! {
+    pub static ref NOKHWA_HANDLES: DashMap<usize, Arc<Mutex<NokhwaCameraHandle>>> = DashMap::<usize, Arc<Mutex<NokhwaCameraHandle>>>::new();
 }
 
-pub fn nokhwa_set_camera_callback(camera_ptr: usize, operations: Vec<ImageOperation>, new_frame_event_sink: StreamSink<LiveCameraFrame>) {
-    unsafe { 
-        let mut camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
-        nokhwa::set_camera_callback(&mut camera, move |raw_frame| {
-            if !is_flutter_app_alive() {
-                SKIPPED_LIVE_CAMERA_FRAMES.fetch_add(1, Ordering::SeqCst);
-                return
-            }
+static NOKHWA_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
 
-            match raw_frame {
-                Some(raw_frame) => {
-                    let processed_frame = image_processing::execute_operations(raw_frame, &operations);
-                    new_frame_event_sink.add(LiveCameraFrame {
-                        raw_image: processed_frame,
-                        skipped_frames: SKIPPED_LIVE_CAMERA_FRAMES.swap(0, Ordering::SeqCst),
-                    });
-                },
-                None => {
-                    new_frame_event_sink.close();
-                },
-            }
-        });
-        Box::into_raw(camera)
-    };
+pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize) -> usize {
+    let renderer = FlutterTexture::new(texture_ptr, 0, 0);
+    let renderer_mutex = Mutex::new(renderer);
+
+    let handle_id = NOKHWA_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
+    let camera = nokhwa::open_camera(friendly_name, move |raw_frame| {
+        let camera_ref = NOKHWA_HANDLES.get_mut(&handle_id).expect("Invalid nokhwa handle ID");
+        let mut handle = camera_ref.lock().expect("Could not lock on handle");
+        match raw_frame {
+            Some(raw_frame) => {
+                let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+                let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
+                renderer.set_size(processed_frame.width, processed_frame.height);
+                renderer.on_rgba(&processed_frame);
+
+                handle.valid_frame_count.fetch_add(1, Ordering::SeqCst);
+                handle.last_frame_was_valid.store(true, Ordering::SeqCst);
+                handle.last_valid_frame = Some(processed_frame);
+            },
+            None => {
+                handle.error_frame_count.fetch_add(1, Ordering::SeqCst);
+                handle.last_frame_was_valid.store(false, Ordering::SeqCst);
+            },
+        }
+        handle.last_received_frame_timestamp = Some(Instant::now());
+    });
+
+    // Store handle
+    NOKHWA_HANDLES.insert(handle_id, Arc::new(Mutex::new(NokhwaCameraHandle::new(camera))));
+
+    handle_id
 }
 
-pub fn nokhwa_close_camera(camera_ptr: usize) {
-    unsafe { 
-        let camera = Box::from_raw(camera_ptr as *mut CallbackCamera);
-        nokhwa::close_camera(*camera)
+pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
+    let camera_ref = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let handle = camera_ref.lock().expect("Could not lock on handle");
+    
+    CameraState {
+        is_streaming: true,
+        valid_frame_count: handle.valid_frame_count.load(Ordering::SeqCst),
+        error_frame_count: handle.error_frame_count.load(Ordering::SeqCst),
+        last_frame_was_valid: handle.last_frame_was_valid.load(Ordering::SeqCst),
+        time_since_last_received_frame: handle.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
     }
+}
+
+pub fn nokhwa_get_last_frame(handle_id: usize) -> Option<RawImage> {
+    let entry = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let handle = entry.lock().expect("Could not lock on handle");
+    handle.last_valid_frame.clone()
+}
+
+pub fn nokhwa_close_camera(handle_id: usize) {
+    let handle = NOKHWA_HANDLES.remove(&handle_id).expect("Invalid nokhwa handle ID");
+    nokhwa::close_camera(&mut handle.1.lock().expect("Could not lock on handle").camera);
+}
+
+// ///// //
+// Noise //
+// ///// //
+ 
+lazy_static::lazy_static! {
+    pub static ref NOISE_HANDLES: DashMap<usize, WhiteNoiseGeneratorHandle> = DashMap::<usize, WhiteNoiseGeneratorHandle>::new();
+}
+
+static NOISE_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
+
+const NOISE_DEFAULT_WIDTH: usize = 1280;
+const NOISE_DEFAULT_HEIGHT: usize = 720;
+
+pub fn noise_open(texture_ptr: usize) -> usize {
+    // Initialize noise and push noise frames to Flutter texture
+    let renderer = FlutterTexture::new(texture_ptr, NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT);
+    let join_handle = white_noise::start_and_get_handle(NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT, move |raw_frame| {
+        renderer.on_rgba(&raw_frame)
+    });
+
+    // Store handle
+    let handle_id = NOISE_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
+    NOISE_HANDLES.insert(handle_id, join_handle);
+
+    handle_id
+}
+
+pub fn noise_get_frame() -> RawImage {
+    white_noise::generate_frame(&Rng::new(), NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT)
+}
+
+pub fn noise_close(handle_id: usize) {
+    // Retrieve handle
+    let handle = NOISE_HANDLES.remove(&handle_id).expect("Invalid noise handle ID");
+
+    log_debug("Stopping white noise generator with handle ".to_string() + &handle_id.to_string());
+    handle.1.stop();
+    log_debug("Stopped white noise generator with handle ".to_string() + &handle_id.to_string());
 }
 
 // ////// //
@@ -88,7 +169,7 @@ pub fn jpeg_encode(raw_image: RawImage, quality: u8, operations_before_encoding:
 }
 
 pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOperation>) -> RawImage {
-    let image = jpeg::decode_jpeg_to_rgba(jpeg_data);
+    let image = jpeg::decode_jpeg_to_rgba(&jpeg_data);
     image_processing::execute_operations(image, &operations_after_decoding)
 }
 
@@ -100,38 +181,11 @@ pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) 
     image_processing::execute_operations(raw_image, &operations)
 }
 
-// //// //
-// Misc //
-// //// //
-
-#[dynamic] 
-static mut APP_LAST_ALIVE_TIME: DateTime<Utc> = Utc::now();
-
-static SKIPPED_LIVE_CAMERA_FRAMES: AtomicUsize = AtomicUsize::new(0);
-
-const MAX_APP_NOT_ALIVE_TIME_MS: i64 = 200;
-
-pub fn update_flutter_app_last_alive_time() {
-    let mut lock = APP_LAST_ALIVE_TIME.write(); 
-    *lock = Utc::now();
-}
-
-fn is_flutter_app_alive() -> bool {
-    let then = *APP_LAST_ALIVE_TIME.read();
-    let now = Utc::now();
-    let diff = now - then;
-    diff.num_milliseconds() <= MAX_APP_NOT_ALIVE_TIME_MS
-}
-
 // /////// //
 // Structs //
 // /////// //
 
-pub struct LiveCameraFrame {
-    pub raw_image: RawImage,
-    pub skipped_frames: usize,
-}
-
+#[derive(Clone)]
 pub struct RawImage {
     pub format: RawImageFormat,
     pub data: Vec<u8>,
@@ -150,6 +204,45 @@ impl RawImage {
     }
 }
 
+#[derive(Clone)]
 pub enum RawImageFormat {
     Rgba,
+}
+
+pub struct NokhwaCameraHandle {
+    pub status_sink: Option<StreamSink<CameraState>>,
+    pub camera: CallbackCamera,
+    pub valid_frame_count: AtomicUsize,
+    pub error_frame_count: AtomicUsize,
+    pub last_frame_was_valid: AtomicBool,
+    pub last_valid_frame: Option<RawImage>,
+    pub last_received_frame_timestamp: Option<Instant>,
+}
+
+impl NokhwaCameraHandle {
+    fn new(camera: CallbackCamera) -> Self {
+        Self {
+            status_sink: None,
+            camera,
+            valid_frame_count: AtomicUsize::new(0),
+            error_frame_count: AtomicUsize::new(0),
+            last_frame_was_valid: AtomicBool::new(false),
+            last_valid_frame: None,
+            last_received_frame_timestamp: None,
+        }
+    }
+}
+
+impl Drop for NokhwaCameraHandle {
+    fn drop(&mut self) {
+        log_debug("Dropping NokhwaCameraHandle".to_string());
+    }
+}
+
+pub struct CameraState {
+    pub is_streaming: bool,
+    pub valid_frame_count: usize,
+    pub error_frame_count: usize,
+    pub last_frame_was_valid: bool,
+    pub time_since_last_received_frame: Option<Duration>,
 }

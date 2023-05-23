@@ -1,7 +1,7 @@
 use derive_more::{From, Into};
-use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
+use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 
-use crate::{dart_bridge::api::RawImage, log_debug, log_info, log_error};
+use crate::{dart_bridge::api::RawImage, log_debug, log_info, log_error, utils::jpeg};
 
 pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
     if cfg!(target_os = "macos") {
@@ -19,7 +19,7 @@ pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
     device_names
 }
 
-pub fn open_camera(friendly_name: String) -> CallbackCamera {
+pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamera where F: Fn(Option<RawImage>) + Send + Sync + 'static {
     log_debug("nokhwa::open_camera() opening '".to_string() + &friendly_name + "'");
     let format = RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestResolution);
     
@@ -28,7 +28,31 @@ pub fn open_camera(friendly_name: String) -> CallbackCamera {
     let devices = query(backend).expect("Could not query backend");
     let camera_info = devices.into_iter().find(|device| device.human_name() == friendly_name).expect("Could not find camera");
 
-    let mut camera = CallbackCamera::new(camera_info.index().clone(), format, |_| {}).expect("Could not create CallbackCamera");
+    // Open camera and configure callback7
+    let mut camera = CallbackCamera::new(camera_info.index().clone(), format, move |buffer| {
+        if buffer.source_frame_format() == FrameFormat::MJPEG {
+            // MJPEG: Use our own implementation which is faster
+            let raw_image = jpeg::decode_jpeg_to_rgba(buffer.buffer()); // TODO: Handle errors (this should return Option<RawImage>)
+            frame_callback(Some(raw_image));
+        } else {
+            // YUV, Gray, etc.
+            let raw_rgba_image = buffer.decode_image::<RgbAFormat>();
+            let raw_image_option = match raw_rgba_image {
+                Ok(image_buffer) => {
+                    Some(RawImage::new_from_rgba_data(
+                        image_buffer.into_vec(),
+                        buffer.resolution().width() as usize,
+                        buffer.resolution().height() as usize,
+                    ))
+                },
+                Err(error) => {
+                    log_error("Image decoding error: ".to_string() + &error.to_string());
+                    None
+                },
+            };
+            frame_callback(raw_image_option)
+        }
+    }).expect("Could not create CallbackCamera");
 
     camera.open_stream().expect("Could not open camera stream");
     let camera_format_str = &camera.camera_format().expect("Could not get camera format").to_string();
@@ -37,33 +61,8 @@ pub fn open_camera(friendly_name: String) -> CallbackCamera {
     camera
 }
 
-pub fn set_camera_callback<F>(camera: &mut CallbackCamera, frame_callback: F) where F: Fn(Option<RawImage>) + Send + Sync + 'static {
-    log_debug("nokhwa::set_camera_callback() setting callback for '".to_string() + &camera.info().human_name() + "'");
-    camera.set_callback(move |buffer| {
-        let raw_rgba_image = buffer.decode_image::<RgbAFormat>();
-        let raw_image_option = match raw_rgba_image {
-            Ok(x) => {
-                Some(RawImage::new_from_rgba_data(
-                    x.to_vec(),
-                    buffer.resolution().width() as usize,
-                    buffer.resolution().height() as usize,
-                ))
-            },
-            Err(err) => {
-                log_error("Image decoding error: ".to_string() + &err.to_string());
-                None
-            },
-        };
-
-        frame_callback(raw_image_option);
-    }).expect("Failed setting the callback");
-    log_debug("nokhwa::set_camera_callback() callback set for '".to_string() + &camera.info().human_name() + "'");
-}
-
-pub fn close_camera(camera: CallbackCamera) {
-    let camera_name = camera.info().human_name();
-    drop(camera);
-    log_info("nokhwa::close_camera() dropped '".to_string() + &camera_name + "'");
+pub fn close_camera(camera: &mut CallbackCamera) {
+    camera.set_callback(|_| {}).expect("Cannot set callback to dummy callback");
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, From, Into)]

@@ -21,7 +21,11 @@ nokhwa = { git = "https://github.com/RReverser/nokhwa.git", branch="fix-callback
 zune-jpeg = "0.3.16"
 jpeg-encoder = "0.5.1"
 static_init = "1.0.3"
+lazy_static = "1.4.0"
+dlopen = "0.1.8"
+noise = "0.8.2"
+dashmap = "5.4.0"
+turborand = "0.10.0"
 
-# Make debug builds as fast as release
-[profile.dev.package."*"]
+[profile.dev]
 opt-level = 3
