@@ -81,7 +81,6 @@ jobs:
       
     - name: Flutter Analyze
       run: flutter analyze
-      continue-on-error: true
 
     # Extract version from branch name
     - name: Extract Release version
