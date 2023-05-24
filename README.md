@@ -107,7 +107,6 @@ Please note: Run all commands from the root folder of the repository, unless men
 ### Current workarounds which should be removed ASAP
 
 - Pods `MACOSX_DEPLOYMENT_TARGET` is overridden to 11.0 due to macOS build error which seems to come from the `hotkey_manager` package
-- If you have to regenerate the Dart/Rust bridge, make sure to add `final` to all classes that inherit from `ffi.Struct` or run the `misc/fix_ffi_for_dart3.py` script (with the root of this repository as working directory)
 
 ### Adding a new screen using the VS Code extension Template
 

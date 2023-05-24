@@ -51,7 +51,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: flutter_rust_bridge_codegen
-        version: "1.75.3"
+        version: "1.76.0"
 
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
@@ -69,9 +69,6 @@ jobs:
         --dart-output lib/rust_bridge/library_api.generated.dart
         --rust-output rust/src/dart_bridge/ffi_exports.rs
         --skip-add-mod-to-lib --no-build-runner
-
-    - name: Patch flutter_rust_bridge_codegen output for Dart 3.0 compatibility
-      run: python misc/fix_ffi_for_dart3.py
       
     - name: Run Code Generation
       run: flutter pub run build_runner build --delete-conflicting-outputs
