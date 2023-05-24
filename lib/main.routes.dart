@@ -1,6 +1,7 @@
 part of 'main.dart';
 
 List<GoRoute> rootRoutes = [
+  _initializationRoute,
   _startRoute,
   _chooseCaptureModeRoute,
   _captureRoute,
@@ -12,6 +13,16 @@ List<GoRoute> rootRoutes = [
   _manualCollageRoute,
   _settingsRoute,
 ];
+
+GoRoute _initializationRoute = GoRoute(
+  path: InitializationScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return FadeTransitionPage(
+      key: state.pageKey,
+      child: const InitializationScreen(),
+    );
+  },
+);
 
 GoRoute _startRoute = GoRoute(
   path: StartScreen.defaultRoute,

@@ -6,7 +6,7 @@ import 'package:momento_booth/views/start_screen/start_screen_view_model.dart';
 
 class StartScreen extends ScreenBase<StartScreenViewModel, StartScreenController, StartScreenView> {
 
-  static const String defaultRoute = "/";
+  static const String defaultRoute = "/start";
 
   const StartScreen({super.key});
 
