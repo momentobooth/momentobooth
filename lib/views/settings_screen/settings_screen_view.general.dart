@@ -21,8 +21,8 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
             value: () => viewModel.displayConfettiSetting,
             onChanged: controller.onDisplayConfettiChanged,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
+          const Padding(
+            padding: EdgeInsets.only(top: 8.0),
             child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
           ),
         ],

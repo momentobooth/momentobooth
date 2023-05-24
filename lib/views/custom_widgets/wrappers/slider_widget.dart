@@ -47,9 +47,9 @@ class SliderWidgetState extends State<SliderWidget>
     return SlideTransition(
       position: _offsetAnimation,
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Padding(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Center(
             child: widget.child,
           ),

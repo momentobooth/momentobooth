@@ -39,7 +39,7 @@ dependencies:
 
   # Interop
   ffi: 2.0.2
-  flutter_rust_bridge: 1.75.3
+  flutter_rust_bridge: 1.76.0
 
   # Printing
   printing: 5.10.4
@@ -70,6 +70,8 @@ dev_dependencies:
 
   # Code quality
   flutter_lints: 2.0.1
+  dart_code_metrics: 5.7.4
+  dart_code_metrics_presets: 1.8.0
 
   # Models
   freezed: 2.3.4
@@ -77,7 +79,7 @@ dev_dependencies:
 
   # Code generation
   build_runner: 2.4.4
-  ffigen: 7.2.11
+  ffigen: 8.0.2
 
 flutter:
   uses-material-design: true

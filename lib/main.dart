@@ -170,7 +170,7 @@ class _AppState extends State<App> with UiLoggy {
       child: WidgetsApp.router(
         routerConfig: _router,
         color: context.theme.primaryColor,
-        localizationsDelegates: [
+        localizationsDelegates: const [
           FluentLocalizations.delegate,
         ],
         builder: (context, child) {
@@ -199,16 +199,16 @@ class _AppState extends State<App> with UiLoggy {
       home: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               blurRadius: 16,
               spreadRadius: 0,
             ),
           ],
         ),
-        margin: EdgeInsets.all(32),
+        margin: const EdgeInsets.all(32),
         clipBehavior: Clip.hardEdge,
-        child: SettingsScreen(),
+        child: const SettingsScreen(),
       ),
     );
   }

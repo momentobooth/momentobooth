@@ -23,7 +23,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
         // Is this very pretty? No. But it works 😅
         FittedBox(
           child: Transform.translate(
-            offset: Offset(3000, 0),
+            offset: const Offset(3000, 0),
             child: PhotoCollage(
               key: viewModel.collageKey,
               singleMode: true,
@@ -38,11 +38,11 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
           children: [
             _getReadyText,
             Flexible(child: Container(
-              padding: EdgeInsets.all(40.0),
-              constraints: BoxConstraints(maxWidth: 600, maxHeight: 600),
+              padding: const EdgeInsets.all(40.0),
+              constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
               child: Observer(builder: (_) {
                 return AnimatedOpacity(
-                  duration: Duration(milliseconds: 50),
+                  duration: const Duration(milliseconds: 50),
                   opacity: viewModel.showCounter ? 1.0 : 0.0,
                   child: CaptureCounter(
                     onCounterFinished: viewModel.onCounterFinished,
@@ -65,8 +65,8 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
                 pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
                 isRepeatingAnimation: false,
                 animatedTexts: [
-                    RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: Duration(milliseconds: 1000)),
-                    RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: Duration(milliseconds: 1000)),
+                    RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+                    RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
                 ],
               ),
       ),
@@ -79,7 +79,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
         opacity: viewModel.opacity,
         duration: viewModel.flashAnimationDuration,
         curve: viewModel.flashAnimationCurve,
-        child: ColoredBox(color: Color(0xFFFFFFFF)),
+        child: const ColoredBox(color: Color(0xFFFFFFFF)),
       );
     });
   }

@@ -36,9 +36,9 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
             ],
           ),
         ),
-        Flexible(
+        const Flexible(
           fit: FlexFit.tight,
-          child: const SizedBox(),
+          child: SizedBox(),
         ),
       ],
     );
@@ -75,15 +75,15 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
                   Row(
                     children: [
                       _getButton(220),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       _getButton(220),
                     ],
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       _getButton(220),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       _getButton(220),
                     ],
                   ),

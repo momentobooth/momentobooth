@@ -111,7 +111,7 @@ FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScr
             );
           }),
         ),
-        SizedBox(width: padding),
+        const SizedBox(width: padding),
         SizedBox(
           width: numberWidth,
           child: Observer(builder: (_) {
@@ -122,7 +122,7 @@ FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScr
             );
           }),
         ),
-        SizedBox(width: padding),
+        const SizedBox(width: padding),
         SizedBox(
           width: numberWidth,
           child: Observer(builder: (_) {
@@ -133,7 +133,7 @@ FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScr
             );
           }),
         ),
-        SizedBox(width: padding,),
+        const SizedBox(width: padding,),
         SizedBox(
           width: numberWidth,
           child: Observer(builder: (_) {
@@ -160,9 +160,9 @@ FluentSettingCard _webcamCard(SettingsScreenViewModel viewModel, SettingsScreenC
           onPressed: viewModel.setWebcamList,
           child: const Text('Refresh'),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 150),
+          constraints: const BoxConstraints(minWidth: 150),
           child: Observer(builder: (_) {
             return ComboBox<String>(
               items: viewModel.webcams,
@@ -187,9 +187,9 @@ FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreen
           onPressed: viewModel.setPrinterList,
           child: const Text('Refresh'),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         ConstrainedBox(
-          constraints: BoxConstraints(minWidth: 150),
+          constraints: const BoxConstraints(minWidth: 150),
           child: Observer(builder: (_) {
             return ComboBox<String>(
               items: viewModel.printerOptions,

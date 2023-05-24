@@ -37,7 +37,7 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
 
   int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
 
-  final Duration opacityDuraction = Duration(milliseconds: 300);
+  final Duration opacityDuraction = const Duration(milliseconds: 300);
 
   @observable
   String directoryString = SettingsManagerBase.instance.settings.hardware.captureLocation;

@@ -48,7 +48,7 @@ class LiveViewBackground extends StatelessWidgetBase {
   }
 
   Widget get _initializingState {
-    return Center(
+    return const Center(
       child: ProgressRing(),
     );
   }
@@ -76,13 +76,13 @@ class LiveViewBackground extends StatelessWidgetBase {
         ColoredBox(color: Colors.green),
         ImageFiltered(
           imageFilter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: LiveView(fit: BoxFit.cover),
+          child: const LiveView(fit: BoxFit.cover),
         ),
         AnimatedOpacity(
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           opacity: _showLiveViewBackground ? 1 : 0,
           curve: Curves.ease,
-          child: LiveView(),
+          child: const LiveView(),
         ),
       ],
     );

@@ -20,7 +20,7 @@ class ImageWithLoaderFallback extends StatelessWidget {
 
   Widget _frameBuilder(BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
     if (frame == null) {
-      return Center(child: ProgressRing());
+      return const Center(child: ProgressRing());
     }
     return child;
   }
