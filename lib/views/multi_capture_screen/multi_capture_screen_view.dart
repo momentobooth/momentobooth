@@ -28,92 +28,80 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
           children: [
             Flexible(
               flex: 1,
-              child: _photoColumn,
+              child: Column(
+                children: [
+                  Flexible(child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AutoSizeText("Photo ${viewModel.photoNumber}/${viewModel.maxPhotos}", style: theme.titleStyle, maxLines: 1,),
+                  )),
+                  for (int i = 0; i < PhotosManager.instance.photos.length; i++)
+                    Flexible(
+                      flex: 0,
+                      child: Padding(padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: AspectRatio(
+                          aspectRatio: 1.5,
+                          child: ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
+                        ),
+                      ),
+                    ),
+                  for (int i = PhotosManager.instance.photos.length; i < 4; i++)
+                    Flexible(
+                      flex: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: AspectRatio(
+                          aspectRatio: 1.5,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            decoration: BoxDecoration(
+                              border: theme.captureCounterContainerBorder,
+                              // boxShadow: [theme.captureCounterContainerShadow],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
             Flexible(
               flex: 5,
               child: AspectRatio(
                 aspectRatio: 1.5,
-                child: _liveViewWithCounter,
-              ),
-            ),
-          ],
-        ),
-        _flashAnimation,
-      ],
-    );
-  }
-
-  Widget get _photoColumn {
-    return Column(
-      children: [
-        Flexible(child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AutoSizeText(
-            "Photo ${viewModel.photoNumber}/${viewModel.maxPhotos}",
-            style: theme.titleStyle,
-            maxLines: 1,
-          ),
-        )),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++)
-          Flexible(
-            flex: 0,
-            child: Padding(padding: const EdgeInsets.symmetric(vertical: 10),
-              child: AspectRatio(
-                aspectRatio: 1.5,
-                child: ImageWithLoaderFallback.memory(PhotosManagerBase.instance.photos[i]),
-              ),
-            ),
-          ),
-        for (int i = PhotosManagerBase.instance.photos.length; i < 4; i++)
-          Flexible(flex: 0, child: _photoPlaceholder),
-      ],
-    );
-  }
-
-  Widget get _liveViewWithCounter {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        const LiveView(),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _getReadyText,
-            Flexible(
-              child: Container(
-                padding: const EdgeInsets.all(40.0),
-                constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
-                child: Observer(builder: (_) {
-                  return AnimatedOpacity(
-                    duration: const Duration(milliseconds: 50),
-                    opacity: viewModel.showCounter ? 1.0 : 0.0,
-                    child: CaptureCounter(
-                      onCounterFinished: viewModel.onCounterFinished,
-                      counterStart: viewModel.counterStart,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    const LiveView(),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _getReadyText,
+                        Flexible(
+                          child: Container(
+                            padding: const EdgeInsets.all(40.0),
+                            constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
+                            child: Observer(builder: (_) {
+                              return AnimatedOpacity(
+                                duration: const Duration(milliseconds: 50),
+                                opacity: viewModel.showCounter ? 1.0 : 0.0,
+                                child: CaptureCounter(
+                                  onCounterFinished: viewModel.onCounterFinished,
+                                  counterStart: viewModel.counterStart,
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ],
                     ),
-                  );
-                }),
+                  ],
+                ),
               ),
             ),
           ],
         ),
+        _flashAnimation
       ],
-    );
-  }
-
-  Widget get _photoPlaceholder {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: AspectRatio(
-        aspectRatio: 1.5,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            border: theme.captureCounterContainerBorder,
-          ),
-        ),
-      ),
     );
   }
 

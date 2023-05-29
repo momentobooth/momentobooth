@@ -25,10 +25,10 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
     required super.contextAccessor,
   });
 
-  bool get displayConfetti => SettingsManagerBase.instance.settings.displayConfetti;
+  bool get displayConfetti => SettingsManager.instance.settings.displayConfetti;
   late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
-  Uint8List get outputImage => PhotosManagerBase.instance.outputImage!;
+  Uint8List get outputImage => PhotosManager.instance.outputImage!;
 
   @observable
   String qrText = "Get QR";
@@ -48,7 +48,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   @observable
   String qrUrl = "";
 
-  CaptureMode get captureMode => PhotosManagerBase.instance.captureMode;
+  CaptureMode get captureMode => PhotosManager.instance.captureMode;
   String get backText => captureMode == CaptureMode.single ? "Retake" : "Change";
 
   /// Global key for controlling the slider widget.

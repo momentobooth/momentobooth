@@ -21,7 +21,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
   // and up to 500 ms in bad light. Differs per lens as well.
   // Short button presses will not trigger the capture when focussing is not complete.
   @override
-  Duration get captureDelay => Duration(milliseconds: SettingsManagerBase.instance.settings.hardware.captureDelaySony);
+  Duration get captureDelay => Duration(milliseconds: SettingsManager.instance.settings.hardware.captureDelaySony);
 
   Future<void> _capture() async {
     loggy.debug("Sending capture command to Sony Remote");

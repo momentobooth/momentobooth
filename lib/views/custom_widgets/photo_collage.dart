@@ -79,14 +79,14 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
   static const double gap = 20.0;
 
-  ObservableList<int> get chosen => PhotosManagerBase.instance.chosen;
-  ObservableList<Uint8List> get photos => PhotosManagerBase.instance.photos;
-  Iterable<Uint8List> get chosenPhotos => PhotosManagerBase.instance.chosenPhotos;
-  int get nChosen => PhotosManagerBase.instance.chosen.length;
+  ObservableList<int> get chosen => PhotosManager.instance.chosen;
+  ObservableList<Uint8List> get photos => PhotosManager.instance.photos;
+  Iterable<Uint8List> get chosenPhotos => PhotosManager.instance.chosenPhotos;
+  int get nChosen => PhotosManager.instance.chosen.length;
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   bool firstImageDecoded = false;
 
-  String get templatesFolder => SettingsManagerBase.instance.settings.templatesFolder;
+  String get templatesFolder => SettingsManager.instance.settings.templatesFolder;
 
   var templates = {
     TemplateKind.front: <int, File?>{},
@@ -168,7 +168,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget get _innerLayout {
-    if (PhotosManagerBase.instance.chosen.isEmpty) {
+    if (PhotosManager.instance.chosen.isEmpty) {
       return _zeroLayout;
     } else if (nChosen == 1) {
       return _oneLayout;

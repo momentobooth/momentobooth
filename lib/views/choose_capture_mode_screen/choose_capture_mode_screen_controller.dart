@@ -16,12 +16,12 @@ class ChooseCaptureModeScreenController extends ScreenControllerBase<ChooseCaptu
   // User interaction methods
 
   void onClickOnSinglePhoto() {
-    PhotosManagerBase.instance.captureMode = CaptureMode.single;
+    PhotosManager.instance.captureMode = CaptureMode.single;
     router.go(CaptureScreen.defaultRoute);
   }
 
   void onClickOnPhotoCollage() {
-    PhotosManagerBase.instance.captureMode = CaptureMode.collage;
+    PhotosManager.instance.captureMode = CaptureMode.collage;
     router.go(MultiCaptureScreen.defaultRoute);
   }
 

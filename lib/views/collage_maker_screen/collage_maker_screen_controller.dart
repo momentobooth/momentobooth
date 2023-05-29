@@ -21,15 +21,15 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
   GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
 
   void togglePicture(int image) {
-    if (PhotosManagerBase.instance.chosen.contains(image)) {
-      PhotosManagerBase.instance.chosen.remove(image);
+    if (PhotosManager.instance.chosen.contains(image)) {
+      PhotosManager.instance.chosen.remove(image);
     } else {
-      PhotosManagerBase.instance.chosen.add(image);
+      PhotosManager.instance.chosen.add(image);
     }
     captureCollage();
   }
 
-  String get outputFolder => SettingsManagerBase.instance.settings.output.localFolder;
+  String get outputFolder => SettingsManager.instance.settings.output.localFolder;
 
   DateTime? latestCapture;
 
@@ -44,23 +44,23 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     if (viewModel.numSelected < 1) return;
 
     final stopwatch = Stopwatch()..start();
-    final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
-    final format = SettingsManagerBase.instance.settings.output.exportFormat;
-    final jpgQuality = SettingsManagerBase.instance.settings.output.jpgQuality;
+    final pixelRatio = SettingsManager.instance.settings.output.resolutionMultiplier;
+    final format = SettingsManager.instance.settings.output.exportFormat;
+    final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
     final exportImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
 
     if (latestCapture == thisCapture) {
-      PhotosManagerBase.instance.outputImage = exportImage;
+      PhotosManager.instance.outputImage = exportImage;
       loggy.debug("Written collage image to output image memory");
-      PhotosManagerBase.instance.writeOutput();
+      PhotosManager.instance.writeOutput();
       viewModel.readyToContinue = true;
     }
   }
 
   void onContinueTap() {
     if (!viewModel.readyToContinue) return;
-    StatsManagerBase.instance.addCreatedMultiCapturePhoto();
+    StatsManager.instance.addCreatedMultiCapturePhoto();
     router.go(ShareScreen.defaultRoute);
   }
 

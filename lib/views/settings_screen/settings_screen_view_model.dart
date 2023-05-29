@@ -68,34 +68,34 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   // Current values
 
-  int get captureDelaySecondsSetting => SettingsManagerBase.instance.settings.captureDelaySeconds;
-  bool get displayConfettiSetting => SettingsManagerBase.instance.settings.displayConfetti;
-  double get collageAspectRatioSetting => SettingsManagerBase.instance.settings.collageAspectRatio;
-  double get collagePaddingSetting => SettingsManagerBase.instance.settings.collagePadding;
-  bool get singlePhotoIsCollageSetting => SettingsManagerBase.instance.settings.singlePhotoIsCollage;
-  String get templatesFolderSetting => SettingsManagerBase.instance.settings.templatesFolder;
-  LiveViewMethod get liveViewMethodSetting => SettingsManagerBase.instance.settings.hardware.liveViewMethod;
-  String get liveViewWebcamId => SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
-  Flip get liveViewFlipImage => SettingsManagerBase.instance.settings.hardware.liveViewFlipImage;
-  CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
-  int get captureDelaySonySetting => SettingsManagerBase.instance.settings.hardware.captureDelaySony;
-  String get captureLocationSetting => SettingsManagerBase.instance.settings.hardware.captureLocation;
-  List<String> get printersSetting => SettingsManagerBase.instance.settings.hardware.printerNames;
-  double get pageHeightSetting => SettingsManagerBase.instance.settings.hardware.pageHeight;
-  double get pageWidthSetting => SettingsManagerBase.instance.settings.hardware.pageWidth;
-  bool get usePrinterSettingsSetting => SettingsManagerBase.instance.settings.hardware.usePrinterSettings;
-  double get printerMarginTopSetting => SettingsManagerBase.instance.settings.hardware.printerMarginTop;
-  double get printerMarginRightSetting => SettingsManagerBase.instance.settings.hardware.printerMarginRight;
-  double get printerMarginBottomSetting => SettingsManagerBase.instance.settings.hardware.printerMarginBottom;
-  double get printerMarginLeftSetting => SettingsManagerBase.instance.settings.hardware.printerMarginLeft;
-  int get printerQueueWarningThresholdSetting => SettingsManagerBase.instance.settings.hardware.printerQueueWarningThreshold;
-  String get localFolderSetting => SettingsManagerBase.instance.settings.output.localFolder;
-  String get firefoxSendServerUrlSetting => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
-  ExportFormat get exportFormat => SettingsManagerBase.instance.settings.output.exportFormat;
-  int get jpgQuality => SettingsManagerBase.instance.settings.output.jpgQuality;
-  double get resolutionMultiplier => SettingsManagerBase.instance.settings.output.resolutionMultiplier;
-  FilterQuality get screenTransitionAnimationFilterQuality => SettingsManagerBase.instance.settings.debug.screenTransitionAnimationFilterQuality;
-  FilterQuality get liveViewFilterQuality => SettingsManagerBase.instance.settings.debug.liveViewFilterQuality;
+  int get captureDelaySecondsSetting => SettingsManager.instance.settings.captureDelaySeconds;
+  bool get displayConfettiSetting => SettingsManager.instance.settings.displayConfetti;
+  double get collageAspectRatioSetting => SettingsManager.instance.settings.collageAspectRatio;
+  double get collagePaddingSetting => SettingsManager.instance.settings.collagePadding;
+  bool get singlePhotoIsCollageSetting => SettingsManager.instance.settings.singlePhotoIsCollage;
+  String get templatesFolderSetting => SettingsManager.instance.settings.templatesFolder;
+  LiveViewMethod get liveViewMethodSetting => SettingsManager.instance.settings.hardware.liveViewMethod;
+  String get liveViewWebcamId => SettingsManager.instance.settings.hardware.liveViewWebcamId;
+  Flip get liveViewFlipImage => SettingsManager.instance.settings.hardware.liveViewFlipImage;
+  CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;
+  int get captureDelaySonySetting => SettingsManager.instance.settings.hardware.captureDelaySony;
+  String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;
+  List<String> get printersSetting => SettingsManager.instance.settings.hardware.printerNames;
+  double get pageHeightSetting => SettingsManager.instance.settings.hardware.pageHeight;
+  double get pageWidthSetting => SettingsManager.instance.settings.hardware.pageWidth;
+  bool get usePrinterSettingsSetting => SettingsManager.instance.settings.hardware.usePrinterSettings;
+  double get printerMarginTopSetting => SettingsManager.instance.settings.hardware.printerMarginTop;
+  double get printerMarginRightSetting => SettingsManager.instance.settings.hardware.printerMarginRight;
+  double get printerMarginBottomSetting => SettingsManager.instance.settings.hardware.printerMarginBottom;
+  double get printerMarginLeftSetting => SettingsManager.instance.settings.hardware.printerMarginLeft;
+  int get printerQueueWarningThresholdSetting => SettingsManager.instance.settings.hardware.printerQueueWarningThreshold;
+  String get localFolderSetting => SettingsManager.instance.settings.output.localFolder;
+  String get firefoxSendServerUrlSetting => SettingsManager.instance.settings.output.firefoxSendServerUrl;
+  ExportFormat get exportFormat => SettingsManager.instance.settings.output.exportFormat;
+  int get jpgQuality => SettingsManager.instance.settings.output.jpgQuality;
+  double get resolutionMultiplier => SettingsManager.instance.settings.output.resolutionMultiplier;
+  FilterQuality get screenTransitionAnimationFilterQuality => SettingsManager.instance.settings.debug.screenTransitionAnimationFilterQuality;
+  FilterQuality get liveViewFilterQuality => SettingsManager.instance.settings.debug.liveViewFilterQuality;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;
@@ -114,9 +114,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   // Methods
 
   Future<void> updateSettings(UpdateSettingsCallback updateCallback) async {
-    Settings currentSettings = SettingsManagerBase.instance.settings;
+    Settings currentSettings = SettingsManager.instance.settings;
     Settings updatedSettings = updateCallback(currentSettings);
-    await SettingsManagerBase.instance.updateAndSave(updatedSettings);
+    await SettingsManager.instance.updateAndSave(updatedSettings);
   }
 
 }

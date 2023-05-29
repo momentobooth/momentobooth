@@ -21,7 +21,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     router.pop();
   }
 
-  String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
+  String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
 
   void onClickCloseQR() {
     viewModel.qrShown = false;
@@ -36,7 +36,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     if (viewModel.uploadState != UploadState.notStarted) return;
 
     final File file = viewModel.file; // Just take the file that we're viewing anyway
-    final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
+    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
 
     loggy.debug("Uploading ${file.path}");
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
@@ -50,7 +50,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
         viewModel.qrUrl = event.downloadUrl!;
         viewModel.qrShown = true;
         viewModel.sliderKey.currentState!.animateForward();
-        StatsManagerBase.instance.addUploadedPhoto();
+        StatsManager.instance.addUploadedPhoto();
       } else {
         loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
       }

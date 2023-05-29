@@ -7,8 +7,11 @@ import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
+import 'package:momento_booth/managers/hotkey_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/models/hotkey_action.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
@@ -29,9 +32,7 @@ import 'package:momento_booth/views/share_screen/share_screen.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:window_manager/window_manager.dart';
 
 part 'main.routes.dart';
 
@@ -42,16 +43,16 @@ void main() async {
   Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 
   // Hotkeys
-  await hotKeyManager.unregisterAll();
+  await HotkeyManager.instance.initialize();
 
   // Settings
-  await SettingsManagerBase.instance.load();
+  await SettingsManager.instance.load();
 
   // Stats
-  await StatsManagerBase.instance.load();
+  await StatsManager.instance.load();
 
   // Windows manager (used for full screen)
-  await windowManager.ensureInitialized();
+  await WindowManager.instance.initialize();
 
   // Native library init
   init();
@@ -87,33 +88,33 @@ class _AppState extends State<App> with UiLoggy {
   );
 
   bool _settingsOpen = false;
-  bool _isFullScreen = false;
 
   static const returnHomeTimeout = Duration(seconds: 45);
   late Timer _returnHomeTimer;
   static const statusCheckPeriod = Duration(seconds: 5);
   late Timer _statusCheckTimer;
 
+  Stream<HotkeyAction> get _hotkeyActionStream => HotkeyManager.instance.hotkeyActionStream;
+  late StreamSubscription<HotkeyAction> _hotkeyActionStreamSubscription;
+
   @override
   void initState() {
-    _initHotKeys();
-    // Check if the window is fullscreen from the start.
-    windowManager.isFullScreen().then((value) => _isFullScreen = value);
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
     _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
-    _router.addListener(() => onActivity(isTap: false));
+    _router.addListener(() => _onActivity(isTap: false));
+    _hotkeyActionStreamSubscription = _hotkeyActionStream.listen(_runHotkeyAction);
     super.initState();
   }
 
   void _statusCheck() async {
-    final printerNames = SettingsManagerBase.instance.settings.hardware.printerNames;
+    final printerNames = SettingsManager.instance.settings.hardware.printerNames;
     final printersStatus = await compute(checkPrintersStatus, printerNames);
     NotificationsManagerBase.instance.notifications.clear();
     printersStatus.forEachIndexed((index, element) {
       final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning);
       final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."), severity: InfoBarSeverity.warning);
       final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info);
-      if (element.jobs >= SettingsManagerBase.instance.settings.hardware.printerQueueWarningThreshold) {
+      if (element.jobs >= SettingsManager.instance.settings.hardware.printerQueueWarningThreshold) {
         NotificationsManagerBase.instance.notifications.add(longQueueNotification);
       }
       if (element.hasError) {
@@ -125,73 +126,16 @@ class _AppState extends State<App> with UiLoggy {
     });
   }
 
-  void _toggleFullscreen() {
-    _isFullScreen = !_isFullScreen;
-    loggy.debug("Setting fullscreen to $_isFullScreen");
-    windowManager.setFullScreen(_isFullScreen);
-  }
-
-  void _initHotKeys() {
-    // Ctrl + S opens/closes settings
-    hotKeyManager.register(
-      HotKey(
-        KeyCode.keyS,
-        modifiers: [KeyModifier.control],
-        scope: HotKeyScope.inapp,
-      ),
-      keyDownHandler: (hotKey) {
-        setState(() => _settingsOpen = !_settingsOpen);
-        loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
-      },
-    );
-    // Ctrl + M opens manual collage maker screen
-    hotKeyManager.register(
-      HotKey(
-        KeyCode.keyM,
-        modifiers: [KeyModifier.control],
-        scope: HotKeyScope.inapp,
-      ),
-      keyDownHandler: (hotKey) {
-        if (_router.location == ManualCollageScreen.defaultRoute) {
-          _router.go(StartScreen.defaultRoute);
-        } else {
-          _router.go(ManualCollageScreen.defaultRoute);
-        }
-      },
-    );
-    // Alt + enter toggles full-screen
-    hotKeyManager.register(
-      HotKey(
-        KeyCode.enter,
-        modifiers: [KeyModifier.alt],
-        scope: HotKeyScope.inapp,
-      ),
-      keyDownHandler: (hotKey) {
-        setState(_toggleFullscreen);
-      },
-    );
-    // Ctrl + F toggles full-screen
-    hotKeyManager.register(
-      HotKey(
-        KeyCode.keyF,
-        modifiers: [KeyModifier.control],
-        scope: HotKeyScope.inapp,
-      ),
-      keyDownHandler: (hotKey) {
-        setState(_toggleFullscreen);
-      },
-    );
-  }
-
   void _returnHome() {
+    if (_router.location == StartScreen.defaultRoute) return;
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.
   /// This resets the return home timer.
-  void onActivity({bool isTap = false}) {
-    if (isTap) { StatsManagerBase.instance.addTap(); }
+  void _onActivity({bool isTap = false}) {
+    if (isTap) StatsManager.instance.addTap();
     _returnHomeTimer.cancel();
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
   }
@@ -225,7 +169,7 @@ class _AppState extends State<App> with UiLoggy {
                 children: [
                   Listener(
                     behavior: HitTestBehavior.translucent,
-                    onPointerDown: (_) => onActivity(isTap: true),
+                    onPointerDown: (_) => _onActivity(isTap: true),
                     child: child!,
                   ),
                   _settingsOpen ? _settingsScreen : const SizedBox(),
@@ -261,7 +205,23 @@ class _AppState extends State<App> with UiLoggy {
   void dispose() {
     _returnHomeTimer.cancel();
     _statusCheckTimer.cancel();
+    _hotkeyActionStreamSubscription.cancel();
+    _router.dispose();
     super.dispose();
+  }
+
+  void _runHotkeyAction(HotkeyAction event) {
+    switch (event) {
+      case HotkeyAction.openSettingsScreen:
+        setState(() => _settingsOpen = !_settingsOpen);
+        loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
+      case HotkeyAction.openManualCollageScreen:
+        if (_router.location == ManualCollageScreen.defaultRoute) {
+          _router.go(StartScreen.defaultRoute);
+        } else {
+          _router.go(ManualCollageScreen.defaultRoute);
+        }
+    }
   }
 
 }

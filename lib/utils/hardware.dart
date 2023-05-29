@@ -20,7 +20,7 @@ final loggy = Loggy<UiLoggy>("hardware utils");
 Future<Uint8List> getImagePDF(Uint8List imageData) async {
   late final pw.MemoryImage image = pw.MemoryImage(imageData);
   const mm = PdfPageFormat.mm;
-  final settings = SettingsManagerBase.instance.settings.hardware;
+  final settings = SettingsManager.instance.settings.hardware;
   final pageFormat = PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
                                     marginBottom: settings.printerMarginBottom * mm,
                                     marginLeft: settings.printerMarginLeft * mm,
@@ -54,7 +54,7 @@ Future<List<Printer>> getSelectedPrinters() async {
   final sourcePrinters = await Printing.listPrinters();
   List<Printer> printers = <Printer>[];
 
-  for (String name in SettingsManagerBase.instance.settings.hardware.printerNames) {
+  for (String name in SettingsManager.instance.settings.hardware.printerNames) {
     Printer? selected = sourcePrinters.firstWhereOrNull((printer) => printer.name == name);
     if (selected == null) {
         loggy.error("Could not find selected printer ($name)");
@@ -191,7 +191,7 @@ List<JobInfo> getJobList(String printerName) {
 }
 
 Future<bool> printPDF(Uint8List pdfData) async {
-  final settings = SettingsManagerBase.instance.settings.hardware;
+  final settings = SettingsManager.instance.settings.hardware;
   final printers = await getSelectedPrinters();
   if (printers.isEmpty) return false;
 
@@ -213,9 +213,9 @@ Future<bool> printPDF(Uint8List pdfData) async {
       onLayout: (pageFormat) => pdfData,
       usePrinterSettings: settings.usePrinterSettings,
   );
-  StatsManagerBase.instance.addPrintedPhoto();
+  StatsManager.instance.addPrintedPhoto();
   
-  Directory outputDir = Directory(SettingsManagerBase.instance.settings.output.localFolder);
+  Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);
   final filePath = join(outputDir.path, 'latest-print.pdf');
   File file = await File(filePath).create();
   await file.writeAsBytes(pdfData);
