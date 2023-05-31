@@ -2,16 +2,21 @@ use std::{sync::RwLock};
 
 use flutter_rust_bridge::StreamSink;
 use hardware_control::live_view::nokhwa;
+use pathsep::{path_separator, join_path};
 
 mod dart_bridge;
 mod hardware_control;
 mod utils;
+
+const TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
 
 static LOG_STREAM: RwLock<Option<StreamSink<LogEvent>>> = RwLock::new(None);
 
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     let log_write = LOG_STREAM.write();
     *log_write.expect("Err") = Some(log_sink);
+
+    log_debug("Native library compiled with target ".to_string() + TARGET)
 }
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {

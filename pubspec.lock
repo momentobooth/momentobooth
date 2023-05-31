@@ -333,10 +333,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: "860606280da3b5d49920c36a0aee7b456c1a1c01e67c907184c409ccb4153b34"
+      sha256: "456c66be2d1e5eab4c0f81dac1c55e023e65d31e81488ed4463741ce10928417"
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.1"
+    version: "4.6.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -396,10 +396,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "42f363d4e7a0ba242f9e51c08e64ac9c3d38d7bdb4f6219bbd5ff04d1937e9f3"
+      sha256: c039cb7b21d11665591557c1bf1d558f8db549a260cc69d455f30443a883f95c
       url: "https://pub.dev"
     source: hosted
-    version: "1.76.0"
+    version: "1.77.1"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
@@ -728,18 +728,10 @@ packages:
     dependency: "direct main"
     description:
       name: pdf
-      sha256: "70d84154dc5b6ddf28eee6c012510a4cbbebb3a1879c0957e05364a95e8f3832"
+      sha256: "9f75fc7f5580ea5e635b5724de58fb27f684c9ad03ed46fdc1aac768e4557315"
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.3"
-  pdf_widget_wrapper:
-    dependency: transitive
-    description:
-      name: pdf_widget_wrapper
-      sha256: e9d31fd7782ce28ae346b127ea7d1cd748d799bddee379f31191693610e23749
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
+    version: "3.10.4"
   petitparser:
     dependency: transitive
     description:
@@ -792,10 +784,10 @@ packages:
     dependency: "direct main"
     description:
       name: printing
-      sha256: "6aa86779d51f1c60608defee7b231e1133ab9b00f63b3b71abfa85cb39898571"
+      sha256: e7c383dca95ee7b88c02dc1c66638628d3dcdc2fb2cc47e7a595facd47e46b56
       url: "https://pub.dev"
     source: hosted
-    version: "5.10.4"
+    version: "5.11.0"
   process:
     dependency: transitive
     description:
@@ -1014,7 +1006,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: d3ceb7780d43f18d1610ea65111142952760018e
+      resolved-ref: "86e24e4403d4c608363bfed501957053dba8f80d"
       url: "https://github.com/h3x4d3c1m4l/flutter_texture_rgba_renderer"
     source: git
     version: "0.0.16"
