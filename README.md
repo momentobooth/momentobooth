@@ -64,7 +64,7 @@ On Windows:
 - Visual Studio 2022 Build Tools
   - Optional: A full Visual Studio 2022 install
   - Make sure to select "Desktop development with C++" on the Workloads tab when installing
-- Rust (`x86_64-pc-windows-msvc` target)
+- Rust (`x86_64-pc-windows-gnu` target)
   - Install using `rustup` is recommended, to keep all components up to date
 
 On macOS:

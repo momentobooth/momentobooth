@@ -38,6 +38,7 @@ jobs:
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
       with:
+        target: x86_64-pc-windows-gnu
         profile: minimal
         toolchain: stable
         components: rustfmt, clippy
@@ -51,7 +52,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: flutter_rust_bridge_codegen
-        version: "1.76.0"
+        version: "1.77.1"
 
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
