@@ -4,6 +4,8 @@
 # Once done, uncomment this line:
 # find_package(Corrosion REQUIRED)
 
+set(Rust_CARGO_TARGET "x86_64-pc-windows-gnu")
+
 include(FetchContent)
 
 FetchContent_Declare(

@@ -26,6 +26,7 @@ dlopen = "0.1.8"
 noise = "0.8.2"
 dashmap = "5.4.0"
 turborand = "0.10.0"
+pathsep = "0.1.1"
 
 [profile.dev]
 opt-level = 3

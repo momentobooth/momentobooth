@@ -1656,6 +1656,7 @@ dependencies = [
  "nokhwa",
  "nokhwa-bindings-macos 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "once_cell",
+ "pathsep",
  "serde_json",
  "static_init",
  "turborand",
@@ -2040,6 +2041,12 @@ name = "paste"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f746c4065a8fa3fe23974dd82f15431cc8d40779821001404d10d2e79ca7d79"
+
+[[package]]
+name = "pathsep"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fa223c370cb326ed75922e69aef96c669a2021545115bfa9778bb640ea575499"
 
 [[package]]
 name = "peeking_take_while"
