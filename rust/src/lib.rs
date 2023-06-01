@@ -21,17 +21,28 @@ pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     log_debug("initialize_hardware() started".to_string());
+    let ready_sink_clone = ready_sink.clone();
 
     // Nokhwa initialize
     nokhwa::initialize(move |success| {
         log_debug("initialize_hardware() nokhwa init result: ".to_string() + &success.to_string());
-        let step = HardwareInitializationFinishedEvent {
+        ready_sink.add(HardwareInitializationFinishedEvent {
             step: HardwareInitializationStep::Nokhwa,
             has_succeeded: success,
             message: String::new(),
-        };
-        ready_sink.add(step);
+        });
     });
+
+    // gphoto2 initialize
+    #[cfg(any(target_os = "windows", target_os = "linux"))]
+    {
+        let gphoto2_context = gphoto2::Context::new();
+        ready_sink_clone.add(HardwareInitializationFinishedEvent {
+            step: HardwareInitializationStep::Gphoto2,
+            has_succeeded: gphoto2_context.is_ok(),
+            message: String::new(),
+        });
+    }
 
     log_debug("initialize_hardware() ended".to_string());
 }
@@ -91,4 +102,5 @@ pub struct HardwareInitializationFinishedEvent {
 #[derive(Debug, Clone)]
 pub enum HardwareInitializationStep {
     Nokhwa,
+    Gphoto2,
 }
