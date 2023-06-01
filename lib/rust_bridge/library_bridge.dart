@@ -46,6 +46,8 @@ void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
     case HardwareInitializationStep.Nokhwa:
       HardwareStateManagerBase.instance.nokhwaIsInitialized = event.hasSucceeded;
       HardwareStateManagerBase.instance.nokhwaInitializationMessage = event.message;
+    case HardwareInitializationStep.Gphoto2:
+      loggy.logDebug("Gphoto2 init: ${event.hasSucceeded} - ${event.message}");
 
   }
 }

@@ -28,10 +28,7 @@ dashmap = "5.4.0"
 turborand = "0.10.0"
 pathsep = "0.1.1"
 
-[target.'cfg(target_os = "windows")'.dependencies]
-gphoto2 = "3.2.1"
-
-[target.'cfg(target_os = "linux")'.dependencies]
+[target.'cfg(not(target_os = "macos"))'.dependencies]
 gphoto2 = "3.2.1"
 
 [profile.dev]
