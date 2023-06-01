@@ -1660,7 +1660,7 @@ dependencies = [
  "lazy_static",
  "noise",
  "nokhwa",
- "nokhwa-bindings-macos 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "nokhwa-bindings-macos 0.2.1",
  "once_cell",
  "pathsep",
  "serde_json",
@@ -1756,7 +1756,7 @@ dependencies = [
  "flume",
  "image",
  "nokhwa-bindings-linux",
- "nokhwa-bindings-macos 0.2.0 (git+https://github.com/RReverser/nokhwa.git?branch=fix-callback-camera-deadlock)",
+ "nokhwa-bindings-macos 0.2.0",
  "nokhwa-bindings-windows",
  "nokhwa-core 0.1.0 (git+https://github.com/RReverser/nokhwa.git?branch=fix-callback-camera-deadlock)",
  "parking_lot 0.12.1",
@@ -1777,22 +1777,6 @@ dependencies = [
 [[package]]
 name = "nokhwa-bindings-macos"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cb2044194c8cc0286a0bfae023caeb434c32900ffe3f3d08565362306437be8"
-dependencies = [
- "block",
- "cocoa-foundation",
- "core-media-sys",
- "core-video-sys",
- "flume",
- "nokhwa-core 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "objc",
- "once_cell",
-]
-
-[[package]]
-name = "nokhwa-bindings-macos"
-version = "0.2.0"
 source = "git+https://github.com/RReverser/nokhwa.git?branch=fix-callback-camera-deadlock#624c6004ca731fc55af6c6e0368b163b45acf23b"
 dependencies = [
  "block",
@@ -1801,6 +1785,22 @@ dependencies = [
  "core-video-sys",
  "flume",
  "nokhwa-core 0.1.0 (git+https://github.com/RReverser/nokhwa.git?branch=fix-callback-camera-deadlock)",
+ "objc",
+ "once_cell",
+]
+
+[[package]]
+name = "nokhwa-bindings-macos"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "739d58859fd2b958f01c25de9a0fbb686be7271e5ef3624150e2be85a627b38a"
+dependencies = [
+ "block",
+ "cocoa-foundation",
+ "core-media-sys",
+ "core-video-sys",
+ "flume",
+ "nokhwa-core 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "objc",
  "once_cell",
 ]
