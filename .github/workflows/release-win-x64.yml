@@ -35,6 +35,13 @@ jobs:
         addPubCacheBinToPath: 'true'
         flutterPrecache: '--windows'
 
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: MINGW64
+        update: true
+        install: mingw-w64-x86_64-libgphoto2
+
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
       with:
@@ -79,6 +86,9 @@ jobs:
 
     - name: Build Project
       run: flutter build windows --release
+    
+    - name: Bundle DLL dependencies of the helper library
+      run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
 
     # Extract version from branch name
     - name: Extract Release version

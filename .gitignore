@@ -52,3 +52,6 @@ app.*.map.json
 *.freezed.dart
 *.json.dart
 *.g.dart
+
+# Output
+dist/
