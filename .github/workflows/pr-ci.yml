@@ -1,23 +1,17 @@
-name: Release - Windows x64
+name: PR CI
 
 on:
   pull_request:
-    branches: [ main ]
-    types: [ closed ]
-
-# Sets permissions to allow version tag
-permissions:
-  contents: write
+    branches:
+      - main
 
 # Allow one concurrent deployment
 concurrency:
-  group: "release-win-x64"
+  group: "pr-ci"
   cancel-in-progress: true
 
 jobs:
   build:
-    if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
-
     runs-on: windows-latest
 
     steps:
@@ -64,9 +58,6 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "1.77.1"
 
-    - name: Install flutter_distributor
-      run: dart pub global activate flutter_distributor
-
     - name: Flutter Config
       run: flutter config --enable-windows-desktop
 
@@ -88,33 +79,7 @@ jobs:
       run: flutter analyze
 
     - name: Build Project
-      run: flutter build windows --release
+      run: msys2 -c 'flutter build windows --release'
     
     - name: Bundle DLL dependencies of the helper library
       run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
-
-    # Extract version from branch name
-    - name: Extract Release version
-      id: extract_release_version
-      shell: bash
-      run: |
-        release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
-        echo "release_version=$release_version" >> $GITHUB_OUTPUT
-
-    # Pack
-    - name: Archive Release
-      uses: thedoctor0/zip-release@0.7.1
-      with:
-        type: 'zip'
-        directory: build/windows/runner/Release
-        filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip'
-
-    # Create GitHub release
-    - name: Create GitHub Release
-      uses: ncipollo/release-action@v1
-      with:
-        allowUpdates: true
-        prerelease: true
-        replacesArtifacts: true
-        tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "build/windows/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip"
