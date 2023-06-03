@@ -88,7 +88,7 @@ jobs:
       run: flutter analyze
 
     - name: Build Project
-      run: flutter build windows --release
+      run: msys2 -c 'flutter build windows --release'
     
     - name: Bundle DLL dependencies of the helper library
       run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
