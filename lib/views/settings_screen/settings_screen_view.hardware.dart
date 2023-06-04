@@ -61,7 +61,9 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
       FluentSettingsBlock(
         title: "Printing",
         settings: [
-          _printerCard(viewModel, controller),
+          for (int i = 0; i <= viewModel.printersSetting.length; i++) ...[
+            _printerCard(viewModel, controller, "Printer ${i+1}", i),
+          ],
           _getInput(
             icon: FluentIcons.page,
             title: "Page height",
@@ -176,11 +178,11 @@ FluentSettingCard _webcamCard(SettingsScreenViewModel viewModel, SettingsScreenC
   );
 }
 
-FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
   return FluentSettingCard(
     icon: FluentIcons.print,
-    title: "Printer",
-    subtitle: "Which printer to use for printing photos",
+    title: title,
+    subtitle: "Which printer(s) to use for printing photos",
     child: Row(
       children: [
         Button(
@@ -193,8 +195,8 @@ FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreen
           child: Observer(builder: (_) {
             return ComboBox<String>(
               items: viewModel.printerOptions,
-              value: viewModel.printerSetting,
-              onChanged: controller.onPrinterChanged,
+              value: index < viewModel.printersSetting.length ? viewModel.printersSetting[index] : viewModel.unsedPrinterValue,
+              onChanged: (name) => controller.onPrinterChanged(name, index),
             );
           }),
         ),

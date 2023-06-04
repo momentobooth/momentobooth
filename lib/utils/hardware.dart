@@ -45,29 +45,34 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
   return await doc.save();
 }
 
-Future<Printer?> getSelectedPrinter() async {
+Future<List<Printer>> getSelectedPrinters() async {
   // Find printer that was set in settings in available printers.
-  final printers = await Printing.listPrinters();
-  Printer? selected;
-  for (var printer in printers) {
-    if (printer.name == SettingsManagerBase.instance.settings.hardware.printerName) {
-      selected = printer;
-      break;
+  final sourcePrinters = await Printing.listPrinters();
+  List<Printer> printers = <Printer>[];
+
+  for (String name in SettingsManagerBase.instance.settings.hardware.printerNames) {
+    Printer? selected;
+    for (var printer in sourcePrinters) {
+      if (printer.name == name) {
+        selected = printer;
+        break;
+      }
     }
+    if (selected == null) {
+        Loggy<UiLoggy>("hardware utils").error("Could not find selected printer ($name)");
+    }
+    printers.add(selected!);
   }
-  if (selected == null) {
-      Loggy<UiLoggy>("hardware utils").error("Could not find selected printer");
-  }
-  return selected;
+  return printers;
 }
 
 Future<bool> printPDF(Uint8List pdfData) async {
   final settings = SettingsManagerBase.instance.settings.hardware;
-  final printer = await getSelectedPrinter();
-  if (printer == null) return false;
+  final printers = await getSelectedPrinters();
+  if (printers.isEmpty) return false;
 
   bool success = await Printing.directPrintPdf(
-      printer: printer,
+      printer: printers.first, // Todo: Select the right printer to use
       name: "MomentoBooth image",
       onLayout: (pageFormat) => pdfData,
       usePrinterSettings: settings.usePrinterSettings,

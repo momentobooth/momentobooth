@@ -30,9 +30,29 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
 
+  RichText _printerCardText(String printerName, bool isAvailable, bool isDefault) {
+    final icon = isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
+    return RichText(
+      text: TextSpan(
+        style: const TextStyle(color: Color(0xFF000000)),
+        children: [
+          TextSpan(text: "$printerName  "),
+          if (isDefault) ...[
+            const WidgetSpan(child: Icon(FluentIcons.default_settings)),
+            const TextSpan(text: "  "),
+          ],
+          WidgetSpan(child: Icon(icon)),
+        ],
+      ),
+    );
+  }
+
+  final String unsedPrinterValue = "UNUSED";
+
   void setPrinterList() async {
     final printers = await Printing.listPrinters();
     printerOptions.clear();
+    printerOptions.add(ComboBoxItem(value: unsedPrinterValue, child: _printerCardText("- Not used -", false, false)));
     for (var printer in printers) {
       final icon = printer.isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
       final text = RichText(
@@ -51,8 +71,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
       printerOptions.add(ComboBoxItem(value: printer.name, child: text));
       
       // If there is no setting yet, set it to the default printer.
-      if (printer.isDefault && printerSetting == "") {
-        updateSettings((settings) => settings.copyWith.hardware(printerName: printer.name));
+      if (printer.isDefault && printersSetting == [""]) {
+        updateSettings((settings) => settings.copyWith.hardware(printerNames: [printer.name]));
       }
     }
   }
@@ -73,7 +93,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   CaptureMethod get captureMethodSetting => SettingsManagerBase.instance.settings.hardware.captureMethod;
   int get captureDelaySonySetting => SettingsManagerBase.instance.settings.hardware.captureDelaySony;
   String get captureLocationSetting => SettingsManagerBase.instance.settings.hardware.captureLocation;
-  String get printerSetting => SettingsManagerBase.instance.settings.hardware.printerName;
+  List<String> get printersSetting => SettingsManagerBase.instance.settings.hardware.printerNames;
   double get pageHeightSetting => SettingsManagerBase.instance.settings.hardware.pageHeight;
   double get pageWidthSetting => SettingsManagerBase.instance.settings.hardware.pageWidth;
   bool get usePrinterSettingsSetting => SettingsManagerBase.instance.settings.hardware.usePrinterSettings;

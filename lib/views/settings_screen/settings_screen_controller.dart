@@ -1,9 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:loggy/loggy.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
-class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewModel> {
+class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewModel> with UiLoggy {
 
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
@@ -102,9 +103,21 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
-  void onPrinterChanged(String? printerName) {
-    if (printerName != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerName: printerName));
+  void onPrinterChanged(String? printerName, int? printerIndex) {
+    if (printerName != null && printerIndex != null) {
+      List<String> currentList = List.from(viewModel.printersSetting);
+      
+      if (printerName == viewModel.unsedPrinterValue) {
+        currentList.length = printerIndex;
+      } else {
+        if (printerIndex >= currentList.length) {
+          currentList.add(printerName);
+        } else {
+          currentList[printerIndex] = printerName;
+        }
+      }
+      loggy.debug("Setting printerlist to $currentList");
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerNames: currentList));
     }
   }
 
