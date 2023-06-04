@@ -61,9 +61,15 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
       FluentSettingsBlock(
         title: "Printing",
         settings: [
-          for (int i = 0; i <= viewModel.printersSetting.length; i++) ...[
-            _printerCard(viewModel, controller, "Printer ${i+1}", i),
-          ],
+          Observer(builder: (context) =>
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (int i = 0; i <= viewModel.printersSetting.length; i++)
+                  _printerCard(viewModel, controller, "Printer ${i+1}", i),
+              ],
+            ),
+          ),
           _getInput(
             icon: FluentIcons.page,
             title: "Page height",

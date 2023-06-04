@@ -54,24 +54,10 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     printerOptions.clear();
     printerOptions.add(ComboBoxItem(value: unsedPrinterValue, child: _printerCardText("- Not used -", false, false)));
     for (var printer in printers) {
-      final icon = printer.isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
-      final text = RichText(
-        text: TextSpan(
-          style: const TextStyle(color: Color(0xFF000000)),
-          children: [
-            TextSpan(text: "${printer.name}  "),
-            if (printer.isDefault) ...[
-              const WidgetSpan(child: Icon(FluentIcons.default_settings)),
-              const TextSpan(text: "  "),
-            ],
-            WidgetSpan(child: Icon(icon)),
-          ],
-        ),
-      );
-      printerOptions.add(ComboBoxItem(value: printer.name, child: text));
+      printerOptions.add(ComboBoxItem(value: printer.name, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
       
       // If there is no setting yet, set it to the default printer.
-      if (printer.isDefault && printersSetting == [""]) {
+      if (printer.isDefault && printersSetting.isEmpty) {
         updateSettings((settings) => settings.copyWith.hardware(printerNames: [printer.name]));
       }
     }
