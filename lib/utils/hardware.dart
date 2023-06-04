@@ -101,65 +101,61 @@ class JobInfo {
 }
 
 List<JobInfo> getJobList(Printer printer) {
-  // Allocate necessary pointers
-  Pointer<Utf16> printerNameHandle;
-  Pointer<IntPtr> handle;
-  Pointer<Uint8> jobs;
-  Pointer<Uint32> usedBytes;
-  Pointer<Uint32> numJobs;
+  return using((Arena alloc) {
+    // Allocate necessary pointers
+    Pointer<Utf16> printerNameHandle;
+    Pointer<IntPtr> handle;
+    Pointer<Uint8> jobs;
+    Pointer<Uint32> usedBytes;
+    Pointer<Uint32> numJobs;
 
-  // Allocate space for printer name and set the string.
-  printerNameHandle = printer.name.toNativeUtf16();
-  // Allocate other pointers
-  handle = calloc<IntPtr>();
-  const numBytes = 100000;
-  jobs = calloc<Uint8>(numBytes);
-  usedBytes = calloc<Uint32>();
-  numJobs = calloc<Uint32>();
+    // Allocate space for printer name and set the string.
+    printerNameHandle = printer.name.toNativeUtf16();
+    // Allocate other pointers
+    handle = alloc<IntPtr>();
+    const numBytes = 100000;
+    jobs = alloc<Uint8>(numBytes);
+    usedBytes = alloc<Uint32>();
+    numJobs = alloc<Uint32>();
 
-  // Get the printer handle.
-  final bool openSuccess = OpenPrinter(printerNameHandle, handle, Pointer.fromAddress(0)) != 0 ? true : false;
-  free(printerNameHandle);
-  if (!openSuccess) throw "Error opening printer ${printer.name} to acquire print jobs";
+    // Get the printer handle.
+    final bool openSuccess = OpenPrinter(printerNameHandle, handle, Pointer.fromAddress(0)) != 0 ? true : false;
+    if (!openSuccess) throw "Error opening printer ${printer.name} to acquire print jobs";
 
-  final int printerHandleValue = handle.value;
-  // Enumerate jobs for printer.
-  const int returnType = 1; // JOB_INFO_1
-  final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0 ? true : false;
-  if (!enumSuccess) throw "Error enumerating print jobs for printer ${printer.name}";
+    final int printerHandleValue = handle.value;
+    // Enumerate jobs for printer.
+    const int returnType = 1; // JOB_INFO_1
+    final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0 ? true : false;
+    if (!enumSuccess) throw "Error enumerating print jobs for printer ${printer.name}";
 
-  loggy.debug("Printer ${printer.name} (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
+    loggy.debug("Printer ${printer.name} (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
 
-  List<JobInfo> jobList = [];
-  for (var i = 0; i < numJobs.value; i++) {
-    var job = jobs.cast<JOB_INFO_1>().elementAt(i).ref;
-    // Convert job status
-    var statusVal = job.Status;
-    var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
-    if (statusString.isNotEmpty) {
-      loggy.debug("Custom statusstring for printer ${printer.name}: $statusString");
+    List<JobInfo> jobList = [];
+    for (var i = 0; i < numJobs.value; i++) {
+      var job = jobs.cast<JOB_INFO_1>().elementAt(i).ref;
+      // Convert job status
+      var statusVal = job.Status;
+      var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
+      if (statusString.isNotEmpty) {
+        loggy.debug("Custom statusstring for printer ${printer.name}: $statusString");
+      }
+      // Extract list of statusses
+      final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
+      if (status.isEmpty) { status.add(JobStatus.unknown); }
+
+      // Convert submitted time object
+      final submitted = job.Submitted;
+      var time = DateTime.utc(submitted.wYear, submitted.wMonth, submitted.wDay, submitted.wHour, submitted.wMinute, submitted.wSecond, submitted.wMilliseconds);
+
+      // Save jobinfo to list
+      jobList.add(JobInfo(status, time, statusVal));
     }
-    // Extract list of statusses
-    final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
-    if (status.isEmpty) { status.add(JobStatus.unknown); }
 
-    // Convert submitted time object
-    final submitted = job.Submitted;
-    var time = DateTime.utc(submitted.wYear, submitted.wMonth, submitted.wDay, submitted.wHour, submitted.wMinute, submitted.wSecond, submitted.wMilliseconds);
-
-    // Save jobinfo to list
-    jobList.add(JobInfo(status, time, statusVal));
-  }
-
-  // Close printer again so we can actually print...
-  final bool closeSuccess = ClosePrinter(printerHandleValue) != 0 ? true : false;
-  if (!closeSuccess) throw "Error closing printer ${printer.name}";
-
-  free(handle);
-  free(jobs);
-  free(usedBytes);
-  free(numJobs);
-  return jobList;
+    // Close printer again so we can actually print...
+    final bool closeSuccess = ClosePrinter(printerHandleValue) != 0 ? true : false;
+    if (!closeSuccess) throw "Error closing printer ${printer.name}";
+    return jobList;
+  });
 }
 
 Future<bool> printPDF(Uint8List pdfData) async {
