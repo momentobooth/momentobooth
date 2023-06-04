@@ -100,7 +100,27 @@ class JobInfo {
   }
 }
 
-List<JobInfo> getJobList(Printer printer) {
+(bool, bool) checkPrinterStatus(List<String> printerNames) {
+  bool hasError = false;
+  bool paperOut = false;
+  for (String printerName in printerNames) {
+    late final List<JobInfo> jobList;
+    try {
+      jobList = getJobList(printerName);
+    } catch (e) {
+      // If the function fails, then at least we can say there is _some_ error
+      hasError = true;
+      jobList = [];
+      loggy.error(e);
+    }
+    // Check if there are prints that have errored
+    hasError = hasError || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.error));
+    paperOut = paperOut || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.paperout));
+  }
+  return (hasError, paperOut);
+}
+
+List<JobInfo> getJobList(String printerName) {
   return using((Arena alloc) {
     // Allocate necessary pointers
     Pointer<Utf16> printerNameHandle;
@@ -110,7 +130,7 @@ List<JobInfo> getJobList(Printer printer) {
     Pointer<Uint32> numJobs;
 
     // Allocate space for printer name and set the string.
-    printerNameHandle = printer.name.toNativeUtf16();
+    printerNameHandle = printerName.toNativeUtf16();
     // Allocate other pointers
     handle = alloc<IntPtr>();
     const numBytes = 100000;
@@ -120,15 +140,15 @@ List<JobInfo> getJobList(Printer printer) {
 
     // Get the printer handle.
     final bool openSuccess = OpenPrinter(printerNameHandle, handle, Pointer.fromAddress(0)) != 0 ? true : false;
-    if (!openSuccess) throw "Error opening printer ${printer.name} to acquire print jobs";
+    if (!openSuccess) throw "Error opening printer $printerName to acquire print jobs";
 
     final int printerHandleValue = handle.value;
     // Enumerate jobs for printer.
     const int returnType = 1; // JOB_INFO_1
     final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0 ? true : false;
-    if (!enumSuccess) throw "Error enumerating print jobs for printer ${printer.name}";
+    if (!enumSuccess) throw "Error enumerating print jobs for printer $printerName";
 
-    loggy.debug("Printer ${printer.name} (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
+    loggy.debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
 
     List<JobInfo> jobList = [];
     for (var i = 0; i < numJobs.value; i++) {
@@ -137,7 +157,7 @@ List<JobInfo> getJobList(Printer printer) {
       var statusVal = job.Status;
       var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
       if (statusString.isNotEmpty) {
-        loggy.debug("Custom statusstring for printer ${printer.name}: $statusString");
+        loggy.debug("Custom statusstring for printer $printerName: $statusString");
       }
       // Extract list of statusses
       final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
@@ -153,7 +173,7 @@ List<JobInfo> getJobList(Printer printer) {
 
     // Close printer again so we can actually print...
     final bool closeSuccess = ClosePrinter(printerHandleValue) != 0 ? true : false;
-    if (!closeSuccess) throw "Error closing printer ${printer.name}";
+    if (!closeSuccess) throw "Error closing printer $printerName";
     return jobList;
   });
 }
@@ -169,7 +189,7 @@ Future<bool> printPDF(Uint8List pdfData) async {
   loggy.debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
 
   try {
-    final jobList = getJobList(printer);
+    final jobList = getJobList(printer.name);
     loggy.debug("Job list for printer ${printer.name} = $jobList");
   } catch (e) {
     loggy.error(e);

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
@@ -9,6 +10,7 @@ import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/fade_transition_page.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -70,6 +72,8 @@ class _AppState extends State<App> with UiLoggy {
 
   static const returnHomeTimeout = Duration(seconds: 45);
   late Timer _returnHomeTimer;
+  static const statusCheckPeriod = Duration(seconds: 5);
+  late Timer _statusCheckTimer;
 
   @override
   void initState() {
@@ -77,8 +81,16 @@ class _AppState extends State<App> with UiLoggy {
     // Check if the window is fullscreen from the start.
     windowManager.isFullScreen().then((value) => _isFullScreen = value);
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
+    _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
     _router.addListener(() => onActivity(isTap: false));
     super.initState();
+  }
+
+  void _statusCheck() async {
+    bool hasError, paperOut;
+    final printerNames = SettingsManagerBase.instance.settings.hardware.printerNames;
+    (hasError, paperOut) = await compute(checkPrinterStatus, printerNames);
+    loggy.debug("Status check $hasError, $paperOut");
   }
 
   void _toggleFullscreen() {
