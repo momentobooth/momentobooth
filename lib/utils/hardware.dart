@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -10,6 +11,8 @@ import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
+
+int lastUsedPrinterIndex = -1;
 
 Future<Uint8List> getImagePDF(Uint8List imageData) async {
   late final pw.MemoryImage image = pw.MemoryImage(imageData);
@@ -51,13 +54,7 @@ Future<List<Printer>> getSelectedPrinters() async {
   List<Printer> printers = <Printer>[];
 
   for (String name in SettingsManagerBase.instance.settings.hardware.printerNames) {
-    Printer? selected;
-    for (var printer in sourcePrinters) {
-      if (printer.name == name) {
-        selected = printer;
-        break;
-      }
-    }
+    Printer? selected = sourcePrinters.firstWhereOrNull((printer) => printer.name == name);
     if (selected == null) {
         Loggy<UiLoggy>("hardware utils").error("Could not find selected printer ($name)");
     }
@@ -71,8 +68,13 @@ Future<bool> printPDF(Uint8List pdfData) async {
   final printers = await getSelectedPrinters();
   if (printers.isEmpty) return false;
 
+  if (++lastUsedPrinterIndex >= printers.length) { lastUsedPrinterIndex = 0; }
+  final printer = printers[lastUsedPrinterIndex];
+
+  Loggy<UiLoggy>("hardware utils").debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
+
   bool success = await Printing.directPrintPdf(
-      printer: printers.first, // Todo: Select the right printer to use
+      printer: printer,
       name: "MomentoBooth image",
       onLayout: (pageFormat) => pdfData,
       usePrinterSettings: settings.usePrinterSettings,
