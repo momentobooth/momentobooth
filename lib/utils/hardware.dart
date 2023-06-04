@@ -109,8 +109,7 @@ List<JobInfo> getJobList(Printer printer) {
   Pointer<Uint32> numJobs;
 
   // Allocate space for printer name and set the string.
-  printerNameHandle = calloc<Uint16>(printer.name.length) as Pointer<Utf16>;
-  printerNameHandle.setString(printer.name);
+  printerNameHandle = printer.name.toNativeUtf16();
   // Allocate other pointers
   handle = calloc<IntPtr>();
   const numBytes = 100000;
@@ -122,7 +121,7 @@ List<JobInfo> getJobList(Printer printer) {
   final bool openSuccess = OpenPrinter(printerNameHandle, handle, Pointer.fromAddress(0)) != 0 ? true : false;
   free(printerNameHandle);
   if (!openSuccess) throw "Error opening printer ${printer.name} to acquire print jobs";
-  
+
   final int printerHandleValue = handle.value;
   // Enumerate jobs for printer.
   const int returnType = 1; // JOB_INFO_1
@@ -151,7 +150,6 @@ List<JobInfo> getJobList(Printer printer) {
     // Save jobinfo to list
     jobList.add(JobInfo(status, time, statusVal));
   }
-  loggy.debug("Job list for printer ${printer.name} = $jobList");
 
   // Close printer again so we can actually print...
   final bool closeSuccess = ClosePrinter(printerHandleValue) != 0 ? true : false;
@@ -175,7 +173,8 @@ Future<bool> printPDF(Uint8List pdfData) async {
   loggy.debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
 
   try {
-    getJobList(printer);
+    final jobList = getJobList(printer);
+    loggy.debug("Job list for printer ${printer.name} = $jobList");
   } catch (e) {
     loggy.error(e);
   }
