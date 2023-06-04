@@ -58,6 +58,7 @@ dependencies:
   flutter_loggy: 2.0.2
   synchronized: 3.1.0
   collection: 1.17.1
+  win32: ^4.1.4
 
 dev_dependencies:
   flutter_test:

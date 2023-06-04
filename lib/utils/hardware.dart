@@ -1,9 +1,10 @@
-
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
+import 'package:ffi/ffi.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -11,8 +12,10 @@ import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:win32/win32.dart';
 
 int lastUsedPrinterIndex = -1;
+final loggy = Loggy<UiLoggy>("hardware utils");
 
 Future<Uint8List> getImagePDF(Uint8List imageData) async {
   late final pw.MemoryImage image = pw.MemoryImage(imageData);
@@ -56,11 +59,109 @@ Future<List<Printer>> getSelectedPrinters() async {
   for (String name in SettingsManagerBase.instance.settings.hardware.printerNames) {
     Printer? selected = sourcePrinters.firstWhereOrNull((printer) => printer.name == name);
     if (selected == null) {
-        Loggy<UiLoggy>("hardware utils").error("Could not find selected printer ($name)");
+        loggy.error("Could not find selected printer ($name)");
     }
     printers.add(selected!);
   }
   return printers;
+}
+
+enum JobStatus {
+  blocked(0x00000200),
+  complete(0x00001000),
+  deleted(0x00000100),
+  deleting(0x00000004),
+  error(0x00000002),
+  offline(0x00000020),
+  paperout(0x00000040),
+  paused(0x00000001),
+  printed(0x00000080),
+  printing(0x00000010),
+  restart(0x00000800),
+  spooling(0x00000008),
+  userIntervention(0x00000400),
+  unknown(0x00000000);
+
+  final int value;
+  const JobStatus(this.value);
+}
+
+class JobInfo {
+  DateTime submitted;
+  List<JobStatus> status;
+  int statusRaw;
+
+  JobInfo(this.status, this.submitted, this.statusRaw);
+
+  @override
+  String toString() {
+    final String statusString = status.map((e) => e.name).join(", ");
+    return "Job {status: $statusString (${statusRaw.toHexString(32)}), submitted: ${submitted.toLocal()}}";
+  }
+}
+
+List<JobInfo> getJobList(Printer printer) {
+  // Allocate necessary pointers
+  Pointer<Utf16> printerNameHandle;
+  Pointer<IntPtr> handle;
+  Pointer<Uint8> jobs;
+  Pointer<Uint32> usedBytes;
+  Pointer<Uint32> numJobs;
+
+  // Allocate space for printer name and set the string.
+  printerNameHandle = calloc<Uint16>(printer.name.length) as Pointer<Utf16>;
+  printerNameHandle.setString(printer.name);
+  // Allocate other pointers
+  handle = calloc<IntPtr>();
+  const numBytes = 100000;
+  jobs = calloc<Uint8>(numBytes);
+  usedBytes = calloc<Uint32>();
+  numJobs = calloc<Uint32>();
+
+  // Get the printer handle.
+  final bool openSuccess = OpenPrinter(printerNameHandle, handle, Pointer.fromAddress(0)) != 0 ? true : false;
+  free(printerNameHandle);
+  if (!openSuccess) throw "Error opening printer ${printer.name} to acquire print jobs";
+  
+  final int printerHandleValue = handle.value;
+  // Enumerate jobs for printer.
+  const int returnType = 1; // JOB_INFO_1
+  final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0 ? true : false;
+  if (!enumSuccess) throw "Error enumerating print jobs for printer ${printer.name}";
+
+  loggy.debug("Printer ${printer.name} (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
+
+  List<JobInfo> jobList = [];
+  for (var i = 0; i < numJobs.value; i++) {
+    var job = jobs.cast<JOB_INFO_1>().elementAt(i).ref;
+    // Convert job status
+    var statusVal = job.Status;
+    var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
+    if (statusString.isNotEmpty) {
+      loggy.debug("Custom statusstring for printer ${printer.name}: $statusString");
+    }
+    // Extract list of statusses
+    final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
+    if (status.isEmpty) { status.add(JobStatus.unknown); }
+
+    // Convert submitted time object
+    final submitted = job.Submitted;
+    var time = DateTime.utc(submitted.wYear, submitted.wMonth, submitted.wDay, submitted.wHour, submitted.wMinute, submitted.wSecond, submitted.wMilliseconds);
+
+    // Save jobinfo to list
+    jobList.add(JobInfo(status, time, statusVal));
+  }
+  loggy.debug("Job list for printer ${printer.name} = $jobList");
+
+  // Close printer again so we can actually print...
+  final bool closeSuccess = ClosePrinter(printerHandleValue) != 0 ? true : false;
+  if (!closeSuccess) throw "Error closing printer ${printer.name}";
+
+  free(handle);
+  free(jobs);
+  free(usedBytes);
+  free(numJobs);
+  return jobList;
 }
 
 Future<bool> printPDF(Uint8List pdfData) async {
@@ -71,7 +172,13 @@ Future<bool> printPDF(Uint8List pdfData) async {
   if (++lastUsedPrinterIndex >= printers.length) { lastUsedPrinterIndex = 0; }
   final printer = printers[lastUsedPrinterIndex];
 
-  Loggy<UiLoggy>("hardware utils").debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
+  loggy.debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
+
+  try {
+    getJobList(printer);
+  } catch (e) {
+    loggy.error(e);
+  }
 
   bool success = await Printing.directPrintPdf(
       printer: printer,
