@@ -74,7 +74,7 @@ dev_dependencies:
   dart_code_metrics_presets: 1.8.0
 
   # Models
-  freezed: 2.3.4
+  freezed: ^2.3.5
   json_serializable: 6.7.0
 
   # Code generation
