@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_controller.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_view_model.dart';
 
@@ -28,12 +29,9 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               for (var file in viewModel.fileList)
                 GestureDetector(
                   onTap: () => controller.openPhoto(file),
-                  child: Hero(
+                  child: AnimatedBoxDecorationHero(
                     tag: file.path,
-                    child: Container(
-                      decoration: const BoxDecoration(),
-                      child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain),
-                    ),
+                    child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain),
                   ),
                 ),
             ],
