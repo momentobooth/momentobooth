@@ -241,4 +241,11 @@ class _AppState extends State<App> with UiLoggy {
     );
   }
 
+  @override
+  void dispose() {
+    _returnHomeTimer.cancel();
+    _statusCheckTimer.cancel();
+    super.dispose();
+  }
+
 }

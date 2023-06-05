@@ -17,7 +17,7 @@ dependencies:
   go_router: 7.1.1
   flutter_svg: 2.0.6
   animated_text_kit: 4.2.2
-  hotkey_manager: 0.1.7
+  hotkey_manager: 0.1.8
   flutter_scroll_shadow: 1.2.0
   flutter_layout_grid: 2.0.3
   pretty_qr_code: 2.0.3
@@ -75,7 +75,7 @@ dev_dependencies:
   dart_code_metrics_presets: 1.8.0
 
   # Models
-  freezed: 2.3.4
+  freezed: 2.3.5
   json_serializable: 6.7.0
 
   # Code generation
