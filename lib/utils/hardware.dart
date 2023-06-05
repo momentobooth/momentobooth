@@ -133,6 +133,8 @@ List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
 }
 
 List<JobInfo> getJobList(String printerName) {
+  // Todo: eventually add OSx and Linux support
+  if (!Platform.isWindows) return [];
   return using((Arena alloc) {
     // Allocate necessary pointers
     Pointer<Utf16> printerNameHandle;

@@ -89,13 +89,12 @@ class _AppState extends State<App> with UiLoggy {
   }
 
   void _statusCheck() async {
-    bool hasError, paperOut;
     final printerNames = SettingsManagerBase.instance.settings.hardware.printerNames;
     final printersStatus = await compute(checkPrintersStatus, printerNames);
     NotificationsManagerBase.instance.notifications.clear();
     printersStatus.forEachIndexed((index, element) {
-      final hasErrorNotification = InfoBar(title: Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning,);
-      final paperOutNotification = InfoBar(title: Text("Printer out of paper"), content: Text("Printer  ${index+1} is out of paper."), severity: InfoBarSeverity.warning,);
+      final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning,);
+      final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer  ${index+1} is out of paper."), severity: InfoBarSeverity.warning,);
       if (element.hasError) {
         NotificationsManagerBase.instance.notifications.add(hasErrorNotification);
       }
