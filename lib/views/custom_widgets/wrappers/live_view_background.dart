@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -28,7 +29,24 @@ class LiveViewBackground extends StatelessWidgetBase {
       children: [
         _viewState,
         child,
+        _statusOverlay,
       ]
+    );
+  }
+  
+  Widget get _statusOverlay {
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: Observer(
+        builder: (context) => Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (InfoBar notification in NotificationsManagerBase.instance.notifications)
+              notification
+          ],
+        ),
+      ),
     );
   }
 

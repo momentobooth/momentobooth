@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
@@ -90,7 +92,16 @@ class _AppState extends State<App> with UiLoggy {
     bool hasError, paperOut;
     final printerNames = SettingsManagerBase.instance.settings.hardware.printerNames;
     (hasError, paperOut) = await compute(checkPrinterStatus, printerNames);
-    loggy.debug("Status check $hasError, $paperOut");
+    const hasErrorNotification = InfoBar(title: Text("Printer error"), content: Text("One of the printers has an error."), severity: InfoBarSeverity.warning,);
+    const paperOutNotification = InfoBar(title: Text("Printer out of paper"), content: Text("One of the printers is out of paper."), severity: InfoBarSeverity.warning,);
+    NotificationsManagerBase.instance.notifications.clear();
+    if (hasError) {
+      NotificationsManagerBase.instance.notifications.add(hasErrorNotification);
+    }
+    if (paperOut) {
+      NotificationsManagerBase.instance.notifications.add(paperOutNotification);
+    }
+    // loggy.debug("Status check $hasError, $paperOut");
   }
 
   void _toggleFullscreen() {
