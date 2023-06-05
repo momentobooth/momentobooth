@@ -100,10 +100,21 @@ class JobInfo {
   }
 }
 
-(bool, bool) checkPrinterStatus(List<String> printerNames) {
-  bool hasError = false;
-  bool paperOut = false;
+class PrinterStatus {
+  int jobs;
+  bool hasError;
+  bool paperOut;
+
+  PrinterStatus(this.jobs, this.hasError, this.paperOut);
+}
+
+/// Get the status of all printers.
+/// Returns list of statusses.
+List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
+  List<PrinterStatus> output = [];
   for (String printerName in printerNames) {
+    bool hasError = false;
+    bool paperOut = false;
     late final List<JobInfo> jobList;
     try {
       jobList = getJobList(printerName);
@@ -116,8 +127,9 @@ class JobInfo {
     // Check if there are prints that have errored
     hasError = hasError || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.error));
     paperOut = paperOut || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.paperout));
+    output.add(PrinterStatus(jobList.length, hasError, paperOut));
   }
-  return (hasError, paperOut);
+  return output;
 }
 
 List<JobInfo> getJobList(String printerName) {

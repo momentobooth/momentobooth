@@ -1,11 +1,11 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
-import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -91,16 +91,18 @@ class _AppState extends State<App> with UiLoggy {
   void _statusCheck() async {
     bool hasError, paperOut;
     final printerNames = SettingsManagerBase.instance.settings.hardware.printerNames;
-    (hasError, paperOut) = await compute(checkPrinterStatus, printerNames);
-    const hasErrorNotification = InfoBar(title: Text("Printer error"), content: Text("One of the printers has an error."), severity: InfoBarSeverity.warning,);
-    const paperOutNotification = InfoBar(title: Text("Printer out of paper"), content: Text("One of the printers is out of paper."), severity: InfoBarSeverity.warning,);
+    final printersStatus = await compute(checkPrintersStatus, printerNames);
     NotificationsManagerBase.instance.notifications.clear();
-    if (hasError) {
-      NotificationsManagerBase.instance.notifications.add(hasErrorNotification);
-    }
-    if (paperOut) {
-      NotificationsManagerBase.instance.notifications.add(paperOutNotification);
-    }
+    printersStatus.forEachIndexed((index, element) {
+      final hasErrorNotification = InfoBar(title: Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning,);
+      final paperOutNotification = InfoBar(title: Text("Printer out of paper"), content: Text("Printer  ${index+1} is out of paper."), severity: InfoBarSeverity.warning,);
+      if (element.hasError) {
+        NotificationsManagerBase.instance.notifications.add(hasErrorNotification);
+      }
+      if (element.paperOut) {
+        NotificationsManagerBase.instance.notifications.add(paperOutNotification);
+      }
+    });
     // loggy.debug("Status check $hasError, $paperOut");
   }
 
