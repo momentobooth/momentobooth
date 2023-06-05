@@ -1,14 +1,18 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/fade_transition_page.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -70,6 +74,8 @@ class _AppState extends State<App> with UiLoggy {
 
   static const returnHomeTimeout = Duration(seconds: 45);
   late Timer _returnHomeTimer;
+  static const statusCheckPeriod = Duration(seconds: 5);
+  late Timer _statusCheckTimer;
 
   @override
   void initState() {
@@ -77,8 +83,29 @@ class _AppState extends State<App> with UiLoggy {
     // Check if the window is fullscreen from the start.
     windowManager.isFullScreen().then((value) => _isFullScreen = value);
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
+    _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
     _router.addListener(() => onActivity(isTap: false));
     super.initState();
+  }
+
+  void _statusCheck() async {
+    final printerNames = SettingsManagerBase.instance.settings.hardware.printerNames;
+    final printersStatus = await compute(checkPrintersStatus, printerNames);
+    NotificationsManagerBase.instance.notifications.clear();
+    printersStatus.forEachIndexed((index, element) {
+      final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning);
+      final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."), severity: InfoBarSeverity.warning);
+      final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info);
+      if (element.jobs >= SettingsManagerBase.instance.settings.hardware.printerQueueWarningThreshold) {
+        NotificationsManagerBase.instance.notifications.add(longQueueNotification);
+      }
+      if (element.hasError) {
+        NotificationsManagerBase.instance.notifications.add(hasErrorNotification);
+      }
+      if (element.paperOut) {
+        NotificationsManagerBase.instance.notifications.add(paperOutNotification);
+      }
+    });
   }
 
   void _toggleFullscreen() {
@@ -211,6 +238,13 @@ class _AppState extends State<App> with UiLoggy {
         child: const SettingsScreen(),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _returnHomeTimer.cancel();
+    _statusCheckTimer.cancel();
+    super.dispose();
   }
 
 }
