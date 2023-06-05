@@ -28,7 +28,13 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               for (var file in viewModel.fileList)
                 GestureDetector(
                   onTap: () => controller.openPhoto(file),
-                  child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain,),
+                  child: Hero(
+                    tag: file.path,
+                    child: Container(
+                      decoration: const BoxDecoration(),
+                      child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain),
+                    ),
+                  ),
                 ),
             ],
           ),

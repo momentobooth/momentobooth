@@ -1,8 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/views/base/fade_transition_page.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/delayed_widget.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/slider_widget.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_controller.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
@@ -26,20 +28,42 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
             // This SizedBox is only necessary when the image used is smaller than what would be displayed.
             child: SizedBox(
               height: double.infinity,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F0F0),
-                  border: theme.captureCounterContainerBorder,
-                  boxShadow: [theme.captureCounterContainerShadow],
+              child: Hero(
+                tag: viewModel.file.path,
+                flightShuttleBuilder: (context, animation, direction, fromContext, toContext) {
+                  return AnimatedBuilder(
+                    animation: animation,
+                    builder: (context, child) {
+                      BoxDecoration a = direction == HeroFlightDirection.push ? (fromContext.widget as dynamic).child.decoration : (toContext.widget as dynamic).child.decoration;
+                      BoxDecoration b = direction == HeroFlightDirection.push ? (toContext.widget as dynamic).child.decoration : (fromContext.widget as dynamic).child.decoration;
+                      return Center(
+                        child: Container(
+                          decoration: BoxDecoration.lerp(a, b, animation.value),
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: ImageWithLoaderFallback.file(viewModel.file, fit: BoxFit.contain),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F0F0),
+                    border: theme.captureCounterContainerBorder,
+                    boxShadow: [theme.captureCounterContainerShadow],
+                  ),
+                  child: ImageWithLoaderFallback.file(viewModel.file, fit: BoxFit.contain),
                 ),
-                child: ImageWithLoaderFallback.file(viewModel.file, fit: BoxFit.contain),
               ),
             ),
           ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
-          child: _foregroundElements,
+          child: DelayedWidget(
+            delay: FadeTransitionPage.defaultTransitionDuration,
+            child: _foregroundElements,
+          ),
         ),
         SizedBox.expand(child: _qrCodeBackdrop),
         _qrCode
