@@ -95,6 +95,10 @@ class _AppState extends State<App> with UiLoggy {
     printersStatus.forEachIndexed((index, element) {
       final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning,);
       final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer  ${index+1} is out of paper."), severity: InfoBarSeverity.warning,);
+      final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer  ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info,);
+      if (element.jobs >= 4) {
+        NotificationsManagerBase.instance.notifications.add(longQueueNotification);
+      }
       if (element.hasError) {
         NotificationsManagerBase.instance.notifications.add(hasErrorNotification);
       }
