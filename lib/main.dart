@@ -93,10 +93,10 @@ class _AppState extends State<App> with UiLoggy {
     final printersStatus = await compute(checkPrintersStatus, printerNames);
     NotificationsManagerBase.instance.notifications.clear();
     printersStatus.forEachIndexed((index, element) {
-      final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning,);
-      final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer  ${index+1} is out of paper."), severity: InfoBarSeverity.warning,);
-      final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer  ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info,);
-      if (element.jobs >= 4) {
+      final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning);
+      final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."), severity: InfoBarSeverity.warning);
+      final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info);
+      if (element.jobs >= SettingsManagerBase.instance.settings.hardware.printerQueueWarningThreshold) {
         NotificationsManagerBase.instance.notifications.add(longQueueNotification);
       }
       if (element.hasError) {
@@ -106,7 +106,6 @@ class _AppState extends State<App> with UiLoggy {
         NotificationsManagerBase.instance.notifications.add(paperOutNotification);
       }
     });
-    // loggy.debug("Status check $hasError, $paperOut");
   }
 
   void _toggleFullscreen() {

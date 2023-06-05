@@ -75,6 +75,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default(0) double printerMarginRight,
     @Default(0) double printerMarginBottom,
     @Default(0) double printerMarginLeft,
+    @Default(4) int printerQueueWarningThreshold,
   }) = _HardwareSettings;
 
   factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});

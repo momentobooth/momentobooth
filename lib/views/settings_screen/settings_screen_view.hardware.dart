@@ -94,6 +94,13 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             value: () => viewModel.usePrinterSettingsSetting,
             onChanged: controller.onUsePrinterSettingsChanged,
           ),
+          _getInput<int>(
+            icon: FluentIcons.queue_advanced,
+            title: "Queue warning threshold",
+            subtitle: "Number of photos in the OS's printer queue before a warning is shown (Windows only for now).",
+            value: () => viewModel.printerQueueWarningThresholdSetting,
+            onChanged: controller.onPrinterQueueWarningThresholdChanged,
+          ),
         ],
       ),
     ],
@@ -141,7 +148,7 @@ FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScr
             );
           }),
         ),
-        const SizedBox(width: padding,),
+        const SizedBox(width: padding),
         SizedBox(
           width: numberWidth,
           child: Observer(builder: (_) {

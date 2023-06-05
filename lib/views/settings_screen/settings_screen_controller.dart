@@ -163,6 +163,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onPrinterQueueWarningThresholdChanged(int? warningThreshold) {
+    if (warningThreshold != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerQueueWarningThreshold: warningThreshold));
+    }
+  }
+
   void onLocalFolderChanged(String? localFolder) {
     if (localFolder != null) {
       viewModel.updateSettings((settings) => settings.copyWith.output(localFolder: localFolder));

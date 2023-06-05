@@ -87,6 +87,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   double get printerMarginRightSetting => SettingsManagerBase.instance.settings.hardware.printerMarginRight;
   double get printerMarginBottomSetting => SettingsManagerBase.instance.settings.hardware.printerMarginBottom;
   double get printerMarginLeftSetting => SettingsManagerBase.instance.settings.hardware.printerMarginLeft;
+  int get printerQueueWarningThresholdSetting => SettingsManagerBase.instance.settings.hardware.printerQueueWarningThreshold;
   String get localFolderSetting => SettingsManagerBase.instance.settings.output.localFolder;
   String get firefoxSendServerUrlSetting => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
   ExportFormat get exportFormat => SettingsManagerBase.instance.settings.output.exportFormat;
