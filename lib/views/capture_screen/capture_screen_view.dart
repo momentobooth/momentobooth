@@ -62,13 +62,13 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
       child: SizedBox(
         height: 300,
         child: AnimatedTextKit(
-                pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
-                isRepeatingAnimation: false,
-                animatedTexts: [
-                    RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
-                    RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
-                ],
-              ),
+          pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
+          isRepeatingAnimation: false,
+          animatedTexts: [
+            RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+          ],
+        ),
       ),
     );
   }
