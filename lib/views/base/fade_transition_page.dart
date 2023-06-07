@@ -17,6 +17,8 @@ class FadeTransitionPage extends CustomTransitionPage<void> {
   FadeTransitionPage({
     required LocalKey super.key,
     required super.child,
+    super.opaque = true,
+    super.barrierDismissible = false,
   }) : super(
           transitionDuration: defaultTransitionDuration,
           reverseTransitionDuration: defaultTransitionDuration,
