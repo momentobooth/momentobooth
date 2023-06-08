@@ -74,7 +74,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
     final Directory docDir = await getApplicationSupportDirectory();
     final String localPath = '${docDir.path}\\$autoItScriptFileName';
     File file = File(localPath);
-    if (!await file.exists()) {
+    if (!file.existsSync()) {
       final imageBytes = await rootBundle.load('assets/scripts/$autoItScriptFileName');
       final buffer = imageBytes.buffer;
       await file.writeAsBytes(buffer.asUint8List(imageBytes.offsetInBytes, imageBytes.lengthInBytes));

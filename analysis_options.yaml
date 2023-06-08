@@ -9,6 +9,21 @@ analyzer:
     - '**/*.generated.dart'
     - '**/*.json.dart'
 
+linter:
+  # More info: https://dart.dev/tools/linter-rules
+  rules:
+    - always_use_package_imports
+    - avoid_dynamic_calls
+    - avoid_slow_async_io
+    # - cascade_invocations # Yet to decide
+    - close_sinks
+    # - discarded_futures # Enable ASAP
+    - eol_at_end_of_file
+    - unreachable_from_main
+    - use_enums
+    - use_is_even_rather_than_modulo
+    - unnecessary_statements
+
 dart_code_metrics:
   rules:
     - prefer-conditional-expressions

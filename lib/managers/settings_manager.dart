@@ -50,7 +50,7 @@ abstract class SettingsManagerBase with Store, UiLoggy {
     loggy.debug("Loading settings");
     await _ensureSettingsFileIsSet();
 
-    if (!await _settingsFile.exists()) {
+    if (!_settingsFile.existsSync()) {
       // File does not exist, load defaults and create settings file
       _settings = Settings.withDefaults();
       await _save();
