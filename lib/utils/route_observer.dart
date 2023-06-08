@@ -1,31 +1,58 @@
 import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
 
 class GoRouterObserver extends NavigatorObserver with UiLoggy {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    var routeDynamic = route as dynamic;
-    loggy.debug("Route push: ${routeDynamic.settings.child}");
+    if (route.settings is CustomTransitionPage) {
+      CustomTransitionPage page = route.settings as CustomTransitionPage;
+      loggy.debug("Route push: ${page.child}");
+    } else {
+      loggy.debug("Route push: Unknown (could not cast to CustomTransitionPage))");
+    }
   }
 
   @override
   void didPop(Route route, Route? previousRoute) {
-    var routeDynamic = route as dynamic;
-    loggy.debug("Route pop: ${routeDynamic.settings.child}");
+    if (route.settings is CustomTransitionPage) {
+      CustomTransitionPage page = route.settings as CustomTransitionPage;
+      loggy.debug("Route pop: ${page.child}");
+    } else {
+      loggy.debug("Route pop: Unknown (could not cast to CustomTransitionPage))");
+    }
   }
 
   @override
   void didRemove(Route route, Route? previousRoute) {
-    var routeDynamic = route as dynamic;
-    loggy.debug("Route remove: ${routeDynamic.settings.child}");
+    if (route.settings is CustomTransitionPage) {
+      CustomTransitionPage page = route.settings as CustomTransitionPage;
+      loggy.debug("Route remove: ${page.child}");
+    } else {
+      loggy.debug("Route remove: Unknown (could not cast to CustomTransitionPage))");
+    }
   }
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
-    var oldRouteDynamic = oldRoute as dynamic;
-    var newRouteDynamic = newRoute as dynamic;
-    loggy.debug("Route replaced ${oldRouteDynamic.settings.child} with ${newRouteDynamic.settings.child}");
+    String? newRouteChildName, oldRouteChildName;
+
+    if (newRoute == null) {
+      newRouteChildName = "None";
+    } else if (newRoute.settings is CustomTransitionPage) {
+      CustomTransitionPage page = newRoute.settings as CustomTransitionPage;
+      newRouteChildName = page.child.toString();
+    }
+
+    if (oldRoute == null) {
+      oldRouteChildName = "None";
+    } else if (oldRoute.settings is CustomTransitionPage) {
+      CustomTransitionPage page = oldRoute.settings as CustomTransitionPage;
+      oldRouteChildName = page.child.toString();
+    }
+
+    loggy.debug("Route replaced ${oldRouteChildName ?? 'Unknown (could not cast)'} with ${newRouteChildName ?? 'Unknown (could not cast)'}");
   }
 
 }

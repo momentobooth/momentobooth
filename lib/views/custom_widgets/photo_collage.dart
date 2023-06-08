@@ -41,7 +41,7 @@ class PhotoCollage extends StatefulWidget {
   final double padding;
   final bool showLogo;
   final bool singleMode;
-  final Function decodeCallback;
+  final VoidCallback decodeCallback;
 
   const PhotoCollage({
     super.key,
@@ -113,7 +113,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   /// Checks if a given template file exists and returns it if it does.
   Future<File?> _templateTest(String fileName) async {
     var template = File(join(templatesFolder, fileName));
-    if (await template.exists()) { return template; }
+    if (template.existsSync()) { return template; }
     return null;
   }
 

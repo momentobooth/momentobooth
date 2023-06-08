@@ -86,7 +86,7 @@ abstract class StatsManagerBase with Store, UiLoggy {
     loggy.debug("Loading statistics");
     await _ensureStatsFileIsSet();
 
-    if (!await _statsFile.exists()) {
+    if (!_statsFile.existsSync()) {
       // File does not exist
       _stats = const Stats();
       loggy.warning("Persisted statistics file not found"); 

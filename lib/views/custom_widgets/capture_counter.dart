@@ -4,6 +4,7 @@ import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 
 class CaptureCounter extends StatefulWidget {
+
   final VoidCallback onCounterFinished;
   final int counterStart;
 
@@ -15,10 +16,10 @@ class CaptureCounter extends StatefulWidget {
 
   @override
   State<CaptureCounter> createState() => CaptureCounterState();
+
 }
 
-class CaptureCounterState extends State<CaptureCounter>
-    with SingleTickerProviderStateMixin {
+class CaptureCounterState extends State<CaptureCounter> with SingleTickerProviderStateMixin {
 
   late final controller = AnimationController(
     vsync: this,
