@@ -12,21 +12,6 @@ class InitializationScreenView extends ScreenViewBase<InitializationScreenViewMo
     required super.contextAccessor,
   });
 
-  static const _colors = [
-    Color(0xFFFEE440),
-    Color(0xFF00BBF9),
-  ];
-
-  static const _durations = [
-    5000,
-    4000,
-  ];
-
-  static const _heightPercentages = [
-    0.65,
-    0.66,
-  ];
-
   @override
   Widget get body {
     return Column(
@@ -37,17 +22,30 @@ class InitializationScreenView extends ScreenViewBase<InitializationScreenViewMo
         ),
         Expanded(
           flex: 1,
-          child: WaveWidget(
-            config: CustomConfig(
-              colors: _colors,
-              durations: _durations,
-              heightPercentages: _heightPercentages,
-            ),
-            size: const Size(double.infinity, double.infinity),
-            waveAmplitude: 0,
-          ),
+          child: _waves,
         ),
       ],
+    );
+  }
+
+  Widget get _waves {
+    return WaveWidget(
+      config: CustomConfig(
+        colors: const [
+          Color(0xFFFEE440),
+          Color(0xFF00BBF9),
+        ],
+        durations: const [
+          5000,
+          4000,
+        ],
+        heightPercentages: const [
+          0.65,
+          0.66,
+        ],
+      ),
+      size: const Size(double.infinity, double.infinity),
+      waveAmplitude: 0,
     );
   }
 }
