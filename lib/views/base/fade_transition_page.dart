@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 
 class FadeTransitionPage extends CustomTransitionPage<void> {
 
+  static const defaultTransitionDuration = Duration(milliseconds: 500);
+
   static CurvedAnimation _curvedAnimation(Animation<double> parent) {
     return CurvedAnimation(
       parent: parent,
@@ -15,9 +17,11 @@ class FadeTransitionPage extends CustomTransitionPage<void> {
   FadeTransitionPage({
     required LocalKey super.key,
     required super.child,
+    super.opaque = true,
+    super.barrierDismissible = false,
   }) : super(
-          transitionDuration: const Duration(milliseconds: 500),
-          reverseTransitionDuration: const Duration(milliseconds: 500),
+          transitionDuration: defaultTransitionDuration,
+          reverseTransitionDuration: defaultTransitionDuration,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeTransition(
               opacity: Tween<double>(begin: 0.0, end: 1.0).animate(_curvedAnimation(animation)),

@@ -8,3 +8,7 @@ analyzer:
     - '**/*.freezed.dart'
     - '**/*.generated.dart'
     - '**/*.json.dart'
+
+dart_code_metrics:
+  rules:
+    - prefer-conditional-expressions

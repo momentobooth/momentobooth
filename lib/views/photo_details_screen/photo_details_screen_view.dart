@@ -1,8 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/views/base/fade_transition_page.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/delayed_widget.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/slider_widget.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_controller.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
@@ -26,7 +29,8 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
             // This SizedBox is only necessary when the image used is smaller than what would be displayed.
             child: SizedBox(
               height: double.infinity,
-              child: Container(
+              child: AnimatedBoxDecorationHero(
+                tag: viewModel.file.path,
                 decoration: BoxDecoration(
                   color: const Color(0xFFF0F0F0),
                   border: theme.captureCounterContainerBorder,
@@ -39,7 +43,10 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
-          child: _foregroundElements,
+          child: DelayedWidget(
+            delay: FadeTransitionPage.defaultTransitionDuration,
+            child: _foregroundElements,
+          ),
         ),
         SizedBox.expand(child: _qrCodeBackdrop),
         _qrCode

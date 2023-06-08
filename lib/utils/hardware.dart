@@ -32,11 +32,9 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
   // Do not assume any prior knowledge about the image.
   final bool rotate = image.width! > image.height!;
   late final pw.Image imageWidget;
-  if (rotate) {
-    imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight);
-  } else {
-    imageWidget = pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
-  }
+  imageWidget = rotate
+      ? pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight)
+      : pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
 
   final doc = pw.Document(title: "MomentoBooth image");
   doc.addPage(pw.Page(

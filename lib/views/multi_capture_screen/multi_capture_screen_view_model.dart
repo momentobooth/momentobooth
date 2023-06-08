@@ -55,11 +55,10 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   MultiCaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    if (SettingsManagerBase.instance.settings.hardware.captureMethod == CaptureMethod.sonyImagingEdgeDesktop){
-      capturer = SonyRemotePhotoCapture(SettingsManagerBase.instance.settings.hardware.captureLocation);
-  	} else {
-      capturer = LiveViewStreamSnapshotCapturer();
-    }
+    capturer = switch (SettingsManagerBase.instance.settings.hardware.captureMethod) {
+      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManagerBase.instance.settings.hardware.captureLocation),
+      CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
+    } as PhotoCaptureMethod;
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
   }
 

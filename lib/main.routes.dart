@@ -88,6 +88,8 @@ GoRoute _photoDetailsRoute = GoRoute(
   pageBuilder: (context, state) {
     return FadeTransitionPage(
       key: state.pageKey,
+      opaque: false,
+      barrierDismissible: true,
       child: PhotoDetailsScreen(photoId: state.pathParameters['pid']!),
     );
   },

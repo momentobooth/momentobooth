@@ -12,6 +12,7 @@ import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/fade_transition_page.dart';
@@ -67,7 +68,13 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with UiLoggy {
 
-  final GoRouter _router = GoRouter(routes: rootRoutes, observers: [GoRouterObserver()]);
+  final GoRouter _router = GoRouter(
+    routes: rootRoutes,
+    observers: [
+      GoRouterObserver(),
+      HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin!, end: end!)),
+    ],
+  );
 
   bool _settingsOpen = false;
   bool _isFullScreen = false;
