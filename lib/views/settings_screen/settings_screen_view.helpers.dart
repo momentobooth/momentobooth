@@ -2,6 +2,29 @@ part of 'settings_screen_view.dart';
 
 typedef GetValueCallback<T> = T Function();
 
+FluentSettingCard _getButtonCard<TValue>({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required String buttonText,
+  required VoidCallback onPressed,
+}) {
+  return FluentSettingCard(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 150),
+      child: Observer(builder: (_) {
+        return Button(
+          onPressed: onPressed,
+          child: Text(buttonText),
+        );
+      }),
+    ),
+  );
+}
+
 FluentSettingCard _getComboBoxCard<TValue>({
   required IconData icon,
   required String title,

@@ -81,6 +81,18 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
         ],
       ),
+      FluentSettingsBlock(
+        title: "Debug actions",
+        settings: [
+          _getButtonCard(
+            icon: FluentIcons.error,
+            title: "Report fake error",
+            subtitle: "Test whether error reporting (to Sentry) works",
+            buttonText: "Report Fake Error",
+            onPressed: () => throw Exception("This is a fake error to test error reporting"),
+          ),
+        ],
+      )
     ],
   );
 }

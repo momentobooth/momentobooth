@@ -87,12 +87,6 @@ jobs:
     - name: Flutter Analyze
       run: flutter analyze
 
-    - name: Build Project
-      run: msys2 -c 'flutter build windows --release'
-    
-    - name: Bundle DLL dependencies of the helper library
-      run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
-
     # Extract version from branch name
     - name: Extract Release version
       id: extract_release_version
@@ -100,6 +94,13 @@ jobs:
       run: |
         release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
+        echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
+
+    - name: Build Project
+      run: msys2 -c 'flutter build windows --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}'
+    
+    - name: Bundle DLL dependencies of the helper library
+      run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
 
     # Pack
     - name: Archive Release
