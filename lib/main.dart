@@ -29,6 +29,7 @@ import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hotkey_manager/hotkey_manager.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
 part 'main.routes.dart';
@@ -54,7 +55,15 @@ void main() async {
   // Native library init
   init();
 
-  runApp(const App());
+  await SentryFlutter.init(
+    (options) {
+      options.tracesSampleRate = 1.0;
+      options.dsn = const String.fromEnvironment("SENTRY_DSN", defaultValue: "");
+      options.environment = const String.fromEnvironment("SENTRY_ENVIRONMENT", defaultValue: 'Development');
+      options.release = const String.fromEnvironment("SENTRY_RELEASE", defaultValue: 'Development');
+    },
+    appRunner: () => runApp(const App()),
+  );
 }
 
 class App extends StatefulWidget {

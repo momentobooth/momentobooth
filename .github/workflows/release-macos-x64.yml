@@ -81,9 +81,6 @@ jobs:
     - name: Flutter Analyze
       run: flutter analyze
 
-    - name: Build Project
-      run: flutter build macos --release
-
     # Extract version from branch name
     - name: Extract Release version
       id: extract_release_version
@@ -91,6 +88,10 @@ jobs:
       run: |
         release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
+        echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
+
+    - name: Build Project
+      run: flutter build macos --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
 
     - name: Copy binary to bundle and bundle dependency dylibs
       run: |

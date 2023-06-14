@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   hotkey_manager
   printing
   screen_retriever
+  sentry_flutter
   texture_rgba_renderer
   window_manager
 )
