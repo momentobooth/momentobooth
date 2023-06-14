@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:path/path.dart';
 import 'package:toml/toml.dart';
+import 'dart:ui' as ui;
 
 part 'settings.freezed.dart';
 part 'settings.g.dart';
@@ -27,6 +28,7 @@ class Settings with _$Settings implements TomlEncodableValue {
     @Default("") String templatesFolder,
     @Default(HardwareSettings()) HardwareSettings hardware,
     @Default(OutputSettings()) OutputSettings output,
+    @Default(DebugSettings()) DebugSettings debug,
   }) = _Settings;
 
   factory Settings.withDefaults() => Settings.fromJson({});
@@ -41,6 +43,9 @@ class Settings with _$Settings implements TomlEncodableValue {
     }
     if (!json.containsKey("output")) {
       json["output"] = OutputSettings.withDefaults().toJson();
+    }
+    if (!json.containsKey("debug")) {
+      json["debug"] = DebugSettings.withDefaults().toJson();
     }
 
     return _$SettingsFromJson(json);
@@ -135,4 +140,27 @@ String _getHome() {
     return envVars['UserProfile']!;
   }
   throw 'Could not find the user\'s home folder: Platform unsupported';
+}
+
+// ////////////// //
+// Debug Settings //
+// ////////////// //
+
+@Freezed(fromJson: true, toJson: true)
+class DebugSettings with _$DebugSettings implements TomlEncodableValue {
+
+  const DebugSettings._();
+
+  const factory DebugSettings({
+    @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
+    @Default(FilterQuality.low) FilterQuality liveViewFilterQuality,
+  }) = _DebugSettings;
+
+  factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
+
+  factory DebugSettings.fromJson(Map<String, Object?> json) => _$DebugSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
 }

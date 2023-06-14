@@ -199,4 +199,16 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onScreenTransitionAnimationFilterQualityChanged(FilterQuality? filterQuality) {
+    if (filterQuality != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(screenTransitionAnimationFilterQuality: filterQuality));
+    }
+  }
+
+  void onLiveViewFilterQualityChanged(FilterQuality? filterQuality) {
+    if (filterQuality != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(liveViewFilterQuality: filterQuality));
+    }
+  }
+
 }
