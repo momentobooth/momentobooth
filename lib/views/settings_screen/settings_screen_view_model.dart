@@ -23,6 +23,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<Flip>> get liveViewFlipImageChoices => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
+  List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
   
   @observable
   ObservableList<ComboBoxItem<String>> printerOptions = ObservableList<ComboBoxItem<String>>();
@@ -93,6 +94,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ExportFormat get exportFormat => SettingsManagerBase.instance.settings.output.exportFormat;
   int get jpgQuality => SettingsManagerBase.instance.settings.output.jpgQuality;
   double get resolutionMultiplier => SettingsManagerBase.instance.settings.output.resolutionMultiplier;
+  FilterQuality get screenTransitionAnimationFilterQuality => SettingsManagerBase.instance.settings.debug.screenTransitionAnimationFilterQuality;
+  FilterQuality get liveViewFilterQuality => SettingsManagerBase.instance.settings.debug.liveViewFilterQuality;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

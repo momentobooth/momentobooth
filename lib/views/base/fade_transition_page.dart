@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 
 class FadeTransitionPage extends CustomTransitionPage<void> {
 
@@ -27,10 +28,12 @@ class FadeTransitionPage extends CustomTransitionPage<void> {
               opacity: Tween<double>(begin: 0.0, end: 1.0).animate(_curvedAnimation(animation)),
               child: ScaleTransition(
                 scale: Tween<double>(begin: 0.95, end: 1.0).animate(_curvedAnimation(animation)),
+                filterQuality: SettingsManagerBase.instance.settings.debug.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
                 child: FadeTransition(
                   opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_curvedAnimation(secondaryAnimation)),
                   child: ScaleTransition(
                     scale: Tween<double>(begin: 1.0, end: 1.3).animate(_curvedAnimation(secondaryAnimation)),
+                    filterQuality: SettingsManagerBase.instance.settings.debug.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
                     child: child,
                   ),
                 ),

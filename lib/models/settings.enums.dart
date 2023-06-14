@@ -54,6 +54,33 @@ enum ExportFormat {
 
 }
 
+enum FilterQuality {
+
+  none(ui.FilterQuality.none, "None"),
+  low(ui.FilterQuality.low, "Low"),
+  medium(ui.FilterQuality.medium, "Medium"),
+  high(ui.FilterQuality.high, "High");
+
+  // can add more properties or getters/methods if needed
+  final ui.FilterQuality value;
+  final String name;
+
+  // can use named parameters if you want
+  const FilterQuality(this.value, this.name);
+
+  ComboBoxItem<FilterQuality> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<FilterQuality>> asComboBoxItems() => FilterQuality.values.map((value) => value.toComboBoxItem()).toList();
+
+  ui.FilterQuality toUiFilterQuality() => switch (this) {
+    FilterQuality.none => ui.FilterQuality.none,
+    FilterQuality.low => ui.FilterQuality.low,
+    FilterQuality.medium => ui.FilterQuality.medium,
+    FilterQuality.high => ui.FilterQuality.high,
+  };
+
+}
+
 enum Flip {
 
   none(false, false, "None"),
