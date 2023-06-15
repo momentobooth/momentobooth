@@ -23,12 +23,12 @@ class Settings with _$Settings implements TomlEncodableValue {
     @Default(5) int captureDelaySeconds,
     @Default(1.5) double collageAspectRatio,
     @Default(0) double collagePadding,
-    @Default(true) bool displayConfetti,
     @Default(true) bool singlePhotoIsCollage,
     @Default("") String templatesFolder,
     @Default(HardwareSettings()) HardwareSettings hardware,
     @Default(OutputSettings()) OutputSettings output,
-    @Default(DebugSettings()) DebugSettings debug,
+    @Default(UiSettings()) UiSettings ui,
+    //@Default(DebugSettings()) DebugSettings debug,
   }) = _Settings;
 
   factory Settings.withDefaults() => Settings.fromJson({});
@@ -44,9 +44,9 @@ class Settings with _$Settings implements TomlEncodableValue {
     if (!json.containsKey("output")) {
       json["output"] = OutputSettings.withDefaults().toJson();
     }
-    if (!json.containsKey("debug")) {
-      json["debug"] = DebugSettings.withDefaults().toJson();
-    }
+    // if (!json.containsKey("debug")) {
+    //   json["debug"] = DebugSettings.withDefaults().toJson();
+    // }
 
     return _$SettingsFromJson(json);
   }
@@ -142,25 +142,47 @@ String _getHome() {
   throw 'Could not find the user\'s home folder: Platform unsupported';
 }
 
+// /////////// //
+// UI Settings //
+// /////////// //
+
+@Freezed(fromJson: true, toJson: true)
+class UiSettings with _$UiSettings implements TomlEncodableValue {
+  const UiSettings._();
+
+  const factory UiSettings({
+    @Default(true) bool displayConfetti,
+    @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
+    @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
+    @Default(FilterQuality.low) FilterQuality liveViewFilterQuality,
+  }) = _UiSettings;
+
+  factory UiSettings.withDefaults() => UiSettings.fromJson({});
+
+  factory UiSettings.fromJson(Map<String, Object?> json) => _$UiSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+}
+
 // ////////////// //
 // Debug Settings //
 // ////////////// //
 
-@Freezed(fromJson: true, toJson: true)
-class DebugSettings with _$DebugSettings implements TomlEncodableValue {
+// @Freezed(fromJson: true, toJson: true)
+// class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 
-  const DebugSettings._();
+//   const DebugSettings._();
 
-  const factory DebugSettings({
-    @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
-    @Default(FilterQuality.low) FilterQuality liveViewFilterQuality,
-  }) = _DebugSettings;
+//   const factory DebugSettings({
 
-  factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
+//   }) = _DebugSettings;
 
-  factory DebugSettings.fromJson(Map<String, Object?> json) => _$DebugSettingsFromJson(json);
+//   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
 
-  @override
-  Map<String, dynamic> toTomlValue() => toJson();
+//   factory DebugSettings.fromJson(Map<String, Object?> json) => _$DebugSettingsFromJson(json);
 
-}
+//   @override
+//   Map<String, dynamic> toTomlValue() => toJson();
+
+// }

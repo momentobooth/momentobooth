@@ -49,12 +49,6 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
-  void onDisplayConfettiChanged(bool? displayConfetti) {
-    if (displayConfetti != null) {
-      viewModel.updateSettings((settings) => settings.copyWith(displayConfetti: displayConfetti));
-    }
-  }
-
   void onSinglePhotoIsCollageChanged(bool? singlePhotoIsCollage) {
     if (singlePhotoIsCollage != null) {
       viewModel.updateSettings((settings) => settings.copyWith(singlePhotoIsCollage: singlePhotoIsCollage));
@@ -199,15 +193,27 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onDisplayConfettiChanged(bool? displayConfetti) {
+    if (displayConfetti != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(displayConfetti: displayConfetti));
+    }
+  }
+
+  void onScreenTransitionAnimationChanged(ScreenTransitionAnimation? screenTransitionAnimation) {
+    if (screenTransitionAnimation != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(screenTransitionAnimation: screenTransitionAnimation));
+    }
+  }
+
   void onScreenTransitionAnimationFilterQualityChanged(FilterQuality? filterQuality) {
     if (filterQuality != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.debug(screenTransitionAnimationFilterQuality: filterQuality));
+      viewModel.updateSettings((settings) => settings.copyWith.ui(screenTransitionAnimationFilterQuality: filterQuality));
     }
   }
 
   void onLiveViewFilterQualityChanged(FilterQuality? filterQuality) {
     if (filterQuality != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.debug(liveViewFilterQuality: filterQuality));
+      viewModel.updateSettings((settings) => settings.copyWith.ui(liveViewFilterQuality: filterQuality));
     }
   }
 

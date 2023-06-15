@@ -15,12 +15,10 @@ FluentSettingCard _getButtonCard<TValue>({
     subtitle: subtitle,
     child: ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 150),
-      child: Observer(builder: (_) {
-        return Button(
-          onPressed: onPressed,
-          child: Text(buttonText),
-        );
-      }),
+      child: Button(
+        onPressed: onPressed,
+        child: Text(buttonText),
+      ),
     ),
   );
 }
