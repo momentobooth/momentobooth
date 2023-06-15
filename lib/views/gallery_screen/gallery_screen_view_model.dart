@@ -18,8 +18,8 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
     findImages();
   }
 
-  Directory get outputDir => Directory(SettingsManagerBase.instance.settings.output.localFolder);
-  String get baseName => PhotosManagerBase.baseName;
+  Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
+  String get baseName => PhotosManager.instance.baseName;
   
   @observable
   ObservableList<File> fileList = ObservableList<File>();

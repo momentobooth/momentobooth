@@ -27,7 +27,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   static const flashEndDuration = Duration(milliseconds: 2500);
   static const minimumContinueWait = Duration(milliseconds: 1500);
 
-  int get counterStart => SettingsManagerBase.instance.settings.captureDelaySeconds;
+  int get counterStart => SettingsManager.instance.settings.captureDelaySeconds;
 
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
@@ -48,15 +48,15 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   Duration get flashAnimationDuration => showFlash ? flashStartDuration : flashEndDuration;
 
   @computed
-  int get photoNumber => PhotosManagerBase.instance.photos.length+1;
+  int get photoNumber => PhotosManager.instance.photos.length+1;
 
   final int maxPhotos = 4;
 
   MultiCaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    capturer = switch (SettingsManagerBase.instance.settings.hardware.captureMethod) {
-      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManagerBase.instance.settings.hardware.captureLocation),
+    capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
+      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
     } as PhotoCaptureMethod;
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
@@ -75,12 +75,12 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   void captureAndGetPhoto() async {
     try {
       final image = await capturer.captureAndGetPhoto();
-      StatsManagerBase.instance.addCapturedPhoto();
-      PhotosManagerBase.instance.photos.add(image);
+      StatsManager.instance.addCapturedPhoto();
+      PhotosManager.instance.photos.add(image);
     } catch (error) {
       loggy.warning(error);
       final errorFile = File('assets/bitmap/capture-error.png');
-      PhotosManagerBase.instance.photos.add(await errorFile.readAsBytes());
+      PhotosManager.instance.photos.add(await errorFile.readAsBytes());
     } finally {
       captureComplete = true;
       navigateAfterCapture();
@@ -89,10 +89,10 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) return;
-    if (PhotosManagerBase.instance.photos.length >= maxPhotos) {
+    if (PhotosManager.instance.photos.length >= maxPhotos) {
       router.go(CollageMakerScreen.defaultRoute);
     } else {
-      router.go("${MultiCaptureScreen.defaultRoute}?n=${PhotosManagerBase.instance.photos.length}");
+      router.go("${MultiCaptureScreen.defaultRoute}?n=${PhotosManager.instance.photos.length}");
     }
   }
 

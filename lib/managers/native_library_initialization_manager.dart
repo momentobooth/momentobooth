@@ -2,12 +2,16 @@ import 'package:mobx/mobx.dart';
 
 part 'native_library_initialization_manager.g.dart';
 
-class HardwareStateManager = HardwareStateManagerBase with _$HardwareStateManager;
+class HardwareStateManager extends _HardwareStateManagerBase with _$HardwareStateManager {
+
+  static final HardwareStateManager instance = HardwareStateManager._internal();
+
+  HardwareStateManager._internal();
+
+}
 
 /// Class containing global state for photos in the app
-abstract class HardwareStateManagerBase with Store {
-
-  static final HardwareStateManagerBase instance = HardwareStateManager._internal();
+abstract class _HardwareStateManagerBase with Store {
 
   // TODO: make these immutable after they are set
 
@@ -16,7 +20,5 @@ abstract class HardwareStateManagerBase with Store {
 
   @observable
   String nokhwaInitializationMessage = "";
-
-  HardwareStateManagerBase._internal();
 
 }

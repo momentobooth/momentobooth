@@ -27,16 +27,16 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   
   void onClickPrev() {
     loggy.debug("Clicked prev");
-    if (PhotosManagerBase.instance.captureMode == CaptureMode.single) {
-      PhotosManagerBase.instance.reset(advance: false);
-      StatsManagerBase.instance.addRetake();
+    if (PhotosManager.instance.captureMode == CaptureMode.single) {
+      PhotosManager.instance.reset(advance: false);
+      StatsManager.instance.addRetake();
       router.go(CaptureScreen.defaultRoute);
     } else {
       router.go(CollageMakerScreen.defaultRoute);
     }
   }
 
-  String get ffSendUrl => SettingsManagerBase.instance.settings.output.firefoxSendServerUrl;
+  String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
 
   void onClickCloseQR() {
     viewModel.qrShown = false;
@@ -50,8 +50,8 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     }
     if (viewModel.uploadState != UploadState.notStarted) return;
 
-    File file = await PhotosManagerBase.instance.getOutputImageAsTempFile();
-    final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
+    File file = await PhotosManager.instance.getOutputImageAsTempFile();
+    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
 
     loggy.debug("Uploading ${file.path}");
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
@@ -65,7 +65,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
         viewModel.qrUrl = event.downloadUrl!;
         viewModel.qrShown = true;
         viewModel.sliderKey.currentState!.animateForward();
-        StatsManagerBase.instance.addUploadedPhoto();
+        StatsManager.instance.addUploadedPhoto();
       } else {
         loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
       }
@@ -91,7 +91,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     viewModel.printText = "Printing...";
     
     // Get photo and print it.
-    final pdfData = await PhotosManagerBase.instance.getOutputPDF();
+    final pdfData = await PhotosManager.instance.getOutputPDF();
     final bool success = await printPDF(pdfData);
 
     viewModel.printText = success ? "Printing..." : "Print unsuccessful";

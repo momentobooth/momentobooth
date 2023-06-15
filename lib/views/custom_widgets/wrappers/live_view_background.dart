@@ -19,8 +19,8 @@ class LiveViewBackground extends StatelessWidgetBase {
     required this.child,
   });
 
-  bool get _showLiveViewBackground => PhotosManagerBase.instance.showLiveViewBackground;
-  LiveViewState get _liveViewState => LiveViewManagerBase.instance.liveViewState;
+  bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground;
+  LiveViewState get _liveViewState => LiveViewManager.instance.liveViewState;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class LiveViewBackground extends StatelessWidgetBase {
   }
 
   Widget get _streamingState {
-    if (LiveViewManagerBase.instance.lastFrameWasInvalid) {
+    if (LiveViewManager.instance.lastFrameWasInvalid) {
       return _errorState(Colors.green, "Could not decode webcam data");
     }
 
@@ -119,7 +119,7 @@ class LiveView extends StatelessWidgetBase {
     this.fit = BoxFit.contain,
   });
 
-  Flip get _flip => SettingsManagerBase.instance.settings.hardware.liveViewFlipImage;
+  Flip get _flip => SettingsManager.instance.settings.hardware.liveViewFlipImage;
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +135,8 @@ class LiveView extends StatelessWidgetBase {
               width: 3,
               height: 2,
               child: Texture(
-                textureId: LiveViewManagerBase.instance.textureId ?? 0,
-                filterQuality: SettingsManagerBase.instance.settings.debug.liveViewFilterQuality.toUiFilterQuality(),
+                textureId: LiveViewManager.instance.textureId ?? 0,
+                filterQuality: SettingsManager.instance.settings.debug.liveViewFilterQuality.toUiFilterQuality(),
               ),
             ),
           ),

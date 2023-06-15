@@ -22,6 +22,7 @@ dependencies:
   flutter_layout_grid: 2.0.3
   pretty_qr_code: 2.0.3
   confetti: 0.7.0
+  wave: 0.2.2
   texture_rgba_renderer:
     git: https://github.com/h3x4d3c1m4l/flutter_texture_rgba_renderer
 

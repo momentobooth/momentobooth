@@ -15,10 +15,16 @@ import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
 part 'live_view_manager.g.dart';
 
-class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
+class LiveViewManager extends _LiveViewManagerBase with _$LiveViewManager {
+
+  static final LiveViewManager instance = LiveViewManager._internal();
+
+  LiveViewManager._internal() : super._internal();
+
+}
 
 /// Class containing global state for photos in the app
-abstract class LiveViewManagerBase with Store, UiLoggy {
+abstract class _LiveViewManagerBase with Store, UiLoggy {
 
   @readonly
   bool _lastFrameWasInvalid = false;
@@ -27,9 +33,7 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
   // Initialization //
   // ////////////// //
 
-  static final LiveViewManager instance = LiveViewManager._internal();
-
-  LiveViewManagerBase._internal() {
+  _LiveViewManagerBase._internal() {
     Timer.periodic(const Duration(seconds: 1), (_) => _checkLiveViewState());
   }
 
@@ -46,16 +50,10 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
     if (_textureId != null) return;
 
     // Initialize texture
-    int textureKey = 0;
+    const int textureKey = 0;
     var textureRenderer = TextureRgbaRenderer();
     await textureRenderer.closeTexture(textureKey);
     _textureId = await textureRenderer.createTexture(textureKey);
-    while (_textureId == -1) {
-      // Hack for Hot Restart
-      await textureRenderer.closeTexture(textureKey);
-      textureKey++;
-      _textureId = await textureRenderer.createTexture(textureKey);
-    }
     _texturePointer = await textureRenderer.getTexturePtr(textureKey);
   }
 
@@ -76,15 +74,15 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
 
   final ReactionDisposer onSettingsChangedDisposer = autorun((_) {
     // To make sure mobx detects that we are responding to changed to this property
-    SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
-    LiveViewManagerBase.instance._lock.synchronized(() async {
-      await LiveViewManagerBase.instance._updateConfig();
+    SettingsManager.instance.settings.hardware.liveViewWebcamId;
+    LiveViewManager.instance._lock.synchronized(() async {
+      await LiveViewManager.instance._updateConfig();
     });
   });
 
   Future<void> _updateConfig() async {
-    LiveViewMethod liveViewMethodSetting = SettingsManagerBase.instance.settings.hardware.liveViewMethod;
-    String webcamIdSetting = SettingsManagerBase.instance.settings.hardware.liveViewWebcamId;
+    LiveViewMethod liveViewMethodSetting = SettingsManager.instance.settings.hardware.liveViewMethod;
+    String webcamIdSetting = SettingsManager.instance.settings.hardware.liveViewWebcamId;
 
     if (_currentLiveViewMethodSetting == null || _currentLiveViewMethodSetting != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
@@ -128,8 +126,8 @@ abstract class LiveViewManagerBase with Store, UiLoggy {
         _lastFrameWasInvalid = true;
       } else {
         // Everything seems to be fine
-        StatsManagerBase.instance.validLiveViewFrames = liveViewState.validFrameCount;
-        StatsManagerBase.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
+        StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount;
+        StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
         _lastFrameWasInvalid = false;
       }
     });

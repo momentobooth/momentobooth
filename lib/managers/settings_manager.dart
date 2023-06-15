@@ -9,9 +9,15 @@ import 'package:toml/toml.dart';
 
 part 'settings_manager.g.dart';
 
-class SettingsManager = SettingsManagerBase with _$SettingsManager;
+class SettingsManager extends _SettingsManagerBase with _$SettingsManager {
 
-abstract class SettingsManagerBase with Store, UiLoggy {
+  static final SettingsManager instance = SettingsManager._internal();
+
+  SettingsManager._internal();
+
+}
+
+abstract class _SettingsManagerBase with Store, UiLoggy {
 
   static const _fileName = "MomentoBooth_Settings.toml";
 
@@ -22,14 +28,6 @@ abstract class SettingsManagerBase with Store, UiLoggy {
 
   @computed
   Settings get settings => _settings!;
-
-  // ////////////// //
-  // Initialization //
-  // ////////////// //
-
-  SettingsManagerBase._internal();
-
-  static final SettingsManager instance = SettingsManager._internal();
 
   // ////// //
   // Mutate //

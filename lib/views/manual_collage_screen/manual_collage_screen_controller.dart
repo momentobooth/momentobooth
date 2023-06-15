@@ -30,7 +30,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     for (var photo in selectedPhotos) {
       photo.isSelected= false;
     }
-    PhotosManagerBase.instance.reset(advance: false);
+    PhotosManager.instance.reset(advance: false);
     viewModel.numSelected = 0;
     selectedPhotos.clear();
     loggy.debug("Cleared selection");
@@ -43,8 +43,8 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
 
     if (file.isSelected) {
       file.isSelected = false;
-      PhotosManagerBase.instance.photos.removeAt(file.selectedIndex);
-      PhotosManagerBase.instance.chosen.removeLast();
+      PhotosManager.instance.photos.removeAt(file.selectedIndex);
+      PhotosManager.instance.chosen.removeLast();
       selectedPhotos.remove(file);
       // Update indexes
       for (int i = 0; i < selectedPhotos.length; i++) {
@@ -57,27 +57,27 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
       selectedPhotos.add(file);
       file.isSelected = true;
       file.selectedIndex = index;
-      PhotosManagerBase.instance.photos.add(await file.file.readAsBytes());
-      PhotosManagerBase.instance.chosen.add(index);
+      PhotosManager.instance.photos.add(await file.file.readAsBytes());
+      PhotosManager.instance.chosen.add(index);
       viewModel.numSelected = index+1;
     }
   }
 
-  String get outputFolder => SettingsManagerBase.instance.settings.output.localFolder;
+  String get outputFolder => SettingsManager.instance.settings.output.localFolder;
 
   void captureCollage() async {
     if (viewModel.numSelected < 1 || viewModel.isSaving) return;
 
     viewModel.isSaving = true;
     final stopwatch = Stopwatch()..start();
-    final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
-    final format = SettingsManagerBase.instance.settings.output.exportFormat;
-    final jpgQuality = SettingsManagerBase.instance.settings.output.jpgQuality;
+    final pixelRatio = SettingsManager.instance.settings.output.resolutionMultiplier;
+    final format = SettingsManager.instance.settings.output.exportFormat;
+    final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
     final exportImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
   
-    PhotosManagerBase.instance.outputImage = exportImage;
-    PhotosManagerBase.instance.writeOutput(advance: true);
+    PhotosManager.instance.outputImage = exportImage;
+    PhotosManager.instance.writeOutput(advance: true);
     loggy.debug("Saved collage image to disk");
     viewModel.isSaving = false;
   }

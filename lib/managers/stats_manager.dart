@@ -11,7 +11,13 @@ import 'package:toml/toml.dart';
 
 part 'stats_manager.g.dart';
 
-class StatsManager = StatsManagerBase with _$StatsManager;
+class StatsManager extends _StatsManagerBase with _$StatsManager {
+
+  static final StatsManager instance = StatsManager._internal();
+
+  StatsManager._internal();
+
+}
 
 enum StatFields {
   taps(),
@@ -24,18 +30,10 @@ enum StatFields {
   createdMultiCapturePhotos(),
 }
 
-abstract class StatsManagerBase with Store, UiLoggy {
+abstract class _StatsManagerBase with Store, UiLoggy {
 
   @readonly
   Stats _stats = const Stats();
-
-  // ////////////// //
-  // Initialization //
-  // ////////////// //
-
-  StatsManagerBase._internal();
-
-  static final StatsManager instance = StatsManager._internal();
 
   // /////////// //
   // Local stats //
