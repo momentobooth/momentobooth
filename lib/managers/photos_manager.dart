@@ -34,8 +34,6 @@ enum CaptureMode {
 /// Class containing global state for photos in the app
 abstract class _PhotosManagerBase with Store {
 
-  static final _PhotosManagerBase instance = PhotosManager._internal();
-
   @observable
   ObservableList<Uint8List> photos = ObservableList<Uint8List>();
 
@@ -69,15 +67,15 @@ abstract class _PhotosManagerBase with Store {
 
   @action
   Future<File?> writeOutput({bool advance = false}) async {
-    if (instance.outputImage == null) return null;
+    if (outputImage == null) return null;
     if (!photoNumberChecked) {
       photoNumber = await findLastImageNumber()+1;
       photoNumberChecked = true;
-    }
+    } 
     final extension = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
     final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$extension');
     File file = await File(filePath).create();
-    await file.writeAsBytes(instance.outputImage!);
+    await file.writeAsBytes(outputImage!);
     if (advance) { photoNumber++; }
     return file;
   }

@@ -109,19 +109,19 @@ class _AppState extends State<App> with UiLoggy {
   void _statusCheck() async {
     final printerNames = SettingsManager.instance.settings.hardware.printerNames;
     final printersStatus = await compute(checkPrintersStatus, printerNames);
-    NotificationsManagerBase.instance.notifications.clear();
+    NotificationsManager.instance.notifications.clear();
     printersStatus.forEachIndexed((index, element) {
       final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning);
       final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."), severity: InfoBarSeverity.warning);
       final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info);
       if (element.jobs >= SettingsManager.instance.settings.hardware.printerQueueWarningThreshold) {
-        NotificationsManagerBase.instance.notifications.add(longQueueNotification);
+        NotificationsManager.instance.notifications.add(longQueueNotification);
       }
       if (element.hasError) {
-        NotificationsManagerBase.instance.notifications.add(hasErrorNotification);
+        NotificationsManager.instance.notifications.add(hasErrorNotification);
       }
       if (element.paperOut) {
-        NotificationsManagerBase.instance.notifications.add(paperOutNotification);
+        NotificationsManager.instance.notifications.add(paperOutNotification);
       }
     });
   }

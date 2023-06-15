@@ -42,7 +42,7 @@ class LiveViewBackground extends StatelessWidgetBase {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (InfoBar notification in NotificationsManagerBase.instance.notifications) ...[
+            for (InfoBar notification in NotificationsManager.instance.notifications) ...[
               notification,
               const SizedBox(height: 8),
             ]
