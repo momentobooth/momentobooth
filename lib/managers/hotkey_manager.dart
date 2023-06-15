@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:loggy/loggy.dart';
@@ -26,30 +27,37 @@ abstract class _HotkeyManagerBase with Store, UiLoggy {
   // Initialization //
   // ////////////// //
 
+  KeyModifier get _defaultModifier => Platform.isMacOS ? KeyModifier.meta : KeyModifier.control;
+
   Future<void> initialize() async {
     await hotKeyManager.unregisterAll();
 
+    // Ctrl + H navigate to home screen
+    await hotKeyManager.register(
+      HotKey(
+        KeyCode.keyH,
+        modifiers: [_defaultModifier],
+        scope: HotKeyScope.inapp,
+      ),
+      keyDownHandler: (hotKey) => _hotkeyActionSubject.add(HotkeyAction.goToHomeScreen),
+    );
     // Ctrl + S opens/closes settings
     await hotKeyManager.register(
       HotKey(
         KeyCode.keyS,
-        modifiers: [KeyModifier.control],
+        modifiers: [_defaultModifier],
         scope: HotKeyScope.inapp,
       ),
-      keyDownHandler: (hotKey) {
-        _hotkeyActionSubject.add(HotkeyAction.openSettingsScreen);
-      },
+      keyDownHandler: (hotKey) => _hotkeyActionSubject.add(HotkeyAction.openSettingsScreen),
     );
     // Ctrl + M opens manual collage maker screen
     await hotKeyManager.register(
       HotKey(
         KeyCode.keyM,
-        modifiers: [KeyModifier.control],
+        modifiers: [_defaultModifier],
         scope: HotKeyScope.inapp,
       ),
-      keyDownHandler: (hotKey) {
-        _hotkeyActionSubject.add(HotkeyAction.openManualCollageScreen);
-      },
+      keyDownHandler: (hotKey) => _hotkeyActionSubject.add(HotkeyAction.openManualCollageScreen),
     );
     // Alt + Enter toggles full-screen
     await hotKeyManager.register(
@@ -58,20 +66,16 @@ abstract class _HotkeyManagerBase with Store, UiLoggy {
         modifiers: [KeyModifier.alt],
         scope: HotKeyScope.inapp,
       ),
-      keyDownHandler: (hotKey) {
-        WindowManager.instance.toggleFullscreen();
-      },
+      keyDownHandler: (hotKey) => WindowManager.instance.toggleFullscreen(),
     );
     // Ctrl + F toggles full-screen
     await hotKeyManager.register(
       HotKey(
         KeyCode.keyF,
-        modifiers: [KeyModifier.control],
+        modifiers: [_defaultModifier],
         scope: HotKeyScope.inapp,
       ),
-      keyDownHandler: (hotKey) {
-        WindowManager.instance.toggleFullscreen();
-      },
+      keyDownHandler: (hotKey) => WindowManager.instance.toggleFullscreen(),
     );
   }
 
