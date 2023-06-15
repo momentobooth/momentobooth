@@ -11,7 +11,6 @@ import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_vi
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
 
 class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel, MultiCaptureScreenController> {
-
   const MultiCaptureScreenView({
     required super.viewModel,
     required super.controller,
@@ -47,7 +46,8 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
   Widget get _photoColumn {
     return Column(
       children: [
-        Flexible(child: Padding(
+        Flexible(
+            child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: AutoSizeText(
             "Photo ${viewModel.photoNumber}/${viewModel.maxPhotos}",
@@ -55,18 +55,18 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
             maxLines: 1,
           ),
         )),
-        for (int i = 0; i < PhotosManagerBase.instance.photos.length; i++)
+        for (int i = 0; i < PhotosManager.instance.photos.length; i++)
           Flexible(
             flex: 0,
-            child: Padding(padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
               child: AspectRatio(
                 aspectRatio: 1.5,
-                child: ImageWithLoaderFallback.memory(PhotosManagerBase.instance.photos[i]),
+                child: ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
               ),
             ),
           ),
-        for (int i = PhotosManagerBase.instance.photos.length; i < 4; i++)
-          Flexible(flex: 0, child: _photoPlaceholder),
+        for (int i = PhotosManager.instance.photos.length; i < 4; i++) Flexible(flex: 0, child: _photoPlaceholder),
       ],
     );
   }
@@ -143,5 +143,4 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       );
     });
   }
-
 }

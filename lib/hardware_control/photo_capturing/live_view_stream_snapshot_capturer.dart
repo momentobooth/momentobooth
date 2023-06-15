@@ -12,7 +12,7 @@ class LiveViewStreamSnapshotCapturer with UiLoggy implements PhotoCaptureMethod 
   @override
   Future<Uint8List> captureAndGetPhoto() async {
     final stopwatch = Stopwatch()..start();
-    final rawImage = await LiveViewManagerBase.instance.currentLiveViewSource?.getLastFrame();
+    final rawImage = await LiveViewManager.instance.currentLiveViewSource?.getLastFrame();
     final jpegData = await rustLibraryApi.jpegEncode(rawImage: rawImage!, quality: 80, operationsBeforeEncoding: []);
     loggy.debug('JPEG encoding took ${stopwatch.elapsed}');
 

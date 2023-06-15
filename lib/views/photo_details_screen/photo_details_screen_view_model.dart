@@ -27,7 +27,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
     required this.photoId,
   });
   
-  Directory get outputDir => Directory(SettingsManagerBase.instance.settings.output.localFolder);
+  Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   File get file => File(join(outputDir.path, photoId));
 
   @observable

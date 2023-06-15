@@ -1,0 +1,4 @@
+enum HotkeyAction {
+  openSettingsScreen,
+  openManualCollageScreen,
+}

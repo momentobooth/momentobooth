@@ -9,7 +9,13 @@ import 'package:path_provider/path_provider.dart';
 
 part 'photos_manager.g.dart';
 
-class PhotosManager = PhotosManagerBase with _$PhotosManager;
+class PhotosManager extends _PhotosManagerBase with _$PhotosManager {
+
+  static final PhotosManager instance = PhotosManager._internal();
+
+  PhotosManager._internal();
+
+}
 
 enum CaptureMode {
 
@@ -26,9 +32,9 @@ enum CaptureMode {
 }
 
 /// Class containing global state for photos in the app
-abstract class PhotosManagerBase with Store {
+abstract class _PhotosManagerBase with Store {
 
-  static final PhotosManagerBase instance = PhotosManager._internal();
+  static final _PhotosManagerBase instance = PhotosManager._internal();
 
   @observable
   ObservableList<Uint8List> photos = ObservableList<Uint8List>();
@@ -45,14 +51,13 @@ abstract class PhotosManagerBase with Store {
   @computed
   bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single;
 
-  Directory get outputDir => Directory(SettingsManagerBase.instance.settings.output.localFolder);
+  Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   int photoNumber = 0;
   bool photoNumberChecked = false;
-  static String baseName = "MomentoBooth-image";
+
+  final String baseName = "MomentoBooth-image";
  
   Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
-
-  PhotosManagerBase._internal();
 
   @action
   void reset({bool advance = true}) {
@@ -69,7 +74,7 @@ abstract class PhotosManagerBase with Store {
       photoNumber = await findLastImageNumber()+1;
       photoNumberChecked = true;
     }
-    final extension = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
+    final extension = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
     final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$extension');
     File file = await File(filePath).create();
     await file.writeAsBytes(instance.outputImage!);
@@ -95,7 +100,7 @@ abstract class PhotosManagerBase with Store {
 
   Future<File> getOutputImageAsTempFile() async {
     final Directory tempDir = await getTemporaryDirectory();
-    final ext = SettingsManagerBase.instance.settings.output.exportFormat.name.toLowerCase();
+    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
     File file = await File('${tempDir.path}/image.$ext').create();
     await file.writeAsBytes(outputImage!);
     return file;

@@ -28,10 +28,10 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   static const flashEndDuration = Duration(milliseconds: 2500);
   static const minimumContinueWait = Duration(milliseconds: 1500);
 
-  int get counterStart => SettingsManagerBase.instance.settings.captureDelaySeconds;
+  int get counterStart => SettingsManager.instance.settings.captureDelaySeconds;
 
-  double get collageAspectRatio => SettingsManagerBase.instance.settings.collageAspectRatio;
-  double get collagePadding => SettingsManagerBase.instance.settings.collagePadding;
+  double get collageAspectRatio => SettingsManager.instance.settings.collageAspectRatio;
+  double get collagePadding => SettingsManager.instance.settings.collagePadding;
 
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
@@ -61,30 +61,30 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   }
 
   Future<File?> captureCollage() async {
-    PhotosManagerBase.instance.chosen.clear();
-    PhotosManagerBase.instance.chosen.add(0);
+    PhotosManager.instance.chosen.clear();
+    PhotosManager.instance.chosen.add(0);
     final stopwatch = Stopwatch()..start();
-    final pixelRatio = SettingsManagerBase.instance.settings.output.resolutionMultiplier;
-    final format = SettingsManagerBase.instance.settings.output.exportFormat;
-    final jpgQuality = SettingsManagerBase.instance.settings.output.jpgQuality;
+    final pixelRatio = SettingsManager.instance.settings.output.resolutionMultiplier;
+    final format = SettingsManager.instance.settings.output.exportFormat;
+    final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
     await completer.future;
-    PhotosManagerBase.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
+    PhotosManager.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
     
-    return await PhotosManagerBase.instance.writeOutput();
+    return await PhotosManager.instance.writeOutput();
   }
 
   CaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    capturer = switch (SettingsManagerBase.instance.settings.hardware.captureMethod) {
-      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManagerBase.instance.settings.hardware.captureLocation),
+    capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
+      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer()
     } as PhotoCaptureMethod;
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
   }
 
-  String get outputFolder => SettingsManagerBase.instance.settings.output.localFolder;
+  String get outputFolder => SettingsManager.instance.settings.output.localFolder;
 
   void onCounterFinished() async {
     showFlash = true;
@@ -99,18 +99,18 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   void captureAndGetPhoto() async {
     try {
       final image = await capturer.captureAndGetPhoto();
-      StatsManagerBase.instance.addCapturedPhoto();
-      PhotosManagerBase.instance.photos.add(image);
-      if (SettingsManagerBase.instance.settings.singlePhotoIsCollage) {
+      StatsManager.instance.addCapturedPhoto();
+      PhotosManager.instance.photos.add(image);
+      if (SettingsManager.instance.settings.singlePhotoIsCollage) {
         await captureCollage();
       } else {
-        PhotosManagerBase.instance.outputImage = image;
-        await PhotosManagerBase.instance.writeOutput();
+        PhotosManager.instance.outputImage = image;
+        await PhotosManager.instance.writeOutput();
       }
     } catch (error) {
       loggy.warning(error);
       final errorFile = File('assets/bitmap/capture-error.png');
-      PhotosManagerBase.instance.outputImage = await errorFile.readAsBytes();
+      PhotosManager.instance.outputImage = await errorFile.readAsBytes();
     } finally {
       captureComplete = true;
       navigateAfterCapture();
@@ -119,7 +119,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) return;
-    StatsManagerBase.instance.addCreatedSinglePhoto();
+    StatsManager.instance.addCreatedSinglePhoto();
     router.go(ShareScreen.defaultRoute);
   }
 
