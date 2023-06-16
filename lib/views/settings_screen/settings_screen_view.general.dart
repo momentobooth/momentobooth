@@ -14,13 +14,6 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
             value: () => viewModel.captureDelaySecondsSetting,
             onChanged: controller.onCaptureDelaySecondsChanged,
           ),
-          _getBooleanInput(
-            icon: FluentIcons.favorite_star,
-            title: "Display confetti 🎉",
-            subtitle: "If enabled, confetti will shower the share screen!",
-            value: () => viewModel.displayConfettiSetting,
-            onChanged: controller.onDisplayConfettiChanged,
-          ),
           const Padding(
             padding: EdgeInsets.only(top: 8.0),
             child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),

@@ -91,22 +91,6 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             buttonText: "Report Fake Error",
             onPressed: () => throw Exception("This is a fake error to test error reporting"),
           ),
-          _getComboBoxCard<FilterQuality>(
-            icon: FluentIcons.transition_effect,
-            title: "Filter quality for screen transition",
-            subtitle: "The filter quality used for the screen transition scale animation",
-            items: viewModel.filterQualityOptions,
-            value: () => viewModel.screenTransitionAnimationFilterQuality,
-            onChanged: controller.onScreenTransitionAnimationFilterQualityChanged,
-          ),
-          _getComboBoxCard<FilterQuality>(
-            icon: FluentIcons.front_camera,
-            title: "Filter quality for live view",
-            subtitle: "The filter quality used for the live view",
-            items: viewModel.filterQualityOptions,
-            value: () => viewModel.liveViewFilterQuality,
-            onChanged: controller.onLiveViewFilterQualityChanged,
-          ),
         ],
       )
     ],

@@ -18,7 +18,7 @@ import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/route_observer.dart';
-import 'package:momento_booth/views/base/fade_transition_page.dart';
+import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
@@ -221,6 +221,8 @@ class _AppState extends State<App> with UiLoggy {
         } else {
           _router.go(ManualCollageScreen.defaultRoute);
         }
+      case HotkeyAction.goToHomeScreen:
+        _router.go(StartScreen.defaultRoute);
     }
   }
 

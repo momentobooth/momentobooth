@@ -16,7 +16,7 @@ List<GoRoute> rootRoutes = [
 GoRoute _startRoute = GoRoute(
   path: StartScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const StartScreen(),
     );
@@ -26,7 +26,7 @@ GoRoute _startRoute = GoRoute(
 GoRoute _chooseCaptureModeRoute = GoRoute(
   path: ChooseCaptureModeScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const ChooseCaptureModeScreen(),
     );
@@ -36,7 +36,7 @@ GoRoute _chooseCaptureModeRoute = GoRoute(
 GoRoute _captureRoute = GoRoute(
   path: CaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const CaptureScreen(),
     );
@@ -46,7 +46,7 @@ GoRoute _captureRoute = GoRoute(
 GoRoute _multiCaptureRoute = GoRoute(
   path: MultiCaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: UniqueKey(),
       child: const MultiCaptureScreen(),
     );
@@ -56,7 +56,7 @@ GoRoute _multiCaptureRoute = GoRoute(
 GoRoute _collageMakerRoute = GoRoute(
   path: CollageMakerScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const CollageMakerScreen(),
     );
@@ -66,7 +66,7 @@ GoRoute _collageMakerRoute = GoRoute(
 GoRoute _shareRoute = GoRoute(
   path: ShareScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const ShareScreen(),
     );
@@ -76,7 +76,7 @@ GoRoute _shareRoute = GoRoute(
 GoRoute _galleryRoute = GoRoute(
   path: GalleryScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const GalleryScreen(),
     );
@@ -86,7 +86,7 @@ GoRoute _galleryRoute = GoRoute(
 GoRoute _photoDetailsRoute = GoRoute(
   path: "${PhotoDetailsScreen.defaultRoute}/:pid",
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       opaque: false,
       barrierDismissible: true,
@@ -98,7 +98,7 @@ GoRoute _photoDetailsRoute = GoRoute(
 GoRoute _manualCollageRoute = GoRoute(
   path: ManualCollageScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const ManualCollageScreen(),
     );
@@ -108,7 +108,7 @@ GoRoute _manualCollageRoute = GoRoute(
 GoRoute _settingsRoute = GoRoute(
   path: SettingsScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return FadeTransitionPage(
+    return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
       child: const SettingsScreen(),
     );

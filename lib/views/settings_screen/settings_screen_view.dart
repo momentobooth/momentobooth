@@ -16,6 +16,7 @@ part 'settings_screen_view.general.dart';
 part 'settings_screen_view.hardware.dart';
 part 'settings_screen_view.output.dart';
 part 'settings_screen_view.debug.dart';
+part 'settings_screen_view.ui.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
 
@@ -49,6 +50,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: const Icon(FluentIcons.send),
                 title: const Text("Output"),
                 body: Builder(builder: (_) => _getOutputSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.open_in_new_window),
+                title: const Text("UI"),
+                body: Builder(builder: (_) => _getUiSettings(viewModel, controller)),
               ),
             ],
             footerItems: [

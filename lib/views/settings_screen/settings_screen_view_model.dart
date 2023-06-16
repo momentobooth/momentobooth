@@ -23,6 +23,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<Flip>> get liveViewFlipImageChoices => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
+  List<ComboBoxItem<ScreenTransitionAnimation>> get screenTransitionAnimations => ScreenTransitionAnimation.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
   
   @observable
@@ -69,7 +70,6 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   // Current values
 
   int get captureDelaySecondsSetting => SettingsManager.instance.settings.captureDelaySeconds;
-  bool get displayConfettiSetting => SettingsManager.instance.settings.displayConfetti;
   double get collageAspectRatioSetting => SettingsManager.instance.settings.collageAspectRatio;
   double get collagePaddingSetting => SettingsManager.instance.settings.collagePadding;
   bool get singlePhotoIsCollageSetting => SettingsManager.instance.settings.singlePhotoIsCollage;
@@ -94,8 +94,10 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ExportFormat get exportFormat => SettingsManager.instance.settings.output.exportFormat;
   int get jpgQuality => SettingsManager.instance.settings.output.jpgQuality;
   double get resolutionMultiplier => SettingsManager.instance.settings.output.resolutionMultiplier;
-  FilterQuality get screenTransitionAnimationFilterQuality => SettingsManager.instance.settings.debug.screenTransitionAnimationFilterQuality;
-  FilterQuality get liveViewFilterQuality => SettingsManager.instance.settings.debug.liveViewFilterQuality;
+  bool get displayConfettiSetting => SettingsManager.instance.settings.ui.displayConfetti;
+  ScreenTransitionAnimation get screenTransitionAnimation => SettingsManager.instance.settings.ui.screenTransitionAnimation;
+  FilterQuality get screenTransitionAnimationFilterQuality => SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality;
+  FilterQuality get liveViewFilterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

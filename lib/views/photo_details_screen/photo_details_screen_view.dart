@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/views/base/fade_transition_page.dart';
+import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
@@ -44,7 +44,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: DelayedWidget(
-            delay: FadeTransitionPage.defaultTransitionDuration,
+            delay: SettingsBasedTransitionPage.defaultTransitionDuration,
             child: _foregroundElements,
           ),
         ),

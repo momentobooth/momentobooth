@@ -5,11 +5,9 @@ enum LiveViewMethod {
   debugNoise(0, "Debug - Static noise"),
   webcam(1, "Webcam");
 
-  // can add more properties or getters/methods if needed
   final int value;
   final String name;
 
-  // can use named parameters if you want
   const LiveViewMethod(this.value, this.name);
 
   ComboBoxItem<LiveViewMethod> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
@@ -23,11 +21,9 @@ enum CaptureMethod {
   liveViewSource(0, "Live view source"),
   sonyImagingEdgeDesktop(1, "Sony Imaging Edge Desktop automation");
 
-  // can add more properties or getters/methods if needed
   final int value;
   final String name;
 
-  // can use named parameters if you want
   const CaptureMethod(this.value, this.name);
 
   ComboBoxItem<CaptureMethod> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
@@ -41,11 +37,9 @@ enum ExportFormat {
   jpgFormat(0, "JPG"),
   pngFormat(1, "PNG");
 
-  // can add more properties or getters/methods if needed
   final int value;
   final String name;
 
-  // can use named parameters if you want
   const ExportFormat(this.value, this.name);
 
   ComboBoxItem<ExportFormat> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
@@ -61,11 +55,9 @@ enum FilterQuality {
   medium(ui.FilterQuality.medium, "Medium"),
   high(ui.FilterQuality.high, "High");
 
-  // can add more properties or getters/methods if needed
   final ui.FilterQuality value;
   final String name;
 
-  // can use named parameters if you want
   const FilterQuality(this.value, this.name);
 
   ComboBoxItem<FilterQuality> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
@@ -78,6 +70,23 @@ enum FilterQuality {
     FilterQuality.medium => ui.FilterQuality.medium,
     FilterQuality.high => ui.FilterQuality.high,
   };
+
+}
+
+enum ScreenTransitionAnimation {
+
+  none("None"),
+  fadeAndScale("Fade and scale"),
+  fadeAndSlide("Fade and slide");
+
+  final String name;
+
+  // can use named parameters if you want
+  const ScreenTransitionAnimation(this.name);
+
+  ComboBoxItem<ScreenTransitionAnimation> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<ScreenTransitionAnimation>> asComboBoxItems() => ScreenTransitionAnimation.values.map((value) => value.toComboBoxItem()).toList();
 
 }
 

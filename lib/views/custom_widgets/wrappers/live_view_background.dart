@@ -136,7 +136,7 @@ class LiveView extends StatelessWidgetBase {
               height: 2,
               child: Texture(
                 textureId: LiveViewManager.instance.textureId ?? 0,
-                filterQuality: SettingsManager.instance.settings.debug.liveViewFilterQuality.toUiFilterQuality(),
+                filterQuality: SettingsManager.instance.settings.ui.liveViewFilterQuality.toUiFilterQuality(),
               ),
             ),
           ),
