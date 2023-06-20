@@ -46,7 +46,11 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                 opacity: viewModel.readyToContinue ? 1 : 0.5,
                 child: GestureDetector(
                   onTap: controller.onContinueTap,
-                  child: AutoSizeText("Continue  →", style: theme.subTitleStyle, maxLines: 1,)
+                  child: AutoSizeText(
+                    "${localizations.genericContinueButton} →",
+                    style: theme.subTitleStyle,
+                    maxLines: 1,
+                  ),
                 ),
               ),
             ),
@@ -62,10 +66,18 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AutoSizeText("Pictures shot", style: theme.titleStyle, maxLines: 1,),
+          AutoSizeText(
+            localizations.collageMakerScreenPicturesShotTitle,
+            style: theme.titleStyle,
+            maxLines: 1,
+          ),
           _photoSelector,
           Observer(
-            builder: (context) => AutoSizeText("${viewModel.numSelected} chosen", style: theme.titleStyle, maxLines: 1,),
+            builder: (context) => AutoSizeText(
+              localizations.collageMakerScreenPhotoCounter(viewModel.numSelected),
+              style: theme.titleStyle,
+              maxLines: 1,
+            ),
           ),
         ],
       ),
@@ -86,30 +98,31 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
         for (int i = 0; i < PhotosManager.instance.photos.length; i++)
           GestureDetector(
             onTap: () => controller.togglePicture(i),
-            child: Observer(
-              builder: (BuildContext context) {
-                return Stack(
-                  children: [
-                    ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
-                    AnimatedOpacity(
-                      opacity: PhotosManager.instance.chosen.contains(i) ? 1 : 0,
-                      duration: const Duration(milliseconds: 200),
-                      curve: Curves.easeInOut,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          const ColoredBox(color: Color(0x80000000)),
-                          Center(
-                            child: Text((PhotosManager.instance.chosen.indexOf(i)+1).toString(), style: theme.subTitleStyle,),
+            child: Observer(builder: (BuildContext context) {
+              return Stack(
+                children: [
+                  ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
+                  AnimatedOpacity(
+                    opacity: PhotosManager.instance.chosen.contains(i) ? 1 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        const ColoredBox(color: Color(0x80000000)),
+                        Center(
+                          child: Text(
+                            (PhotosManager.instance.chosen.indexOf(i) + 1).toString(),
+                            style: theme.subTitleStyle,
                           ),
-                        ],
-                      ),
-                    )
-                  ],
-                );
-              }
-            ),
-          ).inGridArea('picture${i+1}'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ).inGridArea('picture${i + 1}'),
       ],
     );
   }
@@ -125,8 +138,8 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: AutoSizeText("Collage", style: theme.titleStyle,),
-            )
+              child: AutoSizeText(localizations.collageMakerScreenCollageTitle, style: theme.titleStyle),
+            ),
           ),
           Expanded(
             flex: 10,
@@ -134,7 +147,8 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           ),
           const Flexible(
             flex: 1,
-            child: SizedBox()),
+            child: SizedBox(),
+          ),
         ],
       ),
     );

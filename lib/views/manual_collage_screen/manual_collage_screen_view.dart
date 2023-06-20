@@ -71,7 +71,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
           Center(
             child: GestureDetector(
               onTap: controller.refreshImageList,
-              child: AutoSizeText("Refresh", style: theme.titleStyle),
+              child: AutoSizeText(localizations.genericRefreshButton, style: theme.titleStyle),
             ),
           ),
         ],
@@ -101,7 +101,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
               children: [
                 GestureDetector(
                   onTap: controller.clearSelection,
-                  child: AutoSizeText("Clear", style: theme.titleStyle,)
+                  child: AutoSizeText(localizations.genericClearButton, style: theme.titleStyle),
                 ),
                 Observer(
                   builder: (context) => AnimatedOpacity(
@@ -109,12 +109,15 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
                     opacity: viewModel.isSaving ? 0.5 : 1,
                     child: GestureDetector(
                       onTap: controller.captureCollage,
-                      child: AutoSizeText(viewModel.isSaving ? "Saving..." : "Save", style: theme.titleStyle,)
+                      child: AutoSizeText(
+                        viewModel.isSaving ? localizations.manualCollageScreenSaving : localizations.genericSaveButton,
+                        style: theme.titleStyle,
+                      ),
                     ),
                   ),
                 ),
               ],
-            )
+            ),
           ),
         ],
       ),

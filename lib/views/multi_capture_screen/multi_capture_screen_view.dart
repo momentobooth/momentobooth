@@ -47,14 +47,15 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
     return Column(
       children: [
         Flexible(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: AutoSizeText(
-            "Photo ${viewModel.photoNumber}/${viewModel.maxPhotos}",
-            style: theme.titleStyle,
-            maxLines: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AutoSizeText(
+              localizations.multiCaptureScreenPhotoCounter(viewModel.photoNumber, viewModel.maxPhotos),
+              style: theme.titleStyle,
+              maxLines: 1,
+            ),
           ),
-        )),
+        ),
         for (int i = 0; i < PhotosManager.instance.photos.length; i++)
           Flexible(
             flex: 0,
@@ -125,8 +126,8 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
           pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
           isRepeatingAnimation: false,
           animatedTexts: [
-            RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
-            RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.multiCaptureScreenGetReady, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.multiCaptureScreenLookAtCamera, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
           ],
         ),
       ),

@@ -46,7 +46,8 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
                   opacity: viewModel.showCounter ? 1.0 : 0.0,
                   child: CaptureCounter(
                     onCounterFinished: viewModel.onCounterFinished,
-                    counterStart: viewModel.counterStart,),
+                    counterStart: viewModel.counterStart,
+                  ),
                 );
               })
             )),
@@ -65,8 +66,8 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
           pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
           isRepeatingAnimation: false,
           animatedTexts: [
-            RotateAnimatedText("Get Ready!", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
-            RotateAnimatedText("Look at 📷", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.captureScreenGetReady, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.captureScreenLookAtCamera, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
           ],
         ),
       ),

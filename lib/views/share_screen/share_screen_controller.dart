@@ -55,13 +55,13 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
     loggy.debug("Uploading ${file.path}");
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
-    viewModel.qrText = "Uploading";
+    viewModel.qrText = localizations.shareScreenQrUploading;
     viewModel.uploadState = UploadState.uploading;
     stream.listen((event) {
       if (event.isFinished) {
         loggy.debug("Upload complete: ${event.downloadUrl}");
         viewModel.uploadState = UploadState.done;
-        viewModel.qrText = "Show QR";
+        viewModel.qrText = localizations.shareScreenShowQrButton;
         viewModel.qrUrl = event.downloadUrl!;
         viewModel.qrShown = true;
         viewModel.sliderKey.currentState!.animateForward();
@@ -79,7 +79,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   static const _printTextDuration = Duration(seconds: 4);
 
   void resetPrint() {
-    viewModel.printText = successfulPrints > 0 ? "Print +1" : "Print";
+    viewModel.printText = successfulPrints > 0 ? "${localizations.genericPrintButton} +1" : localizations.genericPrintButton;
     viewModel.printEnabled = true;
   }
 
@@ -88,13 +88,13 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
     loggy.debug("Printing photo");
     viewModel.printEnabled = false;
-    viewModel.printText = "Printing...";
+    viewModel.printText = localizations.shareScreenPrinting;
     
     // Get photo and print it.
     final pdfData = await PhotosManager.instance.getOutputPDF();
     final bool success = await printPDF(pdfData);
 
-    viewModel.printText = success ? "Printing..." : "Print unsuccessful";
+    viewModel.printText = success ? localizations.shareScreenPrinting : localizations.shareScreenPrintUnsuccesful;
     successfulPrints += success ? 1 : 0;
     Future.delayed(_printTextDuration, resetPrint);
   }

@@ -1,2 +1,65 @@
 {
+    "@@locale": "nl",
+
+    "genericBackButton": "Terug",
+    "genericPrintButton": "Afdrukken",
+    "genericContinueButton": "Doorgaan",
+    "genericRefreshButton": "Vernieuwen",
+    "genericClearButton": "Wissen",
+    "genericSaveButton": "Opslaan",
+
+    "startScreenTouchToStartButton": "Raak aan om te beginnen",
+    "startScreenGalleryButton": "Galerij",
+
+    "galleryScreenGoToStartButton": "Start",
+
+    "chooseCaptureModeScreenTitle": "Kies modus",
+    "chooseCaptureModeScreenSinglePictureButton": "Enkele foto",
+    "chooseCaptureModeScreenCollageButton": "Collage",
+
+    "captureScreenGetReady": "Maak je klaar",
+    "captureScreenLookAtCamera": "Kijk naar 📷",
+
+    "photoDetailsScreenTitle": "Fotodetails",
+    "photoDetailsScreenGetQrButton": "QR krijgen",
+    "photoDetailsScreenQrUploading": "Uploaden",
+    "photoDetailsScreenShowQrButton": "QR tonen",
+    "photoDetailsScreenPrinting": "Afdrukken...",
+    "photoDetailsScreenPrintUnsuccesful": "Afdrukken mislukt",
+
+    "shareScreenTitle": "Delen",
+    "shareScreenRetakeButton": "Opnieuw maken",
+    "shareScreenChangeButton": "Wijzigen",
+    "shareScreenGetQrButton": "QR krijgen",
+    "shareScreenQrUploading": "Uploaden",
+    "shareScreenShowQrButton": "QR tonen",
+    "shareScreenPrinting": "Afdrukken...",
+    "shareScreenPrintUnsuccesful": "Afdrukken mislukt",
+
+    "multiCaptureScreenPhotoCounter": "Foto {current}/{total}",
+    "@multiCaptureScreenPhotoCounter": {
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "multiCaptureScreenGetReady": "Maak je klaar",
+    "multiCaptureScreenLookAtCamera": "Kijk naar 📷",
+
+    "collageMakerScreenPicturesShotTitle": "Gemaakte foto's",
+    "collageMakerScreenPhotoCounter": "{count} gekozen",
+    "@collageMakerScreenPhotoCounter": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "collageMakerScreenCollageTitle": "Collage",
+
+    "manualCollageScreenSaving": "Opslaan..."
 }

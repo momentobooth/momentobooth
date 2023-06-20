@@ -1,2 +1,65 @@
 {
+    "@@locale": "en",
+
+    "genericBackButton": "Back",
+    "genericPrintButton": "Print",
+    "genericContinueButton": "Print",
+    "genericRefreshButton": "Refresh",
+    "genericClearButton": "Clear",
+    "genericSaveButton": "Save",
+    
+    "startScreenTouchToStartButton": "Touch to start",
+    "startScreenGalleryButton": "Gallery",
+
+    "galleryScreenGoToStartButton": "Start",
+
+    "chooseCaptureModeScreenTitle": "Choose Capture Mode",
+    "chooseCaptureModeScreenSinglePictureButton": "Single Picture",
+    "chooseCaptureModeScreenCollageButton": "Collage",
+
+    "captureScreenGetReady": "Get Ready",
+    "captureScreenLookAtCamera": "Look at 📷",
+
+    "photoDetailsScreenTitle": "Photo Details",
+    "photoDetailsScreenGetQrButton": "Get QR",
+    "photoDetailsScreenQrUploading": "Uploading",
+    "photoDetailsScreenShowQrButton": "Show QR",
+    "photoDetailsScreenPrinting": "Printing...",
+    "photoDetailsScreenPrintUnsuccesful": "Print unsuccessful",
+
+    "shareScreenTitle": "Share",
+    "shareScreenRetakeButton": "Retake",
+    "shareScreenChangeButton": "Change",
+    "shareScreenGetQrButton": "Get QR",
+    "shareScreenQrUploading": "Uploading",
+    "shareScreenShowQrButton": "Show QR",
+    "shareScreenPrinting": "Printing...",
+    "shareScreenPrintUnsuccesful": "Print unsuccessful",
+
+    "multiCaptureScreenPhotoCounter": "Photo {current}/{total}",
+    "@multiCaptureScreenPhotoCounter": {
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "multiCaptureScreenGetReady": "Get Ready",
+    "multiCaptureScreenLookAtCamera": "Look at 📷",
+
+    "collageMakerScreenPicturesShotTitle": "Pictures shot",
+    "collageMakerScreenPhotoCounter": "{count} chosen",
+    "@collageMakerScreenPhotoCounter": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "collageMakerScreenCollageTitle": "Collage",
+
+    "manualCollageScreenSaving": "Saving..."
 }
