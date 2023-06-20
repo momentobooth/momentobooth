@@ -11,6 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # i18n
+  flutter_localizations:
+    sdk: flutter
+  intl: 0.18.0
+
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.6.2
@@ -88,6 +93,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/bitmap/
@@ -100,4 +106,6 @@ flutter:
       fonts:
         - asset: assets/fonts/brandon_grotesque/Brandon_light.otf
           weight: 300
-  
+
+flutter_intl:
+  enabled: true
