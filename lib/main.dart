@@ -170,6 +170,7 @@ class _AppState extends State<App> with UiLoggy {
           Locale('en'), // English
           Locale('nl'), // Dutch
         ],
+        locale: SettingsManager.instance.settings.ui.language.toLocale(),
         builder: (context, child) {
           // This stack allows us to put the Settings screen on top
           return LiveViewBackground(

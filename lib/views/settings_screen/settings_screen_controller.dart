@@ -199,6 +199,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onLanguageChanged(Language? language) {
+    if (language != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(language: language));
+    }
+  }
+
   void onScreenTransitionAnimationChanged(ScreenTransitionAnimation? screenTransitionAnimation) {
     if (screenTransitionAnimation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(screenTransitionAnimation: screenTransitionAnimation));

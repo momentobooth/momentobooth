@@ -23,6 +23,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<Flip>> get liveViewFlipImageChoices => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
+  List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
   List<ComboBoxItem<ScreenTransitionAnimation>> get screenTransitionAnimations => ScreenTransitionAnimation.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
   
@@ -95,6 +96,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   int get jpgQuality => SettingsManager.instance.settings.output.jpgQuality;
   double get resolutionMultiplier => SettingsManager.instance.settings.output.resolutionMultiplier;
   bool get displayConfettiSetting => SettingsManager.instance.settings.ui.displayConfetti;
+  Language get languageSetting => SettingsManager.instance.settings.ui.language;
   ScreenTransitionAnimation get screenTransitionAnimation => SettingsManager.instance.settings.ui.screenTransitionAnimation;
   FilterQuality get screenTransitionAnimationFilterQuality => SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality;
   FilterQuality get liveViewFilterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality;

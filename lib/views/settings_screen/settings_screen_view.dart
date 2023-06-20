@@ -53,7 +53,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               ),
               PaneItem(
                 icon: const Icon(FluentIcons.open_in_new_window),
-                title: const Text("UI"),
+                title: const Text("User interface"),
                 body: Builder(builder: (_) => _getUiSettings(viewModel, controller)),
               ),
             ],
