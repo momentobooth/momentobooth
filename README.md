@@ -100,13 +100,14 @@ For all tools, we support the latest versions.
 
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
-1. Run `flutter_rust_bridge_codegen`:
+1. Run `flutter gen-l10n`
+2. Run `flutter_rust_bridge_codegen`:
     * Windows/Linux: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner`
     * macOS: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --c-output macos/Runner/bridge_generated.h --skip-add-mod-to-lib --no-build-runner`
     * Note: Make sure to re-run this command if you changed anything in the Rust subproject
-2. Run `flutter pub run build_runner build --delete-conflicting-outputs`
+3. Run `flutter pub run build_runner build --delete-conflicting-outputs`
     * Note: During development, it may be convenient to run `watch` instead of `build` to keep the script running to process any new or changes files
-3. Run `flutter run` or use your IDE to run the application
+4. Run `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
 ### Current workarounds which should be removed ASAP
