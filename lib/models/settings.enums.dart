@@ -3,7 +3,8 @@ part of 'settings.dart';
 enum LiveViewMethod {
 
   debugNoise(0, "Debug - Static noise"),
-  webcam(1, "Webcam");
+  webcam(1, "Webcam"),
+  gphoto2(2, "gPhoto2");
 
   final int value;
   final String name;

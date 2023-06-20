@@ -6,7 +6,7 @@ use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use turborand::rng::Rng;
 
-use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug};
+use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, Gphoto2CameraInfo}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug};
 
 // ////////////// //
 // Initialization //
@@ -179,6 +179,32 @@ pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOpera
 
 pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) -> RawImage {
     image_processing::execute_operations(raw_image, &operations)
+}
+
+// ////// //
+// Camera //
+// ////// //
+
+pub fn gphoto2_get_cameras() -> Vec<Gphoto2CameraInfo> {
+    gphoto2::get_cameras()
+}
+
+pub fn gphoto2_open_camera(model: String, port: String, operations: Vec<ImageOperation>, texture_ptr: usize) {
+    let renderer = FlutterTexture::new(texture_ptr, 0, 0);
+    let renderer_mutex = Mutex::new(renderer);
+
+    let camera = gphoto2::open_camera_liveview(model, port, move |raw_frame| {
+        match raw_frame {
+            Some(raw_frame) => {
+                let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+                let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
+                renderer.set_size(processed_frame.width, processed_frame.height);
+                renderer.on_rgba(&processed_frame);
+            },
+            None => {
+            },
+        }
+    });
 }
 
 // /////// //

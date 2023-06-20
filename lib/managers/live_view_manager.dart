@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/camera_state_extension.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -98,6 +99,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
         case LiveViewMethod.webcam:
           List<NokhwaCamera> cameras = await NokhwaCamera.getAllCameras();
           _currentLiveViewSource = cameras.firstWhereOrNull((camera) => camera.friendlyName == webcamIdSetting);
+        case LiveViewMethod.gphoto2:
+          List<Gphoto2Camera> cameras = await Gphoto2Camera.getAllCameras();
+          _currentLiveViewSource = cameras.firstWhereOrNull((camera) => camera.id == webcamIdSetting);
         default:
           throw "Unknown live view method";
       }
