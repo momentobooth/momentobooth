@@ -61,5 +61,7 @@
     },
     "collageMakerScreenCollageTitle": "Collage",
 
-    "manualCollageScreenSaving": "Opslaan..."
+    "manualCollageScreenSaving": "Opslaan...",
+
+    "photoCollageWidgetSelectPhotos": "Kies wat foto's :)"
 }
