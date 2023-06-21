@@ -109,7 +109,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         Flexible(
           fit: FlexFit.tight,
           child: AutoSizeText(
-            "Share",
+            localizations.shareScreenTitle,
             style: theme.titleStyle,
           ),
         ),

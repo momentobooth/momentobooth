@@ -44,7 +44,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
             child: GestureDetector(
               onTap: controller.onPressedBack,
               child: AutoSizeText(
-                "← Start",
+                "← ${localizations.galleryScreenGoToStartButton}",
                 style: theme.subTitleStyle,
               ),
             ),

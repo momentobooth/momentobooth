@@ -30,7 +30,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
             child: GestureDetector(
               onTap: controller.onPressedGallery,
               child: AutoSizeText(
-                "Gallery",
+                localizations.startScreenGalleryButton,
                 style: theme.subTitleStyle,
               ),
             ),
@@ -51,7 +51,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
           flex: 2,
           child: Center(
             child: AutoSizeText(
-              "Touch to start",
+              localizations.startScreenTouchToStartButton,
               style: theme.titleStyle,
             ),
           ),

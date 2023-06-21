@@ -4,21 +4,16 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
   return FluentSettingsPage(
     title: "General",
     blocks: [
-      FluentSettingsBlock(
-        title: "Settings",
-        settings: [
-          _getInput(
-            icon: FluentIcons.timer,
-            title: "Capture delay",
-            subtitle: 'In seconds',
-            value: () => viewModel.captureDelaySecondsSetting,
-            onChanged: controller.onCaptureDelaySecondsChanged,
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 8.0),
-            child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
-          ),
-        ],
+      _getInput(
+        icon: FluentIcons.timer,
+        title: "Capture delay",
+        subtitle: 'In seconds',
+        value: () => viewModel.captureDelaySecondsSetting,
+        onChanged: controller.onCaptureDelaySecondsChanged,
+      ),
+      const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
       ),
       FluentSettingsBlock(
         title: "Creative",

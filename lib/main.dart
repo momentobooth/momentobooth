@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
@@ -32,6 +33,7 @@ import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'main.routes.dart';
 
@@ -159,8 +161,16 @@ class _AppState extends State<App> with UiLoggy {
         routerConfig: _router,
         color: context.theme.primaryColor,
         localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
           FluentLocalizations.delegate,
         ],
+        supportedLocales: const [
+          Locale('en'), // English
+          Locale('nl'), // Dutch
+        ],
+        locale: SettingsManager.instance.settings.ui.language.toLocale(),
         builder: (context, child) {
           // This stack allows us to put the Settings screen on top
           return LiveViewBackground(

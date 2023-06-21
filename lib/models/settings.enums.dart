@@ -110,3 +110,22 @@ enum Flip {
   static List<ComboBoxItem<Flip>> asComboBoxItems() => Flip.values.map((value) => value.toComboBoxItem()).toList();
 
 }
+
+enum Language {
+
+  english("English", "en"),
+  dutch("Dutch", "nl");
+
+  final String name;
+  final String code;
+
+  // can use named parameters if you want
+  const Language(this.name, this.code);
+
+  ComboBoxItem<Language> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<Language>> asComboBoxItems() => Language.values.map((value) => value.toComboBoxItem()).toList();
+
+  Locale toLocale() => Locale(code);
+
+}

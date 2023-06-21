@@ -60,7 +60,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
         Flexible(
           fit: FlexFit.tight,
           child: AutoSizeText(
-            "Photo Details",
+            localizations.photoDetailsScreenTitle,
             style: theme.titleStyle,
           ),
         ),
@@ -73,7 +73,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
               onTap: controller.onClickPrev,
               behavior: HitTestBehavior.translucent,
               child: AutoSizeText(
-                " ← Back",
+                " ← ${localizations.genericBackButton}",
                 style: theme.subTitleStyle,
               ),
             ),

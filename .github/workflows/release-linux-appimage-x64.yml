@@ -54,7 +54,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: flutter_rust_bridge_codegen
-        version: "1.77.1"
+        version: "1.78.0"
 
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
@@ -67,6 +67,9 @@ jobs:
 
     - name: Install Dependencies
       run: flutter packages get
+
+    - name: Generation l10n
+      run: flutter gen-l10n
 
     - name: Generate Dart-to-Rust bridging code
       run: >

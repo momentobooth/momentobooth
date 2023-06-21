@@ -2,8 +2,16 @@ part of 'settings_screen_view.dart';
 
 Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
   return FluentSettingsPage(
-    title: "Output",
+    title: "User interface",
     blocks: [
+      _getComboBoxCard<Language>(
+        icon: FluentIcons.locale_language,
+        title: "Language",
+        subtitle: "The language used in the app (except for this settings screen)",
+        items: viewModel.languages,
+        value: () => viewModel.languageSetting,
+        onChanged: controller.onLanguageChanged,
+      ),
       FluentSettingsBlock(
         title: "Animations",
         settings: [

@@ -151,6 +151,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
   const UiSettings._();
 
   const factory UiSettings({
+    @Default(Language.english) Language language,
     @Default(true) bool displayConfetti,
     @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,

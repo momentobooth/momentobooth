@@ -5,6 +5,7 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -136,12 +137,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       child: SizedBox(
         height: 1000 + 2*widget.padding,
         width: 1000*widget.aspectRatio + 2*widget.padding,
-        child: Observer(builder: (context) => _layout),
+        child: Observer(builder: (context) => _getLayout(AppLocalizations.of(context)!)),
       ),
     );
   }
 
-  Widget get _layout {
+  Widget _getLayout(AppLocalizations localizations) {
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -154,7 +155,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         ],
         Padding(
           padding: EdgeInsets.all(gap + widget.padding),
-          child: _innerLayout,
+          child: _getInnerLayout(localizations),
         ),
         for (int i = 0; i <= 4; i++) ...[
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
@@ -167,9 +168,9 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     );
   }
 
-  Widget get _innerLayout {
+  Widget _getInnerLayout(AppLocalizations localizations) {
     if (PhotosManager.instance.chosen.isEmpty) {
-      return _zeroLayout;
+      return _getZeroLayout(localizations);
     } else if (nChosen == 1) {
       return _oneLayout;
     } else if (nChosen == 2) {
@@ -182,11 +183,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     return Container();
   }
 
-  Widget get _zeroLayout {
+  Widget _getZeroLayout(AppLocalizations localizations) {
     return RotatedBox(
       quarterTurns: 1,
       child: Center(
-        child: AutoSizeText("Select some photos :)",
+        child: AutoSizeText(
+          localizations.photoCollageWidgetSelectPhotos,
           style: theme.titleStyle,
           textAlign: TextAlign.center,
         ),

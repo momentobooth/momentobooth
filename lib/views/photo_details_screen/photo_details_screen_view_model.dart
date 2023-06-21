@@ -31,10 +31,10 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   File get file => File(join(outputDir.path, photoId));
 
   @observable
-  String qrText = "Get QR";
+  late String qrText = localizations.photoDetailsScreenGetQrButton;
 
   @observable
-  String printText = "Print";
+  late String printText = localizations.genericPrintButton;
 
   @observable
   bool printEnabled = true;

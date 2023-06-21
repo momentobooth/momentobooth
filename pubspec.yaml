@@ -11,6 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # i18n
+  flutter_localizations:
+    sdk: flutter
+  intl: 0.18.0
+
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.6.2
@@ -40,7 +45,7 @@ dependencies:
 
   # Interop
   ffi: 2.0.2
-  flutter_rust_bridge: 1.77.1
+  flutter_rust_bridge: 1.78.0
 
   # Printing
   printing: 5.11.0
@@ -55,7 +60,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.7.0
+  sentry_flutter: 7.8.0
 
   # Misc
   meta: 1.9.1
@@ -88,6 +93,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/bitmap/
@@ -100,4 +106,4 @@ flutter:
       fonts:
         - asset: assets/fonts/brandon_grotesque/Brandon_light.otf
           weight: 300
-  
+          

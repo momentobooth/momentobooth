@@ -20,7 +20,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           fit: FlexFit.tight,
           child: Center(
             child: AutoSizeText(
-              "Choose Capture Mode",
+              localizations.chooseCaptureModeScreenTitle,
               style: theme.titleStyle,
               maxLines: 1,
             ),
@@ -52,7 +52,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
         children: [
           Expanded(child: FittedBox(child: _getButton(452))),
           AutoSizeText(
-            "Single Picture",
+            localizations.chooseCaptureModeScreenSinglePictureButton,
             group: viewModel.autoSizeGroup,
             style: theme.titleStyle,
             maxLines: 1,
@@ -92,7 +92,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
             ),
           ),
           AutoSizeText(
-            "Collage",
+            localizations.chooseCaptureModeScreenCollageButton,
             group: viewModel.autoSizeGroup,
             style: theme.titleStyle,
             maxLines: 1,
