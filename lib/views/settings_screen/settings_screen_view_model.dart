@@ -34,6 +34,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
 
+  @observable
+  List<ComboBoxItem<String>> gPhoto2Cameras = ObservableList<ComboBoxItem<String>>();
+
   RichText _printerCardText(String printerName, bool isAvailable, bool isDefault) {
     final icon = isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
     return RichText(
@@ -67,10 +70,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     }
   }
   
-  void setWebcamList() async => webcams = [
-    ...await NokhwaCamera.getCamerasAsComboBoxItems(),
-    ...await Gphoto2Camera.getCamerasAsComboBoxItems(),
-  ];
+  void setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
+  void setCameraList() async => gPhoto2Cameras = await Gphoto2Camera.getCamerasAsComboBoxItems();
 
   // Current values
 
@@ -83,6 +84,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get liveViewWebcamId => SettingsManager.instance.settings.hardware.liveViewWebcamId;
   Flip get liveViewFlipImage => SettingsManager.instance.settings.hardware.liveViewFlipImage;
   CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;
+  String get gPhoto2CameraId => SettingsManager.instance.settings.hardware.gPhoto2CameraId;
   int get captureDelaySonySetting => SettingsManager.instance.settings.hardware.captureDelaySony;
   String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;
   List<String> get printersSetting => SettingsManager.instance.settings.hardware.printerNames;
@@ -117,6 +119,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   }) {
     setPrinterList();
     setWebcamList();
+    setCameraList();
   }
 
   // Methods

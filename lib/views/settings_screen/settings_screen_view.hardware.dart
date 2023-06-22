@@ -48,6 +48,10 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
               value: () => viewModel.captureDelaySonySetting,
               onChanged: controller.onCaptureDelaySonyChanged,
             ),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) return _gPhoto2CamerasCard(viewModel, controller);
+            return const SizedBox();
+          }),
           _getFolderPickerCard(
             icon: FluentIcons.folder,
             title: "Capture location",
@@ -183,6 +187,33 @@ FluentSettingCard _webcamCard(SettingsScreenViewModel viewModel, SettingsScreenC
               items: viewModel.webcams,
               value: viewModel.liveViewWebcamId,
               onChanged: controller.onLiveViewWebcamIdChanged,
+            );
+          }),
+        ),
+      ],
+    ),
+  );
+}
+
+FluentSettingCard _gPhoto2CamerasCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingCard(
+    icon: FluentIcons.camera,
+    title: "Camera",
+    subtitle: "Pick the camera to use for capturing still frames",
+    child: Row(
+      children: [
+        Button(
+          onPressed: viewModel.setCameraList,
+          child: const Text('Refresh'),
+        ),
+        const SizedBox(width: 10),
+        ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 150),
+          child: Observer(builder: (_) {
+            return ComboBox<String>(
+              items: viewModel.gPhoto2Cameras,
+              value: viewModel.gPhoto2CameraId,
+              onChanged: controller.onGPhoto2CameraIdChanged,
             );
           }),
         ),

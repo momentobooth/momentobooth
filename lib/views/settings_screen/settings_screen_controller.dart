@@ -85,6 +85,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onGPhoto2CameraIdChanged(String? gPhoto2CameraId) {
+    if (gPhoto2CameraId != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2CameraId: gPhoto2CameraId));
+    }
+  }
+
   void onCaptureDelaySonyChanged(int? captureDelaySony) {
     if (captureDelaySony != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureDelaySony: captureDelaySony));

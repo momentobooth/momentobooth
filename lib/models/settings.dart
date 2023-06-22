@@ -70,6 +70,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default("") String liveViewWebcamId,
     @Default(Flip.horizontally) Flip liveViewFlipImage,
     @Default(CaptureMethod.liveViewSource) CaptureMethod captureMethod,
+    @Default("") String gPhoto2CameraId,
     @Default(200) int captureDelaySony,
     @Default("") String captureLocation,
     @Default([]) List<String> printerNames,
