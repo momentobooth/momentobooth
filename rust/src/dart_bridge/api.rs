@@ -5,8 +5,9 @@ use dashmap::DashMap;
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use turborand::rng::Rng;
+use ::gphoto2::Camera;
 
-use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, Gphoto2CameraInfo}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug};
+use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug};
 
 // ////////////// //
 // Initialization //
@@ -181,30 +182,55 @@ pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) 
     image_processing::execute_operations(raw_image, &operations)
 }
 
-// ////// //
-// Camera //
-// ////// //
+// /////// //
+// gPhoto2 //
+// /////// //
 
-pub fn gphoto2_get_cameras() -> Vec<Gphoto2CameraInfo> {
-    gphoto2::get_cameras()
+lazy_static::lazy_static! {
+    pub static ref GPHOTO2_HANDLES: DashMap<usize, Arc<Mutex<GPhoto2Camera>>> = DashMap::<usize, Arc<Mutex<GPhoto2Camera>>>::new();
 }
 
-pub fn gphoto2_open_camera(model: String, port: String, operations: Vec<ImageOperation>, texture_ptr: usize) {
+static GPHOTO2_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
+
+pub fn gphoto2_get_cameras() -> Vec<GPhoto2CameraInfo> {
+    gphoto2::get_cameras().expect("Could not enumerate cameras")
+}
+
+pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto2CameraSpecialHandling) -> usize {
+    let camera = gphoto2::open_camera(model, port, special_handling).expect("Could not open camera");
+
+    // Store handle
+    let handle_id = GPHOTO2_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
+    GPHOTO2_HANDLES.insert(handle_id, Arc::new(Mutex::new(camera)));
+
+    handle_id
+}
+
+pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>, texture_ptr: usize) {
     let renderer = FlutterTexture::new(texture_ptr, 0, 0);
     let renderer_mutex = Mutex::new(renderer);
 
-    let camera = gphoto2::open_camera_liveview(model, port, move |raw_frame| {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let mut camera = camera_ref.lock().expect("Could not get lock");
+
+    gphoto2::start_liveview(&mut camera, move |raw_frame| {
         match raw_frame {
-            Some(raw_frame) => {
+            Ok(raw_frame) => {
                 let processed_frame = image_processing::execute_operations(raw_frame, &operations);
                 let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
                 renderer.set_size(processed_frame.width, processed_frame.height);
                 renderer.on_rgba(&processed_frame);
             },
-            None => {
-            },
+            Err(_) => todo!(),
         }
     });
+}
+
+pub fn gphoto2_stop_liveview(handle_id: usize) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.lock().expect("Could not get lock");
+
+    gphoto2::stop_liveview(&camera).expect("Could not stop liveview");
 }
 
 // /////// //
@@ -262,6 +288,36 @@ impl NokhwaCameraHandle {
 impl Drop for NokhwaCameraHandle {
     fn drop(&mut self) {
         log_debug("Dropping NokhwaCameraHandle".to_string());
+    }
+}
+
+pub struct GPhoto2CameraHandle {
+    pub status_sink: Option<StreamSink<CameraState>>,
+    pub camera: GPhoto2Camera,
+    pub valid_frame_count: AtomicUsize,
+    pub error_frame_count: AtomicUsize,
+    pub last_frame_was_valid: AtomicBool,
+    pub last_valid_frame: Option<RawImage>,
+    pub last_received_frame_timestamp: Option<Instant>,
+}
+
+impl GPhoto2CameraHandle {
+    fn new(camera: GPhoto2Camera) -> Self {
+        Self {
+            status_sink: None,
+            camera,
+            valid_frame_count: AtomicUsize::new(0),
+            error_frame_count: AtomicUsize::new(0),
+            last_frame_was_valid: AtomicBool::new(false),
+            last_valid_frame: None,
+            last_received_frame_timestamp: None,
+        }
+    }
+}
+
+impl Drop for GPhoto2CameraHandle {
+    fn drop(&mut self) {
+        log_debug("Dropping GPhoto2CameraHandle".to_string());
     }
 }
 
