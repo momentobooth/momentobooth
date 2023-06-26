@@ -13,7 +13,7 @@ once_cell = "1.18.0"
 atom_table = "1.1.0"
 flutter_rust_bridge = "1.78.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.96"
+serde_json = "1.0.99"
 chrono = "0.4.26"
 image = "0.24.6"
 nokhwa-bindings-macos = "0.2.1"
@@ -28,7 +28,7 @@ dashmap = "5.4.0"
 turborand = "0.10.0"
 pathsep = "0.1.1"
 
-[target.'cfg(not(target_os = "macos"))'.dependencies]
+[target.'cfg(any(not(target_os = "macos"), debug_assertions))'.dependencies]
 gphoto2 = "3.2.1"
 
 [profile.dev]
