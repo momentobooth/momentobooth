@@ -210,10 +210,10 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
     let renderer = FlutterTexture::new(texture_ptr, 0, 0);
     let renderer_mutex = Mutex::new(renderer);
 
-    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
-    let mut camera = camera_ref.lock().expect("Could not get lock");
+    let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone();
 
-    gphoto2::start_liveview(&mut camera, move |raw_frame| {
+    gphoto2::start_liveview(camera, move |raw_frame| {
         match raw_frame {
             Ok(raw_frame) => {
                 let processed_frame = image_processing::execute_operations(raw_frame, &operations);
@@ -227,10 +227,10 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
 }
 
 pub fn gphoto2_stop_liveview(handle_id: usize) {
-    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
-    let camera = camera_ref.lock().expect("Could not get lock");
+    let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone();
 
-    gphoto2::stop_liveview(&camera).expect("Could not stop liveview");
+    gphoto2::stop_liveview(camera).expect("Could not stop liveview");
 }
 
 // /////// //
