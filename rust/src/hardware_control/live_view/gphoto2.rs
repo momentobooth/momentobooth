@@ -1,4 +1,4 @@
-use std::{thread::{self, JoinHandle}, sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc, Mutex}, any::Any, rc::Rc, cell::Cell};
+use std::{thread::{self, JoinHandle}, sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc, Mutex}, any::Any, cell::Cell, path::Path};
 
 use gphoto2::{Context, list::CameraDescriptor, widget::TextWidget, Camera, Error};
 
@@ -78,18 +78,30 @@ pub fn start_liveview<F>(camera_ref: Arc<Mutex<GPhoto2Camera>>, frame_callback: 
 }
 
 pub fn stop_liveview(camera_ref: Arc<Mutex<GPhoto2Camera>>) -> Result<()> {
-  let camera: std::sync::MutexGuard<'_, GPhoto2Camera> = camera_ref.lock().expect("Could not lock camera");
+  let camera = camera_ref.lock().expect("Could not lock camera");
   camera.thread_should_stop.store(true, Ordering::SeqCst);
 
-  let x = camera.thread_join_handle.replace(None);
-  //let x = camera.thread_join_handle.expect("sdsdsd");
-  match x {
+  let join_handle = camera.thread_join_handle.replace(None);
+  match join_handle {
     Some(y) => {
       y.join();
       Ok(())
     },
     None => Ok(()),
   }
+}
+
+pub fn capture_photo(camera_ref: Arc<Mutex<GPhoto2Camera>>) -> Result<Vec<u8>> {
+  let camera = camera_ref.lock().expect("Could not lock camera");
+  let capture = camera.camera.capture_image().wait().expect("Could not capture image");
+  
+  let file = camera.camera
+    .fs()
+    .download_to(&capture.folder(), &capture.name(), Path::new(&capture.name().to_string()))
+    .wait()?;
+  let data = file.get_data(get_context()?).wait().expect("Could not get file data");
+
+  Ok(data.to_vec())
 }
 
 pub struct GPhoto2CameraInfo {

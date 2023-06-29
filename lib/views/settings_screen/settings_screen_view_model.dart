@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/hardware_control/live_view_streaming/gphoto2_camera.dart';
+import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -71,7 +71,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   }
   
   void setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
-  void setCameraList() async => gPhoto2Cameras = await Gphoto2Camera.getCamerasAsComboBoxItems();
+  void setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
 
   // Current values
 

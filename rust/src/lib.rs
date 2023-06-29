@@ -1,8 +1,9 @@
 use std::{sync::RwLock};
 
 use flutter_rust_bridge::StreamSink;
-use hardware_control::live_view::nokhwa;
+use hardware_control::live_view::{nokhwa};
 use pathsep::{path_separator, join_path};
+use crate::hardware_control::live_view::gphoto2;
 
 mod dart_bridge;
 mod hardware_control;
@@ -23,12 +24,12 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
     log_debug("initialize_hardware() started".to_string());
 
     // gphoto2 initialize
-    #[cfg(any(target_os = "windows", target_os = "linux"))]
+    #[cfg(any(not(target_os = "macos"), debug_assertions))]
     {
-        let gphoto2_context = gphoto2::Context::new();
+        let initialize_result = gphoto2::initialize();
         ready_sink.add(HardwareInitializationFinishedEvent {
             step: HardwareInitializationStep::Gphoto2,
-            has_succeeded: gphoto2_context.is_ok(),
+            has_succeeded: initialize_result.is_ok(),
             message: String::new(),
         });
     }

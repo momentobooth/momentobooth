@@ -187,7 +187,7 @@ pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) 
 // /////// //
 
 lazy_static::lazy_static! {
-    pub static ref GPHOTO2_HANDLES: DashMap<usize, Arc<Mutex<GPhoto2Camera>>> = DashMap::<usize, Arc<Mutex<GPhoto2Camera>>>::new();
+    pub static ref GPHOTO2_HANDLES: DashMap<usize, Arc<Mutex<GPhoto2CameraHandle>>> = DashMap::<usize, Arc<Mutex<GPhoto2CameraHandle>>>::new();
 }
 
 static GPHOTO2_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
@@ -201,9 +201,14 @@ pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto
 
     // Store handle
     let handle_id = GPHOTO2_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
-    GPHOTO2_HANDLES.insert(handle_id, Arc::new(Mutex::new(camera)));
+    GPHOTO2_HANDLES.insert(handle_id, Arc::new(Mutex::new(GPhoto2CameraHandle::new(camera))));
 
     handle_id
+}
+
+pub fn gphoto2_close_camera(handle_id: usize) {
+    gphoto2_stop_liveview(handle_id);
+    GPHOTO2_HANDLES.remove(&handle_id).expect("Invalid nokhwa handle ID");
 }
 
 pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>, texture_ptr: usize) {
@@ -211,7 +216,7 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
     let renderer_mutex = Mutex::new(renderer);
 
     let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
-    let camera = camera_ref.clone();
+    let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
     gphoto2::start_liveview(camera, move |raw_frame| {
         match raw_frame {
@@ -228,9 +233,16 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
 
 pub fn gphoto2_stop_liveview(handle_id: usize) {
     let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
-    let camera = camera_ref.clone();
+    let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
     gphoto2::stop_liveview(camera).expect("Could not stop liveview");
+}
+
+pub fn gphoto2_capture_photo(handle_id: usize) -> Vec<u8> {
+    let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
+
+    gphoto2::capture_photo(camera).expect("Could not stop liveview")
 }
 
 // /////// //
@@ -293,7 +305,7 @@ impl Drop for NokhwaCameraHandle {
 
 pub struct GPhoto2CameraHandle {
     pub status_sink: Option<StreamSink<CameraState>>,
-    pub camera: GPhoto2Camera,
+    pub camera: Arc<Mutex<GPhoto2Camera>>,
     pub valid_frame_count: AtomicUsize,
     pub error_frame_count: AtomicUsize,
     pub last_frame_was_valid: AtomicBool,
@@ -305,7 +317,7 @@ impl GPhoto2CameraHandle {
     fn new(camera: GPhoto2Camera) -> Self {
         Self {
             status_sink: None,
-            camera,
+            camera: Arc::new(Mutex::new(camera)),
             valid_frame_count: AtomicUsize::new(0),
             error_frame_count: AtomicUsize::new(0),
             last_frame_was_valid: AtomicBool::new(false),

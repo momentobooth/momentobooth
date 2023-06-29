@@ -1,22 +1,25 @@
 
+import 'dart:typed_data';
+
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
-class Gphoto2Camera extends LiveViewSource {
+class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
 
   late int handleId;
 
-  Gphoto2Camera({required super.id, required super.friendlyName});
+  GPhoto2Camera({required super.id, required super.friendlyName});
 
   // //////////// //
   // List cameras //
   // //////////// //
 
-  static Future<List<Gphoto2Camera>> getAllCameras() async {
-    List<Gphoto2CameraInfo> cameras = await rustLibraryApi.gphoto2GetCameras();
-    return cameras.map((camera) => Gphoto2Camera(
+  static Future<List<GPhoto2Camera>> getAllCameras() async {
+    List<GPhoto2CameraInfo> cameras = await rustLibraryApi.gphoto2GetCameras();
+    return cameras.map((camera) => GPhoto2Camera(
       id: "${camera.port}/${camera.model}",
       friendlyName: "${camera.model} (at ${camera.port})",
     )).toList();
@@ -34,7 +37,8 @@ class Gphoto2Camera extends LiveViewSource {
   @override
   Future<void> openStream({required int texturePtr}) async {
     var split = id.split("/");
-    await rustLibraryApi.gphoto2OpenCamera(model: split[1], port: split[0], operations: [
+    handleId = await rustLibraryApi.gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: GPhoto2CameraSpecialHandling.NikonDSLR);
+    await rustLibraryApi.gphoto2StartLiveview(handleId: handleId, operations: [
       const ImageOperation.cropToAspectRatio(3 / 2),
     ], texturePtr: texturePtr);
   }
@@ -46,6 +50,14 @@ class Gphoto2Camera extends LiveViewSource {
   Future<CameraState> getCameraState() => Future.value(const CameraState(isStreaming: true, validFrameCount: 0, errorFrameCount: 0, lastFrameWasValid: true));
 
   @override
-  Future<void> dispose() => rustLibraryApi.nokhwaCloseCamera(handleId: handleId);
+  Future<void> dispose() => rustLibraryApi.gphoto2CloseCamera(handleId: handleId);
+
+  @override
+  Future<Uint8List> captureAndGetPhoto() async {
+    return await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId);
+  }
+
+  @override
+  Duration get captureDelay => const Duration(milliseconds: 200);
 
 }
