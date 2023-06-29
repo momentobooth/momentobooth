@@ -1,4 +1,4 @@
-use std::{thread::{self, JoinHandle}, sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc, Mutex}, any::Any, cell::Cell, path::Path};
+use std::{thread::{self, JoinHandle}, sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc, Mutex, PoisonError, MutexGuard}, any::Any, cell::Cell, path::Path};
 
 use gphoto2::{Context, list::CameraDescriptor, widget::TextWidget, Camera, Error};
 
@@ -47,11 +47,11 @@ pub fn start_liveview<F>(camera_ref: Arc<Mutex<GPhoto2Camera>>, frame_callback: 
 
   // TODO: check if join handle not already set
 
-  let opcode = camera.camera.config_key::<TextWidget>("opcode").wait().expect("Could not get opcode");
 
   match camera.special_handling {
     GPhoto2CameraSpecialHandling::None => {},
     GPhoto2CameraSpecialHandling::NikonDSLR => {
+      let opcode = camera.camera.config_key::<TextWidget>("opcode").wait()?;
       opcode.set_value("0x9201")?;
       camera.camera.set_config(&opcode).wait()?;
     },
@@ -93,13 +93,13 @@ pub fn stop_liveview(camera_ref: Arc<Mutex<GPhoto2Camera>>) -> Result<()> {
 
 pub fn capture_photo(camera_ref: Arc<Mutex<GPhoto2Camera>>) -> Result<Vec<u8>> {
   let camera = camera_ref.lock().expect("Could not lock camera");
-  let capture = camera.camera.capture_image().wait().expect("Could not capture image");
+  let capture = camera.camera.capture_image().wait()?;
   
   let file = camera.camera
     .fs()
-    .download_to(&capture.folder(), &capture.name(), Path::new(&capture.name().to_string()))
+    .download(&capture.folder(), &capture.name())
     .wait()?;
-  let data = file.get_data(get_context()?).wait().expect("Could not get file data");
+  let data = file.get_data(get_context()?).wait()?;
 
   Ok(data.to_vec())
 }
@@ -139,6 +139,7 @@ type Result<T> = std::result::Result<T, Gphoto2Error>;
 #[derive(Debug)]
 pub enum Gphoto2Error {
   ContextNotInitialized,
+  PoisonError,
   FrameDecodeError,
   StopLiveViewThreadError(Box<dyn Any + Send>),
   Gphoto2LibraryError(Error),
