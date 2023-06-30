@@ -26,6 +26,7 @@ noise = "0.8.2"
 dashmap = "5.4.0"
 turborand = "0.10.0"
 pathsep = "0.1.1"
+tokio = "1.29.1"
 
 [target.'cfg(any(not(target_os = "macos"), debug_assertions))'.dependencies]
 gphoto2 = "3.2.1"

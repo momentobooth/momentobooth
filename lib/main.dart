@@ -103,7 +103,7 @@ class _AppState extends State<App> with UiLoggy {
   void initState() {
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
     _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
-    _router.addListener(() => _onActivity(isTap: false));
+    _router.routerDelegate.addListener(() => _onActivity(isTap: false));
     _hotkeyActionStreamSubscription = _hotkeyActionStream.listen(_runHotkeyAction);
     super.initState();
   }
@@ -129,7 +129,7 @@ class _AppState extends State<App> with UiLoggy {
   }
 
   void _returnHome() {
-    if (_router.location == StartScreen.defaultRoute) return;
+    if (GoRouterState.of(context).location == StartScreen.defaultRoute) return;
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
   }
@@ -226,7 +226,7 @@ class _AppState extends State<App> with UiLoggy {
         setState(() => _settingsOpen = !_settingsOpen);
         loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
       case HotkeyAction.openManualCollageScreen:
-        if (_router.location == ManualCollageScreen.defaultRoute) {
+        if (GoRouterState.of(context).location == ManualCollageScreen.defaultRoute) {
           _router.go(StartScreen.defaultRoute);
         } else {
           _router.go(ManualCollageScreen.defaultRoute);

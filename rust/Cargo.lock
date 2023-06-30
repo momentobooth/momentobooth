@@ -1638,6 +1638,7 @@ dependencies = [
  "pathsep",
  "serde_json",
  "static_init",
+ "tokio",
  "turborand",
  "zune-jpeg",
 ]

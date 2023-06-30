@@ -5,9 +5,10 @@ use dashmap::DashMap;
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use turborand::rng::Rng;
-use ::gphoto2::Camera;
 
-use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug};
+use tokio::{sync::Mutex as AsyncMutex};
+
+use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug, TOKIO_RUNTIME};
 
 // ////////////// //
 // Initialization //
@@ -197,7 +198,9 @@ pub fn gphoto2_get_cameras() -> Vec<GPhoto2CameraInfo> {
 }
 
 pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto2CameraSpecialHandling) -> usize {
-    let camera = gphoto2::open_camera(model, port, special_handling).expect("Could not open camera");
+    let camera = TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async {
+        gphoto2::open_camera(model, port, special_handling).await
+    }).expect("Could not open camera");
 
     // Store handle
     let handle_id = GPHOTO2_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
@@ -218,31 +221,37 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
     let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
-    gphoto2::start_liveview(camera, move |raw_frame| {
-        match raw_frame {
-            Ok(raw_frame) => {
-                let processed_frame = image_processing::execute_operations(raw_frame, &operations);
-                let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
-                renderer.set_size(processed_frame.width, processed_frame.height);
-                renderer.on_rgba(&processed_frame);
-            },
-            Err(_) => todo!(),
-        }
-    });
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async {
+        gphoto2::start_liveview(camera, move |raw_frame| {
+            match raw_frame {
+                Ok(raw_frame) => {
+                    let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+                    let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
+                    renderer.set_size(processed_frame.width, processed_frame.height);
+                    renderer.on_rgba(&processed_frame);
+                },
+                Err(_) => todo!(),
+            }
+        }).await
+    }).expect("mad")
 }
 
 pub fn gphoto2_stop_liveview(handle_id: usize) {
     let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
-    gphoto2::stop_liveview(camera).expect("Could not stop liveview");
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::stop_liveview(camera).await
+    }).expect("Could not get result")
 }
 
 pub fn gphoto2_capture_photo(handle_id: usize) -> Vec<u8> {
     let camera_ref = GPHOTO2_HANDLES.get_mut(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
-    gphoto2::capture_photo(camera).expect("Could not stop liveview")
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::capture_photo(camera).await        
+    }).expect("Could not get result")
 }
 
 // /////// //
@@ -305,7 +314,7 @@ impl Drop for NokhwaCameraHandle {
 
 pub struct GPhoto2CameraHandle {
     pub status_sink: Option<StreamSink<CameraState>>,
-    pub camera: Arc<Mutex<GPhoto2Camera>>,
+    pub camera: Arc<AsyncMutex<GPhoto2Camera>>,
     pub valid_frame_count: AtomicUsize,
     pub error_frame_count: AtomicUsize,
     pub last_frame_was_valid: AtomicBool,
@@ -317,7 +326,7 @@ impl GPhoto2CameraHandle {
     fn new(camera: GPhoto2Camera) -> Self {
         Self {
             status_sink: None,
-            camera: Arc::new(Mutex::new(camera)),
+            camera: Arc::new(AsyncMutex::new(camera)),
             valid_frame_count: AtomicUsize::new(0),
             error_frame_count: AtomicUsize::new(0),
             last_frame_was_valid: AtomicBool::new(false),
