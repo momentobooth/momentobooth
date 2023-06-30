@@ -40,14 +40,18 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             value: () => viewModel.captureMethodSetting,
             onChanged: controller.onCaptureMethodChanged,
           ),
-          if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop)
-            _getInput(
-              icon: FluentIcons.timer,
-              title: "Capture delay for Sony camera",
-              subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
-              value: () => viewModel.captureDelaySonySetting,
-              onChanged: controller.onCaptureDelaySonyChanged,
-            ),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
+              return _getInput(
+                icon: FluentIcons.timer,
+                title: "Capture delay for Sony camera",
+                subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
+                value: () => viewModel.captureDelaySonySetting,
+                onChanged: controller.onCaptureDelaySonyChanged,
+              );
+            }
+            return const SizedBox();
+          }),
           Observer(builder: (_) {
             if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
                 return _gPhoto2CamerasCard(viewModel, controller);
@@ -63,6 +67,18 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
                 items: viewModel.gPhoto2SpecialHandlingOptions,
                 value: () => viewModel.gPhoto2SpecialHandling,
                 onChanged: controller.onGPhoto2SpecialHandlingChanged,
+              );
+            }
+            return const SizedBox();
+          }),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
+              return _getInput(
+                icon: FluentIcons.timer,
+                title: "Capture delay for gPhoto2 camera",
+                subtitle: "Delay in [ms].",
+                value: () => viewModel.captureDelayGPhoto2Setting,
+                onChanged: controller.onCaptureDelayGPhoto2Changed,
               );
             }
             return const SizedBox();

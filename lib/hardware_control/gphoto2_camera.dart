@@ -64,6 +64,8 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
   }
 
   @override
-  Duration get captureDelay => const Duration(milliseconds: 200);
+  Duration get captureDelay => Duration(milliseconds: SettingsManager.instance.settings.hardware.captureDelayGPhoto2);
+
+  Future<void> autoFocus() async => await rustLibraryApi.gphoto2AutoFocus(handleId: handleId);
 
 }
