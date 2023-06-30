@@ -43,6 +43,9 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   @observable
   bool showFlash = false;
 
+  @observable
+  bool showSpinner = false;
+
   @computed
   double get opacity => showFlash ? 1.0 : 0.0;
 
@@ -93,6 +96,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     showCounter = false;
     await Future.delayed(flashAnimationDuration);
     showFlash = false;
+    showSpinner = true;
     await Future.delayed(minimumContinueWait);
     flashComplete = true; // Flash is now not actually complete, but after this time we do not care about it anymore.
     navigateAfterCapture();
