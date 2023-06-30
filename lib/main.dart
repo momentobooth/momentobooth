@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/hotkey_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -78,7 +80,7 @@ class App extends StatefulWidget {
 
 }
 
-class _AppState extends State<App> with UiLoggy {
+class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
   final GoRouter _router = GoRouter(
     routes: rootRoutes,
@@ -105,6 +107,7 @@ class _AppState extends State<App> with UiLoggy {
     _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
     _router.routerDelegate.addListener(() => _onActivity(isTap: false));
     _hotkeyActionStreamSubscription = _hotkeyActionStream.listen(_runHotkeyAction);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -217,6 +220,7 @@ class _AppState extends State<App> with UiLoggy {
     _statusCheckTimer.cancel();
     _hotkeyActionStreamSubscription.cancel();
     _router.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -234,6 +238,12 @@ class _AppState extends State<App> with UiLoggy {
       case HotkeyAction.goToHomeScreen:
         _router.go(StartScreen.defaultRoute);
     }
+  }
+
+  @override
+  Future<AppExitResponse> didRequestAppExit() async {
+    await LiveViewManager.instance.gPhoto2Camera?.dispose();
+    return super.didRequestAppExit();
   }
 
 }
