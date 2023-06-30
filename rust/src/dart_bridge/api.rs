@@ -242,7 +242,7 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
                 Err(_) => todo!(),
             }
         }).await
-    }).expect("mad")
+    }).expect("Could not start live view")
 }
 
 pub fn gphoto2_stop_liveview(handle_id: usize) {

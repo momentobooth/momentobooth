@@ -27,6 +27,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
   List<ComboBoxItem<ScreenTransitionAnimation>> get screenTransitionAnimations => ScreenTransitionAnimation.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
+  List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
   
   @observable
   ObservableList<ComboBoxItem<String>> printerOptions = ObservableList<ComboBoxItem<String>>();
@@ -85,6 +86,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   Flip get liveViewFlipImage => SettingsManager.instance.settings.hardware.liveViewFlipImage;
   CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;
   String get gPhoto2CameraId => SettingsManager.instance.settings.hardware.gPhoto2CameraId;
+  GPhoto2SpecialHandling get gPhoto2SpecialHandling => SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling;
   int get captureDelaySonySetting => SettingsManager.instance.settings.hardware.captureDelaySony;
   String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;
   List<String> get printersSetting => SettingsManager.instance.settings.hardware.printerNames;

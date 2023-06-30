@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:path/path.dart';
 import 'package:toml/toml.dart';
 import 'dart:ui' as ui;
@@ -71,6 +72,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default(Flip.horizontally) Flip liveViewFlipImage,
     @Default(CaptureMethod.liveViewSource) CaptureMethod captureMethod,
     @Default("") String gPhoto2CameraId,
+    @Default(GPhoto2SpecialHandling.none) GPhoto2SpecialHandling gPhoto2SpecialHandling,
     @Default(200) int captureDelaySony,
     @Default("") String captureLocation,
     @Default([]) List<String> printerNames,

@@ -49,7 +49,22 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
               onChanged: controller.onCaptureDelaySonyChanged,
             ),
           Observer(builder: (_) {
-            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) return _gPhoto2CamerasCard(viewModel, controller);
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
+                return _gPhoto2CamerasCard(viewModel, controller);
+            }
+            return const SizedBox();
+          }),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
+              return _getComboBoxCard(
+                icon: FluentIcons.camera,
+                title: "Use special handling for camera",
+                subtitle: "Kind of special handling used for the camera. Pick \"Nikon DSLR\" for cameras like the D-series. The \"None\" might work for most mirrorless camera as they are always in live view mode.",
+                items: viewModel.gPhoto2SpecialHandlingOptions,
+                value: () => viewModel.gPhoto2SpecialHandling,
+                onChanged: controller.onGPhoto2SpecialHandlingChanged,
+              );
+            }
             return const SizedBox();
           }),
           _getFolderPickerCard(

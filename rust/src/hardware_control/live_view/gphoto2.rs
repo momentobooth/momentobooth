@@ -1,6 +1,6 @@
 use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell::Cell};
 
-use gphoto2::{Context, list::CameraDescriptor, widget::TextWidget, Camera, Error};
+use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget}, Camera, Error};
 
 use tokio::{sync::Mutex as AsyncMutex};
 use tokio::task::JoinHandle as AsyncJoinHandle;

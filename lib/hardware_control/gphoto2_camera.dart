@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
@@ -38,7 +39,7 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
   @override
   Future<void> openStream({required int texturePtr}) async {
     var split = id.split("/");
-    handleId = await rustLibraryApi.gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: GPhoto2CameraSpecialHandling.NikonDSLR);
+    handleId = await rustLibraryApi.gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
     isOpened = true;
     await rustLibraryApi.gphoto2StartLiveview(handleId: handleId, operations: [
       const ImageOperation.cropToAspectRatio(3 / 2),

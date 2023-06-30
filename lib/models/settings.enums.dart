@@ -34,6 +34,28 @@ enum CaptureMethod {
 
 }
 
+enum GPhoto2SpecialHandling {
+
+  none("None"),
+  nikonDSLR("Nikon DSLR");
+
+  final String name;
+
+  const GPhoto2SpecialHandling(this.name);
+
+  ComboBoxItem<GPhoto2SpecialHandling> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<GPhoto2SpecialHandling>> asComboBoxItems() => GPhoto2SpecialHandling.values.map((value) => value.toComboBoxItem()).toList();
+
+  GPhoto2CameraSpecialHandling toHelperLibraryEnumValue() {
+    return switch (this) {
+      GPhoto2SpecialHandling.none => GPhoto2CameraSpecialHandling.None,
+      GPhoto2SpecialHandling.nikonDSLR => GPhoto2CameraSpecialHandling.NikonDSLR,
+    };
+  }
+
+}
+
 enum ExportFormat {
 
   jpgFormat(0, "JPG"),
