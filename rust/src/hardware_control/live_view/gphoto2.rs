@@ -94,6 +94,21 @@ pub async fn stop_liveview(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result
   }
 }
 
+pub async fn auto_focus(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
+  let camera = camera_ref.lock().await;
+  
+  match camera.special_handling {
+    GPhoto2CameraSpecialHandling::None => {},
+    GPhoto2CameraSpecialHandling::NikonDSLR => {
+      let opcode = camera.camera.config_key::<TextWidget>("opcode").await?;
+      opcode.set_value("0x90C1")?;
+      camera.camera.set_config(&opcode).await?;
+    },
+  }
+
+  Ok(())
+}
+
 pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<Vec<u8>> {
   let camera = camera_ref.lock().await;
   let capture = camera.camera.capture_image().await?;

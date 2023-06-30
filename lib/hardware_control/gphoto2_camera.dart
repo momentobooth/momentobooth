@@ -47,10 +47,10 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
   }
 
   @override
-  Future<RawImage?> getLastFrame() => rustLibraryApi.nokhwaGetLastFrame(handleId: handleId);
+  Future<RawImage?> getLastFrame() => rustLibraryApi.gphoto2GetLastFrame(handleId: handleId);
 
   @override
-  Future<CameraState> getCameraState() => Future.value(const CameraState(isStreaming: true, validFrameCount: 0, errorFrameCount: 0, lastFrameWasValid: true));
+  Future<CameraState> getCameraState() => rustLibraryApi.gphoto2GetCameraStatus(handleId: handleId);
 
   @override
   Future<void> dispose() async {
