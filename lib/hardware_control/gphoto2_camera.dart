@@ -10,6 +10,7 @@ import 'package:momento_booth/rust_bridge/library_bridge.dart';
 class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
 
   late int handleId;
+  bool isOpened = false;
 
   GPhoto2Camera({required super.id, required super.friendlyName});
 
@@ -38,6 +39,7 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
   Future<void> openStream({required int texturePtr}) async {
     var split = id.split("/");
     handleId = await rustLibraryApi.gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: GPhoto2CameraSpecialHandling.NikonDSLR);
+    isOpened = true;
     await rustLibraryApi.gphoto2StartLiveview(handleId: handleId, operations: [
       const ImageOperation.cropToAspectRatio(3 / 2),
     ], texturePtr: texturePtr);
@@ -50,7 +52,10 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
   Future<CameraState> getCameraState() => Future.value(const CameraState(isStreaming: true, validFrameCount: 0, errorFrameCount: 0, lastFrameWasValid: true));
 
   @override
-  Future<void> dispose() => rustLibraryApi.gphoto2CloseCamera(handleId: handleId);
+  Future<void> dispose() async {
+    if (isOpened) await rustLibraryApi.gphoto2CloseCamera(handleId: handleId);
+    isOpened = false;
+  }
 
   @override
   Future<Uint8List> captureAndGetPhoto() async {

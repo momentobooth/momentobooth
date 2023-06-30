@@ -56,7 +56,7 @@ void main() async {
   await WindowManager.instance.initialize();
 
   // Native library init
-  init();
+  await init();
 
   await SentryFlutter.init(
     (options) {

@@ -105,8 +105,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
       _currentGPhoto2CameraId = gPhoto2CameraId;
 
       // GPhoto2
-      if (_gPhoto2Camera != null) {
+      if (_gPhoto2Camera != null && _gPhoto2Camera!.isOpened) {
         await _gPhoto2Camera!.dispose();
+        _gPhoto2Camera = null;
       }
       if ((liveViewMethodSetting == LiveViewMethod.gphoto2 || captureMethodSetting == CaptureMethod.gPhoto2) && gPhoto2CameraId.isNotEmpty) {
         _gPhoto2Camera = GPhoto2Camera(id: gPhoto2CameraId, friendlyName: gPhoto2CameraId);
