@@ -40,14 +40,49 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             value: () => viewModel.captureMethodSetting,
             onChanged: controller.onCaptureMethodChanged,
           ),
-          if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop)
-            _getInput(
-              icon: FluentIcons.timer,
-              title: "Capture delay for Sony camera",
-              subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
-              value: () => viewModel.captureDelaySonySetting,
-              onChanged: controller.onCaptureDelaySonyChanged,
-            ),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
+              return _getInput(
+                icon: FluentIcons.timer,
+                title: "Capture delay for Sony camera",
+                subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
+                value: () => viewModel.captureDelaySonySetting,
+                onChanged: controller.onCaptureDelaySonyChanged,
+              );
+            }
+            return const SizedBox();
+          }),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
+                return _gPhoto2CamerasCard(viewModel, controller);
+            }
+            return const SizedBox();
+          }),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
+              return _getComboBoxCard(
+                icon: FluentIcons.camera,
+                title: "Use special handling for camera",
+                subtitle: "Kind of special handling used for the camera. Pick \"Nikon DSLR\" for cameras like the D-series. The \"None\" might work for most mirrorless camera as they are always in live view mode.",
+                items: viewModel.gPhoto2SpecialHandlingOptions,
+                value: () => viewModel.gPhoto2SpecialHandling,
+                onChanged: controller.onGPhoto2SpecialHandlingChanged,
+              );
+            }
+            return const SizedBox();
+          }),
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
+              return _getInput(
+                icon: FluentIcons.timer,
+                title: "Capture delay for gPhoto2 camera",
+                subtitle: "Delay in [ms].",
+                value: () => viewModel.captureDelayGPhoto2Setting,
+                onChanged: controller.onCaptureDelayGPhoto2Changed,
+              );
+            }
+            return const SizedBox();
+          }),
           _getFolderPickerCard(
             icon: FluentIcons.folder,
             title: "Capture location",
@@ -183,6 +218,33 @@ FluentSettingCard _webcamCard(SettingsScreenViewModel viewModel, SettingsScreenC
               items: viewModel.webcams,
               value: viewModel.liveViewWebcamId,
               onChanged: controller.onLiveViewWebcamIdChanged,
+            );
+          }),
+        ),
+      ],
+    ),
+  );
+}
+
+FluentSettingCard _gPhoto2CamerasCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingCard(
+    icon: FluentIcons.camera,
+    title: "Camera",
+    subtitle: "Pick the camera to use for capturing still frames",
+    child: Row(
+      children: [
+        Button(
+          onPressed: viewModel.setCameraList,
+          child: const Text('Refresh'),
+        ),
+        const SizedBox(width: 10),
+        ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 150),
+          child: Observer(builder: (_) {
+            return ComboBox<String>(
+              items: viewModel.gPhoto2Cameras,
+              value: viewModel.gPhoto2CameraId,
+              onChanged: controller.onGPhoto2CameraIdChanged,
             );
           }),
         ),

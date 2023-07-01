@@ -6,6 +6,7 @@ import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -41,6 +42,9 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   @observable
   bool showFlash = false;
+
+  @observable
+  bool showSpinner = false;
 
   @computed
   double get opacity => showFlash ? 1.0 : 0.0;
@@ -79,7 +83,8 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   }) {
     capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
       CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
-      CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer()
+      CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
+      CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera,
     } as PhotoCaptureMethod;
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
   }
@@ -91,6 +96,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     showCounter = false;
     await Future.delayed(flashAnimationDuration);
     showFlash = false;
+    showSpinner = true;
     await Future.delayed(minimumContinueWait);
     flashComplete = true; // Flash is now not actually complete, but after this time we do not care about it anymore.
     navigateAfterCapture();

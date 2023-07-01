@@ -13,7 +13,7 @@ final _dylib = Platform.isIOS || Platform.isMacOS
 
 final rustLibraryApi = MomentoBoothNativeHelpersImpl(_dylib);
 
-void init() {
+Future<void> init() async {
   // Initialize log
   Stream<LogEvent> logStream = rustLibraryApi.initializeLog();
   logStream.listen(processLogEvent);

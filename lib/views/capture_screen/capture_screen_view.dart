@@ -37,22 +37,31 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _getReadyText,
-            Flexible(child: Container(
-              padding: const EdgeInsets.all(40.0),
-              constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
-              child: Observer(builder: (_) {
-                return AnimatedOpacity(
-                  duration: const Duration(milliseconds: 50),
-                  opacity: viewModel.showCounter ? 1.0 : 0.0,
-                  child: CaptureCounter(
-                    onCounterFinished: viewModel.onCounterFinished,
-                    counterStart: viewModel.counterStart,
-                  ),
-                );
-              })
-            )),
+            Flexible(
+              child: Container(
+                padding: const EdgeInsets.all(40.0),
+                constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
+                child: Observer(builder: (_) {
+                  return AnimatedOpacity(
+                    duration: const Duration(milliseconds: 50),
+                    opacity: viewModel.showCounter ? 1.0 : 0.0,
+                    child: CaptureCounter(
+                      onCounterFinished: viewModel.onCounterFinished,
+                      counterStart: viewModel.counterStart,
+                    ),
+                  );
+                })
+              ),
+            ),
           ],
         ),
+        Observer(
+          builder: (_) {
+          if (viewModel.showSpinner) {
+            return const Center(child: ProgressRing());
+          }
+          return const SizedBox();
+        }),
         _flashAnimation,
       ],
     );

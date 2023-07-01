@@ -3,7 +3,8 @@ part of 'settings.dart';
 enum LiveViewMethod {
 
   debugNoise(0, "Debug - Static noise"),
-  webcam(1, "Webcam");
+  webcam(1, "Webcam"),
+  gphoto2(2, "gPhoto2");
 
   final int value;
   final String name;
@@ -19,7 +20,8 @@ enum LiveViewMethod {
 enum CaptureMethod {
 
   liveViewSource(0, "Live view source"),
-  sonyImagingEdgeDesktop(1, "Sony Imaging Edge Desktop automation");
+  sonyImagingEdgeDesktop(1, "Sony Imaging Edge Desktop automation"),
+  gPhoto2(2, "gPhoto2");
 
   final int value;
   final String name;
@@ -29,6 +31,28 @@ enum CaptureMethod {
   ComboBoxItem<CaptureMethod> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
   static List<ComboBoxItem<CaptureMethod>> asComboBoxItems() => CaptureMethod.values.map((value) => value.toComboBoxItem()).toList();
+
+}
+
+enum GPhoto2SpecialHandling {
+
+  none("None"),
+  nikonDSLR("Nikon DSLR");
+
+  final String name;
+
+  const GPhoto2SpecialHandling(this.name);
+
+  ComboBoxItem<GPhoto2SpecialHandling> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<GPhoto2SpecialHandling>> asComboBoxItems() => GPhoto2SpecialHandling.values.map((value) => value.toComboBoxItem()).toList();
+
+  GPhoto2CameraSpecialHandling toHelperLibraryEnumValue() {
+    return switch (this) {
+      GPhoto2SpecialHandling.none => GPhoto2CameraSpecialHandling.None,
+      GPhoto2SpecialHandling.nikonDSLR => GPhoto2CameraSpecialHandling.NikonDSLR,
+    };
+  }
 
 }
 

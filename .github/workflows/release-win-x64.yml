@@ -105,6 +105,15 @@ jobs:
     - name: Bundle DLL dependencies of the helper library
       run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
 
+    - name: Bundle libgphoto2 additional libs
+      shell: pwsh
+      run: |
+        $Env:MSYS2_ROOT = msys2 -c 'cygpath -m /'
+        mkdir build\windows\runner\Release\libgphoto2_iolibs
+        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2_port\*\*.dll build\windows\runner\Release\libgphoto2_iolibs
+        mkdir build\windows\runner\Release\libgphoto2_camlibs
+        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2\*\*.dll build\windows\runner\Release\libgphoto2_camlibs
+
     # Pack
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.1

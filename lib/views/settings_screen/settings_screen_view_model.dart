@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -26,12 +27,16 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
   List<ComboBoxItem<ScreenTransitionAnimation>> get screenTransitionAnimations => ScreenTransitionAnimation.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
+  List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
   
   @observable
   ObservableList<ComboBoxItem<String>> printerOptions = ObservableList<ComboBoxItem<String>>();
 
   @observable
   List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
+
+  @observable
+  List<ComboBoxItem<String>> gPhoto2Cameras = ObservableList<ComboBoxItem<String>>();
 
   RichText _printerCardText(String printerName, bool isAvailable, bool isDefault) {
     final icon = isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
@@ -67,6 +72,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   }
   
   void setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
+  void setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
 
   // Current values
 
@@ -79,6 +85,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get liveViewWebcamId => SettingsManager.instance.settings.hardware.liveViewWebcamId;
   Flip get liveViewFlipImage => SettingsManager.instance.settings.hardware.liveViewFlipImage;
   CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;
+  String get gPhoto2CameraId => SettingsManager.instance.settings.hardware.gPhoto2CameraId;
+  GPhoto2SpecialHandling get gPhoto2SpecialHandling => SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling;
+  int get captureDelayGPhoto2Setting => SettingsManager.instance.settings.hardware.captureDelayGPhoto2;
   int get captureDelaySonySetting => SettingsManager.instance.settings.hardware.captureDelaySony;
   String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;
   List<String> get printersSetting => SettingsManager.instance.settings.hardware.printerNames;
@@ -113,6 +122,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   }) {
     setPrinterList();
     setWebcamList();
+    setCameraList();
   }
 
   // Methods

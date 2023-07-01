@@ -24,7 +24,7 @@ class NokhwaCamera extends LiveViewSource {
   static Future<List<ComboBoxItem<String>>> getCamerasAsComboBoxItems() async =>
       (await getAllCameras()).map((value) => value.toComboBoxItem()).toList();
 
-  ComboBoxItem<String> toComboBoxItem() => ComboBoxItem(value: friendlyName, child: Text(friendlyName));
+  ComboBoxItem<String> toComboBoxItem() => ComboBoxItem(value: id, child: Text(friendlyName));
 
   // ////////////// //
   // Control camera //

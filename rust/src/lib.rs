@@ -1,8 +1,10 @@
-use std::{sync::RwLock};
+use std::{sync::{RwLock, OnceLock}};
 
 use flutter_rust_bridge::StreamSink;
-use hardware_control::live_view::nokhwa;
+use hardware_control::live_view::{nokhwa};
 use pathsep::{path_separator, join_path};
+use tokio::runtime::{self, Runtime};
+use crate::hardware_control::live_view::gphoto2;
 
 mod dart_bridge;
 mod hardware_control;
@@ -11,6 +13,8 @@ mod utils;
 const TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
 
 static LOG_STREAM: RwLock<Option<StreamSink<LogEvent>>> = RwLock::new(None);
+
+static TOKIO_RUNTIME: OnceLock<Runtime> = OnceLock::new();
 
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
     let log_write = LOG_STREAM.write();
@@ -22,13 +26,16 @@ pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     log_debug("initialize_hardware() started".to_string());
 
+    // Tokio runtime
+    TOKIO_RUNTIME.get_or_init(|| runtime::Builder::new_multi_thread().enable_all().build().unwrap());
+
     // gphoto2 initialize
-    #[cfg(any(target_os = "windows", target_os = "linux"))]
+    #[cfg(any(not(target_os = "macos"), debug_assertions))]
     {
-        let gphoto2_context = gphoto2::Context::new();
+        let initialize_result = gphoto2::initialize();
         ready_sink.add(HardwareInitializationFinishedEvent {
             step: HardwareInitializationStep::Gphoto2,
-            has_succeeded: gphoto2_context.is_ok(),
+            has_succeeded: initialize_result.is_ok(),
             message: String::new(),
         });
     }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/hotkey_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -56,7 +58,7 @@ void main() async {
   await WindowManager.instance.initialize();
 
   // Native library init
-  init();
+  await init();
 
   await SentryFlutter.init(
     (options) {
@@ -78,7 +80,7 @@ class App extends StatefulWidget {
 
 }
 
-class _AppState extends State<App> with UiLoggy {
+class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
   final GoRouter _router = GoRouter(
     routes: rootRoutes,
@@ -103,8 +105,9 @@ class _AppState extends State<App> with UiLoggy {
   void initState() {
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
     _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
-    _router.addListener(() => _onActivity(isTap: false));
+    _router.routerDelegate.addListener(() => _onActivity(isTap: false));
     _hotkeyActionStreamSubscription = _hotkeyActionStream.listen(_runHotkeyAction);
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
@@ -129,7 +132,7 @@ class _AppState extends State<App> with UiLoggy {
   }
 
   void _returnHome() {
-    if (_router.location == StartScreen.defaultRoute) return;
+    if (GoRouterState.of(context).location == StartScreen.defaultRoute) return;
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
   }
@@ -217,6 +220,7 @@ class _AppState extends State<App> with UiLoggy {
     _statusCheckTimer.cancel();
     _hotkeyActionStreamSubscription.cancel();
     _router.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -226,7 +230,7 @@ class _AppState extends State<App> with UiLoggy {
         setState(() => _settingsOpen = !_settingsOpen);
         loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
       case HotkeyAction.openManualCollageScreen:
-        if (_router.location == ManualCollageScreen.defaultRoute) {
+        if (GoRouterState.of(context).location == ManualCollageScreen.defaultRoute) {
           _router.go(StartScreen.defaultRoute);
         } else {
           _router.go(ManualCollageScreen.defaultRoute);
@@ -234,6 +238,12 @@ class _AppState extends State<App> with UiLoggy {
       case HotkeyAction.goToHomeScreen:
         _router.go(StartScreen.defaultRoute);
     }
+  }
+
+  @override
+  Future<AppExitResponse> didRequestAppExit() async {
+    await LiveViewManager.instance.gPhoto2Camera?.dispose();
+    return super.didRequestAppExit();
   }
 
 }
