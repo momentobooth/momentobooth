@@ -33,7 +33,17 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
               flex: 5,
               child: AspectRatio(
                 aspectRatio: 1.5,
-                child: _liveViewWithCounter,
+                child: Stack(
+                  children: [
+                    _liveViewWithCounter,
+                    Observer(builder: (_) {
+                      if (viewModel.showSpinner) {
+                        return const Center(child: ProgressRing());
+                      }
+                      return const SizedBox();
+                    }),
+                  ],
+                ),
               ),
             ),
           ],
