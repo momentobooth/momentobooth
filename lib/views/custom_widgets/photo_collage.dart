@@ -203,7 +203,6 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
        .addListener(ImageStreamListener((image, synchronousCall) {
           if (firstImageDecoded) return;
           firstImageDecoded = true;
-          loggy.debug("_oneLayout image decoded!");
           widget.decodeCallback();
        }));
     return LayoutGrid(
@@ -211,7 +210,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           l1header
           l1content
         ''',
-      rowSizes: [1.fr, 8.fr],
+      rowSizes: const [auto, auto],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
@@ -221,7 +220,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
             child: SvgPicture.asset(
               "assets/svg/logo.svg",
               colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-            ).inGridArea('l1header')
+            ).inGridArea('l1header'),
           ),
         SizedBox.expand(child: RotatedBox(
           quarterTurns: 1,
