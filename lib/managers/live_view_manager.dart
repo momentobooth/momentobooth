@@ -156,6 +156,17 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
     });
   }
 
+  // /////// //
+  // Methods //
+  // /////// //
+
+  void restoreLiveView() {
+    LiveViewManager.instance._lock.synchronized(() async {
+      _currentLiveViewMethodSetting = null;
+      await LiveViewManager.instance._updateConfig();
+    });
+  }
+
 }
 
 enum LiveViewState {

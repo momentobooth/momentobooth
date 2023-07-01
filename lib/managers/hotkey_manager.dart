@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:hotkey_manager/hotkey_manager.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/hotkey_action.dart';
 
@@ -32,6 +33,15 @@ abstract class _HotkeyManagerBase with Store, UiLoggy {
   Future<void> initialize() async {
     await hotKeyManager.unregisterAll();
 
+    // Ctrl + R recovers live view
+    await hotKeyManager.register(
+      HotKey(
+        KeyCode.keyR,
+        modifiers: [_defaultModifier],
+        scope: HotKeyScope.inapp,
+      ),
+      keyDownHandler: (hotKey) => LiveViewManager.instance.restoreLiveView(),
+    );
     // Ctrl + H navigate to home screen
     await hotKeyManager.register(
       HotKey(
