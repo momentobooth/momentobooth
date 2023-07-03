@@ -55,3 +55,6 @@ app.*.map.json
 
 # Output
 dist/
+
+# mdBook output
+index.html
