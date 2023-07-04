@@ -16,7 +16,7 @@ Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenC
         child: FittedBox(
           child: PhotoCollage(
             key: viewModel.collageKey,
-            debug: 1,
+            debug: 2,
             aspectRatio: 1/viewModel.collageAspectRatioSetting,
             padding: viewModel.collagePaddingSetting,
             // decodeCallback: viewModel.collageReady,

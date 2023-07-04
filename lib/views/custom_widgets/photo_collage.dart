@@ -193,10 +193,10 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     return Container();
   }
 
-  Widget _getChosenImage(int index, {BoxFit? fit}) {
+  Widget _getChosenImage(int index, {BoxFit? fit, decodeCallback = baseCallback}) {
     return widget.debug != null ?
-      ImageWithLoaderFallback.memory(photos[chosen[index]], fit: fit) :
-      ImageWithLoaderFallback.file(File('assets/bitmap/placeholder.png'), fit: fit);
+      ImageWithLoaderFallback.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback,) :
+      ImageWithLoaderFallback.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {
@@ -213,14 +213,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget get _oneLayout {
-    var img = Image.memory(photos[chosen[0]], fit: BoxFit.cover);
-    img.image
-       .resolve(ImageConfiguration.empty)
-       .addListener(ImageStreamListener((image, synchronousCall) {
-          if (firstImageDecoded) return;
-          firstImageDecoded = true;
-          widget.decodeCallback();
-       }));
+    var img = _getChosenImage(0, fit: BoxFit.cover, decodeCallback: widget.decodeCallback);
     return LayoutGrid(
       areas: '''
           l1header
