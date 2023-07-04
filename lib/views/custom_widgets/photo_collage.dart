@@ -41,6 +41,8 @@ class PhotoCollage extends StatefulWidget {
   final double aspectRatio;
   final double padding;
   final bool showLogo;
+  final bool showBackground;
+  final bool showForeground;
   final bool singleMode;
   final int? debug;
   final VoidCallback decodeCallback;
@@ -51,6 +53,8 @@ class PhotoCollage extends StatefulWidget {
     this.padding = 0,
     this.showLogo = false,
     this.singleMode = false,
+    this.showBackground = true,
+    this.showForeground = true,
     this.debug,
     this.decodeCallback = baseCallback,
   });
@@ -151,7 +155,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         for (int i = 0; i <= 4; i++) ...[
           if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
             Opacity(
-              opacity: i == nChosen ? 1 : 0,
+              opacity: i == nChosen && widget.showBackground ? 1 : 0,
               child: ImageWithLoaderFallback.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
             ),
         ],
@@ -176,7 +180,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         for (int i = 0; i <= 4; i++) ...[
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
             Opacity(
-              opacity: i == nChosen ? 1 : 0,
+              opacity: i == nChosen && widget.showForeground ? 1 : 0,
               child: ImageWithLoaderFallback.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
             ),
         ],

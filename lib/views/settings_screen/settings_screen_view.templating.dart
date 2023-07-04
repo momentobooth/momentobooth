@@ -26,7 +26,23 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
               Button(
                 onPressed: controller.exportTemplate,
                 child: const Text("Export"),
-              )
+              ),
+              buttonMargin,
+              Observer(builder: (context) =>
+                ToggleSwitch(
+                  checked: viewModel.previewTemplateShowBack,
+                  onChanged: (v) => viewModel.previewTemplateShowBack = v,
+                  content: const Text("Show background"),
+                )
+              ),
+              buttonMargin,
+              Observer(builder: (context) =>
+                ToggleSwitch(
+                  checked: viewModel.previewTemplateShowFront,
+                  onChanged: (v) => viewModel.previewTemplateShowFront = v,
+                  content: const Text("Show foreground"),
+                )
+              ),
             ],
           ),
           columnMargin,
@@ -66,6 +82,8 @@ Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenC
                 debug: viewModel.previewTemplate,
                 aspectRatio: 1/viewModel.collageAspectRatioSetting,
                 padding: viewModel.collagePaddingSetting,
+                showBackground: viewModel.previewTemplateShowBack,
+                showForeground: viewModel.previewTemplateShowFront,
                 // decodeCallback: viewModel.collageReady,
               ),
             ),
