@@ -42,7 +42,9 @@ class PhotoCollage extends StatefulWidget {
   final double padding;
   final bool showLogo;
   final bool singleMode;
+  final bool debugMode;
   final VoidCallback decodeCallback;
+  final ObservableList<int>? choiceOverride;
 
   const PhotoCollage({
     super.key,
@@ -50,6 +52,8 @@ class PhotoCollage extends StatefulWidget {
     this.padding = 0,
     this.showLogo = false,
     this.singleMode = false,
+    this.debugMode = false,
+    this.choiceOverride,
     this.decodeCallback = baseCallback,
   });
 
@@ -81,9 +85,10 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   static const double gap = 20.0;
 
   ObservableList<int> get chosen => PhotosManager.instance.chosen;
+  // ObservableList<int> get chosen => widget.choiceOverride ?? PhotosManager.instance.chosen;
   ObservableList<Uint8List> get photos => PhotosManager.instance.photos;
   Iterable<Uint8List> get chosenPhotos => PhotosManager.instance.chosenPhotos;
-  int get nChosen => PhotosManager.instance.chosen.length;
+  int get nChosen => chosen.length;
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   bool firstImageDecoded = false;
 
@@ -153,10 +158,18 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               child: ImageWithLoaderFallback.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
             ),
         ],
-        Padding(
-          padding: EdgeInsets.all(gap + widget.padding),
-          child: _getInnerLayout(localizations),
-        ),
+        if (!widget.debugMode)
+          Padding(
+            padding: EdgeInsets.all(gap + widget.padding),
+            child: _getInnerLayout(localizations),
+          ),
+        if (widget.debugMode)
+          DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border.all(width: gap + widget.padding, color: const ui.Color.fromARGB(127, 255, 255, 255)),
+          ),
+            child: _getInnerLayout(localizations),
+          ),
         for (int i = 0; i <= 4; i++) ...[
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
             Opacity(
