@@ -217,6 +217,17 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
   Widget get _settingsScreen {
     return FluentApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        FluentLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('nl'), // Dutch
+      ],
+      locale: SettingsManager.instance.settings.ui.language.toLocale(),
       home: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
