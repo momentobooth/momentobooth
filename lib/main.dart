@@ -196,21 +196,19 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   }
 
   Widget get _settingsScreen {
-    return FluentApp(
-      home: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 16,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        margin: const EdgeInsets.all(32),
-        clipBehavior: Clip.hardEdge,
-        child: const SettingsScreen(),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            blurRadius: 16,
+            spreadRadius: 0,
+          ),
+        ],
       ),
+      margin: const EdgeInsets.all(32),
+      clipBehavior: Clip.hardEdge,
+      child: const SettingsScreen(),
     );
   }
 
