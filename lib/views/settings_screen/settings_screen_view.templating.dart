@@ -22,6 +22,11 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
               templateButton(viewModel, controller, "3 photos", 3),
               buttonMargin,
               templateButton(viewModel, controller, "4 photos", 4),
+              buttonMargin,
+              Button(
+                onPressed: controller.exportTemplate,
+                child: const Text("Export"),
+              )
             ],
           ),
           columnMargin,
@@ -46,7 +51,7 @@ Widget templateButton(SettingsScreenViewModel viewModel, SettingsScreenControlle
 }
 
 Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  const double height = 600;
+  const double height = 800;
   return Row(
     children: [
       const SizedBox(height: height,),
