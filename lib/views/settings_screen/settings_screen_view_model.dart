@@ -18,8 +18,6 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   int paneIndex = 0;
 
-  PageStorageBucket pageStorageBucket = PageStorageBucket();
-
   // Option lists
 
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
