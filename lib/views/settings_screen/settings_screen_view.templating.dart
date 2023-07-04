@@ -27,7 +27,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
           columnMargin,
           const Text("Explanation:\nRed border = padding for printing, will be cut-off if set correctly\nWhite border = gap size"),
           columnMargin,
-          Observer(builder: (context) => Text("Selected template images:\nFront template file: ${viewModel.selectedFrontTemplate}\nBack template file: ${viewModel.selectedBackTemplate}.")),
+          Observer(builder: (context) => Text("Selected template images for n=${viewModel.previewTemplate}:\nFront template file: ${viewModel.selectedFrontTemplate}\nBack template file: ${viewModel.selectedBackTemplate}.")),
           columnMargin,
           _getTemplateExampleRow(viewModel, controller),
         ]
