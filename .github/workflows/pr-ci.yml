@@ -36,7 +36,7 @@ jobs:
         update: true
         install: mingw-w64-x86_64-libgphoto2 mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-clang
         path-type: inherit
-        release: false
+        release: true
 
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
@@ -57,9 +57,6 @@ jobs:
       with:
         crate: flutter_rust_bridge_codegen
         version: "1.78.0"
-
-    - name: Flutter Config
-      run: flutter config --enable-windows-desktop
 
     - name: Install Dependencies
       run: flutter packages get
