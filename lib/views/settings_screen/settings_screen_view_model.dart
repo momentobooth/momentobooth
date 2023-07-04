@@ -22,6 +22,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   PageStorageBucket pageStorageBucket = PageStorageBucket();
 
   final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
+  @observable
+  int previewTemplate = 1;
+  int get previewTemplateRotation => [0, 1, 4].contains(previewTemplate) ? 1 : 0;
 
   // Option lists
 

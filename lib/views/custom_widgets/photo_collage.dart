@@ -161,11 +161,17 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
             child: _getInnerLayout(localizations),
           ),
         if (widget.debug != null)
-          DecoratedBox(
+          Container(
             decoration: BoxDecoration(
-              border: Border.all(width: gap + widget.padding, color: const ui.Color.fromARGB(127, 255, 255, 255)),
-          ),
-            child: _getInnerLayout(localizations),
+              border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
+            ),
+            // padding: EdgeInsets.all(widget.padding),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
+              ),
+              child: _getInnerLayout(localizations),
+            ),
           ),
         for (int i = 0; i <= 4; i++) ...[
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
@@ -179,7 +185,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget _getInnerLayout(AppLocalizations localizations) {
-    if (PhotosManager.instance.chosen.isEmpty) {
+    if (nChosen == 0) {
       return _getZeroLayout(localizations);
     } else if (nChosen == 1) {
       return _oneLayout;
@@ -194,7 +200,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget _getChosenImage(int index, {BoxFit? fit, decodeCallback = baseCallback}) {
-    return widget.debug != null ?
+    return widget.debug == null ?
       ImageWithLoaderFallback.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback,) :
       ImageWithLoaderFallback.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
   }

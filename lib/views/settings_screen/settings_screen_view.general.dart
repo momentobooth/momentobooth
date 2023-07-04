@@ -22,6 +22,7 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
             icon: FluentIcons.aspect_ratio,
             title: "Collage aspect ratio",
             subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
+            smallChange: 0.1,
             value: () => viewModel.collageAspectRatioSetting,
             onChanged: controller.onCollageAspectRatioChanged,
           ),
