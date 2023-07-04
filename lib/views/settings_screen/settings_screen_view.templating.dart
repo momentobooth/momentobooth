@@ -2,6 +2,7 @@ part of 'settings_screen_view.dart';
 
 
 Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  const buttonPadding = SizedBox(width: 10,);
   return FluentSettingsPage(
     title: "Templating",
     blocks: [
@@ -9,6 +10,37 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
       FluentSettingsBlock(
         title: "Template preview",
         settings: [
+          Row(
+            children: [
+              Button(
+                child: const Text('No photo'),
+                onPressed: () => viewModel.previewTemplate = 0,
+              ),
+              buttonPadding,
+              Button(
+                child: const Text('1 photo'),
+                onPressed: () => viewModel.previewTemplate = 1,
+              ),
+              buttonPadding,
+              Button(
+                child: const Text('2 photos'),
+                onPressed: () => viewModel.previewTemplate = 2,
+              ),
+              buttonPadding,
+              Button(
+                child: const Text('3 photos'),
+                onPressed: () => viewModel.previewTemplate = 3,
+              ),
+              buttonPadding,
+              Button(
+                child: const Text('4 photos'),
+                onPressed: () => viewModel.previewTemplate = 4,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10,),
+          const Text("Explanation: Red border = padding for printing, will be cut-off if set correctly, White border = gap size"),
+          const SizedBox(height: 10,),
           _getTemplateExampleRow(viewModel, controller),
         ]
       ),
@@ -17,22 +49,26 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
 }
 
 Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  const double height = 600;
   return Row(
     children: [
-      RotatedBox(
-        quarterTurns: -1 * viewModel.previewTemplateRotation,
-        child: SizedBox(
-          height: 450,
-          child: FittedBox(
-            child: PhotoCollage(
-              key: viewModel.collageKey,
-              debug: viewModel.previewTemplate,
-              aspectRatio: 1/viewModel.collageAspectRatioSetting,
-              padding: viewModel.collagePaddingSetting,
-              // decodeCallback: viewModel.collageReady,
+      const SizedBox(height: height,),
+      Observer(
+        builder: (context) => RotatedBox(
+          quarterTurns: -1 * viewModel.previewTemplateRotation,
+          child: SizedBox(
+            height: height,
+            child: FittedBox(
+              child: PhotoCollage(
+                key: viewModel.collageKey,
+                debug: viewModel.previewTemplate,
+                aspectRatio: 1/viewModel.collageAspectRatioSetting,
+                padding: viewModel.collagePaddingSetting,
+                // decodeCallback: viewModel.collageReady,
+              ),
             ),
           ),
-        ),
+        )
       ),
     ],
   );
@@ -70,13 +106,6 @@ Widget _templateSettings(SettingsScreenViewModel viewModel, SettingsScreenContro
         dialogTitle: "Select templates location",
         controller: controller.templatesFolderSettingController,
         onChanged: controller.onTemplatesFolderChanged,
-      ),
-      _getBooleanInput(
-        icon: FluentIcons.picture_center,
-        title: "Treat single photo as collage",
-        subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
-        value: () => viewModel.singlePhotoIsCollageSetting,
-        onChanged: controller.onSinglePhotoIsCollageChanged,
       ),
       _getInput(
         icon: FluentIcons.picture_stretch,
