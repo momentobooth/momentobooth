@@ -2,7 +2,8 @@ part of 'settings_screen_view.dart';
 
 
 Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  const buttonPadding = SizedBox(width: 10,);
+  const buttonMargin = SizedBox(width: 10,);
+  const columnMargin = SizedBox(height: 10,);
   return FluentSettingsPage(
     title: "Templating",
     blocks: [
@@ -12,39 +13,35 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
         settings: [
           Row(
             children: [
-              Button(
-                child: const Text('No photo'),
-                onPressed: () => viewModel.previewTemplate = 0,
-              ),
-              buttonPadding,
-              Button(
-                child: const Text('1 photo'),
-                onPressed: () => viewModel.previewTemplate = 1,
-              ),
-              buttonPadding,
-              Button(
-                child: const Text('2 photos'),
-                onPressed: () => viewModel.previewTemplate = 2,
-              ),
-              buttonPadding,
-              Button(
-                child: const Text('3 photos'),
-                onPressed: () => viewModel.previewTemplate = 3,
-              ),
-              buttonPadding,
-              Button(
-                child: const Text('4 photos'),
-                onPressed: () => viewModel.previewTemplate = 4,
-              ),
+              templateButton(viewModel, controller, "No photo", 0),
+              buttonMargin,
+              templateButton(viewModel, controller, "1 photo", 1),
+              buttonMargin,
+              templateButton(viewModel, controller, "2 photos", 2),
+              buttonMargin,
+              templateButton(viewModel, controller, "3 photos", 3),
+              buttonMargin,
+              templateButton(viewModel, controller, "4 photos", 4),
             ],
           ),
-          const SizedBox(height: 10,),
-          const Text("Explanation: Red border = padding for printing, will be cut-off if set correctly, White border = gap size"),
-          const SizedBox(height: 10,),
+          columnMargin,
+          const Text("Explanation:\nRed border = padding for printing, will be cut-off if set correctly\nWhite border = gap size"),
+          columnMargin,
+          Observer(builder: (context) => Text("Selected template images:\nFront template file: ${viewModel.selectedFrontTemplate}\nBack template file: ${viewModel.selectedBackTemplate}.")),
+          columnMargin,
           _getTemplateExampleRow(viewModel, controller),
         ]
       ),
     ],
+  );
+}
+
+Widget templateButton(SettingsScreenViewModel viewModel, SettingsScreenController controller, String text, int index) {
+  return Observer(
+    builder: (context) => Button(
+      onPressed: viewModel.previewTemplate == index ? null : () => viewModel.previewTemplate = index,
+      child: Text(text),
+    )
   );
 }
 
@@ -78,6 +75,14 @@ Widget _templateSettings(SettingsScreenViewModel viewModel, SettingsScreenContro
   return FluentSettingsBlock(
     title: "Creative",
     settings: [
+      _getFolderPickerCard(
+        icon: FluentIcons.fabric_report_library,
+        title: "Collage background templates location",
+        subtitle: "Location to look for template files",
+        dialogTitle: "Select templates location",
+        controller: controller.templatesFolderSettingController,
+        onChanged: controller.onTemplatesFolderChanged,
+      ),
       _getInput(
         icon: FluentIcons.aspect_ratio,
         title: "Collage aspect ratio",
@@ -98,14 +103,6 @@ Widget _templateSettings(SettingsScreenViewModel viewModel, SettingsScreenContro
         child: Observer(
           builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting/1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height.")
         ),
-      ),
-      _getFolderPickerCard(
-        icon: FluentIcons.fabric_report_library,
-        title: "Collage background templates location",
-        subtitle: "Location to look for template files",
-        dialogTitle: "Select templates location",
-        controller: controller.templatesFolderSettingController,
-        onChanged: controller.onTemplatesFolderChanged,
       ),
       _getInput(
         icon: FluentIcons.picture_stretch,

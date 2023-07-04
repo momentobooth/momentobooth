@@ -25,6 +25,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   int previewTemplate = 1;
   int get previewTemplateRotation => [0, 1, 4].contains(previewTemplate) ? 1 : 0;
+  String get selectedBackTemplate => collageKey.currentState?.templates[TemplateKind.back]![previewTemplate]?.path ?? "-";
+  String get selectedFrontTemplate => collageKey.currentState?.templates[TemplateKind.front]![previewTemplate]?.path ?? "-";
 
   // Option lists
 
