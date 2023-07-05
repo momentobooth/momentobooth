@@ -30,58 +30,55 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
 
   @override
   Widget get body {
-    return PageStorage(
-      bucket: viewModel.pageStorageBucket,
-      child: Observer(
-        builder: (context) {
-          return NavigationView(
-            pane: NavigationPane(
-              selected: viewModel.paneIndex,
-              onChanged: controller.onNavigationPaneIndexChanged,
-              items: [
-                PaneItemSeparator(color: Colors.transparent),
-                PaneItem(
-                  icon: const Icon(FluentIcons.settings),
-                  title: const Text("General"),
-                  body: Builder(builder: (_) => _getGeneralSettings(viewModel, controller)),
-                ),
-                PaneItem(
-                  icon: const Icon(FluentIcons.devices4),
-                  title: const Text("Hardware"),
-                  body: Builder(builder: (_) => _getHardwareSettings(viewModel, controller)),
-                ),
-                PaneItem(
-                  icon: const Icon(FluentIcons.send),
-                  title: const Text("Output"),
-                  body: Builder(builder: (_) => _getOutputSettings(viewModel, controller)),
-                ),
-                PaneItem(
-                  icon: const Icon(FluentIcons.open_in_new_window),
-                  title: const Text("User interface"),
-                  body: Builder(builder: (_) => _getUiSettings(viewModel, controller)),
-                ),
-                PaneItem(
-                  icon: const Icon(FluentIcons.design),
-                  title: const Text("Templating"),
-                  body: Builder(builder: (_) => _getTemplatingSettings(viewModel, controller)),
-                ),
-              ],
-              footerItems: [
-                PaneItem(
-                  icon: const Icon(FluentIcons.device_bug),
-                  title: const Text("Debug"),
-                  body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
-                ),
-                PaneItem(
-                  icon: const Icon(FluentIcons.data_flow),
-                  title: const Text("Log"),
-                  body: Builder(builder: (_) => _log),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+    return Observer(
+      builder: (context) {
+        return NavigationView(
+          pane: NavigationPane(
+            selected: viewModel.paneIndex,
+            onChanged: controller.onNavigationPaneIndexChanged,
+            items: [
+              PaneItemSeparator(color: Colors.transparent),
+              PaneItem(
+                icon: const Icon(FluentIcons.settings),
+                title: const Text("General"),
+                body: Builder(builder: (_) => _getGeneralSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.devices4),
+                title: const Text("Hardware"),
+                body: Builder(builder: (_) => _getHardwareSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.send),
+                title: const Text("Output"),
+                body: Builder(builder: (_) => _getOutputSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.open_in_new_window),
+                title: const Text("User interface"),
+                body: Builder(builder: (_) => _getUiSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.design),
+                title: const Text("Templating"),
+                body: Builder(builder: (_) => _getTemplatingSettings(viewModel, controller)),
+              ),
+            ],
+            footerItems: [
+              PaneItem(
+                icon: const Icon(FluentIcons.device_bug),
+                title: const Text("Debug"),
+                body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.data_flow),
+                title: const Text("Log"),
+                body: Builder(builder: (_) => _log),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

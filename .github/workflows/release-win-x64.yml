@@ -42,7 +42,7 @@ jobs:
         update: true
         install: mingw-w64-x86_64-libgphoto2 mingw-w64-x86_64-pkgconf mingw-w64-x86_64-gcc mingw-w64-x86_64-clang
         path-type: inherit
-        release: false
+        release: true
 
     - name: Install minimal Rust
       uses: actions-rs/toolchain@v1
@@ -66,9 +66,6 @@ jobs:
 
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
-
-    - name: Flutter Config
-      run: flutter config --enable-windows-desktop
 
     - name: Install Dependencies
       run: flutter packages get
@@ -100,7 +97,7 @@ jobs:
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
     - name: Build Project
-      run: msys2 -c 'flutter build windows --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}'
+      run: msys2 -c 'flutter build windows --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
     
     - name: Bundle DLL dependencies of the helper library
       run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll

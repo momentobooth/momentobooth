@@ -60,9 +60,6 @@ jobs:
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
 
-    - name: Flutter Config
-      run: flutter config --enable-macos-desktop
-
     - name: Install Dependencies
       run: flutter packages get
 

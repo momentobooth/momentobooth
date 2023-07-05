@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
+import 'package:ffi/ffi.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -36,10 +38,13 @@ import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:win32/win32.dart';
 
 part 'main.routes.dart';
 
 void main() async {
+  _ensureGPhoto2EnvironmentVariables();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   // Logging
@@ -69,6 +74,21 @@ void main() async {
     },
     appRunner: () => runApp(const App()),
   );
+}
+
+void _ensureGPhoto2EnvironmentVariables() {
+  if (!Platform.isWindows) return;
+
+  // Read from Dart defines
+  const String iolibsDefine = String.fromEnvironment("IOLIBS");
+  const String camlibsDefine = String.fromEnvironment("CAMLIBS");
+  if (iolibsDefine.isEmpty || camlibsDefine.isEmpty) return;
+
+  // Set to current process using win32 API
+  using((arena) {
+    SetEnvironmentVariable("IOLIBS".toNativeUtf16(allocator: arena), iolibsDefine.toNativeUtf16(allocator: arena));
+    SetEnvironmentVariable("CAMLIBS".toNativeUtf16(allocator: arena), camlibsDefine.toNativeUtf16(allocator: arena));
+  });
 }
 
 class App extends StatefulWidget {
@@ -196,19 +216,32 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   }
 
   Widget get _settingsScreen {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            blurRadius: 16,
-            spreadRadius: 0,
-          ),
-        ],
+    return FluentApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        FluentLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'), // English
+        Locale('nl'), // Dutch
+      ],
+      locale: SettingsManager.instance.settings.ui.language.toLocale(),
+      home: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 16,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        margin: const EdgeInsets.all(32),
+        clipBehavior: Clip.hardEdge,
+        child: const SettingsScreen(),
       ),
-      margin: const EdgeInsets.all(32),
-      clipBehavior: Clip.hardEdge,
-      child: const SettingsScreen(),
     );
   }
 

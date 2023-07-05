@@ -62,9 +62,6 @@ jobs:
     - name: Install AppImage Builder
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
 
-    - name: Flutter Config
-      run: flutter config --enable-linux-desktop
-
     - name: Install Dependencies
       run: flutter packages get
 
