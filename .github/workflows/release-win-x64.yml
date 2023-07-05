@@ -20,6 +20,10 @@ jobs:
 
     runs-on: windows-latest
 
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: "sccache"
+
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -53,10 +57,8 @@ jobs:
         components: rustfmt, clippy
         default: true
 
-    - name: Setup Rust build cache
-      uses: Swatinem/rust-cache@v2
-      with:
-        workspaces: "rust -> target"
+    - name: Setup sccache-cache
+      uses: mozilla-actions/sccache-action@v0.0.3
       
     - name: Install flutter_rust_bridge_codegen
       uses: baptiste0928/cargo-install@v1
@@ -100,7 +102,10 @@ jobs:
       run: msys2 -c 'flutter build windows --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
     
     - name: Bundle DLL dependencies of the helper library
-      run: curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
+      shell: pwsh
+      run: |
+        $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
+        curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
 
     - name: Bundle libgphoto2 additional libs
       shell: pwsh
