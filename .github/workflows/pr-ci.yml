@@ -83,11 +83,12 @@ jobs:
     - name: Build Project
       run: msys2 -c 'flutter build windows --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
       
-    - name: Bundle DLL dependencies of the helper library
+    - name: Bundle dependencies of the helper library
       shell: pwsh
       run: |
         $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
-        curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
+        $bundle_script = curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls
+        echo $bundle_script | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
 
     - name: Bundle libgphoto2 additional libs
       shell: pwsh
@@ -97,3 +98,29 @@ jobs:
         cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2_port\*\*.dll build\windows\runner\Release\libgphoto2_iolibs
         mkdir build\windows\runner\Release\libgphoto2_camlibs
         cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2\*\*.dll build\windows\runner\Release\libgphoto2_camlibs
+
+    - name: Bundle dependencies of libgphoto2 additional libs
+      shell: pwsh
+      run: |
+        $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
+        $bundle_script = curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls
+
+        cd build\windows\runner\Release\
+        $lib_folders = @('libgphoto2_iolibs', 'libgphoto2_camlibs')
+        foreach ( $folder in $lib_folders )
+        {
+          $libs = ls $folder
+          foreach ( $lib in $libs )
+          {
+            echo $bundle_script | python - --copy $lib.fullName
+          }
+
+          # Now move all libraries to the same folder as the executable (except iolibs and camlibs themselves)
+          $files = ls $folder
+          foreach ( $file in $files )
+          {
+            if ($libs.Name -notcontains $file.Name) {
+              Move-Item -Path $file -Destination $file.Directory.Parent.FullName -force
+            }
+          }
+        }
