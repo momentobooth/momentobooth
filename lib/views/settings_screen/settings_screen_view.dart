@@ -8,6 +8,7 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
 import 'package:momento_booth/views/custom_widgets/pages/fluent_settings_page.dart';
+import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
@@ -16,6 +17,7 @@ part 'settings_screen_view.general.dart';
 part 'settings_screen_view.hardware.dart';
 part 'settings_screen_view.output.dart';
 part 'settings_screen_view.debug.dart';
+part 'settings_screen_view.templating.dart';
 part 'settings_screen_view.ui.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
@@ -55,6 +57,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: const Icon(FluentIcons.open_in_new_window),
                 title: const Text("User interface"),
                 body: Builder(builder: (_) => _getUiSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.design),
+                title: const Text("Templating"),
+                body: Builder(builder: (_) => _getTemplatingSettings(viewModel, controller)),
               ),
             ],
             footerItems: [

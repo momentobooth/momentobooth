@@ -5,6 +5,7 @@ import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:printing/printing.dart';
 
 part 'settings_screen_view_model.g.dart';
@@ -17,6 +18,19 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   @observable
   int paneIndex = 0;
+
+  PageStorageBucket pageStorageBucket = PageStorageBucket();
+
+  final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
+  @observable
+  int previewTemplate = 1;
+  int get previewTemplateRotation => [0, 1, 4].contains(previewTemplate) ? 1 : 0;
+  @observable
+  bool previewTemplateShowFront = true;
+  @observable
+  bool previewTemplateShowBack = true;
+  String get selectedBackTemplate => collageKey.currentState?.templates[TemplateKind.back]![previewTemplate]?.path ?? "-";
+  String get selectedFrontTemplate => collageKey.currentState?.templates[TemplateKind.front]![previewTemplate]?.path ?? "-";
 
   // Option lists
 

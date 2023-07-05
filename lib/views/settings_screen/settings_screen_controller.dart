@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
@@ -29,6 +32,18 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onNavigationPaneIndexChanged(int newIndex) {
     viewModel.paneIndex = newIndex;
+  }
+
+  void exportTemplate() async {
+    final stopwatch = Stopwatch()..start();
+    final pixelRatio = viewModel.resolutionMultiplier;
+    final format = viewModel.exportFormat;
+    final jpgQuality = viewModel.jpgQuality;
+    PhotosManager.instance.outputImage = await viewModel.collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
+    loggy.debug('captureCollage took ${stopwatch.elapsed}');
+    
+    File? file = await PhotosManager.instance.writeOutput(advance: true);
+    loggy.debug("Wrote template debug export output to ${file?.path}");
   }
 
   void onCaptureDelaySecondsChanged(int? captureDelaySeconds) {

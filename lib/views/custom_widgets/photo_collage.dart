@@ -41,7 +41,10 @@ class PhotoCollage extends StatefulWidget {
   final double aspectRatio;
   final double padding;
   final bool showLogo;
+  final bool showBackground;
+  final bool showForeground;
   final bool singleMode;
+  final int? debug;
   final VoidCallback decodeCallback;
 
   const PhotoCollage({
@@ -50,6 +53,9 @@ class PhotoCollage extends StatefulWidget {
     this.padding = 0,
     this.showLogo = false,
     this.singleMode = false,
+    this.showBackground = true,
+    this.showForeground = true,
+    this.debug,
     this.decodeCallback = baseCallback,
   });
 
@@ -83,7 +89,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   ObservableList<int> get chosen => PhotosManager.instance.chosen;
   ObservableList<Uint8List> get photos => PhotosManager.instance.photos;
   Iterable<Uint8List> get chosenPhotos => PhotosManager.instance.chosenPhotos;
-  int get nChosen => PhotosManager.instance.chosen.length;
+  int get nChosen => widget.debug ?? chosen.length;
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   bool firstImageDecoded = false;
 
@@ -149,18 +155,32 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         for (int i = 0; i <= 4; i++) ...[
           if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
             Opacity(
-              opacity: i == nChosen ? 1 : 0,
+              opacity: i == nChosen && widget.showBackground ? 1 : 0,
               child: ImageWithLoaderFallback.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
             ),
         ],
-        Padding(
-          padding: EdgeInsets.all(gap + widget.padding),
-          child: _getInnerLayout(localizations),
-        ),
+        if (widget.debug == null)
+          Padding(
+            padding: EdgeInsets.all(gap + widget.padding),
+            child: _getInnerLayout(localizations),
+          ),
+        if (widget.debug != null)
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
+            ),
+            // padding: EdgeInsets.all(widget.padding),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
+              ),
+              child: _getInnerLayout(localizations),
+            ),
+          ),
         for (int i = 0; i <= 4; i++) ...[
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
             Opacity(
-              opacity: i == nChosen ? 1 : 0,
+              opacity: i == nChosen && widget.showForeground ? 1 : 0,
               child: ImageWithLoaderFallback.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
             ),
         ],
@@ -169,7 +189,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget _getInnerLayout(AppLocalizations localizations) {
-    if (PhotosManager.instance.chosen.isEmpty) {
+    if (nChosen == 0) {
       return _getZeroLayout(localizations);
     } else if (nChosen == 1) {
       return _oneLayout;
@@ -181,6 +201,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       return _fourLayout;
     }
     return Container();
+  }
+
+  Widget _getChosenImage(int index, {BoxFit? fit, decodeCallback = baseCallback}) {
+    return widget.debug == null ?
+      ImageWithLoaderFallback.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback,) :
+      ImageWithLoaderFallback.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {
@@ -197,14 +223,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget get _oneLayout {
-    var img = Image.memory(photos[chosen[0]], fit: BoxFit.cover);
-    img.image
-       .resolve(ImageConfiguration.empty)
-       .addListener(ImageStreamListener((image, synchronousCall) {
-          if (firstImageDecoded) return;
-          firstImageDecoded = true;
-          widget.decodeCallback();
-       }));
+    var img = _getChosenImage(0, fit: BoxFit.cover, decodeCallback: widget.decodeCallback);
     return LayoutGrid(
       areas: '''
           l1header
@@ -250,7 +269,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
             ).inGridArea('l2header'),
           ),
         for (int i = 0; i < nChosen; i++) ...[
-          ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l2content${i+1}'),
+          _getChosenImage(i).inGridArea('l2content${i+1}'),
         ]
       ],
     );
@@ -284,8 +303,8 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           ).inGridArea('l3header2'),
         ],
         for (int i = 0; i < nChosen; i++) ...[
-          ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l3content${i+1}'),
-          ImageWithLoaderFallback.memory(photos[chosen[i]]).inGridArea('l3content${i+4}'),
+          _getChosenImage(i).inGridArea('l3content${i+1}'),
+          _getChosenImage(i).inGridArea('l3content${i+4}'),
         ]
       ],
     );
@@ -308,7 +327,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               RotatedBox(
                 quarterTurns: 1,
                 child: SizedBox.expand(
-                  child: ImageWithLoaderFallback.memory(photos[chosen[i]], fit: BoxFit.cover)
+                  child: _getChosenImage(i, fit: BoxFit.cover)
                 )
               ).inGridArea('l4content${i+1}'),
             ]

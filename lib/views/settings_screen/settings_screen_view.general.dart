@@ -11,49 +11,33 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
         value: () => viewModel.captureDelaySecondsSetting,
         onChanged: controller.onCaptureDelaySecondsChanged,
       ),
-      const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
-        child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
+      _getBooleanInput(
+        icon: FluentIcons.picture_center,
+        title: "Treat single photo as collage",
+        subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
+        value: () => viewModel.singlePhotoIsCollageSetting,
+        onChanged: controller.onSinglePhotoIsCollageChanged,
       ),
-      FluentSettingsBlock(
-        title: "Creative",
+      const FluentSettingsBlock(
+        title: "Hotkeys",
         settings: [
-          _getInput(
-            icon: FluentIcons.aspect_ratio,
-            title: "Collage aspect ratio",
-            subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
-            value: () => viewModel.collageAspectRatioSetting,
-            onChanged: controller.onCollageAspectRatioChanged,
-          ),
-          _getInput(
-            icon: FluentIcons.field_filled,
-            title: "Collage padding",
-            subtitle: "Controls the padding around the aspect ratio of the generated collages. Think about this together with paper print size.",
-            value: () => viewModel.collagePaddingSetting,
-            onChanged: controller.onCollagePaddingChanged,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+S to toggle this settings screen."),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Observer(
-              builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting/1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height.")
-            ),
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
           ),
-          _getFolderPickerCard(
-            icon: FluentIcons.fabric_report_library,
-            title: "Collage background templates location",
-            subtitle: "Location to look for template files",
-            dialogTitle: "Select templates location",
-            controller: controller.templatesFolderSettingController,
-            onChanged: controller.onTemplatesFolderChanged,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+M to go to the manual collage creation mode."),
           ),
-          _getBooleanInput(
-            icon: FluentIcons.picture_center,
-            title: "Treat single photo as collage",
-            subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
-            value: () => viewModel.singlePhotoIsCollageSetting,
-            onChanged: controller.onSinglePhotoIsCollageChanged,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+H to return to the homescreen from any place."),
           ),
-        ],
+        ]
       ),
     ],
   );

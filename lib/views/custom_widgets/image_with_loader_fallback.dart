@@ -8,15 +8,19 @@ enum _Type {
   file(),
 }
 
+void baseCallback() {}
+
 class ImageWithLoaderFallback extends StatelessWidget {
 
   late final Uint8List? bytes;
   late final File? file;
   final BoxFit? fit;
   late final _Type _type;
+  // var imageDecoded = false;
+  final VoidCallback decodeCallback;
 
-  ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit}) { _type = _Type.memory; }
-  ImageWithLoaderFallback.file(this.file, {super.key, this.fit}) { _type = _Type.file; }
+  ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit, this.decodeCallback = baseCallback,}) { _type = _Type.memory; }
+  ImageWithLoaderFallback.file(this.file, {super.key, this.fit, this.decodeCallback = baseCallback,}) { _type = _Type.file; }
 
   Widget _frameBuilder(BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
     if (frame == null) {
@@ -24,21 +28,30 @@ class ImageWithLoaderFallback extends StatelessWidget {
     }
     return child;
   }
+  
 
   @override
   Widget build(BuildContext context) {
-    if (_type == _Type.memory) {
-      return Image.memory(
+    var img = _type == _Type.memory ?
+      Image.memory(
         bytes!,
         frameBuilder: _frameBuilder,
         fit: fit,
+      ) :
+      Image.file(
+        file!,
+        frameBuilder: _frameBuilder,
+        fit: fit,
       );
-    }
-    return Image.file(
-      file!,
-      frameBuilder: _frameBuilder,
-      fit: fit,
-    );
+    img.image
+    .resolve(ImageConfiguration.empty)
+    .addListener(ImageStreamListener((image, synchronousCall) {
+      // if (imageDecoded) return;
+      // imageDecoded = true;
+      decodeCallback();
+    }));
+
+    return img;
   }
 
 }
