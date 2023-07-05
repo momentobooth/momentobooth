@@ -11,21 +11,33 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
         value: () => viewModel.captureDelaySecondsSetting,
         onChanged: controller.onCaptureDelaySecondsChanged,
       ),
-      const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
-        child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
+      _getBooleanInput(
+        icon: FluentIcons.picture_center,
+        title: "Treat single photo as collage",
+        subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
+        value: () => viewModel.singlePhotoIsCollageSetting,
+        onChanged: controller.onSinglePhotoIsCollageChanged,
       ),
-      FluentSettingsBlock(
-        title: "Creative",
+      const FluentSettingsBlock(
+        title: "Hotkeys",
         settings: [
-          _getBooleanInput(
-            icon: FluentIcons.picture_center,
-            title: "Treat single photo as collage",
-            subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
-            value: () => viewModel.singlePhotoIsCollageSetting,
-            onChanged: controller.onSinglePhotoIsCollageChanged,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+S to toggle this settings screen."),
           ),
-        ],
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+M to go to the manual collage creation mode."),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+H to return to the homescreen from any place."),
+          ),
+        ]
       ),
     ],
   );

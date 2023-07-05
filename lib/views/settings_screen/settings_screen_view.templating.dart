@@ -48,7 +48,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
           columnMargin,
           const Text("Explanation:\nRed border = padding for printing, will be cut-off if set correctly\nWhite border = gap size"),
           columnMargin,
-          Observer(builder: (context) => Text("Selected template images for n=${viewModel.previewTemplate}:\nFront template file: ${viewModel.selectedFrontTemplate}\nBack template file: ${viewModel.selectedBackTemplate}.")),
+          Observer(builder: (context) => Text("Selected template images for n=${viewModel.previewTemplate}:\nFront template file: ${viewModel.selectedFrontTemplate}\nBack template file: ${viewModel.selectedBackTemplate}")),
           columnMargin,
           _getTemplateExampleRow(viewModel, controller),
         ]
@@ -138,7 +138,7 @@ Widget _templateSettings(SettingsScreenViewModel viewModel, SettingsScreenContro
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Observer(
-          builder: (context) => Text("→ Output resolution based on aspect ratio (${viewModel.collageAspectRatioSetting}) and padding (${viewModel.collagePaddingSetting}) and multiplier will be ${(viewModel.outputResHeightExcl).round()}×${(viewModel.outputResWidthExcl).round()} without and ${(viewModel.outputResHeightIncl).round()}×${(viewModel.outputResWidthIncl).round()} with padding"),
+          builder: (context) => Text("→ Output (and template) resolution based on aspect ratio (${viewModel.collageAspectRatioSetting}) and padding (${viewModel.collagePaddingSetting}) and multiplier will be ${(viewModel.outputResHeightExcl).round()}×${(viewModel.outputResWidthExcl).round()} without and ${(viewModel.outputResHeightIncl).round()}×${(viewModel.outputResWidthIncl).round()} with padding"),
         )
       ),
     ],
