@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:collection/collection.dart';
-import 'package:ffi/ffi.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -21,6 +20,7 @@ import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
+import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
@@ -38,7 +38,6 @@ import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:win32/win32.dart';
 
 part 'main.routes.dart';
 
@@ -84,11 +83,10 @@ void _ensureGPhoto2EnvironmentVariables() {
   const String camlibsDefine = String.fromEnvironment("CAMLIBS");
   if (iolibsDefine.isEmpty || camlibsDefine.isEmpty) return;
 
-  // Set to current process using win32 API
-  using((arena) {
-    SetEnvironmentVariable("IOLIBS".toNativeUtf16(allocator: arena), iolibsDefine.toNativeUtf16(allocator: arena));
-    SetEnvironmentVariable("CAMLIBS".toNativeUtf16(allocator: arena), camlibsDefine.toNativeUtf16(allocator: arena));
-  });
+  // Set to current process using msvcrt API
+  // See: https://stackoverflow.com/questions/4788398/changes-via-setenvironmentvariable-do-not-take-effect-in-library-that-uses-geten
+  putenv_s("IOLIBS", iolibsDefine);
+  putenv_s("CAMLIBS", camlibsDefine);
 }
 
 class App extends StatefulWidget {
