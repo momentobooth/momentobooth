@@ -23,7 +23,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
               buttonMargin,
               templateButton(viewModel, controller, "4 photos", 4),
               buttonMargin,
-              Button(
+              FilledButton(
                 onPressed: controller.exportTemplate,
                 child: const Text("Export"),
               ),
@@ -129,7 +129,7 @@ Widget _templateSettings(SettingsScreenViewModel viewModel, SettingsScreenContro
       ),
       _getInput(
         icon: FluentIcons.picture_stretch,
-        title: "Output resolution multiplier",
+        title: "Output resolution multiplier     (same setting as output tab)",
         subtitle: 'Controls image resolution',
         value: () => viewModel.resolutionMultiplier,
         onChanged: controller.onResolutionMultiplierChanged,
