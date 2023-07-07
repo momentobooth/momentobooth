@@ -18,13 +18,13 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.6.2
-  go_router: 9.0.0
+  fluent_ui: 4.7.0
+  go_router: 9.0.2
   flutter_svg: 2.0.7
   animated_text_kit: 4.2.2
   hotkey_manager: 0.1.8
   flutter_scroll_shadow: 1.2.0
-  flutter_layout_grid: 2.0.3
+  flutter_layout_grid: 2.0.4
   pretty_qr_code: 2.0.3
   confetti: 0.7.0
   wave: 0.2.2

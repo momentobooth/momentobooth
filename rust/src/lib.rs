@@ -30,7 +30,7 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
     TOKIO_RUNTIME.get_or_init(|| runtime::Builder::new_multi_thread().enable_all().build().unwrap());
 
     // gphoto2 initialize
-    #[cfg(any(not(target_os = "macos"), debug_assertions))]
+    #[cfg(not(target_os = "macos"))]
     {
         let initialize_result = gphoto2::initialize();
         ready_sink.add(HardwareInitializationFinishedEvent {
