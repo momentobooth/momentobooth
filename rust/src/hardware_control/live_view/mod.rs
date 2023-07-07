@@ -1,5 +1,5 @@
 pub(crate) mod nokhwa;
 pub(crate) mod white_noise;
 
-#[cfg(any(not(target_os = "macos"), debug_assertions))]
+#[cfg(not(target_os = "macos"))]
 pub(crate) mod gphoto2;

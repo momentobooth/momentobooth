@@ -333,10 +333,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: "456c66be2d1e5eab4c0f81dac1c55e023e65d31e81488ed4463741ce10928417"
+      sha256: be237134ab215d4a1591307f6286f4aa53ed5a492c2ee56be5d86be344fd16db
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.2"
+    version: "4.7.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -351,10 +351,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_layout_grid
-      sha256: "31728ce6e9c8eaa48f8a3f928a7c308da4b74ab867aec2dc5b80b0c9f9b79d0d"
+      sha256: "3c03d28f884d816d6f483bdd64dd79663abfb00eea7cb27ffe98380e8357af95"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -467,10 +467,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "1531542666c2d052c44bbf6e2b48011bf3771da0404b94c60eabec1228a62906"
+      sha256: de9c31ce0be8f695d0fb675229d67f8134d0aae6fb2ec4400ec9230be1c41a03
       url: "https://pub.dev"
     source: hosted
-    version: "9.0.0"
+    version: "9.0.2"
   graphs:
     dependency: transitive
     description:

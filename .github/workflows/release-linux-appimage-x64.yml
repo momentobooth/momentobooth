@@ -93,6 +93,9 @@ jobs:
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
+    - name: Update locate DB
+      run: sudo updatedb
+
     - name: Build and package as AppImage
       run: flutter_distributor package --platform linux --targets appimage --build-dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --build-dart-define SENTRY_ENVIRONMENT=Production --build-dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
 
