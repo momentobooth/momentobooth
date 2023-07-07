@@ -17,4 +17,6 @@ categories:
 
 startup_notify: true
 
-include: []
+include:
+  - /usr/lib/x86_64-linux-gnu/libgphoto2/*/*.so
+  - /usr/lib/x86_64-linux-gnu/libgphoto2_port/*/*.so
