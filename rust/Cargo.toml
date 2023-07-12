@@ -26,8 +26,6 @@ dashmap = "5.4.0"
 turborand = "0.10.0"
 pathsep = "0.1.1"
 tokio = "1.29.1"
-
-[target.'cfg(not(target_os = "macos"))'.dependencies]
 gphoto2 = "3.2.1"
 
 [profile.dev]

@@ -30,15 +30,12 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
     TOKIO_RUNTIME.get_or_init(|| runtime::Builder::new_multi_thread().enable_all().build().unwrap());
 
     // gphoto2 initialize
-    #[cfg(not(target_os = "macos"))]
-    {
-        let initialize_result = gphoto2::initialize();
-        ready_sink.add(HardwareInitializationFinishedEvent {
-            step: HardwareInitializationStep::Gphoto2,
-            has_succeeded: initialize_result.is_ok(),
-            message: String::new(),
-        });
-    }
+    let initialize_result = gphoto2::initialize();
+    ready_sink.add(HardwareInitializationFinishedEvent {
+        step: HardwareInitializationStep::Gphoto2,
+        has_succeeded: initialize_result.is_ok(),
+        message: String::new(),
+    });
 
     // Nokhwa initialize
     nokhwa::initialize(move |success| {
