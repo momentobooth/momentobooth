@@ -1,0 +1,32 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run build_runner build",
+            "type": "shell",
+            "command": "dart run build_runner build --delete-conflicting-outputs",
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate i18n",
+            "type": "shell",
+            "command": "flutter gen-l10n",
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate Rust/Flutter bridge",
+            "type": "shell",
+            "command": "flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner",
+            "osx": "flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --c-output macos/Runner/bridge_generated.h --skip-add-mod-to-lib --no-build-runner",
+            "problemMatcher": []
+        },
+        {
+            "label": "Cargo install flutter_rust_bridge_codegen",
+            "type": "shell",
+            "command": "cargo install flutter_rust_bridge_codegen",
+            "problemMatcher": []
+        }
+    ]
+}

@@ -29,6 +29,8 @@
 		5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */; };
 		A379BA9627BFF7D000A4CD85 /* bridge_generated.h in Resources */ = {isa = PBXBuildFile; fileRef = A379BA8C27BFF75900A4CD85 /* bridge_generated.h */; };
 		C5141FC429C60A540076DC88 /* libmomento_booth_native_helpers_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5141FC329C60A510076DC88 /* libmomento_booth_native_helpers_static.a */; };
+		C5D0D5ED2A5F52C000712A83 /* libgphoto2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D0D5EB2A5F52C000712A83 /* libgphoto2.dylib */; };
+		C5D0D5F42A5F534E00712A83 /* libgphoto2_port.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D0D5F22A5F534E00712A83 /* libgphoto2_port.dylib */; };
 		C5D459D129E032700041A948 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5D459CF29E032700041A948 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -86,6 +88,8 @@
 		A379BA8D27BFF76900A4CD85 /* momento_booth_native_helpers.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = momento_booth_native_helpers.xcodeproj; path = ../rust/momento_booth_native_helpers.xcodeproj; sourceTree = "<group>"; };
 		A3B8EE939F14F5AA947E7DDE /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		B95FCA28249E171BD83D6DAF /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		C5D0D5EB2A5F52C000712A83 /* libgphoto2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgphoto2.dylib; path = /opt/homebrew/lib/libgphoto2.dylib; sourceTree = "<group>"; };
+		C5D0D5F22A5F534E00712A83 /* libgphoto2_port.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgphoto2_port.dylib; path = /opt/homebrew/lib/libgphoto2_port.dylib; sourceTree = "<group>"; };
 		C5D459CF29E032700041A948 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -95,7 +99,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5141FC429C60A540076DC88 /* libmomento_booth_native_helpers_static.a in Frameworks */,
+				C5D0D5F42A5F534E00712A83 /* libgphoto2_port.dylib in Frameworks */,
 				5DCFBE4E7C2AD08712D21BEB /* Pods_Runner.framework in Frameworks */,
+				C5D0D5ED2A5F52C000712A83 /* libgphoto2.dylib in Frameworks */,
 				C5D459D129E032700041A948 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -192,6 +198,8 @@
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5D0D5F22A5F534E00712A83 /* libgphoto2_port.dylib */,
+				C5D0D5EB2A5F52C000712A83 /* libgphoto2.dylib */,
 				C5D459CF29E032700041A948 /* AVFoundation.framework */,
 				2AC4CAD777CCE8195EEEED9F /* Pods_Runner.framework */,
 			);
@@ -489,6 +497,12 @@
 					"@executable_path/../Frameworks",
 					/usr/lib/swift,
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					/usr/lib/swift,
+					/opt/homebrew/lib,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.h3xsoftware.MomentoBooth;
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -624,6 +638,12 @@
 					"@executable_path/../Frameworks",
 					/usr/lib/swift,
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					/usr/lib/swift,
+					/opt/homebrew/lib,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.h3xsoftware.MomentoBooth;
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -650,6 +670,12 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					/usr/lib/swift,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}\"",
+					/usr/lib/swift,
+					/opt/homebrew/lib,
 				);
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.h3xsoftware.MomentoBooth;
