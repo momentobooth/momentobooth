@@ -1,8 +1,8 @@
 import 'package:momento_booth/views/base/build_context_accessor.dart';
 import 'package:momento_booth/views/base/screen_base.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_controller.dart';
-import 'package:momento_booth/views/gallery_screen/gallery_screen_view_model.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_view.dart';
+import 'package:momento_booth/views/gallery_screen/gallery_screen_view_model.dart';
 
 class GalleryScreen extends ScreenBase<GalleryScreenViewModel, GalleryScreenController, GalleryScreenView> {
 

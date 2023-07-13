@@ -34,7 +34,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     viewModel.paneIndex = newIndex;
   }
 
-  void exportTemplate() async {
+  Future<void> exportTemplate() async {
     final stopwatch = Stopwatch()..start();
     final pixelRatio = viewModel.resolutionMultiplier;
     final format = viewModel.exportFormat;

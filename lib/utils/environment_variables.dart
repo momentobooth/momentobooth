@@ -7,10 +7,8 @@ import 'package:ffi/ffi.dart';
 
 final DynamicLibrary msvcrt = Platform.isWindows ? DynamicLibrary.open('msvcrt.dll') : DynamicLibrary.process();
 
-typedef _putenv_s_func = Int32 Function(Pointer<Utf8> e, Pointer<Utf8> v);
-typedef _putenv_s_func_dart = int Function(Pointer<Utf8> e, Pointer<Utf8> v);
 
-final _putenv_s = msvcrt.lookupFunction<_putenv_s_func, _putenv_s_func_dart>('_putenv_s');
+final _putenv_s = msvcrt.lookupFunction<Int32 Function(Pointer<Utf8>, Pointer<Utf8>), int Function(Pointer<Utf8>, Pointer<Utf8>)>('_putenv_s');
 
 int putenv_s(String e, String v) {
   return using((arena) {

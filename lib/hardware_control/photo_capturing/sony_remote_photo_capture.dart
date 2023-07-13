@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/exceptions/photo_capture_exception.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,7 +31,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
     var autoItScriptPath = await _ensureAutoItScriptIsExtracted();
 
     // Execute the AutoIt script using the AutoIt executable
-    Process.run('autoit3.exe', ['/AutoIt3ExecuteScript', autoItScriptPath]);
+    unawaited(Process.run('autoit3.exe', ['/AutoIt3ExecuteScript', autoItScriptPath]));
   }
 
   Future<Uint8List> _getPhoto() async {
@@ -40,7 +41,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
       loggy.debug('Photo found: ${file.path}');
       return img;
     } on TimeoutException {
-      throw 'File not found within 5 seconds';
+      throw PhotoCaptureException.fromImplementationRuntimeType('File not found within 5 seconds', this);
     }
   }
 
