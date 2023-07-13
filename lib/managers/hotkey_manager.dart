@@ -28,7 +28,7 @@ abstract class _HotkeyManagerBase with Store, UiLoggy {
   // Initialization //
   // ////////////// //
 
-  KeyModifier get _defaultModifier => Platform.isMacOS ? KeyModifier.meta : KeyModifier.control;
+  static final KeyModifier _defaultModifier = Platform.isMacOS ? KeyModifier.meta : KeyModifier.control;
 
   Future<void> initialize() async {
     await hotKeyManager.unregisterAll();

@@ -111,6 +111,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   );
 
   bool _settingsOpen = false;
+  bool _manualCollageScreenOpen = false;
 
   static const returnHomeTimeout = Duration(seconds: 45);
   late Timer _returnHomeTimer;
@@ -154,6 +155,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
     if (GoRouterState.of(context).location == StartScreen.defaultRoute) return;
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
+    _manualCollageScreenOpen = false;
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.
@@ -258,11 +260,20 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
         setState(() => _settingsOpen = !_settingsOpen);
         loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
       case HotkeyAction.openManualCollageScreen:
-        if (GoRouterState.of(context).location == ManualCollageScreen.defaultRoute) {
+        // This currently fails due to: https://github.com/flutter/flutter/issues/130213
+        // if (GoRouterState.of(context).location == ManualCollageScreen.defaultRoute) {
+        //   _router.go(StartScreen.defaultRoute);
+        // } else {
+        //   _router.go(ManualCollageScreen.defaultRoute);
+        // }
+
+        // Workaround
+        if (_manualCollageScreenOpen) {
           _router.go(StartScreen.defaultRoute);
         } else {
           _router.go(ManualCollageScreen.defaultRoute);
         }
+        _manualCollageScreenOpen = !_manualCollageScreenOpen;
       case HotkeyAction.goToHomeScreen:
         _router.go(StartScreen.defaultRoute);
     }
