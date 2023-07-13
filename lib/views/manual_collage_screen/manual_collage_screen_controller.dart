@@ -80,7 +80,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
   
     PhotosManager.instance.outputImage = exportImage;
-    unawaited(PhotosManager.instance.writeOutput(advance: true));
+    await PhotosManager.instance.writeOutput(advance: true);
     loggy.debug("Saved collage image to disk");
     viewModel.isSaving = false;
   }
