@@ -3,8 +3,12 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart' hide Action, RawImage;
+import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loggy/loggy.dart';
+import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -12,10 +16,6 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
-import 'package:flutter/material.dart' hide Action, RawImage;
-import 'package:flutter_layout_grid/flutter_layout_grid.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mobx/mobx.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
@@ -100,7 +100,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     TemplateKind.back: <int, File?>{},
   };
   
-  void findTemplates() async {
+  Future<void> findTemplates() async {
     if (widget.singleMode) {
       templates[TemplateKind.front]?[1] = await _templateResolver(TemplateKind.front, 1);
       templates[TemplateKind.back]?[1] = await _templateResolver(TemplateKind.back, 1);
@@ -156,7 +156,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
             Opacity(
               opacity: i == nChosen && widget.showBackground ? 1 : 0,
-              child: ImageWithLoaderFallback.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.back]?[i], fit: BoxFit.cover),
             ),
         ],
         if (widget.debug == null)
@@ -181,7 +181,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
             Opacity(
               opacity: i == nChosen && widget.showForeground ? 1 : 0,
-              child: ImageWithLoaderFallback.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.front]?[i], fit: BoxFit.cover),
             ),
         ],
       ]

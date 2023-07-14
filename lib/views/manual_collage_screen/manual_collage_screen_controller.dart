@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
@@ -36,7 +38,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     loggy.debug("Cleared selection");
   }
 
-  void tapPhoto(SelectableImage file) async {
+  Future<void> tapPhoto(SelectableImage file) async {
     loggy.debug("Tapped image #${file.index} (${basename(file.file.path)}), selected: ${file.isSelected} at index ${file.selectedIndex}");
     
     final index = selectedPhotos.length;
@@ -55,8 +57,9 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
       if (index > 3) return;
 
       selectedPhotos.add(file);
-      file.isSelected = true;
-      file.selectedIndex = index;
+      file
+        ..isSelected = true
+        ..selectedIndex = index;
       PhotosManager.instance.photos.add(await file.file.readAsBytes());
       PhotosManager.instance.chosen.add(index);
       viewModel.numSelected = index+1;
@@ -65,7 +68,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
 
   String get outputFolder => SettingsManager.instance.settings.output.localFolder;
 
-  void captureCollage() async {
+  Future<void> captureCollage() async {
     if (viewModel.numSelected < 1 || viewModel.isSaving) return;
 
     viewModel.isSaving = true;
@@ -77,7 +80,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
   
     PhotosManager.instance.outputImage = exportImage;
-    PhotosManager.instance.writeOutput(advance: true);
+    await PhotosManager.instance.writeOutput(advance: true);
     loggy.debug("Saved collage image to disk");
     viewModel.isSaving = false;
   }

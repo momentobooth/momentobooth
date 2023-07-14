@@ -1,8 +1,8 @@
 import 'package:momento_booth/views/base/build_context_accessor.dart';
 import 'package:momento_booth/views/base/screen_base.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_controller.dart';
-import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view.dart';
+import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
 
 class PhotoDetailsScreen extends ScreenBase<PhotoDetailsScreenViewModel, PhotoDetailsScreenController, PhotoDetailsScreenView> {
   

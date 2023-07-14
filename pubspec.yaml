@@ -40,7 +40,7 @@ dependencies:
   flutter_mobx: 2.0.6+5
 
   # Models
-  freezed_annotation: 2.2.0
+  freezed_annotation: 2.4.1
   json_annotation: 4.8.1
 
   # Interop
@@ -84,7 +84,7 @@ dev_dependencies:
   dart_code_metrics_presets: 1.8.0
 
   # Models
-  freezed: 2.3.5
+  freezed: 2.4.1
   json_serializable: 6.7.1
 
   # Code generation

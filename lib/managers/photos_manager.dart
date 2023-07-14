@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 import 'package:path_provider/path_provider.dart';

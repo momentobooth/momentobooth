@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:loggy/loggy.dart';
-import 'package:momento_booth/models/settings.dart';
 import 'package:mobx/mobx.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:path/path.dart' hide context;
+import 'package:path_provider/path_provider.dart';
 import 'package:toml/toml.dart';
 
 part 'settings_manager.g.dart';
@@ -77,7 +77,7 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
     Map<String, dynamic> settingsMap = _settings!.toJson();
     TomlDocument settingsDocument = TomlDocument.fromMap(settingsMap);
     String settingsAsToml = settingsDocument.toString();
-    _settingsFile.writeAsString(settingsAsToml);
+    await _settingsFile.writeAsString(settingsAsToml);
 
     loggy.debug("Saved settings");
   }

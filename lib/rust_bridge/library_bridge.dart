@@ -15,32 +15,26 @@ final rustLibraryApi = MomentoBoothNativeHelpersImpl(_dylib);
 
 Future<void> init() async {
   // Initialize log
-  Stream<LogEvent> logStream = rustLibraryApi.initializeLog();
-  logStream.listen(processLogEvent);
+  rustLibraryApi.initializeLog().listen(processLogEvent);
 
   // Initialize hardware
-  Stream<HardwareInitializationFinishedEvent> hardwareInitResultStream = rustLibraryApi.initializeHardware();
-  hardwareInitResultStream.listen(processHardwareInitEvent);
+  rustLibraryApi.initializeHardware().listen(processHardwareInitEvent);
 }
 
 void processLogEvent(LogEvent event) {
   switch (event.level) {
     case LogLevel.Debug:
       loggy.logDebug("Lib: ${event.message}");
-      break;
     case LogLevel.Info:
       loggy.logInfo("Lib: ${event.message}");
-      break;
     case LogLevel.Warning:
       loggy.logWarning("Lib: ${event.message}");
-      break;
     case LogLevel.Error:
       loggy.logError("Lib: ${event.message}");
-      break;
   }
 }
 
-void processHardwareInitEvent(HardwareInitializationFinishedEvent event) async {
+void processHardwareInitEvent(HardwareInitializationFinishedEvent event) {
   switch (event.step) {
     
     case HardwareInitializationStep.Nokhwa:

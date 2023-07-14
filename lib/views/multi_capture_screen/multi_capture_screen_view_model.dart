@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/animation.dart';
 import 'package:loggy/loggy.dart';
+import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
@@ -9,9 +10,8 @@ import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:mobx/mobx.dart';
+import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
 
@@ -62,12 +62,12 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
       CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
-      CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera,
+      CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
     } as PhotoCaptureMethod;
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
   }
 
-  void onCounterFinished() async {
+  Future<void> onCounterFinished() async {
     showFlash = true;
     showCounter = false;
     await Future.delayed(flashAnimationDuration);
@@ -78,7 +78,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     navigateAfterCapture();
   }
 
-  void captureAndGetPhoto() async {
+  Future<void> captureAndGetPhoto() async {
     try {
       final image = await capturer.captureAndGetPhoto();
       StatsManager.instance.addCapturedPhoto();

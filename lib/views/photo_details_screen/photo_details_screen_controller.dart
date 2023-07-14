@@ -28,7 +28,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     viewModel.sliderKey.currentState!.animateBackward();
   }
   
-  void onClickGetQR() async {
+  Future<void> onClickGetQR() async {
     if (viewModel.uploadState == UploadState.done) {
       viewModel.qrShown = true;
       viewModel.sliderKey.currentState!.animateForward();
@@ -40,16 +40,22 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
     loggy.debug("Uploading ${file.path}");
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
-    viewModel.qrText = localizations.photoDetailsScreenQrUploading;
-    viewModel.uploadState = UploadState.uploading;
+
+    viewModel
+      ..qrText = localizations.photoDetailsScreenQrUploading
+      ..uploadState = UploadState.uploading;
+
     stream.listen((event) {
       if (event.isFinished) {
         loggy.debug("Upload complete: ${event.downloadUrl}");
-        viewModel.uploadState = UploadState.done;
-        viewModel.qrText = localizations.photoDetailsScreenShowQrButton;
-        viewModel.qrUrl = event.downloadUrl!;
-        viewModel.qrShown = true;
-        viewModel.sliderKey.currentState!.animateForward();
+
+        viewModel
+          ..uploadState = UploadState.done
+          ..qrText = localizations.photoDetailsScreenShowQrButton
+          ..qrUrl = event.downloadUrl!
+          ..qrShown = true
+          ..sliderKey.currentState!.animateForward();
+
         StatsManager.instance.addUploadedPhoto();
       } else {
         loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
@@ -64,16 +70,19 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   static const _printTextDuration = Duration(seconds: 4);
 
   void resetPrint() {
-    viewModel.printText = successfulPrints > 0 ? "${localizations.genericPrintButton} +1" : localizations.genericPrintButton;
-    viewModel.printEnabled = true;
+    viewModel
+      ..printText = successfulPrints > 0 ? "${localizations.genericPrintButton} +1" : localizations.genericPrintButton
+      ..printEnabled = true;
   }
 
   Future<void> onClickPrint() async {
     if (!viewModel.printEnabled) return;
 
     loggy.debug("Printing photo");
-    viewModel.printEnabled = false;
-    viewModel.printText = localizations.photoDetailsScreenPrinting;
+
+    viewModel
+      ..printEnabled = false
+      ..printText = localizations.photoDetailsScreenPrinting;
 
     // Get photo and print it.
     final pdfData = await getImagePDF(await viewModel.file.readAsBytes());

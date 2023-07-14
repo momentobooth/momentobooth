@@ -6,12 +6,13 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/exceptions/win32_exception.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
-import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:win32/win32.dart';
 
 int lastUsedPrinterIndex = -1;
@@ -36,15 +37,15 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
       ? pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight)
       : pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
 
-  final doc = pw.Document(title: "MomentoBooth image");
-  doc.addPage(pw.Page(
-    pageFormat: pageFormat,
-    build: (pw.Context context) {
-      return pw.Center(
-        child: rotate ? pw.Transform.rotateBox(angle: 0.5*pi, child: imageWidget,) : imageWidget,
-      );
-    })
-  );
+  final doc = pw.Document(title: "MomentoBooth image")
+    ..addPage(pw.Page(
+      pageFormat: pageFormat,
+      build: (context) {
+        return pw.Center(
+          child: rotate ? pw.Transform.rotateBox(angle: 0.5 * pi, child: imageWidget) : imageWidget,
+        );
+      },
+    ));
 
   return await doc.save();
 }
@@ -133,7 +134,7 @@ List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
 List<JobInfo> getJobList(String printerName) {
   // Todo: eventually add OSx and Linux support
   if (!Platform.isWindows) return [];
-  return using((Arena alloc) {
+  return using((alloc) {
     // Allocate necessary pointers
     Pointer<Utf16> printerNameHandle;
     Pointer<IntPtr> handle;
@@ -151,14 +152,14 @@ List<JobInfo> getJobList(String printerName) {
     numJobs = alloc<Uint32>();
 
     // Get the printer handle.
-    final bool openSuccess = OpenPrinter(printerNameHandle, handle, Pointer.fromAddress(0)) != 0 ? true : false;
-    if (!openSuccess) throw "Error opening printer $printerName to acquire print jobs";
+    final bool openSuccess = OpenPrinter(printerNameHandle, handle, Pointer.fromAddress(0)) != 0;
+    if (!openSuccess) throw Win32Exception.fromLastError("Error opening printer $printerName to acquire print jobs");
 
     final int printerHandleValue = handle.value;
     // Enumerate jobs for printer.
     const int returnType = 1; // JOB_INFO_1
-    final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0 ? true : false;
-    if (!enumSuccess) throw "Error enumerating print jobs for printer $printerName";
+    final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0;
+    if (!enumSuccess) throw Win32Exception.fromLastError("Error enumerating print jobs for printer $printerName");
 
     loggy.debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
 
@@ -184,8 +185,8 @@ List<JobInfo> getJobList(String printerName) {
     }
 
     // Close printer again so we can actually print...
-    final bool closeSuccess = ClosePrinter(printerHandleValue) != 0 ? true : false;
-    if (!closeSuccess) throw "Error closing printer $printerName";
+    final bool closeSuccess = ClosePrinter(printerHandleValue) != 0;
+    if (!closeSuccess) throw Win32Exception.fromLastError("Error closing printer $printerName");
     return jobList;
   });
 }

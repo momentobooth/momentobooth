@@ -1,15 +1,16 @@
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:momento_booth/exceptions/default_setting_restore_exception.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:path/path.dart';
 import 'package:toml/toml.dart';
-import 'dart:ui' as ui;
 
+part 'settings.enums.dart';
 part 'settings.freezed.dart';
 part 'settings.g.dart';
-part 'settings.enums.dart';
 
 // ///////////// //
 // Root settings //
@@ -143,7 +144,7 @@ String _getHome() {
   } else if (Platform.isWindows) {
     return envVars['UserProfile']!;
   }
-  throw 'Could not find the user\'s home folder: Platform unsupported';
+  throw DefaultSettingRestoreException('Could not find the user\'s home folder: Platform unsupported');
 }
 
 // /////////// //

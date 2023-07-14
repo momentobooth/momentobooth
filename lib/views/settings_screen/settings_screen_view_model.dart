@@ -1,10 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
-import 'package:mobx/mobx.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:printing/printing.dart';
 
@@ -71,22 +71,25 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   final String unsedPrinterValue = "UNUSED";
 
-  void setPrinterList() async {
+  Future<void> setPrinterList() async {
     final printers = await Printing.listPrinters();
-    printerOptions.clear();
-    printerOptions.add(ComboBoxItem(value: unsedPrinterValue, child: _printerCardText("- Not used -", false, false)));
+
+    printerOptions
+      ..clear()
+      ..add(ComboBoxItem(value: unsedPrinterValue, child: _printerCardText("- Not used -", false, false)));
+
     for (var printer in printers) {
       printerOptions.add(ComboBoxItem(value: printer.name, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
       
       // If there is no setting yet, set it to the default printer.
       if (printer.isDefault && printersSetting.isEmpty) {
-        updateSettings((settings) => settings.copyWith.hardware(printerNames: [printer.name]));
+        await updateSettings((settings) => settings.copyWith.hardware(printerNames: [printer.name]));
       }
     }
   }
   
-  void setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
-  void setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
+  Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
+  Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
 
   // Current values
 

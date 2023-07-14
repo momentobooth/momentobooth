@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/views/base/screen_view_model_base.dart';
 
 part 'choose_capture_mode_screen_view_model.g.dart';
 

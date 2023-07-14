@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:loggy/loggy.dart';
+import 'package:mobx/mobx.dart';
 import 'package:momento_booth/extensions/camera_state_extension.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
-import 'package:mobx/mobx.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:synchronized/synchronized.dart';
@@ -121,8 +121,6 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
           _currentLiveViewSource = cameras.firstWhereOrNull((camera) => camera.friendlyName == webcamIdSetting);
         case LiveViewMethod.gphoto2:
           _currentLiveViewSource = _gPhoto2Camera;
-        default:
-          throw "Unknown live view method";
       }
 
       await _ensureTextureAvailable();
@@ -134,7 +132,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   }
 
   Future<void> _checkLiveViewState() async {
-    _lock.synchronized(() async {
+    await _lock.synchronized(() async {
       var liveViewState = await _currentLiveViewSource?.getCameraState();
       if (liveViewState == null) return;
 

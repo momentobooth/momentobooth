@@ -5,13 +5,15 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/hotkey_manager.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
-import 'package:momento_booth/managers/hotkey_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
@@ -32,12 +34,10 @@ import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen.dart';
-import 'package:momento_booth/views/share_screen/share_screen.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
+import 'package:momento_booth/views/share_screen/share_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 part 'main.routes.dart';
 
@@ -66,10 +66,11 @@ void main() async {
 
   await SentryFlutter.init(
     (options) {
-      options.tracesSampleRate = 1.0;
-      options.dsn = const String.fromEnvironment("SENTRY_DSN", defaultValue: "");
-      options.environment = const String.fromEnvironment("SENTRY_ENVIRONMENT", defaultValue: 'Development');
-      options.release = const String.fromEnvironment("SENTRY_RELEASE", defaultValue: 'Development');
+      options
+        ..tracesSampleRate = 1.0
+        ..dsn = const String.fromEnvironment("SENTRY_DSN", defaultValue: "")
+        ..environment = const String.fromEnvironment("SENTRY_ENVIRONMENT", defaultValue: 'Development')
+        ..release = const String.fromEnvironment("SENTRY_RELEASE", defaultValue: 'Development');
     },
     appRunner: () => runApp(const App()),
   );
@@ -91,7 +92,7 @@ void _ensureGPhoto2EnvironmentVariables() {
 
 class App extends StatefulWidget {
 
-  const App({Key? key}) : super(key: key);
+  const App({super.key});
 
   @override
   State<App> createState() => _AppState();
@@ -104,12 +105,13 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
     routes: rootRoutes,
     observers: [
       GoRouterObserver(),
-      HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin!, end: end!)),
+      HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin, end: end)),
     ],
     initialLocation: StartScreen.defaultRoute,
   );
 
   bool _settingsOpen = false;
+  bool _manualCollageScreenOpen = false;
 
   static const returnHomeTimeout = Duration(seconds: 45);
   late Timer _returnHomeTimer;
@@ -129,7 +131,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
     super.initState();
   }
 
-  void _statusCheck() async {
+  Future<void> _statusCheck() async {
     final printerNames = SettingsManager.instance.settings.hardware.printerNames;
     final printersStatus = await compute(checkPrintersStatus, printerNames);
     NotificationsManager.instance.notifications.clear();
@@ -153,6 +155,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
     if (GoRouterState.of(context).location == StartScreen.defaultRoute) return;
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
+    _manualCollageScreenOpen = false;
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.
@@ -168,9 +171,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
     return MomentoBoothTheme(
       data: MomentoBoothThemeData.defaults(),
       child: Builder(
-        builder: (BuildContext context) {
-          return _getWidgetsApp(context);
-        },
+        builder: _getWidgetsApp,
       ),
     );
   }
@@ -201,7 +202,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
                   Listener(
                     behavior: HitTestBehavior.translucent,
                     onPointerDown: (_) => _onActivity(isTap: true),
-                    child: child!,
+                    child: child,
                   ),
                   _settingsOpen ? _settingsScreen : const SizedBox(),
                 ],
@@ -259,11 +260,20 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
         setState(() => _settingsOpen = !_settingsOpen);
         loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
       case HotkeyAction.openManualCollageScreen:
-        if (GoRouterState.of(context).location == ManualCollageScreen.defaultRoute) {
+        // This currently fails due to: https://github.com/flutter/flutter/issues/130213
+        // if (GoRouterState.of(context).location == ManualCollageScreen.defaultRoute) {
+        //   _router.go(StartScreen.defaultRoute);
+        // } else {
+        //   _router.go(ManualCollageScreen.defaultRoute);
+        // }
+
+        // Workaround
+        if (_manualCollageScreenOpen) {
           _router.go(StartScreen.defaultRoute);
         } else {
           _router.go(ManualCollageScreen.defaultRoute);
         }
+        _manualCollageScreenOpen = !_manualCollageScreenOpen;
       case HotkeyAction.goToHomeScreen:
         _router.go(StartScreen.defaultRoute);
     }

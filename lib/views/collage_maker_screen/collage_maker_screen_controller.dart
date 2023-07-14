@@ -33,7 +33,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   DateTime? latestCapture;
 
-  void captureCollage() async {
+  Future<void> captureCollage() async {
     viewModel.readyToContinue = false;
     
     // It can happen that a previous capture takes longer than the latest one.
@@ -53,7 +53,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     if (latestCapture == thisCapture) {
       PhotosManager.instance.outputImage = exportImage;
       loggy.debug("Written collage image to output image memory");
-      PhotosManager.instance.writeOutput();
+      await PhotosManager.instance.writeOutput();
       viewModel.readyToContinue = true;
     }
   }
