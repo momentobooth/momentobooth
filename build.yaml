@@ -1,0 +1,21 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        generate_for:
+          include:
+            - lib/models/*.dart
+            - lib/models/**/*.dart
+            - lib/theme/*.dart
+            - lib/rust_bridge/library_api.generated.dart
+      json_serializable:
+        options:
+          explicit_to_json: true
+        generate_for:
+          include:
+            - lib/models/*.dart
+            - lib/models/**/*.dart
+      mobx_codegen:mobx_generator:
+        generate_for:
+            - lib/views/*/*_view_model.dart
+            - lib/managers/*.dart
