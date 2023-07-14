@@ -20,8 +20,11 @@ MomentoBooth is a cross-platform open source photo booth software. Capture your 
 * Photo sharing using [`ffsend`](https://github.com/timvisee/ffsend) QR code
 * Theming with collage template images (background and foreground)
 * Webcam live view and capture support
+  * Use HDMI capture dongles that act as a webcam
+  * Use any cameras that support live view over USB through libgphoto2
 * Camera capture support
   * With Sony Imaging Edge Remote using AutoIt
+  * Capture using a camera that supports capture over USB through libgphoto2
 * Statistics
 * Clear settings panel
 * Gallery with created images
@@ -31,11 +34,10 @@ MomentoBooth is a cross-platform open source photo booth software. Capture your 
 
 ### Planned
 
-* Image capture support using gPhoto2
-  * Windows first, but looking into other platforms as well
-  * Because this library cannot "just" be compiled with MSVC, maybe use a second subproject and connect using shared memory
-  * Capture first, then possibly also add live view
 * Linux, macOS support
+  * App already runs but:
+    * Webcam support doesn't work properly
+    * Libgphoto2 is not bundled correctly yet
 * User manual
 
 ### Maybe
@@ -105,7 +107,7 @@ Please note: Run all commands from the root folder of the repository, unless men
     * Windows/Linux: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner`
     * macOS: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --c-output macos/Runner/bridge_generated.h --skip-add-mod-to-lib --no-build-runner`
     * Note: Make sure to re-run this command if you changed anything in the Rust subproject
-3. Run `flutter pub run build_runner build --delete-conflicting-outputs`
+3. Run `dart run build_runner build --delete-conflicting-outputs`
     * Note: During development, it may be convenient to run `watch` instead of `build` to keep the script running to process any new or changes files
 4. Run `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
