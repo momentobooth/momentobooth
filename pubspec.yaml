@@ -80,7 +80,7 @@ dev_dependencies:
 
   # Code quality
   flutter_lints: 2.0.2
-  dart_code_metrics: 5.7.5
+  dart_code_metrics: 5.7.6
   dart_code_metrics_presets: 1.8.0
 
   # Models
