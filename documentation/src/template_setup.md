@@ -1,6 +1,6 @@
 # Templates
 
-MomentoBooth works with a simple templating system to thematize your photos. 
+MomentoBooth works with a simple templating system to thematize your photos.
 
 A collage output is constructed of 3 layers:
 
