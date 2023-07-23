@@ -1,0 +1,6 @@
+[book]
+authors = ["Casper Cromjongh", "Sander in 't Hout"]
+language = "en"
+multilingual = false
+src = "src"
+title = "MomentoBooth Documentation"
