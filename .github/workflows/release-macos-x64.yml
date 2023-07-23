@@ -9,11 +9,6 @@ on:
 permissions:
   contents: write
 
-# Allow one concurrent deployment
-concurrency:
-  group: "release-macos-x64"
-  cancel-in-progress: true
-
 jobs:
   build:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}

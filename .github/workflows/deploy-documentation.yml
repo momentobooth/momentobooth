@@ -6,8 +6,8 @@ env:
 
 on:
   push:
-    branches: [main]
-    paths: [documentation/**]
+    branches: [ main ]
+    paths: [ documentation/** ]
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -17,7 +17,7 @@ permissions:
 
 concurrency:
   group: deploy-documentation
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
