@@ -35,7 +35,7 @@ jobs:
           mdbook-version: ${{ env.MDBOOK_VERSION }}
 
       - name: Build static site
-        run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir _site
+        run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir ../_site
 
       - name: Fix permissions
         run: |
