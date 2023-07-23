@@ -1,6 +1,7 @@
 # Camera
 
 Camera usage within MomentoBooth constists of two parts:
+
 * Live view
 * Photo capture
 
@@ -17,7 +18,6 @@ For using a external camera, two methods are available at the moment.
 1. Using the `gphoto2` implementation
 2. Using a vendor remote tethering program (Windows only)
 
-
 ### gphoto2
 
 [Camera support overview](http://www.gphoto.org/doc/remote/) – Needs at least `capture support` and `liveview`.  
@@ -29,6 +29,7 @@ Using the `gphoto2` implementation is very convenient, as it allows for both liv
 
 When a camera is not suported by `gphoto2`, it may be an option to use a vendor tethering program for photo capture through an [AutoIt](https://www.autoitscript.com/site/) script. This works as long as the vendor program writes JPG images to a specified directory.
 Live view must then be obtained from a camera feed.
+
 * This can either be with a video capture device (usually HDMI)  
   You need the capture device and camera video out cable.
 * or by capturing the thethering software with [OBS Studio](https://obsproject.com/) and working with the [OSB virtual webcam](https://obsproject.com/kb/virtual-camera-guide) output.

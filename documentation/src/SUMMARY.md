@@ -10,4 +10,3 @@
 - [Checklist for events](./event_checklist.md)
 
 # Settings
-
