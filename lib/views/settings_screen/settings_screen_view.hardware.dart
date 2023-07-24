@@ -87,7 +87,6 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             icon: FluentIcons.folder,
             title: "Capture location",
             subtitle: "Location to look for captured images",
-            dialogTitle: "Select location to look for captured images",
             controller: controller.captureLocationController,
             onChanged: controller.onCaptureLocationChanged,
           ),
