@@ -119,7 +119,6 @@ FluentSettingCard _getFolderPickerCard<TValue>({
   required IconData icon,
   required String title,
   required String subtitle,
-  String? dialogTitle,
   required TextEditingController controller,
   required ValueChanged<String?> onChanged,
 }) {
@@ -132,7 +131,7 @@ FluentSettingCard _getFolderPickerCard<TValue>({
         IconButton(
           icon: const Icon(FluentIcons.folder, size: 24.0),
           onPressed: () async {
-            String? selectedDirectory = await FilePicker.platform.getDirectoryPath(dialogTitle: dialogTitle, initialDirectory: controller.text);
+            String? selectedDirectory = await getDirectoryPath(initialDirectory: controller.text);
             if (selectedDirectory == null) return;
             controller.text = selectedDirectory;
             onChanged(selectedDirectory);

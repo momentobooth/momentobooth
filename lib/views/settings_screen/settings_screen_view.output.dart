@@ -11,7 +11,6 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
             icon: FluentIcons.fabric_picture_library,
             title: "Local photo storage location",
             subtitle: "Location where the output images will be stored",
-            dialogTitle: "Select local output storage location",
             controller: controller.localFolderSettingController,
             onChanged: controller.onLocalFolderChanged,
           ),
