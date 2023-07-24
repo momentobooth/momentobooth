@@ -152,7 +152,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   }
 
   void _returnHome() {
-    if (GoRouterState.of(context).location == StartScreen.defaultRoute) return;
+    if (GoRouterState.of(context).uri.toString() == StartScreen.defaultRoute) return;
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
     _manualCollageScreenOpen = false;
@@ -261,7 +261,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
         loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
       case HotkeyAction.openManualCollageScreen:
         // This currently fails due to: https://github.com/flutter/flutter/issues/130213
-        // if (GoRouterState.of(context).location == ManualCollageScreen.defaultRoute) {
+        // if (GoRouterState.of(context).uri.toString() == ManualCollageScreen.defaultRoute) {
         //   _router.go(StartScreen.defaultRoute);
         // } else {
         //   _router.go(ManualCollageScreen.defaultRoute);
