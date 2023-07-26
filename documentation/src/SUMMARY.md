@@ -10,3 +10,6 @@
 - [Checklist for events](./event_checklist.md)
 
 # Settings
+- [Settings panel](./settings_panel.md)
+  - [General settings](./settings_general.md)
+  - [Hardware settings](./settings_hardware.md)
