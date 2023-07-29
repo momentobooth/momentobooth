@@ -14,3 +14,5 @@
   - [General settings](./settings_general.md)
   - [Hardware settings](./settings_hardware.md)
   - [Output settings](./settings_output.md)
+  - [User interface settings](./settings_ui.md)
+  - [Statistics & debug settings](./settings_debug.md)
