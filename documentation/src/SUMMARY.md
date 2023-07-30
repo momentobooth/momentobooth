@@ -17,3 +17,4 @@
   - [User interface settings](./settings_ui.md)
   - [Templating settings](./settings_templating.md)
   - [Statistics & debug settings](./settings_debug.md)
+  - [Log panel](./settings_log.md)
