@@ -18,4 +18,5 @@ In the hardware settings, you will find settings related to live view, photo cap
 {{#include ./settings/page_height.md}}
 {{#include ./settings/page_width.md}}
 {{#include ./settings/page_margins.md}}
+{{#include ./settings/use_printer_settings.md}}
 {{#include ./settings/queue_threshold.md}}
