@@ -15,4 +15,5 @@
   - [Hardware settings](./settings_hardware.md)
   - [Output settings](./settings_output.md)
   - [User interface settings](./settings_ui.md)
+  - [Templating settings](./settings_templating.md)
   - [Statistics & debug settings](./settings_debug.md)
