@@ -3,6 +3,7 @@ In the hardware settings, you will find settings related to live view, photo cap
 
 ## Live View
 {{#include ./settings/live_view_method.md}}
+{{#include ./settings/webcam_selection.md}}
 {{#include ./settings/flip_image.md}}
 
 ## Photo Capture

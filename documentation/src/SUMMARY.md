@@ -3,7 +3,7 @@
 [Introduction](./introduction.md)
 
 # Set up
-
+- [Getting started](./getting_started.md)
 - [Camera](./camera_setup.md)
 - [Printer](./printer_setup.md)
 - [Templates](./template_setup.md)

@@ -9,6 +9,8 @@ MomentoBooth is a cross-platform open source photo booth software. Capture your 
 
 [Download from GitHub](https://github.com/h3x4d3c1m4l/momento-booth/releases)
 
+Check the online documentation at [https://h3x4d3c1m4l.github.io/momento-booth/](https://h3x4d3c1m4l.github.io/momento-booth/).
+
 ## Features
 
 * Single capture
