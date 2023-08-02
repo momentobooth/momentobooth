@@ -34,6 +34,30 @@ jobs:
         with:
           mdbook-version: ${{ env.MDBOOK_VERSION }}
 
+      - name: Install minimal Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Setup sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.3
+
+      - name: Install mdBook
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: mdbook
+
+      - name: Install mermaid preprocessor for mdBook
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: mdbook-mermaid
+
+      - name: Install admonish preprocessor for mdBook
+        uses: baptiste0928/cargo-install@v1
+        with:
+          crate: mdbook-admonish
+
       - name: Build static site
         run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir ../_site
 
