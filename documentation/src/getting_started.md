@@ -1,5 +1,10 @@
 # Getting started
 
+```admonish warning
+While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations 
+```
+
+
 ## Current limitations
 
 - Webcam support (and as such HDMI capturing) is not working on Linux and macOS currently.
@@ -10,6 +15,11 @@
   - As cross compilation with native libraries is pretty challenging and GitHub not supporting Apple Silicon runners yet as of 2023 Q3, native Apple Silicon builds for macOS cannot be provided yet.
   - This will be fixed when Apple Silicon runners are made available by GitHub.
   - **Workaround**: Use the Intel/x86_64 builds for now. These should work on Apple Silicon machines without any performance or hardware compatibility issues.
+- Live view through gPhoto2: Currently only Nikon D3400 and Sony α6400 have been tested.
+  - As many Nikon cameras use the same commands for activating and deactivating live view, other Nikon DSLR models which support live view over USB may work.
+  - Many mirrorless (non-DSLR) cameras may work fine anyway due to live view mode being activated automatically (e.g. Sony α6400).
+  - The camera handling code is written with future special cases for different brands and models in mind, however we do not have any devices available for development and testing currently.
+  - **Workaround**: Try the different options available in the settings screen. If these don't work, your help might needed to fix the issue if possible at all. Please let us know by [raising an issue on GitHub](https://github.com/h3x4d3c1m4l/momento-booth/issues/new). Be sure to first check whether your model is listed on the [gPhoto2 compatibility list](http://www.gphoto.org/proj/libgphoto2/support.php). We might be able to expand the compatibility of the application with some remote testing. No guarantees however.
 
 ## Minimal hardware (mostly useful for testing/development)
 
@@ -36,7 +46,6 @@ A very basic (but useful for experimenting and developing) setup could consist o
 ```mermaid
 graph LR
     C{Computer} -- "USB (or Integrated)" --> W(Webcam)
-
 ```
 
 ## Recommended hardware
@@ -53,7 +62,7 @@ graph LR
   - Disk: SSD with enough space left for photo storage
   - Monitor: At least 1920x1080 with touch
 - Digital camera
-  - Live view: Supported directly by gPhoto2, or using HDMI out and a USB HDMI capture device
+  - Live view: Supported directly by gPhoto2, or using HDMI out and a USB HDMI capture device (which can act like a webcam)
   - Capturing: Supported directly by gPhoto2
 - Optional: Photo printer
 
@@ -62,13 +71,17 @@ graph LR
     C{Computer} -- USB --> A(Camera)
     H["HDMI capture device (optional)"] -- USB --> C{Computer}
     A -- HDMI --> H
-    M -- USB --> C
+    M -- "USB (touchscreen)" --> C
     C{Computer} -- VGA/DVI/HDMI/DP --> M(Monitor)
     C{Computer} -- "USB/(W)LAN" --> P(Photo printer)
 
 ```
 
 ## Running the application
+
+```admonish warning
+Make sure to use good quality USB and HDMI cables and preferably connect any USB devices without extension cords. There have been reports of freezes in camera handling due to bad cables.
+```
 
 1. Download the latest MomentoBooth release for your OS from the [GitHub releases page](https://github.com/h3x4d3c1m4l/momento-booth/releases).
 2. Extract the zip file and run the MomentoBooth executable.
