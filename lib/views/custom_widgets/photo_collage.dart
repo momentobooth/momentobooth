@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -353,13 +354,15 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
-    const delay = Duration(milliseconds: 1);
     if (format == ExportFormat.pngFormat) {
-      return screenshotController.capture(pixelRatio: pixelRatio, delay: delay);
+      return screenshotController.capture(pixelRatio: pixelRatio);
     }
 
+    // Await frame render, should workaround the black image issue
+    await waitForPostFrameCallback();
+
     // Capture widget as RGBA image
-    final image = await screenshotController.captureAsUiImage(pixelRatio: pixelRatio, delay: delay);
+    final image = await screenshotController.captureAsUiImage(pixelRatio: pixelRatio);
     final byteData = await image!.toByteData(format: ui.ImageByteFormat.rawRgba);
 
     // Previously we did the conversion to JPEG like this, but it turned out pretty slow
@@ -375,6 +378,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     loggy.debug('JPEG encoding took ${stopwatch.elapsed}');
 
     return jpegData;
+  }
+
+  Future<void> waitForPostFrameCallback() {
+    Completer completer = Completer();
+    WidgetsBinding.instance.addPostFrameCallback((_) => completer.complete());
+    return completer.future;
   }
 
 }
