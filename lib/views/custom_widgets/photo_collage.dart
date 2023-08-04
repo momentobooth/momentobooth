@@ -34,8 +34,6 @@ enum TemplateKind {
 
 }
 
-void baseCallback() {}
-
 class PhotoCollage extends StatefulWidget {
 
   final double aspectRatio;
@@ -45,7 +43,8 @@ class PhotoCollage extends StatefulWidget {
   final bool showForeground;
   final bool singleMode;
   final int? debug;
-  final VoidCallback decodeCallback;
+  final VoidCallback? decodeCallback;
+  final bool isVisible;
 
   const PhotoCollage({
     super.key,
@@ -56,7 +55,8 @@ class PhotoCollage extends StatefulWidget {
     this.showBackground = true,
     this.showForeground = true,
     this.debug,
-    this.decodeCallback = baseCallback,
+    this.decodeCallback,
+    this.isVisible = true,
   });
 
   @override
@@ -65,8 +65,6 @@ class PhotoCollage extends StatefulWidget {
 }
 
 class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
-
-  PhotoCollageState();
 
   @override
   void initState() {
@@ -81,7 +79,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   int get initialized => _initialized.value;
   late Action setInitialized;
 
-  ScreenshotController screenshotController = ScreenshotController(); 
+  ScreenshotController screenshotController = ScreenshotController();
 
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
   static const double gap = 20.0;
@@ -99,7 +97,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     TemplateKind.front: <int, File?>{},
     TemplateKind.back: <int, File?>{},
   };
-  
+
   Future<void> findTemplates() async {
     if (widget.singleMode) {
       templates[TemplateKind.front]?[1] = await _templateResolver(TemplateKind.front, 1);
@@ -120,7 +118,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   /// Checks if a given template file exists and returns it if it does.
   Future<File?> _templateTest(String fileName) async {
     var template = File(join(templatesFolder, fileName));
-    if (template.existsSync()) { return template; }
+    if (template.existsSync()) return template;
     return null;
   }
 
@@ -138,75 +136,77 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    return Screenshot(
-      controller: screenshotController,
-      child: SizedBox(
-        height: 1000 + 2*widget.padding,
-        width: 1000*widget.aspectRatio + 2*widget.padding,
-        child: Observer(builder: (context) => _getLayout(AppLocalizations.of(context)!)),
+    Widget collageBox = FittedBox(
+      child: Screenshot(
+        controller: screenshotController,
+        child: SizedBox(
+          height: 1000 + 2 * widget.padding,
+          width: 1000 * widget.aspectRatio + 2 * widget.padding,
+          child: Observer(builder: (context) => _getLayout(AppLocalizations.of(context)!)),
+        ),
       ),
+    );
+
+    if (widget.isVisible) return collageBox;
+
+    // We have already tested built in Flutter widgets like Visibility, Opacity, Offstage, but none of them work...
+    return Transform.translate(
+      offset: Offset(MediaQuery.sizeOf(context).width, 0),
+      child: collageBox,
     );
   }
 
   Widget _getLayout(AppLocalizations localizations) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        for (int i = 0; i <= 4; i++) ...[
-          if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
-            Opacity(
-              opacity: i == nChosen && widget.showBackground ? 1 : 0,
-              child: ImageWithLoaderFallback.file(templates[TemplateKind.back]?[i], fit: BoxFit.cover),
+    return Stack(fit: StackFit.expand, children: [
+      for (int i = 0; i <= 4; i++) ...[
+        if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
+          Opacity(
+            opacity: i == nChosen && widget.showBackground ? 1 : 0,
+            child: ImageWithLoaderFallback.file(templates[TemplateKind.back]?[i], fit: BoxFit.cover),
+          ),
+      ],
+      if (widget.debug == null)
+        Padding(
+          padding: EdgeInsets.all(gap + widget.padding),
+          child: _getInnerLayout(localizations),
+        ),
+      if (widget.debug != null)
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
             ),
-        ],
-        if (widget.debug == null)
-          Padding(
-            padding: EdgeInsets.all(gap + widget.padding),
             child: _getInnerLayout(localizations),
           ),
-        if (widget.debug != null)
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
-            ),
-            // padding: EdgeInsets.all(widget.padding),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
-              ),
-              child: _getInnerLayout(localizations),
-            ),
+        ),
+      for (int i = 0; i <= 4; i++) ...[
+        if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
+          Opacity(
+            opacity: i == nChosen && widget.showForeground ? 1 : 0,
+            child: ImageWithLoaderFallback.file(templates[TemplateKind.front]?[i], fit: BoxFit.cover),
           ),
-        for (int i = 0; i <= 4; i++) ...[
-          if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
-            Opacity(
-              opacity: i == nChosen && widget.showForeground ? 1 : 0,
-              child: ImageWithLoaderFallback.file(templates[TemplateKind.front]?[i], fit: BoxFit.cover),
-            ),
-        ],
-      ]
-    );
+      ],
+    ]);
   }
 
   Widget _getInnerLayout(AppLocalizations localizations) {
-    if (nChosen == 0) {
-      return _getZeroLayout(localizations);
-    } else if (nChosen == 1) {
-      return _oneLayout;
-    } else if (nChosen == 2) {
-      return _twoLayout;
-    } else if (nChosen == 3) {
-      return _threeLayout;
-    } else if (nChosen == 4) {
-      return _fourLayout;
-    }
-    return Container();
+    return switch (nChosen) {
+      0 => _getZeroLayout(localizations),
+      1 => _oneLayout,
+      2 => _twoLayout,
+      3 => _threeLayout,
+      4 => _fourLayout,
+      _ => const SizedBox.shrink(),
+    };
   }
 
-  Widget _getChosenImage(int index, {BoxFit? fit, decodeCallback = baseCallback}) {
-    return widget.debug == null ?
-      ImageWithLoaderFallback.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback,) :
-      ImageWithLoaderFallback.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
+  Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
+    return widget.debug == null
+        ? ImageWithLoaderFallback.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback)
+        : ImageWithLoaderFallback.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {
@@ -241,10 +241,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
             ).inGridArea('l1header'),
           ),
-        SizedBox.expand(child: RotatedBox(
-          quarterTurns: 1,
-          child: img,
-        ),).inGridArea('l1content'),
+        SizedBox.expand(
+          child: RotatedBox(
+            quarterTurns: 1,
+            child: img,
+          ),
+        ).inGridArea('l1content'),
       ],
     );
   }
@@ -270,7 +272,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           ),
         for (int i = 0; i < nChosen; i++) ...[
           _getChosenImage(i).inGridArea('l2content${i+1}'),
-        ]
+        ],
       ],
     );
   }
@@ -305,7 +307,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         for (int i = 0; i < nChosen; i++) ...[
           _getChosenImage(i).inGridArea('l3content${i+1}'),
           _getChosenImage(i).inGridArea('l3content${i+4}'),
-        ]
+        ],
       ],
     );
   }
@@ -327,10 +329,10 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               RotatedBox(
                 quarterTurns: 1,
                 child: SizedBox.expand(
-                  child: _getChosenImage(i, fit: BoxFit.cover)
-                )
+                  child: _getChosenImage(i, fit: BoxFit.cover),
+                ),
               ).inGridArea('l4content${i+1}'),
-            ]
+            ],
           ],
         ),
         if (widget.showLogo)
@@ -351,16 +353,20 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
-    const delay = Duration(milliseconds: 20);
+    const delay = Duration(milliseconds: 1);
     if (format == ExportFormat.pngFormat) {
       return screenshotController.capture(pixelRatio: pixelRatio, delay: delay);
     }
+
+    // Capture widget as RGBA image
     final image = await screenshotController.captureAsUiImage(pixelRatio: pixelRatio, delay: delay);
-    // Lib by default uses ui.ImageByteFormat.png for capture, encoding is what takes long.
     final byteData = await image!.toByteData(format: ui.ImageByteFormat.rawRgba);
-    // Create an image lib image instance from ui image instance.
+
+    // Previously we did the conversion to JPEG like this, but it turned out pretty slow
     //final dartImage = img.Image.fromBytes(width: image.width, height: image.height, bytes: byteData!.buffer, numChannels: 4, order: img.ChannelOrder.rgba);
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
+
+    // Rotate image and encode to JPEG
     final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
     final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [const ImageOperation.rotate(Rotation.Rotate270)] : [];
 

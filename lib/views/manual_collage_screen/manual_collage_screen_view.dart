@@ -135,12 +135,10 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
             color: const Color.fromARGB(255, 255, 255, 255),
             boxShadow: [theme.chooseCaptureModeButtonShadow],
           ),
-          child: FittedBox(
-            child: PhotoCollage(
-              key: controller.collageKey,
-              aspectRatio: 1/viewModel.collageAspectRatio,
-              padding: viewModel.collagePadding,
-            ),
+          child: PhotoCollage(
+            key: controller.collageKey,
+            aspectRatio: 1/viewModel.collageAspectRatio,
+            padding: viewModel.collagePadding,
           ),
         ),
       ),
