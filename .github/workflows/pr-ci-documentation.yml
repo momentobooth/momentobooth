@@ -1,23 +1,13 @@
-name: Deploy docs to GitHub Pages
+name: PR CI Documentation
 
 env:
   MDBOOK_VERSION: "0.4.34"
   BOOK_LOCATION: "documentation"
 
 on:
-  push:
+  pull_request:
     branches: [ main ]
-    paths: [ documentation/**, .github/workflows/deploy-documentation.yml ]
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: deploy-documentation
-  cancel-in-progress: false
+    paths: [ documentation/**, .github/workflows/pr-ci-documentation.yml ]
 
 jobs:
   build:
@@ -26,8 +16,6 @@ jobs:
     env:
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"
-
-    name: Build
 
     steps:
       - name: Checkout
@@ -59,28 +47,3 @@ jobs:
 
       - name: Build static site
         run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir ../_site
-
-      - name: Fix permissions
-        run: |
-          chmod -c -R +rX "_site/" | while read line; do
-            echo "::warning title=Invalid file permissions automatically fixed::$line"
-          done
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
-
-  deploy:
-    name: Deploy
-
-    needs: build
-
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
