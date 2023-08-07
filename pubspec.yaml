@@ -45,7 +45,7 @@ dependencies:
 
   # Interop
   ffi: 2.0.2
-  flutter_rust_bridge: 1.79.0
+  flutter_rust_bridge: 1.80.1
 
   # Printing
   printing: 5.11.0
