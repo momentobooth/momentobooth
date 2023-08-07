@@ -1,25 +1,6 @@
 # Getting started
 
-```admonish warning
-While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations.
-```
-
-
-## Current limitations
-
-- Webcam support (and as such HDMI capturing) is not working on Linux and macOS currently.
-  - As of 2023 Q3 there is are some bugs in the library that is used for this functionality, these will be resolved in future versions.
-  - Due to this bug, HDMI capture also will not work. As such camera's which don't support live view over USB through gPhoto2 but do support live view using HDMI out (e.g. Nikon D3100) current will not work on Linux and macOS.
-  - **Workaround**: Use a camera which supports live view using USB, or use Windows.
-- macOS: No native builds for Apple Silicon available yet.
-  - As cross compilation with native libraries is pretty challenging and GitHub not supporting Apple Silicon runners yet as of 2023 Q3, native Apple Silicon builds for macOS cannot be provided yet.
-  - This will be fixed when Apple Silicon runners are made available by GitHub.
-  - **Workaround**: Use the Intel/x86_64 builds for now. These should work on Apple Silicon machines without any performance or hardware compatibility issues.
-- Live view through gPhoto2: Currently only Nikon D3400 and Sony α6400 have been tested.
-  - As many Nikon cameras use the same commands for activating and deactivating live view, other Nikon DSLR models which support live view over USB may work.
-  - Many mirrorless (non-DSLR) cameras may work fine anyway due to live view mode being activated automatically (e.g. Sony α6400).
-  - The camera handling code is written with future special cases for different brands and models in mind, however we do not have any devices available for development and testing currently.
-  - **Workaround**: Try the different options available in the settings screen. If these don't work, your help might needed to fix the issue if possible at all. Please let us know by [raising an issue on GitHub](https://github.com/h3x4d3c1m4l/momento-booth/issues/new). Be sure to first check whether your model is listed on the [gPhoto2 compatibility list](http://www.gphoto.org/proj/libgphoto2/support.php). We might be able to expand the compatibility of the application with some remote testing. No guarantees however.
+Getting started with MomentoBooth is easy! You only need a computer/laptop with a webcam for a minimal setup. Read more about our hardware recommendations and follow the install steps:
 
 ## Minimal hardware (mostly useful for testing/development)
 
@@ -65,6 +46,7 @@ graph LR
   - Live view: Supported directly by gPhoto2, or using HDMI out and a USB HDMI capture device (which can act like a webcam)
   - Capturing: Supported directly by gPhoto2
 - Optional: Photo printer
+- Optional: Internet connection
 
 ```mermaid
 graph LR
@@ -81,11 +63,11 @@ graph LR
 
 1. Download the latest MomentoBooth release for your OS from the [GitHub releases page](https://github.com/h3x4d3c1m4l/momento-booth/releases).
 2. Extract the zip file and run the MomentoBooth executable.
-    * It may be convenient to place a shortcut on your desktop.
+    - It may be convenient to place a shortcut on your desktop.
 3. You will be greeted by the homescreen saying "Touch to start" and a green background. Press `Ctrl+S` to open the settings panel. → [See all shortcuts](settings_general.md#hotkeys).
 4. Go to the **hardware** tab
 5. Ensure [live view method](settings_hardware.md#live-view-method) is set to "Webcam" and select your webcam from the list in the [webcam setting](settings_hardware.md#webcam). The [capture method](settings_hardware.md#capture-method) is set to "Live view source" by default.
-    * If you do not have a webcam available you can also select "Static noise" as a live view source for testing.
+    - If you do not have a webcam available you can also select "Static noise" as a live view source for testing.
 6. Next, go to the **output** tab.
 7. Set an [output directory](settings_output.md#local-photo-storage-location) to save your photos.
 8. Next, go to the **templating** tab.
@@ -94,3 +76,23 @@ graph LR
 11. You are now ready to shoot your first pictures! Press `Ctrl+S` again to exit the settings screen and click on or touch the screen to get started.
 
 Once you have the basics up and running you can try [connecting a camera](camera_setup.md#camera), [adding a printer](printer_setup.md), or designing a beautiful [template](template_setup.md) for your next event.
+
+## Current limitations
+
+```admonish warning
+While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations.
+```
+
+- Webcam support (and as such HDMI capturing) is not working on Linux and macOS currently.
+  - As of 2023 Q3 there is are some bugs in the library that is used for this functionality, these will be resolved in future versions.
+  - Due to this bug, HDMI capture also will not work. As such camera's which don't support live view over USB through gPhoto2 but do support live view using HDMI out (e.g. Nikon D3100) current will not work on Linux and macOS.
+  - **Workaround**: Use a camera which supports live view using USB, or use Windows.
+- macOS: No native builds for Apple Silicon available yet.
+  - As cross compilation with native libraries is pretty challenging and GitHub not supporting Apple Silicon runners yet as of 2023 Q3, native Apple Silicon builds for macOS cannot be provided yet.
+  - This will be fixed when Apple Silicon runners are made available by GitHub.
+  - **Workaround**: Use the Intel/x86_64 builds for now. These should work on Apple Silicon machines without any performance or hardware compatibility issues.
+- Live view through gPhoto2: Currently only Nikon D3400 and Sony α6400 have been tested.
+  - As many Nikon cameras use the same commands for activating and deactivating live view, other Nikon DSLR models which support live view over USB may work.
+  - Many mirrorless (non-DSLR) cameras may work fine anyway due to live view mode being activated automatically (e.g. Sony α6400).
+  - The camera handling code is written with future special cases for different brands and models in mind, however we do not have any devices available for development and testing currently.
+  - **Workaround**: Try the different options available in the settings screen. If these don't work, your help might needed to fix the issue if possible at all. Please let us know by [raising an issue on GitHub](https://github.com/h3x4d3c1m4l/momento-booth/issues/new). Be sure to first check whether your model is listed on the [gPhoto2 compatibility list](http://www.gphoto.org/proj/libgphoto2/support.php). We might be able to expand the compatibility of the application with some remote testing. No guarantees however.
