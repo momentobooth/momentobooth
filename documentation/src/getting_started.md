@@ -1,7 +1,7 @@
 # Getting started
 
 ```admonish warning
-While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations 
+While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations.
 ```
 
 
@@ -78,10 +78,6 @@ graph LR
 ```
 
 ## Running the application
-
-```admonish warning
-Make sure to use good quality USB and HDMI cables and preferably connect any USB devices without extension cords. There have been reports of freezes in camera handling due to bad cables.
-```
 
 1. Download the latest MomentoBooth release for your OS from the [GitHub releases page](https://github.com/h3x4d3c1m4l/momento-booth/releases).
 2. Extract the zip file and run the MomentoBooth executable.
