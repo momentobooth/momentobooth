@@ -95,6 +95,8 @@ All platforms:
 * Flutter SDK 3.10.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
+* Optional: For building the documentation mdBook and some extensions for mdBook are needed
+  * Install using Cargo: `cargo install mdbook mdbook-mermaid mdbook-admonish`
 
 For all tools, we support the latest versions.
 

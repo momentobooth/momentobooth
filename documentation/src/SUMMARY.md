@@ -3,13 +3,16 @@
 [Introduction](./introduction.md)
 
 # Set up
+
 - [Getting started](./getting_started.md)
+- [Hardware compatibility](./hardware_compatibility.md)
 - [Camera](./camera_setup.md)
 - [Printer](./printer_setup.md)
 - [Templates](./template_setup.md)
 - [Checklist for events](./event_checklist.md)
 
 # Settings
+
 - [Settings panel](./settings_panel.md)
   - [General settings](./settings_general.md)
   - [Hardware settings](./settings_hardware.md)
