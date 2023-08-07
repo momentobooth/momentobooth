@@ -3,7 +3,7 @@ name: PR CI App
 on:
   pull_request:
     branches: [ main ]
-    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml ]
+    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
 
 jobs:
   build:

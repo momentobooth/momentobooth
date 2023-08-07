@@ -7,7 +7,7 @@ env:
 on:
   push:
     branches: [ main ]
-    paths: [ documentation/**, .github/workflows/deploy-documentation.yml ]
+    paths: [ documentation/**, .github/workflows/deploy-documentation.yml, README.md ]
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
