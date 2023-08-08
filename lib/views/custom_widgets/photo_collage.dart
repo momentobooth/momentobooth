@@ -354,12 +354,12 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Future<Uint8List?> getCollageImage({required double pixelRatio, ExportFormat format = ExportFormat.jpgFormat, int jpgQuality = 80}) async {
+    // Await frame render, should workaround the black image issue
+    await waitForPostFrameCallback();
+    
     if (format == ExportFormat.pngFormat) {
       return screenshotController.capture(pixelRatio: pixelRatio);
     }
-
-    // Await frame render, should workaround the black image issue
-    await waitForPostFrameCallback();
 
     // Capture widget as RGBA image
     final image = await screenshotController.captureAsUiImage(pixelRatio: pixelRatio);
