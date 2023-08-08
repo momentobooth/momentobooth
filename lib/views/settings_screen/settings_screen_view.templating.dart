@@ -76,16 +76,13 @@ Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenC
           quarterTurns: -1 * viewModel.previewTemplateRotation,
           child: SizedBox(
             height: height,
-            child: FittedBox(
-              child: PhotoCollage(
-                key: viewModel.collageKey,
-                debug: viewModel.previewTemplate,
-                aspectRatio: 1/viewModel.collageAspectRatioSetting,
-                padding: viewModel.collagePaddingSetting,
-                showBackground: viewModel.previewTemplateShowBack,
-                showForeground: viewModel.previewTemplateShowFront,
-                // decodeCallback: viewModel.collageReady,
-              ),
+            child: PhotoCollage(
+              key: viewModel.collageKey,
+              debug: viewModel.previewTemplate,
+              aspectRatio: 1/viewModel.collageAspectRatioSetting,
+              padding: viewModel.collagePaddingSetting,
+              showBackground: viewModel.previewTemplateShowBack,
+              showForeground: viewModel.previewTemplateShowFront,
             ),
           ),
         )

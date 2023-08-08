@@ -18,7 +18,7 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.7.1
+  fluent_ui: 4.7.2
   go_router: 10.0.0
   flutter_svg: 2.0.7
   animated_text_kit: 4.2.2
@@ -45,7 +45,7 @@ dependencies:
 
   # Interop
   ffi: 2.0.2
-  flutter_rust_bridge: 1.79.0
+  flutter_rust_bridge: 1.80.1
 
   # Printing
   printing: 5.11.0

@@ -47,7 +47,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         if (viewModel.displayConfetti)
           ... _confettiStack,
         SizedBox.expand(child: _qrCodeBackdrop),
-        _qrCode
+        _qrCode,
       ],
     );
   }

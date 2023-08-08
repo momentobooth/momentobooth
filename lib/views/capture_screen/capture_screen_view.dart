@@ -20,18 +20,14 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
     return Stack(
       fit: StackFit.expand,
       children: [
-        // Is this very pretty? No. But it works 😅
-        FittedBox(
-          child: Transform.translate(
-            offset: const Offset(3000, 0),
-            child: PhotoCollage(
-              key: viewModel.collageKey,
-              singleMode: true,
-              aspectRatio: 1/viewModel.collageAspectRatio,
-              padding: viewModel.collagePadding,
-              decodeCallback: viewModel.collageReady,
-            ),
-          ),
+        // This widget is just here for the purpose of rendering the collage to a bitmap
+        PhotoCollage(
+          key: viewModel.collageKey,
+          singleMode: true,
+          aspectRatio: 1/viewModel.collageAspectRatio,
+          padding: viewModel.collagePadding,
+          decodeCallback: viewModel.collageReady,
+          isVisible: false,
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
