@@ -44,7 +44,7 @@ dependencies:
   json_annotation: 4.8.1
 
   # Interop
-  ffi: 2.0.2
+  ffi: 2.1.0
   flutter_rust_bridge: 1.80.1
 
   # Printing
