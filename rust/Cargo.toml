@@ -10,7 +10,7 @@ crate-type = ["lib", "staticlib", "cdylib"]
 [dependencies]
 derive_more = "0.99.17"
 atom_table = "1.1.0"
-flutter_rust_bridge = "1.80.1"
+flutter_rust_bridge = "1.81.0"
 ffsend-api = "0.7.3"
 serde_json = "1.0.103"
 chrono = "0.4.26"
