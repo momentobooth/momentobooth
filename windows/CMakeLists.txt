@@ -6,8 +6,6 @@ project(momento_booth LANGUAGES CXX)
 # the on-disk name of your application.
 set(BINARY_NAME "momento_booth")
 
-set(CMAKE_INSTALL_RPATH "$ORIGIN/lib")
-
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.
 cmake_policy(VERSION 3.15...3.25)
