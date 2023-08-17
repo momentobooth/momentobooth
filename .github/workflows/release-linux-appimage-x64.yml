@@ -46,6 +46,11 @@ jobs:
 
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3
+
+    - name: Install cargo-expand
+      uses: baptiste0928/cargo-install@v1
+      with:
+        crate: cargo-expand
       
     - name: Install flutter_rust_bridge_codegen
       uses: baptiste0928/cargo-install@v1
