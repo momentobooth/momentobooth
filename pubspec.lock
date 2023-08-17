@@ -348,12 +348,11 @@ packages:
   fluent_ui:
     dependency: "direct main"
     description:
-      path: "."
-      ref: compile-fixes-for-flutter-3-13
-      resolved-ref: "2efd0d2b96b34d100a2e7dcb535226cc8baeaede"
-      url: "https://github.com/h3x4d3c1m4l/fluent_ui"
-    source: git
-    version: "4.7.2"
+      name: fluent_ui
+      sha256: "0ec5ae618b42e6b9d0449d7519dec28c201809bc1955c5effb5a211dd77fa30e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.7.3"
   flutter:
     dependency: "direct main"
     description: flutter
