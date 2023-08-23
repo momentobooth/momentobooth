@@ -9,7 +9,7 @@ class AppDelegate: FlutterAppDelegate {
     doNothing(with: dummyReturnValue)
     return true
   }
-    
+
   @inline(never)
   func doNothing(with object: Any) {
     // This method does nothing with the object parameter
