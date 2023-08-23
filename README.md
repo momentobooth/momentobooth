@@ -116,10 +116,6 @@ Please note: Run all commands from the root folder of the repository, unless men
 4. Run `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
-### Current workarounds which should be removed ASAP
-
-* Pods `MACOSX_DEPLOYMENT_TARGET` is overridden to 11.0 due to macOS build error which seems to come from the `hotkey_manager` package
-
 ### Adding a new screen using the VS Code extension Template
 
 1. Make sure to have the [Template](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) extension installed
