@@ -22,7 +22,6 @@ dependencies:
   go_router: 10.1.0
   flutter_svg: 2.0.7
   animated_text_kit: 4.2.2
-  hotkey_manager: 0.1.8
   flutter_scroll_shadow: 1.2.0
   flutter_layout_grid: 2.0.4
   pretty_qr_code: 2.0.3
