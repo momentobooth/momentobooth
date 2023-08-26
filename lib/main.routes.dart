@@ -1,6 +1,6 @@
 part of 'main.dart';
 
-List<GoRoute> rootRoutes = [
+List<GoRoute> _rootRoutes = [
   _startRoute,
   _chooseCaptureModeRoute,
   _captureRoute,

@@ -20,7 +20,7 @@ class LiveViewManager extends _LiveViewManagerBase with _$LiveViewManager {
 
   static final LiveViewManager instance = LiveViewManager._internal();
 
-  LiveViewManager._internal() : super._internal();
+  LiveViewManager._internal();
 
 }
 
@@ -37,8 +37,16 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   // Initialization //
   // ////////////// //
 
-  _LiveViewManagerBase._internal() {
+  void initialize() {
     Timer.periodic(const Duration(seconds: 1), (_) => _checkLiveViewState());
+
+    autorun((_) {
+      // To make sure mobx detects that we are responding to changes to this property
+      SettingsManager.instance.settings.hardware.liveViewWebcamId;
+      _lock.synchronized(() async {
+        await _updateConfig();
+      });
+    });
   }
 
   // /////// //
@@ -79,14 +87,6 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
 
   @readonly
   LiveViewState _liveViewState = LiveViewState.initializing;
-
-  final ReactionDisposer onSettingsChangedDisposer = autorun((_) {
-    // To make sure mobx detects that we are responding to changed to this property
-    SettingsManager.instance.settings.hardware.liveViewWebcamId;
-    LiveViewManager.instance._lock.synchronized(() async {
-      await LiveViewManager.instance._updateConfig();
-    });
-  });
 
   Future<void> _updateConfig() async {
     LiveViewMethod liveViewMethodSetting = SettingsManager.instance.settings.hardware.liveViewMethod;

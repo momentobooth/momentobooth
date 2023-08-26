@@ -39,6 +39,7 @@ import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'main.routes.dart';
+part 'main.shortcuts.dart';
 
 void main() async {
   _ensureGPhoto2EnvironmentVariables();
@@ -56,6 +57,9 @@ void main() async {
 
   // Windows manager (used for full screen)
   await WindowManager.instance.initialize();
+
+  // Live view manager init
+  LiveViewManager.instance.initialize();
 
   // Native library init
   await init();
@@ -98,7 +102,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
   final GoRouter _router = GoRouter(
-    routes: rootRoutes,
+    routes: _rootRoutes,
     observers: [
       GoRouterObserver(),
       HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin, end: end)),
@@ -188,7 +192,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
           return _AppShortcuts(
             onNavigateToHome: () => _router.go(StartScreen.defaultRoute),
             // ignore: unnecessary_lambdas
-            onRestoreLiveView: () => LiveViewManager.instance.restoreLiveView(),
+            onRestoreLiveView: LiveViewManager.instance.restoreLiveView,
             onToggleSettingsOverlay: () {
               setState(() => _settingsOpen = !_settingsOpen);
               loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
@@ -272,74 +276,6 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   Future<AppExitResponse> didRequestAppExit() async {
     await LiveViewManager.instance.gPhoto2Camera?.dispose();
     return super.didRequestAppExit();
-  }
-
-}
-
-class _NavigateToHomeIntent extends Intent {
-  const _NavigateToHomeIntent();
-}
-
-class _RestoreLiveViewIntent extends Intent {
-  const _RestoreLiveViewIntent();
-}
-
-class _ToggleSettingsOverlayIntent extends Intent {
-  const _ToggleSettingsOverlayIntent();
-}
-
-class _OpenManualCollageScreenIntent extends Intent {
-  const _OpenManualCollageScreenIntent();
-}
-
-class _ToggleFullScreenIntent extends Intent {
-  const _ToggleFullScreenIntent();
-}
-
-
-class _AppShortcuts extends StatelessWidget {
-
-  final VoidCallback onNavigateToHome;
-  final VoidCallback onRestoreLiveView;
-  final VoidCallback onToggleSettingsOverlay;
-  final VoidCallback onOpenManualCollageScreen;
-  final VoidCallback onToggleFullScreen;
-  final Widget child;
-
-  const _AppShortcuts({
-    super.key,
-    required this.onNavigateToHome,
-    required this.onRestoreLiveView,
-    required this.onToggleSettingsOverlay,
-    required this.onOpenManualCollageScreen,
-    required this.onToggleFullScreen,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    bool control = !Platform.isMacOS, meta = Platform.isMacOS;
-
-    return Shortcuts(
-      shortcuts: <ShortcutActivator, Intent>{
-        SingleActivator(LogicalKeyboardKey.keyH, control: control, meta: meta): const _NavigateToHomeIntent(),
-        SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): const _RestoreLiveViewIntent(),
-        SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): const _ToggleSettingsOverlayIntent(),
-        SingleActivator(LogicalKeyboardKey.keyM, control: control, meta: meta): const _OpenManualCollageScreenIntent(),
-        SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): const _ToggleFullScreenIntent(),
-        const SingleActivator(LogicalKeyboardKey.enter, alt: true): const _ToggleFullScreenIntent(),
-      },
-      child: Actions(
-        actions: <Type, Action<Intent>>{
-          _NavigateToHomeIntent: CallbackAction(onInvoke: (_) => onNavigateToHome()),
-          _RestoreLiveViewIntent: CallbackAction(onInvoke: (_) => onRestoreLiveView()),
-          _ToggleSettingsOverlayIntent: CallbackAction(onInvoke: (_) => onToggleSettingsOverlay()),
-          _OpenManualCollageScreenIntent: CallbackAction(onInvoke: (_) => onOpenManualCollageScreen()),
-          _ToggleFullScreenIntent: CallbackAction(onInvoke: (_) => onToggleFullScreen()),
-        },
-        child: child,
-      ),
-    );
   }
 
 }
