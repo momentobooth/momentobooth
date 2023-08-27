@@ -5,19 +5,18 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
-import 'package:momento_booth/managers/hotkey_manager.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
-import 'package:momento_booth/models/hotkey_action.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
@@ -40,6 +39,7 @@ import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'main.routes.dart';
+part 'main.shortcuts.dart';
 
 void main() async {
   _ensureGPhoto2EnvironmentVariables();
@@ -49,9 +49,6 @@ void main() async {
   // Logging
   Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 
-  // Hotkeys
-  await HotkeyManager.instance.initialize();
-
   // Settings
   await SettingsManager.instance.load();
 
@@ -60,6 +57,9 @@ void main() async {
 
   // Windows manager (used for full screen)
   await WindowManager.instance.initialize();
+
+  // Live view manager init
+  LiveViewManager.instance.initialize();
 
   // Native library init
   await init();
@@ -102,7 +102,7 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
   final GoRouter _router = GoRouter(
-    routes: rootRoutes,
+    routes: _rootRoutes,
     observers: [
       GoRouterObserver(),
       HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin, end: end)),
@@ -111,22 +111,17 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   );
 
   bool _settingsOpen = false;
-  bool _manualCollageScreenOpen = false;
 
   static const returnHomeTimeout = Duration(seconds: 45);
   late Timer _returnHomeTimer;
   static const statusCheckPeriod = Duration(seconds: 5);
   late Timer _statusCheckTimer;
 
-  Stream<HotkeyAction> get _hotkeyActionStream => HotkeyManager.instance.hotkeyActionStream;
-  late StreamSubscription<HotkeyAction> _hotkeyActionStreamSubscription;
-
   @override
   void initState() {
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
     _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
     _router.routerDelegate.addListener(() => _onActivity(isTap: false));
-    _hotkeyActionStreamSubscription = _hotkeyActionStream.listen(_runHotkeyAction);
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
@@ -152,10 +147,9 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   }
 
   void _returnHome() {
-    if (GoRouterState.of(context).uri.toString() == StartScreen.defaultRoute) return;
+    if (_currentRouterLocation == StartScreen.defaultRoute) return;
     loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
     _router.go(StartScreen.defaultRoute);
-    _manualCollageScreenOpen = false;
   }
 
   /// Method that is fired when a user does any kind of touch or the route changes.
@@ -195,17 +189,28 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
         locale: SettingsManager.instance.settings.ui.language.toLocale(),
         builder: (context, child) {
           // This stack allows us to put the Settings screen on top
-          return LiveViewBackground(
-            child: Center(
-              child: Stack(
-                children: [
-                  Listener(
-                    behavior: HitTestBehavior.translucent,
-                    onPointerDown: (_) => _onActivity(isTap: true),
-                    child: child,
-                  ),
-                  _settingsOpen ? _settingsScreen : const SizedBox(),
-                ],
+          return _AppShortcuts(
+            onNavigateToHome: () => _router.go(StartScreen.defaultRoute),
+            // ignore: unnecessary_lambdas
+            onRestoreLiveView: LiveViewManager.instance.restoreLiveView,
+            onToggleSettingsOverlay: () {
+              setState(() => _settingsOpen = !_settingsOpen);
+              loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
+            },
+            onOpenManualCollageScreen: _toggleManualCollageScreen,
+            onToggleFullScreen: WindowManager.instance.toggleFullscreen,
+            child: LiveViewBackground(
+              child: Center(
+                child: Stack(
+                  children: [
+                    Listener(
+                      behavior: HitTestBehavior.translucent,
+                      onPointerDown: (_) => _onActivity(isTap: true),
+                      child: child,
+                    ),
+                    _settingsOpen ? _settingsScreen : const SizedBox(),
+                  ],
+                ),
               ),
             ),
           );
@@ -248,34 +253,22 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   void dispose() {
     _returnHomeTimer.cancel();
     _statusCheckTimer.cancel();
-    _hotkeyActionStreamSubscription.cancel();
     _router.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  void _runHotkeyAction(HotkeyAction event) {
-    switch (event) {
-      case HotkeyAction.openSettingsScreen:
-        setState(() => _settingsOpen = !_settingsOpen);
-        loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
-      case HotkeyAction.openManualCollageScreen:
-        // This currently fails due to: https://github.com/flutter/flutter/issues/130213
-        // if (GoRouterState.of(context).uri.toString() == ManualCollageScreen.defaultRoute) {
-        //   _router.go(StartScreen.defaultRoute);
-        // } else {
-        //   _router.go(ManualCollageScreen.defaultRoute);
-        // }
+  String get _currentRouterLocation {
+    final RouteMatch lastMatch = _router.routerDelegate.currentConfiguration.last;
+    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch ? lastMatch.matches : _router.routerDelegate.currentConfiguration;
+    return matchList.uri.toString();
+  }
 
-        // Workaround
-        if (_manualCollageScreenOpen) {
-          _router.go(StartScreen.defaultRoute);
-        } else {
-          _router.go(ManualCollageScreen.defaultRoute);
-        }
-        _manualCollageScreenOpen = !_manualCollageScreenOpen;
-      case HotkeyAction.goToHomeScreen:
-        _router.go(StartScreen.defaultRoute);
+  void _toggleManualCollageScreen() {
+    if (_currentRouterLocation == ManualCollageScreen.defaultRoute) {
+      _router.go(StartScreen.defaultRoute);
+    } else {
+      _router.go(ManualCollageScreen.defaultRoute);
     }
   }
 

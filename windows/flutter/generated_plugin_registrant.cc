@@ -7,7 +7,6 @@
 #include "generated_plugin_registrant.h"
 
 #include <file_selector_windows/file_selector_windows.h>
-#include <hotkey_manager/hotkey_manager_plugin.h>
 #include <printing/printing_plugin.h>
 #include <screen_retriever/screen_retriever_plugin.h>
 #include <sentry_flutter/sentry_flutter_plugin.h>
@@ -17,8 +16,6 @@
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   FileSelectorWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
-  HotkeyManagerPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("HotkeyManagerPlugin"));
   PrintingPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("PrintingPlugin"));
   ScreenRetrieverPluginRegisterWithRegistrar(
