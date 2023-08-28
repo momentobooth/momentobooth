@@ -66,7 +66,7 @@ dependencies:
   toml: 0.14.0
   synchronized: 3.1.0
   collection: 1.17.2
-  win32: 5.0.6
+  win32: 5.0.7
 
 dev_dependencies:
   flutter_test:
