@@ -98,8 +98,29 @@ jobs:
     - name: Update locate DB
       run: sudo updatedb
 
-    - name: Build and package as AppImage
+    - name: Flutter build
       run: flutter build linux --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define=SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
+
+    - name: Create AppDir and copy Flutter bundle
+      run: mkdir -p AppDir/app && cp -r build/linux/x64/release/bundle/* AppDir/app/
+
+    - name: Bundle main executable dependency libraries
+      run: mkdir AppDir/lib && pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath AppDir/app/momento_booth -copyTo AppDir/lib
+
+    - name: Bundle Rust library dependency libraries
+      run: pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath AppDir/app/lib/libmomento_booth_native_helpers.so -copyTo AppDir/lib
+
+    - name: Bundle libgphoto2 camlibs dependency libraries
+      run: for f in /lib64/libgphoto2/*/*; do pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib; done
+
+    - name: Bundle iolibs camlibs dependency libraries
+      run: for f in /lib64/libgphoto2_port/*/*; do pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib; done
+
+    - name: Copy camlibs
+      run: mkdir AppDir/camlibs && cp /lib64/libgphoto2/*/* AppDir/camlibs
+
+    - name: Copy iolibs
+      run: mkdir AppDir/iolibs && cp /lib64/libgphoto2_port/*/* AppDir/iolibs
 
     # Pack
     - name: Archive Release

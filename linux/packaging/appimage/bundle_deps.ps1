@@ -45,3 +45,6 @@ foreach ($lddtree_line in $lddtree_output_split) {
         }
     }
 }
+
+Write-Output "Bundling done!"
+Write-Output ""
