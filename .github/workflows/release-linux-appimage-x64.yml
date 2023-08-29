@@ -58,8 +58,10 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "1.81.0"
 
-    - name: Install flutter_distributor
-      run: dart pub global activate flutter_distributor
+    - name: Install lddtree
+      uses: baptiste0928/cargo-install@v1
+      with:
+        crate: lddtree
 
     - name: Install AppImage Builder
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
@@ -97,7 +99,7 @@ jobs:
       run: sudo updatedb
 
     - name: Build and package as AppImage
-      run: flutter_distributor package --platform linux --targets appimage --build-dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --build-dart-define SENTRY_ENVIRONMENT=Production --build-dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
+      run: flutter build linux --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define=SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
 
     # Pack
     - name: Archive Release
