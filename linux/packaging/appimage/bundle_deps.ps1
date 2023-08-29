@@ -17,10 +17,11 @@ Write-Output ""
 
 $absolute_path_directory = (Get-Item $absolute_path).DirectoryName
 
-$lddtree_output = lddtree $absolute_path
+$lddtree_output = lddtree "$absolute_path"
 $lddtree_output_split = $lddtree_output.Split([Environment]::NewLine)
 
 $libs_to_copy = @()
+Set-Location $absolute_copy_to_path
 foreach ($lddtree_line in $lddtree_output_split) {
     $lddtree_line_split = $lddtree_line.Split("=>")
     $lib_path = $lddtree_line_split[1].Trim().Replace(" (DEPENDENCY CYCLE)", "")
@@ -33,13 +34,14 @@ foreach ($lddtree_line in $lddtree_output_split) {
 
         # lib was not added to list yet
         $libs_to_copy += $lib_path
-        Write-Output "Will copy: $lib_path"
-    }
-}
-Write-Output ""
+        Write-Output "Copying: $lib_path"
+        Copy-Item -Path $lib_path -Destination $absolute_copy_to_path
 
-# copy libs
-foreach ($lib in $libs_to_copy) {
-    Write-Output "Copying: $lib to $absolute_copy_to_path"
-    Copy-Item -Path $lib -Destination $absolute_copy_to_path
+        $symlink_src = $lddtree_line_split[0].Trim()
+        $symlink_dst = (Get-Item $lib_path).Name.ToString()
+        if ($symlink_src -ne $symlink_dst) {
+            Write-Output "Will symlink $symlink_src to $symlink_dst"
+            ln -s -r "$symlink_dst" "$symlink_src"
+        }
+    }
 }
