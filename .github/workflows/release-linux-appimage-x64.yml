@@ -63,7 +63,7 @@ jobs:
       with:
         crate: lddtree
 
-    - name: Install AppImage Builder
+    - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
 
     - name: Install Dependencies
@@ -122,15 +122,18 @@ jobs:
     - name: Copy iolibs
       run: mkdir AppDir/iolibs && cp /usr/lib/x86_64-linux-gnu/libgphoto2_port/*/* AppDir/iolibs
 
-    # Pack
-    - name: Archive Release
-      uses: thedoctor0/zip-release@0.7.1
-      with:
-        type: 'zip'
-        directory: dist/${{ steps.extract_release_version.outputs.distributor_version }}
-        filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip'
+    - name: Move ld to correct location
+      run: mv AppDir/lib/ld-linux-x86-64.so.2 AppDir/app/
 
-    # Create GitHub release
+    - name: Copy icon, .desktop and AppRun
+      run: |
+        cp linux/packaging/appimage/momentoBooth.desktop AppDir/
+        cp linux/packaging/appimage/AppRun AppDir/
+        cp linux/packaging/appimage/icon.svg AppDir/
+    
+    - name: Pack as AppImage and rename
+      run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
+
     - name: Create GitHub Release
       uses: ncipollo/release-action@v1
       with:
@@ -138,4 +141,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "dist/${{ steps.extract_release_version.outputs.distributor_version }}/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip"
+        artifacts: "MomentoBooth-Linux-x86_64.AppImage"
