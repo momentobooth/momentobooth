@@ -108,7 +108,7 @@ jobs:
       run: mkdir AppDir/lib && pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath AppDir/app/momento_booth -copyTo AppDir/lib
 
     - name: Bundle Rust library and Flutter plugin dependency libraries
-      run: for f in AppDir/app/lib/*; pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib
+      run: for f in AppDir/app/lib/*; do pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib; done
 
     - name: Bundle libgphoto2 camlibs dependency libraries
       run: for f in /usr/lib/x86_64-linux-gnu/libgphoto2/*/*; do pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib; done
