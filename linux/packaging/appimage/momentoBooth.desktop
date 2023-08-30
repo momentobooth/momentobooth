@@ -3,4 +3,4 @@ Name=MomentoBooth
 Exec=AppRun
 Type=Application
 Categories=
-Icon=icon.svg
+Icon=icon
