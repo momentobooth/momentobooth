@@ -13,7 +13,7 @@ jobs:
   build:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     env:
       SCCACHE_GHA_ENABLED: "true"
@@ -58,10 +58,12 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "1.81.0"
 
-    - name: Install flutter_distributor
-      run: dart pub global activate flutter_distributor
+    - name: Install lddtree
+      uses: baptiste0928/cargo-install@v1
+      with:
+        crate: lddtree
 
-    - name: Install AppImage Builder
+    - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
 
     - name: Install Dependencies
@@ -96,18 +98,42 @@ jobs:
     - name: Update locate DB
       run: sudo updatedb
 
-    - name: Build and package as AppImage
-      run: flutter_distributor package --platform linux --targets appimage --build-dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --build-dart-define SENTRY_ENVIRONMENT=Production --build-dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
+    - name: Flutter build
+      run: flutter build linux --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define=SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
 
-    # Pack
-    - name: Archive Release
-      uses: thedoctor0/zip-release@0.7.1
-      with:
-        type: 'zip'
-        directory: dist/${{ steps.extract_release_version.outputs.distributor_version }}
-        filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip'
+    - name: Create AppDir and copy Flutter bundle
+      run: mkdir -p AppDir/app && cp -r build/linux/x64/release/bundle/* AppDir/app/
 
-    # Create GitHub release
+    - name: Bundle main executable dependency libraries
+      run: mkdir AppDir/lib && pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath AppDir/app/momento_booth -copyTo AppDir/lib
+
+    - name: Bundle Rust library and Flutter plugin dependency libraries
+      run: for f in AppDir/app/lib/*; pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib
+
+    - name: Bundle libgphoto2 camlibs dependency libraries
+      run: for f in /usr/lib/x86_64-linux-gnu/libgphoto2/*/*; do pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib; done
+
+    - name: Bundle iolibs camlibs dependency libraries
+      run: for f in /usr/lib/x86_64-linux-gnu/libgphoto2_port/*/*; do pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib; done
+
+    - name: Copy camlibs
+      run: mkdir AppDir/camlibs && cp /usr/lib/x86_64-linux-gnu/libgphoto2/*/* AppDir/camlibs
+
+    - name: Copy iolibs
+      run: mkdir AppDir/iolibs && cp /usr/lib/x86_64-linux-gnu/libgphoto2_port/*/* AppDir/iolibs
+
+    - name: Move ld to correct location
+      run: mv AppDir/lib/ld-linux-x86-64.so.2 AppDir/app/
+
+    - name: Copy icon, .desktop and AppRun
+      run: |
+        cp linux/packaging/appimage/momentoBooth.desktop AppDir/
+        cp linux/packaging/appimage/AppRun AppDir/
+        cp linux/packaging/appimage/icon.svg AppDir/
+    
+    - name: Pack as AppImage and rename
+      run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
+
     - name: Create GitHub Release
       uses: ncipollo/release-action@v1
       with:
@@ -115,4 +141,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "dist/${{ steps.extract_release_version.outputs.distributor_version }}/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-AppImage-x64.zip"
+        artifacts: "MomentoBooth-Linux-x86_64.AppImage"

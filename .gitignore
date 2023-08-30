@@ -58,3 +58,6 @@ dist/
 
 # mdBook output
 index.html
+
+# AppDir/AppImage
+AppDir/
