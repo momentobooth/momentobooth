@@ -125,11 +125,12 @@ jobs:
     - name: Move ld to correct location
       run: mv AppDir/lib/ld-linux-x86-64.so.2 AppDir/app/
 
-    - name: Copy icon, .desktop and AppRun
+    - name: Copy icon, .desktop and AppRun, set exec permission on AppRun
       run: |
         cp linux/packaging/appimage/momentoBooth.desktop AppDir/
         cp linux/packaging/appimage/AppRun AppDir/
         cp linux/packaging/appimage/icon.svg AppDir/
+        chmod +x AppDir/AppRun
     
     - name: Pack as AppImage and rename
       run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
