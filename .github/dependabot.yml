@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      all-dependencies:
+      flutter-dependencies:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
@@ -18,6 +18,6 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      all-dependencies:
+      rust-dependencies:
         patterns:
           - "*"
