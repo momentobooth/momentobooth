@@ -1066,9 +1066,9 @@ checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
 name = "gphoto2"
-version = "3.2.1"
+version = "3.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1bebad662d3927bca6d5ab209887d03c331932ee185dc7ab9c93ff9f616eb15d"
+checksum = "21decdf0782c9de6df613cc6168b3e90af8afa14e7a2b05eeb4f497b1bb544e3"
 dependencies = [
  "crossbeam-channel",
  "libc",
