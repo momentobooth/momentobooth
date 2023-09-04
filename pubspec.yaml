@@ -22,7 +22,7 @@ dependencies:
   go_router: 10.1.0
   flutter_svg: 2.0.7
   animated_text_kit: 4.2.2
-  flutter_scroll_shadow: 1.2.1
+  flutter_scroll_shadow: 1.2.2
   flutter_layout_grid: 2.0.4
   pretty_qr_code: 2.0.3
   confetti: 0.7.0
