@@ -51,7 +51,7 @@ dependencies:
   pdf: 3.10.4
 
   # System
-  path_provider: 2.1.0
+  path_provider: 2.1.1
   path: 1.8.3
   window_manager: 0.3.6
   file_selector: 1.0.0
