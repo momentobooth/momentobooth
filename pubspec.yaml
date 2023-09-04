@@ -78,7 +78,7 @@ dev_dependencies:
   mobx_codegen: 2.3.0
 
   # Code quality
-  flutter_lints: 2.0.2
+  flutter_lints: 2.0.3
 
   # Models
   freezed: 2.4.1
