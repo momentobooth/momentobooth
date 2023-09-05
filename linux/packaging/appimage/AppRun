@@ -6,4 +6,4 @@ export LD_LIBRARY_PATH="lib:../lib:${LD_LIBRARY_PATH}"
 export IOLIBS="../iolibs"
 export CAMLIBS="../camlibs"
 
-exec ./ld-linux-x86-64.so.2 ./momento_booth 
+exec ./momento_booth 
