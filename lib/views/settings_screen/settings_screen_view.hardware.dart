@@ -16,7 +16,9 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             onChanged: controller.onLiveViewMethodChanged,
           ),
           Observer(builder: (_) {
-            if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam) return _webcamCard(viewModel, controller);
+            if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam) {
+              return _webcamCard(viewModel, controller);
+            }
             return const SizedBox();
           }),
           _getComboBoxCard(
@@ -90,13 +92,32 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             }
             return const SizedBox();
           }),
-          _getFolderPickerCard(
-            icon: FluentIcons.folder,
-            title: "Capture location",
-            subtitle: "Location to look for captured images",
-            controller: controller.captureLocationController,
-            onChanged: controller.onCaptureLocationChanged,
+          Observer(builder: (_) {
+            if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
+              return _getFolderPickerCard(
+                icon: FluentIcons.folder,
+                title: "Capture location",
+                subtitle: "Location to look for captured images",
+                controller: controller.captureLocationController,
+                onChanged: controller.onCaptureLocationChanged,
+              );
+            }
+            return const SizedBox();
+          }),
+          _getBooleanInput(
+            icon: FluentIcons.hard_drive,
+            title: "Save captures to disk",
+            subtitle: "Location where all captured photos (as retrieved from the capture implementation) will be saved to",
+            value: () => viewModel.saveCapturesToDiskSetting,
+            onChanged: controller.onSaveCapturesToDiskChanged,
           ),
+          _getFolderPickerCard(
+            icon: FluentIcons.hard_drive,
+            title: "Capture storage location",
+            subtitle: "Location where all captured photos (as retrieved from the capture implementation) will be saved to",
+            controller: controller.captureStorageLocationController,
+            onChanged: controller.onCaptureStorageLocationChanged,
+          )
         ],
       ),
       FluentSettingsBlock(

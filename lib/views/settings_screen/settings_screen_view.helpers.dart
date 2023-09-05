@@ -145,7 +145,7 @@ FluentSettingCard _getFolderPickerCard<TValue>({
           child: SizedBox(
             width: 250,
             child: TextBox(
-              enabled: false,
+              readOnly: true,
               controller: controller,
               onChanged: onChanged,
             ),

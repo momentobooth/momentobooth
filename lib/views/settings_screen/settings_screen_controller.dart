@@ -14,6 +14,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _captureLocationController;
   TextEditingController get captureLocationController => _captureLocationController ??= TextEditingController(text: viewModel.captureLocationSetting);
 
+  TextEditingController? _captureStorageLocationController;
+  TextEditingController get captureStorageLocationController => _captureStorageLocationController ??= TextEditingController(text: viewModel.captureStorageLocationSetting);
+
   TextEditingController? _localFolderController;
   TextEditingController get localFolderSettingController => _localFolderController ??= TextEditingController(text: viewModel.localFolderSetting);
 
@@ -157,6 +160,18 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCaptureLocationChanged(String? captureLocation) {
     if (captureLocation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureLocation: captureLocation));
+    }
+  }
+
+  void onSaveCapturesToDiskChanged(bool? saveCapturesToDisk) {
+    if (saveCapturesToDisk != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(saveCapturesToDisk: saveCapturesToDisk));
+    }
+  }
+
+  void onCaptureStorageLocationChanged(String? captureStorageLocation) {
+    if (captureStorageLocation != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(captureStorageLocation: captureStorageLocation));
     }
   }
 
