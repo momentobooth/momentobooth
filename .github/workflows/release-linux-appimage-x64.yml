@@ -51,7 +51,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: cargo-expand
-      
+
     - name: Install flutter_rust_bridge_codegen
       uses: baptiste0928/cargo-install@v1
       with:
@@ -79,10 +79,10 @@ jobs:
         --dart-output lib/rust_bridge/library_api.generated.dart
         --rust-output rust/src/dart_bridge/ffi_exports.rs
         --skip-add-mod-to-lib --no-build-runner
-      
+
     - name: Run Code Generation
       run: dart run build_runner build
-      
+
     - name: Flutter Analyze
       run: flutter analyze
 
@@ -122,8 +122,8 @@ jobs:
     - name: Copy iolibs
       run: mkdir AppDir/iolibs && cp /usr/lib/x86_64-linux-gnu/libgphoto2_port/*/* AppDir/iolibs
 
-    - name: Move ld to correct location
-      run: mv AppDir/lib/ld-linux-x86-64.so.2 AppDir/app/
+    # - name: Move ld to correct location
+    #   run: mv AppDir/lib/ld-linux-x86-64.so.2 AppDir/app/
 
     - name: Copy icon, .desktop and AppRun, set exec permission on AppRun
       run: |
@@ -131,7 +131,7 @@ jobs:
         cp linux/packaging/appimage/AppRun AppDir/
         cp linux/packaging/appimage/icon.svg AppDir/
         chmod +x AppDir/AppRun
-    
+
     - name: Pack as AppImage and rename
       run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
 
