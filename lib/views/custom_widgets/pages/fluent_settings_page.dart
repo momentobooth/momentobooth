@@ -2,7 +2,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
 
-class FluentSettingsPage extends StatefulWidget {
+class FluentSettingsPage extends StatelessWidget {
 
   final String title;
   final List<Widget> blocks;
@@ -14,20 +14,6 @@ class FluentSettingsPage extends StatefulWidget {
   });
 
   @override
-  State<FluentSettingsPage> createState() => _FluentSettingsPageState();
-}
-
-class _FluentSettingsPageState extends State<FluentSettingsPage> {
-
-  late ScrollController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = ScrollController();
-  }
-
-  @override
   Widget build(BuildContext context) {
     FluentThemeData theme = FluentTheme.of(context);
     return Padding(
@@ -37,15 +23,14 @@ class _FluentSettingsPageState extends State<FluentSettingsPage> {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: Text(widget.title, style: theme.typography.title),
+            child: Text(title, style: theme.typography.title),
           ),
           Expanded(
             child: ScrollShadow(
+              size: 16,
               color: theme.micaBackgroundColor.toAccentColor().lightest,
-              controller: _controller,
               child: ListView(
-                controller: _controller,
-                children: widget.blocks,
+                children: blocks,
               ),
             ),
           ),
