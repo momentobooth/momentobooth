@@ -133,7 +133,7 @@ jobs:
         chmod +x AppDir/AppRun
 
     - name: Pack as AppImage and rename
-      run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
+      run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-x86_64.AppImage
 
     - name: Create GitHub Release
       uses: ncipollo/release-action@v1
@@ -142,4 +142,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "MomentoBooth-Linux-x86_64.AppImage"
+        artifacts: "MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-x86_64.AppImage"
