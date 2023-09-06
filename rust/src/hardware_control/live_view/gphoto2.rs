@@ -2,10 +2,9 @@ use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell:
 
 use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error};
 
-use tokio::{sync::Mutex as AsyncMutex};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 
-use crate::{utils::jpeg, dart_bridge::api::RawImage, log_info};
+use crate::{utils::jpeg, dart_bridge::api::RawImage, log_debug};
 
 static CONTEXT: OnceLock<Context> = OnceLock::new();
 
@@ -119,8 +118,7 @@ pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_t
   }
 
   let capture = camera.camera.capture_image().await?;
-  log_info("DFile:".to_string());
-  log_info(capture.folder().to_string());
+  log_debug(format!("Downloading file from camera: {}/{}", capture.folder(), capture.name()));
   
   let file = camera.camera.fs().download(&capture.folder(), &capture.name()).await?;
   let data = file.get_data(get_context()?).await?;
