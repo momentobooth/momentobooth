@@ -104,6 +104,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;
   String get gPhoto2CameraId => SettingsManager.instance.settings.hardware.gPhoto2CameraId;
   GPhoto2SpecialHandling get gPhoto2SpecialHandling => SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling;
+  String get gPhoto2CaptureTargetSetting => SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
   int get captureDelayGPhoto2Setting => SettingsManager.instance.settings.hardware.captureDelayGPhoto2;
   int get captureDelaySonySetting => SettingsManager.instance.settings.hardware.captureDelaySony;
   String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;

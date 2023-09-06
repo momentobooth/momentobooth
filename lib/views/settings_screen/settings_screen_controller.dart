@@ -22,6 +22,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   TextEditingController? _firefoxSendServerUrlController;
   TextEditingController get firefoxSendServerUrlController => _firefoxSendServerUrlController ??= TextEditingController(text: viewModel.firefoxSendServerUrlSetting);
+  
+  TextEditingController? _gPhoto2CaptureTargetController;
+  TextEditingController get gPhoto2CaptureTargetController => _gPhoto2CaptureTargetController ??= TextEditingController(text: viewModel.gPhoto2CaptureTargetSetting);
 
   // Initialization/Deinitialization
 
@@ -109,6 +112,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onGPhoto2SpecialHandlingChanged(GPhoto2SpecialHandling? gPhoto2SpecialHandling) {
     if (gPhoto2SpecialHandling != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2SpecialHandling: gPhoto2SpecialHandling));
+    }
+  }
+
+  void onGPhoto2CaptureTargetChanged(String? gPhoto2CaptureTarget) {
+    if (gPhoto2CaptureTarget != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2CaptureTarget: gPhoto2CaptureTarget));
     }
   }
   

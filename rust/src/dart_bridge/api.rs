@@ -274,12 +274,12 @@ pub fn gphoto2_auto_focus(handle_id: usize) {
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_capture_photo(handle_id: usize) -> Vec<u8> {
+pub fn gphoto2_capture_photo(handle_id: usize, capture_target_value: String) -> Vec<u8> {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
-        gphoto2::capture_photo(camera).await        
+        gphoto2::capture_photo(camera, capture_target_value).await        
     }).expect("Could not get result")
 }
 
