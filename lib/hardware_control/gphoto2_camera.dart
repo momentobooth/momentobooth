@@ -60,7 +60,8 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
 
   @override
   Future<Uint8List> captureAndGetPhoto() async {
-    return await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId);
+    String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
+    return await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
   }
 
   @override

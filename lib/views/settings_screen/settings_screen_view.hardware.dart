@@ -71,6 +71,13 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
             }
             return const SizedBox();
           }),
+          _getTextInput(
+            icon: FluentIcons.s_d_card,
+            title: "Camera capture target",
+            subtitle: "Sets the camera's 'capturetarget'. When unsure, leave empty as it could cause capture issues. Values can be found in the libgphoto2 source code.",
+            controller: controller.gPhoto2CaptureTargetController,
+            onChanged: controller.onGPhoto2CaptureTargetChanged,
+          ),
           Observer(builder: (_) {
             if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
               return _getInput(

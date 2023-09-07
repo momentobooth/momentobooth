@@ -1,9 +1,0 @@
-output: dist/
-releases:
-  - name: dev
-    jobs:
-      # Build and publish for Linux AppImage
-      - name: release-linux-appimage
-        package:
-          platform: linux
-          target: appimage

@@ -1,8 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  plugins:
-    - dart_code_metrics
   exclude:
     - '**/*.g.dart'
     - '**/*.freezed.dart'
@@ -55,7 +53,3 @@ linter:
     - use_string_buffers
     - use_super_parameters
     - use_to_and_as_if_applicable
-
-dart_code_metrics:
-  rules:
-    - prefer-conditional-expressions

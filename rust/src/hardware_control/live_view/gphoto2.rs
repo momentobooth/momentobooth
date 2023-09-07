@@ -1,11 +1,11 @@
 use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell::Cell};
 
-use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget}, Camera, Error};
+use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error};
 
-use tokio::{sync::Mutex as AsyncMutex};
+use tokio::sync::Mutex as AsyncMutex;
 use tokio::task::JoinHandle as AsyncJoinHandle;
 
-use crate::{utils::jpeg, dart_bridge::api::RawImage};
+use crate::{utils::jpeg, dart_bridge::api::RawImage, log_debug};
 
 static CONTEXT: OnceLock<Context> = OnceLock::new();
 
@@ -109,9 +109,17 @@ pub async fn auto_focus(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()
   Ok(())
 }
 
-pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<Vec<u8>> {
+pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_target_value: String) -> Result<Vec<u8>> {
   let camera = camera_ref.lock().await;
+
+  if !capture_target_value.is_empty() {
+    let opcode = camera.camera.config_key::<RadioWidget>("capturetarget").await?;
+    opcode.set_choice(&capture_target_value)?;
+    camera.camera.set_config(&opcode).await?;
+  }
+
   let capture = camera.camera.capture_image().await?;
+  log_debug(format!("Downloading file from camera: {}/{}", capture.folder(), capture.name()));
   
   let file = camera.camera.fs().download(&capture.folder(), &capture.name()).await?;
   let data = file.get_data(get_context()?).await?;
