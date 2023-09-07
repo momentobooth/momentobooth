@@ -55,6 +55,11 @@ jobs:
         components: rustfmt, clippy
         default: true
 
+    - name: Setup Rust cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: "rust -> ../build/windows/x64/Debug/cargo/build"
+
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3
 

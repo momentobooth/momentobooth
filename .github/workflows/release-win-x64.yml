@@ -61,6 +61,11 @@ jobs:
         components: rustfmt, clippy
         default: true
 
+    - name: Setup Rust cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: "rust -> ../build/windows/x64/Debug/cargo/build"
+
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3
 
@@ -77,8 +82,8 @@ jobs:
         version: "1.81.0"
         args: --target x86_64-pc-windows-msvc
 
-    - name: Install flutter_distributor
-      run: dart pub global activate flutter_distributor
+    # - name: Install flutter_distributor
+    #   run: dart pub global activate flutter_distributor
 
     - name: Install Dependencies
       run: flutter packages get
