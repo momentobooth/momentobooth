@@ -61,6 +61,11 @@ jobs:
         components: rustfmt, clippy
         default: true
 
+    - name: Setup Rust cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: "rust -> ../build/windows/x64/Debug/cargo/build"
+
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3
 
@@ -77,8 +82,8 @@ jobs:
         version: "1.81.0"
         args: --target x86_64-pc-windows-msvc
 
-    - name: Install flutter_distributor
-      run: dart pub global activate flutter_distributor
+    # - name: Install flutter_distributor
+    #   run: dart pub global activate flutter_distributor
 
     - name: Install Dependencies
       run: flutter packages get
@@ -110,7 +115,7 @@ jobs:
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
     - name: Build Project
-      run: msys2 -c 'flutter build windows --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
+      run: msys2 -c 'flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
     
     - name: Bundle DLL dependencies of the helper library
       shell: pwsh
