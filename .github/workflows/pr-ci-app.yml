@@ -58,7 +58,7 @@ jobs:
     - name: Setup Rust cache
       uses: Swatinem/rust-cache@v2
       with:
-        workspaces: "rust -> ../build/windows/x64/Debug/cargo/build"
+        workspaces: "rust -> ../build/windows/x64/Release/cargo/build"
 
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3
