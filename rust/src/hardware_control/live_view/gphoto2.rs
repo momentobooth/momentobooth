@@ -2,6 +2,7 @@ use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell:
 
 use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error};
 
+use tokio::sync::Mutex as AsyncMutex;
 use tokio::task::JoinHandle as AsyncJoinHandle;
 
 use crate::{utils::jpeg, dart_bridge::api::RawImage, log_debug};
