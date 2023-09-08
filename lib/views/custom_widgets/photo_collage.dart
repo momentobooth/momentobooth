@@ -230,7 +230,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           l1header
           l1content
         ''',
-      rowSizes: const [auto, auto],
+      rowSizes: [1.fr, 8.fr],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
