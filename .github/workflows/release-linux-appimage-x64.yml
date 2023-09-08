@@ -21,10 +21,10 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install apt packages
-      run: sudo apt update && sudo apt install build-essential git clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev llvm locate libfuse2 libgphoto2-dev
+      run: sudo apt update && sudo apt install build-essential git clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev llvm libfuse2 libgphoto2-dev
 
     - name: Detect Flutter Version
       uses: kuhnroyal/flutter-fvm-config-action@v1
@@ -99,9 +99,6 @@ jobs:
         release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
-
-    - name: Update locate DB
-      run: sudo updatedb
 
     - name: Flutter build
       run: flutter build linux -v --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define=SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
