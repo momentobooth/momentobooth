@@ -18,5 +18,8 @@ class LiveViewStreamSnapshotCapturer with UiLoggy implements PhotoCaptureMethod 
 
     return jpegData;
   }
+  
+  @override
+  Future<void> clearPreviousEvents() async {}
 
 }

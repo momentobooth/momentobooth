@@ -64,6 +64,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
       CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
       CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
     } as PhotoCaptureMethod;
+    capturer.clearPreviousEvents();
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
   }
 

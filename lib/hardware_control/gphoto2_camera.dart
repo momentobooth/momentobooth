@@ -69,4 +69,7 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
 
   Future<void> autoFocus() async => await rustLibraryApi.gphoto2AutoFocus(handleId: handleId);
 
+  @override
+  Future<void> clearPreviousEvents() async => await rustLibraryApi.gphoto2ClearEvents(handleId: handleId);
+
 }
