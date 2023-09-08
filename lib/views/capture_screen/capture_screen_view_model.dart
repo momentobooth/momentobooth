@@ -86,6 +86,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
       CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
     } as PhotoCaptureMethod;
+    capturer.clearPreviousEvents();
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
   }
 

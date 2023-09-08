@@ -6,9 +6,9 @@ use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
 use turborand::rng::Rng;
 
-use tokio::{sync::Mutex as AsyncMutex};
+use tokio::sync::Mutex as AsyncMutex;
 
-use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo, stop_liveview}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug, TOKIO_RUNTIME};
+use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug, TOKIO_RUNTIME};
 
 // ////////////// //
 // Initialization //
@@ -271,6 +271,15 @@ pub fn gphoto2_auto_focus(handle_id: usize) {
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
         gphoto2::auto_focus(camera).await        
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_clear_events(handle_id: usize) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::clear_events(camera).await        
     }).expect("Could not get result")
 }
 

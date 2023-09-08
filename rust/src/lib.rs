@@ -1,7 +1,7 @@
-use std::{sync::{RwLock, OnceLock}};
+use std::sync::{RwLock, OnceLock};
 
 use flutter_rust_bridge::StreamSink;
-use hardware_control::live_view::{nokhwa};
+use hardware_control::live_view::nokhwa;
 use pathsep::{path_separator, join_path};
 use tokio::runtime::{self, Runtime};
 use crate::hardware_control::live_view::gphoto2;

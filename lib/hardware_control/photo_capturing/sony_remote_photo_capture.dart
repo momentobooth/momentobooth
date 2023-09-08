@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 /// This solution exists because gPhoto2 and other possibly better solutions require driver overrides on Windows or
 /// require bundling shared libraries which we do not support at the moment.
 class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
+
   static const String autoItScriptFileName = "sony_remote_capture_photo.au3";
 
   final String directoryPath;
@@ -83,4 +84,8 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
     }
     return localPath;
   }
+
+  @override
+  Future<void> clearPreviousEvents() async {}
+
 }

@@ -1,6 +1,6 @@
-use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell::Cell};
+use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell::Cell, time::{Duration, Instant}};
 
-use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error};
+use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error, camera::CameraEvent};
 
 use tokio::sync::Mutex as AsyncMutex;
 use tokio::task::JoinHandle as AsyncJoinHandle;
@@ -105,6 +105,29 @@ pub async fn auto_focus(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()
       camera.camera.set_config(&opcode).await?;
     },
   }
+
+  Ok(())
+}
+
+pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
+  let camera = camera_ref.lock().await;
+
+  let start = Instant::now();
+  let mut n_events = 0;
+  loop {
+    let event = camera.camera.wait_event(Duration::ZERO).await?;
+    n_events += 1;
+    match event {
+      CameraEvent::NewFile(event) => {
+        log_debug(format!("Cleared file: {:?}", event));
+      },
+      CameraEvent::Timeout => break,
+      _ => {},
+    }
+  }
+
+  let elapsed = start.elapsed();
+  log_debug(format!("Cleared {} events in {}ms", n_events - 1, elapsed.as_millis()));
 
   Ok(())
 }
