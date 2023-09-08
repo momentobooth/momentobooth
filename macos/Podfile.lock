@@ -2,10 +2,6 @@ PODS:
   - file_selector_macos (0.0.1):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
-  - HotKey (0.2.0)
-  - hotkey_manager (0.0.1):
-    - FlutterMacOS
-    - HotKey
   - package_info_plus (0.0.1):
     - FlutterMacOS
   - path_provider_foundation (0.0.1):
@@ -30,7 +26,6 @@ PODS:
 DEPENDENCIES:
   - file_selector_macos (from `Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
-  - hotkey_manager (from `Flutter/ephemeral/.symlinks/plugins/hotkey_manager/macos`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - printing (from `Flutter/ephemeral/.symlinks/plugins/printing/macos`)
@@ -41,7 +36,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - HotKey
     - Sentry
     - SentryPrivate
 
@@ -50,8 +44,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/file_selector_macos/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
-  hotkey_manager:
-    :path: Flutter/ephemeral/.symlinks/plugins/hotkey_manager/macos
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
   path_provider_foundation:
@@ -70,8 +62,6 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   file_selector_macos: 468fb6b81fac7c0e88d71317f3eec34c3b008ff9
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  HotKey: e96d8a2ddbf4591131e2bb3f54e69554d90cdca6
-  hotkey_manager: c32bf0bfe8f934b7bc17ab4ad5c4c142960b023c
   package_info_plus: 02d7a575e80f194102bef286361c6c326e4c29ce
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   printing: 1dd6a1fce2209ec240698e2439a4adbb9b427637
