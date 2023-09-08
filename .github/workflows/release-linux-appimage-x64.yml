@@ -42,12 +42,14 @@ jobs:
       with:
         profile: minimal
         toolchain: stable
-        components: rustfmt, clippy
+        components: clippy
 
     - name: Setup Rust cache
       uses: Swatinem/rust-cache@v2
       with:
-        workspaces: "rust -> ../build/linux/x64/release/cargo/build"
+        workspaces: |
+          rust -> ../build/linux/x64/release/cargo/build
+          rust -> target
 
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3

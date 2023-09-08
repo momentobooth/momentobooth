@@ -45,7 +45,7 @@ jobs:
         target: x86_64-pc-windows-msvc
         profile: minimal
         toolchain: stable-gnu
-        components: rustfmt, clippy
+        components: clippy
         default: true
 
     - name: Install minimal Rust (GNU target)
@@ -54,13 +54,15 @@ jobs:
         target: x86_64-pc-windows-gnu
         profile: minimal
         toolchain: stable-gnu
-        components: rustfmt, clippy
+        components: clippy
         default: true
 
     - name: Setup Rust cache
       uses: Swatinem/rust-cache@v2
       with:
-        workspaces: "rust -> ../build/windows/x64/Release/cargo/build"
+        workspaces: |
+          rust -> ../build/windows/x64/Release/cargo/build
+          rust -> target
 
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.3
