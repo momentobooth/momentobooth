@@ -1,17 +1,13 @@
-name: Release - Linux AppImage x86_64
+name: PR CI App - Linux AppImage x86_64
 
 on:
   pull_request:
     branches: [ main ]
-    types: [ closed ]
-
-# Sets permissions to allow version tag
-permissions:
-  contents: write
+    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
 
 jobs:
   build:
-    if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
+    if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true }}
 
     runs-on: ubuntu-22.04
 
@@ -91,17 +87,8 @@ jobs:
     - name: Flutter Analyze
       run: flutter analyze
 
-    # Extract version from branch name
-    - name: Extract Release version
-      id: extract_release_version
-      shell: bash
-      run: |
-        release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
-        echo "release_version=$release_version" >> $GITHUB_OUTPUT
-        echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
-
     - name: Flutter build
-      run: flutter build linux -v --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define=SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
+      run: flutter build linux -v --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }}
 
     - name: Create AppDir and copy Flutter bundle
       run: mkdir -p AppDir/app && cp -r build/linux/x64/release/bundle/* AppDir/app/
@@ -135,13 +122,10 @@ jobs:
         chmod +x AppDir/AppRun
 
     - name: Pack as AppImage and rename
-      run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-x86_64.AppImage
+      run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
 
-    - name: Create GitHub Release
-      uses: ncipollo/release-action@v1
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
       with:
-        allowUpdates: true
-        prerelease: true
-        replacesArtifacts: true
-        tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-x86_64.AppImage"
+        name: Linux x86_64 AppImage
+        path: MomentoBooth-Linux-x86_64.AppImage
