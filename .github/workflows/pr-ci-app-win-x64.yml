@@ -1,4 +1,4 @@
-name: PR CI App
+name: PR CI App - Windows x64
 
 on:
   pull_request:
@@ -97,7 +97,7 @@ jobs:
       run: flutter analyze
 
     - name: Build Project
-      run: msys2 -c 'flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
+      run: msys2 -c 'flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
       
     - name: Bundle dependencies of the helper library
       shell: pwsh
@@ -140,3 +140,16 @@ jobs:
             }
           }
         }
+
+    - name: Archive Release
+      uses: thedoctor0/zip-release@0.7.1
+      with:
+        type: zip
+        directory: build/windows/runner/Release
+        filename: MomentoBooth-Win-x64.zip
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Windows x64
+        path: build/windows/runner/Release/MomentoBooth-Win-x64.zip
