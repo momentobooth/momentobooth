@@ -12,12 +12,12 @@ import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
-import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
@@ -49,6 +49,9 @@ void main() async {
   // Logging
   Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 
+  // Helper library initialization
+  HelperLibraryInitializationManager.instance.initialize();
+
   // Settings
   await SettingsManager.instance.load();
 
@@ -60,9 +63,6 @@ void main() async {
 
   // Live view manager init
   LiveViewManager.instance.initialize();
-
-  // Native library init
-  await init();
 
   await SentryFlutter.init(
     (options) {
