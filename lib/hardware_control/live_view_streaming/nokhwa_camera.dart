@@ -1,5 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
+import 'package:momento_booth/exceptions/nokhwa_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
+import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
@@ -14,6 +16,7 @@ class NokhwaCamera extends LiveViewSource {
   // //////////// //
 
   static Future<List<NokhwaCamera>> getAllCameras() async {
+    await _ensureLibraryInitialized();
     List<NokhwaCameraInfo> cameras = await rustLibraryApi.nokhwaGetCameras();
     return cameras.map((camera) => NokhwaCamera(
       id: camera.friendlyName,
@@ -32,6 +35,7 @@ class NokhwaCamera extends LiveViewSource {
 
   @override
   Future<void> openStream({required int texturePtr}) async {
+    await _ensureLibraryInitialized();
     handleId = await rustLibraryApi.nokhwaOpenCamera(friendlyName: friendlyName, operations: [
       const ImageOperation.cropToAspectRatio(3 / 2),
     ], texturePtr: texturePtr);
@@ -45,5 +49,11 @@ class NokhwaCamera extends LiveViewSource {
 
   @override
   Future<void> dispose() => rustLibraryApi.nokhwaCloseCamera(handleId: handleId);
+
+  static Future<void> _ensureLibraryInitialized() async {
+    if (!await HelperLibraryInitializationManager.instance.nokhwaInitializationResult) {
+      throw NokhwaException('Nokhwa implementation cannot be used due to initialization failure.');
+    }
+  }
 
 }
