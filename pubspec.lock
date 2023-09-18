@@ -349,10 +349,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: "0ec5ae618b42e6b9d0449d7519dec28c201809bc1955c5effb5a211dd77fa30e"
+      sha256: b015021e7b19107ebf06277531d48fa40e450a500bad751a330ab5f94c815650
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.3"
+    version: "4.7.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -404,10 +404,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: a2ff791f96ed03be0d4a8d249130688371ab3612ef95efeddef23600b904a1ef
+      sha256: "85b6f4ed7b5caed631814b40bd87e066abe613172047504dc28a7372c234e9ea"
       url: "https://pub.dev"
     source: hosted
-    version: "1.81.0"
+    version: "1.82.0"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
@@ -784,10 +784,10 @@ packages:
     dependency: "direct main"
     description:
       name: pretty_qr_code
-      sha256: ea7ccb3069e0f5b89b441449b9ec10f4148ddda7a4bef89a130d2ebdaa0be647
+      sha256: "799fa8d5c605028302cb7debbf3f180ce56678c4927fb2ecc4b174a3bee526d6"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "3.0.0"
   printing:
     dependency: "direct main"
     description:
@@ -888,18 +888,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "39c23342fc96105da449914f7774139a17a0ca8a4e70d9ad5200171f7e47d6ba"
+      sha256: "830667eadc0398fea3a3424ed1b74568e2db603a42758d0922e2f2974ce55a60"
       url: "https://pub.dev"
     source: hosted
-    version: "7.9.0"
+    version: "7.10.1"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: ff68ab31918690da004a42e20204242a3ad9ad57da7e2712da8487060ac9767f
+      sha256: "6730f41b304c6fb0fa590dacccaf73ba11082fc64b274cfe8a79776f2b95309c"
       url: "https://pub.dev"
     source: hosted
-    version: "7.9.0"
+    version: "7.10.1"
   shelf:
     dependency: transitive
     description:
