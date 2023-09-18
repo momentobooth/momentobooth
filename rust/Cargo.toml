@@ -10,10 +10,10 @@ crate-type = ["lib", "staticlib", "cdylib"]
 [dependencies]
 derive_more = "0.99.17"
 atom_table = "1.1.0"
-flutter_rust_bridge = "1.81.0"
+flutter_rust_bridge = "1.82.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.106"
-chrono = "0.4.28"
+serde_json = "1.0.107"
+chrono = "0.4.31"
 image = "0.24.7"
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.3.17"
