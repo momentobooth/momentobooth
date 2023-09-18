@@ -5,7 +5,7 @@ publish_to: "none"
 version: 0.5.3+71
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.1.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -18,13 +18,13 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.7.3
+  fluent_ui: 4.7.4
   go_router: 10.1.2
   flutter_svg: 2.0.7
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.3
   flutter_layout_grid: 2.0.5
-  pretty_qr_code: 2.0.3
+  pretty_qr_code: 3.0.0
   confetti: 0.7.0
   wave: 0.2.2
   texture_rgba_renderer:
@@ -44,7 +44,7 @@ dependencies:
 
   # Interop
   ffi: 2.1.0
-  flutter_rust_bridge: 1.81.0
+  flutter_rust_bridge: 1.82.0
 
   # Printing
   printing: 5.11.0
@@ -59,7 +59,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.9.0
+  sentry_flutter: 7.10.1
 
   # Misc
   meta: 1.9.1
