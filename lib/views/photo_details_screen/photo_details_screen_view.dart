@@ -4,12 +4,12 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/custom_widgets/qr_code.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/delayed_widget.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/slider_widget.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_controller.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
 
 class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel, PhotoDetailsScreenController> {
 
@@ -157,11 +157,9 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
             border: theme.captureCounterContainerBorder,
             boxShadow: [theme.captureCounterContainerShadow],
           ),
-          child: PrettyQr(
+          child: QrCode(
             size: 500,
             data: viewModel.qrUrl,
-            errorCorrectLevel: QrErrorCorrectLevel.L,
-            roundEdges: true,
           ),
         ),
       );
