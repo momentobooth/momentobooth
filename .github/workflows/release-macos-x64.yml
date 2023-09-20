@@ -64,7 +64,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: flutter_rust_bridge_codegen
-        version: "1.82.0"
+        version: "1.82.1"
 
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor

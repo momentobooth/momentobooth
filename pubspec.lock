@@ -404,10 +404,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "85b6f4ed7b5caed631814b40bd87e066abe613172047504dc28a7372c234e9ea"
+      sha256: e12415c3bce49bcbc3fed383f0ea41ad7d828f6cf0eccba0588ffa5a812fe522
       url: "https://pub.dev"
     source: hosted
-    version: "1.82.0"
+    version: "1.82.1"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
