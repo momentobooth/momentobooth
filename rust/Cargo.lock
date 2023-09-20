@@ -861,9 +861,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "1.82.0"
+version = "1.82.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a23db02978984f7832254240b32fd92aa7ac085c159ad5684a8f8274ba636cb4"
+checksum = "d5b3f423054f2fbc74e3dcef394ef3fd7a4f8309265a6b9a6ccf9c0fb07bb14b"
 dependencies = [
  "allo-isolate",
  "anyhow",
@@ -887,9 +887,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge_macros"
-version = "1.82.0"
+version = "1.82.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "90f907b6c1555d3b0d99ebc81641d4703cc6695b1a2b099b61485bf8b18a6bc6"
+checksum = "0ef4736aac920ca50be2c7747a46494d3740ca88bc49a6654b031d6f396282f3"
 
 [[package]]
 name = "fnv"
@@ -1128,9 +1128,9 @@ checksum = "2c6201b9ff9fd90a5a3bac2e56a830d0caa509576f0e503818ee82c181b3437a"
 
 [[package]]
 name = "hermit-abi"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "443144c8cdadd93ebf52ddb4056d257f5b52c04d3c804e657d19eb73fc33668b"
+checksum = "d77f7ec81a6d05a3abb01ab6eb7590f6083d08449fe5a1c8b1e620283546ccb7"
 
 [[package]]
 name = "hkdf"
