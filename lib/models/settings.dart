@@ -30,6 +30,7 @@ class Settings with _$Settings implements TomlEncodableValue {
     @Default(HardwareSettings()) HardwareSettings hardware,
     @Default(OutputSettings()) OutputSettings output,
     @Default(UiSettings()) UiSettings ui,
+    @Default(IntegrationSettings()) IntegrationSettings integration,
     //@Default(DebugSettings()) DebugSettings debug,
   }) = _Settings;
 
@@ -167,6 +168,30 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
   factory UiSettings.withDefaults() => UiSettings.fromJson({});
 
   factory UiSettings.fromJson(Map<String, Object?> json) => _$UiSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+}
+
+// //////////////////// //
+// Integration Settings //
+// //////////////////// //
+
+@Freezed(fromJson: true, toJson: true)
+class IntegrationSettings with _$IntegrationSettings implements TomlEncodableValue {
+  const IntegrationSettings._();
+
+  const factory IntegrationSettings({
+    @Default(false) bool mqttEnable,
+    @Default("mqtt://localhost") mqttAddress,
+    @Default(true) bool mqttVerifyCertificate,
+    @Default("") String mqttUsername,
+    @Default("") String mqttPassword,
+  }) = _IntegrationSettings;
+
+  factory IntegrationSettings.withDefaults() => IntegrationSettings.fromJson({});
+
+  factory IntegrationSettings.fromJson(Map<String, Object?> json) => _$IntegrationSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();

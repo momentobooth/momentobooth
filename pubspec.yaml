@@ -67,6 +67,7 @@ dependencies:
   synchronized: 3.1.0
   collection: 1.17.2
   win32: 5.0.8
+  mqtt5_client: 4.0.0
 
 dev_dependencies:
   flutter_test:
