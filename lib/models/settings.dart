@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -30,7 +31,7 @@ class Settings with _$Settings implements TomlEncodableValue {
     @Default(HardwareSettings()) HardwareSettings hardware,
     @Default(OutputSettings()) OutputSettings output,
     @Default(UiSettings()) UiSettings ui,
-    @Default(IntegrationSettings()) IntegrationSettings integration,
+    @Default(MqttIntegrationSettings()) MqttIntegrationSettings mqttIntegration,
     //@Default(DebugSettings()) DebugSettings debug,
   }) = _Settings;
 
@@ -178,20 +179,33 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
 // //////////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class IntegrationSettings with _$IntegrationSettings implements TomlEncodableValue {
-  const IntegrationSettings._();
+class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEncodableValue {
+  const MqttIntegrationSettings._();
 
-  const factory IntegrationSettings({
-    @Default(false) bool mqttEnable,
-    @Default("mqtt://localhost") mqttAddress,
-    @Default(true) bool mqttVerifyCertificate,
-    @Default("") String mqttUsername,
-    @Default("") String mqttPassword,
-  }) = _IntegrationSettings;
+  const factory MqttIntegrationSettings({
+    @Default(false) bool enable,
+    @Default("localhost") host,
+    @Default(1883) int port,
+    @Default(true) bool secure,
+    @Default(true) bool verifyCertificate,
+    @Default(false) bool useWebSocket,
+    @Default("") String username,
+    @Default("") String password,
+    @Default("") String clientId,
+    @Default("momento_booth") String rootTopic,
+  }) = _MqttIntegrationSettings;
 
-  factory IntegrationSettings.withDefaults() => IntegrationSettings.fromJson({});
+  factory MqttIntegrationSettings.withDefaults() => MqttIntegrationSettings.fromJson({});
 
-  factory IntegrationSettings.fromJson(Map<String, Object?> json) => _$IntegrationSettingsFromJson(json);
+  factory MqttIntegrationSettings.fromJson(Map<String, Object?> json) {
+    if (!json.containsKey('clientId')) {
+      var possibleChars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      var random = Random();
+      json['clientId'] = 'momento-booth-photobooth-${List.generate(6, (index) => possibleChars[random.nextInt(possibleChars.length)]).join()}';
+    }
+
+    return _$MqttIntegrationSettingsFromJson(json);
+  }
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
