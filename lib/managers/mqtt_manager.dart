@@ -27,52 +27,65 @@ abstract class _MqttManagerBase with Store {
 
   MqttIntegrationSettings? _currentSettings;
   MqttServerClient? _client;
+  Map<String, dynamic>? _latestPublishedStats;
 
   void initialize() {
+    // Respond to settings changes
     autorun((_) {
-      // To make sure mobx detects that we are responding to changes to this property
       MqttIntegrationSettings newMqttSettings = SettingsManager.instance.settings.mqttIntegration;
       _updateMqttClientInstanceLock.synchronized(() async {
         await _recreateClient(newMqttSettings);
       });
     });
 
+    // Publish stats
     autorun((_) {
       Stats stats = StatsManager.instance.stats;
-      if (_client != null) {
-        for (MapEntry<String, dynamic> statsEntry in stats.toJson().entries) {
-          _client!.publishMessage(
-            "momento-booth/stats/${statsEntry.key}",
-            MqttQos.atLeastOnce,
-            MqttPayloadBuilder().addString(statsEntry.value.toString()).payload!,
-          );
-        }
-      }
+      if (_client != null) _publishStats(stats);
     });
+  }
+
+  void _publishStats(Stats stats) {
+    for (MapEntry<String, dynamic> statsEntry in stats.toJson().entries) {
+      if (_latestPublishedStats != null && _latestPublishedStats![statsEntry.key] == statsEntry.value) continue;
+      _client!.publishMessage(
+        "momento-booth/stats/${statsEntry.key}",
+        MqttQos.atMostOnce,
+        (MqttPayloadBuilder()..addString(statsEntry.value.toString())).payload!,
+        retain: true,
+      );
+    }
+    _latestPublishedStats = stats.toJson();
   }
 
   Future<void> _recreateClient(MqttIntegrationSettings newSettings) async {
     if (newSettings == _currentSettings) return;
 
-    MqttServerClient client = MqttServerClient.withPort(
-      newSettings.host,
-      newSettings.clientId,
-      newSettings.port,
-    )
-      ..useWebSocket = newSettings.useWebSocket
-      ..autoReconnect = true;
+    _client?.disconnect();
+    if (newSettings.enable) {
+      MqttServerClient client = MqttServerClient.withPort(
+        newSettings.host,
+        newSettings.clientId,
+        newSettings.port,
+      )
+        ..useWebSocket = newSettings.useWebSocket
+        ..autoReconnect = true;
 
-    if (!newSettings.verifyCertificate) {
-      client.onBadCertificate = (certificate) => true;
+      if (!newSettings.verifyCertificate) {
+        client.onBadCertificate = (certificate) => true;
+      }
+
+      MqttConnectionStatus? result = await client.connect(newSettings.username, newSettings.password);
+      if (result?.state != MqttConnectionState.connected) {
+        loggy.logError("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
+        return;
+      }
+
+      _client = client;
+    } else {
+      _client = null;
     }
 
-    MqttConnectionStatus? result = await client.connect(newSettings.username, newSettings.password);
-    if (result?.state != MqttConnectionState.connected) {
-      loggy.logError("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
-      return;
-    }
-
-    _client = client;
     _currentSettings = newSettings;
   }
 

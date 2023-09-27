@@ -48,6 +48,9 @@ class Settings with _$Settings implements TomlEncodableValue {
     if (!json.containsKey("output")) {
       json["output"] = OutputSettings.withDefaults().toJson();
     }
+    if (!json.containsKey("mqttIntegration")) {
+      json["mqttIntegration"] = MqttIntegrationSettings.withDefaults().toJson();
+    }
     // if (!json.containsKey("debug")) {
     //   json["debug"] = DebugSettings.withDefaults().toJson();
     // }
