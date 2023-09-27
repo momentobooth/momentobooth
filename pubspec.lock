@@ -117,10 +117,10 @@ packages:
     dependency: transitive
     description:
       name: build_resolvers
-      sha256: d912852cce27c9e80a93603db721c267716894462e7033165178b91138587972
+      sha256: "0713a05b0386bd97f9e63e78108805a4feca5898a4b821d6610857f10c91e975"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.4.0"
   build_runner:
     dependency: "direct dev"
     description:
@@ -133,10 +133,10 @@ packages:
     dependency: transitive
     description:
       name: build_runner_core
-      sha256: "6d6ee4276b1c5f34f21fdf39425202712d2be82019983d52f351c94aafbc2c41"
+      sha256: c9e32d21dd6626b5c163d48b037ce906bbe428bc23ab77bcd77bb21e593b6185
       url: "https://pub.dev"
     source: hosted
-    version: "7.2.10"
+    version: "7.2.11"
   built_collection:
     dependency: transitive
     description:
@@ -446,10 +446,10 @@ packages:
     dependency: "direct dev"
     description:
       name: freezed
-      sha256: "83462cfc33dc9680533a7f3a4a6ab60aa94f287db5f4ee6511248c22833c497f"
+      sha256: be7826ed5d87e98c924a839542674fc14edbcb3e4fc0adbc058d680f2b241837
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.3"
   freezed_annotation:
     dependency: "direct main"
     description:
@@ -483,10 +483,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "24d89757552a78615d6e65c7bc206740f94ca95a12ecf189d883394d34c9d9bd"
+      sha256: "4b58412b92bd7d588f904425ef6d41a017da1f097e5e9428d2c27d275777e16e"
       url: "https://pub.dev"
     source: hosted
-    version: "11.0.0"
+    version: "11.1.1"
   graphs:
     dependency: transitive
     description:
@@ -523,10 +523,10 @@ packages:
     dependency: "direct main"
     description:
       name: image
-      sha256: "93d1141eb65fe62414d5492de96ca2bff97eba0ca9218a89ad407a6f201fcadf"
+      sha256: "028f61960d56f26414eb616b48b04eb37d700cbe477b7fb09bf1d7ce57fd9271"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.2"
+    version: "4.1.3"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -1182,10 +1182,10 @@ packages:
     dependency: "direct main"
     description:
       name: win32
-      sha256: c97defd418eef4ec88c0d1652cdce84b9f7b63dd7198e266d06ac1710d527067
+      sha256: "350a11abd2d1d97e0cc7a28a81b781c08002aa2864d9e3f192ca0ffa18b06ed3"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.8"
+    version: "5.0.9"
   window_manager:
     dependency: "direct main"
     description:
