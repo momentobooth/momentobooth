@@ -19,6 +19,7 @@ part 'settings_screen_view.output.dart';
 part 'settings_screen_view.debug.dart';
 part 'settings_screen_view.templating.dart';
 part 'settings_screen_view.ui.dart';
+part 'settings_screen_view.mqtt_integration.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
 
@@ -62,6 +63,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: const Icon(FluentIcons.design),
                 title: const Text("Templating"),
                 body: Builder(builder: (_) => _getTemplatingSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.automate_flow),
+                title: const Text("MQTT integration"),
+                body: Builder(builder: (_) => _getMqttIntegrationSettings(viewModel, controller)),
               ),
             ],
             footerItems: [

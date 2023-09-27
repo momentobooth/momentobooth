@@ -184,9 +184,9 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
 
   const factory MqttIntegrationSettings({
     @Default(false) bool enable,
-    @Default("localhost") host,
+    @Default("localhost") String host,
     @Default(1883) int port,
-    @Default(true) bool secure,
+    @Default(false) bool secure,
     @Default(true) bool verifyCertificate,
     @Default(false) bool useWebSocket,
     @Default("") String username,

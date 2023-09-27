@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/stats.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:synchronized/synchronized.dart';
@@ -27,19 +29,29 @@ abstract class _MqttManagerBase with Store {
   MqttServerClient? _client;
 
   void initialize() {
-    _recreateClient();
-
     autorun((_) {
       // To make sure mobx detects that we are responding to changes to this property
-      SettingsManager.instance.settings.mqttIntegration;
+      MqttIntegrationSettings newMqttSettings = SettingsManager.instance.settings.mqttIntegration;
       _updateMqttClientInstanceLock.synchronized(() async {
-        await _recreateClient();
+        await _recreateClient(newMqttSettings);
       });
+    });
+
+    autorun((_) {
+      Stats stats = StatsManager.instance.stats;
+      if (_client != null) {
+        for (MapEntry<String, dynamic> statsEntry in stats.toJson().entries) {
+          _client!.publishMessage(
+            "momento-booth/stats/${statsEntry.key}",
+            MqttQos.atLeastOnce,
+            MqttPayloadBuilder().addString(statsEntry.value.toString()).payload!,
+          );
+        }
+      }
     });
   }
 
-  Future<void> _recreateClient() async {
-    MqttIntegrationSettings newSettings = SettingsManager.instance.settings.mqttIntegration;
+  Future<void> _recreateClient(MqttIntegrationSettings newSettings) async {
     if (newSettings == _currentSettings) return;
 
     MqttServerClient client = MqttServerClient.withPort(

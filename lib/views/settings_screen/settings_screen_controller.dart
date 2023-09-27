@@ -26,6 +26,21 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _gPhoto2CaptureTargetController;
   TextEditingController get gPhoto2CaptureTargetController => _gPhoto2CaptureTargetController ??= TextEditingController(text: viewModel.gPhoto2CaptureTargetSetting);
 
+  TextEditingController? _mqttIntegrationHostController;
+  TextEditingController get mqttIntegrationHostController => _mqttIntegrationHostController ??= TextEditingController(text: viewModel.mqttIntegrationHostSetting);
+
+  TextEditingController? _mqttIntegrationUsernameController;
+  TextEditingController get mqttIntegrationUsernameController => _mqttIntegrationUsernameController ??= TextEditingController(text: viewModel.mqttIntegrationUsernameSetting);
+
+  TextEditingController? _mqttIntegrationPasswordController;
+  TextEditingController get mqttIntegrationPasswordController => _mqttIntegrationPasswordController ??= TextEditingController(text: viewModel.mqttIntegrationPasswordSetting);
+
+  TextEditingController? _mqttIntegratonClientIdController;
+  TextEditingController get mqttIntegrationClientIdController => _mqttIntegratonClientIdController ??= TextEditingController(text: viewModel.mqttIntegrationClientIdSetting);
+
+  TextEditingController? _mqttIntegrationRootTopicController;
+  TextEditingController get mqttIntegrationRootTopicController => _mqttIntegrationRootTopicController ??= TextEditingController(text: viewModel.mqttIntegrationRootTopicSetting);
+
   // Initialization/Deinitialization
 
   SettingsScreenController({
@@ -262,6 +277,66 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onLiveViewFilterQualityChanged(FilterQuality? filterQuality) {
     if (filterQuality != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(liveViewFilterQuality: filterQuality));
+    }
+  }
+
+  void onMqttIntegrationEnableChanged(bool? enable) {
+    if (enable != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(enable: enable));
+    }
+  }
+
+  void onMqttIntegrationHostChanged(String? host) {
+    if (host != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(host: host));
+    }
+  }
+
+  void onMqttIntegrationPortChanged(int? port) {
+    if (port != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(port: port));
+    }
+  }
+
+  void onMqttIntegrationSecureChanged(bool? secure) {
+    if (secure != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(secure: secure));
+    }
+  }
+
+  void onMqttIntegrationVerifyCertificateChanged(bool? verifyCertificate) {
+    if (verifyCertificate != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(verifyCertificate: verifyCertificate));
+    }
+  }
+
+  void onMqttIntegrationUseWebSocketChanged(bool? useWebSocket) {
+    if (useWebSocket != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(useWebSocket: useWebSocket));
+    }
+  }
+
+  void onMqttIntegrationUsernameChanged(String? username) {
+    if (username != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(username: username));
+    }
+  }
+
+  void onMqttIntegrationPasswordChanged(String? password) {
+    if (password != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(password: password));
+    }
+  }
+
+  void onMqttIntegrationClientIdChanged(String? clientId) {
+    if (clientId != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(clientId: clientId));
+    }
+  }
+
+  void onMqttIntegrationRootTopicChanged(String? rootTopic) {
+    if (rootTopic != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(rootTopic: rootTopic));
     }
   }
 
