@@ -39,7 +39,6 @@ import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'main.routes.dart';
-part 'main.shortcuts.dart';
 
 void main() async {
   _ensureGPhoto2EnvironmentVariables();
@@ -189,16 +188,19 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
         locale: SettingsManager.instance.settings.ui.language.toLocale(),
         builder: (context, child) {
           // This stack allows us to put the Settings screen on top
-          return _AppShortcuts(
-            onNavigateToHome: () => _router.go(StartScreen.defaultRoute),
-            // ignore: unnecessary_lambdas
-            onRestoreLiveView: LiveViewManager.instance.restoreLiveView,
-            onToggleSettingsOverlay: () {
-              setState(() => _settingsOpen = !_settingsOpen);
-              loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}");
+          bool control = !Platform.isMacOS, meta = Platform.isMacOS;
+          return CallbackShortcuts(
+            bindings: {
+              SingleActivator(LogicalKeyboardKey.keyH, control: control, meta: meta): () => _router.go(StartScreen.defaultRoute),
+              SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): LiveViewManager.instance.restoreLiveView,
+              SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () {
+                setState(() => _settingsOpen = !_settingsOpen);
+                loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}"); 
+              },
+              SingleActivator(LogicalKeyboardKey.keyM, control: control, meta: meta): _toggleManualCollageScreen,
+              SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): WindowManager.instance.toggleFullscreen,
+              const SingleActivator(LogicalKeyboardKey.enter, alt: true): WindowManager.instance.toggleFullscreen,
             },
-            onOpenManualCollageScreen: _toggleManualCollageScreen,
-            onToggleFullScreen: WindowManager.instance.toggleFullscreen,
             child: LiveViewBackground(
               child: Center(
                 child: Stack(
