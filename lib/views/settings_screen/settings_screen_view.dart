@@ -7,6 +7,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
+import 'package:momento_booth/views/custom_widgets/indicators/connection_state_indicator.dart';
 import 'package:momento_booth/views/custom_widgets/pages/fluent_settings_page.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';

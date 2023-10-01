@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
@@ -29,6 +30,9 @@ abstract class _MqttManagerBase with Store {
   MqttIntegrationSettings? _currentSettings;
   MqttServerClient? _client;
   Map<String, dynamic>? _latestPublishedStats;
+
+  @readonly
+  ConnectionState _connectionState = ConnectionState.disconnected;
 
   void initialize() {
     // Respond to settings changes
@@ -64,8 +68,10 @@ abstract class _MqttManagerBase with Store {
 
     _client?.disconnect();
     _client = null;
+    _connectionState = ConnectionState.disconnected;
 
     if (newSettings.enable) {
+      _connectionState = ConnectionState.connecting;
       MqttServerClient client = MqttServerClient.withPort(
         newSettings.host,
         newSettings.clientId,
@@ -87,8 +93,16 @@ abstract class _MqttManagerBase with Store {
         loggy.logInfo("Connected to MQTT server");
         _client = client
           ..onDisconnected = (() => loggy.logInfo("Disconnected from MQTT server"))
-          ..onAutoReconnect = (() => loggy.logInfo("Reconnecting to MQTT server"))
-          ..onAutoReconnected = (() => loggy.logInfo("Reconnected to MQTT server"));
+          ..onAutoReconnect = (() {
+            _connectionState = ConnectionState.connecting;
+            loggy.logInfo("Reconnecting to MQTT server");
+          })
+          ..onAutoReconnected = (() {
+            _connectionState = ConnectionState.connected;
+            loggy.logInfo("Reconnected to MQTT server");
+          });
+
+        _connectionState = ConnectionState.connected;
       } catch (e) {
         loggy.logError("Failed to connect to MQTT server: $e");
       }

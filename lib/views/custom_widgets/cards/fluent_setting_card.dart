@@ -6,6 +6,7 @@ class FluentSettingCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final Widget child;
+  final Widget? prefixWidget;
 
   const FluentSettingCard({
     super.key,
@@ -13,6 +14,7 @@ class FluentSettingCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.child,
+    this.prefixWidget,
   });
 
   @override
@@ -35,6 +37,9 @@ class FluentSettingCard extends StatelessWidget {
               ],
             ),
           ),
+          if (prefixWidget != null)
+            const SizedBox(width: 16),
+          if (prefixWidget != null) prefixWidget!,
           const SizedBox(width: 16),
           child,
         ],

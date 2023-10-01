@@ -10,6 +10,7 @@ Widget _getMqttIntegrationSettings(SettingsScreenViewModel viewModel, SettingsSc
         subtitle: "If enabled, the application will publish MQTT messages to the specified broker and will subscribe for commands.\nMore info on the possibilities of MQTT can be found in the documentation.",
         value: () => viewModel.mqttIntegrationEnableSetting,
         onChanged: controller.onMqttIntegrationEnableChanged,
+        prefixWidget: const MqttConnectionStateIndicator(),
       ),
       _getTextInput(
         icon: FluentIcons.server,

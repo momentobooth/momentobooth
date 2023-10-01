@@ -101,11 +101,13 @@ FluentSettingCard _getBooleanInput({
   required String subtitle,
   required GetValueCallback<bool> value,
   required ValueChanged<bool> onChanged,
+  Widget? prefixWidget,
 }) {
   return FluentSettingCard(
     icon: icon,
     title: title,
     subtitle: subtitle,
+    prefixWidget: prefixWidget,
     child: Observer(builder: (_) {
       return ToggleSwitch(
         checked: value(),
