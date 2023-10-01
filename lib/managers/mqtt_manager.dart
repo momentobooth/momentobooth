@@ -86,6 +86,7 @@ abstract class _MqttManagerBase with Store {
 
         loggy.logInfo("Connected to MQTT server");
         _client = client
+          ..onDisconnected = (() => loggy.logInfo("Disconnected from MQTT server"))
           ..onAutoReconnect = (() => loggy.logInfo("Reconnecting to MQTT server"))
           ..onAutoReconnected = (() => loggy.logInfo("Reconnected to MQTT server"));
       } catch (e) {
