@@ -19,7 +19,7 @@ class MqttConnectionStateIndicator extends StatelessWidget {
             height: 6,
             decoration: BoxDecoration(
                 color: manager.connectionState == ConnectionState.connected
-                    ? Colors.green
+                    ? Colors.lightGreen
                     : manager.connectionState == ConnectionState.connecting
                         ? Colors.orange
                         : Colors.red,
