@@ -288,55 +288,55 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onMqttIntegrationHostChanged(String? host) {
     if (host != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(host: host));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(host: host, enable: false));
     }
   }
 
   void onMqttIntegrationPortChanged(int? port) {
     if (port != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(port: port));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(port: port, enable: false));
     }
   }
 
   void onMqttIntegrationSecureChanged(bool? secure) {
     if (secure != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(secure: secure));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(secure: secure, enable: false));
     }
   }
 
   void onMqttIntegrationVerifyCertificateChanged(bool? verifyCertificate) {
     if (verifyCertificate != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(verifyCertificate: verifyCertificate));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(verifyCertificate: verifyCertificate, enable: false));
     }
   }
 
   void onMqttIntegrationUseWebSocketChanged(bool? useWebSocket) {
     if (useWebSocket != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(useWebSocket: useWebSocket));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(useWebSocket: useWebSocket, enable: false));
     }
   }
 
   void onMqttIntegrationUsernameChanged(String? username) {
     if (username != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(username: username));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(username: username, enable: false));
     }
   }
 
   void onMqttIntegrationPasswordChanged(String? password) {
     if (password != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(password: password));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(password: password, enable: false));
     }
   }
 
   void onMqttIntegrationClientIdChanged(String? clientId) {
     if (clientId != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(clientId: clientId));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(clientId: clientId, enable: false));
     }
   }
 
   void onMqttIntegrationRootTopicChanged(String? rootTopic) {
     if (rootTopic != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(rootTopic: rootTopic));
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(rootTopic: rootTopic, enable: false));
     }
   }
 

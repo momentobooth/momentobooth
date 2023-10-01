@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/exceptions/mqtt_exception.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -62,6 +63,8 @@ abstract class _MqttManagerBase with Store {
     if (newSettings == _currentSettings) return;
 
     _client?.disconnect();
+    _client = null;
+
     if (newSettings.enable) {
       MqttServerClient client = MqttServerClient.withPort(
         newSettings.host,
@@ -75,15 +78,19 @@ abstract class _MqttManagerBase with Store {
         client.onBadCertificate = (certificate) => true;
       }
 
-      MqttConnectionStatus? result = await client.connect(newSettings.username, newSettings.password);
-      if (result?.state != MqttConnectionState.connected) {
-        loggy.logError("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
-        return;
-      }
+      try {
+        MqttConnectionStatus? result = await client.connect(newSettings.username, newSettings.password);
+        if (result?.state != MqttConnectionState.connected) {
+          throw MqttException("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
+        }
 
-      _client = client;
-    } else {
-      _client = null;
+        loggy.logInfo("Connected to MQTT server");
+        _client = client
+          ..onAutoReconnect = (() => loggy.logInfo("Reconnecting to MQTT server"))
+          ..onAutoReconnected = (() => loggy.logInfo("Reconnected to MQTT server"));
+      } catch (e) {
+        loggy.logError("Failed to connect to MQTT server: $e");
+      }
     }
 
     _currentSettings = newSettings;
