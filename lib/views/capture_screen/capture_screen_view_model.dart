@@ -8,9 +8,11 @@ import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/capture_state.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
@@ -88,6 +90,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     } as PhotoCaptureMethod;
     capturer.clearPreviousEvents();
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
+    MqttManager.instance.publishCaptureState(CaptureState.countdown);
   }
 
   String get outputFolder => SettingsManager.instance.settings.output.localFolder;
@@ -104,6 +107,8 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   }
 
   Future<void> captureAndGetPhoto() async {
+    MqttManager.instance.publishCaptureState(CaptureState.capturing);
+
     try {
       final image = await capturer.captureAndGetPhoto();
       StatsManager.instance.addCapturedPhoto();
@@ -121,6 +126,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     } finally {
       captureComplete = true;
       navigateAfterCapture();
+      MqttManager.instance.publishCaptureState(CaptureState.idle);
     }
   }
 

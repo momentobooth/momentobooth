@@ -195,7 +195,7 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
     @Default("") String username,
     @Default("") String password,
     @Default("") String clientId,
-    @Default("momento_booth") String rootTopic,
+    @Default("momento-booth") String rootTopic,
   }) = _MqttIntegrationSettings;
 
   factory MqttIntegrationSettings.withDefaults() => MqttIntegrationSettings.fromJson({});
