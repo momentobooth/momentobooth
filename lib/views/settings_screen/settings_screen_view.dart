@@ -69,6 +69,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: const Icon(FluentIcons.automate_flow),
                 title: const Text("MQTT integration"),
                 body: Builder(builder: (_) => _getMqttIntegrationSettings(viewModel, controller)),
+                infoBadge: const MqttConnectionStateIndicator(),
               ),
             ],
             footerItems: [
