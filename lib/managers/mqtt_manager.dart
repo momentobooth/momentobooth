@@ -50,9 +50,10 @@ abstract class _MqttManagerBase with Store {
     });
   }
 
-  void _publishStats(Stats stats) {
+  void _publishStats(Stats stats, [bool force = false]) {
     for (MapEntry<String, dynamic> statsEntry in stats.toJson().entries) {
-      if (_latestPublishedStats != null && _latestPublishedStats![statsEntry.key] == statsEntry.value) continue;
+      if (!force && _latestPublishedStats != null && _latestPublishedStats![statsEntry.key] == statsEntry.value) continue;
+      print("Publishing ${statsEntry.key} = ${statsEntry.value}");
       _client!.publishMessage(
         "momento-booth/stats/${statsEntry.key}",
         MqttQos.atMostOnce,
@@ -100,9 +101,11 @@ abstract class _MqttManagerBase with Store {
           ..onAutoReconnected = (() {
             _connectionState = ConnectionState.connected;
             loggy.logInfo("Reconnected to MQTT server");
+            _publishStats(StatsManager.instance.stats, true);
           });
 
         _connectionState = ConnectionState.connected;
+        _publishStats(StatsManager.instance.stats, true);
       } catch (e) {
         loggy.logError("Failed to connect to MQTT server: $e");
       }

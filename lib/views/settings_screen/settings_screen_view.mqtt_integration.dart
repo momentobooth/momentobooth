@@ -2,7 +2,7 @@ part of 'settings_screen_view.dart';
 
 Widget _getMqttIntegrationSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
   return FluentSettingsPage(
-    title: "Hardware",
+    title: "MQTT integration",
     blocks: [
       _getBooleanInput(
         icon: FluentIcons.toggle_border,
