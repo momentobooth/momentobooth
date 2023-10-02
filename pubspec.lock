@@ -664,10 +664,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: "3d0cc808e0b882d396f9ec26b12e84de5c8d20e6f13d39c6474f7a1f3e9bbd75"
+      sha256: "6329421b812d3031c0f7bb432143ee860bd4cd5cb7030c3334fd31bbf2fe1d85"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.0"
+    version: "4.0.2"
   nested:
     dependency: transitive
     description:

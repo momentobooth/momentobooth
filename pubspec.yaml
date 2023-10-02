@@ -67,7 +67,7 @@ dependencies:
   synchronized: 3.1.0
   collection: 1.17.2
   win32: 5.0.9
-  mqtt5_client: 4.0.0
+  mqtt5_client: 4.0.2
   dart_casing: 3.0.1
 
 dev_dependencies:
