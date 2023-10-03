@@ -108,6 +108,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   int get captureDelayGPhoto2Setting => SettingsManager.instance.settings.hardware.captureDelayGPhoto2;
   int get captureDelaySonySetting => SettingsManager.instance.settings.hardware.captureDelaySony;
   String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;
+  bool get saveCapturesToDiskSetting => SettingsManager.instance.settings.hardware.saveCapturesToDisk;
+  String get captureStorageLocationSetting => SettingsManager.instance.settings.hardware.captureStorageLocation;
   List<String> get printersSetting => SettingsManager.instance.settings.hardware.printerNames;
   double get pageHeightSetting => SettingsManager.instance.settings.hardware.pageHeight;
   double get pageWidthSetting => SettingsManager.instance.settings.hardware.pageWidth;

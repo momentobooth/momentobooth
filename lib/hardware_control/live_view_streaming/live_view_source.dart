@@ -2,10 +2,8 @@ import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 
 abstract class LiveViewSource {
 
-  final String id;
-  final String friendlyName;
-
-  LiveViewSource({required this.id, required this.friendlyName});
+  String get id;
+  String get friendlyName;
 
   Future<void> openStream({required int texturePtr});
 

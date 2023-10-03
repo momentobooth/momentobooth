@@ -7,21 +7,21 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
   return FluentSettingsPage(
     title: "Templating",
     blocks: [
-      _templateSettings(viewModel, controller),
+      _getTemplateSettings(viewModel, controller),
       FluentSettingsBlock(
         title: "Template preview",
         settings: [
           Row(
             children: [
-              templateButton(viewModel, controller, "No photo", 0),
+              _getTemplateButton(viewModel, controller, "No photo", 0),
               buttonMargin,
-              templateButton(viewModel, controller, "1 photo", 1),
+              _getTemplateButton(viewModel, controller, "1 photo", 1),
               buttonMargin,
-              templateButton(viewModel, controller, "2 photos", 2),
+              _getTemplateButton(viewModel, controller, "2 photos", 2),
               buttonMargin,
-              templateButton(viewModel, controller, "3 photos", 3),
+              _getTemplateButton(viewModel, controller, "3 photos", 3),
               buttonMargin,
-              templateButton(viewModel, controller, "4 photos", 4),
+              _getTemplateButton(viewModel, controller, "4 photos", 4),
               buttonMargin,
               FilledButton(
                 onPressed: controller.exportTemplate,
@@ -57,7 +57,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
   );
 }
 
-Widget templateButton(SettingsScreenViewModel viewModel, SettingsScreenController controller, String text, int index) {
+Widget _getTemplateButton(SettingsScreenViewModel viewModel, SettingsScreenController controller, String text, int index) {
   return Observer(
     builder: (context) => Button(
       onPressed: viewModel.previewTemplate == index ? null : () => viewModel.previewTemplate = index,
@@ -91,7 +91,7 @@ Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenC
   );
 }
 
-Widget _templateSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
   return FluentSettingsBlock(
     title: "Creative",
     settings: [

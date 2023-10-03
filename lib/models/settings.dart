@@ -66,6 +66,8 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default(100) int captureDelayGPhoto2,
     @Default(200) int captureDelaySony,
     @JsonKey(defaultValue: _captureLocationFromJson) required String captureLocation,
+    @Default(true) bool saveCapturesToDisk,
+    @JsonKey(defaultValue: _captureStorageLocationFromJson) required String captureStorageLocation,
     @Default([]) List<String> printerNames,
     @Default(148) double pageHeight,
     @Default(100) double pageWidth,
@@ -206,6 +208,7 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
 
 String _templatesFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Templates");
 String _captureLocationFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Captures");
+String _captureStorageLocationFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "From camera");
 String _localFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Output");
 String _clientIdFromJson() => 'momentobooth-photobooth-${getRandomString()}';
 String _homeAssistantComponentIdFromJson() => 'momentobooth-${getRandomString()}';

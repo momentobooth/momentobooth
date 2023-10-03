@@ -4,9 +4,15 @@ import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
 class NoiseSource extends LiveViewSource {
 
+  @override
+  final String id = '';
+
+  @override
+  final String friendlyName = '';
+
   late int _handleId;
 
-  NoiseSource() : super(id: '', friendlyName: '');
+  NoiseSource();
 
   @override
   Future<void> openStream({required int texturePtr}) async => _handleId = await rustLibraryApi.noiseOpen(texturePtr: texturePtr);

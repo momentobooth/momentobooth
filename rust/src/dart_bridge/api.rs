@@ -8,7 +8,7 @@ use turborand::rng::Rng;
 
 use tokio::sync::Mutex as AsyncMutex;
 
-use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug, TOKIO_RUNTIME};
+use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo, GPhoto2File}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug, TOKIO_RUNTIME};
 
 // ////////////// //
 // Initialization //
@@ -283,7 +283,7 @@ pub fn gphoto2_clear_events(handle_id: usize) {
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_capture_photo(handle_id: usize, capture_target_value: String) -> Vec<u8> {
+pub fn gphoto2_capture_photo(handle_id: usize, capture_target_value: String) -> GPhoto2File {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
@@ -311,6 +311,17 @@ pub fn gphoto2_get_last_frame(handle_id: usize) -> Option<RawImage> {
     let camera_arc = camera_ref.clone();
     let camera = camera_arc.lock().expect("Could not lock camera");
     camera.last_valid_frame.clone()
+}
+
+pub fn gphoto2_set_extra_file_callback(handle_id: usize, image_sink: StreamSink<GPhoto2File>) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_extra_file_callback(camera, move |data| {
+            image_sink.add(data);
+        }).await;
+    })
 }
 
 // /////// //

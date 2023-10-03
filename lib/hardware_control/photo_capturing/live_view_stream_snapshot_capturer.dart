@@ -4,17 +4,17 @@ import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_met
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
-class LiveViewStreamSnapshotCapturer with UiLoggy implements PhotoCaptureMethod {
+class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod with UiLoggy {
 
   @override
   Duration get captureDelay => const Duration(milliseconds: -17);
 
   @override
   Future<Uint8List> captureAndGetPhoto() async {
-    final stopwatch = Stopwatch()..start();
     final rawImage = await LiveViewManager.instance.currentLiveViewSource?.getLastFrame();
     final jpegData = await rustLibraryApi.jpegEncode(rawImage: rawImage!, quality: 80, operationsBeforeEncoding: []);
-    loggy.debug('JPEG encoding took ${stopwatch.elapsed}');
+
+    await storePhotoSafe('liveview.jpg', jpegData);
 
     return jpegData;
   }

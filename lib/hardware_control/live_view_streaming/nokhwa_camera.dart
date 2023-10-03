@@ -7,9 +7,15 @@ import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
 class NokhwaCamera extends LiveViewSource {
 
+  @override
+  final String id;
+
+  @override
+  final String friendlyName;
+
   late int handleId;
 
-  NokhwaCamera({required super.id, required super.friendlyName});
+  NokhwaCamera({required this.id, required this.friendlyName});
 
   // //////////// //
   // List cameras //
