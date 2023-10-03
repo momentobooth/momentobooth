@@ -10,12 +10,18 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
-class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
+class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
+
+  @override
+  final String id;
+
+  @override
+  final String friendlyName;
 
   late int handleId;
   bool isOpened = false;
 
-  GPhoto2Camera({required super.id, required super.friendlyName});
+  GPhoto2Camera({required this.id, required this.friendlyName});
 
   // //////////// //
   // List cameras //
@@ -48,8 +54,9 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
     await rustLibraryApi.gphoto2StartLiveview(handleId: handleId, operations: [
       const ImageOperation.cropToAspectRatio(3 / 2),
     ], texturePtr: texturePtr);
+
     rustLibraryApi.gphoto2SetExtraFileCallback(handleId: handleId).listen((element) {
-      print("Extra file ${element.filename} received of length: ${element.data.length}");
+      storePhotoSafe(element.filename, element.data);
     });
   }
 
@@ -69,7 +76,10 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
   Future<Uint8List> captureAndGetPhoto() async {
     await _ensureLibraryInitialized();
     String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
-    return (await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget)).data;
+    var capture = await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
+    await storePhotoSafe(capture.filename, capture.data);
+
+    return capture.data;
   }
 
   @override
