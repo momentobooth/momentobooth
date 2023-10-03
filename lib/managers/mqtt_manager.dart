@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/capture_state.dart';
@@ -165,7 +166,7 @@ abstract class _MqttManagerBase with Store {
       manufacturer: "h3x Software",
       model: "Momento Booth",
       name: "Momento Booth instance on ${Platform.localHostname}",
-      softwareVersion: "WIP",
+      softwareVersion: '${packageInfo.version} build ${packageInfo.buildNumber}',
     );
 
   void publishHomeAssistantDiscoveryTopics() {

@@ -37,14 +37,20 @@ import 'package:momento_booth/views/photo_details_screen/photo_details_screen.da
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:momento_booth/views/share_screen/share_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 part 'main.routes.dart';
+
+late PackageInfo packageInfo;
 
 void main() async {
   _ensureGPhoto2EnvironmentVariables();
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  // App info
+  packageInfo = await PackageInfo.fromPlatform();
 
   // Logging
   Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
