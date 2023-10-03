@@ -43,6 +43,7 @@ pub async fn open_camera(model: String, port: String, special_handling: GPhoto2C
     special_handling,
     thread_join_handle: Cell::new(None),
     thread_should_stop: AtomicBool::new(false),
+    extra_file_callback: None,
   })
 }
 
@@ -119,7 +120,19 @@ pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<
     n_events += 1;
     match event {
       CameraEvent::NewFile(event) => {
-        log_debug(format!("Cleared file: {:?}", event));
+        log_debug(format!("Downloading file from camera: {}/{}", event.folder(), event.name()));
+        let file = camera.camera.fs().download(&event.folder(), &event.name()).await?;
+        let data = file.get_data(get_context()?).await?;
+        if let Some(callback) = &camera.extra_file_callback {
+          log_debug(format!("Calling extra file callback"));
+          callback(GPhoto2File {
+            source_folder: event.folder().to_string(),
+            filename: event.name().to_string(),
+            data: data.to_vec(),
+          });
+        } else {
+          log_debug(format!("No extra file callback set"));
+        }
       },
       CameraEvent::Timeout => break,
       _ => {},
@@ -132,7 +145,13 @@ pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<
   Ok(())
 }
 
-pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_target_value: String) -> Result<Vec<u8>> {
+pub async fn set_extra_file_callback<F>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, file_data_callback: F) where F: Fn(GPhoto2File) + Send + Sync + 'static {
+  let mut camera = camera_ref.lock().await;
+
+  camera.extra_file_callback = Some(Box::new(file_data_callback));
+}
+
+pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_target_value: String) -> Result<GPhoto2File> {
   let camera = camera_ref.lock().await;
 
   if !capture_target_value.is_empty() {
@@ -147,7 +166,11 @@ pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_t
   let file = camera.camera.fs().download(&capture.folder(), &capture.name()).await?;
   let data = file.get_data(get_context()?).await?;
 
-  Ok(data.to_vec())
+  Ok(GPhoto2File {
+    source_folder: capture.folder().to_string(),
+    filename: capture.name().to_string(),
+    data: data.to_vec(),
+  })
 }
 
 pub struct GPhoto2CameraInfo {
@@ -169,6 +192,7 @@ pub struct GPhoto2Camera {
   pub special_handling: GPhoto2CameraSpecialHandling,
   thread_join_handle: Cell<Option<AsyncJoinHandle<()>>>,
   thread_should_stop: AtomicBool,
+  extra_file_callback: Option<Box<dyn Fn(GPhoto2File) + Send + Sync + 'static>>,
 }
 
 pub enum GPhoto2CameraSpecialHandling {
@@ -195,4 +219,10 @@ impl From<Error> for Gphoto2Error {
   fn from(err: Error) -> Gphoto2Error {
     Gphoto2Error::Gphoto2LibraryError(err)
   }
+}
+
+pub struct GPhoto2File {
+    pub source_folder: String,
+    pub filename: String,
+    pub data: Vec<u8>,
 }

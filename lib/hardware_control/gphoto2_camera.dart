@@ -48,6 +48,9 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
     await rustLibraryApi.gphoto2StartLiveview(handleId: handleId, operations: [
       const ImageOperation.cropToAspectRatio(3 / 2),
     ], texturePtr: texturePtr);
+    rustLibraryApi.gphoto2SetExtraFileCallback(handleId: handleId).listen((element) {
+      print("Extra file ${element.filename} received of length: ${element.data.length}");
+    });
   }
 
   @override
@@ -66,7 +69,7 @@ class GPhoto2Camera extends LiveViewSource implements PhotoCaptureMethod {
   Future<Uint8List> captureAndGetPhoto() async {
     await _ensureLibraryInitialized();
     String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
-    return await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
+    return (await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget)).data;
   }
 
   @override
