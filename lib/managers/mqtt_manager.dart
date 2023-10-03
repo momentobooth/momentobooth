@@ -176,47 +176,75 @@ abstract class _MqttManagerBase with Store {
 
     // Stats
     for (MapEntry<String, dynamic> statsEntry in _lastPublishedStats.entries) {
-      publishHomeAssistantDiscoveryTopic(
-        integrationType: HomeAssistantIntegrationType.sensor,
+      publishHomeAssistantSensorDiscoveryTopic(
         integrationName: toBeginningOfSentenceCase(Casing.lowerCase(statsEntry.key))!,
         stateTopic: "$rootTopic/stats/${Casing.snakeCase(statsEntry.key)}",
       );
     }
 
     // Screen
-    publishHomeAssistantDiscoveryTopic(
-      integrationType: HomeAssistantIntegrationType.sensor,
+    publishHomeAssistantSensorDiscoveryTopic(
       integrationName: "Screen",
       stateTopic: "$rootTopic/screen",
     );
 
     // Capture state
-    publishHomeAssistantDiscoveryTopic(
-      integrationType: HomeAssistantIntegrationType.sensor,
+    publishHomeAssistantSensorDiscoveryTopic(
       integrationName: "Capturing",
+      stateTopic: "$rootTopic/capturing",
+    );
+    publishHomeAssistantDeviceTriggerDiscoveryTopic(
+      integrationName: "Capturing",
+      payload: CaptureState.idle.mqttValue,
+      stateTopic: "$rootTopic/capturing",
+    );
+    publishHomeAssistantDeviceTriggerDiscoveryTopic(
+      integrationName: "Capturing",
+      payload: CaptureState.countdown.mqttValue,
+      stateTopic: "$rootTopic/capturing",
+    );
+    publishHomeAssistantDeviceTriggerDiscoveryTopic(
+      integrationName: "Capturing",
+      payload: CaptureState.capturing.mqttValue,
       stateTopic: "$rootTopic/capturing",
     );
   }
 
-  void publishHomeAssistantDiscoveryTopic({required HomeAssistantIntegrationType integrationType, required String integrationName, required String stateTopic}) {
+  void publishHomeAssistantSensorDiscoveryTopic({required String integrationName, required String stateTopic}) {
     final String discoveryTopicPrefix = SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
     final String componentId = SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
 
-    final String uniqueId = '${Casing.snakeCase(integrationName)}_$componentId';
+    _client!.publishMessage(
+      '$discoveryTopicPrefix/sensor/$componentId/${Casing.snakeCase(integrationName)}/config',
+      MqttQos.atLeastOnce,
+      (MqttPayloadBuilder()..addString(jsonEncode(HomeAssistantDiscoveryPayload.sensor(
+              name: integrationName,
+              stateTopic: stateTopic,
+              uniqueId: '${Casing.snakeCase(integrationName)}_$componentId',
+              device: homeAssistantDevice,
+            ).toJson()))).payload!,
+      retain: true,
+    );
+  }
 
-    HomeAssistantDiscoveryPayload discoveryPayload = switch (integrationType) {
-      HomeAssistantIntegrationType.sensor => HomeAssistantDiscoveryPayload.sensor(
-          name: integrationName,
-          stateTopic: stateTopic,
-          uniqueId: uniqueId,
-          device: homeAssistantDevice,
-        ),
-    };
+  void publishHomeAssistantDeviceTriggerDiscoveryTopic({required String integrationName, required String payload, required String stateTopic}) {
+    final String discoveryTopicPrefix = SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
+    final String componentId = SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
+
+    final String subId = Casing.snakeCase(payload);
 
     _client!.publishMessage(
-      '$discoveryTopicPrefix/${integrationType.mqttName}/$componentId/$uniqueId/config',
+      '$discoveryTopicPrefix/device_automation/$componentId/${Casing.snakeCase(integrationName)}_$subId/config',
       MqttQos.atLeastOnce,
-      (MqttPayloadBuilder()..addString(jsonEncode(discoveryPayload.toJson()))).payload!,
+      (MqttPayloadBuilder()
+            ..addString(jsonEncode(HomeAssistantDiscoveryPayload.deviceTrigger(
+              payload: payload,
+              topic: stateTopic,
+              type: "state_change",
+              subtype: payload,
+              device: homeAssistantDevice,
+            ).toJson())))
+          .payload!,
       retain: true,
     );
   }

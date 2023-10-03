@@ -15,12 +15,20 @@ class HomeAssistantDiscoveryPayload with _$HomeAssistantDiscoveryPayload {
   const HomeAssistantDiscoveryPayload._();
 
   const factory HomeAssistantDiscoveryPayload.sensor({
-    
     @JsonKey(name: 'name') required String name,
     @JsonKey(name: 'state_topic') required String stateTopic,
     @JsonKey(name: 'unique_id') required String uniqueId,
     @JsonKey(name: 'device') required HomeAssistantDevice device,
   }) = HomeAssistantSensorDiscoveryPayload;
+
+  const factory HomeAssistantDiscoveryPayload.deviceTrigger({
+    @JsonKey(name: 'automation_type') @Default("trigger") String automationType,
+    @JsonKey(name: 'payload') required String payload,
+    @JsonKey(name: 'topic') required String topic,
+    @JsonKey(name: 'type') required String type,
+    @JsonKey(name: 'subtype') required String subtype,
+    @JsonKey(name: 'device') required HomeAssistantDevice device,
+  }) = HomeAssistantDeviceTriggerDiscoveryPayload;
 
 }
 
