@@ -58,14 +58,14 @@ Widget _getMqttIntegrationSettings(SettingsScreenViewModel viewModel, SettingsSc
       _getTextInput(
         icon: FluentIcons.remote_application,
         title: "MQTT client ID",
-        subtitle: "If enabled, the application will use a custom client ID when connecting to the MQTT broker.",
+        subtitle: "The identifier for this MQTT client.",
         controller: controller.mqttIntegrationClientIdController,
         onChanged: controller.onMqttIntegrationClientIdChanged,
       ),
       _getTextInput(
         icon: FluentIcons.chat,
         title: "MQTT root topic",
-        subtitle: "The root topic to use when publishing and subscribing to MQTT messages.",
+        subtitle: "The root topic to use when publishing and subscribing to MQTT messages. You might want to add some unique identifier to avoid conflicts with other instances of Momento Booth on the same MQTT broker.",
         controller: controller.mqttIntegrationRootTopicController,
         onChanged: controller.onMqttIntegrationRootTopicChanged,
       ),

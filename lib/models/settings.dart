@@ -164,7 +164,7 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
     @Default("") String username,
     @Default("") String password,
     @JsonKey(defaultValue: _clientIdFromJson) required String clientId,
-    @Default("momento-booth") String rootTopic,
+    @Default("momentobooth") String rootTopic,
     @Default(false) bool enableHomeAssistantDiscovery,
     @Default("homeassistant") String homeAssistantDiscoveryTopicPrefix,
     @JsonKey(defaultValue: _homeAssistantComponentIdFromJson) required String homeAssistantComponentId,
@@ -207,5 +207,5 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
 String _templatesFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Templates");
 String _captureLocationFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Captures");
 String _localFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Output");
-String _clientIdFromJson() => 'momento-booth-photobooth-${getRandomString()}';
-String _homeAssistantComponentIdFromJson() => 'momento-booth-${getRandomString()}';
+String _clientIdFromJson() => 'momentobooth-photobooth-${getRandomString()}';
+String _homeAssistantComponentIdFromJson() => 'momentobooth-${getRandomString()}';

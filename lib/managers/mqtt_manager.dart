@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:dart_casing/dart_casing.dart';
+import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
@@ -8,6 +11,8 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/capture_state.dart';
 import 'package:momento_booth/models/connection_state.dart';
+import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
+import 'package:momento_booth/models/home_assistant/home_assistant_integration_type.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
@@ -32,7 +37,7 @@ abstract class _MqttManagerBase with Store {
   MqttIntegrationSettings? _currentSettings;
   MqttServerClient? _client;
 
-  Map<String, dynamic>? _lastPublishedStats;
+  Map<String, dynamic> _lastPublishedStats = {};
   String _lastPublishedRoute = "";
   CaptureState _lastPublishedCaptureState = CaptureState.idle;
 
@@ -129,13 +134,14 @@ abstract class _MqttManagerBase with Store {
     _publishStats(StatsManager.instance.stats, true);
     publishScreen();
     publishCaptureState();
+    publishHomeAssistantDiscoveryTopics();
   }
 
   void _publishStats(Stats stats, [bool force = false]) {
     for (MapEntry<String, dynamic> statsEntry in stats.toJson().entries) {
-      if (force || _lastPublishedStats == null || _lastPublishedStats![statsEntry.key] != statsEntry.value) {
-        String statsKeyKebabCase = Casing.kebabCase(statsEntry.key);
-        _publish("stats/$statsKeyKebabCase", statsEntry.value.toString(), retain: true);
+      if (force || !_lastPublishedStats.containsKey(statsEntry.key) || _lastPublishedStats[statsEntry.key] != statsEntry.value) {
+        String statsKeySnakeCase = Casing.snakeCase(statsEntry.key);
+        _publish("stats/$statsKeySnakeCase", statsEntry.value.toString(), retain: true);
       }
     }
     _lastPublishedStats = stats.toJson();
@@ -148,7 +154,71 @@ abstract class _MqttManagerBase with Store {
 
   void publishCaptureState([CaptureState? captureState]) {
     if (captureState != null) _lastPublishedCaptureState = captureState;
-    _publish("capture", _lastPublishedCaptureState.mqttValue);
+    _publish("capturing", _lastPublishedCaptureState.mqttValue);
+  }
+
+  // ////////////////////////// //
+  // Home Assistant integration //
+  // ////////////////////////// //
+
+  HomeAssistantDevice get homeAssistantDevice => HomeAssistantDevice(
+      identifiers: [SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId],
+      manufacturer: "h3x Software",
+      model: "Momento Booth",
+      name: "Momento Booth instance on ${Platform.localHostname}",
+      softwareVersion: "WIP",
+    );
+
+  void publishHomeAssistantDiscoveryTopics() {
+    if (_client == null || !SettingsManager.instance.settings.mqttIntegration.enableHomeAssistantDiscovery) return;
+
+    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+
+    // Stats
+    for (MapEntry<String, dynamic> statsEntry in _lastPublishedStats.entries) {
+      publishHomeAssistantDiscoveryTopic(
+        integrationType: HomeAssistantIntegrationType.sensor,
+        integrationName: toBeginningOfSentenceCase(Casing.lowerCase(statsEntry.key))!,
+        stateTopic: "$rootTopic/stats/${Casing.snakeCase(statsEntry.key)}",
+      );
+    }
+
+    // Screen
+    publishHomeAssistantDiscoveryTopic(
+      integrationType: HomeAssistantIntegrationType.sensor,
+      integrationName: "Screen",
+      stateTopic: "$rootTopic/screen",
+    );
+
+    // Capture state
+    publishHomeAssistantDiscoveryTopic(
+      integrationType: HomeAssistantIntegrationType.sensor,
+      integrationName: "Capturing",
+      stateTopic: "$rootTopic/capturing",
+    );
+  }
+
+  void publishHomeAssistantDiscoveryTopic({required HomeAssistantIntegrationType integrationType, required String integrationName, required String stateTopic}) {
+    final String discoveryTopicPrefix = SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
+    final String componentId = SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
+
+    final String uniqueId = '${Casing.snakeCase(integrationName)}_$componentId';
+
+    HomeAssistantDiscoveryPayload discoveryPayload = switch (integrationType) {
+      HomeAssistantIntegrationType.sensor => HomeAssistantDiscoveryPayload.sensor(
+          name: integrationName,
+          stateTopic: stateTopic,
+          uniqueId: uniqueId,
+          device: homeAssistantDevice,
+        ),
+    };
+
+    _client!.publishMessage(
+      '$discoveryTopicPrefix/${integrationType.mqttName}/$componentId/$uniqueId/config',
+      MqttQos.atLeastOnce,
+      (MqttPayloadBuilder()..addString(jsonEncode(discoveryPayload.toJson()))).payload!,
+      retain: true,
+    );
   }
 
 }
