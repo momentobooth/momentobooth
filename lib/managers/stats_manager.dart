@@ -20,14 +20,14 @@ class StatsManager extends _StatsManagerBase with _$StatsManager {
 }
 
 enum StatFields {
-  taps(),
-  liveViewFrames(),
-  printedPhotos(),
-  uploadedPhotos(),
-  capturedPhotos(),
-  createdSinglePhotos(),
-  retakes(),
-  createdMultiCapturePhotos(),
+  taps,
+  liveViewFrames,
+  printedPhotos,
+  uploadedPhotos,
+  capturedPhotos,
+  createdSinglePhotos,
+  retakes,
+  createdMultiCapturePhotos,
 }
 
 abstract class _StatsManagerBase with Store, UiLoggy {
@@ -50,26 +50,26 @@ abstract class _StatsManagerBase with Store, UiLoggy {
   // /////// //
 
   @action
-  void addTap() { _stats = _stats.copyWith(taps: _stats.taps+1); }
+  void addTap() => _stats = _stats.copyWith(taps: _stats.taps + 1);
 
   @action
-  void addPrintedPhoto() { _stats = _stats.copyWith(printedPhotos: _stats.printedPhotos+1); }
+  void addPrintedPhoto() => _stats = _stats.copyWith(printedPhotos: _stats.printedPhotos + 1);
 
   @action
-  void addUploadedPhoto() { _stats = _stats.copyWith(uploadedPhotos: _stats.uploadedPhotos+1); }
+  void addUploadedPhoto() => _stats = _stats.copyWith(uploadedPhotos: _stats.uploadedPhotos + 1);
 
   @action
-  void addCapturedPhoto() { _stats = _stats.copyWith(capturedPhotos: _stats.capturedPhotos+1); }
+  void addCapturedPhoto() => _stats = _stats.copyWith(capturedPhotos: _stats.capturedPhotos + 1);
 
   @action
-  void addCreatedSinglePhoto() { _stats = _stats.copyWith(createdSinglePhotos: _stats.createdSinglePhotos+1); }
+  void addCreatedSinglePhoto() => _stats = _stats.copyWith(createdSinglePhotos: _stats.createdSinglePhotos + 1);
 
   @action
-  void addRetake() { _stats = _stats.copyWith(retakes: _stats.retakes+1); }
+  void addRetake() => _stats = _stats.copyWith(retakes: _stats.retakes + 1);
 
   @action
-  void addCreatedMultiCapturePhoto() { _stats = _stats.copyWith(createdMultiCapturePhotos: _stats.createdMultiCapturePhotos+1); }
-  
+  void addCreatedMultiCapturePhoto() => _stats = _stats.copyWith(createdMultiCapturePhotos: _stats.createdMultiCapturePhotos + 1);
+
   // /////////// //
   // Persistence //
   // /////////// //
@@ -130,5 +130,5 @@ abstract class _StatsManagerBase with Store, UiLoggy {
     String filePath = join(storageDirectory.path, _fileName);
     _statsFile = File(filePath);
   }
-  
+
 }

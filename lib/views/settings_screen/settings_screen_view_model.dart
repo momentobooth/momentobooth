@@ -127,6 +127,16 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ScreenTransitionAnimation get screenTransitionAnimation => SettingsManager.instance.settings.ui.screenTransitionAnimation;
   FilterQuality get screenTransitionAnimationFilterQuality => SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality;
   FilterQuality get liveViewFilterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality;
+  bool get mqttIntegrationEnableSetting => SettingsManager.instance.settings.mqttIntegration.enable;
+  String get mqttIntegrationHostSetting => SettingsManager.instance.settings.mqttIntegration.host;
+  int get mqttIntegrationPortSetting => SettingsManager.instance.settings.mqttIntegration.port;
+  bool get mqttIntegrationSecureSetting => SettingsManager.instance.settings.mqttIntegration.secure;
+  bool get mqttIntegrationVerifyCertificateSetting => SettingsManager.instance.settings.mqttIntegration.verifyCertificate;
+  bool get mqttIntegrationUseWebSocketSetting => SettingsManager.instance.settings.mqttIntegration.useWebSocket;
+  String get mqttIntegrationUsernameSetting => SettingsManager.instance.settings.mqttIntegration.username;
+  String get mqttIntegrationPasswordSetting => SettingsManager.instance.settings.mqttIntegration.password;
+  String get mqttIntegrationClientIdSetting => SettingsManager.instance.settings.mqttIntegration.clientId;
+  String get mqttIntegrationRootTopicSetting => SettingsManager.instance.settings.mqttIntegration.rootTopic;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

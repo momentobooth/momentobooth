@@ -43,7 +43,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
     autorun((_) {
       // To make sure mobx detects that we are responding to changes to this property
       SettingsManager.instance.settings.hardware.liveViewWebcamId;
-      _lock.synchronized(() async {
+      _updateLiveViewSourceInstanceLock.synchronized(() async {
         await _updateConfig();
       });
     });
@@ -73,7 +73,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   // Reactions //
   // ///////// //
 
-  final Lock _lock = Lock();
+  final Lock _updateLiveViewSourceInstanceLock = Lock();
 
   @readonly
   LiveViewSource? _currentLiveViewSource;
@@ -132,7 +132,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   }
 
   Future<void> _checkLiveViewState() async {
-    await _lock.synchronized(() async {
+    await _updateLiveViewSourceInstanceLock.synchronized(() async {
       var liveViewState = await _currentLiveViewSource?.getCameraState();
       if (liveViewState == null) return;
 
@@ -159,7 +159,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   // /////// //
 
   void restoreLiveView() {
-    LiveViewManager.instance._lock.synchronized(() async {
+    LiveViewManager.instance._updateLiveViewSourceInstanceLock.synchronized(() async {
       _currentLiveViewMethodSetting = null;
       await LiveViewManager.instance._updateConfig();
     });

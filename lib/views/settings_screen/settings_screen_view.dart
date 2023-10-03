@@ -7,6 +7,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
+import 'package:momento_booth/views/custom_widgets/indicators/connection_state_indicator.dart';
 import 'package:momento_booth/views/custom_widgets/pages/fluent_settings_page.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
@@ -19,6 +20,7 @@ part 'settings_screen_view.output.dart';
 part 'settings_screen_view.debug.dart';
 part 'settings_screen_view.templating.dart';
 part 'settings_screen_view.ui.dart';
+part 'settings_screen_view.mqtt_integration.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
 
@@ -62,6 +64,12 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: const Icon(FluentIcons.design),
                 title: const Text("Templating"),
                 body: Builder(builder: (_) => _getTemplatingSettings(viewModel, controller)),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.automate_flow),
+                title: const Text("MQTT integration"),
+                body: Builder(builder: (_) => _getMqttIntegrationSettings(viewModel, controller)),
+                infoBadge: const MqttConnectionStateIndicator(),
               ),
             ],
             footerItems: [

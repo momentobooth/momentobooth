@@ -14,6 +14,7 @@ import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -62,6 +63,9 @@ void main() async {
 
   // Live view manager init
   LiveViewManager.instance.initialize();
+
+  // MQTT client manager init
+  MqttManager.instance.initialize();
 
   await SentryFlutter.init(
     (options) {

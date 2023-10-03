@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/managers/mqtt_manager.dart';
 
 class GoRouterObserver extends NavigatorObserver with UiLoggy {
 
@@ -9,6 +10,7 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
     if (route.settings is CustomTransitionPage) {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
       loggy.debug("Route push: ${page.child}");
+      MqttManager.instance.publishScreen('${page.child}');
     } else {
       loggy.debug("Route push: Unknown (could not cast to CustomTransitionPage))");
     }
@@ -19,6 +21,7 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
     if (route.settings is CustomTransitionPage) {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
       loggy.debug("Route pop: ${page.child}");
+      MqttManager.instance.publishScreen('${page.child}');
     } else {
       loggy.debug("Route pop: Unknown (could not cast to CustomTransitionPage))");
     }
@@ -53,6 +56,7 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
     }
 
     loggy.debug("Route replaced ${oldRouteChildName ?? 'Unknown (could not cast)'} with ${newRouteChildName ?? 'Unknown (could not cast)'}");
+    if (newRouteChildName != null) MqttManager.instance.publishScreen(newRouteChildName);
   }
 
 }
