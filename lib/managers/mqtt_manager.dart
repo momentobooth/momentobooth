@@ -12,7 +12,6 @@ import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/capture_state.dart';
 import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
-import 'package:momento_booth/models/home_assistant/home_assistant_integration_type.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
@@ -149,12 +148,12 @@ abstract class _MqttManagerBase with Store {
 
   void publishScreen([String? routeName]) {
     if (routeName != null) _lastPublishedRoute = routeName;
-    _publish("screen", _lastPublishedRoute);
+    _publish("current_screen", _lastPublishedRoute);
   }
 
   void publishCaptureState([CaptureState? captureState]) {
     if (captureState != null) _lastPublishedCaptureState = captureState;
-    _publish("capturing", _lastPublishedCaptureState.mqttValue);
+    _publish("capture_state", _lastPublishedCaptureState.mqttValue);
   }
 
   // ////////////////////////// //
@@ -184,29 +183,29 @@ abstract class _MqttManagerBase with Store {
 
     // Screen
     publishHomeAssistantSensorDiscoveryTopic(
-      integrationName: "Screen",
-      stateTopic: "$rootTopic/screen",
+      integrationName: "Current screen",
+      stateTopic: "$rootTopic/current_screen",
     );
 
     // Capture state
     publishHomeAssistantSensorDiscoveryTopic(
-      integrationName: "Capturing",
-      stateTopic: "$rootTopic/capturing",
+      integrationName: "Capture state",
+      stateTopic: "$rootTopic/capture_state",
     );
     publishHomeAssistantDeviceTriggerDiscoveryTopic(
-      integrationName: "Capturing",
+      integrationName: "Capture state",
       payload: CaptureState.idle.mqttValue,
-      stateTopic: "$rootTopic/capturing",
+      stateTopic: "$rootTopic/capture_state",
     );
     publishHomeAssistantDeviceTriggerDiscoveryTopic(
-      integrationName: "Capturing",
+      integrationName: "Capture state",
       payload: CaptureState.countdown.mqttValue,
-      stateTopic: "$rootTopic/capturing",
+      stateTopic: "$rootTopic/capture_state",
     );
     publishHomeAssistantDeviceTriggerDiscoveryTopic(
-      integrationName: "Capturing",
+      integrationName: "Capture state",
       payload: CaptureState.capturing.mqttValue,
-      stateTopic: "$rootTopic/capturing",
+      stateTopic: "$rootTopic/capture_state",
     );
   }
 
@@ -231,17 +230,18 @@ abstract class _MqttManagerBase with Store {
     final String discoveryTopicPrefix = SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
     final String componentId = SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
 
-    final String subId = Casing.snakeCase(payload);
+    final String triggerType = Casing.snakeCase(integrationName);
+    final String triggerSubType = Casing.snakeCase(payload);
 
     _client!.publishMessage(
-      '$discoveryTopicPrefix/device_automation/$componentId/${Casing.snakeCase(integrationName)}_$subId/config',
+      '$discoveryTopicPrefix/device_automation/$componentId/${triggerType}_$triggerSubType/config',
       MqttQos.atLeastOnce,
       (MqttPayloadBuilder()
             ..addString(jsonEncode(HomeAssistantDiscoveryPayload.deviceTrigger(
               payload: payload,
               topic: stateTopic,
-              type: "state_change",
-              subtype: payload,
+              type: triggerType,
+              subtype: triggerSubType,
               device: homeAssistantDevice,
             ).toJson())))
           .payload!,
