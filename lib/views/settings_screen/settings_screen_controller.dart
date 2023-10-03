@@ -41,6 +41,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _mqttIntegrationRootTopicController;
   TextEditingController get mqttIntegrationRootTopicController => _mqttIntegrationRootTopicController ??= TextEditingController(text: viewModel.mqttIntegrationRootTopicSetting);
 
+  TextEditingController? _mqttIntegrationHomeAssistantDiscoveryTopicPrefixController;
+  TextEditingController get mqttIntegrationHomeAssistantDiscoveryTopicPrefixController => _mqttIntegrationHomeAssistantDiscoveryTopicPrefixController ??= TextEditingController(text: viewModel.mqttIntegrationHomeAssistantDiscoveryTopicPrefixSetting);
+
+  TextEditingController? _mqttIntegrationHomeAssistantComponentIdController;
+  TextEditingController get mqttIntegrationHomeAssistantComponentIdController => _mqttIntegrationHomeAssistantComponentIdController ??= TextEditingController(text: viewModel.mqttIntegrationHomeAssistantComponentIdSetting);
+
   // Initialization/Deinitialization
 
   SettingsScreenController({
@@ -337,6 +343,24 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onMqttIntegrationRootTopicChanged(String? rootTopic) {
     if (rootTopic != null) {
       viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(rootTopic: rootTopic, enable: false));
+    }
+  }
+
+  void onMqttIntegrationEnableHomeAssistantDiscoveryChanged(bool? enableHomeAssistantDiscovery) {
+    if (enableHomeAssistantDiscovery != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(enableHomeAssistantDiscovery: enableHomeAssistantDiscovery, enable: false));
+    }
+  }
+
+  void onMqttIntegrationHomeAssistantDiscoveryTopicPrefixChanged(String? homeAssistantDiscoveryTopicPrefix) {
+    if (homeAssistantDiscoveryTopicPrefix != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(homeAssistantDiscoveryTopicPrefix: homeAssistantDiscoveryTopicPrefix, enable: false));
+    }
+  }
+
+  void onMqttIntegrationHomeAssistantComponentIdChanged(String? homeAssistantComponentId) {
+    if (homeAssistantComponentId != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(homeAssistantComponentId: homeAssistantComponentId, enable: false));
     }
   }
 

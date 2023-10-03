@@ -61,13 +61,12 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
     Map<String, dynamic> settingsMap = settingsDocument.toMap();
     try {
       _settings = Settings.fromJson(settingsMap);
+      loggy.debug("Loaded settings: ${_settings?.toJson().toString() ?? "null"}");
     } catch (_) {
       // Fixme: Failed to parse, load defaults and create settings file
       _settings = Settings.withDefaults();
-      await _save();
-      return;
     }
-    loggy.debug("Loaded settings: ${_settings?.toJson().toString() ?? "null"}");
+    await _save();
   }
 
   Future<void> _save() async {

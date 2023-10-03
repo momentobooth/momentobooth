@@ -1,11 +1,13 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'dart:io';
-import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/exceptions/default_setting_restore_exception.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
+import 'package:momento_booth/utils/random_string.dart';
 import 'package:path/path.dart';
 import 'package:toml/toml.dart';
 
@@ -27,36 +29,17 @@ class Settings with _$Settings implements TomlEncodableValue {
     @Default(1.5) double collageAspectRatio,
     @Default(0) double collagePadding,
     @Default(true) bool singlePhotoIsCollage,
-    @Default("") String templatesFolder,
-    @Default(HardwareSettings()) HardwareSettings hardware,
-    @Default(OutputSettings()) OutputSettings output,
-    @Default(UiSettings()) UiSettings ui,
-    @Default(MqttIntegrationSettings()) MqttIntegrationSettings mqttIntegration,
+    @JsonKey(defaultValue: _templatesFolderFromJson) required String templatesFolder,
+    @JsonKey(defaultValue: HardwareSettings.withDefaults) required HardwareSettings hardware,
+    @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
+    @JsonKey(defaultValue: UiSettings.withDefaults) required UiSettings ui,
+    @JsonKey(defaultValue: MqttIntegrationSettings.withDefaults) required MqttIntegrationSettings mqttIntegration,
     //@Default(DebugSettings()) DebugSettings debug,
   }) = _Settings;
 
   factory Settings.withDefaults() => Settings.fromJson({});
 
-  factory Settings.fromJson(Map<String, Object?> json) {
-    // Default settings
-    if (!json.containsKey("templatesFolder")) {
-      json["templatesFolder"] = _getHome();
-    }
-    if (!json.containsKey("hardware")) {
-      json["hardware"] = HardwareSettings.withDefaults().toJson();
-    }
-    if (!json.containsKey("output")) {
-      json["output"] = OutputSettings.withDefaults().toJson();
-    }
-    if (!json.containsKey("mqttIntegration")) {
-      json["mqttIntegration"] = MqttIntegrationSettings.withDefaults().toJson();
-    }
-    // if (!json.containsKey("debug")) {
-    //   json["debug"] = DebugSettings.withDefaults().toJson();
-    // }
-
-    return _$SettingsFromJson(json);
-  }
+  factory Settings.fromJson(Map<String, Object?> json) => _$SettingsFromJson(json);
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -82,7 +65,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default("") String gPhoto2CaptureTarget,
     @Default(100) int captureDelayGPhoto2,
     @Default(200) int captureDelaySony,
-    @Default("") String captureLocation,
+    @JsonKey(defaultValue: _captureLocationFromJson) required String captureLocation,
     @Default([]) List<String> printerNames,
     @Default(148) double pageHeight,
     @Default(100) double pageWidth,
@@ -96,14 +79,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
   factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});
 
-  factory HardwareSettings.fromJson(Map<String, Object?> json) {
-    // Default settings
-    if (!json.containsKey("captureLocation")) {
-      json["captureLocation"] = _getHome();
-    }
-
-    return _$HardwareSettingsFromJson(json);
-  }
+  factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -120,23 +96,16 @@ class OutputSettings with _$OutputSettings implements TomlEncodableValue {
   const OutputSettings._();
 
   const factory OutputSettings({
-    @Default("") String localFolder,
-    @Default(80)  int jpgQuality,
-    @Default(4.0)  double resolutionMultiplier,
-    @Default(ExportFormat.jpgFormat)  ExportFormat exportFormat,
-    @Default("https://send.vis.ee/")  String firefoxSendServerUrl,
+    @JsonKey(defaultValue: _localFolderFromJson) required String localFolder,
+    @Default(80) int jpgQuality,
+    @Default(4.0) double resolutionMultiplier,
+    @Default(ExportFormat.jpgFormat) ExportFormat exportFormat,
+    @Default("https://send.vis.ee/") String firefoxSendServerUrl,
   }) = _OutputSettings;
 
   factory OutputSettings.withDefaults() => OutputSettings.fromJson({});
 
-  factory OutputSettings.fromJson(Map<String, Object?> json) {
-    // Default settings
-    if (!json.containsKey("localFolder")) {
-      json["localFolder"] = join(_getHome(), "Pictures");
-    }
-
-    return _$OutputSettingsFromJson(json);
-  }
+  factory OutputSettings.fromJson(Map<String, Object?> json) => _$OutputSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -194,21 +163,16 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
     @Default(false) bool useWebSocket,
     @Default("") String username,
     @Default("") String password,
-    @Default("") String clientId,
-    @Default("momento-booth") String rootTopic,
+    @JsonKey(defaultValue: _clientIdFromJson) required String clientId,
+    @Default("momentobooth") String rootTopic,
+    @Default(false) bool enableHomeAssistantDiscovery,
+    @Default("homeassistant") String homeAssistantDiscoveryTopicPrefix,
+    @JsonKey(defaultValue: _homeAssistantComponentIdFromJson) required String homeAssistantComponentId,
   }) = _MqttIntegrationSettings;
 
   factory MqttIntegrationSettings.withDefaults() => MqttIntegrationSettings.fromJson({});
 
-  factory MqttIntegrationSettings.fromJson(Map<String, Object?> json) {
-    if (!json.containsKey('clientId')) {
-      var possibleChars = 'abcdefghijklmnopqrstuvwxyz0123456789';
-      var random = Random();
-      json['clientId'] = 'momento-booth-photobooth-${List.generate(6, (index) => possibleChars[random.nextInt(possibleChars.length)]).join()}';
-    }
-
-    return _$MqttIntegrationSettingsFromJson(json);
-  }
+  factory MqttIntegrationSettings.fromJson(Map<String, Object?> json) => _$MqttIntegrationSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -235,3 +199,13 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
 //   Map<String, dynamic> toTomlValue() => toJson();
 
 // }
+
+// /////////////// //
+// Default helpers //
+// /////////////// //
+
+String _templatesFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Templates");
+String _captureLocationFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Captures");
+String _localFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Output");
+String _clientIdFromJson() => 'momentobooth-photobooth-${getRandomString()}';
+String _homeAssistantComponentIdFromJson() => 'momentobooth-${getRandomString()}';
