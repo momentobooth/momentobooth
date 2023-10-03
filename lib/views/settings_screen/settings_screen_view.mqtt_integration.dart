@@ -12,6 +12,17 @@ Widget _getMqttIntegrationSettings(SettingsScreenViewModel viewModel, SettingsSc
         onChanged: controller.onMqttIntegrationEnableChanged,
         prefixWidget: const MqttConnectionStateIndicator(),
       ),
+      _getConnectionBlock(viewModel, controller),
+      _getClientBlock(viewModel, controller),
+      _getHomeAssistantBlock(viewModel, controller),
+    ],
+  );
+}
+
+Widget _getConnectionBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "Connection",
+    settings: [
       _getTextInput(
         icon: FluentIcons.server,
         title: "MQTT broker address",
@@ -55,6 +66,14 @@ Widget _getMqttIntegrationSettings(SettingsScreenViewModel viewModel, SettingsSc
         controller: controller.mqttIntegrationPasswordController,
         onChanged: controller.onMqttIntegrationPasswordChanged,
       ),
+    ],
+  );
+}
+
+Widget _getClientBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "Client",
+    settings: [
       _getTextInput(
         icon: FluentIcons.remote_application,
         title: "MQTT client ID",
@@ -68,6 +87,35 @@ Widget _getMqttIntegrationSettings(SettingsScreenViewModel viewModel, SettingsSc
         subtitle: "The root topic to use when publishing and subscribing to MQTT messages. You might want to add some unique identifier to avoid conflicts with other instances of Momento Booth on the same MQTT broker.",
         controller: controller.mqttIntegrationRootTopicController,
         onChanged: controller.onMqttIntegrationRootTopicChanged,
+      ),
+    ],
+  );
+}
+
+Widget _getHomeAssistantBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "Home Assistant integration",
+    settings: [
+      _getBooleanInput(
+        icon: FluentIcons.toggle_border,
+        title: "Enable Home Assistant integration",
+        subtitle: "If enabled, the application will publish the discovery topics for Home Assistant.",
+        value: () => viewModel.mqttIntegrationEnableHomeAssistantDiscoverySetting,
+        onChanged: controller.onMqttIntegrationEnableHomeAssistantDiscoveryChanged,
+      ),
+      _getTextInput(
+        icon: FluentIcons.chat,
+        title: "Discovery topic",
+        subtitle: "The discovery topic as configured in Home Assistant. Use the default value if you haven't changed it in Home Assistant.",
+        controller: controller.mqttIntegrationHomeAssistantDiscoveryTopicPrefixController,
+        onChanged: controller.onMqttIntegrationHomeAssistantDiscoveryTopicPrefixChanged,
+      ),
+        _getTextInput(
+        icon: FluentIcons.device_run,
+        title: "Device ID",
+        subtitle: "The device ID to use when publishing the discovery topics for Home Assistant.",
+        controller: controller.mqttIntegrationHomeAssistantComponentIdController,
+        onChanged: controller.onMqttIntegrationHomeAssistantComponentIdChanged,
       ),
     ],
   );

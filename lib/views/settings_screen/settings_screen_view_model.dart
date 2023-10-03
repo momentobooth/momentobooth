@@ -137,6 +137,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get mqttIntegrationPasswordSetting => SettingsManager.instance.settings.mqttIntegration.password;
   String get mqttIntegrationClientIdSetting => SettingsManager.instance.settings.mqttIntegration.clientId;
   String get mqttIntegrationRootTopicSetting => SettingsManager.instance.settings.mqttIntegration.rootTopic;
+  bool get mqttIntegrationEnableHomeAssistantDiscoverySetting => SettingsManager.instance.settings.mqttIntegration.enableHomeAssistantDiscovery;
+  String get mqttIntegrationHomeAssistantDiscoveryTopicPrefixSetting => SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
+  String get mqttIntegrationHomeAssistantComponentIdSetting => SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;
