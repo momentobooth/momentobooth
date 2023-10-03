@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
@@ -78,6 +79,8 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
     var capture = await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
     await storePhotoSafe(capture.filename, capture.data);
+    
+    unawaited(clearPreviousEvents());
 
     return capture.data;
   }
