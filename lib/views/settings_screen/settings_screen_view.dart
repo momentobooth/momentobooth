@@ -1,4 +1,3 @@
-import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -12,15 +11,22 @@ import 'package:momento_booth/views/custom_widgets/pages/fluent_settings_page.da
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
+import 'package:momento_booth/views/settings_screen/widgets/boolean_input_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/button_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/combo_box_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/folder_picker_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/number_input_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/password_input_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/text_display_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/text_input_card.dart';
 
-part 'settings_screen_view.helpers.dart';
+part 'settings_screen_view.debug.dart';
 part 'settings_screen_view.general.dart';
 part 'settings_screen_view.hardware.dart';
+part 'settings_screen_view.mqtt_integration.dart';
 part 'settings_screen_view.output.dart';
-part 'settings_screen_view.debug.dart';
 part 'settings_screen_view.templating.dart';
 part 'settings_screen_view.ui.dart';
-part 'settings_screen_view.mqtt_integration.dart';
 
 class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, SettingsScreenController> {
 

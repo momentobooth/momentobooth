@@ -95,27 +95,27 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
   return FluentSettingsBlock(
     title: "Creative",
     settings: [
-      _getFolderPickerCard(
+      FolderPickerCard(
         icon: FluentIcons.fabric_report_library,
         title: "Collage background templates location",
         subtitle: "Location to look for template files",
         controller: controller.templatesFolderSettingController,
         onChanged: controller.onTemplatesFolderChanged,
       ),
-      _getInput(
+      NumberInputCard(
         icon: FluentIcons.aspect_ratio,
         title: "Collage aspect ratio",
         subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
         smallChange: 0.1,
         value: () => viewModel.collageAspectRatioSetting,
-        onChanged: controller.onCollageAspectRatioChanged,
+        onFinishedEditing: controller.onCollageAspectRatioChanged,
       ),
-      _getInput(
+      NumberInputCard(
         icon: FluentIcons.field_filled,
         title: "Collage padding",
         subtitle: "Controls the padding around the aspect ratio of the generated collages. Think about this together with paper print size.",
         value: () => viewModel.collagePaddingSetting,
-        onChanged: controller.onCollagePaddingChanged,
+        onFinishedEditing: controller.onCollagePaddingChanged,
       ),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -123,12 +123,12 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
           builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting/1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height.")
         ),
       ),
-      _getInput(
+      NumberInputCard(
         icon: FluentIcons.picture_stretch,
         title: "Output resolution multiplier     (same setting as output tab)",
         subtitle: 'Controls image resolution',
         value: () => viewModel.resolutionMultiplier,
-        onChanged: controller.onResolutionMultiplierChanged,
+        onFinishedEditing: controller.onResolutionMultiplierChanged,
         smallChange: 0.1,
       ),
       Padding(

@@ -15,7 +15,7 @@ Widget _getLiveViewBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
   return FluentSettingsBlock(
     title: "Live view",
     settings: [
-      _getComboBoxCard(
+      ComboBoxCard(
         icon: FluentIcons.camera,
         title: "Live view method",
         subtitle: "Method used for live previewing",
@@ -29,7 +29,7 @@ Widget _getLiveViewBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         }
         return const SizedBox();
       }),
-      _getComboBoxCard(
+      ComboBoxCard(
         icon: FluentIcons.camera,
         title: "Flip image",
         subtitle: "Whether the image should be flipped in none, one or both axis",
@@ -45,7 +45,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
   return FluentSettingsBlock(
     title: "Photo capture",
     settings: [
-      _getComboBoxCard(
+      ComboBoxCard(
         icon: FluentIcons.camera,
         title: "Capture method",
         subtitle: "Method used for capturing final images",
@@ -55,12 +55,12 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       ),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return _getInput(
+          return NumberInputCard(
             icon: FluentIcons.timer,
             title: "Capture delay for Sony camera",
             subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
             value: () => viewModel.captureDelaySonySetting,
-            onChanged: controller.onCaptureDelaySonyChanged,
+            onFinishedEditing: controller.onCaptureDelaySonyChanged,
           );
         }
         return const SizedBox();
@@ -73,7 +73,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
-          return _getComboBoxCard(
+          return ComboBoxCard(
             icon: FluentIcons.camera,
             title: "Use special handling for camera",
             subtitle: "Kind of special handling used for the camera. Pick \"Nikon DSLR\" for cameras like the D-series. The \"None\" might work for most mirrorless camera as they are always in live view mode.",
@@ -86,31 +86,31 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return _getTextInput(
+          return TextInputCard(
             icon: FluentIcons.s_d_card,
             title: "Camera capture target",
             subtitle: "Sets the camera's 'capturetarget'. When unsure, leave empty as it could cause capture issues. Values can be found in the libgphoto2 source code.",
             controller: controller.gPhoto2CaptureTargetController,
-            onChanged: controller.onGPhoto2CaptureTargetChanged,
+            onFinishedEditing: controller.onGPhoto2CaptureTargetChanged,
           );
         }
         return const SizedBox();
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return _getInput(
+          return NumberInputCard(
             icon: FluentIcons.timer,
             title: "Capture delay for gPhoto2 camera.",
             subtitle: "Delay in [ms].",
             value: () => viewModel.captureDelayGPhoto2Setting,
-            onChanged: controller.onCaptureDelayGPhoto2Changed,
+            onFinishedEditing: controller.onCaptureDelayGPhoto2Changed,
           );
         }
         return const SizedBox();
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return _getFolderPickerCard(
+          return FolderPickerCard(
             icon: FluentIcons.folder,
             title: "Capture location",
             subtitle: "Location to look for captured images.",
@@ -122,7 +122,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop) {
-          return _getBooleanInput(
+          return BooleanInputCard(
             icon: FluentIcons.hard_drive,
             title: "Save captures to disk",
             subtitle: "Whether to save captures to disk.",
@@ -134,7 +134,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop && viewModel.saveCapturesToDiskSetting) {
-          return _getFolderPickerCard(
+          return FolderPickerCard(
             icon: FluentIcons.hard_drive,
             title: "Capture storage location",
             subtitle: "Location where all captured photos (as retrieved from the capture implementation) will be saved to",
@@ -161,36 +161,36 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
           ],
         ),
       ),
-      _getInput(
+      NumberInputCard(
         icon: FluentIcons.page,
         title: "Page height",
         subtitle: 'Page format height used for printing [mm]',
         value: () => viewModel.pageHeightSetting,
-        onChanged: controller.onPageHeightChanged,
+        onFinishedEditing: controller.onPageHeightChanged,
         smallChange: 0.1,
       ),
-      _getInput(
+      NumberInputCard(
         icon: FluentIcons.page,
         title: "Page width",
         subtitle: 'Page format width used for printing [mm]',
         value: () => viewModel.pageWidthSetting,
-        onChanged: controller.onPageWidthChanged,
+        onFinishedEditing: controller.onPageWidthChanged,
         smallChange: 0.1,
       ),
       _printerMargins(viewModel, controller),
-      _getBooleanInput(
+      BooleanInputCard(
         icon: FluentIcons.settings,
         title: "usePrinterSettings for printing",
         subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
         value: () => viewModel.usePrinterSettingsSetting,
         onChanged: controller.onUsePrinterSettingsChanged,
       ),
-      _getInput<int>(
+      NumberInputCard(
         icon: FluentIcons.queue_advanced,
         title: "Queue warning threshold",
         subtitle: "Number of photos in the OS's printer queue before a warning is shown (Windows only for now).",
         value: () => viewModel.printerQueueWarningThresholdSetting,
-        onChanged: controller.onPrinterQueueWarningThresholdChanged,
+        onFinishedEditing: controller.onPrinterQueueWarningThresholdChanged,
       ),
     ],
   );

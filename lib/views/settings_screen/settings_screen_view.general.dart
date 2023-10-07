@@ -4,14 +4,14 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
   return FluentSettingsPage(
     title: "General",
     blocks: [
-      _getInput(
+      NumberInputCard(
         icon: FluentIcons.timer,
         title: "Capture delay",
         subtitle: 'In seconds',
         value: () => viewModel.captureDelaySecondsSetting,
-        onChanged: controller.onCaptureDelaySecondsChanged,
+        onFinishedEditing: controller.onCaptureDelaySecondsChanged,
       ),
-      _getBooleanInput(
+      BooleanInputCard(
         icon: FluentIcons.picture_center,
         title: "Treat single photo as collage",
         subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",

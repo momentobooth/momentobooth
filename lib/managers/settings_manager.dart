@@ -35,6 +35,7 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
 
   @action
   Future<void> updateAndSave(Settings settings) async {
+    if (settings == _settings) return;
     _settings = settings;
     await _save();
   }
