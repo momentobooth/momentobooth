@@ -44,7 +44,13 @@ Widget _getConnectionBlock(SettingsScreenViewModel viewModel, SettingsScreenCont
         value: () => viewModel.mqttIntegrationSecureSetting,
         onChanged: controller.onMqttIntegrationSecureChanged,
       ),
-      // webscoekt
+      _getBooleanInput(
+        icon: FluentIcons.security_test,
+        title: "Verify server certificate",
+        subtitle: "If enabled and a secure connection is used, the application will verify the server certificate against the trusted certificates on the device.",
+        value: () => viewModel.mqttIntegrationVerifyCertificateSetting,
+        onChanged: controller.onMqttIntegrationVerifyCertificateChanged,
+      ),
       _getBooleanInput(
         icon: FluentIcons.toggle_border,
         title: "Use WebSocket",
