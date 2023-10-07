@@ -95,6 +95,29 @@ FluentSettingCard _getTextInput({
   );
 }
 
+FluentSettingCard _getPasswordInput({
+  required IconData icon,
+  required String title,
+  required String subtitle,
+  required TextEditingController controller,
+  required ValueChanged<String?> onChanged,
+}) {
+  return FluentSettingCard(
+    icon: icon,
+    title: title,
+    subtitle: subtitle,
+    child: SizedBox(
+      width: 250,
+      child: PasswordBox(
+        controller: controller,
+        onChanged: onChanged,
+        revealMode: PasswordRevealMode.peekAlways,
+        // Todo: See if there is a better way to fire onChanged instead of every button press.
+      ),
+    ),
+  );
+}
+
 FluentSettingCard _getBooleanInput({
   required IconData icon,
   required String title,

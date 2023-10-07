@@ -65,7 +65,7 @@ Widget _getConnectionBlock(SettingsScreenViewModel viewModel, SettingsScreenCont
         controller: controller.mqttIntegrationUsernameController,
         onChanged: controller.onMqttIntegrationUsernameChanged,
       ),
-      _getTextInput(
+      _getPasswordInput(
         icon: FluentIcons.password_field,
         title: "MQTT password",
         subtitle: "The password to use when connecting to the MQTT broker.",
