@@ -220,7 +220,11 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
                       onPointerDown: (_) => _onActivity(isTap: true),
                       child: child,
                     ),
-                    _settingsOpen ? _settingsScreen : const SizedBox(),
+                    Visibility(
+                      visible: _settingsOpen,
+                      maintainState: true,
+                      child: _settingsScreen,
+                    ),
                   ],
                 ),
               ),
