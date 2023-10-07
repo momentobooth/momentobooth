@@ -4,7 +4,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
   return FluentSettingsPage(
     title: "User interface",
     blocks: [
-      _getComboBoxCard<Language>(
+      ComboBoxCard<Language>(
         icon: FluentIcons.locale_language,
         title: "Language",
         subtitle: "The language used in the app (except for this settings screen)",
@@ -15,14 +15,14 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
       FluentSettingsBlock(
         title: "Animations",
         settings: [
-          _getBooleanInput(
+          BooleanInputCard(
             icon: FluentIcons.favorite_star,
             title: "Display confetti 🎉",
             subtitle: "If enabled, confetti will shower the share screen!",
             value: () => viewModel.displayConfettiSetting,
             onChanged: controller.onDisplayConfettiChanged,
           ),
-          _getComboBoxCard<ScreenTransitionAnimation>(
+          ComboBoxCard<ScreenTransitionAnimation>(
             icon: FluentIcons.transition_effect,
             title: "Screen transition animation",
             subtitle: "The animation used when switching between screens",
@@ -35,7 +35,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
       FluentSettingsBlock(
         title: "Advanced",
         settings: [
-          _getComboBoxCard<FilterQuality>(
+          ComboBoxCard<FilterQuality>(
             icon: FluentIcons.transition_effect,
             title: "Filter quality for screen transitions",
             subtitle: "The filter quality used for the screen transition scale animation",
@@ -43,7 +43,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
             value: () => viewModel.screenTransitionAnimationFilterQuality,
             onChanged: controller.onScreenTransitionAnimationFilterQualityChanged,
           ),
-          _getComboBoxCard<FilterQuality>(
+          ComboBoxCard<FilterQuality>(
             icon: FluentIcons.front_camera,
             title: "Filter quality for live view",
             subtitle: "The filter quality used for the live view",

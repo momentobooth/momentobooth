@@ -7,7 +7,7 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
       FluentSettingsBlock(
         title: "Local",
         settings: [
-          _getFolderPickerCard(
+          FolderPickerCard(
             icon: FluentIcons.fabric_picture_library,
             title: "Local photo storage location",
             subtitle: "Location where the output images will be stored",
@@ -19,19 +19,19 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
       FluentSettingsBlock(
         title: "Share using internet",
         settings: [
-          _getTextInput(
+          TextInputCard(
             icon: FluentIcons.my_network,
             title: "Firefox Send URL",
             subtitle: "Firefox Send Server URL",
             controller: controller.firefoxSendServerUrlController,
-            onChanged: controller.onFirefoxSendServerUrlChanged,
+            onFinishedEditing: controller.onFirefoxSendServerUrlChanged,
           ),
         ],
       ),
       FluentSettingsBlock(
         title: "Image settings",
         settings: [
-          _getComboBoxCard(
+          ComboBoxCard(
             icon: FluentIcons.file_image,
             title: "Image file type",
             subtitle: "What kind of file to generate",
@@ -39,19 +39,19 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
             value: () => viewModel.exportFormat,
             onChanged: controller.onExportFormatChanged,
           ),
-          _getInput(
+          NumberInputCard(
             icon: FluentIcons.equalizer,
             title: "JPG quality",
             subtitle: 'Export quality (higher is bigger files)',
             value: () => viewModel.jpgQuality,
-            onChanged: controller.onJpgQualityChanged,
+            onFinishedEditing: controller.onJpgQualityChanged,
           ),
-          _getInput(
+          NumberInputCard(
             icon: FluentIcons.picture_stretch,
             title: "Output resolution multiplier",
             subtitle: 'Controls image resolution',
             value: () => viewModel.resolutionMultiplier,
-            onChanged: controller.onResolutionMultiplierChanged,
+            onFinishedEditing: controller.onResolutionMultiplierChanged,
             smallChange: 0.1,
           ),
           Padding(

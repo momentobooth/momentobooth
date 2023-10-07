@@ -79,6 +79,7 @@ abstract class _MqttManagerBase with Store {
         newSettings.port,
       )
         ..useWebSocket = newSettings.useWebSocket
+        ..secure = newSettings.secure
         ..autoReconnect = true;
 
       if (!newSettings.verifyCertificate) {

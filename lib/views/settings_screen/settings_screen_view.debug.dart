@@ -8,8 +8,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         title: "Stats",
         settings: [
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.touch,
               title: "Taps",
               subtitle: "The number of taps in the app (outside settings)",
@@ -17,8 +16,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             ),
           ),
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.front_camera,
               title: "Live view frames",
               subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames",
@@ -26,8 +24,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             ),
           ),
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.print,
               title: "Printed pictures",
               subtitle: "The number of prints (e.g. 2 prints of the same pictures will count as 2 as well)",
@@ -35,8 +32,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             ),
           ),
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.upload,
               title: "Uploaded pictures",
               subtitle: "The number of uploaded pictures",
@@ -44,8 +40,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             ),
           ),
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.camera,
               title: "Captured photos",
               subtitle: "The number of photo captures (e.g. a multi capture picture would increase this by 4)",
@@ -53,8 +48,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             ),
           ),
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.photo2,
               title: "Created single shot pictures",
               subtitle: "The number of single capture pictures created",
@@ -62,8 +56,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             ),
           ),
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.undo,
               title: "Retakes",
               subtitle: "The number of retakes for (single) photo captures",
@@ -71,8 +64,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             ),
           ),
           Observer(
-            builder: (context) => _getTextDisplay(
-              context: context,
+            builder: (context) => TextDisplayCard(
               icon: FluentIcons.photo_collection,
               title: "Created multi shot pictures",
               subtitle: "The number of multi shot pictures created",
@@ -84,7 +76,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
       FluentSettingsBlock(
         title: "Debug actions",
         settings: [
-          _getButtonCard(
+          ButtonCard(
             icon: FluentIcons.error,
             title: "Report fake error",
             subtitle: "Test whether error reporting (to Sentry) works",
