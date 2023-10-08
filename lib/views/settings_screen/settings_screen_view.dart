@@ -14,6 +14,7 @@ import 'package:momento_booth/views/settings_screen/settings_screen_view_model.d
 import 'package:momento_booth/views/settings_screen/widgets/boolean_input_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/button_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/combo_box_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/file_picker_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/folder_picker_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/number_input_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/password_input_card.dart';

@@ -11,6 +11,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
+  TextEditingController? _shareScreenSfxFileController;
+  TextEditingController get shareScreenSfxFileController => _shareScreenSfxFileController ??= TextEditingController(text: viewModel.shareScreenSfxFileSetting);
+
   TextEditingController? _captureLocationController;
   TextEditingController get captureLocationController => _captureLocationController ??= TextEditingController(text: viewModel.captureLocationSetting);
 
@@ -274,6 +277,18 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onDisplayConfettiChanged(bool? displayConfetti) {
     if (displayConfetti != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(displayConfetti: displayConfetti));
+    }
+  }
+
+  void onEnableSfxChanged(bool? enableSfx) {
+    if (enableSfx != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(enableSfx: enableSfx));
+    }
+  }
+
+  void onShareScreenSfxFileChanged(String? shareScreenSfxFile) {
+    if (shareScreenSfxFile != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(shareScreenSfxFile: shareScreenSfxFile));
     }
   }
 
