@@ -38,7 +38,6 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
       String routeType = page.child.runtimeType.toString();
 
       loggy.debug("Route remove: $routeType");
-      MqttManager.instance.publishScreen(routeType);
     } else {
       loggy.debug("Route remove: Unknown (is not a CustomTransitionPage))");
     }
@@ -63,9 +62,7 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
     }
 
     loggy.debug("Route replaced ${oldRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'} with ${newRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'}");
-    if (newRouteChildName != null) {
-      MqttManager.instance.publishScreen(newRouteChildName);
-    }
+    if (newRouteChildName != null) MqttManager.instance.publishScreen(newRouteChildName);
   }
 
 }
