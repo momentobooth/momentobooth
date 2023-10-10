@@ -9,10 +9,12 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route.settings is CustomTransitionPage) {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
-      loggy.debug("Route push: ${page.child}");
-      MqttManager.instance.publishScreen('${page.child}');
+      String routeType = page.child.runtimeType.toString();
+
+      loggy.debug("Route push: $routeType");
+      MqttManager.instance.publishScreen(routeType);
     } else {
-      loggy.debug("Route push: Unknown (could not cast to CustomTransitionPage))");
+      loggy.debug("Route push: Unknown (is not a CustomTransitionPage))");
     }
   }
 
@@ -20,10 +22,12 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
   void didPop(Route route, Route? previousRoute) {
     if (route.settings is CustomTransitionPage) {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
-      loggy.debug("Route pop: ${page.child}");
-      MqttManager.instance.publishScreen('${page.child}');
+      String routeType = page.child.runtimeType.toString();
+
+      loggy.debug("Route pop: $routeType");
+      MqttManager.instance.publishScreen(routeType);
     } else {
-      loggy.debug("Route pop: Unknown (could not cast to CustomTransitionPage))");
+      loggy.debug("Route pop: Unknown (is not a CustomTransitionPage))");
     }
   }
 
@@ -31,9 +35,12 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
   void didRemove(Route route, Route? previousRoute) {
     if (route.settings is CustomTransitionPage) {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
-      loggy.debug("Route remove: ${page.child}");
+      String routeType = page.child.runtimeType.toString();
+
+      loggy.debug("Route remove: $routeType");
+      MqttManager.instance.publishScreen(routeType);
     } else {
-      loggy.debug("Route remove: Unknown (could not cast to CustomTransitionPage))");
+      loggy.debug("Route remove: Unknown (is not a CustomTransitionPage))");
     }
   }
 
@@ -45,18 +52,20 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
       newRouteChildName = "None";
     } else if (newRoute.settings is CustomTransitionPage) {
       CustomTransitionPage page = newRoute.settings as CustomTransitionPage;
-      newRouteChildName = page.child.toString();
+      newRouteChildName = page.child.runtimeType.toString();
     }
 
     if (oldRoute == null) {
       oldRouteChildName = "None";
     } else if (oldRoute.settings is CustomTransitionPage) {
       CustomTransitionPage page = oldRoute.settings as CustomTransitionPage;
-      oldRouteChildName = page.child.toString();
+      oldRouteChildName = page.child.runtimeType.toString();
     }
 
-    loggy.debug("Route replaced ${oldRouteChildName ?? 'Unknown (could not cast)'} with ${newRouteChildName ?? 'Unknown (could not cast)'}");
-    if (newRouteChildName != null) MqttManager.instance.publishScreen(newRouteChildName);
+    loggy.debug("Route replaced ${oldRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'} with ${newRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'}");
+    if (newRouteChildName != null) {
+      MqttManager.instance.publishScreen(newRouteChildName);
+    }
   }
 
 }
