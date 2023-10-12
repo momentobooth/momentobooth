@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/utils/hardware.dart';
@@ -19,7 +20,9 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   ShareScreenController({
     required super.viewModel,
     required super.contextAccessor,
-  });
+  }) {
+    SfxManager.instance.playShareScreenSound();
+  }
 
   void onClickNext() {
     router.go(StartScreen.defaultRoute);

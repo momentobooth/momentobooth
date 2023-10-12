@@ -13,10 +13,12 @@ part 'share_screen_view_model.g.dart';
 class ShareScreenViewModel = ShareScreenViewModelBase with _$ShareScreenViewModel;
 
 enum UploadState {
+
   notStarted,
   uploading,
   errored,
-  done
+  done,
+
 }
 
 abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {

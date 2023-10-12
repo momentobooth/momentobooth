@@ -61,6 +61,10 @@ dependencies:
   flutter_loggy: 2.0.2
   sentry_flutter: 7.10.1
 
+  # Sound output
+  just_audio: 0.9.35
+  just_audio_windows: 0.2.0
+
   # Misc
   meta: 1.9.1
   toml: 0.14.0
@@ -100,6 +104,7 @@ flutter:
     - assets/svg/
     - assets/fonts/brandon_grotesque/
     - assets/scripts/
+    - assets/sounds/
 
   fonts:
     - family: Brandon Grotesque

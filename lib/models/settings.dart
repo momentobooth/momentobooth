@@ -135,6 +135,8 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
   const factory UiSettings({
     @Default(Language.english) Language language,
     @Default(true) bool displayConfetti,
+    @Default(false) bool enableSfx,
+    @Default("") String shareScreenSfxFile,
     @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
     @Default(FilterQuality.low) FilterQuality liveViewFilterQuality,

@@ -33,6 +33,30 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         ],
       ),
       FluentSettingsBlock(
+        title: "Sound effects",
+        settings: [
+          BooleanInputCard(
+            icon: FluentIcons.volume3,
+            title: "Enable sound effects 🔊",
+            subtitle: "If enabled, sound effects will be enabled",
+            value: () => viewModel.enableSfxSetting,
+            onChanged: controller.onEnableSfxChanged,
+          ),
+          Observer(builder: (_) {
+            if (viewModel.enableSfxSetting) {
+              return FilePickerCard(
+                icon: FluentIcons.volume3,
+                title: "Share screen sound effect",
+                subtitle: "The sound effect that will be played when the share screen is opened",
+                controller: controller.shareScreenSfxFileController,
+                onChanged: controller.onShareScreenSfxFileChanged,
+              );
+            }
+            return const SizedBox();
+          }),
+        ],
+      ),
+      FluentSettingsBlock(
         title: "Advanced",
         settings: [
           ComboBoxCard<FilterQuality>(
