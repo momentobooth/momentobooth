@@ -64,6 +64,7 @@ dependencies:
   # Sound output
   just_audio: 0.9.35
   just_audio_windows: 0.2.0
+  just_audio_mpv: 0.1.7
 
   # Misc
   meta: 1.9.1
