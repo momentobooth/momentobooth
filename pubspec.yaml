@@ -29,7 +29,6 @@ dependencies:
   wave: 0.2.2
   texture_rgba_renderer:
     git: https://github.com/h3x4d3c1m4l/flutter_texture_rgba_renderer
-  just_audio: 0.9.35
 
   # Printscreen/Image processing
   screenshot: 2.1.0
@@ -61,6 +60,10 @@ dependencies:
   loggy: 2.0.3
   flutter_loggy: 2.0.2
   sentry_flutter: 7.10.1
+
+  # Sound output
+  just_audio: 0.9.35
+  just_audio_windows: 0.2.0
 
   # Misc
   meta: 1.9.1
@@ -101,6 +104,7 @@ flutter:
     - assets/svg/
     - assets/fonts/brandon_grotesque/
     - assets/scripts/
+    - assets/sounds/
 
   fonts:
     - family: Brandon Grotesque

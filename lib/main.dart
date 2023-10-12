@@ -17,6 +17,7 @@ import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
@@ -72,6 +73,9 @@ void main() async {
 
   // MQTT client manager init
   MqttManager.instance.initialize();
+
+  // Sfx manager init
+  await SfxManager.instance.initialize();
 
   await SentryFlutter.init(
     (options) {
