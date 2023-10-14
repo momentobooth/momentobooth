@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class SliderWidget extends StatefulWidget {
+
   final Widget child; 
 
   const SliderWidget({
@@ -10,10 +11,10 @@ class SliderWidget extends StatefulWidget {
 
   @override
   State<SliderWidget> createState() => SliderWidgetState();
+
 }
 
-class SliderWidgetState extends State<SliderWidget>
-    with SingleTickerProviderStateMixin {
+class SliderWidgetState extends State<SliderWidget> with SingleTickerProviderStateMixin {
 
   late final AnimationController _controller = AnimationController(
     duration: const Duration(milliseconds: 600),
@@ -33,7 +34,7 @@ class SliderWidgetState extends State<SliderWidget>
     end: Offset.zero,
   ).animate(CurvedAnimation(
     parent: _controller,
-    curve: Curves.easeOut,
+    curve: Curves.easeInOut,
   ));
 
   @override
@@ -57,4 +58,5 @@ class SliderWidgetState extends State<SliderWidget>
       ),
     );
   }
+
 }

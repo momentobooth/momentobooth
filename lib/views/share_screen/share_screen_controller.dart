@@ -47,11 +47,13 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
   
   Future<void> onClickGetQR() async {
-    if (viewModel.uploadState == UploadState.done) {
+     if (viewModel.qrUrl != null) {
       viewModel.qrShown = true;
       viewModel.sliderKey.currentState!.animateForward();
+      return;
+    } else if (viewModel.uploadProgress != null) {
+      return;
     }
-    if (viewModel.uploadState != UploadState.notStarted) return;
 
     File file = await PhotosManager.instance.getOutputImageAsTempFile();
     final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
@@ -60,27 +62,29 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
 
     viewModel
-      ..qrText = localizations.shareScreenQrUploading
-      ..uploadState = UploadState.uploading;
+      ..uploadProgress = 0.0
+      ..uploadFailed = false;
 
     stream.listen((event) {
       if (event.isFinished) {
         loggy.debug("Upload complete: ${event.downloadUrl}");
 
         viewModel
-          ..uploadState = UploadState.done
-          ..qrText = localizations.shareScreenShowQrButton
-          ..qrUrl = event.downloadUrl!
+          ..uploadProgress = null
+          ..qrUrl = event.downloadUrl
           ..qrShown = true
           ..sliderKey.currentState!.animateForward();
 
         StatsManager.instance.addUploadedPhoto();
       } else {
         loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
+        viewModel.uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
     }).onError((x) {
       loggy.error("Upload failed, file path: ${file.path}", x);
-      viewModel.uploadState = UploadState.errored;
+      viewModel
+        ..uploadProgress = null
+        ..uploadFailed = true;
     });
   }
 

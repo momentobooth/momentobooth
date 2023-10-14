@@ -24,6 +24,7 @@
     "photoDetailsScreenGetQrButton": "QR krijgen",
     "photoDetailsScreenQrUploading": "Uploaden",
     "photoDetailsScreenShowQrButton": "QR tonen",
+    "photoDetailsScreenRetryQrButton": "Fout, opnieuw?",
     "photoDetailsScreenPrinting": "Afdrukken...",
     "photoDetailsScreenPrintUnsuccesful": "Afdrukken mislukt",
 
@@ -33,6 +34,7 @@
     "shareScreenGetQrButton": "QR krijgen",
     "shareScreenQrUploading": "Uploaden",
     "shareScreenShowQrButton": "QR tonen",
+    "shareScreenRetryQrButton": "Fout, opnieuw?",
     "shareScreenPrinting": "Afdrukken...",
     "shareScreenPrintUnsuccesful": "Afdrukken mislukt",
 

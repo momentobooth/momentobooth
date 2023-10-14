@@ -1,5 +1,6 @@
 xcuserdata/
 target/
+build/
 
 # Generated Rust code
 src/dart_bridge/ffi_exports.io.rs

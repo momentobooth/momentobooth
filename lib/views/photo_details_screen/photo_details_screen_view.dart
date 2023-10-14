@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
@@ -97,10 +97,23 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
               onTap: controller.onClickGetQR,
               behavior: HitTestBehavior.translucent,
               child: Observer(
-                builder: (context) => AutoSizeText(
-                  viewModel.qrText,
-                  style: theme.titleStyle,
-                ),
+                builder: (context) {
+                  if (viewModel.uploadProgress != null) {
+                    return ProgressRing(
+                      value: (viewModel.uploadProgress ?? 0) * 100,
+                    );
+                  } else if (viewModel.uploadFailed) {
+                    return AutoSizeText(
+                      localizations.photoDetailsScreenRetryQrButton,
+                      style: theme.titleStyle,
+                    );
+                  }
+
+                  return AutoSizeText(
+                    localizations.photoDetailsScreenGetQrButton,
+                    style: theme.titleStyle,
+                  );
+                },
               ),
             ),
           ),
@@ -159,7 +172,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
           ),
           child: QrCode(
             size: 500,
-            data: viewModel.qrUrl,
+            data: viewModel.qrUrl ?? "",
           ),
         ),
       );

@@ -24,6 +24,7 @@
     "photoDetailsScreenGetQrButton": "Get QR",
     "photoDetailsScreenQrUploading": "Uploading",
     "photoDetailsScreenShowQrButton": "Show QR",
+    "photoDetailsScreenRetryQrButton": "Error, retry?",
     "photoDetailsScreenPrinting": "Printing...",
     "photoDetailsScreenPrintUnsuccesful": "Print unsuccessful",
 
@@ -33,6 +34,7 @@
     "shareScreenGetQrButton": "Get QR",
     "shareScreenQrUploading": "Uploading",
     "shareScreenShowQrButton": "Show QR",
+    "shareScreenRetryQrButton": "Error, retry?",
     "shareScreenPrinting": "Printing...",
     "shareScreenPrintUnsuccesful": "Print unsuccessful",
 
