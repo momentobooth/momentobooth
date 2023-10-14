@@ -137,6 +137,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,
     @Default(true) bool displayConfetti,
     @Default(false) bool enableSfx,
+    @Default("") String clickSfxFile,
     @Default("") String shareScreenSfxFile,
     @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,

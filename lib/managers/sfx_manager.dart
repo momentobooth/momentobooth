@@ -44,6 +44,12 @@ abstract class _SfxManagerBase with Store, UiLoggy {
     await _playSound(filePath);
   }
 
+  Future<void> playClickSound() async {
+    String filePath = SettingsManager.instance.settings.ui.clickSfxFile;
+
+    await _playSound(filePath);
+  }
+
   // ////////////// //
   // Helper methods //
   // ////////////// //

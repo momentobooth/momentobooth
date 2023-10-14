@@ -45,6 +45,18 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           Observer(builder: (_) {
             if (viewModel.enableSfxSetting) {
               return FilePickerCard(
+                icon: FluentIcons.clicked,
+                title: "Click sound effect",
+                subtitle: "The sound effect that will be played when the screen is tapped or something is clicked",
+                controller: controller.clickSfxFileController,
+                onChanged: controller.onClickSfxFileChanged,
+              );
+            }
+            return const SizedBox();
+          }),
+          Observer(builder: (_) {
+            if (viewModel.enableSfxSetting) {
+              return FilePickerCard(
                 icon: FluentIcons.volume3,
                 title: "Share screen sound effect",
                 subtitle: "The sound effect that will be played when the share screen is opened",

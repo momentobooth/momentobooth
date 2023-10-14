@@ -11,6 +11,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
+  TextEditingController? _clickSfxFileController;
+  TextEditingController get clickSfxFileController => _clickSfxFileController ??= TextEditingController(text: viewModel.clickSfxFileSetting);
+
   TextEditingController? _shareScreenSfxFileController;
   TextEditingController get shareScreenSfxFileController => _shareScreenSfxFileController ??= TextEditingController(text: viewModel.shareScreenSfxFileSetting);
 
@@ -283,6 +286,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onEnableSfxChanged(bool? enableSfx) {
     if (enableSfx != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(enableSfx: enableSfx));
+    }
+  }
+
+  void onClickSfxFileChanged(String? clickSfxFile) {
+    if (clickSfxFile != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(clickSfxFile: clickSfxFile));
     }
   }
 
