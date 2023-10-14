@@ -82,6 +82,7 @@ abstract class _PhotosManagerBase with Store {
   
   @action
   Future<int> findLastImageNumber() async {
+    if (!outputDir.existsSync()) outputDir.createSync();
     final fileListBefore = await outputDir.list().toList();
     final matchingFiles = fileListBefore.whereType<File>().where((file) => basename(file.path).startsWith(baseName));
     
