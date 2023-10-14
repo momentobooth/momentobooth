@@ -156,13 +156,12 @@ enum Language {
 
 enum AnimationAnchor {
 
-  touchToStart(0, "Touch to start"),
-  logo(1, "Logo"),
-  screen(2, "Screen");
+  //touchToStart("Touch to start"), // TODO: implement
+  //logo("Logo"), // TODO: implement
+  screen("Screen");
 
-  final int value;
   final String name;
 
-  const AnimationAnchor(this.value, this.name);
+  const AnimationAnchor(this.name);
 
 }

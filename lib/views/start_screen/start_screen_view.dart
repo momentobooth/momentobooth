@@ -18,7 +18,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
   @override
   Widget get body {
     return LottieAnimationWrapper(
-      animationSettings: viewModel.screenAnimations,
+      animationSettings: viewModel.introScreenLottieAnimations,
       child: Stack(
         children: [
           GestureDetector(
@@ -54,12 +54,9 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
         Expanded(
           flex: 2,
           child: Center(
-            child: LottieAnimationWrapper(
-              animationSettings: viewModel.touchToStartAnimations,
-              child: AutoSizeText(
-                localizations.startScreenTouchToStartButton,
-                style: theme.titleStyle,
-              ),
+            child: AutoSizeText(
+              localizations.startScreenTouchToStartButton,
+              style: theme.titleStyle,
             ),
           ),
         ),
@@ -76,13 +73,10 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
       width: 450,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 32),
-        child: LottieAnimationWrapper(
-          animationSettings: viewModel.logoAnimations,
-          child: SvgPicture.asset(
-            "assets/svg/logo.svg",
-            colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),
-            alignment: Alignment.bottomCenter,
-          ),
+        child: SvgPicture.asset(
+          "assets/svg/logo.svg",
+          colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),
+          alignment: Alignment.bottomCenter,
         ),
       ),
     );

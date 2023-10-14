@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -13,27 +14,25 @@ class LottieAnimationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.passthrough,
       children: [
         child,
         for (LottieAnimationSettings animation in animationSettings)
-          LayoutBuilder(
-            builder: (context, snapshot) {
-              return Transform.translate(
-                offset: Offset(
-                  0.5 * animation.alignmentX * snapshot.maxWidth + animation.offsetDx,
-                  0.5 * animation.alignmentY * snapshot.maxHeight + animation.offsetDy,
+          Align(
+            alignment: Alignment(animation.alignmentX, animation.alignmentY),
+            child: Transform.translate(
+              offset: Offset(
+                animation.offsetDx,
+                animation.offsetDy,
+              ),
+              child: Transform.rotate(
+                angle: animation.rotation,
+                child: Lottie.file(
+                  File(animation.file),
+                  height: animation.height,
+                  width: animation.width,
                 ),
-                child: Transform.rotate(
-                  angle: animation.rotation,
-                  child: Lottie.file(
-                    File(animation.file),
-                    height: animation.height,
-                    width: animation.width,
-                  ),
-                ),
-              );
-            }
+              ),
+            ),
           ),
       ],
     );

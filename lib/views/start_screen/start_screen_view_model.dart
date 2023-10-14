@@ -13,19 +13,6 @@ abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
   @computed
   List<LottieAnimationSettings> get introScreenLottieAnimations =>  SettingsManager.instance.settings.ui.introScreenLottieAnimations;
 
-  @computed
-  List<LottieAnimationSettings> get touchToStartAnimations => 
-    introScreenLottieAnimations.where((animation) => animation.anchor == AnimationAnchor.touchToStart).toList();
-
-  @computed
-  List<LottieAnimationSettings> get logoAnimations =>
-      introScreenLottieAnimations
-          .where((animation) => animation.anchor == AnimationAnchor.logo)
-          .toList();
-
-  @computed
-  List<LottieAnimationSettings> get screenAnimations =>
-      introScreenLottieAnimations.where((animation) => animation.anchor == AnimationAnchor.screen).toList();
 
   StartScreenViewModelBase({required super.contextAccessor}) {
     // Remove images in memory
