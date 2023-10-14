@@ -134,6 +134,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
 
   const factory UiSettings({
     @Default(Language.english) Language language,
+    @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,
     @Default(true) bool displayConfetti,
     @Default(false) bool enableSfx,
     @Default("") String shareScreenSfxFile,
@@ -145,6 +146,28 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
   factory UiSettings.withDefaults() => UiSettings.fromJson({});
 
   factory UiSettings.fromJson(Map<String, Object?> json) => _$UiSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+}
+
+@Freezed(fromJson: true, toJson: true)
+class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEncodableValue {
+  const LottieAnimationSettings._();
+
+  const factory LottieAnimationSettings({
+    @Default("") String file,
+    @Default(0) double width,
+    @Default(0) double height,
+    @Default(AnimationAnchor.screen) AnimationAnchor anchor,
+    @Default(0) double alignmentX,
+    @Default(0) double alignmentY,
+    @Default(0) double offsetDx,
+    @Default(0) double offsetDy,
+    @Default(0) double rotation,
+  }) = _LottieAnimationSettings;
+
+  factory LottieAnimationSettings.fromJson(Map<String, Object?> json) => _$LottieAnimationSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
