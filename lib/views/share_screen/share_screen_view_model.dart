@@ -12,15 +12,6 @@ part 'share_screen_view_model.g.dart';
 
 class ShareScreenViewModel = ShareScreenViewModelBase with _$ShareScreenViewModel;
 
-enum UploadState {
-
-  notStarted,
-  uploading,
-  errored,
-  done,
-
-}
-
 abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
 
   ShareScreenViewModelBase({
@@ -33,22 +24,22 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   Uint8List get outputImage => PhotosManager.instance.outputImage!;
 
   @observable
-  late String qrText = localizations.shareScreenGetQrButton;
-
-  @observable
   late String printText = localizations.genericPrintButton;
 
   @observable
   bool printEnabled = true;
 
   @observable
-  UploadState uploadState = UploadState.notStarted;
+  double? uploadProgress;
+
+  @observable
+  bool uploadFailed = false;
 
   @observable
   bool qrShown = false;
 
   @observable
-  String qrUrl = "";
+  String? qrUrl;
 
   CaptureMode get captureMode => PhotosManager.instance.captureMode;
   String get backText => captureMode == CaptureMode.single ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;

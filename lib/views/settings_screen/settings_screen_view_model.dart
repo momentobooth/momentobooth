@@ -126,6 +126,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   double get resolutionMultiplier => SettingsManager.instance.settings.output.resolutionMultiplier;
   bool get displayConfettiSetting => SettingsManager.instance.settings.ui.displayConfetti;
   bool get enableSfxSetting => SettingsManager.instance.settings.ui.enableSfx;
+  String get clickSfxFileSetting => SettingsManager.instance.settings.ui.clickSfxFile;
   String get shareScreenSfxFileSetting => SettingsManager.instance.settings.ui.shareScreenSfxFile;
   Language get languageSetting => SettingsManager.instance.settings.ui.language;
   ScreenTransitionAnimation get screenTransitionAnimation => SettingsManager.instance.settings.ui.screenTransitionAnimation;

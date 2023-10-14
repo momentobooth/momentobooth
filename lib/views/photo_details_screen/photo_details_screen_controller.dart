@@ -29,11 +29,13 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   }
   
   Future<void> onClickGetQR() async {
-    if (viewModel.uploadState == UploadState.done) {
+    if (viewModel.qrUrl != null) {
       viewModel.qrShown = true;
       viewModel.sliderKey.currentState!.animateForward();
+      return;
+    } else if (viewModel.uploadProgress != null) {
+      return;
     }
-    if (viewModel.uploadState != UploadState.notStarted) return;
 
     final File file = viewModel.file; // Just take the file that we're viewing anyway
     final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
@@ -42,27 +44,29 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
 
     viewModel
-      ..qrText = localizations.photoDetailsScreenQrUploading
-      ..uploadState = UploadState.uploading;
+      ..uploadProgress = 0.0
+      ..uploadFailed = false;
 
     stream.listen((event) {
       if (event.isFinished) {
         loggy.debug("Upload complete: ${event.downloadUrl}");
 
         viewModel
-          ..uploadState = UploadState.done
-          ..qrText = localizations.photoDetailsScreenShowQrButton
-          ..qrUrl = event.downloadUrl!
+          ..uploadProgress = null
+          ..qrUrl = event.downloadUrl
           ..qrShown = true
           ..sliderKey.currentState!.animateForward();
 
         StatsManager.instance.addUploadedPhoto();
       } else {
         loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
+        viewModel.uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
     }).onError((x) {
       loggy.error("Upload failed, file path: ${file.path}", x);
-      viewModel.uploadState = UploadState.errored;
+      viewModel
+        ..uploadProgress = null
+        ..uploadFailed = true;
     });
   }
 

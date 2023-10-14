@@ -168,7 +168,10 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   /// Method that is fired when a user does any kind of touch or the route changes.
   /// This resets the return home timer.
   void _onActivity({bool isTap = false}) {
-    if (isTap) StatsManager.instance.addTap();
+    if (isTap) {
+      StatsManager.instance.addTap();
+      SfxManager.instance.playClickSound();
+    }
     _returnHomeTimer.cancel();
     _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
   }

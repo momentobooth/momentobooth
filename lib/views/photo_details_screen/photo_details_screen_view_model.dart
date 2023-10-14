@@ -9,13 +9,6 @@ import 'package:path/path.dart' hide context;
 
 part 'photo_details_screen_view_model.g.dart';
 
-enum UploadState {
-  notStarted,
-  uploading,
-  errored,
-  done
-}
-
 class PhotoDetailsScreenViewModel = PhotoDetailsScreenViewModelBase with _$PhotoDetailsScreenViewModel;
 
 abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with Store {
@@ -31,22 +24,22 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   File get file => File(join(outputDir.path, photoId));
 
   @observable
-  late String qrText = localizations.photoDetailsScreenGetQrButton;
-
-  @observable
   late String printText = localizations.genericPrintButton;
 
   @observable
   bool printEnabled = true;
 
   @observable
-  UploadState uploadState = UploadState.notStarted;
+  double? uploadProgress;
+
+  @observable
+  bool uploadFailed = false;
 
   @observable
   bool qrShown = false;
 
   @observable
-  String qrUrl = "";
+  String? qrUrl;
 
   /// Global key for controlling the slider widget.
   GlobalKey<SliderWidgetState> sliderKey = GlobalKey<SliderWidgetState>();

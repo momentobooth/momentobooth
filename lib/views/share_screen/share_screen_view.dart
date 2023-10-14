@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confetti/confetti.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
@@ -158,10 +158,23 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
               onTap: controller.onClickGetQR,
               behavior: HitTestBehavior.translucent,
               child: Observer(
-                builder: (context) => AutoSizeText(
-                  viewModel.qrText,
-                  style: theme.titleStyle,
-                ),
+                builder: (context) {
+                  if (viewModel.uploadProgress != null) {
+                    return ProgressRing(
+                      value: (viewModel.uploadProgress ?? 0) * 100,
+                    );
+                  } else if (viewModel.uploadFailed) {
+                    return AutoSizeText(
+                      localizations.shareScreenRetryQrButton,
+                      style: theme.titleStyle,
+                    );
+                  }
+
+                  return AutoSizeText(
+                    localizations.shareScreenGetQrButton,
+                    style: theme.titleStyle,
+                  );
+                },
               ),
             ),
           ),
@@ -220,7 +233,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           ),
           child: QrCode(
             size: 500,
-            data: viewModel.qrUrl,
+            data: viewModel.qrUrl ?? '',
           ),
         ),
       );
