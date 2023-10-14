@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/lottie_animation_wrapper.dart';
 import 'package:momento_booth/views/start_screen/start_screen_controller.dart';
 import 'package:momento_booth/views/start_screen/start_screen_view_model.dart';
 
@@ -13,30 +14,33 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
     required super.controller,
     required super.contextAccessor,
   });
-  
+
   @override
   Widget get body {
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: controller.onPressedContinue,
-          behavior: HitTestBehavior.opaque,
-          child: _foregroundElements,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(30),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: GestureDetector(
-              onTap: controller.onPressedGallery,
-              child: AutoSizeText(
-                localizations.startScreenGalleryButton,
-                style: theme.subTitleStyle,
+    return LottieAnimationWrapper(
+      animationSettings: viewModel.screenAnimations,
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: controller.onPressedContinue,
+            behavior: HitTestBehavior.opaque,
+            child: _foregroundElements,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(30),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: GestureDetector(
+                onTap: controller.onPressedGallery,
+                child: AutoSizeText(
+                  localizations.startScreenGalleryButton,
+                  style: theme.subTitleStyle,
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -50,9 +54,12 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
         Expanded(
           flex: 2,
           child: Center(
-            child: AutoSizeText(
-              localizations.startScreenTouchToStartButton,
-              style: theme.titleStyle,
+            child: LottieAnimationWrapper(
+              animationSettings: viewModel.touchToStartAnimations,
+              child: AutoSizeText(
+                localizations.startScreenTouchToStartButton,
+                style: theme.titleStyle,
+              ),
             ),
           ),
         ),
@@ -69,10 +76,13 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
       width: 450,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 32),
-        child: SvgPicture.asset(
-          "assets/svg/logo.svg",
-          colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),
-          alignment: Alignment.bottomCenter,
+        child: LottieAnimationWrapper(
+          animationSettings: viewModel.logoAnimations,
+          child: SvgPicture.asset(
+            "assets/svg/logo.svg",
+            colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),
+            alignment: Alignment.bottomCenter,
+          ),
         ),
       ),
     );

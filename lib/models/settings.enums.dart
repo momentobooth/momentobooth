@@ -153,3 +153,16 @@ enum Language {
   Locale toLocale() => Locale(code);
 
 }
+
+enum AnimationAnchor {
+
+  touchToStart(0, "Touch to start"),
+  logo(1, "Logo"),
+  screen(2, "Screen");
+
+  final int value;
+  final String name;
+
+  const AnimationAnchor(this.value, this.name);
+
+}
