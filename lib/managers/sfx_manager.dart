@@ -57,6 +57,7 @@ abstract class _SfxManagerBase with Store, UiLoggy {
   Future<void> _playSound(String filePath) async {
     try {
       if (!SettingsManager.instance.settings.ui.enableSfx || filePath.isEmpty) return;
+      await _audioPlayer?.stop();
       await _audioPlayer?.setFilePath(filePath);
       await _audioPlayer?.play();
     } catch (e) {
