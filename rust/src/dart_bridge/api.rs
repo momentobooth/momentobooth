@@ -102,6 +102,7 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
         is_streaming: true,
         valid_frame_count: handle.valid_frame_count.load(Ordering::SeqCst),
         error_frame_count: handle.error_frame_count.load(Ordering::SeqCst),
+        duplicate_frame_count: 0,
         last_frame_was_valid: handle.last_frame_was_valid.load(Ordering::SeqCst),
         time_since_last_received_frame: handle.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
     }
@@ -252,6 +253,11 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
                     camera.last_frame_was_valid.store(false, Ordering::SeqCst);
                 },
             }
+        }, move || {
+            let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+            let camera_arc = camera_ref.clone();
+            let camera = camera_arc.lock().expect("Could not lock camera");
+            camera.duplicate_frame_count.fetch_add(1, Ordering::SeqCst);
         }).await
     }).expect("Could not start live view")
 }
@@ -301,6 +307,7 @@ pub fn gphoto2_get_camera_status(handle_id: usize) -> CameraState {
         is_streaming: true,
         valid_frame_count: camera.valid_frame_count.load(Ordering::SeqCst),
         error_frame_count: camera.error_frame_count.load(Ordering::SeqCst),
+        duplicate_frame_count: camera.duplicate_frame_count.load(Ordering::SeqCst),
         last_frame_was_valid: camera.last_frame_was_valid.load(Ordering::SeqCst),
         time_since_last_received_frame: camera.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
     }
@@ -387,6 +394,7 @@ pub struct GPhoto2CameraHandle {
     pub camera: Arc<AsyncMutex<GPhoto2Camera>>,
     pub valid_frame_count: AtomicUsize,
     pub error_frame_count: AtomicUsize,
+    pub duplicate_frame_count: AtomicUsize,
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
     pub last_received_frame_timestamp: Option<Instant>,
@@ -399,6 +407,7 @@ impl GPhoto2CameraHandle {
             camera: Arc::new(AsyncMutex::new(camera)),
             valid_frame_count: AtomicUsize::new(0),
             error_frame_count: AtomicUsize::new(0),
+            duplicate_frame_count: AtomicUsize::new(0),
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
             last_received_frame_timestamp: None,
@@ -416,6 +425,7 @@ pub struct CameraState {
     pub is_streaming: bool,
     pub valid_frame_count: usize,
     pub error_frame_count: usize,
+    pub duplicate_frame_count: usize,
     pub last_frame_was_valid: bool,
     pub time_since_last_received_frame: Option<Duration>,
 }

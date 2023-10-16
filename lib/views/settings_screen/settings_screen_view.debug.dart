@@ -19,8 +19,8 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             builder: (context) => TextDisplayCard(
               icon: FluentIcons.front_camera,
               title: "Live view frames",
-              subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames",
-              text: "${StatsManager.instance.validLiveViewFrames} / ${StatsManager.instance.invalidLiveViewFrames}",
+              subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames / Duplicate frames",
+              text: "${StatsManager.instance.validLiveViewFrames} / ${StatsManager.instance.invalidLiveViewFrames} / ${StatsManager.instance.duplicateLiveViewFrames}",
             ),
           ),
           Observer(

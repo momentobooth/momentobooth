@@ -1,10 +1,10 @@
 use std::{thread::{self, JoinHandle}, time, sync::{atomic::{AtomicBool, Ordering}, Arc}};
 use turborand::{rng::Rng, GenCore};
 
-use crate::{dart_bridge::api::RawImage};
+use crate::dart_bridge::api::RawImage;
 
 pub fn start_and_get_handle<F>(width: usize, height: usize, frame_callback: F) -> WhiteNoiseGeneratorHandle where F: Fn(RawImage) + Send + 'static {
-    let ten_millis = time::Duration::from_millis(10);
+    let frame_wait_time = time::Duration::from_millis(20);
 
     let should_stop = Arc::new(AtomicBool::new(false));
     let should_stop_clone = should_stop.clone();
@@ -15,7 +15,7 @@ pub fn start_and_get_handle<F>(width: usize, height: usize, frame_callback: F) -
             let frame = generate_frame(&rng, width, height);
             frame_callback(frame);
 
-            thread::sleep(ten_millis)
+            thread::sleep(frame_wait_time)
         }
     });
 

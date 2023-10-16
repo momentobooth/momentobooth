@@ -1,5 +1,6 @@
-use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell::Cell, time::{Duration, Instant}};
+use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell::Cell, time::{Duration, Instant}, hash::{Hash, Hasher}};
 
+use ahash::AHasher;
 use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error, camera::CameraEvent};
 
 use tokio::sync::Mutex as AsyncMutex;
@@ -47,7 +48,7 @@ pub async fn open_camera(model: String, port: String, special_handling: GPhoto2C
   })
 }
 
-pub async fn start_liveview<F>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, frame_callback: F) -> Result<()> where F: Fn(Result<RawImage>) + Send + Sync + 'static {
+pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, frame_callback: F, duplicate_frame_callback: D) -> Result<()> where F: Fn(Result<RawImage>) + Send + Sync + 'static, D: Fn() + Send + Sync + 'static {
   let mut camera = camera_ref.lock().await;
 
   // TODO: check if join handle not already set
@@ -65,20 +66,37 @@ pub async fn start_liveview<F>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, frame
   let join_handle = tokio::spawn(async move {
     let context = get_context().expect("TODO: handle this");
 
+    let last_hash = Cell::new(0);
+
     loop {
       let camera = camera_ref.lock().await;
       let preview = camera.camera.capture_preview().await.expect("Could not capture preview");
       drop(camera);
 
       let data = preview.get_data(&context).await.expect("Could not get preview data");
+      let hash = hash_box(&data);
+      if hash == last_hash.get() {
+        // Frame is the same as the last one, skip
+        duplicate_frame_callback();
+        continue;
+      }
+
       let raw_image = jpeg::decode_jpeg_to_rgba(&data); // TODO: Handle errors (this should return Option<RawImage>)
-      frame_callback(Ok(raw_image))
+      frame_callback(Ok(raw_image));
+
+      last_hash.set(hash);
     }
   });
 
   camera.thread_join_handle = Cell::new(Some(join_handle));
 
   Ok(())
+}
+
+fn hash_box(data: &Box<[u8]>) -> u64 {
+    let mut hasher = AHasher::default();
+    data.hash(&mut hasher);
+    hasher.finish()
 }
 
 pub async fn stop_liveview(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {

@@ -149,6 +149,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
         // Everything seems to be fine
         StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount;
         StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
+        StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
         _lastFrameWasInvalid = false;
       }
     });
