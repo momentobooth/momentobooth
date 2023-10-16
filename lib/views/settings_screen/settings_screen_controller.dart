@@ -403,4 +403,10 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onDebugShowFpsCounterChanged(bool? showFpsCounter) {
+    if (showFpsCounter != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(showFpsCounter: showFpsCounter));
+    }
+  }
+
 }

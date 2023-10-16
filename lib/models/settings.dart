@@ -34,7 +34,7 @@ class Settings with _$Settings implements TomlEncodableValue {
     @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
     @JsonKey(defaultValue: UiSettings.withDefaults) required UiSettings ui,
     @JsonKey(defaultValue: MqttIntegrationSettings.withDefaults) required MqttIntegrationSettings mqttIntegration,
-    //@Default(DebugSettings()) DebugSettings debug,
+    @JsonKey(defaultValue: DebugSettings.withDefaults) required DebugSettings debug,
   }) = _Settings;
 
   factory Settings.withDefaults() => Settings.fromJson({});
@@ -130,6 +130,7 @@ String _getHome() {
 
 @Freezed(fromJson: true, toJson: true)
 class UiSettings with _$UiSettings implements TomlEncodableValue {
+
   const UiSettings._();
 
   const factory UiSettings({
@@ -150,10 +151,12 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
+
 }
 
 @Freezed(fromJson: true, toJson: true)
 class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEncodableValue {
+
   const LottieAnimationSettings._();
 
   const factory LottieAnimationSettings({
@@ -172,6 +175,7 @@ class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEnco
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
+
 }
 
 // //////////////////// //
@@ -180,6 +184,7 @@ class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEnco
 
 @Freezed(fromJson: true, toJson: true)
 class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEncodableValue {
+
   const MqttIntegrationSettings._();
 
   const factory MqttIntegrationSettings({
@@ -204,29 +209,30 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
+
 }
 
 // ////////////// //
 // Debug Settings //
 // ////////////// //
 
-// @Freezed(fromJson: true, toJson: true)
-// class DebugSettings with _$DebugSettings implements TomlEncodableValue {
+@Freezed(fromJson: true, toJson: true)
+class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 
-//   const DebugSettings._();
+  const DebugSettings._();
 
-//   const factory DebugSettings({
+  const factory DebugSettings({
+    @Default(false) bool showFpsCounter,
+  }) = _DebugSettings;
 
-//   }) = _DebugSettings;
+  factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
 
-//   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
+  factory DebugSettings.fromJson(Map<String, Object?> json) => _$DebugSettingsFromJson(json);
 
-//   factory DebugSettings.fromJson(Map<String, Object?> json) => _$DebugSettingsFromJson(json);
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
 
-//   @override
-//   Map<String, dynamic> toTomlValue() => toJson();
-
-// }
+}
 
 // /////////////// //
 // Default helpers //

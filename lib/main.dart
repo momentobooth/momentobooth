@@ -9,7 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lemberfpsmonitor/lemberfpsmonitor.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
@@ -231,6 +233,18 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
                       visible: _settingsOpen,
                       maintainState: true,
                       child: _settingsScreen,
+                    ),
+                    Observer(
+                      builder: (_) {
+                        if (SettingsManager.instance.settings.debug.showFpsCounter) {
+                          return FPSMonitor(
+                            showFPSChart: true,
+                            align: Alignment.topRight,
+                            onFPSChanged: (fps) {},
+                          );
+                        }
+                        return const SizedBox();
+                      },
                     ),
                   ],
                 ),

@@ -74,6 +74,18 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ],
       ),
       FluentSettingsBlock(
+        title: "Debug settings",
+        settings: [
+          BooleanInputCard(
+            icon: FluentIcons.count,
+            title: "Show FPS count",
+            subtitle: "Show the FPS count in the upper right corner.",
+            value: () => viewModel.debugShowFpsCounter,
+            onChanged: controller.onDebugShowFpsCounterChanged,
+          ),
+        ],
+      ),
+      FluentSettingsBlock(
         title: "Debug actions",
         settings: [
           ButtonCard(
@@ -84,7 +96,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             onPressed: () => throw Exception("This is a fake error to test error reporting"),
           ),
         ],
-      )
+      ),
     ],
   );
 }
