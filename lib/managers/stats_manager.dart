@@ -45,6 +45,9 @@ abstract class _StatsManagerBase with Store, UiLoggy {
   @observable
   int invalidLiveViewFrames = 0;
 
+  @observable
+  int duplicateLiveViewFrames = 0;
+
   // /////// //
   // Updates //
   // /////// //

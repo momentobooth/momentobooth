@@ -31,6 +31,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
   Widget _photoInst(SelectableImage image) {
     return Observer(
       builder: (context) => Stack(
+        clipBehavior: Clip.none,
         children: [
           Center(
             child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
@@ -40,6 +41,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
             child: Stack(
+              clipBehavior: Clip.none,
               fit: StackFit.expand,
               children: [
                 const ColoredBox(color: Color(0x80000000)),

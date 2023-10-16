@@ -18,6 +18,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
   @override
   Widget get body {
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
         // This widget is just here for the purpose of rendering the collage to a bitmap

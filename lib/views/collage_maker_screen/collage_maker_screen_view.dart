@@ -20,6 +20,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
   @override
   Widget get body {
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
         Row(
@@ -100,6 +101,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             onTap: () => controller.togglePicture(i),
             child: Observer(builder: (context) {
               return Stack(
+                clipBehavior: Clip.none,
                 children: [
                   ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
                   AnimatedOpacity(
@@ -107,6 +109,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeInOut,
                     child: Stack(
+                      clipBehavior: Clip.none,
                       fit: StackFit.expand,
                       children: [
                         const ColoredBox(color: Color(0x80000000)),

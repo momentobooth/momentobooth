@@ -19,8 +19,8 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             builder: (context) => TextDisplayCard(
               icon: FluentIcons.front_camera,
               title: "Live view frames",
-              subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames",
-              text: "${StatsManager.instance.validLiveViewFrames} / ${StatsManager.instance.invalidLiveViewFrames}",
+              subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames / Duplicate frames",
+              text: "${StatsManager.instance.validLiveViewFrames} / ${StatsManager.instance.invalidLiveViewFrames} / ${StatsManager.instance.duplicateLiveViewFrames}",
             ),
           ),
           Observer(
@@ -74,6 +74,18 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ],
       ),
       FluentSettingsBlock(
+        title: "Debug settings",
+        settings: [
+          BooleanInputCard(
+            icon: FluentIcons.count,
+            title: "Show FPS count",
+            subtitle: "Show the FPS count in the upper right corner.",
+            value: () => viewModel.debugShowFpsCounter,
+            onChanged: controller.onDebugShowFpsCounterChanged,
+          ),
+        ],
+      ),
+      FluentSettingsBlock(
         title: "Debug actions",
         settings: [
           ButtonCard(
@@ -84,7 +96,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             onPressed: () => throw Exception("This is a fake error to test error reporting"),
           ),
         ],
-      )
+      ),
     ],
   );
 }

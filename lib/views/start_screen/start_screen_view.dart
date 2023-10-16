@@ -20,6 +20,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
     return LottieAnimationWrapper(
       animationSettings: viewModel.introScreenLottieAnimations,
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           GestureDetector(
             onTap: controller.onPressedContinue,
