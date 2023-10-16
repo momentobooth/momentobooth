@@ -47,6 +47,7 @@ class CaptureCounterState extends State<CaptureCounter> with SingleTickerProvide
     return AspectRatio(
       aspectRatio: 1,
       child: Stack(
+        clipBehavior: Clip.none,
         fit: StackFit.expand,
         children: [
           Container(

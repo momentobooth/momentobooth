@@ -223,6 +223,7 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
             child: LiveViewBackground(
               child: Center(
                 child: Stack(
+                  clipBehavior: Clip.none,
                   children: [
                     Listener(
                       behavior: HitTestBehavior.translucent,

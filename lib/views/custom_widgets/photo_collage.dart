@@ -158,39 +158,43 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget _getLayout(AppLocalizations localizations) {
-    return Stack(fit: StackFit.expand, children: [
-      for (int i = 0; i <= 4; i++) ...[
-        if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
-          Opacity(
-            opacity: i == nChosen && widget.showBackground ? 1 : 0,
-            child: ImageWithLoaderFallback.file(templates[TemplateKind.back]?[i], fit: BoxFit.cover),
-          ),
-      ],
-      if (widget.debug == null)
-        Padding(
-          padding: EdgeInsets.all(gap + widget.padding),
-          child: _getInnerLayout(localizations),
-        ),
-      if (widget.debug != null)
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
+    return Stack(
+      clipBehavior: Clip.none,
+      fit: StackFit.expand,
+      children: [
+        for (int i = 0; i <= 4; i++) ...[
+          if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
+            Opacity(
+              opacity: i == nChosen && widget.showBackground ? 1 : 0,
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.back]?[i], fit: BoxFit.cover),
             ),
+        ],
+        if (widget.debug == null)
+          Padding(
+            padding: EdgeInsets.all(gap + widget.padding),
             child: _getInnerLayout(localizations),
           ),
-        ),
-      for (int i = 0; i <= 4; i++) ...[
-        if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
-          Opacity(
-            opacity: i == nChosen && widget.showForeground ? 1 : 0,
-            child: ImageWithLoaderFallback.file(templates[TemplateKind.front]?[i], fit: BoxFit.cover),
+        if (widget.debug != null)
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
+              ),
+              child: _getInnerLayout(localizations),
+            ),
           ),
+        for (int i = 0; i <= 4; i++) ...[
+          if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
+            Opacity(
+              opacity: i == nChosen && widget.showForeground ? 1 : 0,
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.front]?[i], fit: BoxFit.cover),
+            ),
+        ],
       ],
-    ]);
+    );
   }
 
   Widget _getInnerLayout(AppLocalizations localizations) {
@@ -315,6 +319,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
 
   Widget get _fourLayout {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         LayoutGrid(
           areas: '''

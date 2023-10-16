@@ -22,6 +22,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
   @override
   Widget get body {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         Padding(
           padding: const EdgeInsets.all(30),

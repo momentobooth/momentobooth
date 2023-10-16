@@ -18,6 +18,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
   @override
   Widget get body {
     return Stack(
+      clipBehavior: Clip.none,
       children: [
         Observer(
           builder: (context) => GridView.count(

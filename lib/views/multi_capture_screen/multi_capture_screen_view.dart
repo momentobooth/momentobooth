@@ -20,6 +20,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
   @override
   Widget get body {
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
         Row(
@@ -34,6 +35,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
               child: AspectRatio(
                 aspectRatio: 1.5,
                 child: Stack(
+                  clipBehavior: Clip.none,
                   children: [
                     _liveViewWithCounter,
                     Observer(builder: (_) {
@@ -84,9 +86,10 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
 
   Widget get _liveViewWithCounter {
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        const LiveView(),
+        const LiveView(fit: BoxFit.contain),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

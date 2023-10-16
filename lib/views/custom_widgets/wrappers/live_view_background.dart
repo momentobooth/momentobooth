@@ -25,6 +25,7 @@ class LiveViewBackground extends StatelessWidgetBase {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
         _viewState,
@@ -91,6 +92,7 @@ class LiveViewBackground extends StatelessWidgetBase {
     }
 
     return Stack(
+      clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
         ColoredBox(color: Colors.green),
@@ -102,7 +104,7 @@ class LiveViewBackground extends StatelessWidgetBase {
           duration: const Duration(milliseconds: 300),
           opacity: _showLiveViewBackground ? 1 : 0,
           curve: Curves.ease,
-          child: const LiveView(),
+          child: const LiveView(fit: BoxFit.contain),
         ),
       ],
     );
@@ -116,29 +118,28 @@ class LiveView extends StatelessWidgetBase {
 
   const LiveView({
     super.key,
-    this.fit = BoxFit.contain,
+    required this.fit,
   });
 
   Flip get _flip => SettingsManager.instance.settings.hardware.liveViewFlipImage;
+  ui.FilterQuality get _filterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality.toUiFilterQuality();
 
   @override
   Widget build(BuildContext context) {
     return Observer(
-      builder: (context) => Transform(
-        transform: Matrix4.diagonal3Values(_flip.flipX ? -1.0 : 1.0, _flip.flipY ? -1.0 : 1.0, 1.0),
-        alignment: Alignment.center,
-        child: AspectRatio(
-          aspectRatio: 3/2,
-          child: FittedBox(
-            fit: fit,
-            child: SizedBox(
-              width: 3,
-              height: 2,
-              child: Texture(
-                textureId: LiveViewManager.instance.textureId ?? 0,
-                filterQuality: SettingsManager.instance.settings.ui.liveViewFilterQuality.toUiFilterQuality(),
-              ),
-            ),
+      builder: (context) => FittedBox(
+        fit: fit,
+        child: SizedBox(
+          width: 3,
+          height: 2,
+          child: Transform.flip(
+            flipX: _flip.flipX,
+            flipY: _flip.flipY,
+            filterQuality: _filterQuality,
+            child: LiveViewManager.instance.textureId != null ? Texture(
+              textureId: LiveViewManager.instance.textureId!,
+              filterQuality: _filterQuality,
+            ) : null,
           ),
         ),
       ),
