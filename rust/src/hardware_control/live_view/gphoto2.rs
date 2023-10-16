@@ -3,7 +3,7 @@ use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell:
 use ahash::AHasher;
 use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error, camera::CameraEvent};
 
-use tokio::sync::Mutex as AsyncMutex;
+use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 
 use crate::{utils::jpeg, dart_bridge::api::RawImage, log_debug};
@@ -78,6 +78,7 @@ pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, fr
       if hash == last_hash.get() {
         // Frame is the same as the last one, skip
         duplicate_frame_callback();
+        sleep(Duration::from_millis(8)).await;
         continue;
       }
 
