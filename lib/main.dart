@@ -5,13 +5,10 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lemberfpsmonitor/lemberfpsmonitor.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
@@ -22,6 +19,9 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/shell/widgets/activity_monitor.dart';
+import 'package:momento_booth/shell/widgets/fps_monitor.dart';
+import 'package:momento_booth/shell/widgets/hotkey_monitor.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
@@ -110,11 +110,11 @@ class App extends StatefulWidget {
   const App({super.key});
 
   @override
-  State<App> createState() => _AppState();
+  State<App> createState() => AppState();
 
 }
 
-class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
+class AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
@@ -125,18 +125,15 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
     initialLocation: StartScreen.defaultRoute,
   );
 
-  bool _settingsOpen = false;
+  bool settingsOpen = false;
 
-  static const returnHomeTimeout = Duration(seconds: 45);
-  late Timer _returnHomeTimer;
   static const statusCheckPeriod = Duration(seconds: 5);
   late Timer _statusCheckTimer;
 
   @override
   void initState() {
-    _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
     _statusCheckTimer = Timer.periodic(statusCheckPeriod, (_) => _statusCheck());
-    _router.routerDelegate.addListener(() => _onActivity(isTap: false));
+    
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
@@ -161,29 +158,20 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
     });
   }
 
-  void _returnHome() {
-    if (_currentRouterLocation == StartScreen.defaultRoute) return;
-    loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
-    _router.go(StartScreen.defaultRoute);
-  }
-
-  /// Method that is fired when a user does any kind of touch or the route changes.
-  /// This resets the return home timer.
-  void _onActivity({bool isTap = false}) {
-    if (isTap) {
-      StatsManager.instance.addTap();
-      SfxManager.instance.playClickSound();
-    }
-    _returnHomeTimer.cancel();
-    _returnHomeTimer = Timer(returnHomeTimeout, _returnHome);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MomentoBoothTheme(
-      data: MomentoBoothThemeData.defaults(),
-      child: Builder(
-        builder: _getWidgetsApp,
+    return FpsMonitor(
+      child: ActivityMonitor(
+        router: _router,
+        child: HotkeyMonitor(
+          router: _router,
+          child: MomentoBoothTheme(
+            data: MomentoBoothThemeData.defaults(),
+            child: Builder(
+              builder: _getWidgetsApp,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -206,49 +194,18 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
         ],
         locale: SettingsManager.instance.settings.ui.language.toLocale(),
         builder: (context, child) {
-          // This stack allows us to put the Settings screen on top
-          bool control = !Platform.isMacOS, meta = Platform.isMacOS;
-          return CallbackShortcuts(
-            bindings: {
-              SingleActivator(LogicalKeyboardKey.keyH, control: control, meta: meta): () => _router.go(StartScreen.defaultRoute),
-              SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): LiveViewManager.instance.restoreLiveView,
-              SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () {
-                setState(() => _settingsOpen = !_settingsOpen);
-                loggy.debug("Settings ${_settingsOpen ? "opened" : "closed"}"); 
-              },
-              SingleActivator(LogicalKeyboardKey.keyM, control: control, meta: meta): _toggleManualCollageScreen,
-              SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): WindowManager.instance.toggleFullscreen,
-              const SingleActivator(LogicalKeyboardKey.enter, alt: true): WindowManager.instance.toggleFullscreen,
-            },
-            child: LiveViewBackground(
-              child: Center(
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Listener(
-                      behavior: HitTestBehavior.translucent,
-                      onPointerDown: (_) => _onActivity(isTap: true),
-                      child: child,
-                    ),
-                    Visibility(
-                      visible: _settingsOpen,
-                      maintainState: true,
-                      child: _settingsScreen,
-                    ),
-                    Observer(
-                      builder: (_) {
-                        if (SettingsManager.instance.settings.debug.showFpsCounter) {
-                          return FPSMonitor(
-                            showFPSChart: true,
-                            align: Alignment.topRight,
-                            onFPSChanged: (fps) {},
-                          );
-                        }
-                        return const SizedBox();
-                      },
-                    ),
-                  ],
-                ),
+          return LiveViewBackground(
+            child: Center(
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  child!,
+                  Visibility(
+                    visible: settingsOpen,
+                    maintainState: true,
+                    child: _settingsScreen,
+                  ),
+                ],
               ),
             ),
           );
@@ -289,25 +246,10 @@ class _AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
   @override
   void dispose() {
-    _returnHomeTimer.cancel();
     _statusCheckTimer.cancel();
     _router.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  String get _currentRouterLocation {
-    final RouteMatch lastMatch = _router.routerDelegate.currentConfiguration.last;
-    final RouteMatchList matchList = lastMatch is ImperativeRouteMatch ? lastMatch.matches : _router.routerDelegate.currentConfiguration;
-    return matchList.uri.toString();
-  }
-
-  void _toggleManualCollageScreen() {
-    if (_currentRouterLocation == ManualCollageScreen.defaultRoute) {
-      _router.go(StartScreen.defaultRoute);
-    } else {
-      _router.go(ManualCollageScreen.defaultRoute);
-    }
   }
 
   @override
