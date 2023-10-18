@@ -43,7 +43,7 @@ import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-part 'main.routes.dart';
+part 'shell/photobooth.routes.dart';
 
 late PackageInfo packageInfo;
 
@@ -116,17 +116,6 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
 
-  final GoRouter _router = GoRouter(
-    routes: _rootRoutes,
-    observers: [
-      GoRouterObserver(),
-      HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin, end: end)),
-    ],
-    initialLocation: StartScreen.defaultRoute,
-  );
-
-  bool settingsOpen = false;
-
   static const statusCheckPeriod = Duration(seconds: 5);
   late Timer _statusCheckTimer;
 
@@ -161,85 +150,34 @@ class AppState extends State<App> with UiLoggy, WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return FpsMonitor(
-      child: ActivityMonitor(
-        router: _router,
-        child: HotkeyMonitor(
-          router: _router,
-          child: MomentoBoothTheme(
-            data: MomentoBoothThemeData.defaults(),
-            child: Builder(
-              builder: _getWidgetsApp,
+      child: HotkeyMonitor(
+        child: FluentApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            FluentLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('nl'), // Dutch
+          ],
+          locale: SettingsManager.instance.settings.ui.language.toLocale(),
+          home: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 16,
+                  spreadRadius: 0,
+                ),
+              ],
             ),
+            margin: const EdgeInsets.all(32),
+            clipBehavior: Clip.hardEdge,
+            child: const SettingsScreen(),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _getWidgetsApp(BuildContext context) {
-    return FluentTheme(
-      data: FluentThemeData(),
-      child: WidgetsApp.router(
-        routerConfig: _router,
-        color: context.theme.primaryColor,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          FluentLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en'), // English
-          Locale('nl'), // Dutch
-        ],
-        locale: SettingsManager.instance.settings.ui.language.toLocale(),
-        builder: (context, child) {
-          return LiveViewBackground(
-            child: Center(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  child!,
-                  Visibility(
-                    visible: settingsOpen,
-                    maintainState: true,
-                    child: _settingsScreen,
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget get _settingsScreen {
-    return FluentApp(
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        FluentLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en'), // English
-        Locale('nl'), // Dutch
-      ],
-      locale: SettingsManager.instance.settings.ui.language.toLocale(),
-      home: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 16,
-              spreadRadius: 0,
-            ),
-          ],
-        ),
-        margin: const EdgeInsets.all(32),
-        clipBehavior: Clip.hardEdge,
-        child: const SettingsScreen(),
       ),
     );
   }
