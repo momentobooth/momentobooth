@@ -185,6 +185,7 @@ abstract class _MqttManagerBase with Store {
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
       MqttPayloadBuilder().payload!,
+      retain: true,
     );
   }
 
