@@ -164,12 +164,28 @@ abstract class _MqttManagerBase with Store {
 
   void publishSettings([Settings? settings]) {
     if (settings != null) _settings = settings;
-    _publish("settings", jsonEncode(_settings.toJson()));
+    _publish(
+      "running_settings",
+      jsonEncode(
+        _settings.toJson()..["mqttIntegration"] = null,
+      ),
+    );
   }
 
   void _publishAppVersion() {
     _publish("app_version", packageInfo.version);
     _publish("app_build", packageInfo.buildNumber);
+  }
+
+  void _clearTopic(String topic) {
+    if (_client == null) return;
+
+    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    _client!.publishMessage(
+      '$rootTopic/$topic',
+      MqttQos.atMostOnce,
+      MqttPayloadBuilder().payload!..clear(),
+    );
   }
 
   // ///////////// //
@@ -181,6 +197,8 @@ abstract class _MqttManagerBase with Store {
     _client!.published!.listen((message) {
       switch (message) {
         case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/update_settings":
+          if (payload.length == 0) return;
+          _clearTopic("update_settings");
           _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
         default:
           loggy.logWarning("Received unknown MQTT message: $message");
@@ -202,7 +220,10 @@ abstract class _MqttManagerBase with Store {
   void _onSettingsMessage(String message) {
     loggy.logInfo("Received settings update from MQTT");
     Settings settings = Settings.fromJson(jsonDecode(message));
-    SettingsManager.instance.updateAndSave(settings);
+    SettingsManager.instance.updateAndSave(settings.copyWith(
+      // Don't copy these settings from MQTT
+      mqttIntegration: SettingsManager.instance.settings.mqttIntegration,
+    ));
     loggy.logInfo("Loaded settings data from MQTT");
   }
 
