@@ -8,6 +8,9 @@ targets:
             - lib/models/**/*.dart
             - lib/theme/*.dart
             - lib/rust_bridge/library_api.generated.dart
+        options:
+          map: false
+          when: false
       json_serializable:
         options:
           explicit_to_json: true

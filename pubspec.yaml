@@ -19,7 +19,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.7.6
-  go_router: 11.1.4
+  go_router: 12.0.0
   flutter_svg: 2.0.7
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.3
@@ -36,8 +36,8 @@ dependencies:
   image: 4.1.3
 
   # MVC
-  mobx: 2.2.0
-  flutter_mobx: 2.1.0
+  mobx: 2.2.1
+  flutter_mobx: 2.1.0+1
 
   # Models
   freezed_annotation: 2.4.1
@@ -88,7 +88,7 @@ dev_dependencies:
   mobx_codegen: 2.4.0
 
   # Code quality
-  flutter_lints: 2.0.3
+  flutter_lints: 3.0.0
 
   # Models
   freezed: 2.4.5
