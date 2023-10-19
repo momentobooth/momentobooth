@@ -108,7 +108,7 @@ abstract class _MqttManagerBase with Store {
 
         _connectionState = ConnectionState.connected;
         _forcePublishAll();
-        _subscribe();
+        _createSubscriptions();
       } catch (e) {
         loggy.logError("Failed to connect to MQTT server: $e");
       }
@@ -184,7 +184,7 @@ abstract class _MqttManagerBase with Store {
     _client!.publishMessage(
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
-      MqttPayloadBuilder().payload!..clear(),
+      MqttPayloadBuilder().payload!,
     );
   }
 
@@ -192,16 +192,20 @@ abstract class _MqttManagerBase with Store {
   // Subscriptions //
   // ///////////// //
 
-  void _subscribe() {
+  void _createSubscriptions() {
     String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
     _client!.published!.listen((message) {
-      switch (message) {
-        case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/update_settings":
-          if (payload.length == 0) return;
-          _clearTopic("update_settings");
-          _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
-        default:
-          loggy.logWarning("Received unknown MQTT message: $message");
+      try {
+        switch (message) {
+          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/update_settings":
+            if (payload.length == 0) return;
+            _clearTopic("update_settings");
+            _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
+          default:
+            loggy.logWarning("Received unknown published MQTT message: $message");
+        }
+      } catch (e) {
+        loggy.logError("Failed to parse published MQTT message (length: ${message.payload.length}): $e");
       }
     });
 
@@ -234,8 +238,8 @@ abstract class _MqttManagerBase with Store {
   HomeAssistantDevice get homeAssistantDevice => HomeAssistantDevice(
       identifiers: [SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId],
       manufacturer: "h3x Software",
-      model: "Momento Booth",
-      name: "Momento Booth instance on ${Platform.localHostname}",
+      model: "MomentoBooth",
+      name: "MomentoBooth instance on ${Platform.localHostname}",
       softwareVersion: '${packageInfo.version} build ${packageInfo.buildNumber}',
     );
 
