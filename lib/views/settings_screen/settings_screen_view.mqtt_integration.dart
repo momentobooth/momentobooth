@@ -90,7 +90,7 @@ Widget _getClientBlock(SettingsScreenViewModel viewModel, SettingsScreenControll
       TextInputCard(
         icon: FluentIcons.chat,
         title: "MQTT root topic",
-        subtitle: "The root topic to use when publishing and subscribing to MQTT messages. You might want to add some unique identifier to avoid conflicts with other instances of Momento Booth on the same MQTT broker.",
+        subtitle: "The root topic to use when publishing and subscribing to MQTT messages. You might want to add some unique identifier to avoid conflicts with other instances of MomentoBooth on the same MQTT broker.",
         controller: controller.mqttIntegrationRootTopicController,
         onFinishedEditing: controller.onMqttIntegrationRootTopicChanged,
       ),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:path/path.dart' hide context;
 import 'package:path_provider/path_provider.dart';
@@ -37,6 +38,7 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
   Future<void> updateAndSave(Settings settings) async {
     if (settings == _settings) return;
     _settings = settings;
+    MqttManager.instance.publishSettings(settings);
     await _save();
   }
   

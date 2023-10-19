@@ -40,6 +40,7 @@ abstract class _MqttManagerBase with Store {
   Map<String, dynamic> _lastPublishedStats = {};
   String _lastPublishedRoute = "";
   CaptureState _lastPublishedCaptureState = CaptureState.idle;
+  Settings _settings = SettingsManager.instance.settings;
 
   @readonly
   ConnectionState _connectionState = ConnectionState.disconnected;
@@ -107,6 +108,7 @@ abstract class _MqttManagerBase with Store {
 
         _connectionState = ConnectionState.connected;
         _forcePublishAll();
+        _createSubscriptions();
       } catch (e) {
         loggy.logError("Failed to connect to MQTT server: $e");
       }
@@ -135,6 +137,8 @@ abstract class _MqttManagerBase with Store {
     _publishStats(StatsManager.instance.stats, true);
     publishScreen();
     publishCaptureState();
+    publishSettings();
+    _publishAppVersion();
     publishHomeAssistantDiscoveryTopics();
   }
 
@@ -158,6 +162,76 @@ abstract class _MqttManagerBase with Store {
     _publish("capture_state", _lastPublishedCaptureState.mqttValue);
   }
 
+  void publishSettings([Settings? settings]) {
+    if (settings != null) _settings = settings;
+    _publish(
+      "running_settings",
+      jsonEncode(
+        _settings.toJson()..["mqttIntegration"] = null,
+      ),
+    );
+  }
+
+  void _publishAppVersion() {
+    _publish("app_version", packageInfo.version);
+    _publish("app_build", packageInfo.buildNumber);
+  }
+
+  void _clearTopic(String topic) {
+    if (_client == null) return;
+
+    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    _client!.publishMessage(
+      '$rootTopic/$topic',
+      MqttQos.atMostOnce,
+      MqttPayloadBuilder().payload!,
+      retain: true,
+    );
+  }
+
+  // ///////////// //
+  // Subscriptions //
+  // ///////////// //
+
+  void _createSubscriptions() {
+    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    _client!.published!.listen((message) {
+      try {
+        switch (message) {
+          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/update_settings":
+            if (payload.length == 0) return;
+            _clearTopic("update_settings");
+            _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
+          default:
+            loggy.logWarning("Received unknown published MQTT message: $message");
+        }
+      } catch (e) {
+        loggy.logError("Failed to parse published MQTT message (length: ${message.payload.length}): $e");
+      }
+    });
+
+    _subscribeToTopic('update_settings');
+  }
+
+  void _subscribeToTopic(String relativeTopic) {
+    _client!.subscribe(
+      "${SettingsManager.instance.settings.mqttIntegration.rootTopic}/$relativeTopic",
+      MqttQos.atMostOnce,
+    );
+
+    // TODO: error handling?
+  }
+
+  void _onSettingsMessage(String message) {
+    loggy.logInfo("Received settings update from MQTT");
+    Settings settings = Settings.fromJson(jsonDecode(message));
+    SettingsManager.instance.updateAndSave(settings.copyWith(
+      // Don't copy these settings from MQTT
+      mqttIntegration: SettingsManager.instance.settings.mqttIntegration,
+    ));
+    loggy.logInfo("Loaded settings data from MQTT");
+  }
+
   // ////////////////////////// //
   // Home Assistant integration //
   // ////////////////////////// //
@@ -165,8 +239,8 @@ abstract class _MqttManagerBase with Store {
   HomeAssistantDevice get homeAssistantDevice => HomeAssistantDevice(
       identifiers: [SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId],
       manufacturer: "h3x Software",
-      model: "Momento Booth",
-      name: "Momento Booth instance on ${Platform.localHostname}",
+      model: "MomentoBooth",
+      name: "MomentoBooth instance on ${Platform.localHostname}",
       softwareVersion: '${packageInfo.version} build ${packageInfo.buildNumber}',
     );
 
