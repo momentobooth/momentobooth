@@ -40,6 +40,7 @@ abstract class _MqttManagerBase with Store {
   Map<String, dynamic> _lastPublishedStats = {};
   String _lastPublishedRoute = "";
   CaptureState _lastPublishedCaptureState = CaptureState.idle;
+  Settings _settings = SettingsManager.instance.settings;
 
   @readonly
   ConnectionState _connectionState = ConnectionState.disconnected;
@@ -107,6 +108,7 @@ abstract class _MqttManagerBase with Store {
 
         _connectionState = ConnectionState.connected;
         _forcePublishAll();
+        _subscribe();
       } catch (e) {
         loggy.logError("Failed to connect to MQTT server: $e");
       }
@@ -135,6 +137,8 @@ abstract class _MqttManagerBase with Store {
     _publishStats(StatsManager.instance.stats, true);
     publishScreen();
     publishCaptureState();
+    publishSettings();
+    _publishAppVersion();
     publishHomeAssistantDiscoveryTopics();
   }
 
@@ -156,6 +160,50 @@ abstract class _MqttManagerBase with Store {
   void publishCaptureState([CaptureState? captureState]) {
     if (captureState != null) _lastPublishedCaptureState = captureState;
     _publish("capture_state", _lastPublishedCaptureState.mqttValue);
+  }
+
+  void publishSettings([Settings? settings]) {
+    if (settings != null) _settings = settings;
+    _publish("settings", jsonEncode(_settings.toJson()));
+  }
+
+  void _publishAppVersion() {
+    _publish("app_version", packageInfo.version);
+    _publish("app_build", packageInfo.buildNumber);
+  }
+
+  // ///////////// //
+  // Subscriptions //
+  // ///////////// //
+
+  void _subscribe() {
+    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    _client!.published!.listen((message) {
+      switch (message) {
+        case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/update_settings":
+          _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
+        default:
+          loggy.logWarning("Received unknown MQTT message: $message");
+      }
+    });
+
+    _subscribeToTopic('update_settings');
+  }
+
+  void _subscribeToTopic(String relativeTopic) {
+    _client!.subscribe(
+      "${SettingsManager.instance.settings.mqttIntegration.rootTopic}/$relativeTopic",
+      MqttQos.atMostOnce,
+    );
+
+    // TODO: error handling?
+  }
+
+  void _onSettingsMessage(String message) {
+    loggy.logInfo("Received settings update from MQTT");
+    Settings settings = Settings.fromJson(jsonDecode(message));
+    SettingsManager.instance.updateAndSave(settings);
+    loggy.logInfo("Loaded settings data from MQTT");
   }
 
   // ////////////////////////// //
