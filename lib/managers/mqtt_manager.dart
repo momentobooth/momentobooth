@@ -195,8 +195,12 @@ abstract class _MqttManagerBase with Store {
 
   void _createSubscriptions() {
     String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
-    _client!.published!.listen((message) {
+    _client!.updates.listen((messageList) {
+      MqttPublishMessage? message;
       try {
+        // From example: mqtt5_server_client_secure.dart
+        message = messageList[0].payload as MqttPublishMessage;
+
         switch (message) {
           case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/update_settings":
             if (payload.length == 0) return;
@@ -206,7 +210,7 @@ abstract class _MqttManagerBase with Store {
             loggy.logWarning("Received unknown published MQTT message: $message");
         }
       } catch (e) {
-        loggy.logError("Failed to parse published MQTT message (length: ${message.payload.length}): $e");
+        loggy.logError("Failed to parse published MQTT message (length: ${message?.payload.length}): $e");
       }
     });
 
