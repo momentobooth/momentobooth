@@ -1,10 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:momento_booth/app/widgets/activity_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/shell/widgets/activity_monitor.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
@@ -22,18 +22,18 @@ import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:momento_booth/views/share_screen/share_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 
-part 'photobooth.routes.dart';
+part 'photo_booth.routes.dart';
 
-class Photobooth extends StatefulWidget {
+class PhotoBooth extends StatefulWidget {
 
-  const Photobooth({super.key});
+  const PhotoBooth({super.key});
 
   @override
-  State<StatefulWidget> createState() => PhotoboothState();
+  State<StatefulWidget> createState() => PhotoBoothState();
 
 }
 
-class PhotoboothState extends State<Photobooth> {
+class PhotoBoothState extends State<PhotoBooth> {
 
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
@@ -69,6 +69,12 @@ class PhotoboothState extends State<Photobooth> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _router.dispose();
+    super.dispose();
   }
 
 }
