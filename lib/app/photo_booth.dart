@@ -51,20 +51,24 @@ class PhotoBoothState extends State<PhotoBooth> {
         router: _router,
         child: MomentoBoothTheme(
           data: MomentoBoothThemeData.defaults(),
-          child: WidgetsApp.router(
-            routerConfig: _router,
-            color: context.theme.primaryColor,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              FluentLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'), // English
-              Locale('nl'), // Dutch
-            ],
-            locale: SettingsManager.instance.settings.ui.language.toLocale(),
+          child: Builder(
+            builder: (context) {
+              return WidgetsApp.router(
+                routerConfig: _router,
+                color: context.theme.primaryColor,
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  FluentLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('en'), // English
+                  Locale('nl'), // Dutch
+                ],
+                locale: SettingsManager.instance.settings.ui.language.toLocale(),
+              );
+            }
           ),
         ),
       ),

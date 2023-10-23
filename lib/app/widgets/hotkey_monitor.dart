@@ -28,6 +28,7 @@ class HotkeyMonitor extends StatelessWidget with UiLoggy {
           // ignore: invalid_use_of_protected_member
           // state.setState(() => state.settingsOpen = !state.settingsOpen);
           // loggy.debug("Settings ${state.settingsOpen ? "opened" : "closed"}");
+          router.pushNamed("/settings");
         },
         SingleActivator(LogicalKeyboardKey.keyM, control: control, meta: meta): _toggleManualCollageScreen,
         SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): WindowManager.instance.toggleFullscreen,

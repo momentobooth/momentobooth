@@ -10,8 +10,8 @@ import 'package:momento_booth/app/widgets/hotkey_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
+import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
-import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 
 part 'shell.routes.dart';
 
@@ -29,7 +29,7 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
     observers: [
       HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin, end: end)),
     ],
-    initialLocation: "/photo_booth",
+    initialLocation: '/photo_booth',
   );
 
   @override
@@ -43,7 +43,8 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
     return FpsMonitor(
       child: HotkeyMonitor(
         router: _router,
-        child: FluentApp(
+        child: FluentApp.router(
+          routerConfig: _router,
           localizationsDelegates: const [
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
@@ -55,20 +56,6 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
             Locale('nl'), // Dutch
           ],
           locale: SettingsManager.instance.settings.ui.language.toLocale(),
-          home: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [
-                BoxShadow(
-                  blurRadius: 16,
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            margin: const EdgeInsets.all(32),
-            clipBehavior: Clip.hardEdge,
-            child: const SettingsScreen(),
-          ),
         ),
       ),
     );
