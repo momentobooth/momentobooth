@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
-import 'package:momento_booth/app/shell.dart';
+import 'package:momento_booth/app/shell/shell.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:package_info_plus/package_info_plus.dart';

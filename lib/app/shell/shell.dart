@@ -4,14 +4,15 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
-import 'package:momento_booth/app/photo_booth.dart';
-import 'package:momento_booth/app/widgets/fps_monitor.dart';
-import 'package:momento_booth/app/widgets/hotkey_monitor.dart';
+import 'package:momento_booth/app/photo_booth/photo_booth.dart';
+import 'package:momento_booth/app/shell/widgets/fps_monitor.dart';
+import 'package:momento_booth/app/shell/widgets/shell_hotkey_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 
 part 'shell.routes.dart';
 
@@ -41,7 +42,7 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return FpsMonitor(
-      child: HotkeyMonitor(
+      child: ShellHotkeyMonitor(
         router: _router,
         child: FluentApp.router(
           routerConfig: _router,

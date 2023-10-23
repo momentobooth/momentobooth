@@ -1,7 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
-import 'package:momento_booth/app/widgets/activity_monitor.dart';
+import 'package:momento_booth/app/photo_booth/widgets/activity_monitor.dart';
+import 'package:momento_booth/app/photo_booth/widgets/photo_booth_hotkey_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -47,28 +48,31 @@ class PhotoBoothState extends State<PhotoBooth> {
   @override
   Widget build(BuildContext context) {
     return LiveViewBackground(
-      child: ActivityMonitor(
+      child: PhotoBoothHotkeyMonitor(
         router: _router,
-        child: MomentoBoothTheme(
-          data: MomentoBoothThemeData.defaults(),
-          child: Builder(
-            builder: (context) {
-              return WidgetsApp.router(
-                routerConfig: _router,
-                color: context.theme.primaryColor,
-                localizationsDelegates: const [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  FluentLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('en'), // English
-                  Locale('nl'), // Dutch
-                ],
-                locale: SettingsManager.instance.settings.ui.language.toLocale(),
-              );
-            }
+        child: ActivityMonitor(
+          router: _router,
+          child: MomentoBoothTheme(
+            data: MomentoBoothThemeData.defaults(),
+            child: Builder(
+              builder: (context) {
+                return WidgetsApp.router(
+                  routerConfig: _router,
+                  color: context.theme.primaryColor,
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    FluentLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en'), // English
+                    Locale('nl'), // Dutch
+                  ],
+                  locale: SettingsManager.instance.settings.ui.language.toLocale(),
+                );
+              },
+            ),
           ),
         ),
       ),

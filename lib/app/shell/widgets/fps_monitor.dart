@@ -4,6 +4,7 @@ import 'package:lemberfpsmonitor/lemberfpsmonitor.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 
 class FpsMonitor extends StatelessWidget {
+
   final Widget child;
 
   const FpsMonitor({super.key, required this.child});
@@ -21,4 +22,5 @@ class FpsMonitor extends StatelessWidget {
       );
     });
   }
+
 }

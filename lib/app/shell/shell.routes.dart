@@ -10,6 +10,7 @@ GoRoute _photoBoothRoute = GoRoute(
   pageBuilder: (context, state) {
     return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
+      enableTransitionOut: false,
       child: const PhotoBooth(),
     );
   },
@@ -17,12 +18,14 @@ GoRoute _photoBoothRoute = GoRoute(
 
 GoRoute _settingsRoute = GoRoute(
   path: "/settings",
-  pageBuilder: (context, state) {
+  pageBuilder: (context, state) { 
     return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
+      opaque: false,
       child: const FullScreenPopup(
-        child: PhotoBooth(),
+        child: SettingsScreen(),
       ),
+      barrierDismissible: true,
     );
   },
 );
