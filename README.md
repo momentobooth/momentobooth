@@ -104,6 +104,15 @@ For all tools, we support the latest versions.
 
 ### Build steps
 
+### Using `rps` (recommended)
+
+Please note: This method expects global fvm and Dart installs to be available.
+
+1. Install `rps` using `dart pub global activate rps`
+2. Run `rps` from the root folder of the repository
+
+### Manually
+
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
 1. Run `flutter gen-l10n`
