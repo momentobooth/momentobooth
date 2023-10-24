@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app/photo_booth/widgets/activity_monitor.dart';
 import 'package:momento_booth/app/photo_booth/widgets/photo_booth_hotkey_monitor.dart';
@@ -26,16 +27,13 @@ import 'package:momento_booth/views/start_screen/start_screen.dart';
 part 'photo_booth.routes.dart';
 
 class PhotoBooth extends StatefulWidget {
-
   const PhotoBooth({super.key});
 
   @override
   State<StatefulWidget> createState() => PhotoBoothState();
-
 }
 
 class PhotoBoothState extends State<PhotoBooth> {
-
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
     observers: [
@@ -54,24 +52,22 @@ class PhotoBoothState extends State<PhotoBooth> {
           router: _router,
           child: MomentoBoothTheme(
             data: MomentoBoothThemeData.defaults(),
-            child: Builder(
-              builder: (context) {
-                return WidgetsApp.router(
-                  routerConfig: _router,
-                  color: context.theme.primaryColor,
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    FluentLocalizations.delegate,
-                  ],
-                  supportedLocales: const [
-                    Locale('en'), // English
-                    Locale('nl'), // Dutch
-                  ],
-                  locale: SettingsManager.instance.settings.ui.language.toLocale(),
-                );
-              },
+            child: Observer(
+              builder: (context) => WidgetsApp.router(
+                routerConfig: _router,
+                color: context.theme.primaryColor,
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  FluentLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('en'), // English
+                  Locale('nl'), // Dutch
+                ],
+                locale: SettingsManager.instance.settings.ui.language.toLocale(),
+              ),
             ),
           ),
         ),
@@ -84,5 +80,4 @@ class PhotoBoothState extends State<PhotoBooth> {
     _router.dispose();
     super.dispose();
   }
-
 }

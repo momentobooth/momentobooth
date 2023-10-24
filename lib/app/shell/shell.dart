@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/app/photo_booth/photo_booth.dart';
@@ -24,7 +25,6 @@ class Shell extends StatefulWidget {
 }
 
 class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
-
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
     observers: [
@@ -44,19 +44,21 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
     return FpsMonitor(
       child: ShellHotkeyMonitor(
         router: _router,
-        child: FluentApp.router(
-          routerConfig: _router,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            FluentLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en'), // English
-            Locale('nl'), // Dutch
-          ],
-          locale: SettingsManager.instance.settings.ui.language.toLocale(),
+        child: Observer(
+          builder: (context) => FluentApp.router(
+            routerConfig: _router,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              FluentLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'), // English
+              Locale('nl'), // Dutch
+            ],
+            locale: SettingsManager.instance.settings.ui.language.toLocale(),
+          ),
         ),
       ),
     );
@@ -74,5 +76,4 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
     await LiveViewManager.instance.gPhoto2Camera?.dispose();
     return super.didRequestAppExit();
   }
-
 }
