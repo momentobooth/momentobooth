@@ -7,12 +7,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:momento_booth/main.dart';
+import 'package:momento_booth/app/shell/shell.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const App());
+    await tester.pumpWidget(const Shell());
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

@@ -1,4 +1,4 @@
-part of 'main.dart';
+part of 'photo_booth.dart';
 
 List<GoRoute> _rootRoutes = [
   _startRoute,

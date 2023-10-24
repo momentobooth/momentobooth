@@ -16,7 +16,7 @@ import 'package:printing/printing.dart';
 import 'package:win32/win32.dart';
 
 int lastUsedPrinterIndex = -1;
-final loggy = Loggy<UiLoggy>("hardware utils");
+final _loggy = Loggy<UiLoggy>("hardware utils");
 
 Future<Uint8List> getImagePDF(Uint8List imageData) async {
   late final pw.MemoryImage image = pw.MemoryImage(imageData);
@@ -58,7 +58,7 @@ Future<List<Printer>> getSelectedPrinters() async {
   for (String name in SettingsManager.instance.settings.hardware.printerNames) {
     Printer? selected = sourcePrinters.firstWhereOrNull((printer) => printer.name == name);
     if (selected == null) {
-        loggy.error("Could not find selected printer ($name)");
+        _loggy.error("Could not find selected printer ($name)");
     }
     printers.add(selected!);
   }
@@ -121,7 +121,7 @@ List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
       // If the function fails, then at least we can say there is _some_ error
       hasError = true;
       jobList = [];
-      loggy.error(e);
+      _loggy.error(e);
     }
     // Check if there are prints that have errored
     hasError = hasError || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.error));
@@ -161,7 +161,7 @@ List<JobInfo> getJobList(String printerName) {
     final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0;
     if (!enumSuccess) throw Win32Exception.fromLastError("Error enumerating print jobs for printer $printerName");
 
-    loggy.debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
+    _loggy.debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
 
     List<JobInfo> jobList = [];
     for (var i = 0; i < numJobs.value; i++) {
@@ -170,7 +170,7 @@ List<JobInfo> getJobList(String printerName) {
       var statusVal = job.Status;
       var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
       if (statusString.isNotEmpty) {
-        loggy.debug("Custom statusstring for printer $printerName: $statusString");
+        _loggy.debug("Custom statusstring for printer $printerName: $statusString");
       }
       // Extract list of statusses
       final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
@@ -199,13 +199,13 @@ Future<bool> printPDF(Uint8List pdfData) async {
   if (++lastUsedPrinterIndex >= printers.length) { lastUsedPrinterIndex = 0; }
   final printer = printers[lastUsedPrinterIndex];
 
-  loggy.debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
+  _loggy.debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
 
   try {
     final jobList = getJobList(printer.name);
-    loggy.debug("Job list for printer ${printer.name} = $jobList");
+    _loggy.debug("Job list for printer ${printer.name} = $jobList");
   } catch (e) {
-    loggy.error(e);
+    _loggy.error(e);
   }
 
   bool success = await Printing.directPrintPdf(
