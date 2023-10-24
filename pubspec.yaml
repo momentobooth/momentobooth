@@ -45,7 +45,7 @@ dependencies:
 
   # Interop
   ffi: 2.1.0
-  flutter_rust_bridge: 1.82.1
+  flutter_rust_bridge: 1.82.3
 
   # Printing
   printing: 5.11.0
@@ -61,7 +61,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.10.1
+  sentry_flutter: 7.11.0
 
   # Sound output
   just_audio: 0.9.35
@@ -114,4 +114,22 @@ flutter:
       fonts:
         - asset: assets/fonts/brandon_grotesque/Brandon_light.otf
           weight: 300
-          
+
+scripts:
+  run: rps install all && rps generate all
+  install:
+    all: rps install flutter && rps install cargo-expand && rps install flutter_rust_bridge_codegen && rps install deps
+    flutter: fvm install
+    cargo-expand: cargo install cargo-expand
+    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 1.82.3
+    deps: fvm flutter pub get
+  generate:
+    all: rps generate l10n && rps generate rust_bridge && rps generate build_runner_targets
+    l10n: fvm flutter gen-l10n
+    rust_bridge:
+      $script:
+        $default: flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner
+        $macos: flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --c-output macos/Runner/bridge_generated.h --skip-add-mod-to-lib --no-build-runner
+    build_runner_targets: fvm dart run build_runner build --delete-conflicting-outputs
+  update:
+    rust-install: rustup update

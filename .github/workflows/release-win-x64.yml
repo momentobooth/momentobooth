@@ -81,7 +81,7 @@ jobs:
       uses: baptiste0928/cargo-install@v1
       with:
         crate: flutter_rust_bridge_codegen
-        version: "1.82.1"
+        version: "1.82.3"
         args: --target x86_64-pc-windows-msvc
 
     # - name: Install flutter_distributor
