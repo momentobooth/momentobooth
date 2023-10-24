@@ -133,3 +133,8 @@ scripts:
     build_runner_targets: fvm dart run build_runner build --delete-conflicting-outputs
   update:
     rust-install: rustup update
+  docs:
+    install-deps: cargo install mdbook mdbook-mermaid mdbook-admonish
+    build:
+      $before: $docs install-deps
+      $script: mdbook build documentation
