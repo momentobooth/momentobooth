@@ -49,7 +49,7 @@ dependencies:
 
   # Printing
   printing: 5.11.1
-  pdf: 3.10.5
+  pdf: 3.10.6
 
   # System
   path_provider: 2.1.1

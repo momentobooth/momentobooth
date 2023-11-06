@@ -848,10 +848,10 @@ packages:
     dependency: "direct main"
     description:
       name: pdf
-      sha256: "1ab12455c1eda6d1e7c8da47cdd1002cc784122b88997bfaf24f16e0e600d688"
+      sha256: aa8835fcb9cfaf57ab2f1970e8548ceed3d0cb53eda7da906648f8153eaf37c9
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.5"
+    version: "3.10.6"
   petitparser:
     dependency: transitive
     description:
