@@ -29,10 +29,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: "7e0d52067d05f2e0324268097ba723b71cb41ac8a6a2b24d1edf9c536b987b03"
+      sha256: "27b24c1b1ab091964e7c0079dcedc9a04d992089df724b9cea45fe6f82d48de1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.6"
+    version: "3.4.7"
   args:
     dependency: transitive
     description:
@@ -157,10 +157,10 @@ packages:
     dependency: transitive
     description:
       name: built_value
-      sha256: a8de5955205b4d1dbbbc267daddf2178bd737e4bab8987c04a500478c9651e74
+      sha256: "723b4021e903217dfc445ec4cf5b42e27975aece1fc4ebbc1ca6329c2d9fb54e"
       url: "https://pub.dev"
     source: hosted
-    version: "8.6.3"
+    version: "8.7.0"
   characters:
     dependency: transitive
     description:
@@ -325,10 +325,10 @@ packages:
     dependency: transitive
     description:
       name: file_selector_ios
-      sha256: b3fbdda64aa2e335df6e111f6b0f1bb968402ed81d2dd1fa4274267999aa32c2
+      sha256: "2f48db7e338b2255101c35c604b7ca5ab588dce032db7fc418a2fe5f28da63f8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1+6"
+    version: "0.5.1+7"
   file_selector_linux:
     dependency: transitive
     description:
@@ -407,10 +407,10 @@ packages:
     dependency: "direct dev"
     description:
       name: flutter_lints
-      sha256: ad76540d21c066228ee3f9d1dad64a9f7e46530e8bb7c85011a88bc1fd874bc5
+      sha256: e2a421b7e59244faef694ba7b30562e489c2b489866e505074eb005cd7060db7
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "3.0.1"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
@@ -452,10 +452,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: bfc7cc3c75fe1282e8ce2e056d8fd1533f1a6848b65c379b4a5e7a9b623d3371
+      sha256: d39e7f95621fc84376bc0f7d504f05c3a41488c562f4a8ad410569127507402c
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.8"
+    version: "2.0.9"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -507,10 +507,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: e156bc1b2088eb5ece9351bccd48c3e1719a4858eacbd44e59162e98a68205d1
+      sha256: "5098760d7478aabfe682a462bf121d61bc5dbe5df5aac8dad733564a0aee33bc"
       url: "https://pub.dev"
     source: hosted
-    version: "12.0.1"
+    version: "12.1.0"
   graphs:
     dependency: transitive
     description:
@@ -848,10 +848,10 @@ packages:
     dependency: "direct main"
     description:
       name: pdf
-      sha256: "9f75fc7f5580ea5e635b5724de58fb27f684c9ad03ed46fdc1aac768e4557315"
+      sha256: "1ab12455c1eda6d1e7c8da47cdd1002cc784122b88997bfaf24f16e0e600d688"
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.4"
+    version: "3.10.5"
   petitparser:
     dependency: transitive
     description:
@@ -904,10 +904,10 @@ packages:
     dependency: "direct main"
     description:
       name: printing
-      sha256: e7c383dca95ee7b88c02dc1c66638628d3dcdc2fb2cc47e7a595facd47e46b56
+      sha256: ad39a42a5f83125952457dfd94f395c8cf0eb1f7759583dadb769be5c7f99d24
       url: "https://pub.dev"
     source: hosted
-    version: "5.11.0"
+    version: "5.11.1"
   process:
     dependency: transitive
     description:
@@ -1008,18 +1008,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "80cc1b38c7219c8072c8a79f124838bd668e0bc840e8a98c0fbf9f55a432997d"
+      sha256: "9cfd325611ab54b57d5e26957466823f05bea9d6cfcc8d48f11817b8bcedf0d1"
       url: "https://pub.dev"
     source: hosted
-    version: "7.11.0"
+    version: "7.12.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "01dffb216873d1d31436bc50585fb222d4e7d8bcefcf84ccc8f145dac546c1d5"
+      sha256: "0cd7d622cb63c94fd1b2f87ab508e158b950bd281e2a80f327ebf73bb217eaf3"
       url: "https://pub.dev"
     source: hosted
-    version: "7.11.0"
+    version: "7.12.0"
   shelf:
     dependency: transitive
     description:
