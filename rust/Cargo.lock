@@ -3060,9 +3060,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.33.0"
+version = "1.34.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4f38200e3ef7995e5ef13baec2f432a6da0aa9ac495b2c0e8f3b7eec2c92d653"
+checksum = "d0c014766411e834f7af5b8f4cf46257aab4036ca95e9d2c144a10f59ad6f5b9"
 dependencies = [
  "backtrace",
  "bytes 1.5.0",
@@ -3759,12 +3759,9 @@ dependencies = [
 
 [[package]]
 name = "zune-core"
-version = "0.2.14"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "29ca36c2e02af0d8d7ee977542bfe33ed1c516be73d3c1faa4420af46e96ceee"
-dependencies = [
- "bitflags 2.4.1",
-]
+checksum = "1f2c8a67c0cbdd282a6d563e9039011dbbf27df85101abaac7215c42b34abd72"
 
 [[package]]
 name = "zune-inflate"
@@ -3777,10 +3774,9 @@ dependencies = [
 
 [[package]]
 name = "zune-jpeg"
-version = "0.3.17"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2848e8f4f29dbdcc79910ab3abdff22bb0bacef8556f2a983b5ca950d8b4991e"
+checksum = "20b34342cf79f4c6d2a5850e15ab7bcbb228a37a307b443697fe5cebe11222ad"
 dependencies = [
- "log 0.4.20",
  "zune-core",
 ]
