@@ -121,7 +121,7 @@ scripts:
     all: rps install flutter && rps install cargo-expand && rps install flutter_rust_bridge_codegen && rps install deps
     flutter: fvm install
     cargo-expand: cargo install cargo-expand
-    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 1.82.3
+    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 1.82.4
     deps: fvm flutter pub get
   generate:
     all: rps generate l10n && rps generate rust_bridge && rps generate build_runner_targets
