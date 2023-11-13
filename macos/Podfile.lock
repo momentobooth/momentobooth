@@ -15,13 +15,13 @@ PODS:
     - FlutterMacOS
   - screen_retriever (0.0.1):
     - FlutterMacOS
-  - Sentry/HybridSDK (8.11.0):
-    - SentryPrivate (= 8.11.0)
+  - Sentry/HybridSDK (8.14.2):
+    - SentryPrivate (= 8.14.2)
   - sentry_flutter (0.0.1):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.11.0)
-  - SentryPrivate (8.11.0)
+    - Sentry/HybridSDK (= 8.14.2)
+  - SentryPrivate (8.14.2)
   - texture_rgba_renderer (0.0.1):
     - FlutterMacOS
   - window_manager (0.2.0):
@@ -78,12 +78,12 @@ SPEC CHECKSUMS:
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   printing: 1dd6a1fce2209ec240698e2439a4adbb9b427637
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
-  Sentry: 39d57e691e311bdb73bc1ab5bbebbd6bc890050d
-  sentry_flutter: b2feefdad5b0f06602347172bc7257e8e9da5562
-  SentryPrivate: 48712023cdfd523735c2edb6b06bedf26c4730a3
+  Sentry: e0ea366f95ebb68f26d6030d8c22d6b2e6d23dd0
+  sentry_flutter: 9a04c51c373d76ee22167bf1e65bc468c0a91fed
+  SentryPrivate: 949a21fa59872427edc73b524c3ec8456761d97f
   texture_rgba_renderer: cbed959a3c127122194a364e14b8577bd62dc8f2
   window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
 PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.2

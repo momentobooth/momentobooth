@@ -19,7 +19,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.7.7
-  go_router: 12.1.0
+  go_router: 12.1.1
   flutter_svg: 2.0.9
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.3
@@ -45,7 +45,7 @@ dependencies:
 
   # Interop
   ffi: 2.1.0
-  flutter_rust_bridge: 1.82.3
+  flutter_rust_bridge: 1.82.4
 
   # Printing
   printing: 5.11.1
@@ -64,7 +64,7 @@ dependencies:
   sentry_flutter: 7.12.0
 
   # Sound output
-  just_audio: 0.9.35
+  just_audio: 0.9.36
   just_audio_windows: 0.2.0
   just_audio_mpv: 0.1.7
 
@@ -121,7 +121,7 @@ scripts:
     all: rps install flutter && rps install cargo-expand && rps install flutter_rust_bridge_codegen && rps install deps
     flutter: fvm install
     cargo-expand: cargo install cargo-expand
-    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 1.82.3
+    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 1.82.4
     deps: fvm flutter pub get
   generate:
     all: rps generate l10n && rps generate rust_bridge && rps generate build_runner_targets

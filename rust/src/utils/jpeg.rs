@@ -18,7 +18,7 @@ lazy_static::lazy_static! {
 }
 
 pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
-    let mut decoder = JpegDecoder::new_with_options(*JPEG_TO_RGBA_DECODER_OPTIONS, jpeg_data);
+    let mut decoder = JpegDecoder::new_with_options(jpeg_data, *JPEG_TO_RGBA_DECODER_OPTIONS);
     let pixels = decoder.decode().expect("Could not decode JPEG data");
     let image_info = decoder.info().expect("Could not extract JPEG info");
 
