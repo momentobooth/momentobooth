@@ -40,6 +40,11 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
   final Duration opacityDuraction = const Duration(milliseconds: 300);
 
   @observable
+  bool printOnSave = false;
+  @observable
+  bool clearOnSave = false;
+
+  @observable
   String directoryString = SettingsManager.instance.settings.hardware.captureLocation;
 
   Directory get outputDir => Directory(directoryString);

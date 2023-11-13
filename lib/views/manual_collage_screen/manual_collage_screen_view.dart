@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
@@ -96,6 +96,25 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
             flex: 10,
             child: _collage,
           ),
+          Flexible(child: Row(
+            children: [
+              Observer(
+                builder: (context) => Checkbox(
+                  content: Text("Print on save"),
+                  checked: viewModel.printOnSave,
+                  onChanged: (b) => viewModel.printOnSave = b!,
+                ),
+              ),
+              const SizedBox(width: 15,),
+              Observer(
+                builder: (context) => Checkbox(
+                  content: Text("Clear on save"),
+                  checked: viewModel.clearOnSave,
+                  onChanged: (b) => viewModel.clearOnSave = b!,
+                ),
+              ),
+            ],
+          )),
           Flexible(
             flex: 2,
             child: Row(

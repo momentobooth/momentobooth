@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/manual_collage_screen/manual_collage_screen_view_model.dart';
@@ -82,6 +83,13 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     PhotosManager.instance.outputImage = exportImage;
     await PhotosManager.instance.writeOutput(advance: true);
     loggy.debug("Saved collage image to disk");
+
+    if (viewModel.printOnSave) {
+      await printPDF(await getImagePDF(exportImage!));
+    }
+    if (viewModel.clearOnSave) {
+      clearSelection();
+    }
     viewModel.isSaving = false;
   }
 
