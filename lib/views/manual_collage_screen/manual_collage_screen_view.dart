@@ -81,6 +81,11 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
     );
   }
 
+  static final checkboxStyle = CheckboxThemeData(
+    foregroundColor: ButtonState.all(Colors.white),
+    uncheckedDecoration: ButtonState.all(BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(6))),
+  );
+
   Widget get _rightColumn {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -100,6 +105,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
             children: [
               Observer(
                 builder: (context) => Checkbox(
+                  style: checkboxStyle,
                   content: Text("Print on save"),
                   checked: viewModel.printOnSave,
                   onChanged: (b) => viewModel.printOnSave = b!,
@@ -108,6 +114,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
               const SizedBox(width: 15,),
               Observer(
                 builder: (context) => Checkbox(
+                  style: checkboxStyle,
                   content: Text("Clear on save"),
                   checked: viewModel.clearOnSave,
                   onChanged: (b) => viewModel.clearOnSave = b!,
