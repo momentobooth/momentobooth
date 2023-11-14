@@ -100,35 +100,42 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          const Flexible(
-            flex: 1,
-            child: SizedBox()
-          ),
           Expanded(
             flex: 10,
             child: _collage,
           ),
-          Flexible(child: Row(
-            children: [
-              Observer(
-                builder: (context) => Checkbox(
-                  style: checkboxStyle,
-                  content: Text("Print on save"),
-                  checked: viewModel.printOnSave,
-                  onChanged: (b) => viewModel.printOnSave = b!,
+          const SizedBox(height: 30,),
+          Flexible(
+            child: Row(
+              children: [
+                Observer(
+                  builder: (context) => Transform.scale(
+                    scale: 1.5,
+                    alignment: Alignment.centerLeft,
+                    child: Checkbox(
+                      style: checkboxStyle,
+                      content: Text("Print on save"),
+                      checked: viewModel.printOnSave,
+                      onChanged: (b) => viewModel.printOnSave = b!,
+                    ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 15,),
-              Observer(
-                builder: (context) => Checkbox(
-                  style: checkboxStyle,
-                  content: Text("Clear on save"),
-                  checked: viewModel.clearOnSave,
-                  onChanged: (b) => viewModel.clearOnSave = b!,
+                const SizedBox(width: 85,),
+                Observer(
+                  builder: (context) => Transform.scale(
+                    scale: 1.5,
+                    alignment: Alignment.centerLeft,
+                    child: Checkbox(
+                      style: checkboxStyle,
+                      content: Text("Clear on save"),
+                      checked: viewModel.clearOnSave,
+                      onChanged: (b) => viewModel.clearOnSave = b!,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          )),
+              ],
+            )
+          ),
           Flexible(
             flex: 2,
             child: Row(
