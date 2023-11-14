@@ -17,14 +17,21 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
   
   @override
   Widget get body {
-    return Row(
-      children: [
-        Flexible(child: _photoGrid),
-        Flexible(
-          fit: FlexFit.tight,
-          child: _rightColumn
-        ),
-      ],
+    return RawKeyboardListener(
+      focusNode: viewModel.focusNode,
+      onKey: (event) {
+        viewModel..isShiftPressed = event.isShiftPressed
+                 ..isControlPressed = event.isControlPressed;
+      },
+      child: Row(
+        children: [
+          Flexible(child: _photoGrid),
+          Flexible(
+            fit: FlexFit.tight,
+            child: _rightColumn
+          ),
+        ],
+      )
     );
   }
 

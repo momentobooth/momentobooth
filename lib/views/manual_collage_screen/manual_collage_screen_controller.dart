@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:loggy/loggy.dart';
@@ -40,8 +41,31 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
   }
 
   Future<void> tapPhoto(SelectableImage file) async {
-    loggy.debug("Tapped image #${file.index} (${basename(file.file.path)}), selected: ${file.isSelected} at index ${file.selectedIndex}");
+    loggy.debug("Tapped image #${file.index} (${basename(file.file.path)}), selected: ${file.isSelected} at index ${file.selectedIndex}, ctrl: ${viewModel.isControlPressed}, shift: ${viewModel.isShiftPressed}");
     
+    if (viewModel.isShiftPressed) {
+      final lastSelected = selectedPhotos.last.index;
+      final tapped = file.index;
+      final direction = tapped > lastSelected;
+      if (direction) {
+        for (int i = lastSelected+1; i <= tapped; i++) {
+          await selectPhoto(viewModel.fileList[i]);
+        }
+      } else {
+        for (int i = lastSelected-1; i >= tapped; i--) {
+          await selectPhoto(viewModel.fileList[i]);
+        }
+      }
+    } else if (viewModel.isControlPressed) {
+      for (int i = 0; i < 4; i++) {
+        await selectPhoto(viewModel.fileList[file.index+i]);
+      }
+    } else {
+      await selectPhoto(file);
+    }
+  }
+
+  Future<void> selectPhoto(SelectableImage file) async {
     final index = selectedPhotos.length;
 
     if (file.isSelected) {
