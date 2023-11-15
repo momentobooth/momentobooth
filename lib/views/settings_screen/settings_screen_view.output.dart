@@ -56,7 +56,7 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("→ Output resolution based on aspect ratio (${viewModel.collageAspectRatioSetting}) and padding (${viewModel.collagePaddingSetting}) and multiplier will be ${(viewModel.outputResHeightExcl).round()}×${(viewModel.outputResWidthExcl).round()} without and ${(viewModel.outputResHeightIncl).round()}×${(viewModel.outputResWidthIncl).round()} with padding"),
+            child: Text("→ Output resolution based on aspect ratio (${viewModel.collageAspectRatioSetting}) and padding (${viewModel.collagePaddingSetting}) and multiplier will be ${viewModel.outputResHeightExcl.round()}×${viewModel.outputResWidthExcl.round()} without and ${viewModel.outputResHeightIncl.round()}×${viewModel.outputResWidthIncl.round()} with padding"),
           ),
         ],
       ),

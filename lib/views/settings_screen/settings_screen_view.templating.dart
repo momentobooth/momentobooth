@@ -134,7 +134,7 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Observer(
-          builder: (context) => Text("→ Output (and template) resolution based on aspect ratio (${viewModel.collageAspectRatioSetting}) and padding (${viewModel.collagePaddingSetting}) and multiplier will be ${(viewModel.outputResHeightExcl).round()}×${(viewModel.outputResWidthExcl).round()} without and ${(viewModel.outputResHeightIncl).round()}×${(viewModel.outputResWidthIncl).round()} with padding"),
+          builder: (context) => Text("→ Output (and template) resolution based on aspect ratio (${viewModel.collageAspectRatioSetting}) and padding (${viewModel.collagePaddingSetting}) and multiplier will be ${viewModel.outputResHeightExcl.round()}×${viewModel.outputResWidthExcl.round()} without and ${viewModel.outputResHeightIncl.round()}×${viewModel.outputResWidthIncl.round()} with padding"),
         )
       ),
     ],
