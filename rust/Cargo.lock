@@ -2525,9 +2525,9 @@ dependencies = [
 
 [[package]]
 name = "rustls"
-version = "0.21.8"
+version = "0.21.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "446e14c5cda4f3f30fe71863c34ec70f5ac79d6087097ad0bb433e1be5edf04c"
+checksum = "629648aced5775d558af50b2b4c7b02983a04b312126d45eeead26e7caa498b9"
 dependencies = [
  "log 0.4.20",
  "ring 0.17.5",
@@ -3759,9 +3759,9 @@ dependencies = [
 
 [[package]]
 name = "zune-core"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f2c8a67c0cbdd282a6d563e9039011dbbf27df85101abaac7215c42b34abd72"
+checksum = "167b40ad31b6e3d4be67db10ecab6534f3e78ef9b32348d4efe3187700208944"
 
 [[package]]
 name = "zune-inflate"
