@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -27,6 +28,7 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
     required super.contextAccessor,
   }) {
     findImages();
+    focusNode.requestFocus();
   }
 
   @observable
@@ -38,6 +40,15 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
   int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
 
   final Duration opacityDuraction = const Duration(milliseconds: 300);
+
+  final focusNode = FocusNode();
+  bool isShiftPressed = false;
+  bool isControlPressed = false;
+
+  @observable
+  bool printOnSave = false;
+  @observable
+  bool clearOnSave = false;
 
   @observable
   String directoryString = SettingsManager.instance.settings.hardware.captureLocation;

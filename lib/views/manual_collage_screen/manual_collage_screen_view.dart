@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
@@ -17,14 +17,21 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
   
   @override
   Widget get body {
-    return Row(
-      children: [
-        Flexible(child: _photoGrid),
-        Flexible(
-          fit: FlexFit.tight,
-          child: _rightColumn
-        ),
-      ],
+    return RawKeyboardListener(
+      focusNode: viewModel.focusNode,
+      onKey: (event) {
+        viewModel..isShiftPressed = event.isShiftPressed
+                 ..isControlPressed = event.isControlPressed;
+      },
+      child: Row(
+        children: [
+          Flexible(child: _photoGrid),
+          Flexible(
+            fit: FlexFit.tight,
+            child: _rightColumn
+          ),
+        ],
+      )
     );
   }
 
@@ -81,6 +88,11 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
     );
   }
 
+  static final checkboxStyle = CheckboxThemeData(
+    foregroundColor: ButtonState.all(Colors.white),
+    uncheckedDecoration: ButtonState.all(BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(6))),
+  );
+
   Widget get _rightColumn {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -88,13 +100,41 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          const Flexible(
-            flex: 1,
-            child: SizedBox()
-          ),
           Expanded(
             flex: 10,
             child: _collage,
+          ),
+          const SizedBox(height: 30,),
+          Flexible(
+            child: Row(
+              children: [
+                Observer(
+                  builder: (context) => Transform.scale(
+                    scale: 1.5,
+                    alignment: Alignment.centerLeft,
+                    child: Checkbox(
+                      style: checkboxStyle,
+                      content: const Text("Print on save"),
+                      checked: viewModel.printOnSave,
+                      onChanged: (b) => viewModel.printOnSave = b!,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 85,),
+                Observer(
+                  builder: (context) => Transform.scale(
+                    scale: 1.5,
+                    alignment: Alignment.centerLeft,
+                    child: Checkbox(
+                      style: checkboxStyle,
+                      content: const Text("Clear on save"),
+                      checked: viewModel.clearOnSave,
+                      onChanged: (b) => viewModel.clearOnSave = b!,
+                    ),
+                  ),
+                ),
+              ],
+            )
           ),
           Flexible(
             flex: 2,
