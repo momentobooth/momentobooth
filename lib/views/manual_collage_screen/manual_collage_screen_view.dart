@@ -114,7 +114,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
                     alignment: Alignment.centerLeft,
                     child: Checkbox(
                       style: checkboxStyle,
-                      content: Text("Print on save"),
+                      content: const Text("Print on save"),
                       checked: viewModel.printOnSave,
                       onChanged: (b) => viewModel.printOnSave = b!,
                     ),
@@ -127,7 +127,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
                     alignment: Alignment.centerLeft,
                     child: Checkbox(
                       style: checkboxStyle,
-                      content: Text("Clear on save"),
+                      content: const Text("Clear on save"),
                       checked: viewModel.clearOnSave,
                       onChanged: (b) => viewModel.clearOnSave = b!,
                     ),

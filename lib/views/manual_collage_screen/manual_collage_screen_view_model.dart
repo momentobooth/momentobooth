@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
