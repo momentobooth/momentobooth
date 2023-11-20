@@ -428,10 +428,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_mobx
-      sha256: "2ba0aa5a42811eaaeff2e35626689cf2b8a3869907d0e8889c914f2c95d8fd76"
+      sha256: d1d379561fe84675cc099bc42e99456f73a77fff475d0e2e9bda271751a11a91
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.1"
+    version: "2.2.0"
   flutter_rust_bridge:
     dependency: "direct main"
     description:
