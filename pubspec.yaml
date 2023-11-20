@@ -37,7 +37,7 @@ dependencies:
 
   # MVC
   mobx: 2.2.1
-  flutter_mobx: 2.1.1
+  flutter_mobx: 2.2.0
 
   # Models
   freezed_annotation: 2.4.1
