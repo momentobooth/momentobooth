@@ -65,7 +65,7 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
-          rust -> ../build/windows/x64/Release/cargo/build
+          rust -> ../build/windows/x64/x64/Release/cargo/build
           rust -> target
 
     - name: Setup sccache-cache
@@ -124,16 +124,16 @@ jobs:
       run: |
         $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
         $bundle_script = curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls
-        echo $bundle_script | python - --copy build\windows\runner\Release\momento_booth_native_helpers.dll
+        echo $bundle_script | python - --copy build\windows\x64\runner\Release\momento_booth_native_helpers.dll
 
     - name: Bundle libgphoto2 additional libs
       shell: pwsh
       run: |
         $Env:MSYS2_ROOT = msys2 -c 'cygpath -m /'
-        mkdir build\windows\runner\Release\libgphoto2_iolibs
-        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2_port\*\*.dll build\windows\runner\Release\libgphoto2_iolibs
-        mkdir build\windows\runner\Release\libgphoto2_camlibs
-        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2\*\*.dll build\windows\runner\Release\libgphoto2_camlibs
+        mkdir build\windows\x64\runner\Release\libgphoto2_iolibs
+        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2_port\*\*.dll build\windows\x64\runner\Release\libgphoto2_iolibs
+        mkdir build\windows\x64\runner\Release\libgphoto2_camlibs
+        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2\*\*.dll build\windows\x64\runner\Release\libgphoto2_camlibs
 
     - name: Bundle dependencies of libgphoto2 additional libs
       shell: pwsh
@@ -141,7 +141,7 @@ jobs:
         $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
         $bundle_script = curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls
 
-        cd build\windows\runner\Release\
+        cd build\windows\x64\runner\Release\
         $lib_folders = @('libgphoto2_iolibs', 'libgphoto2_camlibs')
         foreach ( $folder in $lib_folders )
         {
@@ -166,7 +166,7 @@ jobs:
       uses: thedoctor0/zip-release@0.7.1
       with:
         type: 'zip'
-        directory: build/windows/runner/Release
+        directory: build/windows/x64/runner/Release
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip'
 
     # Create GitHub release
@@ -177,4 +177,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "build/windows/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip"
+        artifacts: "build/windows/x64/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip"
