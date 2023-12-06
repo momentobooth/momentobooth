@@ -229,10 +229,10 @@ packages:
     dependency: transitive
     description:
       name: cross_file
-      sha256: "2f9d2cbccb76127ba28528cb3ae2c2326a122446a83de5a056aaa3880d3882c5"
+      sha256: fedaadfa3a6996f75211d835aaeb8fede285dae94262485698afd832371b9a5e
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.3+7"
+    version: "0.3.3+8"
   crypto:
     dependency: transitive
     description:
@@ -428,10 +428,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_mobx
-      sha256: d1d379561fe84675cc099bc42e99456f73a77fff475d0e2e9bda271751a11a91
+      sha256: "0f0463db8a1582ac88670bea6e4f58ab64a16d701bc7d2c27ea50c1dbe5aecdc"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.0+1"
   flutter_rust_bridge:
     dependency: "direct main"
     description:
@@ -523,10 +523,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
+      sha256: d4872660c46d929f6b8a9ef4e7a7eff7e49bbf0c4ec3f385ee32df5119175139
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.2"
   http_multi_server:
     dependency: transitive
     description:
@@ -720,10 +720,10 @@ packages:
     dependency: "direct main"
     description:
       name: mobx
-      sha256: "42ae7277ec5c36fa5ce02aa14551065babce3c38a35947330144ff47bc775c75"
+      sha256: "537bee828f30a971ffd7d29d8e22bbdec5c9f5899ad4b01f3206a21eeb5c75de"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.3"
   mobx_codegen:
     dependency: "direct dev"
     description:
