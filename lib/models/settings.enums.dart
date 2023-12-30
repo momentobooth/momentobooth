@@ -116,18 +116,15 @@ enum ScreenTransitionAnimation {
 
 enum Flip {
 
-  none(false, false, "None"),
-  horizontally(true, false, "Horizontally"),
-  vertically(false, true, "Vertically"),
-  both(true, true, "Both");
+  none("None"),
+  horizontally("Horizontally"),
+  vertically("Vertically");
 
   // can add more properties or getters/methods if needed
-  final bool flipX;
-  final bool flipY;
   final String name;
 
   // can use named parameters if you want
-  const Flip(this.flipX, this.flipY, this.name);
+  const Flip(this.name);
 
   ComboBoxItem<Flip> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 

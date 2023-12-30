@@ -3,11 +3,7 @@ import 'dart:ui' as ui;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/managers/live_view_manager.dart';
-import 'package:momento_booth/managers/notifications_manager.dart';
-import 'package:momento_booth/managers/photos_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/views/base/stateless_widget_base.dart';
 
 class LiveViewBackground extends StatelessWidgetBase {
@@ -96,15 +92,18 @@ class LiveViewBackground extends StatelessWidgetBase {
       fit: StackFit.expand,
       children: [
         ColoredBox(color: Colors.green),
-        ImageFiltered(
-          imageFilter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: const LiveView(fit: BoxFit.cover),
+        LiveView(
+          fit: BoxFit.cover,
+          textureId: LiveViewManager.instance.textureIdBlur,
         ),
         AnimatedOpacity(
           duration: const Duration(milliseconds: 300),
           opacity: _showLiveViewBackground ? 1 : 0,
           curve: Curves.ease,
-          child: const LiveView(fit: BoxFit.contain),
+          child: LiveView(
+            fit: BoxFit.contain,
+            textureId: LiveViewManager.instance.textureIdMain,
+          ),
         ),
       ],
     );
@@ -115,33 +114,27 @@ class LiveViewBackground extends StatelessWidgetBase {
 class LiveView extends StatelessWidgetBase {
 
   final BoxFit fit;
+  final int? textureId;
 
   const LiveView({
     super.key,
     required this.fit,
+    this.textureId,
   });
 
-  Flip get _flip => SettingsManager.instance.settings.hardware.liveViewFlipImage;
   ui.FilterQuality get _filterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality.toUiFilterQuality();
 
   @override
   Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) => FittedBox(
-        fit: fit,
-        child: SizedBox(
-          width: 3,
-          height: 2,
-          child: Transform.flip(
-            flipX: _flip.flipX,
-            flipY: _flip.flipY,
-            filterQuality: _filterQuality,
-            child: LiveViewManager.instance.textureId != null ? Texture(
-              textureId: LiveViewManager.instance.textureId!,
-              filterQuality: _filterQuality,
-            ) : null,
-          ),
-        ),
+    return FittedBox(
+      fit: fit,
+      child: SizedBox(
+        width: 3,
+        height: 2,
+        child: textureId != null ? Texture(
+          textureId: textureId!,
+          filterQuality: _filterQuality,
+        ) : null,
       ),
     );
   }

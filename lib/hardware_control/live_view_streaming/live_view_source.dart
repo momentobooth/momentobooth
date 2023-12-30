@@ -5,7 +5,7 @@ abstract class LiveViewSource {
   String get id;
   String get friendlyName;
 
-  Future<void> openStream({required int texturePtr});
+  Future<void> openStream({required int texturePtrMain, required int texturePtrBlur});
 
   Future<RawImage?> getLastFrame();
 

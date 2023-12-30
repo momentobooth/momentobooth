@@ -47,14 +47,14 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   // ////////////// //
 
   @override
-  Future<void> openStream({required int texturePtr}) async {
+  Future<void> openStream({required int texturePtrMain, required int texturePtrBlur}) async {
     await _ensureLibraryInitialized();
     var split = id.split("/");
     handleId = await rustLibraryApi.gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
     isOpened = true;
     await rustLibraryApi.gphoto2StartLiveview(handleId: handleId, operations: [
       const ImageOperation.cropToAspectRatio(3 / 2),
-    ], texturePtr: texturePtr);
+    ], texturePtrMain: texturePtrMain, texturePtrBlur: texturePtrBlur);
 
     rustLibraryApi.gphoto2SetExtraFileCallback(handleId: handleId).listen((element) {
       storePhotoSafe(element.filename, element.data);
