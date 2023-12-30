@@ -74,7 +74,7 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
         match raw_frame {
             Some(raw_frame) => {
                 let processed_frame_main = image_processing::execute_operations(&raw_frame, &operations);
-                let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::BackgroundBlur(8.0)]);
+                let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::ResizeForBackgroundBlur]);
                 let mut renderer_main = renderer_mutex_main.lock().expect("Could not lock on renderer");
                 let mut renderer_blur = renderer_mutex_blur.lock().expect("Could not lock on renderer");
 
@@ -146,7 +146,7 @@ pub fn noise_open(texture_ptr_main: usize, texture_ptr_blur: usize) -> usize {
     let renderer_blur = FlutterTexture::new(texture_ptr_blur, 100, 75);
     let join_handle = white_noise::start_and_get_handle(NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT, move |raw_frame| {
         renderer_main.on_rgba(&raw_frame);
-        renderer_blur.on_rgba(&image_processing::execute_operations(&raw_frame, &vec![ImageOperation::BackgroundBlur(8.0)]));
+        renderer_blur.on_rgba(&image_processing::execute_operations(&raw_frame, &vec![ImageOperation::ResizeForBackgroundBlur]));
     });
 
     // Store handle
@@ -252,7 +252,7 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
             match raw_frame {
                 Ok(raw_frame) => {
                     let processed_frame_main = image_processing::execute_operations(&raw_frame, &operations);
-                    let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::BackgroundBlur(8.0)]);
+                    let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::ResizeForBackgroundBlur]);
                     let mut renderer_main = renderer_mutex_main.lock().expect("Could not lock on renderer");
                     let mut renderer_blur = renderer_mutex_blur.lock().expect("Could not lock on renderer");
 
