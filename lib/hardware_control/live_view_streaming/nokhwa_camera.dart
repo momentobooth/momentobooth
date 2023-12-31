@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/exceptions/nokhwa_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
@@ -41,15 +40,23 @@ class NokhwaCamera extends LiveViewSource {
   // ////////////// //
 
   @override
-  Future<void> openStream({required int texturePtrMain, required int texturePtrBlur}) async {
+  Future<void> openStream({
+    required int texturePtrMain,
+    required int texturePtrBlur,
+    required List<ImageOperation> operations,
+  }) async {
     await _ensureLibraryInitialized();
-    handleId = await rustLibraryApi.nokhwaOpenCamera(friendlyName: friendlyName, operations: [
-      const ImageOperation.cropToAspectRatio(3 / 2),
-      if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.horizontally)
-        const ImageOperation.flip(FlipAxis.Horizontally),
-      if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.vertically)
-          const ImageOperation.flip(FlipAxis.Vertically),
-    ], texturePtrMain: texturePtrMain, texturePtrBlur: texturePtrBlur);
+    handleId = await rustLibraryApi.nokhwaOpenCamera(
+      friendlyName: friendlyName,
+      operations: operations,
+      texturePtrMain: texturePtrMain,
+      texturePtrBlur: texturePtrBlur,
+    );
+  }
+
+  @override
+  Future<void> setOperations(List<ImageOperation> operations) {
+    return rustLibraryApi.nokhwaSetOperations(handleId: handleId, operations: operations);
   }
 
   @override

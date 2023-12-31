@@ -11,6 +11,7 @@ import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
@@ -89,12 +90,12 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   @readonly
   LiveViewSource? _currentLiveViewSource;
 
-  LiveViewMethod? _currentLiveViewMethodSetting;
+  LiveViewMethod? _currentLiveViewMethod;
   String? _currentLiveViewWebcamId;
-
-  CaptureMethod? _currentCaptureMethodSetting;
-
+  CaptureMethod? _currentCaptureMethod;
   String? _currentGPhoto2CameraId;
+  Flip? _currentliveViewFlip;
+  double? _currentLiveViewAndCaptureAspectRatio;
 
   @readonly
   LiveViewState _liveViewState = LiveViewState.initializing;
@@ -102,26 +103,30 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   Future<void> _updateConfig() async {
     LiveViewMethod liveViewMethodSetting = SettingsManager.instance.settings.hardware.liveViewMethod;
     CaptureMethod captureMethodSetting = SettingsManager.instance.settings.hardware.captureMethod;
-    String gPhoto2CameraId = SettingsManager.instance.settings.hardware.gPhoto2CameraId;
+    String gPhoto2CameraIdSetting = SettingsManager.instance.settings.hardware.gPhoto2CameraId;
     String webcamIdSetting = SettingsManager.instance.settings.hardware.liveViewWebcamId;
+    Flip liveViewFlipSetting = SettingsManager.instance.settings.hardware.liveViewFlipImage;
+    double liveViewAndCaptureAspectRatioSetting = SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
 
-    if (_currentLiveViewMethodSetting == null || _currentLiveViewMethodSetting != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethodSetting != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraId) {
+    if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting || _currentliveViewFlip != liveViewFlipSetting || _currentLiveViewAndCaptureAspectRatio != liveViewAndCaptureAspectRatioSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
       _liveViewState = LiveViewState.initializing;
       await _currentLiveViewSource?.dispose();
 
-      _currentLiveViewMethodSetting = liveViewMethodSetting;
+      _currentLiveViewMethod = liveViewMethodSetting;
       _currentLiveViewWebcamId = webcamIdSetting;
-      _currentCaptureMethodSetting = captureMethodSetting;
-      _currentGPhoto2CameraId = gPhoto2CameraId;
+      _currentCaptureMethod = captureMethodSetting;
+      _currentGPhoto2CameraId = gPhoto2CameraIdSetting;
+      _currentliveViewFlip = liveViewFlipSetting;
+      _currentLiveViewAndCaptureAspectRatio = liveViewAndCaptureAspectRatioSetting;
 
       // GPhoto2
       if (_gPhoto2Camera != null && _gPhoto2Camera!.isOpened) {
         await _gPhoto2Camera!.dispose();
         _gPhoto2Camera = null;
       }
-      if ((liveViewMethodSetting == LiveViewMethod.gphoto2 || captureMethodSetting == CaptureMethod.gPhoto2) && gPhoto2CameraId.isNotEmpty) {
-        _gPhoto2Camera = GPhoto2Camera(id: gPhoto2CameraId, friendlyName: gPhoto2CameraId);
+      if ((liveViewMethodSetting == LiveViewMethod.gphoto2 || captureMethodSetting == CaptureMethod.gPhoto2) && gPhoto2CameraIdSetting.isNotEmpty) {
+        _gPhoto2Camera = GPhoto2Camera(id: gPhoto2CameraIdSetting, friendlyName: gPhoto2CameraIdSetting);
       }
 
       switch (liveViewMethodSetting) {
@@ -135,11 +140,25 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
       }
 
       await _ensureTextureAvailable();
-      await _currentLiveViewSource?.openStream(texturePtrMain: _texturePointerMain!, texturePtrBlur: _texturePointerBlur!);
+      await _currentLiveViewSource?.openStream(
+        texturePtrMain: _texturePointerMain!,
+        texturePtrBlur: _texturePointerBlur!,
+        operations: _getImageOperations(),
+      );
 
       _liveViewState = LiveViewState.streaming;
       _lastFrameWasInvalid = false;
     }
+  }
+
+  List<ImageOperation> _getImageOperations() {
+    return [
+      ImageOperation.cropToAspectRatio(SettingsManager.instance.settings.collageAspectRatio),
+      if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.horizontally)
+        const ImageOperation.flip(FlipAxis.Horizontally),
+      if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.vertically)
+        const ImageOperation.flip(FlipAxis.Vertically),
+    ];
   }
 
   Future<void> _checkLiveViewState() async {
@@ -172,7 +191,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
 
   void restoreLiveView() {
     LiveViewManager.instance._updateLiveViewSourceInstanceLock.synchronized(() async {
-      _currentLiveViewMethodSetting = null;
+      _currentLiveViewMethod = null;
       await LiveViewManager.instance._updateConfig();
     });
   }

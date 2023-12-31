@@ -98,6 +98,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   double get collagePaddingSetting => SettingsManager.instance.settings.collagePadding;
   bool get singlePhotoIsCollageSetting => SettingsManager.instance.settings.singlePhotoIsCollage;
   String get templatesFolderSetting => SettingsManager.instance.settings.templatesFolder;
+  double get liveViewAndCaptureAspectRatioSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
   LiveViewMethod get liveViewMethodSetting => SettingsManager.instance.settings.hardware.liveViewMethod;
   String get liveViewWebcamId => SettingsManager.instance.settings.hardware.liveViewWebcamId;
   Flip get liveViewFlipImage => SettingsManager.instance.settings.hardware.liveViewFlipImage;

@@ -4,9 +4,26 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
   return FluentSettingsPage(
     title: "Hardware",
     blocks: [
+      _getGeneralBlock(viewModel, controller),
       _getLiveViewBlock(viewModel, controller),
       _getPhotoCaptureBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
+    ],
+  );
+}
+
+Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "General",
+    settings: [
+        NumberInputCard(
+        icon: FluentIcons.page,
+        title: "Aspect ratio",
+        subtitle: 'The aspect ratio to which live view images and captured photos are cropped.',
+        value: () => viewModel.liveViewAndCaptureAspectRatioSetting,
+        onFinishedEditing: controller.onLiveViewAndCaptureAspectRatioChanged,
+        smallChange: 0.1,
+      ),
     ],
   );
 }

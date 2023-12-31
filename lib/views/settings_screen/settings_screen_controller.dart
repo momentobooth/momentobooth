@@ -109,6 +109,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onLiveViewAndCaptureAspectRatioChanged(double? liveViewAndCaptureAspectRatio) {
+    if (liveViewAndCaptureAspectRatio != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewAndCaptureAspectRatio: liveViewAndCaptureAspectRatio));
+    }
+  }
+
   void onLiveViewMethodChanged(LiveViewMethod? liveViewMethod) {
     if (liveViewMethod != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: liveViewMethod));

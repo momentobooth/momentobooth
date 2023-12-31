@@ -87,6 +87,7 @@ fn flip(src_raw_image: &ImageBuffer<image::Rgba<u8>, Vec<u8>>, flip: FlipAxis) -
     }
 }
 
+// Can potentially be made even faster using https://crates.io/crates/fast_image_resize
 fn background_blur(src_raw_image: &ImageBuffer<image::Rgba<u8>, Vec<u8>>) -> ImageBuffer<image::Rgba<u8>, Vec<u8>> {
     imageops::resize(src_raw_image, 100, 75, FilterType::Triangle)
 }

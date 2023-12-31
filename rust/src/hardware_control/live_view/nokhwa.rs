@@ -1,7 +1,7 @@
 use derive_more::{From, Into};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 
-use crate::{dart_bridge::api::RawImage, log_debug, log_info, log_error, utils::jpeg};
+use crate::{dart_bridge::api::RawImage, log_debug, log_info, log_error, utils::{jpeg, image_processing::ImageOperation}};
 
 pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
     if cfg!(target_os = "macos") {
@@ -28,7 +28,7 @@ pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamer
     let devices = query(backend).expect("Could not query backend");
     let camera_info = devices.into_iter().find(|device| device.human_name() == friendly_name).expect("Could not find camera");
 
-    // Open camera and configure callback7
+    // Open camera and configure callback
     let mut camera = CallbackCamera::new(camera_info.index().clone(), format, move |buffer| {
         if buffer.source_frame_format() == FrameFormat::MJPEG {
             // MJPEG: Use our own implementation which is faster

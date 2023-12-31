@@ -15,8 +15,19 @@ class NoiseSource extends LiveViewSource {
   NoiseSource();
 
   @override
-  Future<void> openStream({required int texturePtrMain, required int texturePtrBlur}) async =>
-      _handleId = await rustLibraryApi.noiseOpen(texturePtrMain: texturePtrMain, texturePtrBlur: texturePtrBlur);
+  Future<void> openStream({
+    required int texturePtrMain,
+    required int texturePtrBlur,
+    required List<ImageOperation> operations,
+  }) async {
+    _handleId = await rustLibraryApi.noiseOpen(
+      texturePtrMain: texturePtrMain,
+      texturePtrBlur: texturePtrBlur,
+    );
+  }
+
+  @override
+  Future<void> setOperations(List<ImageOperation> operations) async {}
 
   @override
   Future<RawImage> getLastFrame() => rustLibraryApi.noiseGetFrame();

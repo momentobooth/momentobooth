@@ -1,4 +1,4 @@
-use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time::Instant};
+use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time::Instant, vec};
 
 use chrono::Duration;
 use dashmap::DashMap;
@@ -73,7 +73,7 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
         let mut handle = camera_ref.lock().expect("Could not lock on handle");
         match raw_frame {
             Some(raw_frame) => {
-                let processed_frame_main = image_processing::execute_operations(&raw_frame, &operations);
+                let processed_frame_main = image_processing::execute_operations(&raw_frame, &handle.operations);
                 let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::ResizeForBackgroundBlur]);
                 let mut renderer_main = renderer_mutex_main.lock().expect("Could not lock on renderer");
                 let mut renderer_blur = renderer_mutex_blur.lock().expect("Could not lock on renderer");
@@ -97,9 +97,16 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
     });
 
     // Store handle
-    NOKHWA_HANDLES.insert(handle_id, Arc::new(Mutex::new(NokhwaCameraHandle::new(camera))));
+    NOKHWA_HANDLES.insert(handle_id, Arc::new(Mutex::new(NokhwaCameraHandle::new(camera, operations))));
 
     handle_id
+}
+
+pub fn nokhwa_set_operations(handle_id: usize, operations: Vec<ImageOperation>) {
+    let camera_ref = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let mut handle = camera_ref.lock().expect("Could not lock on handle");
+
+    handle.operations = operations;
 }
 
 pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
@@ -224,7 +231,7 @@ pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto
 
     // Store handle
     let handle_id = GPHOTO2_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
-    GPHOTO2_HANDLES.insert(handle_id, Arc::new(Mutex::new(GPhoto2CameraHandle::new(camera))));
+    GPHOTO2_HANDLES.insert(handle_id, Arc::new(Mutex::new(GPhoto2CameraHandle::new(camera, vec!()))));
 
     handle_id
 }
@@ -241,7 +248,10 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
     let renderer_mutex_blur = Mutex::new(renderer_blur);
 
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
-    let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
+    let mut camera_handle = camera_ref.lock().expect("Could not lock camera");
+    camera_handle.operations = operations;
+
+    let camera = camera_handle.camera.clone();
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async {
         gphoto2::start_liveview(camera, move |raw_frame| {
@@ -251,7 +261,7 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
 
             match raw_frame {
                 Ok(raw_frame) => {
-                    let processed_frame_main = image_processing::execute_operations(&raw_frame, &operations);
+                    let processed_frame_main = image_processing::execute_operations(&raw_frame, &camera.operations);
                     let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::ResizeForBackgroundBlur]);
                     let mut renderer_main = renderer_mutex_main.lock().expect("Could not lock on renderer");
                     let mut renderer_blur = renderer_mutex_blur.lock().expect("Could not lock on renderer");
@@ -278,6 +288,12 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
             camera.duplicate_frame_count.fetch_add(1, Ordering::SeqCst);
         }).await
     }).expect("Could not start live view")
+}
+
+pub fn gphoto2_set_operations(handle_id: usize, operations: Vec<ImageOperation>) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let mut camera_handle = camera_ref.lock().expect("Could not lock camera");
+    camera_handle.operations = operations;
 }
 
 pub fn gphoto2_stop_liveview(handle_id: usize) {
@@ -385,10 +401,11 @@ pub struct NokhwaCameraHandle {
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
     pub last_received_frame_timestamp: Option<Instant>,
+    pub operations: Vec<ImageOperation>,
 }
 
 impl NokhwaCameraHandle {
-    fn new(camera: CallbackCamera) -> Self {
+    fn new(camera: CallbackCamera, operations: Vec<ImageOperation>) -> Self {
         Self {
             status_sink: None,
             camera,
@@ -397,6 +414,7 @@ impl NokhwaCameraHandle {
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
             last_received_frame_timestamp: None,
+            operations: operations,
         }
     }
 }
@@ -416,10 +434,11 @@ pub struct GPhoto2CameraHandle {
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
     pub last_received_frame_timestamp: Option<Instant>,
+    pub operations: Vec<ImageOperation>,
 }
 
 impl GPhoto2CameraHandle {
-    fn new(camera: GPhoto2Camera) -> Self {
+    fn new(camera: GPhoto2Camera, operations: Vec<ImageOperation>) -> Self {
         Self {
             status_sink: None,
             camera: Arc::new(AsyncMutex::new(camera)),
@@ -429,6 +448,7 @@ impl GPhoto2CameraHandle {
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
             last_received_frame_timestamp: None,
+            operations: operations,
         }
     }
 }
