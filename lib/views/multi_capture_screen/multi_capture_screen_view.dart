@@ -33,7 +33,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
             Flexible(
               flex: 5,
               child: AspectRatio(
-                aspectRatio: 1.5,
+                aspectRatio: viewModel.aspectRatio,
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -74,7 +74,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: AspectRatio(
-                aspectRatio: 1.5,
+                aspectRatio: viewModel.aspectRatio,
                 child: ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
               ),
             ),
@@ -120,7 +120,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: AspectRatio(
-        aspectRatio: 1.5,
+        aspectRatio: viewModel.aspectRatio,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(

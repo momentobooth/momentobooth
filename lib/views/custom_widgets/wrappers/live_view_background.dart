@@ -121,14 +121,15 @@ class LiveView extends StatelessWidgetBase {
   });
 
   ui.FilterQuality get _filterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality.toUiFilterQuality();
+  double get _aspectRatio => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
 
   @override
   Widget build(BuildContext context) {
     return FittedBox(
       fit: fit,
       child: SizedBox(
-        width: 3,
-        height: 2,
+        width: _aspectRatio,
+        height: 1,
         child: textureId != null
             ? Observer(builder: (_) {
                 return Texture(
