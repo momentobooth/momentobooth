@@ -27,10 +27,10 @@ class LiveViewBackground extends StatelessWidgetBase {
         _viewState,
         child,
         _statusOverlay,
-      ]
+      ],
     );
   }
-  
+
   Widget get _statusOverlay {
     return Padding(
       padding: const EdgeInsets.all(30),
@@ -52,14 +52,12 @@ class LiveViewBackground extends StatelessWidgetBase {
   Widget get _viewState {
     return Observer(builder: (context) {
       switch (_liveViewState) {
-        
         case LiveViewState.initializing:
           return _initializingState;
         case LiveViewState.error:
           return _errorState(Colors.red, null);
         case LiveViewState.streaming:
           return _streamingState;
-
       }
     });
   }
@@ -131,10 +129,14 @@ class LiveView extends StatelessWidgetBase {
       child: SizedBox(
         width: 3,
         height: 2,
-        child: textureId != null ? Texture(
-          textureId: textureId!,
-          filterQuality: _filterQuality,
-        ) : null,
+        child: textureId != null
+            ? Observer(builder: (_) {
+                return Texture(
+                  textureId: textureId!,
+                  filterQuality: _filterQuality,
+                );
+              })
+            : null,
       ),
     );
   }
