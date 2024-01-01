@@ -108,7 +108,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
     Flip liveViewFlipSetting = SettingsManager.instance.settings.hardware.liveViewFlipImage;
     double liveViewAndCaptureAspectRatioSetting = SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
 
-    if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting || _currentliveViewFlip != liveViewFlipSetting || _currentLiveViewAndCaptureAspectRatio != liveViewAndCaptureAspectRatioSetting) {
+    if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
       _liveViewState = LiveViewState.initializing;
       await _currentLiveViewSource?.dispose();
@@ -148,12 +148,17 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
 
       _liveViewState = LiveViewState.streaming;
       _lastFrameWasInvalid = false;
+    } else if ((_currentliveViewFlip != liveViewFlipSetting || _currentLiveViewAndCaptureAspectRatio != liveViewAndCaptureAspectRatioSetting) && _currentLiveViewSource != null) {
+      _currentliveViewFlip = liveViewFlipSetting;
+      _currentLiveViewAndCaptureAspectRatio = liveViewAndCaptureAspectRatioSetting;
+
+      await _currentLiveViewSource!.setOperations(_getImageOperations());
     }
   }
 
   List<ImageOperation> _getImageOperations() {
     return [
-      ImageOperation.cropToAspectRatio(SettingsManager.instance.settings.collageAspectRatio),
+      ImageOperation.cropToAspectRatio(SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio),
       if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.horizontally)
         const ImageOperation.flip(FlipAxis.Horizontally),
       if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.vertically)
