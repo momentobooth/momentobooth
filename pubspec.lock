@@ -381,10 +381,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: f5996aa055a8fe3f90dd97b9cf8f6522ae87df5d2d0ccb81b0142e4e4ca03f51
+      sha256: "19d172588cac32a98901787ffef751cfc671e1f44e9ff2c0786d748617e32011"
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.2"
+    version: "4.8.3"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -720,18 +720,18 @@ packages:
     dependency: "direct main"
     description:
       name: mobx
-      sha256: "1226c02cdb2a5f321be977a9a0d5cc0c9e6e395b72be3bca90b2299ff0845198"
+      sha256: "6b467f91bfc534922ea670db69a1972d28bd9754085892decb5bce19f2c8d0d5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.3+1"
+    version: "2.3.0"
   mobx_codegen:
     dependency: "direct dev"
     description:
       name: mobx_codegen
-      sha256: "375df14ff39b708f942a7c1fbb3b83619e71733f6142089fc42d0c16b71edb74"
+      sha256: c9f4be5a67b89f9b90d4c07a0dfa7c368072108061f74d9f09400fe7252cfb84
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.1"
+    version: "2.6.0"
   mpv_dart:
     dependency: transitive
     description:
@@ -744,10 +744,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: "50eab5dcc98129a5d19c32bdb009dbef6699a6ff8a43ae48e90afba547647faa"
+      sha256: abe6bacee971333de382086e25580fb33d8d28a4e76b1062891df3992fe7a51d
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.3"
+    version: "4.0.4"
   nested:
     dependency: transitive
     description:
