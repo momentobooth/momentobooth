@@ -130,6 +130,38 @@ enum Flip {
 
   static List<ComboBoxItem<Flip>> asComboBoxItems() => Flip.values.map((value) => value.toComboBoxItem()).toList();
 
+  FlipAxis? get asFlipAxis => switch (this) {
+    Flip.none => null,
+    Flip.horizontally => FlipAxis.Horizontally,
+    Flip.vertically => FlipAxis.Vertically,
+  };
+
+}
+
+enum Rotate {
+
+  none("No rotation"),
+  clockwise90degrees("90 degrees"),
+  clockwise180degrees("180 degrees"),
+  clockwise270degrees("270 degrees");
+
+  // can add more properties or getters/methods if needed
+  final String name;
+
+  // can use named parameters if you want
+  const Rotate(this.name);
+
+  ComboBoxItem<Rotate> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<Rotate>> asComboBoxItems() => Rotate.values.map((value) => value.toComboBoxItem()).toList();
+
+  Rotation? get asRotation => switch (this) {
+        Rotate.none => null,
+        Rotate.clockwise90degrees => Rotation.Rotate90,
+        Rotate.clockwise180degrees => Rotation.Rotate180,
+        Rotate.clockwise270degrees => Rotation.Rotate270,
+      };
+
 }
 
 enum Language {

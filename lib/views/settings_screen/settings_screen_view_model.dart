@@ -35,7 +35,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   // Option lists
 
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
-  List<ComboBoxItem<Flip>> get liveViewFlipImageChoices => Flip.asComboBoxItems();
+  List<ComboBoxItem<Rotate>> get liveViewAndCaptureRotateOptions => Rotate.asComboBoxItems();
+  List<ComboBoxItem<Flip>> get liveViewFlipOptions => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
@@ -98,10 +99,11 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   double get collagePaddingSetting => SettingsManager.instance.settings.collagePadding;
   bool get singlePhotoIsCollageSetting => SettingsManager.instance.settings.singlePhotoIsCollage;
   String get templatesFolderSetting => SettingsManager.instance.settings.templatesFolder;
+  Rotate get liveViewAndCaptureRotateSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureRotate;
   double get liveViewAndCaptureAspectRatioSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
+  Flip get liveViewFlipSetting => SettingsManager.instance.settings.hardware.liveViewFlip;
   LiveViewMethod get liveViewMethodSetting => SettingsManager.instance.settings.hardware.liveViewMethod;
   String get liveViewWebcamId => SettingsManager.instance.settings.hardware.liveViewWebcamId;
-  Flip get liveViewFlipImage => SettingsManager.instance.settings.hardware.liveViewFlipImage;
   CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;
   String get gPhoto2CameraId => SettingsManager.instance.settings.hardware.gPhoto2CameraId;
   GPhoto2SpecialHandling get gPhoto2SpecialHandling => SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling;

@@ -109,6 +109,18 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onLiveViewAndCaptureRotateChanged(Rotate? liveViewAndCaptureRotate) {
+    if (liveViewAndCaptureRotate != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewAndCaptureRotate: liveViewAndCaptureRotate));
+    }
+  }
+
+  void onLiveViewFlipChanged(Flip? liveViewFlip) {
+    if (liveViewFlip != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewFlip: liveViewFlip));
+    }
+  }
+
   void onLiveViewAndCaptureAspectRatioChanged(double? liveViewAndCaptureAspectRatio) {
     if (liveViewAndCaptureAspectRatio != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewAndCaptureAspectRatio: liveViewAndCaptureAspectRatio));
@@ -124,12 +136,6 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onLiveViewWebcamIdChanged(String? liveViewWebcamId) {
     if (liveViewWebcamId != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewWebcamId: liveViewWebcamId));
-    }
-  }
-
-  void onLiveViewFlipImageChanged(Flip? liveViewFlipImage) {
-    if (liveViewFlipImage != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewFlipImage: liveViewFlipImage));
     }
   }
 

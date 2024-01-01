@@ -127,17 +127,19 @@ class LiveView extends StatelessWidgetBase {
   Widget build(BuildContext context) {
     return FittedBox(
       fit: fit,
-      child: SizedBox(
-        width: _aspectRatio,
-        height: 1,
-        child: textureId != null
-            ? Observer(builder: (_) {
-                return Texture(
-                  textureId: textureId!,
-                  filterQuality: _filterQuality,
-                );
-              })
-            : null,
+      child: Observer(
+        builder: (_) {
+          return SizedBox(
+              width: _aspectRatio,
+              height: 1,
+              child: textureId != null
+                  ? Texture(
+                    textureId: textureId!,
+                    filterQuality: _filterQuality,
+                  )
+                  : null,
+            );
+        }
       ),
     );
   }

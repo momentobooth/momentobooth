@@ -94,8 +94,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   String? _currentLiveViewWebcamId;
   CaptureMethod? _currentCaptureMethod;
   String? _currentGPhoto2CameraId;
-  Flip? _currentliveViewFlip;
+  Rotate? _currentLiveViewAndCaptureRotate;
   double? _currentLiveViewAndCaptureAspectRatio;
+  Flip? _currentLiveViewFlip;
 
   @readonly
   LiveViewState _liveViewState = LiveViewState.initializing;
@@ -105,8 +106,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
     CaptureMethod captureMethodSetting = SettingsManager.instance.settings.hardware.captureMethod;
     String gPhoto2CameraIdSetting = SettingsManager.instance.settings.hardware.gPhoto2CameraId;
     String webcamIdSetting = SettingsManager.instance.settings.hardware.liveViewWebcamId;
-    Flip liveViewFlipSetting = SettingsManager.instance.settings.hardware.liveViewFlipImage;
+    Rotate liveViewAndCaptureRotateSetting = SettingsManager.instance.settings.hardware.liveViewAndCaptureRotate;
     double liveViewAndCaptureAspectRatioSetting = SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
+    Flip liveViewFlipSetting = SettingsManager.instance.settings.hardware.liveViewFlip;
 
     if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
@@ -117,7 +119,8 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
       _currentLiveViewWebcamId = webcamIdSetting;
       _currentCaptureMethod = captureMethodSetting;
       _currentGPhoto2CameraId = gPhoto2CameraIdSetting;
-      _currentliveViewFlip = liveViewFlipSetting;
+      _currentLiveViewAndCaptureRotate = liveViewAndCaptureRotateSetting;
+      _currentLiveViewFlip = liveViewFlipSetting;
       _currentLiveViewAndCaptureAspectRatio = liveViewAndCaptureAspectRatioSetting;
 
       // GPhoto2
@@ -148,8 +151,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
 
       _liveViewState = LiveViewState.streaming;
       _lastFrameWasInvalid = false;
-    } else if ((_currentliveViewFlip != liveViewFlipSetting || _currentLiveViewAndCaptureAspectRatio != liveViewAndCaptureAspectRatioSetting) && _currentLiveViewSource != null) {
-      _currentliveViewFlip = liveViewFlipSetting;
+    } else if ((_currentLiveViewAndCaptureRotate != liveViewAndCaptureRotateSetting || _currentLiveViewFlip != liveViewFlipSetting || _currentLiveViewAndCaptureAspectRatio != liveViewAndCaptureAspectRatioSetting) && _currentLiveViewSource != null) {
+      _currentLiveViewAndCaptureRotate = liveViewAndCaptureRotateSetting;
+      _currentLiveViewFlip = liveViewFlipSetting;
       _currentLiveViewAndCaptureAspectRatio = liveViewAndCaptureAspectRatioSetting;
 
       await _currentLiveViewSource!.setOperations(_getImageOperations());
@@ -157,12 +161,13 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   }
 
   List<ImageOperation> _getImageOperations() {
+    Rotation? rotate = SettingsManager.instance.settings.hardware.liveViewAndCaptureRotate.asRotation;
+    FlipAxis? flipAxis = SettingsManager.instance.settings.hardware.liveViewFlip.asFlipAxis;
+
     return [
+      if (rotate != null) ImageOperation.rotate(rotate),
       ImageOperation.cropToAspectRatio(SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio),
-      if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.horizontally)
-        const ImageOperation.flip(FlipAxis.Horizontally),
-      if (SettingsManager.instance.settings.hardware.liveViewFlipImage == Flip.vertically)
-        const ImageOperation.flip(FlipAxis.Vertically),
+      if (flipAxis != null) ImageOperation.flip(flipAxis),
     ];
   }
 

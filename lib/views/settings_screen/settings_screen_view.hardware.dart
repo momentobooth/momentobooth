@@ -16,13 +16,29 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
   return FluentSettingsBlock(
     title: "General",
     settings: [
-        NumberInputCard(
+      ComboBoxCard(
+        icon: FluentIcons.camera,
+        title: "Rotate image",
+        subtitle: "Whether the live view and capture will be rotated 90, 180 or 280 degrees clockwise.",
+        items: viewModel.liveViewAndCaptureRotateOptions,
+        value: () => viewModel.liveViewAndCaptureRotateSetting,
+        onChanged: controller.onLiveViewAndCaptureRotateChanged,
+      ),
+      NumberInputCard(
         icon: FluentIcons.page,
         title: "Aspect ratio",
         subtitle: 'The aspect ratio to which live view images and captured photos are cropped.',
         value: () => viewModel.liveViewAndCaptureAspectRatioSetting,
         onFinishedEditing: controller.onLiveViewAndCaptureAspectRatioChanged,
         smallChange: 0.1,
+      ),
+      ComboBoxCard(
+        icon: FluentIcons.camera,
+        title: "Flip image",
+        subtitle: "Whether the live view image will be flipped horizontally or vertically.",
+        items: viewModel.liveViewFlipOptions,
+        value: () => viewModel.liveViewFlipSetting,
+        onChanged: controller.onLiveViewFlipChanged,
       ),
     ],
   );
@@ -46,14 +62,6 @@ Widget _getLiveViewBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         }
         return const SizedBox();
       }),
-      ComboBoxCard(
-        icon: FluentIcons.camera,
-        title: "Flip image",
-        subtitle: "Whether the image should be flipped in none, one or both axis",
-        items: viewModel.liveViewFlipImageChoices,
-        value: () => viewModel.liveViewFlipImage,
-        onChanged: controller.onLiveViewFlipImageChanged,
-      ),
     ],
   );
 }
