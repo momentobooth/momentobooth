@@ -18,8 +18,8 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.8.3
-  go_router: 13.0.0
+  fluent_ui: 4.8.4
+  go_router: 13.0.1
   flutter_svg: 2.0.9
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.3
@@ -56,7 +56,7 @@ dependencies:
   path: 1.8.3
   window_manager: 0.3.7
   file_selector: 1.0.1
-  win32: 5.1.1
+  win32: 5.2.0
 
   # Log and error handling
   loggy: 2.0.3
