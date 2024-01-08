@@ -381,10 +381,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: "19d172588cac32a98901787ffef751cfc671e1f44e9ff2c0786d748617e32011"
+      sha256: "57b31a68fba8c87790b9d160d8ff94385c155821cad542582566d8c97cb4c3c0"
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.3"
+    version: "4.8.4"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -507,10 +507,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: ca7e4a2249f96773152f1853fa25933ac752495cdd7fdf5dafb9691bd05830fd
+      sha256: "3b40e751eaaa855179b416974d59d29669e750d2e50fcdb2b37f1cb0ca8c803a"
       url: "https://pub.dev"
     source: hosted
-    version: "13.0.0"
+    version: "13.0.1"
   graphs:
     dependency: transitive
     description:
@@ -1278,10 +1278,10 @@ packages:
     dependency: "direct main"
     description:
       name: win32
-      sha256: b0f37db61ba2f2e9b7a78a1caece0052564d1bc70668156cf3a29d676fe4e574
+      sha256: "464f5674532865248444b4c3daca12bd9bf2d7c47f759ce2617986e7229494a8"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.1"
+    version: "5.2.0"
   window_manager:
     dependency: "direct main"
     description:
