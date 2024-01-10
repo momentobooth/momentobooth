@@ -25,11 +25,11 @@ class AnimatedBoxDecorationHero extends StatelessWidget {
           animation: animation,
           builder: (context, child) {
             return Align(
-              child: Container(
-                decoration: 
-                  direction == HeroFlightDirection.push ? 
-                    Decoration.lerp(from, to, animation.value) : 
-                    Decoration.lerp(to, from, animation.value),
+              child: DecoratedBox(
+                decoration: (direction == HeroFlightDirection.push
+                        ? Decoration.lerp(from, to, animation.value)
+                        : Decoration.lerp(to, from, animation.value)) ??
+                    const BoxDecoration(),
                 child: child,
               ),
             );
@@ -37,7 +37,7 @@ class AnimatedBoxDecorationHero extends StatelessWidget {
           child: child,
         );
       },
-      child: Container(
+      child: DecoratedBox(
         decoration: decoration,
         child: child,
       ),

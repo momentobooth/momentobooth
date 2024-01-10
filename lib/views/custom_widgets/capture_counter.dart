@@ -50,7 +50,7 @@ class CaptureCounterState extends State<CaptureCounter> with SingleTickerProvide
         clipBehavior: Clip.none,
         fit: StackFit.expand,
         children: [
-          Container(
+          DecoratedBox(
             decoration: BoxDecoration(
               color: theme.captureCounterContainerBackground,
               // border: theme.captureCounterContainerBorder,
