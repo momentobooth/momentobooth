@@ -12,31 +12,40 @@ linter:
   rules:
     - always_declare_return_types
     - always_use_package_imports
+    - annotate_redeclares
     - avoid_bool_literals_in_conditional_expressions
     - avoid_dynamic_calls
-    - avoid_field_initializers_in_const_classes 
+    - avoid_field_initializers_in_const_classes
     - avoid_private_typedef_functions
     - avoid_slow_async_io
+    - avoid_type_to_string
     - avoid_types_on_closure_parameters
     - avoid_unused_constructor_parameters
     - avoid_void_async
+    - cancel_subscriptions
     - cascade_invocations
     - cast_nullable_to_non_nullable
     - close_sinks
     - combinators_ordering
     - directives_ordering
-    # - discarded_futures # Enable ASAP
+    # - discarded_futures
     - eol_at_end_of_file
+    - implicit_reopen
+    - invalid_case_patterns
     - join_return_with_assignment
+    - matching_super_parameters
     - missing_whitespace_between_adjacent_strings
+    - no_adjacent_strings_in_list
+    - no_runtimeType_toString
     - noop_primitive_operations
     - only_throw_errors
     - parameter_assignments
     - prefer_asserts_in_initializer_lists
     - prefer_asserts_with_message
-    # - prefer_expression_function_bodies # Yet to decide
+    - prefer_if_elements_to_conditional_expressions
     - prefer_null_aware_method_calls
     - sized_box_shrink_expand
+    - throw_in_finally
     - unawaited_futures
     - unnecessary_breaks
     - unnecessary_lambdas
@@ -46,10 +55,11 @@ linter:
     - unnecessary_raw_strings
     - unnecessary_statements
     - unreachable_from_main
+    - use_colored_box
+    - use_decorated_box
     - use_enums
     - use_is_even_rather_than_modulo
     - use_late_for_private_fields_and_variables
     - use_named_constants
     - use_string_buffers
-    - use_super_parameters
     - use_to_and_as_if_applicable

@@ -172,7 +172,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         turns: -0.25 * viewModel.rotation, // could also use controller.collageKey.currentState!.rotation
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 255, 255, 255),
             boxShadow: [theme.chooseCaptureModeButtonShadow],

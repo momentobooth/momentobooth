@@ -175,11 +175,11 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
             child: _getInnerLayout(localizations),
           ),
         if (widget.debug != null)
-          Container(
+          DecoratedBox(
             decoration: BoxDecoration(
               border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
             ),
-            child: Container(
+            child: DecoratedBox(
               decoration: BoxDecoration(
                 border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
               ),

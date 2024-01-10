@@ -30,7 +30,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             // This SizedBox is only necessary when the image used is smaller than what would be displayed.
             child: SizedBox(
               height: double.infinity,
-              child: Container(
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: const Color(0xFFF0F0F0),
                   border: theme.captureCounterContainerBorder,
