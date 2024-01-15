@@ -18,22 +18,22 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.8.4
+  fluent_ui: 4.8.5
   go_router: 13.0.1
   flutter_svg: 2.0.9
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.4
   flutter_layout_grid: 2.0.5
-  pretty_qr_code: 3.0.0
+  pretty_qr_code: 3.1.0
   confetti: 0.7.0
   wave: 0.2.2
   texture_rgba_renderer:
     git: https://github.com/h3x4d3c1m4l/flutter_texture_rgba_renderer
-  lottie: 2.7.0
+  lottie: 3.0.0
 
   # Printscreen/Image processing
   screenshot: 2.1.0
-  image: 4.1.3
+  image: 4.1.4
 
   # MVC
   mobx: 2.3.0+1
@@ -95,7 +95,7 @@ dev_dependencies:
   json_serializable: 6.7.1
 
   # Code generation
-  build_runner: 2.4.7
+  build_runner: 2.4.8
   ffigen: 8.0.2
 
 flutter:

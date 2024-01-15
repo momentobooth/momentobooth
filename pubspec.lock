@@ -133,10 +133,10 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "67d591d602906ef9201caf93452495ad1812bea2074f04e25dbd7c133785821b"
+      sha256: "581bacf68f89ec8792f5e5a0b2c4decd1c948e97ce659dc783688c8a88fbec21"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.7"
+    version: "2.4.8"
   build_runner_core:
     dependency: transitive
     description:
@@ -381,10 +381,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: "57b31a68fba8c87790b9d160d8ff94385c155821cad542582566d8c97cb4c3c0"
+      sha256: d6ffe21ff6bc61e98044a0529c139277dac2bbe6e71f868f7791d7eabc53d718
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.4"
+    version: "4.8.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -547,10 +547,10 @@ packages:
     dependency: "direct main"
     description:
       name: image
-      sha256: "028f61960d56f26414eb616b48b04eb37d700cbe477b7fb09bf1d7ce57fd9271"
+      sha256: "004a2e90ce080f8627b5a04aecb4cdfac87d2c3f3b520aa291260be5a32c033d"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.3"
+    version: "4.1.4"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -672,10 +672,10 @@ packages:
     dependency: "direct main"
     description:
       name: lottie
-      sha256: a93542cc2d60a7057255405f62252533f8e8956e7e06754955669fd32fb4b216
+      sha256: "1f0ce68112072d66ea271a9841994fa8d16442e23d8cf8996c9fa74174e58b4e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.0"
+    version: "3.0.0"
   matcher:
     dependency: transitive
     description:
@@ -896,10 +896,10 @@ packages:
     dependency: "direct main"
     description:
       name: pretty_qr_code
-      sha256: "799fa8d5c605028302cb7debbf3f180ce56678c4927fb2ecc4b174a3bee526d6"
+      sha256: "2163eb6e2231f3e8b2b2503d94f31d8bd6846bc428e9b5cf499c05fda0b34a16"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.0"
+    version: "3.1.0"
   printing:
     dependency: "direct main"
     description:
