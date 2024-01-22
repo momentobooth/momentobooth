@@ -744,10 +744,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: abe6bacee971333de382086e25580fb33d8d28a4e76b1062891df3992fe7a51d
+      sha256: "374fe8e70660275aad889081fe5ad28af8efe9ca2e04f4dc767588a689e67e44"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.4"
+    version: "4.1.0"
   nested:
     dependency: transitive
     description:
