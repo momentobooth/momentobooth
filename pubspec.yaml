@@ -61,7 +61,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.14.0
+  sentry_flutter: 7.15.0
 
   # Sound output
   just_audio: 0.9.36
