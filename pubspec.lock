@@ -157,10 +157,10 @@ packages:
     dependency: transitive
     description:
       name: built_value
-      sha256: c9aabae0718ec394e5bc3c7272e6bb0dc0b32201a08fe185ec1d8401d3e39309
+      sha256: a3ec2e0f967bc47f69f95009bb93db936288d61d5343b9436e378b28a2f830c6
       url: "https://pub.dev"
     source: hosted
-    version: "8.8.1"
+    version: "8.9.0"
   characters:
     dependency: transitive
     description:
@@ -523,10 +523,10 @@ packages:
     dependency: transitive
     description:
       name: http
-      sha256: d4872660c46d929f6b8a9ef4e7a7eff7e49bbf0c4ec3f385ee32df5119175139
+      sha256: a2bbf9d017fcced29139daa8ed2bba4ece450ab222871df93ca9eec6f80c34ba
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.2"
+    version: "1.2.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -712,10 +712,10 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: e4ff8e8564c03f255408decd16e7899da1733852a9110a58fe6d1b817684a63e
+      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.0.5"
   mobx:
     dependency: "direct main"
     description:
@@ -880,10 +880,10 @@ packages:
     dependency: transitive
     description:
       name: pointycastle
-      sha256: "7c1e5f0d23c9016c5bbd8b1473d0d3fb3fc851b876046039509e18e0c7485f2c"
+      sha256: "43ac87de6e10afabc85c445745a7b799e04de84cebaa4fd7bf55a5e1e9604d29"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.3"
+    version: "3.7.4"
   pool:
     dependency: transitive
     description:
@@ -1008,18 +1008,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "89e426587b0879e53c46a0aae0eb312696d9d2d803ba14b252a65cc24b1416a2"
+      sha256: "5686ed515bb620dc52b4ae99a6586fe720d443591183cf1f620ec5d1f0eec100"
       url: "https://pub.dev"
     source: hosted
-    version: "7.14.0"
+    version: "7.15.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: fd089ee4e75a927be037c56815a0a54af5a519f52b803a5ffecb589bb36e2401
+      sha256: "505dec3b6810562785d2c34ae871c73ff2cba6cf436c32c188f0464df226ba8f"
       url: "https://pub.dev"
     source: hosted
-    version: "7.14.0"
+    version: "7.15.0"
   shelf:
     dependency: transitive
     description:
