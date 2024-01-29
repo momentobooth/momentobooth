@@ -13,8 +13,8 @@ derive_more = "0.99.17"
 atom_table = "1.1.0"
 flutter_rust_bridge = "=1.82.5"
 ffsend-api = "0.7.3"
-serde_json = "1.0.111"
-chrono = "0.4.31"
+serde_json = "1.0.113"
+chrono = "0.4.33"
 image = { version = "0.24.8", features = ["rayon"] }
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.4.11"
