@@ -133,7 +133,7 @@ jobs:
       run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Linux x86_64 AppImage
         path: MomentoBooth-Linux-x86_64.AppImage
