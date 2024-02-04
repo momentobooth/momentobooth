@@ -51,18 +51,18 @@ jobs:
       uses: mozilla-actions/sccache-action@v0.0.3
 
     - name: Install cargo-expand
-      uses: baptiste0928/cargo-install@v1
+      uses: baptiste0928/cargo-install@v3
       with:
         crate: cargo-expand
 
     - name: Install flutter_rust_bridge_codegen
-      uses: baptiste0928/cargo-install@v1
+      uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
         version: "1.82.5"
 
     - name: Install lddtree
-      uses: baptiste0928/cargo-install@v1
+      uses: baptiste0928/cargo-install@v3
       with:
         crate: lddtree
 
@@ -133,7 +133,7 @@ jobs:
       run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Linux x86_64 AppImage
         path: MomentoBooth-Linux-x86_64.AppImage
