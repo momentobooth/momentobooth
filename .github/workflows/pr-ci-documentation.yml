@@ -36,12 +36,12 @@ jobs:
         uses: mozilla-actions/sccache-action@v0.0.3
 
       - name: Install mermaid preprocessor for mdBook
-        uses: baptiste0928/cargo-install@v1
+        uses: baptiste0928/cargo-install@v3
         with:
           crate: mdbook-mermaid
 
       - name: Install admonish preprocessor for mdBook
-        uses: baptiste0928/cargo-install@v1
+        uses: baptiste0928/cargo-install@v3
         with:
           crate: mdbook-admonish
 
