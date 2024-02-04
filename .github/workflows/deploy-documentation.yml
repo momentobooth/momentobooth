@@ -46,7 +46,7 @@ jobs:
           toolchain: stable
 
       - name: Setup sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.3
+        uses: mozilla-actions/sccache-action@v0.0.4
 
       - name: Install mermaid preprocessor for mdBook
         uses: baptiste0928/cargo-install@v3
