@@ -146,7 +146,7 @@ jobs:
         }
 
     - name: Archive Release
-      uses: thedoctor0/zip-release@0.7.1
+      uses: thedoctor0/zip-release@0.7.6
       with:
         type: zip
         directory: build/windows/runner/Release
