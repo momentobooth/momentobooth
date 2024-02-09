@@ -44,9 +44,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# fvm
-.fvm/flutter_sdk
-
 # Generated Dart code
 *.generated.dart
 *.freezed.dart
@@ -61,3 +58,6 @@ index.html
 
 # AppDir/AppImage
 AppDir/
+
+# FVM Version Cache
+.fvm/
