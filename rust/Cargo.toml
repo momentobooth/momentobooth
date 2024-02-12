@@ -14,7 +14,7 @@ atom_table = "1.1.0"
 flutter_rust_bridge = "=1.82.5"
 ffsend-api = "0.7.3"
 serde_json = "1.0.113"
-chrono = "0.4.33"
+chrono = "0.4.34"
 image = { version = "0.24.8", features = ["rayon"] }
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.4.11"
@@ -28,7 +28,7 @@ turborand = "0.10.0"
 pathsep = "0.1.1"
 tokio = "1.35.1"
 gphoto2 = "3.2.3"
-ahash = "0.8.7"
+ahash = "0.8.8"
 
 [profile.dev]
 opt-level = 3
