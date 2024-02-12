@@ -71,6 +71,14 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
       FluentSettingsBlock(
         title: "Advanced",
         settings: [
+          ComboBoxCard<BackgroundBlur>(
+            icon: FluentIcons.blur,
+            title: "Background blur",
+            subtitle: "Sets the background blur implementation",
+            items: viewModel.backgroundBlurOptions,
+            value: () => viewModel.backgroundBlur,
+            onChanged: controller.onBackgroundBlurChanged,
+          ),
           ComboBoxCard<FilterQuality>(
             icon: FluentIcons.transition_effect,
             title: "Filter quality for screen transitions",

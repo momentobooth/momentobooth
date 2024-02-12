@@ -325,6 +325,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onBackgroundBlurChanged(BackgroundBlur? backgroundBlur) {
+    if (backgroundBlur != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(backgroundBlur: backgroundBlur));
+    }
+  }
+
   void onScreenTransitionAnimationFilterQualityChanged(FilterQuality? filterQuality) {
     if (filterQuality != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(screenTransitionAnimationFilterQuality: filterQuality));

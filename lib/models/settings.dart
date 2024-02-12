@@ -143,6 +143,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default("") String clickSfxFile,
     @Default("") String shareScreenSfxFile,
     @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
+    @Default(BackgroundBlur.textureBlur) BackgroundBlur backgroundBlur,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
     @Default(FilterQuality.high) FilterQuality liveViewFilterQuality,
   }) = _UiSettings;

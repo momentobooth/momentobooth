@@ -194,3 +194,21 @@ enum AnimationAnchor {
   const AnimationAnchor(this.name);
 
 }
+
+enum BackgroundBlur {
+
+  none("Disabled"),
+  softwareResize("Use software resize"),
+  textureBlur("Use texture blur");
+
+  // can add more properties or getters/methods if needed
+  final String name;
+
+  // can use named parameters if you want
+  const BackgroundBlur(this.name);
+
+  ComboBoxItem<BackgroundBlur> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<BackgroundBlur>> asComboBoxItems() => BackgroundBlur.values.map((value) => value.toComboBoxItem()).toList();
+
+}

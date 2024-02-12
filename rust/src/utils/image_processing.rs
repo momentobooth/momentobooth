@@ -11,7 +11,7 @@ pub enum ImageOperation {
     CropToAspectRatio(f64),
     Rotate(Rotation),
     Flip(FlipAxis),
-    ResizeForBackgroundBlur,
+    Resize(u32, u32),
 }
 
 #[derive(Clone, Copy)]
@@ -35,7 +35,7 @@ pub fn execute_operations(image: &RawImage, operations: &Vec<ImageOperation>) ->
             ImageOperation::CropToAspectRatio(aspect_ratio) => crop_to_aspect_ratio(&mut img_buf, *aspect_ratio),
             ImageOperation::Rotate(rotation) => rotate(&img_buf, *rotation),
             ImageOperation::Flip(axis) => flip(&img_buf, *axis),
-            ImageOperation::ResizeForBackgroundBlur => background_blur(&img_buf),
+            ImageOperation::Resize(width, height) => resize(&img_buf, *width, *height),
         }
     }
 
@@ -88,6 +88,6 @@ fn flip(src_raw_image: &ImageBuffer<image::Rgba<u8>, Vec<u8>>, flip: FlipAxis) -
 }
 
 // Can potentially be made even faster using https://crates.io/crates/fast_image_resize
-fn background_blur(src_raw_image: &ImageBuffer<image::Rgba<u8>, Vec<u8>>) -> ImageBuffer<image::Rgba<u8>, Vec<u8>> {
-    imageops::resize(src_raw_image, 100, 75, FilterType::Triangle)
+fn resize(src_raw_image: &ImageBuffer<image::Rgba<u8>, Vec<u8>>, width: u32, height: u32) -> ImageBuffer<image::Rgba<u8>, Vec<u8>> {
+    imageops::resize(src_raw_image, width, height, FilterType::Triangle)
 }
