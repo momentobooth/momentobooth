@@ -6,7 +6,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
-import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_controller.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_view_model.dart';
 
