@@ -18,8 +18,8 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.8.5
-  go_router: 13.1.0
+  fluent_ui: 4.8.6
+  go_router: 13.2.0
   flutter_svg: 2.0.9
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.4
@@ -33,7 +33,7 @@ dependencies:
 
   # Printscreen/Image processing
   screenshot: 2.1.0
-  image: 4.1.6
+  image: 4.1.7
 
   # MVC
   mobx: 2.3.0+1
@@ -73,7 +73,7 @@ dependencies:
   toml: 0.15.0
   synchronized: 3.1.0+1
   collection: 1.18.0
-  mqtt5_client: 4.1.0
+  mqtt5_client: 4.2.0
   dart_casing: 3.0.1
   package_info_plus: 5.0.1
   lemberfpsmonitor: 0.0.3+6
