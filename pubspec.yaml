@@ -44,7 +44,7 @@ dependencies:
   json_annotation: 4.8.1
 
   # Interop
-  ffi: 2.1.2
+  ffi: ^2.1.0
   flutter_rust_bridge: 1.82.5
 
   # Printing
@@ -53,7 +53,7 @@ dependencies:
 
   # System
   path_provider: 2.1.2
-  path: 1.9.0
+  path: ^1.8.3
   window_manager: 0.3.8
   file_selector: 1.0.3
   win32: 5.2.0
@@ -69,7 +69,7 @@ dependencies:
   just_audio_mpv: 0.1.7
 
   # Misc
-  meta: 1.11.0
+  meta: ^1.10.0
   toml: 0.15.0
   synchronized: 3.1.0+1
   collection: 1.18.0
