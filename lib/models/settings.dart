@@ -145,7 +145,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
     @Default(BackgroundBlur.textureBlur) BackgroundBlur backgroundBlur,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
-    @Default(FilterQuality.high) FilterQuality liveViewFilterQuality,
+    @Default(FilterQuality.medium) FilterQuality liveViewFilterQuality,
   }) = _UiSettings;
 
   factory UiSettings.withDefaults() => UiSettings.fromJson({});
