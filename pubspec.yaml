@@ -91,7 +91,7 @@ dev_dependencies:
 
   # Code generation
   build_runner: 2.4.8
-  ffigen: 8.0.2
+  ffigen: 11.0.0
 
 flutter:
   uses-material-design: true
