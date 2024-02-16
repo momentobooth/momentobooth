@@ -18,8 +18,8 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.8.5
-  go_router: 13.1.0
+  fluent_ui: 4.8.6
+  go_router: 13.2.0
   flutter_svg: 2.0.9
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.4
@@ -33,7 +33,7 @@ dependencies:
 
   # Printscreen/Image processing
   screenshot: 2.1.0
-  image: 4.1.6
+  image: 4.1.7
 
   # MVC
   mobx: 2.3.0+1
@@ -44,7 +44,7 @@ dependencies:
   json_annotation: 4.8.1
 
   # Interop
-  ffi: 2.1.0
+  ffi: 2.1.2
   flutter_rust_bridge: 1.82.5
 
   # Printing
@@ -53,7 +53,7 @@ dependencies:
 
   # System
   path_provider: 2.1.2
-  path: 1.8.3
+  path: 1.9.0
   window_manager: 0.3.8
   file_selector: 1.0.3
   win32: 5.2.0
@@ -61,7 +61,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.16.0
+  sentry_flutter: 7.16.1
 
   # Sound output
   just_audio: 0.9.36
@@ -69,21 +69,16 @@ dependencies:
   just_audio_mpv: 0.1.7
 
   # Misc
-  meta: 1.10.0
+  meta: 1.11.0
   toml: 0.15.0
   synchronized: 3.1.0+1
   collection: 1.18.0
-  mqtt5_client: 4.1.0
+  mqtt5_client: 4.2.0
   dart_casing: 3.0.1
   package_info_plus: 5.0.1
   lemberfpsmonitor: 0.0.3+6
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  integration_test:
-    sdk: flutter
-
   # MVC
   mobx_codegen: 2.6.0+1
 

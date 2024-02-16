@@ -165,7 +165,7 @@ List<JobInfo> getJobList(String printerName) {
 
     List<JobInfo> jobList = [];
     for (var i = 0; i < numJobs.value; i++) {
-      var job = jobs.cast<JOB_INFO_1>().elementAt(i).ref;
+      var job = (jobs.cast<JOB_INFO_1>() + i).ref;
       // Convert job status
       var statusVal = job.Status;
       var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
