@@ -198,7 +198,6 @@ enum AnimationAnchor {
 enum BackgroundBlur {
 
   none("Disabled"),
-  softwareResize("Use software resize"),
   textureBlur("Use texture blur");
 
   // can add more properties or getters/methods if needed

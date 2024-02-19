@@ -20,8 +20,7 @@ class LiveViewBackground extends StatelessWidgetBase {
   bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground;
   BackgroundBlur get _backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
   LiveViewState get _liveViewState => LiveViewManager.instance.liveViewState;
-  int? get _textureIdMain => LiveViewManager.instance.textureIdMain;
-  int? get _textureIdBlur => LiveViewManager.instance.textureIdBlur;
+  int? get _textureId => LiveViewManager.instance.textureId;
 
   @override
   Widget build(BuildContext context) {
@@ -95,17 +94,12 @@ class LiveViewBackground extends StatelessWidgetBase {
       fit: StackFit.expand,
       children: [
         ColoredBox(color: Colors.green),
-        if (_backgroundBlur == BackgroundBlur.softwareResize)
-          LiveView(
-            fit: BoxFit.cover,
-            textureId: _textureIdBlur,
-          ),
         if (_backgroundBlur == BackgroundBlur.textureBlur)
           ImageFiltered(
             imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
             child: LiveView(
               fit: BoxFit.cover,
-              textureId: _textureIdMain,
+              textureId: _textureId,
             ),
           ),
         AnimatedOpacity(
@@ -114,7 +108,7 @@ class LiveViewBackground extends StatelessWidgetBase {
           curve: Curves.ease,
           child: LiveView(
             fit: BoxFit.contain,
-            textureId: _textureIdMain,
+            textureId: _textureId,
           ),
         ),
       ],

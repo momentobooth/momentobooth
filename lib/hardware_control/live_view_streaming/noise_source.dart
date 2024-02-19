@@ -16,13 +16,11 @@ class NoiseSource extends LiveViewSource {
 
   @override
   Future<void> openStream({
-    required int texturePtrMain,
-    required int texturePtrBlur,
+    required int texturePtr,
     required List<ImageOperation> operations,
   }) async {
     _handleId = await rustLibraryApi.noiseOpen(
-      texturePtrMain: texturePtrMain,
-      texturePtrBlur: texturePtrBlur,
+      texturePtr: texturePtr,
     );
   }
 

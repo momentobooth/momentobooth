@@ -55,30 +55,19 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   // /////// //
 
   @readonly
-  int? _textureIdMain;
+  int? _textureId;
 
-  int? _texturePointerMain;
-
-  @readonly
-  int? _textureIdBlur;
-
-  int? _texturePointerBlur;
+  int? _texturePointer;
 
   Future<void> _ensureTextureAvailable() async {
-    if (_textureIdMain != null) return;
+    if (_textureId != null) return;
     var textureRenderer = TextureRgbaRenderer();
 
     // Initialize main texture
     const int textureKeyMain = 0;
     await textureRenderer.closeTexture(textureKeyMain);
-    _textureIdMain = await textureRenderer.createTexture(textureKeyMain);
-    _texturePointerMain = await textureRenderer.getTexturePtr(textureKeyMain);
-
-    // Initialize blurred texture
-    const int textureKeyBlur = 1;
-    await textureRenderer.closeTexture(textureKeyBlur);
-    _textureIdBlur = await textureRenderer.createTexture(textureKeyBlur);
-    _texturePointerBlur = await textureRenderer.getTexturePtr(textureKeyBlur);
+    _textureId = await textureRenderer.createTexture(textureKeyMain);
+    _texturePointer = await textureRenderer.getTexturePtr(textureKeyMain);
   }
 
   // ///////// //
@@ -144,8 +133,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
 
       await _ensureTextureAvailable();
       await _currentLiveViewSource?.openStream(
-        texturePtrMain: _texturePointerMain!,
-        texturePtrBlur: _texturePointerBlur!,
+        texturePtr: _texturePointer!,
         operations: _getImageOperations(),
       );
 

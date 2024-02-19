@@ -61,11 +61,10 @@ lazy_static::lazy_static! {
 
 static NOKHWA_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
 
-pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr_main: usize, texture_ptr_blur: usize) -> usize {
-    let renderer_main = FlutterTexture::new(texture_ptr_main, 0, 0);
-    let renderer_blur = FlutterTexture::new(texture_ptr_blur, 0, 0);
-    let renderer_mutex_main = Mutex::new(renderer_main);
-    let renderer_mutex_blur = Mutex::new(renderer_blur);
+pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize
+) -> usize {
+    let renderer = FlutterTexture::new(texture_ptr, 0, 0);
+    let renderer_mutex = Mutex::new(renderer);
 
     let handle_id = NOKHWA_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
     let camera = nokhwa::open_camera(friendly_name, move |raw_frame| {
@@ -73,20 +72,15 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
         let mut handle = camera_ref.lock().expect("Could not lock on handle");
         match raw_frame {
             Some(raw_frame) => {
-                let processed_frame_main = image_processing::execute_operations(&raw_frame, &handle.operations);
-                let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::Resize(100, 75)]);
-                let mut renderer_main = renderer_mutex_main.lock().expect("Could not lock on renderer");
-                let mut renderer_blur = renderer_mutex_blur.lock().expect("Could not lock on renderer");
+                let processed_frame = image_processing::execute_operations(&raw_frame, &handle.operations);
+                let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
 
-                renderer_main.set_size(processed_frame_main.width, processed_frame_main.height);
-                renderer_main.on_rgba(&processed_frame_main);
+                renderer.set_size(processed_frame.width, processed_frame.height);
+                renderer.on_rgba(&processed_frame);
                 
-                renderer_blur.set_size(processed_frame_blur.width, processed_frame_blur.height);
-                renderer_blur.on_rgba(&processed_frame_blur);
-
                 handle.valid_frame_count.fetch_add(1, Ordering::SeqCst);
                 handle.last_frame_was_valid.store(true, Ordering::SeqCst);
-                handle.last_valid_frame = Some(processed_frame_main);
+                handle.last_valid_frame = Some(processed_frame);
             },
             None => {
                 handle.error_frame_count.fetch_add(1, Ordering::SeqCst);
@@ -147,13 +141,11 @@ static NOISE_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
 const NOISE_DEFAULT_WIDTH: usize = 1280;
 const NOISE_DEFAULT_HEIGHT: usize = 720;
 
-pub fn noise_open(texture_ptr_main: usize, texture_ptr_blur: usize) -> usize {
+pub fn noise_open(texture_ptr: usize) -> usize {
     // Initialize noise and push noise frames to Flutter texture
-    let renderer_main = FlutterTexture::new(texture_ptr_main, NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT);
-    let renderer_blur = FlutterTexture::new(texture_ptr_blur, 100, 75);
+    let renderer_main = FlutterTexture::new(texture_ptr, NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT);
     let join_handle = white_noise::start_and_get_handle(NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT, move |raw_frame| {
         renderer_main.on_rgba(&raw_frame);
-        renderer_blur.on_rgba(&image_processing::execute_operations(&raw_frame, &vec![ImageOperation::Resize(100, 75)]));
     });
 
     // Store handle
@@ -241,11 +233,9 @@ pub fn gphoto2_close_camera(handle_id: usize) {
     GPHOTO2_HANDLES.remove(&handle_id).expect("Invalid nokhwa handle ID");
 }
 
-pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>, texture_ptr_main: usize, texture_ptr_blur: usize) {
-    let renderer_main = FlutterTexture::new(texture_ptr_main, 0, 0);
-    let renderer_blur = FlutterTexture::new(texture_ptr_blur, 0, 0);
-    let renderer_mutex_main = Mutex::new(renderer_main);
-    let renderer_mutex_blur = Mutex::new(renderer_blur);
+pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>, texture_ptr: usize) {
+    let renderer = FlutterTexture::new(texture_ptr, 0, 0);
+    let renderer_mutex = Mutex::new(renderer);
 
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let mut camera_handle = camera_ref.lock().expect("Could not lock camera");
@@ -261,20 +251,15 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
 
             match raw_frame {
                 Ok(raw_frame) => {
-                    let processed_frame_main = image_processing::execute_operations(&raw_frame, &camera.operations);
-                    let processed_frame_blur = image_processing::execute_operations(&processed_frame_main, &vec![ImageOperation::Resize(100, 75)]);
-                    let mut renderer_main = renderer_mutex_main.lock().expect("Could not lock on renderer");
-                    let mut renderer_blur = renderer_mutex_blur.lock().expect("Could not lock on renderer");
+                    let processed_frame = image_processing::execute_operations(&raw_frame, &camera.operations);
+                    let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
 
-                    renderer_main.set_size(processed_frame_main.width, processed_frame_main.height);
-                    renderer_main.on_rgba(&processed_frame_main);
+                    renderer.set_size(processed_frame.width, processed_frame.height);
+                    renderer.on_rgba(&processed_frame);
                     
-                    renderer_blur.set_size(processed_frame_blur.width, processed_frame_blur.height);
-                    renderer_blur.on_rgba(&processed_frame_blur);
-
                     camera.valid_frame_count.fetch_add(1, Ordering::SeqCst);
                     camera.last_frame_was_valid.store(true, Ordering::SeqCst);
-                    camera.last_valid_frame = Some(processed_frame_main);
+                    camera.last_valid_frame = Some(processed_frame);
                 },
                 Err(_) => {
                     camera.error_frame_count.fetch_add(1, Ordering::SeqCst);

@@ -74,7 +74,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           ComboBoxCard<BackgroundBlur>(
             icon: FluentIcons.blur,
             title: "Background blur",
-            subtitle: "Sets the background blur implementation",
+            subtitle: "Sets the background blur implementation. Currently there are no options for this setting except disabling it for testing.",
             items: viewModel.backgroundBlurOptions,
             value: () => viewModel.backgroundBlur,
             onChanged: controller.onBackgroundBlurChanged,

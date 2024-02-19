@@ -48,8 +48,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   @override
   Future<void> openStream({
-    required int texturePtrMain,
-    required int texturePtrBlur,
+    required int texturePtr,
     required List<ImageOperation> operations,
   }) async {
     await _ensureLibraryInitialized();
@@ -59,8 +58,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     await rustLibraryApi.gphoto2StartLiveview(
       handleId: handleId,
       operations: operations,
-      texturePtrMain: texturePtrMain,
-      texturePtrBlur: texturePtrBlur,
+      texturePtr: texturePtr,
     );
 
     rustLibraryApi.gphoto2SetExtraFileCallback(handleId: handleId).listen((element) {

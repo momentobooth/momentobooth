@@ -6,8 +6,7 @@ abstract class LiveViewSource {
   String get friendlyName;
 
   Future<void> openStream({
-    required int texturePtrMain,
-    required int texturePtrBlur,
+    required int texturePtr,
     required List<ImageOperation> operations,
   });
 
