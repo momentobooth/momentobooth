@@ -8,6 +8,7 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/static_image_source.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -129,6 +130,8 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
           _currentLiveViewSource = cameras.firstWhereOrNull((camera) => camera.friendlyName == webcamIdSetting);
         case LiveViewMethod.gphoto2:
           _currentLiveViewSource = _gPhoto2Camera;
+        case LiveViewMethod.debugStaticImage:
+          _currentLiveViewSource = StaticImageSource();
       }
 
       await _ensureTextureAvailable();

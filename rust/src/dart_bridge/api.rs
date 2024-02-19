@@ -168,6 +168,15 @@ pub fn noise_close(handle_id: usize) {
     log_debug("Stopped white noise generator with handle ".to_string() + &handle_id.to_string());
 }
 
+// //////////// //
+// Static image //
+// //////////// //
+
+pub fn write_image_to_texture(raw_image: RawImage, texture_ptr: usize) {
+    let renderer_main = FlutterTexture::new(texture_ptr, raw_image.width, raw_image.height);
+    renderer_main.on_rgba(&raw_image);
+}
+
 // ////// //
 // ffsend //
 // ////// //
