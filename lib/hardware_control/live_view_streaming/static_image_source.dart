@@ -14,6 +14,8 @@ class StaticImageSource extends LiveViewSource {
   @override
   final String friendlyName = '';
 
+  late final int _imageWidth, _imageHeight;
+
   StaticImageSource();
 
   @override
@@ -24,12 +26,15 @@ class StaticImageSource extends LiveViewSource {
     final ByteData data = await rootBundle.load('assets/bitmap/placeholder.png');
     final Image image = await decodeImageFromList(data.buffer.asUint8List());
 
-    await rustLibraryApi.writeImageToTexture(
+    _imageWidth = image.width;
+    _imageHeight = image.height;
+
+    await rustLibraryApi.staticImageWriteToTexture(
       texturePtr: texturePtr,
       rawImage: RawImage(
         format: RawImageFormat.Rgba,
-        width: image.width,
-        height: image.height,
+        width: _imageWidth,
+        height: _imageHeight,
         data: (await image.toByteData())!.buffer.asUint8List(),
       )
     );
@@ -42,6 +47,14 @@ class StaticImageSource extends LiveViewSource {
   Future<RawImage> getLastFrame() => rustLibraryApi.noiseGetFrame();
 
   @override
-  Future<CameraState?> getCameraState() async => null;
+  Future<CameraState?> getCameraState() async => CameraState(
+    isStreaming: true,
+    validFrameCount: 1,
+    errorFrameCount: 0,
+    duplicateFrameCount: 0,
+    lastFrameWasValid: true,
+    frameWidth: _imageWidth,
+    frameHeight: _imageHeight,
+  );
 
 }

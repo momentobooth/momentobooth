@@ -56,6 +56,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   // /////// //
 
   @readonly
+  int? _textureWidth, _textureHeight;
+
+  @readonly
   int? _textureId;
 
   int? _texturePointer;
@@ -155,6 +158,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
         StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
         StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
         _lastFrameWasInvalid = false;
+
+        _textureWidth = liveViewState.frameWidth;
+        _textureHeight = liveViewState.frameHeight;
       }
     });
   }

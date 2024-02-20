@@ -6,6 +6,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/stateless_widget_base.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/rotate_flip_crop_container.dart';
 
 class LiveView extends StatelessWidgetBase {
 
@@ -31,21 +32,16 @@ class LiveView extends StatelessWidgetBase {
       fit: fit,
       child: Observer(
         builder: (_) {
-          return  Transform.flip(
-            flipX: _flip == Flip.horizontally,
-            flipY: _flip == Flip.vertically,
-            child: RotatedBox(
-              quarterTurns: _rotate.quarterTurns,
-              child: SizedBox(
-                  width: _aspectRatio,
-                  height: 1,
-                  child: _textureId != null
-                      ? Texture(
-                        textureId: _textureId!,
-                        filterQuality: _filterQuality,
-                      )
-                      : null,
-                ),
+          if (_textureId == null) return const SizedBox.shrink();
+          
+          return RotateFlipCropContainer(
+            rotate: _rotate,
+            flip: _flip,
+            aspectRatio: _aspectRatio,
+            child: SizedBox(
+              width: LiveViewManager.instance.textureWidth?.toDouble(),
+              height: LiveViewManager.instance.textureHeight?.toDouble(),
+              child: Texture(textureId: _textureId!, filterQuality: _filterQuality),
             ),
           );
         },

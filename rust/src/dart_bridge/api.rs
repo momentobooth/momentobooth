@@ -114,6 +114,8 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
         duplicate_frame_count: 0,
         last_frame_was_valid: handle.last_frame_was_valid.load(Ordering::SeqCst),
         time_since_last_received_frame: handle.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
+        frame_width: Some(NOISE_WIDTH),
+        frame_height: Some(NOISE_HEIGHT),
     }
 }
 
@@ -138,13 +140,13 @@ lazy_static::lazy_static! {
 
 static NOISE_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
 
-const NOISE_DEFAULT_WIDTH: usize = 1280;
-const NOISE_DEFAULT_HEIGHT: usize = 720;
+const NOISE_WIDTH: usize = 1280;
+const NOISE_HEIGHT: usize = 720;
 
 pub fn noise_open(texture_ptr: usize) -> usize {
     // Initialize noise and push noise frames to Flutter texture
-    let renderer_main = FlutterTexture::new(texture_ptr, NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT);
-    let join_handle = white_noise::start_and_get_handle(NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT, move |raw_frame| {
+    let renderer_main = FlutterTexture::new(texture_ptr, NOISE_WIDTH, NOISE_HEIGHT);
+    let join_handle = white_noise::start_and_get_handle(NOISE_WIDTH, NOISE_HEIGHT, move |raw_frame| {
         renderer_main.on_rgba(&raw_frame);
     });
 
@@ -156,7 +158,7 @@ pub fn noise_open(texture_ptr: usize) -> usize {
 }
 
 pub fn noise_get_frame() -> RawImage {
-    white_noise::generate_frame(&Rng::new(), NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT)
+    white_noise::generate_frame(&Rng::new(), NOISE_WIDTH, NOISE_HEIGHT)
 }
 
 pub fn noise_close(handle_id: usize) {
@@ -172,7 +174,7 @@ pub fn noise_close(handle_id: usize) {
 // Static image //
 // //////////// //
 
-pub fn write_image_to_texture(raw_image: RawImage, texture_ptr: usize) {
+pub fn static_image_write_to_texture(raw_image: RawImage, texture_ptr: usize) {
     let renderer_main = FlutterTexture::new(texture_ptr, raw_image.width, raw_image.height);
     renderer_main.on_rgba(&raw_image);
 }
@@ -338,6 +340,8 @@ pub fn gphoto2_get_camera_status(handle_id: usize) -> CameraState {
         duplicate_frame_count: camera.duplicate_frame_count.load(Ordering::SeqCst),
         last_frame_was_valid: camera.last_frame_was_valid.load(Ordering::SeqCst),
         time_since_last_received_frame: camera.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
+        frame_width: camera.last_valid_frame.clone().map(|frame| frame.width),
+        frame_height: camera.last_valid_frame.clone().map(|frame| frame.height),
     }
 }
 
@@ -460,4 +464,6 @@ pub struct CameraState {
     pub duplicate_frame_count: usize,
     pub last_frame_was_valid: bool,
     pub time_since_last_received_frame: Option<Duration>,
+    pub frame_width: Option<usize>,
+    pub frame_height: Option<usize>,
 }
