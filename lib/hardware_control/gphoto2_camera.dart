@@ -49,7 +49,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   @override
   Future<void> openStream({
     required int texturePtr,
-    required List<ImageOperation> operations,
+    List<ImageOperation> operations = const [],
   }) async {
     await _ensureLibraryInitialized();
     var split = id.split("/");

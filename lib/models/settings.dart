@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';

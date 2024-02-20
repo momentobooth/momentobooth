@@ -141,16 +141,20 @@ enum Flip {
 
 enum Rotate {
 
-  none("No rotation"),
-  clockwise90degrees("90 degrees"),
-  clockwise180degrees("180 degrees"),
-  clockwise270degrees("270 degrees");
+  none("No rotation", 0, 0),
+  clockwise90degrees("90 degrees", 1, math.pi / 2),
+  clockwise180degrees("180 degrees", 2, math.pi),
+  clockwise270degrees("270 degrees", 3, math.pi * 1.5);
 
   // can add more properties or getters/methods if needed
   final String name;
 
+  final int quarterTurns;
+
+  final double radians;
+
   // can use named parameters if you want
-  const Rotate(this.name);
+  const Rotate(this.name, this.quarterTurns, this.radians);
 
   ComboBoxItem<Rotate> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 

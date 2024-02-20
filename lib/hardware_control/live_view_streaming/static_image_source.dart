@@ -19,7 +19,7 @@ class StaticImageSource extends LiveViewSource {
   @override
   Future<void> openStream({
     required int texturePtr,
-    required List<ImageOperation> operations,
+    List<ImageOperation> operations = const [], // TODO: Implement
   }) async {
     final ByteData data = await rootBundle.load('assets/bitmap/placeholder.png');
     final Image image = await decodeImageFromList(data.buffer.asUint8List());

@@ -95,20 +95,17 @@ class LiveViewBackground extends StatelessWidgetBase {
       children: [
         ColoredBox(color: Colors.green),
         if (_backgroundBlur == BackgroundBlur.textureBlur)
-          ImageFiltered(
-            imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-            child: LiveView(
-              fit: BoxFit.cover,
-              textureId: _textureId,
-            ),
+          const LiveView(
+            fit: BoxFit.cover,
+            blur: true,
           ),
         AnimatedOpacity(
           duration: const Duration(milliseconds: 300),
           opacity: _showLiveViewBackground ? 1 : 0,
           curve: Curves.ease,
-          child: LiveView(
+          child: const LiveView(
             fit: BoxFit.contain,
-            textureId: _textureId,
+            blur: false,
           ),
         ),
       ],

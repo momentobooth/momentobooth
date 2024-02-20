@@ -7,7 +7,7 @@ abstract class LiveViewSource {
 
   Future<void> openStream({
     required int texturePtr,
-    required List<ImageOperation> operations,
+    List<ImageOperation> operations = const [],
   });
 
   Future<void> setOperations(List<ImageOperation> operations);
