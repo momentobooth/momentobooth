@@ -73,7 +73,7 @@ dependencies:
   toml: 0.15.0
   synchronized: 3.1.0+1
   collection: 1.18.0
-  mqtt5_client: 4.2.0
+  mqtt5_client: 4.2.1
   dart_casing: 3.0.1
   package_info_plus: 5.0.1
   lemberfpsmonitor: 0.0.3+6
