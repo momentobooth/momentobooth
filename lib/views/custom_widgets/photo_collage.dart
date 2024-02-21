@@ -17,6 +17,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/custom_widgets/capture_presenter.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
@@ -183,7 +184,10 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
               decoration: BoxDecoration(
                 border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
               ),
-              child: _getInnerLayout(localizations),
+              child: Padding(
+                padding: EdgeInsets.all(gap + widget.padding),
+                child: _getInnerLayout(localizations),
+              ),
             ),
           ),
         for (int i = 0; i <= 4; i++) ...[
@@ -210,8 +214,8 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
 
   Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
     return widget.debug == null
-        ? ImageWithLoaderFallback.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback)
-        : ImageWithLoaderFallback.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
+        ? CapturePresenter.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback)
+        : CapturePresenter.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {
@@ -228,7 +232,6 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   }
 
   Widget get _oneLayout {
-    var img = _getChosenImage(0, fit: BoxFit.cover, decodeCallback: widget.decodeCallback);
     return LayoutGrid(
       areas: '''
           l1header
@@ -240,18 +243,11 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       rowGap: gap,
       children: [
         if (widget.showLogo)
-          Center(
-            child: SvgPicture.asset(
-              "assets/svg/logo.svg",
-              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-            ).inGridArea('l1header'),
-          ),
-        SizedBox.expand(
-          child: RotatedBox(
-            quarterTurns: 1,
-            child: img,
-          ),
-        ).inGridArea('l1content'),
+          const _CenteredLogo().inGridArea('l1header'),
+       _PhotoContainer(
+          rotated: true,
+          child: _getChosenImage(0, decodeCallback: widget.decodeCallback),
+       ).inGridArea('l1content'),
       ],
     );
   }
@@ -263,20 +259,17 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           l2content1
           l2content2
         ''',
-      rowSizes: [1.fr, auto, auto],
-      columnSizes: [1.fr],
+      rowSizes: [128.px, auto, auto],
+      columnSizes: const [auto],
       columnGap: gap,
       rowGap: gap,
       children: [
         if (widget.showLogo)
-          Center(
-            child: SvgPicture.asset(
-              "assets/svg/logo.svg",
-              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-            ).inGridArea('l2header'),
-          ),
+          const _CenteredLogo().inGridArea('l2header'),
         for (int i = 0; i < nChosen; i++) ...[
-          _getChosenImage(i).inGridArea('l2content${i+1}'),
+          _PhotoContainer(
+            child: _getChosenImage(i),
+          ).inGridArea('l2content${i + 1}'),
         ],
       ],
     );
@@ -290,28 +283,22 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           l3content2 l3content5
           l3content3 l3content6
         ''',
-      rowSizes: [1.fr, auto, auto, auto],
+      rowSizes: [1.fr, 1.5.fr, 1.5.fr, 1.5.fr],
       columnSizes: [1.fr, 1.fr],
       columnGap: 2*gap,
       rowGap: gap,
       children: [
         if (widget.showLogo) ...[
-          Center(
-            child: SvgPicture.asset(
-              "assets/svg/logo.svg",
-              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-            ),
-          ).inGridArea('l3header1'),
-          Center(
-            child: SvgPicture.asset(
-              "assets/svg/logo.svg",
-              colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-            ),
-          ).inGridArea('l3header2'),
+          const _CenteredLogo().inGridArea('l3header1'),
+          const _CenteredLogo().inGridArea('l3header2'),
         ],
         for (int i = 0; i < nChosen; i++) ...[
-          _getChosenImage(i).inGridArea('l3content${i+1}'),
-          _getChosenImage(i).inGridArea('l3content${i+4}'),
+          _PhotoContainer(
+            child: _getChosenImage(i),
+          ).inGridArea('l3content${i + 1}'),
+          _PhotoContainer(
+            child: _getChosenImage(i),
+          ).inGridArea('l3content${i + 4}'),
         ],
       ],
     );
@@ -332,26 +319,19 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           rowGap: gap,
           children: [
             for (int i = 0; i < nChosen; i++) ...[
-              RotatedBox(
-                quarterTurns: 1,
-                child: SizedBox.expand(
-                  child: _getChosenImage(i, fit: BoxFit.cover),
-                ),
-              ).inGridArea('l4content${i+1}'),
+              _PhotoContainer(
+                rotated: true,
+                child: _getChosenImage(i),
+              ).inGridArea('l4content${i + 1}'),
             ],
           ],
         ),
         if (widget.showLogo)
-          Padding(
-            padding: const EdgeInsets.all(250),
+          const Padding(
+            padding: EdgeInsets.all(250),
             child: RotatedBox(
               quarterTurns: 1,
-              child: Center(
-                child: SvgPicture.asset(
-                  "assets/svg/logo.svg",
-                  colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                ),
-              ),
+              child: _CenteredLogo(),
             ),
           ),
       ],
@@ -389,6 +369,43 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     Completer completer = Completer();
     WidgetsBinding.instance.addPostFrameCallback((_) => completer.complete());
     return completer.future;
+  }
+
+}
+
+class _CenteredLogo extends StatelessWidget {
+
+  const _CenteredLogo();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SvgPicture.asset(
+        "assets/svg/logo.svg",
+        colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
+      ),
+    );
+  }
+
+}
+
+class _PhotoContainer extends StatelessWidget {
+
+  final bool rotated;
+  final Widget child;
+
+  const _PhotoContainer({required this.child, this.rotated = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: FittedBox(
+        child: RotatedBox(
+          quarterTurns: rotated ? 1 : 0,
+          child: child,
+        ),
+      ),
+    );
   }
 
 }

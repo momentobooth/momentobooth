@@ -23,20 +23,13 @@ class StaticImageSource extends LiveViewSource {
     required int texturePtr,
     List<ImageOperation> operations = const [], // TODO: Implement
   }) async {
-    final ByteData data = await rootBundle.load('assets/bitmap/placeholder.png');
-    final Image image = await decodeImageFromList(data.buffer.asUint8List());
-
+    RawImage image = await _getPlaceholder();
     _imageWidth = image.width;
     _imageHeight = image.height;
 
     await rustLibraryApi.staticImageWriteToTexture(
       texturePtr: texturePtr,
-      rawImage: RawImage(
-        format: RawImageFormat.Rgba,
-        width: _imageWidth,
-        height: _imageHeight,
-        data: (await image.toByteData())!.buffer.asUint8List(),
-      )
+      rawImage: image,
     );
   }
 
@@ -44,7 +37,7 @@ class StaticImageSource extends LiveViewSource {
   Future<void> setOperations(List<ImageOperation> operations) async {}
 
   @override
-  Future<RawImage> getLastFrame() => rustLibraryApi.noiseGetFrame();
+  Future<RawImage> getLastFrame() => _getPlaceholder();
 
   @override
   Future<CameraState?> getCameraState() async => CameraState(
@@ -56,5 +49,17 @@ class StaticImageSource extends LiveViewSource {
     frameWidth: _imageWidth,
     frameHeight: _imageHeight,
   );
+
+  Future<RawImage> _getPlaceholder() async {
+    final ByteData data = await rootBundle.load('assets/bitmap/placeholder.png');
+    final Image image = await decodeImageFromList(data.buffer.asUint8List());
+
+    return RawImage(
+      format: RawImageFormat.Rgba,
+      width: image.width,
+      height: image.height,
+      data: (await image.toByteData())!.buffer.asUint8List(),
+    );
+  }
 
 }
