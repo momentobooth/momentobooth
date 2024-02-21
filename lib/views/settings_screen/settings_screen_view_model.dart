@@ -36,7 +36,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
   List<ComboBoxItem<Rotate>> get liveViewAndCaptureRotateOptions => Rotate.asComboBoxItems();
-  List<ComboBoxItem<Flip>> get liveViewFlipOptions => Flip.asComboBoxItems();
+  List<ComboBoxItem<Flip>> get flipOptions => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
@@ -101,8 +101,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   bool get singlePhotoIsCollageSetting => SettingsManager.instance.settings.singlePhotoIsCollage;
   String get templatesFolderSetting => SettingsManager.instance.settings.templatesFolder;
   Rotate get liveViewAndCaptureRotateSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureRotate;
-  double get liveViewAndCaptureAspectRatioSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
   Flip get liveViewFlipSetting => SettingsManager.instance.settings.hardware.liveViewFlip;
+  Flip get captureFlipSetting => SettingsManager.instance.settings.hardware.captureFlip;
+  double get liveViewAndCaptureAspectRatioSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
   LiveViewMethod get liveViewMethodSetting => SettingsManager.instance.settings.hardware.liveViewMethod;
   String get liveViewWebcamId => SettingsManager.instance.settings.hardware.liveViewWebcamId;
   CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;

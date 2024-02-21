@@ -58,8 +58,9 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
   const factory HardwareSettings({
     @Default(Rotate.none) Rotate liveViewAndCaptureRotate,
-    @Default(1.5) double liveViewAndCaptureAspectRatio,
     @Default(Flip.horizontally) Flip liveViewFlip,
+    @Default(1.5) double liveViewAndCaptureAspectRatio,
+    @Default(Flip.none) Flip captureFlip,
     @Default(LiveViewMethod.webcam) LiveViewMethod liveViewMethod,
     @Default("") String liveViewWebcamId,
     @Default(CaptureMethod.liveViewSource) CaptureMethod captureMethod,
