@@ -8,7 +8,7 @@ name = "momento_booth_native_helpers"
 crate-type = ["lib", "staticlib", "cdylib"]
 
 [dependencies]
-anyhow = "1.0.79"
+anyhow = "1.0.80"
 derive_more = "0.99.17"
 atom_table = "1.1.0"
 flutter_rust_bridge = "=1.82.5"
