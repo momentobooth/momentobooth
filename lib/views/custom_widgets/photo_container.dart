@@ -8,7 +8,7 @@ import 'package:momento_booth/views/custom_widgets/wrappers/rotate_flip_crop_con
 
 enum _Type { memory, file }
 
-class CapturePresenter extends StatelessWidget {
+class PhotoContainer extends StatelessWidget {
 
   final Uint8List? bytes;
   final File? file;
@@ -16,11 +16,11 @@ class CapturePresenter extends StatelessWidget {
   final VoidCallback? decodeCallback;
   final _Type _type;
 
-  const CapturePresenter.memory(this.bytes, {super.key, this.fit, this.decodeCallback})
+  const PhotoContainer.memory(this.bytes, {super.key, this.fit, this.decodeCallback})
       : _type = _Type.memory,
         file = null;
 
-  const CapturePresenter.file(this.file, {super.key, this.fit, this.decodeCallback})
+  const PhotoContainer.file(this.file, {super.key, this.fit, this.decodeCallback})
       : _type = _Type.file,
         bytes = null;
 

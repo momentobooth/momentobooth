@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -20,7 +18,6 @@ class LiveViewBackground extends StatelessWidgetBase {
   bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground;
   BackgroundBlur get _backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
   LiveViewState get _liveViewState => LiveViewManager.instance.liveViewState;
-  int? get _textureId => LiveViewManager.instance.textureId;
 
   @override
   Widget build(BuildContext context) {

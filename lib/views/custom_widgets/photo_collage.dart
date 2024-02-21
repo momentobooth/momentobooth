@@ -17,7 +17,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
-import 'package:momento_booth/views/custom_widgets/capture_presenter.dart';
+import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
@@ -214,8 +214,8 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
 
   Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
     return widget.debug == null
-        ? CapturePresenter.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback)
-        : CapturePresenter.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
+        ? PhotoContainer.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback)
+        : PhotoContainer.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {

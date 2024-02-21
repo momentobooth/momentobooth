@@ -3,10 +3,11 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_controller.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_view_model.dart';
-import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 
 class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel, CollageMakerScreenController> {
@@ -103,7 +104,12 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
               return Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
+                  SizedBox.expand(
+                    child: AspectRatio(
+                      aspectRatio: SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio,
+                      child: PhotoContainer.memory(PhotosManager.instance.photos[i]),
+                    ),
+                  ),
                   AnimatedOpacity(
                     opacity: PhotosManager.instance.chosen.contains(i) ? 1 : 0,
                     duration: const Duration(milliseconds: 200),

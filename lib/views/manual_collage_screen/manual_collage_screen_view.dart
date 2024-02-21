@@ -105,7 +105,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
             flex: 10,
             child: _collage,
           ),
-          const SizedBox(height: 30,),
+          const SizedBox(height: 30),
           Flexible(
             child: Row(
               children: [

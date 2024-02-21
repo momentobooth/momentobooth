@@ -12,7 +12,6 @@ import 'package:momento_booth/hardware_control/live_view_streaming/static_image_
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
