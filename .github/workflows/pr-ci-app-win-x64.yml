@@ -4,10 +4,11 @@ on:
   pull_request:
     branches: [ main ]
     paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   build:
-    if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && ! github.event.pull_request.draft }}
+    if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
     runs-on: windows-latest
     
