@@ -17,8 +17,8 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
-import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 

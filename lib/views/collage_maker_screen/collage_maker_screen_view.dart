@@ -7,8 +7,8 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_controller.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_view_model.dart';
-import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
+import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 
 class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel, CollageMakerScreenController> {
 
