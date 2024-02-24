@@ -260,7 +260,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           l2content1
           l2content2
         ''',
-      rowSizes: [128.px, auto, auto],
+      rowSizes: [75.px, auto, auto],
       columnSizes: const [auto],
       columnGap: gap,
       rowGap: gap,
@@ -284,7 +284,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
           l3content2 l3content5
           l3content3 l3content6
         ''',
-      rowSizes: [1.fr, 1.5.fr, 1.5.fr, 1.5.fr],
+      rowSizes: [1.fr, auto, auto, auto],
       columnSizes: [1.fr, 1.fr],
       columnGap: 2*gap,
       rowGap: gap,
@@ -409,10 +409,15 @@ class _PhotoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox.expand(
-      child: FittedBox(
-        child: RotatedBox(
-          quarterTurns: rotated ? 1 : 0,
-          child: child,
+      child: AspectRatio(
+        aspectRatio: SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio,
+        child: FittedBox(
+          fit: BoxFit.cover,
+          clipBehavior: ui.Clip.hardEdge,
+          child: RotatedBox(
+            quarterTurns: rotated ? 1 : 0,
+            child: child,
+          ),
         ),
       ),
     );
