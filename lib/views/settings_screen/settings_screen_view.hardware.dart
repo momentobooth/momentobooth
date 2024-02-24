@@ -119,6 +119,18 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
+          return BooleanInputCard(
+            icon: FluentIcons.camera,
+            title: "Download extra files (e.g. RAW) from camera",
+            subtitle: "Whether to download extra files from the camera. This is useful for cameras that can create RAW files.",
+            value: () => viewModel.gPhoto2DownloadExtraFilesSetting,
+            onChanged: controller.onGPhoto2DownloadExtraFilesChanged,
+          );
+        }
+        return const SizedBox();
+      }),
+      Observer(builder: (_) {
+        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
           return TextInputCard(
             icon: FluentIcons.s_d_card,
             title: "Camera capture target",

@@ -129,7 +129,7 @@ pub async fn auto_focus(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()
   Ok(())
 }
 
-pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
+pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, download_extra_files: bool) -> Result<()> {
   let camera = camera_ref.lock().await;
 
   let start = Instant::now();
@@ -139,10 +139,12 @@ pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<
     n_events += 1;
     match event {
       CameraEvent::NewFile(event) => {
-        log_debug(format!("Downloading file from camera: {}/{}", event.folder(), event.name()));
-        let file = camera.camera.fs().download(&event.folder(), &event.name()).await?;
-        let data = file.get_data(get_context()?).await?;
-        if let Some(callback) = &camera.extra_file_callback {
+        if !download_extra_files {
+          log_debug(format!("download_extra_files is false, ignoring file: {}/{}", event.folder(), event.name()));
+        } else if let Some(callback) = &camera.extra_file_callback {
+          log_debug(format!("Downloading file from camera: {}/{}", event.folder(), event.name()));
+          let file = camera.camera.fs().download(&event.folder(), &event.name()).await?;
+          let data = file.get_data(get_context()?).await?;
           log_debug(format!("Calling extra file callback"));
           callback(GPhoto2File {
             source_folder: event.folder().to_string(),
@@ -150,7 +152,7 @@ pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<
             data: data.to_vec(),
           });
         } else {
-          log_debug(format!("No extra file callback set"));
+          log_debug(format!("No extra file callback set, ignoring file: {}/{}", event.folder(), event.name()));
         }
       },
       CameraEvent::Timeout => break,
