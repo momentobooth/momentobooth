@@ -19,6 +19,8 @@
 
     "captureScreenGetReady": "Maak je klaar",
     "captureScreenLookAtCamera": "Kijk naar 📷",
+    "captureScreenLoadingPhoto": "Foto inladen...",
+    "captureScreenLoadingPhotos": "Foto's inladen...",
 
     "photoDetailsScreenTitle": "Fotodetails",
     "photoDetailsScreenGetQrButton": "QR krijgen",
