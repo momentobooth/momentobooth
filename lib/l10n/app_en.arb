@@ -19,6 +19,8 @@
 
     "captureScreenGetReady": "Get Ready",
     "captureScreenLookAtCamera": "Look at 📷",
+    "captureScreenLoadingPhoto": "Loading photo...",
+    "captureScreenLoadingPhotos": "Loading photos...",
 
     "photoDetailsScreenTitle": "Photo Details",
     "photoDetailsScreenGetQrButton": "Get QR",

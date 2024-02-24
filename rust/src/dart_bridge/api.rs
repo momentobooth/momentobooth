@@ -310,12 +310,12 @@ pub fn gphoto2_auto_focus(handle_id: usize) {
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_clear_events(handle_id: usize) {
+pub fn gphoto2_clear_events(handle_id: usize, download_extra_files: bool) {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
-        gphoto2::clear_events(camera).await        
+        gphoto2::clear_events(camera, download_extra_files).await        
     }).expect("Could not get result")
 }
 

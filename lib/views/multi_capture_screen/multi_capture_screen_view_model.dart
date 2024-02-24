@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/animation.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
@@ -31,10 +32,14 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   static const minimumContinueWait = Duration(milliseconds: 1500);
 
   int get counterStart => SettingsManager.instance.settings.captureDelaySeconds;
+  int get autoFocusMsBeforeCapture => SettingsManager.instance.settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
   double get aspectRatio => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
 
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
+
+  @computed
+  Duration get autoFocusDelay => photoDelay - Duration(milliseconds: autoFocusMsBeforeCapture);
 
   @observable
   bool showCounter = true;
@@ -68,6 +73,10 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
       CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
     } as PhotoCaptureMethod;
     capturer.clearPreviousEvents();
+
+    if (autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
+      Future.delayed(autoFocusDelay).then((_) => (capturer as GPhoto2Camera).autoFocus());
+    }
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
     MqttManager.instance.publishCaptureState(CaptureState.countdown);
   }

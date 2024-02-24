@@ -38,7 +38,9 @@ enum CaptureMethod {
 enum GPhoto2SpecialHandling {
 
   none("None"),
-  nikonDSLR("Nikon DSLR");
+  nikonDSLR("Nikon DSLR"),
+  nikonGeneric("Nikon"),
+  sony("Sony");
 
   final String name;
 
@@ -52,6 +54,8 @@ enum GPhoto2SpecialHandling {
     return switch (this) {
       GPhoto2SpecialHandling.none => GPhoto2CameraSpecialHandling.None,
       GPhoto2SpecialHandling.nikonDSLR => GPhoto2CameraSpecialHandling.NikonDSLR,
+      GPhoto2SpecialHandling.nikonGeneric => GPhoto2CameraSpecialHandling.NikonGeneric,
+      GPhoto2SpecialHandling.sony => GPhoto2CameraSpecialHandling.Sony,
     };
   }
 

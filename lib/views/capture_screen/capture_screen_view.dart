@@ -5,6 +5,7 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen_controller.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen_view_model.dart';
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
+import 'package:momento_booth/views/custom_widgets/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 
 class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureScreenController> {
@@ -55,7 +56,7 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
         Observer(
           builder: (_) {
           if (viewModel.showSpinner) {
-            return const Center(child: ProgressRing());
+            return Center(child: LoadingDialog(title: localizations.captureScreenLoadingPhoto));
           }
           return const SizedBox();
         }),

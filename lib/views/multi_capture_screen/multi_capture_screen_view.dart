@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
+import 'package:momento_booth/views/custom_widgets/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_controller.dart';
@@ -41,7 +42,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                     _liveViewWithCounter,
                     Observer(builder: (_) {
                       if (viewModel.showSpinner) {
-                        return const Center(child: ProgressRing());
+                        return Center(child: LoadingDialog(title: localizations.captureScreenLoadingPhoto));
                       }
                       return const SizedBox();
                     }),

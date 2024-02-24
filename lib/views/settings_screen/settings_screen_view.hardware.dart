@@ -119,12 +119,36 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
+          return BooleanInputCard(
+            icon: FluentIcons.camera,
+            title: "Download extra files (e.g. RAW) from camera",
+            subtitle: "Whether to download extra files from the camera. This is useful for cameras that can create RAW files.",
+            value: () => viewModel.gPhoto2DownloadExtraFilesSetting,
+            onChanged: controller.onGPhoto2DownloadExtraFilesChanged,
+          );
+        }
+        return const SizedBox();
+      }),
+      Observer(builder: (_) {
+        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
           return TextInputCard(
             icon: FluentIcons.s_d_card,
             title: "Camera capture target",
             subtitle: "Sets the camera's 'capturetarget'. When unsure, leave empty as it could cause capture issues. Values can be found in the libgphoto2 source code.",
             controller: controller.gPhoto2CaptureTargetController,
             onFinishedEditing: controller.onGPhoto2CaptureTargetChanged,
+          );
+        }
+        return const SizedBox();
+      }),
+      Observer(builder: (_) {
+        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
+          return NumberInputCard(
+            icon: FluentIcons.camera,
+            title: "Auto focus before capture",
+            subtitle: "Time to wait for the camera to focus before capturing the image. This is useful to improve capture speed. Requires the 'Special handling' setting set. Set to 0 to disable.",
+            value: () => viewModel.gPhoto2AutoFocusMsBeforeCaptureSetting,
+            onFinishedEditing: controller.onGPhoto2AutoFocusMsBeforeCaptureChanged,
           );
         }
         return const SizedBox();

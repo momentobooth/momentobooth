@@ -106,7 +106,10 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   @override
   Future<void> clearPreviousEvents() async {
     await _ensureLibraryInitialized();
-    await rustLibraryApi.gphoto2ClearEvents(handleId: handleId);
+    await rustLibraryApi.gphoto2ClearEvents(
+      handleId: handleId,
+      downloadExtraFiles: SettingsManager.instance.settings.hardware.gPhoto2DownloadExtraFiles,
+    );
   }
 
   static Future<void> _ensureLibraryInitialized() async {
