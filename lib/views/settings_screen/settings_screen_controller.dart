@@ -174,6 +174,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
       viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2DownloadExtraFiles: gPhoto2DownloadExtraFiles));
     }
   }
+
+  void onGPhoto2AutoFocusMsBeforeCaptureChanged(int? gPhoto2AutoFocusMsBeforeCapture) {
+    if (gPhoto2AutoFocusMsBeforeCapture != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2AutoFocusMsBeforeCapture: gPhoto2AutoFocusMsBeforeCapture));
+    }
+  }
   
   void onCaptureDelayGPhoto2Changed(int? captureDelayGPhoto2) {
     if (captureDelayGPhoto2 != null) {

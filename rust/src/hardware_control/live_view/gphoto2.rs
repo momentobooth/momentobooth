@@ -1,4 +1,4 @@
-use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, any::Any, cell::Cell, time::{Duration, Instant}, hash::{Hash, Hasher}};
+use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, cell::Cell, time::{Duration, Instant}, hash::{Hash, Hasher}};
 
 use ahash::AHasher;
 use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error, camera::CameraEvent};
@@ -35,7 +35,7 @@ pub fn get_cameras() -> Result<Vec<GPhoto2CameraInfo>> {
   Ok(cameras)
 }
 
-pub async fn open_camera(model: String, port: String, special_handling: GPhoto2CameraSpecialHandling) -> Result<GPhoto2Camera> {
+pub async fn open_camera(model: String, _: String, special_handling: GPhoto2CameraSpecialHandling) -> Result<GPhoto2Camera> {
   let camera_descriptor = get_context()?.list_cameras().await.expect("Could not enumerate cameras").into_iter().find(|camera| camera.model == model).expect("Could not find camera");
   let camera = get_context()?.get_camera(&camera_descriptor).await?;
 
@@ -54,12 +54,12 @@ pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, fr
   // TODO: check if join handle not already set
 
   match camera.special_handling {
-    GPhoto2CameraSpecialHandling::None => {},
     GPhoto2CameraSpecialHandling::NikonDSLR => {
       let opcode = camera.camera.config_key::<TextWidget>("opcode").await?;
       opcode.set_value("0x9201")?;
       camera.camera.set_config(&opcode).await?;
     },
+    _ => {},
   }
   
   let camera_ref = camera_ref.clone();
@@ -119,9 +119,14 @@ pub async fn auto_focus(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()
   
   match camera.special_handling {
     GPhoto2CameraSpecialHandling::None => {},
-    GPhoto2CameraSpecialHandling::NikonDSLR => {
+    GPhoto2CameraSpecialHandling::NikonGeneric | GPhoto2CameraSpecialHandling::NikonDSLR => {
       let opcode = camera.camera.config_key::<TextWidget>("opcode").await?;
       opcode.set_value("0x90C1")?;
+      camera.camera.set_config(&opcode).await?;
+    },
+    GPhoto2CameraSpecialHandling::Sony => {
+      let opcode = camera.camera.config_key::<TextWidget>("opcode").await?;
+      opcode.set_value("0xD2C1")?;
       camera.camera.set_config(&opcode).await?;
     },
   }
@@ -219,6 +224,8 @@ pub struct GPhoto2Camera {
 pub enum GPhoto2CameraSpecialHandling {
   None,
   NikonDSLR,
+  NikonGeneric,
+  Sony,
 }
 
 // ////// //
@@ -230,9 +237,9 @@ type Result<T> = std::result::Result<T, Gphoto2Error>;
 #[derive(Debug)]
 pub enum Gphoto2Error {
   ContextNotInitialized,
-  PoisonError,
-  FrameDecodeError,
-  StopLiveViewThreadError(Box<dyn Any + Send>),
+  // PoisonError,
+  // FrameDecodeError,
+  // StopLiveViewThreadError(Box<dyn Any + Send>),
   Gphoto2LibraryError(Error),
 }
 

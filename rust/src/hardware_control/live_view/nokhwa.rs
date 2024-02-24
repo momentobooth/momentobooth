@@ -1,7 +1,7 @@
 use derive_more::{From, Into};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 
-use crate::{dart_bridge::api::RawImage, log_debug, log_info, log_error, utils::{jpeg, image_processing::ImageOperation}};
+use crate::{dart_bridge::api::RawImage, log_debug, log_info, log_error, utils::jpeg};
 
 pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
     if cfg!(target_os = "macos") {
