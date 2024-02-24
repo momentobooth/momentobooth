@@ -4,7 +4,8 @@ enum LiveViewMethod {
 
   debugNoise(0, "Debug - Static noise"),
   webcam(1, "Webcam"),
-  gphoto2(2, "gPhoto2");
+  gphoto2(2, "gPhoto2"),
+  debugStaticImage(3, "Debug - Static image");
 
   final int value;
   final String name;
@@ -116,22 +117,55 @@ enum ScreenTransitionAnimation {
 
 enum Flip {
 
-  none(false, false, "None"),
-  horizontally(true, false, "Horizontally"),
-  vertically(false, true, "Vertically"),
-  both(true, true, "Both");
+  none("None"),
+  horizontally("Horizontally"),
+  vertically("Vertically");
 
   // can add more properties or getters/methods if needed
-  final bool flipX;
-  final bool flipY;
   final String name;
 
   // can use named parameters if you want
-  const Flip(this.flipX, this.flipY, this.name);
+  const Flip(this.name);
 
   ComboBoxItem<Flip> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
   static List<ComboBoxItem<Flip>> asComboBoxItems() => Flip.values.map((value) => value.toComboBoxItem()).toList();
+
+  FlipAxis? get asFlipAxis => switch (this) {
+    Flip.none => null,
+    Flip.horizontally => FlipAxis.Horizontally,
+    Flip.vertically => FlipAxis.Vertically,
+  };
+
+}
+
+enum Rotate {
+
+  none("No rotation", 0, 0),
+  clockwise90degrees("90 degrees", 1, math.pi / 2),
+  clockwise180degrees("180 degrees", 2, math.pi),
+  clockwise270degrees("270 degrees", 3, math.pi * 1.5);
+
+  // can add more properties or getters/methods if needed
+  final String name;
+
+  final int quarterTurns;
+
+  final double radians;
+
+  // can use named parameters if you want
+  const Rotate(this.name, this.quarterTurns, this.radians);
+
+  ComboBoxItem<Rotate> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<Rotate>> asComboBoxItems() => Rotate.values.map((value) => value.toComboBoxItem()).toList();
+
+  Rotation? get asRotation => switch (this) {
+        Rotate.none => null,
+        Rotate.clockwise90degrees => Rotation.Rotate90,
+        Rotate.clockwise180degrees => Rotation.Rotate180,
+        Rotate.clockwise270degrees => Rotation.Rotate270,
+      };
 
 }
 
@@ -163,5 +197,22 @@ enum AnimationAnchor {
   final String name;
 
   const AnimationAnchor(this.name);
+
+}
+
+enum BackgroundBlur {
+
+  none("Disabled"),
+  textureBlur("Use texture blur");
+
+  // can add more properties or getters/methods if needed
+  final String name;
+
+  // can use named parameters if you want
+  const BackgroundBlur(this.name);
+
+  ComboBoxItem<BackgroundBlur> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<BackgroundBlur>> asComboBoxItems() => BackgroundBlur.values.map((value) => value.toComboBoxItem()).toList();
 
 }

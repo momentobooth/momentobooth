@@ -5,12 +5,13 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
-import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
-import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
+import 'package:momento_booth/views/custom_widgets/photo_container.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_controller.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen_view_model.dart';
 
 class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel, MultiCaptureScreenController> {
+
   const MultiCaptureScreenView({
     required super.viewModel,
     required super.controller,
@@ -33,7 +34,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
             Flexible(
               flex: 5,
               child: AspectRatio(
-                aspectRatio: 1.5,
+                aspectRatio: viewModel.aspectRatio,
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
@@ -58,28 +59,26 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
   Widget get _photoColumn {
     return Column(
       children: [
-        Flexible(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: AutoSizeText(
-              localizations.multiCaptureScreenPhotoCounter(viewModel.photoNumber, viewModel.maxPhotos),
-              style: theme.titleStyle,
-              maxLines: 1,
-            ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AutoSizeText(
+            localizations.multiCaptureScreenPhotoCounter(viewModel.photoNumber, viewModel.maxPhotos),
+            style: theme.titleStyle,
+            maxLines: 1,
           ),
         ),
         for (int i = 0; i < PhotosManager.instance.photos.length; i++)
-          Flexible(
-            flex: 0,
+          Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: AspectRatio(
-                aspectRatio: 1.5,
-                child: ImageWithLoaderFallback.memory(PhotosManager.instance.photos[i]),
+                aspectRatio: viewModel.aspectRatio,
+                child: PhotoContainer.memory(PhotosManager.instance.photos[i]),
               ),
             ),
           ),
-        for (int i = PhotosManager.instance.photos.length; i < 4; i++) Flexible(flex: 0, child: _photoPlaceholder),
+        for (int i = PhotosManager.instance.photos.length; i < 4; i++)
+          Expanded(child: _photoPlaceholder),
       ],
     );
   }
@@ -89,7 +88,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        const LiveView(fit: BoxFit.contain),
+        const LiveView(fit: BoxFit.contain, blur: false),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -120,7 +119,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: AspectRatio(
-        aspectRatio: 1.5,
+        aspectRatio: viewModel.aspectRatio,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
@@ -157,4 +156,5 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       );
     });
   }
+
 }

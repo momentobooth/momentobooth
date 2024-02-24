@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/exceptions/nokhwa_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
-import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
@@ -40,11 +40,21 @@ class NokhwaCamera extends LiveViewSource {
   // ////////////// //
 
   @override
-  Future<void> openStream({required int texturePtr}) async {
+  Future<void> openStream({
+    required int texturePtr,
+    List<ImageOperation> operations = const [],
+  }) async {
     await _ensureLibraryInitialized();
-    handleId = await rustLibraryApi.nokhwaOpenCamera(friendlyName: friendlyName, operations: [
-      const ImageOperation.cropToAspectRatio(3 / 2),
-    ], texturePtr: texturePtr);
+    handleId = await rustLibraryApi.nokhwaOpenCamera(
+      friendlyName: friendlyName,
+      operations: operations,
+      texturePtr: texturePtr,
+    );
+  }
+
+  @override
+  Future<void> setOperations(List<ImageOperation> operations) {
+    return rustLibraryApi.nokhwaSetOperations(handleId: handleId, operations: operations);
   }
 
   @override

@@ -31,6 +31,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   static const minimumContinueWait = Duration(milliseconds: 1500);
 
   int get counterStart => SettingsManager.instance.settings.captureDelaySeconds;
+  double get aspectRatio => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
 
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;

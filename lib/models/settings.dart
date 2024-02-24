@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:fluent_ui/fluent_ui.dart';
@@ -56,9 +57,12 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
   const HardwareSettings._();
 
   const factory HardwareSettings({
+    @Default(Rotate.none) Rotate liveViewAndCaptureRotate,
+    @Default(Flip.horizontally) Flip liveViewFlip,
+    @Default(1.5) double liveViewAndCaptureAspectRatio,
+    @Default(Flip.none) Flip captureFlip,
     @Default(LiveViewMethod.webcam) LiveViewMethod liveViewMethod,
     @Default("") String liveViewWebcamId,
-    @Default(Flip.horizontally) Flip liveViewFlipImage,
     @Default(CaptureMethod.liveViewSource) CaptureMethod captureMethod,
     @Default("") String gPhoto2CameraId,
     @Default(GPhoto2SpecialHandling.none) GPhoto2SpecialHandling gPhoto2SpecialHandling,
@@ -141,8 +145,9 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default("") String clickSfxFile,
     @Default("") String shareScreenSfxFile,
     @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
+    @Default(BackgroundBlur.textureBlur) BackgroundBlur backgroundBlur,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
-    @Default(FilterQuality.low) FilterQuality liveViewFilterQuality,
+    @Default(FilterQuality.medium) FilterQuality liveViewFilterQuality,
   }) = _UiSettings;
 
   factory UiSettings.withDefaults() => UiSettings.fromJson({});

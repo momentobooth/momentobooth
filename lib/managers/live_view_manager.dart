@@ -8,6 +8,7 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/static_image_source.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -54,19 +55,22 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   // /////// //
 
   @readonly
+  int? _textureWidth, _textureHeight;
+
+  @readonly
   int? _textureId;
 
   int? _texturePointer;
 
   Future<void> _ensureTextureAvailable() async {
     if (_textureId != null) return;
-
-    // Initialize texture
-    const int textureKey = 0;
     var textureRenderer = TextureRgbaRenderer();
-    await textureRenderer.closeTexture(textureKey);
-    _textureId = await textureRenderer.createTexture(textureKey);
-    _texturePointer = await textureRenderer.getTexturePtr(textureKey);
+
+    // Initialize main texture
+    const int textureKeyMain = 0;
+    await textureRenderer.closeTexture(textureKeyMain);
+    _textureId = await textureRenderer.createTexture(textureKeyMain);
+    _texturePointer = await textureRenderer.getTexturePtr(textureKeyMain);
   }
 
   // ///////// //
@@ -78,11 +82,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   @readonly
   LiveViewSource? _currentLiveViewSource;
 
-  LiveViewMethod? _currentLiveViewMethodSetting;
+  LiveViewMethod? _currentLiveViewMethod;
   String? _currentLiveViewWebcamId;
-
-  CaptureMethod? _currentCaptureMethodSetting;
-
+  CaptureMethod? _currentCaptureMethod;
   String? _currentGPhoto2CameraId;
 
   @readonly
@@ -91,26 +93,26 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
   Future<void> _updateConfig() async {
     LiveViewMethod liveViewMethodSetting = SettingsManager.instance.settings.hardware.liveViewMethod;
     CaptureMethod captureMethodSetting = SettingsManager.instance.settings.hardware.captureMethod;
-    String gPhoto2CameraId = SettingsManager.instance.settings.hardware.gPhoto2CameraId;
+    String gPhoto2CameraIdSetting = SettingsManager.instance.settings.hardware.gPhoto2CameraId;
     String webcamIdSetting = SettingsManager.instance.settings.hardware.liveViewWebcamId;
 
-    if (_currentLiveViewMethodSetting == null || _currentLiveViewMethodSetting != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethodSetting != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraId) {
+    if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
       _liveViewState = LiveViewState.initializing;
       await _currentLiveViewSource?.dispose();
 
-      _currentLiveViewMethodSetting = liveViewMethodSetting;
+      _currentLiveViewMethod = liveViewMethodSetting;
       _currentLiveViewWebcamId = webcamIdSetting;
-      _currentCaptureMethodSetting = captureMethodSetting;
-      _currentGPhoto2CameraId = gPhoto2CameraId;
+      _currentCaptureMethod = captureMethodSetting;
+      _currentGPhoto2CameraId = gPhoto2CameraIdSetting;
 
       // GPhoto2
       if (_gPhoto2Camera != null && _gPhoto2Camera!.isOpened) {
         await _gPhoto2Camera!.dispose();
         _gPhoto2Camera = null;
       }
-      if ((liveViewMethodSetting == LiveViewMethod.gphoto2 || captureMethodSetting == CaptureMethod.gPhoto2) && gPhoto2CameraId.isNotEmpty) {
-        _gPhoto2Camera = GPhoto2Camera(id: gPhoto2CameraId, friendlyName: gPhoto2CameraId);
+      if ((liveViewMethodSetting == LiveViewMethod.gphoto2 || captureMethodSetting == CaptureMethod.gPhoto2) && gPhoto2CameraIdSetting.isNotEmpty) {
+        _gPhoto2Camera = GPhoto2Camera(id: gPhoto2CameraIdSetting, friendlyName: gPhoto2CameraIdSetting);
       }
 
       switch (liveViewMethodSetting) {
@@ -121,10 +123,14 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
           _currentLiveViewSource = cameras.firstWhereOrNull((camera) => camera.friendlyName == webcamIdSetting);
         case LiveViewMethod.gphoto2:
           _currentLiveViewSource = _gPhoto2Camera;
+        case LiveViewMethod.debugStaticImage:
+          _currentLiveViewSource = StaticImageSource();
       }
 
       await _ensureTextureAvailable();
-      await _currentLiveViewSource?.openStream(texturePtr: _texturePointer!);
+      await _currentLiveViewSource?.openStream(
+        texturePtr: _texturePointer!,
+      );
 
       _liveViewState = LiveViewState.streaming;
       _lastFrameWasInvalid = false;
@@ -151,6 +157,9 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
         StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
         StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
         _lastFrameWasInvalid = false;
+
+        _textureWidth = liveViewState.frameWidth;
+        _textureHeight = liveViewState.frameHeight;
       }
     });
   }
@@ -161,7 +170,7 @@ abstract class _LiveViewManagerBase with Store, UiLoggy {
 
   void restoreLiveView() {
     LiveViewManager.instance._updateLiveViewSourceInstanceLock.synchronized(() async {
-      _currentLiveViewMethodSetting = null;
+      _currentLiveViewMethod = null;
       await LiveViewManager.instance._updateConfig();
     });
   }

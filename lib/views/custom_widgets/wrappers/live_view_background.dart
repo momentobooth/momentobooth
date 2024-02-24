@@ -1,14 +1,10 @@
-import 'dart:ui' as ui;
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/managers/live_view_manager.dart';
-import 'package:momento_booth/managers/notifications_manager.dart';
-import 'package:momento_booth/managers/photos_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/stateless_widget_base.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
 
 class LiveViewBackground extends StatelessWidgetBase {
 
@@ -20,6 +16,7 @@ class LiveViewBackground extends StatelessWidgetBase {
   });
 
   bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground;
+  BackgroundBlur get _backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
   LiveViewState get _liveViewState => LiveViewManager.instance.liveViewState;
 
   @override
@@ -31,10 +28,10 @@ class LiveViewBackground extends StatelessWidgetBase {
         _viewState,
         child,
         _statusOverlay,
-      ]
+      ],
     );
   }
-  
+
   Widget get _statusOverlay {
     return Padding(
       padding: const EdgeInsets.all(30),
@@ -46,7 +43,7 @@ class LiveViewBackground extends StatelessWidgetBase {
             for (InfoBar notification in NotificationsManager.instance.notifications) ...[
               notification,
               const SizedBox(height: 8),
-            ]
+            ],
           ],
         ),
       ),
@@ -56,14 +53,12 @@ class LiveViewBackground extends StatelessWidgetBase {
   Widget get _viewState {
     return Observer(builder: (context) {
       switch (_liveViewState) {
-        
         case LiveViewState.initializing:
           return _initializingState;
         case LiveViewState.error:
           return _errorState(Colors.red, null);
         case LiveViewState.streaming:
           return _streamingState;
-
       }
     });
   }
@@ -96,53 +91,21 @@ class LiveViewBackground extends StatelessWidgetBase {
       fit: StackFit.expand,
       children: [
         ColoredBox(color: Colors.green),
-        ImageFiltered(
-          imageFilter: ui.ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: const LiveView(fit: BoxFit.cover),
-        ),
+        if (_backgroundBlur == BackgroundBlur.textureBlur)
+          const LiveView(
+            fit: BoxFit.cover,
+            blur: true,
+          ),
         AnimatedOpacity(
           duration: const Duration(milliseconds: 300),
           opacity: _showLiveViewBackground ? 1 : 0,
           curve: Curves.ease,
-          child: const LiveView(fit: BoxFit.contain),
-        ),
-      ],
-    );
-  }
-
-}
-
-class LiveView extends StatelessWidgetBase {
-
-  final BoxFit fit;
-
-  const LiveView({
-    super.key,
-    required this.fit,
-  });
-
-  Flip get _flip => SettingsManager.instance.settings.hardware.liveViewFlipImage;
-  ui.FilterQuality get _filterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality.toUiFilterQuality();
-
-  @override
-  Widget build(BuildContext context) {
-    return Observer(
-      builder: (context) => FittedBox(
-        fit: fit,
-        child: SizedBox(
-          width: 3,
-          height: 2,
-          child: Transform.flip(
-            flipX: _flip.flipX,
-            flipY: _flip.flipY,
-            filterQuality: _filterQuality,
-            child: LiveViewManager.instance.textureId != null ? Texture(
-              textureId: LiveViewManager.instance.textureId!,
-              filterQuality: _filterQuality,
-            ) : null,
+          child: const LiveView(
+            fit: BoxFit.contain,
+            blur: false,
           ),
         ),
-      ),
+      ],
     );
   }
 

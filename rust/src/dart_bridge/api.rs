@@ -1,4 +1,4 @@
-use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time::Instant};
+use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time::Instant, vec};
 
 use chrono::Duration;
 use dashmap::DashMap;
@@ -61,7 +61,8 @@ lazy_static::lazy_static! {
 
 static NOKHWA_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
 
-pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize) -> usize {
+pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize
+) -> usize {
     let renderer = FlutterTexture::new(texture_ptr, 0, 0);
     let renderer_mutex = Mutex::new(renderer);
 
@@ -71,11 +72,12 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
         let mut handle = camera_ref.lock().expect("Could not lock on handle");
         match raw_frame {
             Some(raw_frame) => {
-                let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+                let processed_frame = image_processing::execute_operations(&raw_frame, &handle.operations);
                 let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
+
                 renderer.set_size(processed_frame.width, processed_frame.height);
                 renderer.on_rgba(&processed_frame);
-
+                
                 handle.valid_frame_count.fetch_add(1, Ordering::SeqCst);
                 handle.last_frame_was_valid.store(true, Ordering::SeqCst);
                 handle.last_valid_frame = Some(processed_frame);
@@ -89,9 +91,16 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
     });
 
     // Store handle
-    NOKHWA_HANDLES.insert(handle_id, Arc::new(Mutex::new(NokhwaCameraHandle::new(camera))));
+    NOKHWA_HANDLES.insert(handle_id, Arc::new(Mutex::new(NokhwaCameraHandle::new(camera, operations))));
 
     handle_id
+}
+
+pub fn nokhwa_set_operations(handle_id: usize, operations: Vec<ImageOperation>) {
+    let camera_ref = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
+    let mut handle = camera_ref.lock().expect("Could not lock on handle");
+
+    handle.operations = operations;
 }
 
 pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
@@ -105,6 +114,8 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
         duplicate_frame_count: 0,
         last_frame_was_valid: handle.last_frame_was_valid.load(Ordering::SeqCst),
         time_since_last_received_frame: handle.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
+        frame_width: Some(NOISE_WIDTH),
+        frame_height: Some(NOISE_HEIGHT),
     }
 }
 
@@ -129,14 +140,14 @@ lazy_static::lazy_static! {
 
 static NOISE_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
 
-const NOISE_DEFAULT_WIDTH: usize = 1280;
-const NOISE_DEFAULT_HEIGHT: usize = 720;
+const NOISE_WIDTH: usize = 1280;
+const NOISE_HEIGHT: usize = 720;
 
 pub fn noise_open(texture_ptr: usize) -> usize {
     // Initialize noise and push noise frames to Flutter texture
-    let renderer = FlutterTexture::new(texture_ptr, NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT);
-    let join_handle = white_noise::start_and_get_handle(NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT, move |raw_frame| {
-        renderer.on_rgba(&raw_frame)
+    let renderer_main = FlutterTexture::new(texture_ptr, NOISE_WIDTH, NOISE_HEIGHT);
+    let join_handle = white_noise::start_and_get_handle(NOISE_WIDTH, NOISE_HEIGHT, move |raw_frame| {
+        renderer_main.on_rgba(&raw_frame);
     });
 
     // Store handle
@@ -147,7 +158,7 @@ pub fn noise_open(texture_ptr: usize) -> usize {
 }
 
 pub fn noise_get_frame() -> RawImage {
-    white_noise::generate_frame(&Rng::new(), NOISE_DEFAULT_WIDTH, NOISE_DEFAULT_HEIGHT)
+    white_noise::generate_frame(&Rng::new(), NOISE_WIDTH, NOISE_HEIGHT)
 }
 
 pub fn noise_close(handle_id: usize) {
@@ -157,6 +168,15 @@ pub fn noise_close(handle_id: usize) {
     log_debug("Stopping white noise generator with handle ".to_string() + &handle_id.to_string());
     handle.1.stop();
     log_debug("Stopped white noise generator with handle ".to_string() + &handle_id.to_string());
+}
+
+// //////////// //
+// Static image //
+// //////////// //
+
+pub fn static_image_write_to_texture(raw_image: RawImage, texture_ptr: usize) {
+    let renderer_main = FlutterTexture::new(texture_ptr, raw_image.width, raw_image.height);
+    renderer_main.on_rgba(&raw_image);
 }
 
 // ////// //
@@ -176,13 +196,13 @@ pub fn ffsend_delete_file(file_id: String) {
 // //// //
 
 pub fn jpeg_encode(raw_image: RawImage, quality: u8, operations_before_encoding: Vec<ImageOperation>) -> ZeroCopyBuffer<Vec<u8>> {
-    let processed_image = image_processing::execute_operations(raw_image, &operations_before_encoding);
+    let processed_image = image_processing::execute_operations(&raw_image, &operations_before_encoding);
     jpeg::encode_raw_to_jpeg(processed_image, quality)
 }
 
 pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOperation>) -> RawImage {
     let image = jpeg::decode_jpeg_to_rgba(&jpeg_data);
-    image_processing::execute_operations(image, &operations_after_decoding)
+    image_processing::execute_operations(&image, &operations_after_decoding)
 }
 
 // ///////////////////// //
@@ -190,7 +210,7 @@ pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOpera
 // ///////////////////// //
 
 pub fn run_image_pipeline(raw_image: RawImage, operations: Vec<ImageOperation>) -> RawImage {
-    image_processing::execute_operations(raw_image, &operations)
+    image_processing::execute_operations(&raw_image, &operations)
 }
 
 // /////// //
@@ -214,7 +234,7 @@ pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto
 
     // Store handle
     let handle_id = GPHOTO2_HANDLE_COUNT.fetch_add(1, Ordering::SeqCst);
-    GPHOTO2_HANDLES.insert(handle_id, Arc::new(Mutex::new(GPhoto2CameraHandle::new(camera))));
+    GPHOTO2_HANDLES.insert(handle_id, Arc::new(Mutex::new(GPhoto2CameraHandle::new(camera, vec!()))));
 
     handle_id
 }
@@ -229,7 +249,10 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
     let renderer_mutex = Mutex::new(renderer);
 
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
-    let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
+    let mut camera_handle = camera_ref.lock().expect("Could not lock camera");
+    camera_handle.operations = operations;
+
+    let camera = camera_handle.camera.clone();
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async {
         gphoto2::start_liveview(camera, move |raw_frame| {
@@ -239,11 +262,12 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
 
             match raw_frame {
                 Ok(raw_frame) => {
-                    let processed_frame = image_processing::execute_operations(raw_frame, &operations);
+                    let processed_frame = image_processing::execute_operations(&raw_frame, &camera.operations);
                     let mut renderer = renderer_mutex.lock().expect("Could not lock on renderer");
+
                     renderer.set_size(processed_frame.width, processed_frame.height);
                     renderer.on_rgba(&processed_frame);
-
+                    
                     camera.valid_frame_count.fetch_add(1, Ordering::SeqCst);
                     camera.last_frame_was_valid.store(true, Ordering::SeqCst);
                     camera.last_valid_frame = Some(processed_frame);
@@ -260,6 +284,12 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
             camera.duplicate_frame_count.fetch_add(1, Ordering::SeqCst);
         }).await
     }).expect("Could not start live view")
+}
+
+pub fn gphoto2_set_operations(handle_id: usize, operations: Vec<ImageOperation>) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let mut camera_handle = camera_ref.lock().expect("Could not lock camera");
+    camera_handle.operations = operations;
 }
 
 pub fn gphoto2_stop_liveview(handle_id: usize) {
@@ -310,6 +340,8 @@ pub fn gphoto2_get_camera_status(handle_id: usize) -> CameraState {
         duplicate_frame_count: camera.duplicate_frame_count.load(Ordering::SeqCst),
         last_frame_was_valid: camera.last_frame_was_valid.load(Ordering::SeqCst),
         time_since_last_received_frame: camera.last_received_frame_timestamp.map(|timestamp| Duration::from_std(timestamp.elapsed()).expect("Could not convert duration")),
+        frame_width: camera.last_valid_frame.clone().map(|frame| frame.width),
+        frame_height: camera.last_valid_frame.clone().map(|frame| frame.height),
     }
 }
 
@@ -367,10 +399,11 @@ pub struct NokhwaCameraHandle {
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
     pub last_received_frame_timestamp: Option<Instant>,
+    pub operations: Vec<ImageOperation>,
 }
 
 impl NokhwaCameraHandle {
-    fn new(camera: CallbackCamera) -> Self {
+    fn new(camera: CallbackCamera, operations: Vec<ImageOperation>) -> Self {
         Self {
             status_sink: None,
             camera,
@@ -379,6 +412,7 @@ impl NokhwaCameraHandle {
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
             last_received_frame_timestamp: None,
+            operations: operations,
         }
     }
 }
@@ -398,10 +432,11 @@ pub struct GPhoto2CameraHandle {
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
     pub last_received_frame_timestamp: Option<Instant>,
+    pub operations: Vec<ImageOperation>,
 }
 
 impl GPhoto2CameraHandle {
-    fn new(camera: GPhoto2Camera) -> Self {
+    fn new(camera: GPhoto2Camera, operations: Vec<ImageOperation>) -> Self {
         Self {
             status_sink: None,
             camera: Arc::new(AsyncMutex::new(camera)),
@@ -411,6 +446,7 @@ impl GPhoto2CameraHandle {
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
             last_received_frame_timestamp: None,
+            operations: operations,
         }
     }
 }
@@ -428,4 +464,6 @@ pub struct CameraState {
     pub duplicate_frame_count: usize,
     pub last_frame_was_valid: bool,
     pub time_since_last_received_frame: Option<Duration>,
+    pub frame_width: Option<usize>,
+    pub frame_height: Option<usize>,
 }

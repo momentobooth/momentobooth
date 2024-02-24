@@ -671,6 +671,7 @@
 					"$(inherited)",
 					/opt/homebrew/Cellar/libgphoto2/2.5.31/lib,
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;

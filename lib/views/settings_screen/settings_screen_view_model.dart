@@ -35,11 +35,13 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   // Option lists
 
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
-  List<ComboBoxItem<Flip>> get liveViewFlipImageChoices => Flip.asComboBoxItems();
+  List<ComboBoxItem<Rotate>> get liveViewAndCaptureRotateOptions => Rotate.asComboBoxItems();
+  List<ComboBoxItem<Flip>> get flipOptions => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
   List<ComboBoxItem<ScreenTransitionAnimation>> get screenTransitionAnimations => ScreenTransitionAnimation.asComboBoxItems();
+  List<ComboBoxItem<BackgroundBlur>> get backgroundBlurOptions => BackgroundBlur.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
   List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
   
@@ -98,9 +100,12 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   double get collagePaddingSetting => SettingsManager.instance.settings.collagePadding;
   bool get singlePhotoIsCollageSetting => SettingsManager.instance.settings.singlePhotoIsCollage;
   String get templatesFolderSetting => SettingsManager.instance.settings.templatesFolder;
+  Rotate get liveViewAndCaptureRotateSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureRotate;
+  Flip get liveViewFlipSetting => SettingsManager.instance.settings.hardware.liveViewFlip;
+  Flip get captureFlipSetting => SettingsManager.instance.settings.hardware.captureFlip;
+  double get liveViewAndCaptureAspectRatioSetting => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
   LiveViewMethod get liveViewMethodSetting => SettingsManager.instance.settings.hardware.liveViewMethod;
   String get liveViewWebcamId => SettingsManager.instance.settings.hardware.liveViewWebcamId;
-  Flip get liveViewFlipImage => SettingsManager.instance.settings.hardware.liveViewFlipImage;
   CaptureMethod get captureMethodSetting => SettingsManager.instance.settings.hardware.captureMethod;
   String get gPhoto2CameraId => SettingsManager.instance.settings.hardware.gPhoto2CameraId;
   GPhoto2SpecialHandling get gPhoto2SpecialHandling => SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling;
@@ -130,6 +135,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get shareScreenSfxFileSetting => SettingsManager.instance.settings.ui.shareScreenSfxFile;
   Language get languageSetting => SettingsManager.instance.settings.ui.language;
   ScreenTransitionAnimation get screenTransitionAnimation => SettingsManager.instance.settings.ui.screenTransitionAnimation;
+  BackgroundBlur get backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
   FilterQuality get screenTransitionAnimationFilterQuality => SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality;
   FilterQuality get liveViewFilterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality;
   bool get mqttIntegrationEnableSetting => SettingsManager.instance.settings.mqttIntegration.enable;

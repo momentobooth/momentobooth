@@ -188,6 +188,59 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		5FCD75452B7F9CE3004022A4 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CARGO_TARGET_DIR = "$(PROJECT_TEMP_DIR)/cargo_target";
+				CARGO_XCODE_BUILD_MODE = release;
+				CARGO_XCODE_FEATURES = "";
+				"CARGO_XCODE_TARGET_ARCH[arch=arm64*]" = aarch64;
+				"CARGO_XCODE_TARGET_ARCH[arch=i386]" = i686;
+				"CARGO_XCODE_TARGET_ARCH[arch=x86_64*]" = x86_64;
+				"CARGO_XCODE_TARGET_OS[sdk=appletvos*]" = tvos;
+				"CARGO_XCODE_TARGET_OS[sdk=appletvsimulator*]" = tvos;
+				"CARGO_XCODE_TARGET_OS[sdk=iphoneos*]" = ios;
+				"CARGO_XCODE_TARGET_OS[sdk=iphonesimulator*]" = "ios-sim";
+				"CARGO_XCODE_TARGET_OS[sdk=iphonesimulator*][arch=x86_64*]" = ios;
+				"CARGO_XCODE_TARGET_OS[sdk=macosx*]" = darwin;
+				CURRENT_PROJECT_VERSION = 0.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MARKETING_VERSION = 0.1.0;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = momento_booth_native_helpers;
+				SDKROOT = macosx;
+				SUPPORTS_MACCATALYST = YES;
+				TVOS_DEPLOYMENT_TARGET = 15.0;
+			};
+			name = Profile;
+		};
+		5FCD75462B7F9CE3004022A4 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CARGO_XCODE_CARGO_DEP_FILE_NAME = libmomento_booth_native_helpers.d;
+				CARGO_XCODE_CARGO_FILE_NAME = libmomento_booth_native_helpers.a;
+				INSTALL_GROUP = "";
+				INSTALL_MODE_FLAG = "";
+				INSTALL_OWNER = "";
+				PRODUCT_NAME = momento_booth_native_helpers_static;
+				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos appletvsimulator appletvos";
+			};
+			name = Profile;
+		};
+		5FCD75472B7F9CE3004022A4 /* Profile */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CARGO_XCODE_CARGO_DEP_FILE_NAME = libmomento_booth_native_helpers.d;
+				CARGO_XCODE_CARGO_FILE_NAME = libmomento_booth_native_helpers.dylib;
+				DYLIB_COMPATIBILITY_VERSION = 0;
+				PRODUCT_NAME = momento_booth_native_helpers;
+				SUPPORTED_PLATFORMS = macosx;
+			};
+			name = Profile;
+		};
 		CA604AE1B390C529DB9FC4E2 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -300,6 +353,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA607CDAE2223CC16B37690B /* Release */,
+				5FCD75452B7F9CE3004022A4 /* Profile */,
 				CA607CDAE222228BE02872F8 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -309,6 +363,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA60F047D9CCC529DB9FC4E2 /* Release */,
+				5FCD75462B7F9CE3004022A4 /* Profile */,
 				CA604AE1B390C529DB9FC4E2 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -318,6 +373,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CA60F047D9CCF7EA7C7D19F9 /* Release */,
+				5FCD75472B7F9CE3004022A4 /* Profile */,
 				CA604AE1B390F7EA7C7D19F9 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;

@@ -4,9 +4,50 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
   return FluentSettingsPage(
     title: "Hardware",
     blocks: [
+      _getGeneralBlock(viewModel, controller),
       _getLiveViewBlock(viewModel, controller),
       _getPhotoCaptureBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
+    ],
+  );
+}
+
+Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "General",
+    settings: [
+      ComboBoxCard(
+        icon: FluentIcons.camera,
+        title: "Rotate image",
+        subtitle: "Whether the live view and captures will be rotated 90, 180 or 270 degrees clockwise.",
+        items: viewModel.liveViewAndCaptureRotateOptions,
+        value: () => viewModel.liveViewAndCaptureRotateSetting,
+        onChanged: controller.onLiveViewAndCaptureRotateChanged,
+      ),
+      ComboBoxCard(
+        icon: FluentIcons.camera,
+        title: "Flip image",
+        subtitle: "Whether the live view image will be flipped horizontally or vertically.",
+        items: viewModel.flipOptions,
+        value: () => viewModel.liveViewFlipSetting,
+        onChanged: controller.onLiveViewFlipChanged,
+      ),
+      ComboBoxCard(
+        icon: FluentIcons.camera,
+        title: "Flip image",
+        subtitle: "Whether the captured image will be flipped horizontally or vertically.",
+        items: viewModel.flipOptions,
+        value: () => viewModel.captureFlipSetting,
+        onChanged: controller.onCaptureFlipChanged,
+      ),
+      NumberInputCard(
+        icon: FluentIcons.page,
+        title: "Aspect ratio",
+        subtitle: 'The aspect ratio to which live view and captures are cropped.',
+        value: () => viewModel.liveViewAndCaptureAspectRatioSetting,
+        onFinishedEditing: controller.onLiveViewAndCaptureAspectRatioChanged,
+        smallChange: 0.1,
+      ),
     ],
   );
 }
@@ -29,14 +70,6 @@ Widget _getLiveViewBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         }
         return const SizedBox();
       }),
-      ComboBoxCard(
-        icon: FluentIcons.camera,
-        title: "Flip image",
-        subtitle: "Whether the image should be flipped in none, one or both axis",
-        items: viewModel.liveViewFlipImageChoices,
-        value: () => viewModel.liveViewFlipImage,
-        onChanged: controller.onLiveViewFlipImageChanged,
-      ),
     ],
   );
 }
