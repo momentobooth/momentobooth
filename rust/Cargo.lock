@@ -3182,9 +3182,9 @@ checksum = "e421abadd41a4225275504ea4d6566923418b7f05506fbc9c0fe86ba7396114b"
 
 [[package]]
 name = "turborand"
-version = "0.10.0"
+version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e28d61f1c96db8c016037a77961fa5da84fc3a57fe69a15283ace0ab1647bac0"
+checksum = "ffa9ae3c65785079fa553e8aea4ae4b12579b5c5029b4133b54ea3afb2e3e9fa"
 dependencies = [
  "getrandom 0.2.12",
  "instant",
