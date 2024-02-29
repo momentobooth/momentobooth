@@ -38,11 +38,9 @@ jobs:
         flutterPrecache: '--macos'
 
     - name: Install minimal Rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@master
       with:
-        profile: minimal
         toolchain: stable
-        components: clippy
         target: aarch64-apple-darwin
 
     - name: Setup Rust cache

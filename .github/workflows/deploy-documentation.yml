@@ -40,9 +40,8 @@ jobs:
           mdbook-version: ${{ env.MDBOOK_VERSION }}
 
       - name: Install minimal Rust
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: stable
 
       - name: Setup sccache-cache
