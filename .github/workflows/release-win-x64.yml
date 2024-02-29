@@ -44,22 +44,16 @@ jobs:
         release: true
 
     - name: Install minimal Rust (MSVC target)
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@master
       with:
         target: x86_64-pc-windows-msvc
-        profile: minimal
         toolchain: stable-gnu
-        components: rustfmt, clippy
-        default: true
 
     - name: Install minimal Rust (GNU target)
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@master
       with:
         target: x86_64-pc-windows-gnu
-        profile: minimal
         toolchain: stable-gnu
-        components: clippy
-        default: true
 
     - name: Setup Rust cache
       uses: Swatinem/rust-cache@v2
