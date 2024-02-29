@@ -237,7 +237,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onPageWidthChanged(double? pageWidth) {
     if (pageWidth != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(pageHeight: pageWidth));
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(pageWidth: pageWidth));
     }
   }
 
