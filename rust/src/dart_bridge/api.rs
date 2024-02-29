@@ -8,7 +8,7 @@ use turborand::rng::Rng;
 
 use tokio::sync::Mutex as AsyncMutex;
 
-use crate::{hardware_control::live_view::{nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}, gphoto2::{self, GPhoto2Camera, GPhoto2CameraSpecialHandling, GPhoto2CameraInfo, GPhoto2File}}, utils::{ffsend_client::{self, FfSendTransferProgress}, jpeg, image_processing::{self, ImageOperation}, flutter_texture::FlutterTexture}, LogEvent, HardwareInitializationFinishedEvent, log_debug, TOKIO_RUNTIME};
+use crate::{hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, log_debug, utils::{ffsend_client::{self, FfSendTransferProgress}, flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg::{self, MomentoBoothExifTag}}, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME};
 
 // ////////////// //
 // Initialization //
@@ -195,9 +195,9 @@ pub fn ffsend_delete_file(file_id: String) {
 // JPEG //
 // //// //
 
-pub fn jpeg_encode(raw_image: RawImage, quality: u8, operations_before_encoding: Vec<ImageOperation>) -> ZeroCopyBuffer<Vec<u8>> {
+pub fn jpeg_encode(raw_image: RawImage, quality: u8, exif_tags: Vec<MomentoBoothExifTag>, operations_before_encoding: Vec<ImageOperation>) -> ZeroCopyBuffer<Vec<u8>> {
     let processed_image = image_processing::execute_operations(&raw_image, &operations_before_encoding);
-    jpeg::encode_raw_to_jpeg(processed_image, quality)
+    jpeg::encode_raw_to_jpeg(processed_image, quality, exif_tags)
 }
 
 pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOperation>) -> RawImage {

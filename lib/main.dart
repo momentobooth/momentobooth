@@ -6,17 +6,14 @@ import 'package:loggy/loggy.dart';
 import 'package:momento_booth/app/shell/shell.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-
-late PackageInfo packageInfo;
 
 void main() async {
   _ensureGPhoto2EnvironmentVariables();
 
   WidgetsFlutterBinding.ensureInitialized();
-
-  packageInfo = await PackageInfo.fromPlatform();
+  await initialize();
 
   Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 
