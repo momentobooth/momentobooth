@@ -13,9 +13,9 @@ derive_more = "0.99.17"
 atom_table = "1.1.0"
 flutter_rust_bridge = "=1.82.5"
 ffsend-api = "0.7.3"
-serde_json = "1.0.113"
-chrono = "0.4.33"
-image = { version = "0.24.8", features = ["rayon"] }
+serde_json = "1.0.114"
+chrono = "0.4.34"
+image = { version = "0.24.9", features = ["rayon"] }
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.4.11"
 jpeg-encoder = "0.6.0"
@@ -26,9 +26,11 @@ noise = "0.8.2"
 dashmap = "5.5.3"
 turborand = "0.10.1"
 pathsep = "0.1.1"
-tokio = "1.35.1"
+tokio = "1.36.0"
 gphoto2 = "3.2.3"
-ahash = "0.8.7"
+ahash = "0.8.10"
+img-parts = "0.3.0"
+little_exif = "0.3.1"
 
 [profile.dev]
 opt-level = 3
