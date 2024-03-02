@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -14,17 +12,21 @@ import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
+import 'package:window_manager/window_manager.dart';
 
 part 'shell.routes.dart';
 
 class Shell extends StatefulWidget {
+
   const Shell({super.key});
 
   @override
   State<Shell> createState() => _ShellState();
+
 }
 
-class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
+class _ShellState extends State<Shell> with UiLoggy, WindowListener {
+
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
     observers: [
@@ -35,8 +37,13 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
+
+    // This uses the window_manager package to listen for window close events,
+    // instead of WidgetsBindingObserver as it seems more reliable.
+    windowManager
+      ..addListener(this)
+      ..setPreventClose(true);
   }
 
   @override
@@ -67,13 +74,14 @@ class _ShellState extends State<Shell> with UiLoggy, WidgetsBindingObserver {
   @override
   void dispose() {
     _router.dispose();
-    WidgetsBinding.instance.removeObserver(this);
+    windowManager.removeListener(this);
     super.dispose();
   }
 
   @override
-  Future<AppExitResponse> didRequestAppExit() async {
+  Future<void> onWindowClose() async {
     await LiveViewManager.instance.gPhoto2Camera?.dispose();
-    return super.didRequestAppExit();
+    await windowManager.destroy();
   }
+
 }
