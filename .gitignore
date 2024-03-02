@@ -85,3 +85,6 @@ ci_build
 
 # Sentry
 .sentry-native/
+
+# Flatpak
+.flatpak-builder/

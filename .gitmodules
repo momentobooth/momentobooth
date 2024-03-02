@@ -1,3 +1,6 @@
 [submodule "windows/installer/InnoDependencyInstaller"]
 	path = windows/installer/InnoDependencyInstaller
 	url = https://github.com/DomGries/InnoDependencyInstaller
+[submodule "linux/packaging/flatpak/shared-modules"]
+	path = linux/packaging/flatpak/shared-modules
+	url = https://github.com/flathub/shared-modules.git
