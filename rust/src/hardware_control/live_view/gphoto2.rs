@@ -1,7 +1,7 @@
 use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, cell::Cell, time::{Duration, Instant}, hash::{Hash, Hasher}};
 
 use ahash::AHasher;
-use gphoto2::{Context, list::CameraDescriptor, widget::{TextWidget, RadioWidget}, Camera, Error, camera::CameraEvent};
+use gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidget, TextWidget, ToggleWidget}, Camera, Context, Error};
 
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
@@ -118,16 +118,16 @@ pub async fn auto_focus(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()
   let camera = camera_ref.lock().await;
   
   match camera.special_handling {
-    GPhoto2CameraSpecialHandling::None => {},
     GPhoto2CameraSpecialHandling::NikonGeneric | GPhoto2CameraSpecialHandling::NikonDSLR => {
+      // Non blocking autofocus
       let opcode = camera.camera.config_key::<TextWidget>("opcode").await?;
       opcode.set_value("0x90C1")?;
       camera.camera.set_config(&opcode).await?;
     },
-    GPhoto2CameraSpecialHandling::Sony => {
-      let opcode = camera.camera.config_key::<TextWidget>("opcode").await?;
-      opcode.set_value("0xD2C1")?;
-      camera.camera.set_config(&opcode).await?;
+    _ => {
+      // Potentially blocks live view for a moment
+      let widget = camera.camera.config_key::<ToggleWidget>("autofocusdrive").await?;
+      camera.camera.set_config(&widget).await?;
     },
   }
 
