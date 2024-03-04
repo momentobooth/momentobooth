@@ -28,7 +28,7 @@ turborand = "0.10.1"
 pathsep = "0.1.1"
 tokio = "1.36.0"
 gphoto2 = "3.2.3"
-ahash = "0.8.10"
+ahash = "0.8.11"
 img-parts = "0.3.0"
 little_exif = "0.3.1"
 
