@@ -307,6 +307,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onReturnToHomeTimeoutSecondsChanged(int? returnToHomeTimeoutSeconds) {
+    if (returnToHomeTimeoutSeconds != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(returnToHomeTimeoutSeconds: returnToHomeTimeoutSeconds));
+    }
+  }
+
   void onDisplayConfettiChanged(bool? displayConfetti) {
     if (displayConfetti != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(displayConfetti: displayConfetti));

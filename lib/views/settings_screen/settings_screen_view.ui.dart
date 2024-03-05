@@ -4,6 +4,13 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
   return FluentSettingsPage(
     title: "User interface",
     blocks: [
+      NumberInputCard(
+        icon: FluentIcons.timer,
+        title: "Return to home timeout",
+        subtitle: "The time in seconds before the app returns to the home screen. Set to 0 to disable.",
+        value: () => viewModel.returnToHomeTimeoutSeconds,
+        onFinishedEditing: controller.onReturnToHomeTimeoutSecondsChanged,
+      ),
       ComboBoxCard<Language>(
         icon: FluentIcons.locale_language,
         title: "Language",
