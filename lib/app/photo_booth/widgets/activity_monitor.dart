@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loggy/loggy.dart';
+import 'package:mobx/mobx.dart' hide Listener;
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
@@ -21,15 +22,15 @@ class ActivityMonitor extends StatefulWidget {
 
 class _ActivityMonitorState extends State<ActivityMonitor> with UiLoggy {
 
-  static const returnHomeTimeout = Duration(seconds: 45);
-  late Timer _returnHomeTimer;
+  Timer? _returnHomeTimer;
+  late ReactionDisposer _resetTimerReactionDisposer;
 
   @override
   void initState() {
     super.initState();
 
-    _returnHomeTimer = Timer(returnHomeTimeout, _goHome);
     widget.router.routerDelegate.addListener(_resetTimer);
+    _resetTimerReactionDisposer = autorun((_) => _resetTimer());
   }
 
   @override
@@ -50,20 +51,24 @@ class _ActivityMonitorState extends State<ActivityMonitor> with UiLoggy {
   }
 
   void _resetTimer() {
-    _returnHomeTimer.cancel();
-    _returnHomeTimer = Timer(returnHomeTimeout, _goHome);
+    _returnHomeTimer?.cancel();
+    int timeoutSeconds = SettingsManager.instance.settings.ui.returnToHomeTimeoutSeconds;
+    if (timeoutSeconds > 0) {
+      _returnHomeTimer = Timer(Duration(seconds: timeoutSeconds), _goHome);
+    }
   }
 
   void _goHome() {
     if (widget.router.currentLocation == StartScreen.defaultRoute) return;
-    loggy.debug("No activity in $returnHomeTimeout, returning to homescreen");
+    loggy.debug("Returning to homescreen because Home screen timeout was reached.");
     widget.router.go(StartScreen.defaultRoute);
   }
 
   @override
   void dispose() {
-    _returnHomeTimer.cancel();
+    _returnHomeTimer?.cancel();
     widget.router.routerDelegate.removeListener(_resetTimer);
+    _resetTimerReactionDisposer();
     super.dispose();
   }
 
