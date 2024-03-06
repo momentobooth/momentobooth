@@ -19,6 +19,13 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         value: () => viewModel.languageSetting,
         onChanged: controller.onLanguageChanged,
       ),
+      BooleanInputCard(
+        icon: FluentIcons.scroll_up_down,
+        title: "Allow scroll gesture with mouse",
+        subtitle: "If enabled, the touch scrolling gesture can be simulated using click and drag with a standard mouse. This might workaround Flutter touch gesture support on Linux also.",
+        value: () => viewModel.allowScrollGestureWithMouse,
+        onChanged: controller.onAllowScrollGestureWithMouseChanged,
+      ),
       FluentSettingsBlock(
         title: "Animations",
         settings: [
