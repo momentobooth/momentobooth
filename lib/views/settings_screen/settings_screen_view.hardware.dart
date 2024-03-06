@@ -26,7 +26,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
       ),
       ComboBoxCard(
         icon: FluentIcons.camera,
-        title: "Flip image",
+        title: "Flip image – Live View",
         subtitle: "Whether the live view image will be flipped horizontally or vertically.",
         items: viewModel.flipOptions,
         value: () => viewModel.liveViewFlipSetting,
@@ -34,7 +34,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
       ),
       ComboBoxCard(
         icon: FluentIcons.camera,
-        title: "Flip image",
+        title: "Flip image – Capture",
         subtitle: "Whether the captured image will be flipped horizontally or vertically.",
         items: viewModel.flipOptions,
         value: () => viewModel.captureFlipSetting,

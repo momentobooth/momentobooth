@@ -12,8 +12,8 @@ class LoadingDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16.0),
-      height: 125,
-      width: 300,
+      height: 200,
+      width: 400,
       decoration: ShapeDecoration(
         color: Colors.lightBlueAccent.withOpacity(0.75),
         shape: SmoothRectangleBorder(
@@ -34,7 +34,7 @@ class LoadingDialog extends StatelessWidget {
             child: Center(
               child: Text(
                 title,
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+                style: const TextStyle(color: Colors.white, fontSize: 22),
                 textAlign: TextAlign.center,
               ),
             ),

@@ -20,6 +20,7 @@ class RotateFlipCropContainer extends StatelessWidget {
     return SizedBox(
       width: aspectRatio,
       height: 1,
+      // Cover the aspect ratio and clip away the spills
       child: FittedBox(
         fit: BoxFit.cover,
         clipBehavior: Clip.hardEdge,
