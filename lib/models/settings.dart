@@ -147,6 +147,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(false) bool enableSfx,
     @Default("") String clickSfxFile,
     @Default("") String shareScreenSfxFile,
+    @Default(false) bool allowScrollGestureWithMouse,
     @Default(ScreenTransitionAnimation.fadeAndScale) ScreenTransitionAnimation screenTransitionAnimation,
     @Default(BackgroundBlur.textureBlur) BackgroundBlur backgroundBlur,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,

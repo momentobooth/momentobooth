@@ -16,6 +16,7 @@ import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view_background.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/set_scroll_configuration.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
@@ -52,21 +53,23 @@ class PhotoBoothState extends State<PhotoBooth> {
           router: _router,
           child: MomentoBoothTheme(
             data: MomentoBoothThemeData.defaults(),
-            child: Observer(
-              builder: (context) => WidgetsApp.router(
-                routerConfig: _router,
-                color: context.theme.primaryColor,
-                localizationsDelegates: const [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  FluentLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('en'), // English
-                  Locale('nl'), // Dutch
-                ],
-                locale: SettingsManager.instance.settings.ui.language.toLocale(),
+            child: SetScrollConfiguration(
+              child: Observer(
+                builder: (context) => WidgetsApp.router(
+                  routerConfig: _router,
+                  color: context.theme.primaryColor,
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    FluentLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en'), // English
+                    Locale('nl'), // Dutch
+                  ],
+                  locale: SettingsManager.instance.settings.ui.language.toLocale(),
+                ),
               ),
             ),
           ),

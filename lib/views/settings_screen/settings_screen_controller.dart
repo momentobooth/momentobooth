@@ -343,6 +343,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onAllowScrollGestureWithMouseChanged(bool? allowScrollGestureWithMouse) {
+    if (allowScrollGestureWithMouse != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(allowScrollGestureWithMouse: allowScrollGestureWithMouse));
+    }
+  }
+
   void onScreenTransitionAnimationChanged(ScreenTransitionAnimation? screenTransitionAnimation) {
     if (screenTransitionAnimation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(screenTransitionAnimation: screenTransitionAnimation));

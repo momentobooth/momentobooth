@@ -137,6 +137,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get clickSfxFileSetting => SettingsManager.instance.settings.ui.clickSfxFile;
   String get shareScreenSfxFileSetting => SettingsManager.instance.settings.ui.shareScreenSfxFile;
   Language get languageSetting => SettingsManager.instance.settings.ui.language;
+  bool get allowScrollGestureWithMouse => SettingsManager.instance.settings.ui.allowScrollGestureWithMouse;
   ScreenTransitionAnimation get screenTransitionAnimation => SettingsManager.instance.settings.ui.screenTransitionAnimation;
   BackgroundBlur get backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
   FilterQuality get screenTransitionAnimationFilterQuality => SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality;
