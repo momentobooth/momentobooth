@@ -11,22 +11,20 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/set_scroll_configuration.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:window_manager/window_manager.dart';
 
 part 'shell.routes.dart';
 
 class Shell extends StatefulWidget {
-
   const Shell({super.key});
 
   @override
   State<Shell> createState() => _ShellState();
-
 }
 
 class _ShellState extends State<Shell> with UiLoggy, WindowListener {
-
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
     observers: [
@@ -51,20 +49,23 @@ class _ShellState extends State<Shell> with UiLoggy, WindowListener {
     return FpsMonitor(
       child: ShellHotkeyMonitor(
         router: _router,
-        child: Observer(
-          builder: (context) => FluentApp.router(
-            routerConfig: _router,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              FluentLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'), // English
-              Locale('nl'), // Dutch
-            ],
-            locale: SettingsManager.instance.settings.ui.language.toLocale(),
+        child: SetScrollConfiguration(
+          child: Observer(
+            builder: (context) => FluentApp.router(
+              scrollBehavior: ScrollConfiguration.of(context),
+              routerConfig: _router,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                FluentLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en'), // English
+                Locale('nl'), // Dutch
+              ],
+              locale: SettingsManager.instance.settings.ui.language.toLocale(),
+            ),
           ),
         ),
       ),
@@ -83,5 +84,4 @@ class _ShellState extends State<Shell> with UiLoggy, WindowListener {
     await LiveViewManager.instance.gPhoto2Camera?.dispose();
     await windowManager.destroy();
   }
-
 }
