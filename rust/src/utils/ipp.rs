@@ -136,7 +136,6 @@ pub struct MyJobState {
     name: String,
     id: i32,
     state: JobState,
-    message: String,
     reason: String,
     created: DateTime<Utc>
 }
@@ -161,11 +160,13 @@ fn get_jobs_state(uri: String, job_id: i32) -> MyJobState {
 
     let creation_time = DateTime::from_timestamp_millis((attributes["time-at-creation"].value().as_integer().unwrap().clone() as i64) * 1000).unwrap();
 
+    // Not every job seems to have a name
+    let job_name = if attributes.get_key_value("job-name").is_some() { attributes["job-name"].value().to_string().clone() } else { "".to_string() };
+
     MyJobState {
-        name: attributes["job-name"].value().to_string().clone(),
+        name: job_name,
         id: attributes["job-id"].value().as_integer().unwrap().clone(),
         state: state,
-        message: attributes["job-printer-state-message"].value().to_string().clone(),
         reason: attributes["job-state-reasons"].value().to_string().clone(),
         created: creation_time,
     }
