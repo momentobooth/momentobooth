@@ -3,6 +3,7 @@ use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time:
 use chrono::Duration;
 use dashmap::DashMap;
 pub use ipp::model::PrinterState;
+pub use ipp::model::JobState;
 use ::nokhwa::CallbackCamera;
 use flutter_rust_bridge::{frb, StreamSink, ZeroCopyBuffer};
 use turborand::rng::Rng;
@@ -10,7 +11,7 @@ use turborand::rng::Rng;
 use tokio::sync::Mutex as AsyncMutex;
 use url::Url;
 
-use crate::{hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, log_debug, utils::{ffsend_client::{self, FfSendTransferProgress}, flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, ipp_client::{self, IppPrinterState}, jpeg::{self, MomentoBoothExifTag}}, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME};
+use crate::{hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, log_debug, utils::{ffsend_client::{self, FfSendTransferProgress}, flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, ipp_client::{self, IppPrinterState, PrintJobState}, jpeg::{self, MomentoBoothExifTag}}, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME};
 
 // ////////////// //
 // Initialization //
@@ -370,7 +371,7 @@ pub fn gphoto2_set_extra_file_callback(handle_id: usize, image_sink: StreamSink<
 // ////////// //
 
 fn cups_build_url(printer_id: String) -> String {
-    let base = Url::parse("http://localhost:631/printers/").unwrap();
+    let base = Url::parse("http://photobooth:photobooth@localhost:631/printers/").unwrap();
     base.join(&printer_id).unwrap().to_string()
 }
 
@@ -384,6 +385,11 @@ pub fn cups_resume_printer(printer_id: String) {
     ipp_client::resume_printer(uri);
 }
 
+pub fn cups_get_jobs_states(printer_id: String) -> Vec<PrintJobState> {
+    let uri = cups_build_url(printer_id);
+    ipp_client::get_jobs_states(uri)
+}
+
 // /////// //
 // Structs //
 // /////// //
@@ -393,6 +399,17 @@ pub enum _PrinterState {
     Idle = 3,
     Processing = 4,
     Stopped = 5,
+}
+
+#[frb(mirror(JobState))]
+pub enum _JobState {
+    Pending = 3,
+    PendingHeld = 4,
+    Processing = 5,
+    ProcessingStopped = 6,
+    Canceled = 7,
+    Aborted = 8,
+    Completed = 9,
 }
 
 #[derive(Clone)]
