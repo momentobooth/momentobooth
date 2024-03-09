@@ -1772,6 +1772,7 @@ dependencies = [
  "static_init",
  "tokio",
  "turborand",
+ "url 2.5.0",
  "zune-jpeg",
 ]
 

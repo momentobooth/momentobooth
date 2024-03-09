@@ -32,6 +32,7 @@ gphoto2 = "3.2.3"
 ahash = "0.8.10"
 img-parts = "0.3.0"
 little_exif = "0.3.1"
+url = "2.5.0"
 
 [profile.dev]
 opt-level = 3

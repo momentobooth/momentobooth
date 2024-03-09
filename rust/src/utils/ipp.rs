@@ -1,6 +1,5 @@
-use std::error::Error;
 use std::collections::HashMap;
-use chrono::{DateTime, NaiveDateTime, Utc};
+use chrono::{DateTime, Utc};
 
 use ipp::prelude::*;
 
@@ -62,40 +61,27 @@ fn send_ipp_job_request(uri: String, op: Operation, job_id: i32) -> IppRequestRe
     resp.unwrap()
 }
 
-fn resume_printer(uri: String) -> bool {
+pub fn resume_printer(uri: String) -> bool {
     send_ipp_request(uri, Operation::ResumePrinter).header().status_code().is_success()
 }
 
-fn purge_jobs(uri: String) -> bool {
+pub fn purge_jobs(uri: String) -> bool {
     send_ipp_request(uri, Operation::PurgeJobs).header().status_code().is_success()
 }
 
-fn restart_job(uri: String, job_id: i32) -> bool {
+pub fn restart_job(uri: String, job_id: i32) -> bool {
     send_ipp_job_request(uri, Operation::RestartJob, job_id).header().status_code().is_success()
 }
 
-fn release_job(uri: String, job_id: i32) -> bool {
+pub fn release_job(uri: String, job_id: i32) -> bool {
     send_ipp_job_request(uri, Operation::ReleaseJob, job_id).header().status_code().is_success()
 }
 
-fn cancel_job(uri: String, job_id: i32) -> bool {
+pub fn cancel_job(uri: String, job_id: i32) -> bool {
     send_ipp_job_request(uri, Operation::CancelJob, job_id).header().status_code().is_success()
 }
 
-#[derive(Debug)]
-pub struct MyPrinterState {
-    name: String,
-    state: PrinterState,
-    job_count: i32,
-    state_message: String,
-    state_reason: String
-}
-
-fn get_printer_state(uri: String) -> MyPrinterState {
-    // let uri_p: Uri = uri.parse().unwrap();
-    // let operation = IppOperationBuilder::get_printer_attributes(uri_p.clone()).build();
-    // let client = IppClient::new(uri_p);
-    // let resp = client.send(operation).unwrap();
+pub fn get_printer_state(uri: String) -> IppPrinterState {
     let resp = send_ipp_request(uri.clone(), Operation::GetPrinterAttributes);
 
     let group = resp.attributes().groups_of(DelimiterTag::PrinterAttributes).next().unwrap();
@@ -111,40 +97,23 @@ fn get_printer_state(uri: String) -> MyPrinterState {
     let name = attributes["printer-name"].value().to_string().clone();
     let state_reason = attributes["printer-state-reasons"].value().to_string().clone();
     //print_attributes(attributes);
-    MyPrinterState { name, state, job_count, state_message, state_reason }
+    IppPrinterState { name, state, job_count, state_message, state_reason }
 }
 
-fn get_jobs(uri: String) -> Vec<MyJobState> {
-    // let uri_p: Uri = uri.parse().unwrap();
-    // let operation = IppOperationBuilder::get_jobs(uri_p.clone()).build();
-    // let client = IppClient::new(uri_p);
-    // let resp = client.send(operation).unwrap();
+pub fn get_jobs_states(uri: String) -> Vec<PrintJobState> {
     let resp = send_ipp_request(uri.clone(), Operation::GetJobs);
-    let mut vec: Vec<MyJobState> = Vec::new();
+    let mut vec: Vec<PrintJobState> = Vec::new();
 
     for job in resp.attributes().groups_of(DelimiterTag::JobAttributes) {
         let job_id = job.attributes()["job-id"].value().as_integer().unwrap().clone();
-        vec.push(get_jobs_state(uri.clone(), job_id));
+        vec.push(get_job_state(uri.clone(), job_id));
     }
 
     // print_attributes(attributes);
     vec
 }
 
-#[derive(Debug)]
-pub struct MyJobState {
-    name: String,
-    id: i32,
-    state: JobState,
-    reason: String,
-    created: DateTime<Utc>
-}
-
-fn get_jobs_state(uri: String, job_id: i32) -> MyJobState {
-    // let uri_p: Uri = uri.parse().unwrap();
-    // let operation = IppOperationBuilder::get_job_attributes(uri_p.clone(), job_id).build();
-    // let client = IppClient::new(uri_p);
-    // let resp = client.send(operation).unwrap();
+fn get_job_state(uri: String, job_id: i32) -> PrintJobState {
     let resp = send_ipp_job_request(uri.clone(), Operation::GetJobAttributes, job_id);
 
     let group = resp.attributes().groups_of(DelimiterTag::JobAttributes).next().unwrap();
@@ -163,7 +132,7 @@ fn get_jobs_state(uri: String, job_id: i32) -> MyJobState {
     // Not every job seems to have a name
     let job_name = if attributes.get_key_value("job-name").is_some() { attributes["job-name"].value().to_string().clone() } else { "".to_string() };
 
-    MyJobState {
+    PrintJobState {
         name: job_name,
         id: attributes["job-id"].value().as_integer().unwrap().clone(),
         state: state,
@@ -176,4 +145,26 @@ fn print_attributes(attributes: HashMap<String, IppAttribute>) {
     for attribute in attributes {
         println!("Attribute {}: {:?}", attribute.0, attribute.1.value());
     }
+}
+
+// /////// //
+// Structs //
+// /////// //
+
+#[derive(Debug)]
+pub struct IppPrinterState {
+    name: String,
+    state: PrinterState,
+    job_count: i32,
+    state_message: String,
+    state_reason: String,
+}
+
+#[derive(Debug)]
+pub struct PrintJobState {
+    name: String,
+    id: i32,
+    state: JobState,
+    reason: String,
+    created: DateTime<Utc>,
 }
