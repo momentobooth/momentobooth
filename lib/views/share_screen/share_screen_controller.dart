@@ -5,18 +5,16 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/models/printer_issue_type.dart';
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/utils/hardware.dart';
+import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
-import 'package:momento_booth/views/custom_widgets/dialogs/printer_issue_dialog.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 
-class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with UiLoggy {
+class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with UiLoggy, PrinterStatusDialogMixin<ShareScreenViewModel> {
 
   // Initialization/Deinitialization
 
@@ -116,6 +114,8 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     viewModel.printText = success ? localizations.shareScreenPrinting : localizations.shareScreenPrintUnsuccesful;
     successfulPrints += success ? 1 : 0;
     Future.delayed(_printTextDuration, resetPrint);
+
+    await checkPrintersAndShowWarnings();
   }
 
 }

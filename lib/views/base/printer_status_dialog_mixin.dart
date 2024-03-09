@@ -4,10 +4,10 @@ import 'package:momento_booth/models/printer_issue_type.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/printer_issue_dialog.dart';
-import 'package:momento_booth/views/start_screen/start_screen_view_model.dart';
 
-mixin PrinterStatusDialogMixin<T extends StartScreenViewModelBase> on ScreenControllerBase<T>, UiLoggy {
+mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControllerBase<T>, UiLoggy {
 
   Future<void> checkPrintersAndShowWarnings() async {
     List<String> printerIds = SettingsManager.instance.settings.hardware.printerNames;
