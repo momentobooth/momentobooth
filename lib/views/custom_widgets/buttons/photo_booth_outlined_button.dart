@@ -1,0 +1,35 @@
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
+
+class PhotoBoothOutlinedButton extends StatelessWidget {
+
+  final String title;
+  final IconData? icon;
+  final VoidCallback? onPressed;
+
+  const PhotoBoothOutlinedButton({
+    super.key,
+    required this.title,
+    this.icon,
+    this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: context.theme.photoBoothDialogButtonStyle,
+      child: Row(
+        children: [
+          if (icon != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 12.0),
+              child: Icon(icon, size: 24.0),
+            ),
+          Text(title),
+        ],
+      ),
+    );
+  }
+
+}

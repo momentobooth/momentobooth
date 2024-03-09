@@ -41,31 +41,32 @@
     "shareScreenPrintUnsuccesful": "Afdrukken mislukt",
 
     "multiCaptureScreenPhotoCounter": "Foto {current}/{total}",
-    "@multiCaptureScreenPhotoCounter": {
-        "placeholders": {
-            "current": {
-                "type": "int"
-            },
-            "total": {
-                "type": "int"
-            }
-        }
-    },
     "multiCaptureScreenGetReady": "Maak je klaar",
     "multiCaptureScreenLookAtCamera": "Kijk naar 📷",
 
     "collageMakerScreenPicturesShotTitle": "Gemaakte foto's",
     "collageMakerScreenPhotoCounter": "{count} gekozen",
-    "@collageMakerScreenPhotoCounter": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
     "collageMakerScreenCollageTitle": "Collage",
 
     "manualCollageScreenSaving": "Opslaan...",
 
-    "photoCollageWidgetSelectPhotos": "Kies wat foto's :)"
+    "photoCollageWidgetSelectPhotos": "Kies wat foto's :)",
+
+    "printerErrorNoInkTitle": "Geen inkt",
+    "printerErrorNoInkBody1": "Printer {name} heeft gemeld dat de inkt op is.",
+    "printerErrorNoInkBody2": "Vervang de inktcartridge, bevestig met de 'OK' op de printer, klik daarna op 'Hervat wachtrij'.",
+    "printerErrorNoMediaTitle": "Geen papier",
+    "printerErrorNoMediaBody1": "Printer {name} heeft gemeld dat het papier op is.",
+    "printerErrorNoMediaBody2": "Plaats nieuw papier, bevestig met de 'OK' op de printer, klik daarna op 'Hervat wachtrij'.",
+    "printerErrorMediaJamTitle": "Papier vastgelopen",
+    "printerErrorMediaJamBody1": "Printer [{name}] heeft gemeld dat de papierdoorvoer vastgelopen is.",
+    "printerErrorMediaJamBody2": "Volg de instructies op het display van de printer om het papier te verwijderen, indien deze er zijn. Klik daarna op 'Hervat wachtrij'.",
+    "printerErrorConnectionErrorTitle": "Verbindingsprobleem",
+    "printerErrorConnectionErrorBody1": "Het afdruksysteem meldt dat de printer [{name}] niet langer is verbonden met de computer.",
+    "printerErrorConnectionErrorBody2": "Controleer de verbinding tussen de printer en de computer, klik daarna op 'Hervat wachtrij'.",
+    "printerErrorUnknownIssueTitle": "Onbekend printerprobleem",
+    "printerErrorUnknownIssueBody1": "Printer [{name}] heeft een probleem gemeld:\n\n{error}",
+    "printerErrorUnknownIssueBody2": "Volg de instructies op het display van de printer, indien die er zijn. Of controleer de systeeminstellingen voor meer informatie over de fout. Klik daarna op 'Hervat wachtrij'.",
+    "printerErrorIgnoreButton": "Negeer voor nu",
+    "printerErrorResumeQueueButton": "Hervat wachtrij"
 }

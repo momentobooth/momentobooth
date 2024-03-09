@@ -15,6 +15,7 @@ class MqttConnectionStateIndicator extends StatelessWidget {
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           child: Container(
+            key: ValueKey(manager.connectionState),
             width: 6,
             height: 6,
             decoration: BoxDecoration(
