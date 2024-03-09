@@ -3,12 +3,13 @@ use std::{sync::{Mutex, atomic::{AtomicUsize, Ordering, AtomicBool}, Arc}, time:
 use chrono::Duration;
 use dashmap::DashMap;
 use ::nokhwa::CallbackCamera;
-use flutter_rust_bridge::{StreamSink, ZeroCopyBuffer};
+use flutter_rust_bridge::{frb, StreamSink, ZeroCopyBuffer};
 use turborand::rng::Rng;
 
 use tokio::sync::Mutex as AsyncMutex;
+use url::Url;
 
-use crate::{hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, log_debug, utils::{ffsend_client::{self, FfSendTransferProgress}, flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg::{self, MomentoBoothExifTag}}, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME};
+use crate::{hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, log_debug, utils::{ffsend_client::{self, FfSendTransferProgress}, flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, ipp::{self, IppPrinterState}, jpeg::{self, MomentoBoothExifTag}}, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME};
 
 // ////////////// //
 // Initialization //
@@ -363,9 +364,37 @@ pub fn gphoto2_set_extra_file_callback(handle_id: usize, image_sink: StreamSink<
     })
 }
 
+// ////////// //
+// IPP (CUPS) //
+// ////////// //
+
+fn cups_build_url(printer_id: String) -> String {
+    let base = Url::parse("http://localhost:631/").unwrap();
+    let path_parts = ["printers", &printer_id];
+
+    base.join("printers").unwrap().join(&printer_id).unwrap().to_string()
+}
+
+pub fn cups_get_printer_state(printer_id: String) -> IppPrinterState {
+    let uri = cups_build_url(printer_id);
+    ipp::get_printer_state(uri)
+}
+
+pub fn cups_resume_printer(printer_id: String) {
+    let uri = cups_build_url(printer_id);
+    ipp::resume_printer(uri);
+}
+
 // /////// //
 // Structs //
 // /////// //
+
+#[frb(mirror(PrinterState))]
+pub enum _PrinterState {
+    Idle = 3,
+    Processing = 4,
+    Stopped = 5,
+}
 
 #[derive(Clone)]
 pub struct RawImage {
