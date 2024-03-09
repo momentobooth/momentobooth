@@ -153,18 +153,18 @@ fn print_attributes(attributes: HashMap<String, IppAttribute>) {
 
 #[derive(Debug)]
 pub struct IppPrinterState {
-    name: String,
-    state: PrinterState,
-    job_count: i32,
-    state_message: String,
-    state_reason: String,
+    pub name: String,
+    pub state: PrinterState,
+    pub job_count: i32,
+    pub state_message: String,
+    pub state_reason: String,
 }
 
 #[derive(Debug)]
 pub struct PrintJobState {
-    name: String,
-    id: i32,
-    state: JobState,
-    reason: String,
-    created: DateTime<Utc>,
+    pub name: String,
+    pub id: i32,
+    pub state: JobState,
+    pub reason: String,
+    pub created: DateTime<Utc>,
 }

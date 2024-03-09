@@ -113,6 +113,19 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     viewModel.printText = success ? localizations.shareScreenPrinting : localizations.shareScreenPrintUnsuccesful;
     successfulPrints += success ? 1 : 0;
     Future.delayed(_printTextDuration, resetPrint);
+
+    _checkPrinters();
+  }
+
+  void _checkPrinters() {
+    if (!Platform.isLinux) return;
+
+    List<String> printerIds = SettingsManager.instance.settings.hardware.printerNames;
+    for (var printerId in printerIds) {
+      rustLibraryApi.cupsGetPrinterState(printerId: printerId).then((state) {
+        loggy.debug("Printer $printerId state: $state");
+      });
+    }
   }
 
 }
