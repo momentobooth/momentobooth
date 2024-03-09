@@ -370,8 +370,8 @@ pub fn gphoto2_set_extra_file_callback(handle_id: usize, image_sink: StreamSink<
 // ////////// //
 
 fn cups_build_url(printer_id: String) -> String {
-    let base = Url::parse("http://localhost:631/").unwrap();
-    base.join("printers").unwrap().join(&printer_id).unwrap().to_string()
+    let base = Url::parse("http://localhost:631/printers/").unwrap();
+    base.join(&printer_id).unwrap().to_string()
 }
 
 pub fn cups_get_printer_state(printer_id: String) -> IppPrinterState {

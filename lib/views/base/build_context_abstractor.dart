@@ -19,8 +19,8 @@ mixin BuildContextAbstractor {
 
   AppLocalizations get localizations => AppLocalizations.of(_context)!;
 
-  void showUserDialog(Widget child) {
-    navigator.push(PhotoBoothDialogPage(
+  Future<void> showUserDialog(Widget child) async {
+    await navigator.push(PhotoBoothDialogPage(
       key: null,
       child: Padding(
         padding: const EdgeInsets.all(32),

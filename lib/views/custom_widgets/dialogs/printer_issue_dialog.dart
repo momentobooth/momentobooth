@@ -12,12 +12,14 @@ class PrinterIssueDialog extends StatelessWidget {
   final String printerName;
   final PrinterIssueType issueType;
   final String errorText;
+  final VoidCallback onResumeQueuePressed;
 
   const PrinterIssueDialog({
     super.key,
     required this.printerName,
     required this.issueType,
     required this.errorText,
+    required this.onResumeQueuePressed,
   });
 
   @override
@@ -60,6 +62,7 @@ class PrinterIssueDialog extends StatelessWidget {
           icon: FluentIcons.play_resume,
           onPressed: () {
             Navigator.of(context).pop();
+            onResumeQueuePressed();
           },
         ),
       ],

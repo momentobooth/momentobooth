@@ -9,6 +9,19 @@ enum PrinterIssueType {
   connectionError,
   other;
 
+  factory PrinterIssueType.fromPrinterState(String stateReason) {
+    List<String> reasons = stateReason.substring(1, stateReason.length - 1).split(",");
+    if (reasons.contains("media-empty")) {
+      return PrinterIssueType.noMedia;
+    } else if (reasons.contains("media-jam")) {
+      return PrinterIssueType.mediaJam;
+    } else if (reasons.contains("ink-empty")) {
+      return PrinterIssueType.noInk;
+    } else {
+      return PrinterIssueType.other;
+    }
+  }
+
   String getTitle(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
     return switch (this) {
@@ -40,6 +53,6 @@ enum PrinterIssueType {
       PrinterIssueType.connectionError => localizations.printerErrorConnectionErrorBody2,
       PrinterIssueType.other => localizations.printerErrorUnknownIssueBody2,
     };
-  }  
+  }
 
 }
