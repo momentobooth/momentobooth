@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
@@ -10,6 +12,8 @@ import 'package:momento_booth/views/custom_widgets/dialogs/printer_issue_dialog.
 mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControllerBase<T>, UiLoggy {
 
   Future<void> checkPrintersAndShowWarnings() async {
+    if (!Platform.isLinux) return;
+
     List<String> printerIds = SettingsManager.instance.settings.hardware.printerNames;
     for (var printerId in printerIds) {
       try {
@@ -30,11 +34,7 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
               },
             ),
           );
-        } else {
-          // If printer does not have any error, perhaps the print job is stuck
-          List<PrintJobState> printJobs = await rustLibraryApi.cupsGetJobsStates(printerId: printerId);
         }
-
       } catch (e) {
         loggy.debug("Failed to query printer [$printerId] with error: $e");
       }
