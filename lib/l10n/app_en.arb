@@ -41,6 +41,35 @@
     "shareScreenPrintUnsuccesful": "Print unsuccessful",
 
     "multiCaptureScreenPhotoCounter": "Photo {current}/{total}",
+    "multiCaptureScreenGetReady": "Get Ready",
+    "multiCaptureScreenLookAtCamera": "Look at 📷",
+
+    "collageMakerScreenPicturesShotTitle": "Pictures shot",
+    "collageMakerScreenPhotoCounter": "{count} chosen",
+    "collageMakerScreenCollageTitle": "Collage",
+
+    "manualCollageScreenSaving": "Saving...",
+
+    "photoCollageWidgetSelectPhotos": "Select some photos :)",
+
+    "printerErrorNoInkTitle": "No ink",
+    "printerErrorNoInkBody1": "Printer [{name}] reports that it ran out of ink.",
+    "printerErrorNoInkBody2": "Please replace the ink cartridge, confirm with the 'OK' button on the printer, then click 'Resume queue'.",
+    "printerErrorNoMediaTitle": "No paper",
+    "printerErrorNoMediaBody1": "Printer [{name}] reports that it ran out of paper.",
+    "printerErrorNoMediaBody2": "Please insert paper, confirm with the 'OK' button on the printer, then click 'Resume queue'.",
+    "printerErrorMediaJamTitle": "Paper jam",
+    "printerErrorMediaJamBody1": "Printer [{name}] reports that it has a paper jam.",
+    "printerErrorMediaJamBody2": "Please follow any instructions displayed by the printer, if any. When the issue is resolved, click 'Resume queue'.",
+    "printerErrorConnectionErrorTitle": "Connection error",
+    "printerErrorConnectionErrorBody1": "The printing system report that printer [{name}] is no longer connected to the computer.",
+    "printerErrorConnectionErrorBody2": "Please check the connection between the printer and the computer, then click 'Resume queue'.",
+    "printerErrorUnknownIssueTitle": "Unknown printer issue",
+    "printerErrorUnknownIssueBody1": "Printer [{name}] reports that it has an issue:\n\n{error}",
+    "printerErrorUnknownIssueBody2": "Please follow any instructions displayed by the printer or check system printing settings for more details. When the issue is resolved, click 'Resume queue'.",
+    "printerErrorIgnoreButton": "Ignore for now",
+    "printerErrorResumeQueueButton": "Resume queue",
+
     "@multiCaptureScreenPhotoCounter": {
         "placeholders": {
             "current": {
@@ -51,11 +80,6 @@
             }
         }
     },
-    "multiCaptureScreenGetReady": "Get Ready",
-    "multiCaptureScreenLookAtCamera": "Look at 📷",
-
-    "collageMakerScreenPicturesShotTitle": "Pictures shot",
-    "collageMakerScreenPhotoCounter": "{count} chosen",
     "@collageMakerScreenPhotoCounter": {
         "placeholders": {
             "count": {
@@ -63,9 +87,42 @@
             }
         }
     },
-    "collageMakerScreenCollageTitle": "Collage",
-
-    "manualCollageScreenSaving": "Saving...",
-
-    "photoCollageWidgetSelectPhotos": "Select some photos :)"
+    "@printerErrorNoInkBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorNoMediaBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorMediaJamBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorConnectionErrorBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorUnknownIssueBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            },
+            "error": {
+                "type": "String"
+            }
+        }
+    }
 }

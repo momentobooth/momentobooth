@@ -31,6 +31,7 @@ dependencies:
   texture_rgba_renderer:
     git: https://github.com/h3x4d3c1m4l/flutter_texture_rgba_renderer
   lottie: 3.1.0
+  font_awesome_flutter: 10.7.0
 
   # Printscreen/Image processing
   screenshot: 2.1.0

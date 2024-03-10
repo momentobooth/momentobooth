@@ -18,13 +18,16 @@ import 'package:window_manager/window_manager.dart';
 part 'shell.routes.dart';
 
 class Shell extends StatefulWidget {
+
   const Shell({super.key});
 
   @override
   State<Shell> createState() => _ShellState();
+
 }
 
 class _ShellState extends State<Shell> with UiLoggy, WindowListener {
+
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
     observers: [
@@ -84,4 +87,5 @@ class _ShellState extends State<Shell> with UiLoggy, WindowListener {
     await LiveViewManager.instance.gPhoto2Camera?.dispose();
     await windowManager.destroy();
   }
+
 }

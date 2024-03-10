@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:figma_squircle/figma_squircle.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'momento_booth_theme_data.freezed.dart';
@@ -25,6 +26,9 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
     required BorderRadius captureCounterContainerBorderRadius,
     required Color captureCounterContainerBackground,
     required BoxShadow captureCounterContainerShadow,
+
+    // PhotoBoothDialog
+    required ButtonStyle photoBoothDialogButtonStyle,
   }) = _MomentoBoothThemeData;
 
   factory MomentoBoothThemeData.defaults() => MomentoBoothThemeData(
@@ -91,7 +95,21 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
       color: Color(0x29000000),
       offset: Offset(0, 3),
       blurRadius: 16,
-    )
+    ),
+
+    // PhotoBoothDialog
+    photoBoothDialogButtonStyle: ButtonStyle(
+      textStyle: ButtonState.all(const TextStyle(fontSize: 16.0)),
+      padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 32.0, vertical: 18.0)),
+      shape: ButtonState.all(
+        SmoothRectangleBorder(
+          borderRadius: SmoothBorderRadius(
+            cornerRadius: 18,
+            cornerSmoothing: 2,
+          ),
+        ),
+      ),
+    ),
   );
 
 }

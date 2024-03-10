@@ -1,9 +1,10 @@
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
+import 'package:momento_booth/views/base/photo_booth_dialog_page.dart';
 
 mixin BuildContextAbstractor {
 
@@ -17,5 +18,16 @@ mixin BuildContextAbstractor {
   NavigatorState get rootNavigator => _context.rootNavigator;
 
   AppLocalizations get localizations => AppLocalizations.of(_context)!;
+
+  Future<void> showUserDialog(Widget child) async {
+    await navigator.push(PhotoBoothDialogPage(
+      key: null,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: child,
+      ),
+      barrierDismissible: true,
+    ).createRoute(_context));
+  }
 
 }
