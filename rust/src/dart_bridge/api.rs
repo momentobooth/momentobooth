@@ -208,6 +208,10 @@ pub fn jpeg_decode(jpeg_data: Vec<u8>, operations_after_decoding: Vec<ImageOpera
     image_processing::execute_operations(&image, &operations_after_decoding)
 }
 
+pub fn get_momento_booth_exif_tags_from_file(image_file_path: String) -> Vec<MomentoBoothExifTag> {
+    jpeg::get_momento_booth_exif_tags_from_file(&image_file_path)
+}
+
 // ///////////////////// //
 // RGBA image processing //
 // ///////////////////// //
