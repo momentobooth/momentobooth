@@ -4,10 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/manual_collage_screen/manual_collage_screen_view_model.dart';
+import 'package:path/path.dart' as path;
 import 'package:path/path.dart' hide context;
 
 class ManualCollageScreenController extends ScreenControllerBase<ManualCollageScreenViewModel> with UiLoggy {
@@ -84,7 +86,10 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
       file
         ..isSelected = true
         ..selectedIndex = index;
-      PhotosManager.instance.photos.add(await file.file.readAsBytes());
+      PhotosManager.instance.photos.add(PhotoCapture(
+        data: await file.file.readAsBytes(),
+        filename: path.basename(file.file.path),
+      ));
       PhotosManager.instance.chosen.add(index);
       viewModel.numSelected = index+1;
     }

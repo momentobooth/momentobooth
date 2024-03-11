@@ -125,7 +125,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       if (SettingsManager.instance.settings.singlePhotoIsCollage) {
         await captureCollage();
       } else {
-        PhotosManager.instance.outputImage = image;
+        PhotosManager.instance.outputImage = image.data;
         await PhotosManager.instance.writeOutput();
       }
     } catch (error) {

@@ -79,6 +79,7 @@ dependencies:
   dart_casing: 3.0.1
   package_info_plus: 5.0.1
   lemberfpsmonitor: 0.0.3+6
+  crypto: 3.0.3
 
 dev_dependencies:
   # MVC

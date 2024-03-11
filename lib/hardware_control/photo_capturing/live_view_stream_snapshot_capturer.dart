@@ -1,7 +1,7 @@
-import 'package:flutter/services.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
@@ -12,7 +12,7 @@ class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod with UiLoggy {
   Duration get captureDelay => const Duration(milliseconds: -17);
 
   @override
-  Future<Uint8List> captureAndGetPhoto() async {
+  Future<PhotoCapture> captureAndGetPhoto() async {
     final rawImage = await LiveViewManager.instance.currentLiveViewSource?.getLastFrame();
     final jpegData = await rustLibraryApi.jpegEncode(
       rawImage: rawImage!,
@@ -27,7 +27,10 @@ class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod with UiLoggy {
 
     await storePhotoSafe('liveview.jpg', jpegData);
 
-    return jpegData;
+    return PhotoCapture(
+      data: jpegData,
+      filename: 'liveview.jpg',
+    );
   }
   
   @override
