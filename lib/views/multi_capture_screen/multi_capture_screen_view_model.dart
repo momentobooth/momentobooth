@@ -18,6 +18,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
+import 'package:path/path.dart' as path;
 
 part 'multi_capture_screen_view_model.g.dart';
 
@@ -105,7 +106,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
       final errorFile = File('assets/bitmap/capture-error.png');
       PhotosManager.instance.photos.add(PhotoCapture(
         data: await errorFile.readAsBytes(),
-        fileName: errorFile.path,
+        filename: path.basename(errorFile.path),
       ));
     } finally {
       captureComplete = true;

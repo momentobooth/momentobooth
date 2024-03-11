@@ -29,7 +29,7 @@ class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod with UiLoggy {
 
     return PhotoCapture(
       data: jpegData,
-      fileName: 'liveview.jpg',
+      filename: 'liveview.jpg',
     );
   }
   

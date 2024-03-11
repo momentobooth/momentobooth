@@ -8,7 +8,7 @@ part 'photo_capture.freezed.dart';
 abstract class PhotoCapture with _$PhotoCapture {
 
   const factory PhotoCapture({
-    required String fileName,
+    required String filename,
     required Uint8List data,
   }) = _PhotoCapture;
 

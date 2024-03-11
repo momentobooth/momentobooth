@@ -7,7 +7,7 @@ part 'source_photo.g.dart';
 abstract class SourcePhoto with _$SourcePhoto {
 
   const factory SourcePhoto({
-    required String fileName,
+    required String filename,
     required String sha256,
   }) = _SourcePhoto;
 

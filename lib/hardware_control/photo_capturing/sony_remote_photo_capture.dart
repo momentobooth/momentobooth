@@ -7,6 +7,7 @@ import 'package:momento_booth/exceptions/photo_capture_exception.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 /// Capture method that captures an image by automating the Sony Imaging Edge Desktop application (Windows only).
@@ -43,7 +44,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
       loggy.debug('Photo found: ${file.path}');
       return PhotoCapture(
         data: img,
-        fileName: file.path,
+        filename: path.basename(file.path),
       );
     } on TimeoutException {
       throw PhotoCaptureException.fromImplementationRuntimeType('File not found within 5 seconds', this);

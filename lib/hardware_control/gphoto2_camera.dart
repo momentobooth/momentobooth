@@ -94,7 +94,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
     return PhotoCapture(
       data: capture.data,
-      fileName: capture.filename,
+      filename: capture.filename,
     );
   }
 

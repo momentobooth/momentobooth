@@ -376,7 +376,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         MomentoBoothExifTag.makerNote(jsonEncode(MakerNoteData(
           sourcePhotos: chosenPhotos.map(
             (photo) => SourcePhoto(
-              fileName: path.basename(photo.fileName),
+              filename: path.basename(photo.filename),
               sha256: sha256.convert(photo.data).toString(),
             ),
           ).toList(),
