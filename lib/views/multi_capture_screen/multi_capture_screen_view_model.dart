@@ -13,6 +13,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/capture_state.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
@@ -102,7 +103,10 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     } catch (error) {
       loggy.warning(error);
       final errorFile = File('assets/bitmap/capture-error.png');
-      PhotosManager.instance.photos.add(await errorFile.readAsBytes());
+      PhotosManager.instance.photos.add(PhotoCapture(
+        data: await errorFile.readAsBytes(),
+        fileName: errorFile.path,
+      ));
     } finally {
       captureComplete = true;
       navigateAfterCapture();

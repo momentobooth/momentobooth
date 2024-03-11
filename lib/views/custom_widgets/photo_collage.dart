@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart' hide Action, RawImage;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -13,13 +15,17 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/maker_note_data.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/source_photo.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/photo_container.dart';
+import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -88,8 +94,8 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   static const double gap = 20.0;
 
   ObservableList<int> get chosen => PhotosManager.instance.chosen;
-  ObservableList<Uint8List> get photos => PhotosManager.instance.photos;
-  Iterable<Uint8List> get chosenPhotos => PhotosManager.instance.chosenPhotos;
+  ObservableList<PhotoCapture> get photos => PhotosManager.instance.photos;
+  Iterable<PhotoCapture> get chosenPhotos => PhotosManager.instance.chosenPhotos;
   int get nChosen => widget.debug ?? chosen.length;
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   bool firstImageDecoded = false;
@@ -215,7 +221,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
 
   Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
     return widget.debug == null
-        ? PhotoContainer.memory(photos[chosen[index]], fit: fit, decodeCallback: decodeCallback)
+        ? PhotoContainer.memory(photos[chosen[index]].data, fit: fit, decodeCallback: decodeCallback)
         : PhotoContainer.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
   }
 
@@ -367,6 +373,14 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         const MomentoBoothExifTag.imageDescription("Photo collage created with MomentoBooth"),
         MomentoBoothExifTag.software(exifSoftwareName),
         MomentoBoothExifTag.createDate(DateTime.now()),
+        MomentoBoothExifTag.makerNote(jsonEncode(MakerNoteData(
+          sourcePhotos: chosenPhotos.map(
+            (photo) => SourcePhoto(
+              fileName: path.basename(photo.fileName),
+              sha256: sha256.convert(photo.data).toString(),
+            ),
+          ).toList(),
+        ).toJson())),
       ],
       operationsBeforeEncoding: operationsBeforeEncoding,
     );

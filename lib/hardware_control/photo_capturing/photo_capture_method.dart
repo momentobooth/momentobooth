@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:path/path.dart' as path;
 
 abstract class PhotoCaptureMethod {
@@ -12,7 +13,7 @@ abstract class PhotoCaptureMethod {
 
   Future<void> clearPreviousEvents();
 
-  Future<Uint8List> captureAndGetPhoto();
+  Future<PhotoCapture> captureAndGetPhoto();
 
   Future<void> storePhotoSafe(String filename, Uint8List fileData) async {
     if (SettingsManager.instance.settings.hardware.saveCapturesToDisk) {

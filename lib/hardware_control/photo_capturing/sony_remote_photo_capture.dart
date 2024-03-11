@@ -6,6 +6,7 @@ import 'package:loggy/loggy.dart';
 import 'package:momento_booth/exceptions/photo_capture_exception.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Capture method that captures an image by automating the Sony Imaging Edge Desktop application (Windows only).
@@ -35,19 +36,22 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
     unawaited(Process.run('autoit3.exe', ['/AutoIt3ExecuteScript', autoItScriptPath]));
   }
 
-  Future<Uint8List> _getPhoto() async {
+  Future<PhotoCapture> _getPhoto() async {
     try {
       final file = await waitForFile(directoryPath, ".jpg");
       final img = await file.readAsBytes();
       loggy.debug('Photo found: ${file.path}');
-      return img;
+      return PhotoCapture(
+        data: img,
+        fileName: file.path,
+      );
     } on TimeoutException {
       throw PhotoCaptureException.fromImplementationRuntimeType('File not found within 5 seconds', this);
     }
   }
 
   @override
-  Future<Uint8List> captureAndGetPhoto() {
+  Future<PhotoCapture> captureAndGetPhoto() {
     _capture();
     return _getPhoto();
   }
