@@ -25,7 +25,7 @@ dependencies:
   figma_squircle: 0.5.3
   flutter_scroll_shadow: 1.2.4
   flutter_layout_grid: 2.0.5
-  pretty_qr_code: 3.2.1
+  pretty_qr_code: 3.3.0
   confetti: 0.7.0
   wave: 0.2.2
   texture_rgba_renderer:
@@ -58,12 +58,12 @@ dependencies:
   path: ^1.8.3
   window_manager: 0.3.8
   file_selector: 1.0.3
-  win32: 5.2.0
+  win32: 5.3.0
 
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.16.1
+  sentry_flutter: 7.17.0
 
   # Sound output
   just_audio: 0.9.36
