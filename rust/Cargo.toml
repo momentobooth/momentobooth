@@ -15,7 +15,7 @@ flutter_rust_bridge = "=1.82.5"
 ffsend-api = "0.7.3"
 serde_json = "1.0.114"
 chrono = "0.4.35"
-image = { version = "0.24.9", features = ["rayon"] }
+image = { version = "0.25.0", features = ["rayon"] }
 ipp = "5.0.3"
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.4.11"
