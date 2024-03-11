@@ -25,7 +25,6 @@ import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/photo_container.dart';
-import 'package:path/path.dart' as path;
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -376,7 +375,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
         MomentoBoothExifTag.makerNote(jsonEncode(MakerNoteData(
           sourcePhotos: chosenPhotos.map(
             (photo) => SourcePhoto(
-              filename: path.basename(photo.filename),
+              filename: photo.filename,
               sha256: sha256.convert(photo.data).toString(),
             ),
           ).toList(),
