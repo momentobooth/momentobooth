@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 import 'package:path_provider/path_provider.dart';
@@ -35,7 +36,7 @@ enum CaptureMode {
 abstract class _PhotosManagerBase with Store {
 
   @observable
-  ObservableList<Uint8List> photos = ObservableList<Uint8List>();
+  ObservableList<PhotoCapture> photos = ObservableList<PhotoCapture>();
 
   @observable
   Uint8List? outputImage;
@@ -55,7 +56,7 @@ abstract class _PhotosManagerBase with Store {
 
   final String baseName = "MomentoBooth-image";
  
-  Iterable<Uint8List> get chosenPhotos => chosen.map((choice) => photos[choice]);
+  Iterable<PhotoCapture> get chosenPhotos => chosen.map((choice) => photos[choice]);
 
   @action
   void reset({bool advance = true}) {

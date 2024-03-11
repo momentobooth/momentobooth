@@ -107,7 +107,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                   SizedBox.expand(
                     child: AspectRatio(
                       aspectRatio: SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio,
-                      child: PhotoContainer.memory(PhotosManager.instance.photos[i]),
+                      child: PhotoContainer.memory(PhotosManager.instance.photos[i].data),
                     ),
                   ),
                   AnimatedOpacity(

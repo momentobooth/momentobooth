@@ -74,7 +74,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: AspectRatio(
                 aspectRatio: viewModel.aspectRatio,
-                child: PhotoContainer.memory(PhotosManager.instance.photos[i]),
+                child: PhotoContainer.memory(PhotosManager.instance.photos[i].data),
               ),
             ),
           ),

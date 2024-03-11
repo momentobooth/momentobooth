@@ -1,6 +1,5 @@
 
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/exceptions/gphoto2_exception.dart';
@@ -8,6 +7,7 @@ import 'package:momento_booth/hardware_control/live_view_streaming/live_view_sou
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/rust_bridge/library_api.generated.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 
@@ -84,7 +84,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   }
 
   @override
-  Future<Uint8List> captureAndGetPhoto() async {
+  Future<PhotoCapture> captureAndGetPhoto() async {
     await _ensureLibraryInitialized();
     String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
     var capture = await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
@@ -92,7 +92,10 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     
     unawaited(clearPreviousEvents());
 
-    return capture.data;
+    return PhotoCapture(
+      data: capture.data,
+      filename: capture.filename,
+    );
   }
 
   @override
