@@ -1,6 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
@@ -27,12 +29,12 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
             crossAxisSpacing: 20,
             crossAxisCount: 4,
             children: [
-              for (var file in viewModel.fileList)
+              for (GalleryImage image in viewModel.imageGroups?.values.flattened ?? [])
                 GestureDetector(
-                  onTap: () => controller.openPhoto(file),
+                  onTap: () => controller.openPhoto(image.file),
                   child: AnimatedBoxDecorationHero(
-                    tag: file.path,
-                    child: ImageWithLoaderFallback.file(file, fit: BoxFit.contain),
+                    tag: image.file.path,
+                    child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
                   ),
                 ),
             ],
