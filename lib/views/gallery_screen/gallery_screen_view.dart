@@ -29,7 +29,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
             crossAxisSpacing: 20,
             crossAxisCount: 4,
             children: [
-              for (GalleryImage image in viewModel.imageGroups?.values.flattened ?? [])
+              for (GalleryImage image in viewModel.imageGroups?.map((group) => group.images).flattened ?? [])
                 GestureDetector(
                   onTap: () => controller.openPhoto(image.file),
                   child: AnimatedBoxDecorationHero(

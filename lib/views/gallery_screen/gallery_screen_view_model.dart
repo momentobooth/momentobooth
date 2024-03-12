@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/rust_bridge/library_bridge.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
@@ -25,7 +26,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   String get baseName => PhotosManager.instance.baseName;
   
   @readonly
-  Map<DateTime?, List<GalleryImage>>? _imageGroups;
+  List<GalleryGroup>? _imageGroups;
 
   @action
   Future<void> findImages() async {
@@ -43,13 +44,22 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
     }
 
     // Group images and sort within groups
-    Map<DateTime?, List<GalleryImage>> imageGroups = imagesWithExif.groupListsBy((image) => image.createdDate != null ? DateTime(
-      image.createdDate!.year,
-      image.createdDate!.month,
-      image.createdDate!.day,
-      image.createdDate!.hour,
-    ) : null);
-    imageGroups.values.map((imageList) => imageList.sort((a, b) => (a.createdDate ?? DateTime(1970)).compareTo(b.createdDate ?? DateTime(1970))));
+    List<GalleryGroup> imageGroups = imagesWithExif
+        .groupListsBy((image) => image.createdDate != null
+            ? DateTime(
+                image.createdDate!.year,
+                image.createdDate!.month,
+                image.createdDate!.day,
+                image.createdDate!.hour,
+              )
+            : null)
+        .entries
+        .map((entry) => GalleryGroup(
+            createdDayAndHour: entry.key,
+            images: entry.value
+              ..sort((a, b) => (b.createdDate ?? DateTime(1970)).compareTo(a.createdDate ?? DateTime(1970)))))
+        .toList()
+      ..sort((a, b) => (b.createdDayAndHour ?? DateTime(1970)).compareTo(a.createdDayAndHour ?? DateTime(1970)));
 
     _imageGroups = imageGroups;
   }
