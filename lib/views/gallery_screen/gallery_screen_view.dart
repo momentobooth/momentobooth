@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
@@ -23,21 +24,32 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
       clipBehavior: Clip.none,
       children: [
         Observer(
-          builder: (context) => GridView.count(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
-            crossAxisCount: 4,
-            children: [
-              for (GalleryImage image in viewModel.imageGroups?.map((group) => group.images).flattened ?? [])
-                GestureDetector(
-                  onTap: () => controller.openPhoto(image.file),
-                  child: AnimatedBoxDecorationHero(
-                    tag: image.file.path,
-                    child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+          builder: (context) => DraggableScrollbar.semicircle(
+            controller: viewModel.myScrollController,
+            labelTextBuilder: (offset) {
+              final int currentItem = viewModel.myScrollController.hasClients
+                  ? (viewModel.myScrollController.offset / viewModel.myScrollController.position.maxScrollExtent * 100).floor()
+                  : 0;
+
+              return Text("$currentItem");
+            },
+            child: GridView.count(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              crossAxisCount: 4,
+              controller: viewModel.myScrollController,
+              children: [
+                for (GalleryImage image in viewModel.imageGroups?.map((group) => group.images).flattened ?? [])
+                  GestureDetector(
+                    onTap: () => controller.openPhoto(image.file),
+                    child: AnimatedBoxDecorationHero(
+                      tag: image.file.path,
+                      child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+                    ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
         Padding(
