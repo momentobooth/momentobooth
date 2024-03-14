@@ -41,19 +41,16 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                 slivers: [
                   for (GalleryGroup group in viewModel.imageGroups ?? [])
                     SliverMainAxisGroup(slivers: [
-                      SliverIgnorePointer(
-                        sliver: SliverAppBar(
-                          pinned: true,
-                          toolbarHeight: 100,
-                          backgroundColor: Colors.transparent,
-                          surfaceTintColor: Colors.transparent,
-                          automaticallyImplyLeading: false,
-                          title: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: Text(
-                              viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
-                              style: theme.subTitleStyle,
-                            ),
+                      SliverAppBar(
+                        pinned: true,
+                        toolbarHeight: 100,
+                        forceMaterialTransparency: true,
+                        automaticallyImplyLeading: false,
+                        title: Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          child: Text(
+                            viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
+                            style: theme.subTitleStyle,
                           ),
                         ),
                       ),
