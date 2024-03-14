@@ -1,10 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:collection/collection.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
@@ -44,16 +41,24 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                 slivers: [
                   for (GalleryGroup group in viewModel.imageGroups ?? [])
                     SliverMainAxisGroup(slivers: [
-                      SliverAppBar(
-                        pinned: true,
-                        backgroundColor: Color.fromARGB(0, 0, 0, 0),
-                        title: Text(
-                          viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
-                          style: TextStyle(fontSize: 50, color: Color.fromARGB(255, 255, 255, 255)),
+                      SliverIgnorePointer(
+                        sliver: SliverAppBar(
+                          pinned: true,
+                          toolbarHeight: 100,
+                          backgroundColor: Colors.transparent,
+                          surfaceTintColor: Colors.transparent,
+                          automaticallyImplyLeading: false,
+                          title: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Text(
+                              viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
+                              style: theme.subTitleStyle,
+                            ),
+                          ),
                         ),
                       ),
                       SliverPadding(
-                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                         sliver: SliverGrid.count(
                           mainAxisSpacing: 20,
                           crossAxisSpacing: 20,

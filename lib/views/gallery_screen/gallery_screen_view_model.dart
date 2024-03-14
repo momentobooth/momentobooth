@@ -26,7 +26,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
 
   ScrollController myScrollController = ScrollController();
   
-  final DateFormat formatter = DateFormat.Hm();
+  final DateFormat formatter = DateFormat("MMM dd – HH:mm");
 
   Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   String get baseName => PhotosManager.instance.baseName;
