@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -24,6 +25,8 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   }
 
   ScrollController myScrollController = ScrollController();
+  
+  final DateFormat formatter = DateFormat.Hm();
 
   Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   String get baseName => PhotosManager.instance.baseName;

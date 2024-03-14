@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -25,42 +26,53 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Observer(
-          builder: (context) => DraggableScrollbar.semicircle(
-            controller: viewModel.myScrollController,
-            labelTextBuilder: (offset) {
-              final int currentItem = viewModel.myScrollController.hasClients
-                  ? (viewModel.myScrollController.offset / viewModel.myScrollController.position.maxScrollExtent * 100).floor()
-                  : 0;
-
-              return Text("$currentItem");
-            },
-            child: CustomScrollView(
+        ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: Observer(
+            builder: (context) => DraggableScrollbar.semicircle(
+              alwaysVisibleScrollThumb: true,
               controller: viewModel.myScrollController,
-              slivers: [
-                for (GalleryGroup group in viewModel.imageGroups ?? [])
-                  SliverMainAxisGroup(slivers: [
-                    SliverAppBar(
-                      pinned: true,
-                      title: Text("${group.createdDayAndHour}"),
-                    ),
-                    SliverGrid.count(
-                      mainAxisSpacing: 20,
-                      crossAxisSpacing: 20,
-                      crossAxisCount: 4,
-                      children: [
-                        for (GalleryImage image in group.images)
-                          GestureDetector(
-                            onTap: () => controller.openPhoto(image.file),
-                            child: AnimatedBoxDecorationHero(
-                              tag: image.file.path,
-                              child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
-                            ),
-                          ),
-                      ],
-                    )
-                  ]),
-              ],
+              labelTextBuilder: (offset) {
+                final int currentItem = viewModel.myScrollController.hasClients
+                    ? (viewModel.myScrollController.offset / viewModel.myScrollController.position.maxScrollExtent * 100).floor()
+                    : 0;
+          
+                return Text("$currentItem");
+              },
+              child: CustomScrollView(
+                controller: viewModel.myScrollController,
+                slivers: [
+                  for (GalleryGroup group in viewModel.imageGroups ?? [])
+                    SliverMainAxisGroup(slivers: [
+                      SliverAppBar(
+                        pinned: true,
+                        backgroundColor: Color.fromARGB(0, 0, 0, 0),
+                        title: Text(
+                          viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
+                          style: TextStyle(fontSize: 50, color: Color.fromARGB(255, 255, 255, 255)),
+                        ),
+                      ),
+                      SliverPadding(
+                        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                        sliver: SliverGrid.count(
+                          mainAxisSpacing: 20,
+                          crossAxisSpacing: 20,
+                          crossAxisCount: 4,
+                          children: [
+                            for (GalleryImage image in group.images)
+                              GestureDetector(
+                                onTap: () => controller.openPhoto(image.file),
+                                child: AnimatedBoxDecorationHero(
+                                  tag: image.file.path,
+                                  child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+                                ),
+                              ),
+                          ],
+                        ),
+                      )
+                    ]),
+                ],
+              ),
             ),
           ),
         ),
