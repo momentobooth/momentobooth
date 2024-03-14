@@ -1,8 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
@@ -33,21 +35,31 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
 
               return Text("$currentItem");
             },
-            child: GridView.count(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              crossAxisCount: 4,
+            child: CustomScrollView(
               controller: viewModel.myScrollController,
-              children: [
-                for (GalleryImage image in viewModel.imageGroups?.map((group) => group.images).flattened ?? [])
-                  GestureDetector(
-                    onTap: () => controller.openPhoto(image.file),
-                    child: AnimatedBoxDecorationHero(
-                      tag: image.file.path,
-                      child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+              slivers: [
+                for (GalleryGroup group in viewModel.imageGroups ?? [])
+                  SliverMainAxisGroup(slivers: [
+                    SliverAppBar(
+                      pinned: true,
+                      title: Text("${group.createdDayAndHour}"),
                     ),
-                  ),
+                    SliverGrid.count(
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 20,
+                      crossAxisCount: 4,
+                      children: [
+                        for (GalleryImage image in group.images)
+                          GestureDetector(
+                            onTap: () => controller.openPhoto(image.file),
+                            child: AnimatedBoxDecorationHero(
+                              tag: image.file.path,
+                              child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+                            ),
+                          ),
+                      ],
+                    )
+                  ]),
               ],
             ),
           ),
