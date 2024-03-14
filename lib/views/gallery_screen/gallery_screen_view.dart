@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/models/gallery_group.dart';
@@ -18,6 +21,9 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
     required super.contextAccessor,
   });
   
+  static double groupHeaderHeight = 100;
+  static int imagesPerRow = 4;
+  
   @override
   Widget get body {
     return Stack(
@@ -29,12 +35,26 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
             builder: (context) => MomentoDraggableScrollbar.semicircle(
               alwaysVisibleScrollThumb: true,
               controller: viewModel.myScrollController,
+              labelConstraints: const BoxConstraints(maxWidth: 200, maxHeight: 50),
               labelTextBuilder: (offset) {
-                final int currentItem = viewModel.myScrollController.hasClients
-                    ? (viewModel.myScrollController.offset / viewModel.myScrollController.position.maxScrollExtent * 100).floor()
-                    : 0;
+                final int numGroups = viewModel.imageGroups?.length ?? 0;
+                final List<int> groupImageNums = viewModel.imageGroups?.map((group) => group.images.length).toList() ?? [];
+                final List<DateTime> timeslots = viewModel.imageGroups?.map((group) => group.createdDayAndHour ?? DateTime(1970)).toList() ?? [];
+                final groupRows = groupImageNums.map((e) => (e / 4).ceil());
+                final double screenHeight = viewModel.myScrollController.position.viewportDimension;
+
+                final double groupHeaderHeightCompensated = groupHeaderHeight + 50.0;
+                // We need to compensate for the screenheight twice because of the way that the comparison is implemented.
+                final double pageLength = viewModel.myScrollController.position.maxScrollExtent + 2*screenHeight;
+                final double rowHeight = (pageLength - (numGroups * groupHeaderHeightCompensated)) / groupRows.sum;
+                final sectionLengths = groupRows.map((element) => element*rowHeight + groupHeaderHeightCompensated).toList();
+
+                int currentIndex = 0;
+                double currentLength = 0;
+                for (; offset > currentLength; currentIndex++) { currentLength += sectionLengths[currentIndex]; }
+                currentIndex = max(currentIndex-1, 0);
           
-                return Text("$currentItem");
+                return Text(viewModel.formatter.format(timeslots[currentIndex]), style: const TextStyle(fontSize: 22),);
               },
               child: CustomScrollView(
                 controller: viewModel.myScrollController,
@@ -43,7 +63,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                     SliverMainAxisGroup(slivers: [
                       SliverAppBar(
                         pinned: true,
-                        toolbarHeight: 100,
+                        toolbarHeight: groupHeaderHeight,
                         forceMaterialTransparency: true,
                         automaticallyImplyLeading: false,
                         title: Padding(
@@ -59,7 +79,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                         sliver: SliverGrid.count(
                           mainAxisSpacing: 20,
                           crossAxisSpacing: 20,
-                          crossAxisCount: 4,
+                          crossAxisCount: imagesPerRow,
                           children: [
                             for (GalleryImage image in group.images)
                               GestureDetector(
