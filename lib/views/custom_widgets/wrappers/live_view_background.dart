@@ -38,7 +38,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
     widget.router.routerDelegate.addListener(_routerListener);
   }
 
-  void _routerListener() => setState(() {});
+  void _routerListener() => WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
 
   @override
   Widget build(BuildContext context) {
