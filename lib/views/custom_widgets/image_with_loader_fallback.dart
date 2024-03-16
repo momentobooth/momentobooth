@@ -5,7 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 
 enum _Type { memory, file }
 
-class ImageWithLoaderFallback extends StatelessWidget {
+class ImageWithLoaderFallback extends StatefulWidget {
 
   final Uint8List? bytes;
   final File? file;
@@ -21,33 +21,49 @@ class ImageWithLoaderFallback extends StatelessWidget {
       : _type = _Type.file,
         bytes = null;
 
+  @override
+  State<ImageWithLoaderFallback> createState() => _ImageWithLoaderFallbackState();
+
+}
+
+class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
+
+  late Image _imageWidget;
+  late ImageStream _imageStream;
+  late ImageStreamListener _listener;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _imageWidget = widget._type == _Type.memory ?
+      Image.memory(
+        widget.bytes!,
+        frameBuilder: _frameBuilder,
+        fit: widget.fit,
+      ) :
+      Image.file(
+        widget.file!,
+        frameBuilder: _frameBuilder,
+        fit: widget.fit,
+      );
+
+    _listener = ImageStreamListener((image, synchronousCall) => widget.decodeCallback?.call());
+    _imageStream = _imageWidget.image.resolve(ImageConfiguration.empty);
+    _imageStream.addListener(_listener);
+  }
+
   Widget _frameBuilder(BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
-    if (frame == null) {
-      return const Center(child: ProgressRing());
-    }
-    return child;
+    return frame != null ? child : const Center(child: ProgressRing());
   }
 
   @override
-  Widget build(BuildContext context) {
-    Image img = _type == _Type.memory ?
-      Image.memory(
-        bytes!,
-        frameBuilder: _frameBuilder,
-        fit: fit,
-      ) :
-      Image.file(
-        file!,
-        frameBuilder: _frameBuilder,
-        fit: fit,
-      );
+  Widget build(BuildContext context) => _imageWidget;
 
-    // Listen to decode status
-    img.image
-        .resolve(ImageConfiguration.empty)
-        .addListener(ImageStreamListener((image, synchronousCall) => decodeCallback?.call()));
-
-    return img;
+  @override
+  void dispose() {
+    _imageStream.removeListener(_listener);
+    super.dispose();
   }
 
 }
