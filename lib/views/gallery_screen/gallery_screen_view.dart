@@ -7,9 +7,9 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/custom_widgets/draggable_scrollbar_override.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
-import 'package:momento_booth/views/gallery_screen/draggable_scrollbar_override.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_controller.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_view_model.dart';
 
@@ -52,9 +52,9 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                 int currentIndex = 0;
                 double currentLength = 0;
                 for (; offset > currentLength; currentIndex++) { currentLength += sectionLengths[currentIndex]; }
-                currentIndex = max(currentIndex-1, 0);
+                currentIndex = max(currentIndex - 1, 0);
           
-                return Text(viewModel.formatter.format(timeslots[currentIndex]), style: const TextStyle(fontSize: 22),);
+                return Text(viewModel.formatter.format(timeslots[currentIndex]), style: const TextStyle(fontSize: 22));
               },
               child: CustomScrollView(
                 controller: viewModel.myScrollController,
