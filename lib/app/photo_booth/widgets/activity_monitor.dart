@@ -35,10 +35,17 @@ class _ActivityMonitorState extends State<ActivityMonitor> with UiLoggy {
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      behavior: HitTestBehavior.translucent,
-      onPointerDown: (_) => _onActivity(isTap: true),
-      child: widget.child,
+    return Focus(
+      onKeyEvent: (node, event) {
+        _onActivity(isTap: false);
+        return KeyEventResult.ignored;
+      },
+      child: Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerDown: (_) => _onActivity(isTap: true),
+        onPointerSignal: (_) => _onActivity(isTap: false), // This handles scrolling.
+        child: widget.child,
+      ),
     );
   }
 

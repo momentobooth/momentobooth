@@ -1,23 +1,44 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:go_router/go_router.dart';
+import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/views/base/stateless_widget_base.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
+import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
 
-class LiveViewBackground extends StatelessWidgetBase {
+class LiveViewBackground extends StatefulWidget {
 
+  final GoRouter router;
   final Widget child;
 
   const LiveViewBackground({
     super.key,
+    required this.router,
     required this.child,
   });
 
-  bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground;
+  @override
+  State<LiveViewBackground> createState() => _LiveViewBackgroundState();
+
+}
+
+class _LiveViewBackgroundState extends State<LiveViewBackground> {
+
+  bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground && widget.router.currentLocation != GalleryScreen.defaultRoute;
+
   BackgroundBlur get _backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
+
   LiveViewState get _liveViewState => LiveViewManager.instance.liveViewState;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.router.routerDelegate.addListener(_routerListener);
+  }
+
+  void _routerListener() => WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +47,7 @@ class LiveViewBackground extends StatelessWidgetBase {
       fit: StackFit.expand,
       children: [
         _viewState,
-        child,
+        widget.child,
         _statusOverlay,
       ],
     );
@@ -107,6 +128,12 @@ class LiveViewBackground extends StatelessWidgetBase {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    widget.router.routerDelegate.removeListener(_routerListener);
+    super.dispose();
   }
 
 }

@@ -1,13 +1,14 @@
-use std::path::Path;
+use std::fs::File;
 
 use flutter_rust_bridge::ZeroCopyBuffer;
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
-use little_exif::{exif_tag::{ExifTag, ExifTagGroup}, filetype::FileExtension, metadata::Metadata};
+use little_exif::{exif_tag::ExifTagGroup, filetype::FileExtension, metadata::Metadata};
 use num::FromPrimitive;
 use num_derive::FromPrimitive;
 use zune_jpeg::{JpegDecoder, zune_core::{options::DecoderOptions, colorspace::ColorSpace}};
-use chrono::{DateTime, Local, NaiveDateTime, TimeZone};
+use chrono::{DateTime, Local};
+use nom_exif::ExifTag::{*};
 
 use crate::dart_bridge::api::RawImage;
 
@@ -51,56 +52,90 @@ pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
 // EXIF //
 // //// //
 
+// Note about implementation:
+// This currently uses two different libraries for reading and writing EXIF data.
+
+// This is because the `little-exif` library is used for creating the EXIF data (in combination with img_parts for adding it to the JPEG data),
+// however `little-exif` does not correctly read the EXIF data back as of version 0.3.1.
+
+// The `nom-exif` library is used for reading the EXIF data, but it does not support writing EXIF data.
+// Once `little-exif` supports reading EXIF data, the `nom-exif` library can be removed.
+
+const TAGS: &[nom_exif::ExifTag] = &[
+    Orientation,
+    CreateDate,
+    ImageDescription,
+    Software,
+    MakerNote,
+];
+
 pub fn get_momento_booth_exif_tags_from_file(image_file_path: &str) -> Vec<MomentoBoothExifTag> {
-    let image_path = Path::new(image_file_path);
-    let metadata = Metadata::new_from_path(&image_path).unwrap();
+    let mut reader = File::open(image_file_path).unwrap();
+    let exif = nom_exif::parse_jpeg_exif(&mut reader).unwrap();
 
-    let mut exif_tags: Vec<MomentoBoothExifTag> = Vec::new();
-    for tag in metadata.data() {
-        match MomentoBoothExifTag::try_from(tag) {
-            Ok(tag) => exif_tags.push(tag),
-            Err(_) => (),
+    let exif_tags = exif.unwrap().get_values(TAGS);
+
+    exif_tags.iter().map(|(tag, value)| {
+        match tag {
+            nom_exif::ExifTag::ImageDescription => MomentoBoothExifTag::ImageDescription(match value {
+                nom_exif::EntryValue::Text(value) => value.clone(),
+                _ => panic!("Invalid value type for ImageDescription"),
+            }),
+            nom_exif::ExifTag::Software => MomentoBoothExifTag::Software(match value {
+                nom_exif::EntryValue::Text(value) => value.clone(),
+                _ => panic!("Invalid value type for Software"),
+            }),
+            nom_exif::ExifTag::CreateDate => MomentoBoothExifTag::CreateDate(match value {
+                nom_exif::EntryValue::Time(value) => value.with_timezone(&Local).clone(),
+                _ => panic!("Invalid value type for CreateDate"),
+            }),
+            nom_exif::ExifTag::Orientation => MomentoBoothExifTag::Orientation(match value {
+                nom_exif::EntryValue::U16(value) => ExifOrientation::from_u16(value.clone()).unwrap(),
+                _ => panic!("Invalid value type for Orientation"),
+            }),
+            nom_exif::ExifTag::MakerNote => MomentoBoothExifTag::MakerNote(match value {
+                nom_exif::EntryValue::Text(value) => value.clone(),
+                _ => panic!("Invalid value type for MakerNote"),
+            }),
+            _ => panic!("Unknown tag"),
         }
-    };
-
-    exif_tags
+    }).collect()
 }
 
-impl From<MomentoBoothExifTag> for ExifTag {
-    fn from(tag: MomentoBoothExifTag) -> ExifTag {
+impl From<MomentoBoothExifTag> for little_exif::exif_tag::ExifTag {
+    fn from(tag: MomentoBoothExifTag) -> little_exif::exif_tag::ExifTag {
         match tag {
-            MomentoBoothExifTag::ImageDescription(value) => ExifTag::ImageDescription(value),
-            MomentoBoothExifTag::Software(value) => ExifTag::Software(value),
-            MomentoBoothExifTag::CreateDate(value) => ExifTag::CreateDate(value.to_utc().format("%Y:%m:%d %H:%M:%S").to_string()),
-            MomentoBoothExifTag::Orientation(value) => ExifTag::Orientation(vec!(value as u16)),
-            MomentoBoothExifTag::ImageHistory(value) => ExifTag::UnknownSTRING(value, 0x9213, ExifTagGroup::IFD0),
-            MomentoBoothExifTag::MakerNote(value) => ExifTag::UnknownSTRING(value, 0x927C, ExifTagGroup::ExifIFD),
+            MomentoBoothExifTag::ImageDescription(value) => little_exif::exif_tag::ExifTag::ImageDescription(value),
+            MomentoBoothExifTag::Software(value) => little_exif::exif_tag::ExifTag::Software(value),
+            MomentoBoothExifTag::CreateDate(value) => little_exif::exif_tag::ExifTag::CreateDate(value.format("%Y:%m:%d %H:%M:%S").to_string()),
+            MomentoBoothExifTag::Orientation(value) => little_exif::exif_tag::ExifTag::Orientation(vec!(value as u16)),
+            MomentoBoothExifTag::MakerNote(value) => little_exif::exif_tag::ExifTag::UnknownSTRING(value, 0x927C, ExifTagGroup::ExifIFD),
         }
     }
 }
 
-impl TryFrom<&ExifTag> for MomentoBoothExifTag {
+// This is for future purpose when `little-exif` correctly supports reading EXIF data.
+impl TryFrom<&little_exif::exif_tag::ExifTag> for MomentoBoothExifTag {
     type Error = &'static str;
 
-    fn try_from(exif_tag: &ExifTag) -> Result<MomentoBoothExifTag, Self::Error> {
+    fn try_from(exif_tag: &little_exif::exif_tag::ExifTag) -> Result<MomentoBoothExifTag, Self::Error> {
         match exif_tag {
-            ExifTag::ImageDescription(value) => Ok(MomentoBoothExifTag::ImageDescription(value.clone())),
-            ExifTag::Software(value) => Ok(MomentoBoothExifTag::Software(value.clone())),
-            ExifTag::CreateDate(value) => {
+            little_exif::exif_tag::ExifTag::ImageDescription(value) => Ok(MomentoBoothExifTag::ImageDescription(value.clone())),
+            little_exif::exif_tag::ExifTag::Software(value) => Ok(MomentoBoothExifTag::Software(value.clone())),
+            little_exif::exif_tag::ExifTag::CreateDate(value) => {
                 let fixed_offset_date = DateTime::parse_from_str(&value, "%Y:%m:%d %H:%M:%S").expect("Error while parsing EXIF create date");
                 let local_date = DateTime::from_timestamp(fixed_offset_date.timestamp(), 0).unwrap().with_timezone(&Local);
                 Ok(MomentoBoothExifTag::CreateDate(local_date))
             },
-            ExifTag::Orientation(value) => {
+            little_exif::exif_tag::ExifTag::Orientation(value) => {
                 let orientation: Option<ExifOrientation> = ExifOrientation::from_u16(value[0]);
                 match orientation {
                     Some(orientation) => Ok(MomentoBoothExifTag::Orientation(orientation)),
                     None => Err("Unknown orientation"),
                 }
             },
-            ExifTag::UnknownSTRING(value, tag_id, tag_group) => {
+            little_exif::exif_tag::ExifTag::UnknownSTRING(value, tag_id, tag_group) => {
                 match (tag_id, tag_group) {
-                    (0x9213, ExifTagGroup::IFD0) => Ok(MomentoBoothExifTag::ImageHistory(value.clone())),
                     (0x927C, ExifTagGroup::ExifIFD) => Ok(MomentoBoothExifTag::MakerNote(value.clone())),
                     _ => Err("Unknown tag"),
                 }
@@ -115,7 +150,6 @@ pub enum MomentoBoothExifTag {
     Software(String),
     CreateDate(DateTime<Local>),
     Orientation(ExifOrientation),
-    ImageHistory(String),
     MakerNote(String),
 }
 

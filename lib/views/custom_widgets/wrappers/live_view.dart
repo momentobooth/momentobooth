@@ -41,7 +41,14 @@ class LiveView extends StatelessWidgetBase {
             child: SizedBox(
               width: LiveViewManager.instance.textureWidth?.toDouble(),
               height: LiveViewManager.instance.textureHeight?.toDouble(),
-              child: Texture(textureId: _textureId!, filterQuality: _filterQuality),
+              child: LayoutBuilder(
+                builder: (context, boxConstraints) {
+                  // For some reason, we get unconstrained width and height when the application has just started.
+                  // This is a workaround to prevent errors.
+                  if (boxConstraints == const BoxConstraints()) return const SizedBox.shrink();
+                  return Texture(textureId: _textureId!, filterQuality: _filterQuality);
+                }
+              ),
             ),
           );
         },

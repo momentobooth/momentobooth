@@ -47,6 +47,7 @@ class PhotoBoothState extends State<PhotoBooth> {
   @override
   Widget build(BuildContext context) {
     return LiveViewBackground(
+      router: _router,
       child: PhotoBoothHotkeyMonitor(
         router: _router,
         child: ActivityMonitor(
