@@ -19,7 +19,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.8.6
-  go_router: 13.2.0
+  go_router: 13.2.1
   flutter_svg: 2.0.10+1
   animated_text_kit: 4.2.2
   figma_squircle: 0.5.3
@@ -34,7 +34,7 @@ dependencies:
   font_awesome_flutter: 10.7.0
 
   # Printscreen/Image processing
-  screenshot: 2.1.0
+  screenshot: 2.3.0
   image: 4.1.7
 
   # MVC
@@ -63,7 +63,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.17.0
+  sentry_flutter: 7.18.0
 
   # Sound output
   just_audio: 0.9.36
