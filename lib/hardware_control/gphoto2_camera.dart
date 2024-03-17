@@ -8,8 +8,9 @@ import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_met
 import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
-import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
+import 'package:momento_booth/src/rust/utils/image_processing.dart';
 
 class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
@@ -30,7 +31,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   static Future<List<GPhoto2Camera>> getAllCameras() async {
     await _ensureLibraryInitialized();
-    List<GPhoto2CameraInfo> cameras = await rustLibraryApi.gphoto2GetCameras();
+    List<GPhoto2CameraInfo> cameras = await gphoto2GetCameras();
     return cameras.map((camera) => GPhoto2Camera(
       id: "${camera.port}/${camera.model}",
       friendlyName: "${camera.model} (at ${camera.port})",
@@ -53,33 +54,33 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   }) async {
     await _ensureLibraryInitialized();
     var split = id.split("/");
-    handleId = await rustLibraryApi.gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
+    handleId = await gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
     isOpened = true;
-    await rustLibraryApi.gphoto2StartLiveview(
+    await gphoto2StartLiveview(
       handleId: handleId,
       operations: operations,
       texturePtr: texturePtr,
     );
 
-    rustLibraryApi.gphoto2SetExtraFileCallback(handleId: handleId).listen((element) {
+    gphoto2SetExtraFileCallback(handleId: handleId).listen((element) {
       storePhotoSafe(element.filename, element.data);
     });
   }
 
   @override
   Future<void> setOperations(List<ImageOperation> operations) {
-    return rustLibraryApi.gphoto2SetOperations(handleId: handleId, operations: operations);
+    return gphoto2SetOperations(handleId: handleId, operations: operations);
   }
 
   @override
-  Future<RawImage?> getLastFrame() => rustLibraryApi.gphoto2GetLastFrame(handleId: handleId);
+  Future<RawImage?> getLastFrame() => gphoto2GetLastFrame(handleId: handleId);
 
   @override
-  Future<CameraState> getCameraState() => rustLibraryApi.gphoto2GetCameraStatus(handleId: handleId);
+  Future<CameraState> getCameraState() => gphoto2GetCameraStatus(handleId: handleId);
 
   @override
   Future<void> dispose() async {
-    if (isOpened) await rustLibraryApi.gphoto2CloseCamera(handleId: handleId);
+    if (isOpened) await gphoto2CloseCamera(handleId: handleId);
     isOpened = false;
   }
 
@@ -87,7 +88,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   Future<PhotoCapture> captureAndGetPhoto() async {
     await _ensureLibraryInitialized();
     String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
-    var capture = await rustLibraryApi.gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
+    var capture = await gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
     await storePhotoSafe(capture.filename, capture.data);
     
     unawaited(clearPreviousEvents());
@@ -103,13 +104,13 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   Future<void> autoFocus() async {
     await _ensureLibraryInitialized();
-    await rustLibraryApi.gphoto2AutoFocus(handleId: handleId);
+    await gphoto2AutoFocus(handleId: handleId);
   }
 
   @override
   Future<void> clearPreviousEvents() async {
     await _ensureLibraryInitialized();
-    await rustLibraryApi.gphoto2ClearEvents(
+    await gphoto2ClearEvents(
       handleId: handleId,
       downloadExtraFiles: SettingsManager.instance.settings.hardware.gPhoto2DownloadExtraFiles,
     );

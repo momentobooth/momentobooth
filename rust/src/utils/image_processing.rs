@@ -1,6 +1,6 @@
 use image::{imageops::{self, FilterType}, RgbaImage, ImageBuffer};
 
-use crate::dart_bridge::api::RawImage;
+use crate::api::simple::RawImage;
 
 // /////////////////////////// //
 // Structs and Main Operations //

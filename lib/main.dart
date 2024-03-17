@@ -5,11 +5,13 @@ import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/app/shell/shell.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
+  await RustLib.init();
   _ensureGPhoto2EnvironmentVariables();
 
   WidgetsFlutterBinding.ensureInitialized();

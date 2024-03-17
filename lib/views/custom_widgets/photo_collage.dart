@@ -19,8 +19,8 @@ import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/source_photo.dart';
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
-import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
@@ -361,11 +361,11 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
 
     // Rotate image and encode to JPEG
-    final rawImage = RawImage(format: RawImageFormat.Rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
-    final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [const ImageOperation.rotate(Rotation.Rotate270)] : [];
+    final rawImage = RawImage(format: RawImageFormat.rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
+    final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [const ImageOperation.rotate(Rotation.rotate270)] : [];
 
     final stopwatch = Stopwatch()..start();
-    final jpegData = await rustLibraryApi.jpegEncode(
+    final jpegData = await jpegEncode(
       rawImage: rawImage,
       quality: jpgQuality,
       exifTags: [

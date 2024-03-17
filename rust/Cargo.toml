@@ -1,17 +1,16 @@
 [package]
-name = "momento_booth_native_helpers"
-version = "0.1.0"
+name = "rust_lib_momento_booth"
+version = "0.2.0"
 edition = "2021"
 
 [lib]
-name = "momento_booth_native_helpers"
-crate-type = ["lib", "staticlib", "cdylib"]
+crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
+flutter_rust_bridge = { version = "=2.0.0-dev.28", features = ["chrono"] }
 anyhow = "1.0.80"
 derive_more = "0.99.17"
 atom_table = "1.1.0"
-flutter_rust_bridge = "=1.82.5"
 ffsend-api = "0.7.3"
 serde_json = "1.0.114"
 chrono = "0.4.35"

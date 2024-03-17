@@ -52,10 +52,10 @@ enum GPhoto2SpecialHandling {
 
   GPhoto2CameraSpecialHandling toHelperLibraryEnumValue() {
     return switch (this) {
-      GPhoto2SpecialHandling.none => GPhoto2CameraSpecialHandling.None,
-      GPhoto2SpecialHandling.nikonDSLR => GPhoto2CameraSpecialHandling.NikonDSLR,
-      GPhoto2SpecialHandling.nikonGeneric => GPhoto2CameraSpecialHandling.NikonGeneric,
-      GPhoto2SpecialHandling.sony => GPhoto2CameraSpecialHandling.Sony,
+      GPhoto2SpecialHandling.none => GPhoto2CameraSpecialHandling.none,
+      GPhoto2SpecialHandling.nikonDSLR => GPhoto2CameraSpecialHandling.nikonDslr,
+      GPhoto2SpecialHandling.nikonGeneric => GPhoto2CameraSpecialHandling.nikonGeneric,
+      GPhoto2SpecialHandling.sony => GPhoto2CameraSpecialHandling.sony,
     };
   }
 
@@ -137,8 +137,8 @@ enum Flip {
 
   FlipAxis? get asFlipAxis => switch (this) {
     Flip.none => null,
-    Flip.horizontally => FlipAxis.Horizontally,
-    Flip.vertically => FlipAxis.Vertically,
+    Flip.horizontally => FlipAxis.horizontally,
+    Flip.vertically => FlipAxis.vertically,
   };
 
 }
@@ -166,9 +166,9 @@ enum Rotate {
 
   Rotation? get asRotation => switch (this) {
         Rotate.none => null,
-        Rotate.clockwise90degrees => Rotation.Rotate90,
-        Rotate.clockwise180degrees => Rotation.Rotate180,
-        Rotate.clockwise270degrees => Rotation.Rotate270,
+        Rotate.clockwise90degrees => Rotation.rotate90,
+        Rotate.clockwise180degrees => Rotation.rotate180,
+        Rotate.clockwise270degrees => Rotation.rotate270,
       };
 
 }

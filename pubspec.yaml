@@ -14,7 +14,7 @@ dependencies:
   # i18n
   flutter_localizations:
     sdk: flutter
-  intl: 0.18.1
+  intl: ^0.18.1
 
   # UI
   auto_size_text: 3.0.0
@@ -46,8 +46,8 @@ dependencies:
   json_annotation: 4.8.1
 
   # Interop
-  ffi: ^2.1.0
-  flutter_rust_bridge: 1.82.5
+  ffi: 2.1.2
+  flutter_rust_bridge: 2.0.0-dev.28
 
   # Printing
   printing: 5.12.0
@@ -55,7 +55,7 @@ dependencies:
 
   # System
   path_provider: 2.1.2
-  path: ^1.8.3
+  path: ^1.9.0
   window_manager: 0.3.8
   file_selector: 1.0.3
   win32: 5.3.0
@@ -71,7 +71,7 @@ dependencies:
   just_audio_mpv: 0.1.7
 
   # Misc
-  meta: ^1.10.0
+  meta: ^1.11.0
   toml: 0.15.0
   synchronized: 3.1.0+1
   collection: 1.18.0
@@ -80,7 +80,9 @@ dependencies:
   package_info_plus: 5.0.1
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.3
-  draggable_scrollbar: ^0.1.0
+  draggable_scrollbar: 0.1.0
+  rust_lib_momento_booth:
+    path: rust_builder
 
 dev_dependencies:
   # MVC
@@ -95,7 +97,8 @@ dev_dependencies:
 
   # Code generation
   build_runner: 2.4.8
-  ffigen: 8.0.2
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true

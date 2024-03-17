@@ -5,7 +5,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -60,7 +60,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
 
     loggy.debug("Uploading ${file.path}");
-    var stream = rustLibraryApi.ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
+    var stream = ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
 
     viewModel
       ..uploadProgress = 0.0
