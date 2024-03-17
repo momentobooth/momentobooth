@@ -28,8 +28,6 @@
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		485CFFAA2BB7773AEEE509DF /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05416FC8979D88A04E95F2A8 /* Pods_RunnerTests.framework */; };
-		5F3E6D7B2A95E04F004DA4EF /* libmomento_booth_native_helpers_static.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F3E6D762A95DFCB004DA4EF /* libmomento_booth_native_helpers_static.a */; };
-		5F3E6D7D2A95E1F9004DA4EF /* bridge_generated.h in Resources */ = {isa = PBXBuildFile; fileRef = 5F3E6D7C2A95E1E6004DA4EF /* bridge_generated.h */; };
 		5F3E6D812A95E4A7004DA4EF /* libgphoto2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F3E6D7F2A95E4A7004DA4EF /* libgphoto2.dylib */; };
 		5F3E6D822A95E4A7004DA4EF /* libgphoto2.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 5F3E6D7F2A95E4A7004DA4EF /* libgphoto2.dylib */; };
 		5F3E6D872A95E51C004DA4EF /* libgphoto2_port.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F3E6D852A95E51C004DA4EF /* libgphoto2_port.dylib */; };
@@ -54,27 +52,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 33CC111A2044C6BA0003C045;
 			remoteInfo = FLX;
-		};
-		5F3E6D752A95DFCB004DA4EF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5F3E6D702A95DFCB004DA4EF /* momento_booth_native_helpers.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CA60957939D1AD1E3DC02A5C;
-			remoteInfo = "momento_booth_native_helpers-staticlib";
-		};
-		5F3E6D772A95DFCB004DA4EF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5F3E6D702A95DFCB004DA4EF /* momento_booth_native_helpers.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CA604C5554ED2B3BABD1B908;
-			remoteInfo = "momento_booth_native_helpers-cdylib";
-		};
-		5F3E6D792A95E027004DA4EF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5F3E6D702A95DFCB004DA4EF /* momento_booth_native_helpers.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CA60957939D1C529DB9FC4E2;
-			remoteInfo = "momento_booth_native_helpers-staticlib";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -115,8 +92,6 @@
 		33E51914231749380026EE4D /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
 		4FA69507CE9BC7034C564D05 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5F3E6D702A95DFCB004DA4EF /* momento_booth_native_helpers.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = momento_booth_native_helpers.xcodeproj; path = ../../rust/momento_booth_native_helpers.xcodeproj; sourceTree = "<group>"; };
-		5F3E6D7C2A95E1E6004DA4EF /* bridge_generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bridge_generated.h; sourceTree = "<group>"; };
 		5F3E6D7F2A95E4A7004DA4EF /* libgphoto2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgphoto2.dylib; path = /opt/homebrew/lib/libgphoto2.dylib; sourceTree = "<group>"; };
 		5F3E6D852A95E51C004DA4EF /* libgphoto2_port.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgphoto2_port.dylib; path = /opt/homebrew/lib/libgphoto2_port.dylib; sourceTree = "<group>"; };
 		5F3E6D8B2A95E582004DA4EF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -146,7 +121,6 @@
 				5F3E6D872A95E51C004DA4EF /* libgphoto2_port.dylib in Frameworks */,
 				5F3E6D8D2A95E582004DA4EF /* AVFoundation.framework in Frameworks */,
 				5FBC345B2AD5435800473197 /* CoreFoundation.framework in Frameworks */,
-				5F3E6D7B2A95E04F004DA4EF /* libmomento_booth_native_helpers_static.a in Frameworks */,
 				5FBC34592AD5435100473197 /* SystemConfiguration.framework in Frameworks */,
 				A4A2F8093FD57D07EC2B3BDD /* Pods_Runner.framework in Frameworks */,
 			);
@@ -220,8 +194,6 @@
 		33FAB671232836740065AC1E /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				5F3E6D7C2A95E1E6004DA4EF /* bridge_generated.h */,
-				5F3E6D702A95DFCB004DA4EF /* momento_booth_native_helpers.xcodeproj */,
 				33CC10F02044A3C60003C045 /* AppDelegate.swift */,
 				33CC11122044BFA00003C045 /* MainFlutterWindow.swift */,
 				33E51913231747F40026EE4D /* DebugProfile.entitlements */,
@@ -243,15 +215,6 @@
 				223E6E73B2EB4E378CD465D4 /* Pods-RunnerTests.profile.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		5F3E6D712A95DFCB004DA4EF /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5F3E6D762A95DFCB004DA4EF /* libmomento_booth_native_helpers_static.a */,
-				5F3E6D782A95DFCB004DA4EF /* momento_booth_native_helpers.dylib */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
@@ -305,7 +268,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				5F3E6D7A2A95E027004DA4EF /* PBXTargetDependency */,
 				33CC11202044C79F0003C045 /* PBXTargetDependency */,
 			);
 			name = Runner;
@@ -354,12 +316,6 @@
 			mainGroup = 33CC10E42044A3C60003C045;
 			productRefGroup = 33CC10EE2044A3C60003C045 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 5F3E6D712A95DFCB004DA4EF /* Products */;
-					ProjectRef = 5F3E6D702A95DFCB004DA4EF /* momento_booth_native_helpers.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				33CC10EC2044A3C60003C045 /* Runner */,
@@ -368,23 +324,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		5F3E6D762A95DFCB004DA4EF /* libmomento_booth_native_helpers_static.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libmomento_booth_native_helpers_static.a;
-			remoteRef = 5F3E6D752A95DFCB004DA4EF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5F3E6D782A95DFCB004DA4EF /* momento_booth_native_helpers.dylib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			path = momento_booth_native_helpers.dylib;
-			remoteRef = 5F3E6D772A95DFCB004DA4EF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		331C80D3294CF70F00263BE5 /* Resources */ = {
@@ -400,7 +339,6 @@
 			files = (
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
-				5F3E6D7D2A95E1F9004DA4EF /* bridge_generated.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,11 +478,6 @@
 			target = 33CC111A2044C6BA0003C045 /* Flutter Assemble */;
 			targetProxy = 33CC111F2044C79F0003C045 /* PBXContainerItemProxy */;
 		};
-		5F3E6D7A2A95E027004DA4EF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "momento_booth_native_helpers-staticlib";
-			targetProxy = 5F3E6D792A95E027004DA4EF /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -647,7 +580,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Profile;
@@ -735,7 +667,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -782,7 +713,6 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_OBJC_BRIDGING_HEADER = Runner/bridge_generated.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;

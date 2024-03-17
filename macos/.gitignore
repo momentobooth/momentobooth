@@ -5,6 +5,3 @@
 # Xcode-related
 **/dgph
 **/xcuserdata/
-
-# Rust bridge-related
-Runner/bridge_generated.h
