@@ -121,6 +121,12 @@ Please note: Run all commands from the root folder of the repository, unless men
 3. Run `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
+Some additional notes:
+
+* If you have changed any code in the Dart or Rust project that could change the generated bridging code, you should re-run the `flutter_rust_bridge_codegen generate` or `rps generate rust_bridge` command
+* If you have changed any code related to JSON or TOML serialization, or MobX, you should re-run the `dart run build_runner build --delete-conflicting-outputs` or `rps generate build_runner_targets` command
+* If you have changed any code related to the localization, you should re-run the `flutter gen-l10n` of `rps generate l10n` command
+
 ### Adding a new screen using the VS Code extension Template
 
 1. Make sure to have the [Template](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) extension installed
