@@ -95,7 +95,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     } as PhotoCaptureMethod;
     capturer.clearPreviousEvents();
     
-    if (autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
+    if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
       Future.delayed(autoFocusDelay).then((_) => (capturer as GPhoto2Camera).autoFocus());
     }
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
