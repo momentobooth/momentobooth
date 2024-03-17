@@ -60,8 +60,9 @@ dist/
 # mdBook output
 index.html
 
-# AppDir/AppImage
+# AppDir/AppImage/Flatpak
 AppDir/
+.flatpak-builder/
 
 # FVM Version Cache
 .fvm/

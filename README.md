@@ -84,7 +84,7 @@ On Linux:
 
 * [This list](https://docs.flutter.dev/get-started/install/linux#additional-linux-requirements) of packages from the Flutter website
   * The install command provided by the Flutter website may only work on Ubuntu, please check your distro website for the corresponding package names
-* Additional packages: llvm, libssl-dev
+* Additional packages: llvm, libssl-dev, libdigest-sha-perl
 * Rust (`x86_64-unknown-linux-gnu` target)
   * Install using `rustup` is recommended, to keep all components up to date
 
