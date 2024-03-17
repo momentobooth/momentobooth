@@ -52,7 +52,7 @@ app.*.map.json
 
 # flutter_rust_bridge
 frb_generated.*
-lib/src/rust/
+lib/src/**/*.dart
 
 # Output
 dist/
