@@ -118,9 +118,7 @@ Please note: Run all commands from the root folder of the repository, unless men
 1. Run `flutter gen-l10n`
 2. Run `flutter_rust_bridge_codegen generate`:
     * Note: Make sure to re-run this command if you changed anything in the Rust subproject
-3. Run `dart run build_runner build --delete-conflicting-outputs`
-    * Note: During development, it may be convenient to run `watch` instead of `build` to keep the script running to process any new or changes files
-4. Run `flutter run` or use your IDE to run the application
+3. Run `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
 ### Adding a new screen using the VS Code extension Template

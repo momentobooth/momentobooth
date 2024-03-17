@@ -127,7 +127,7 @@ scripts:
     flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.28
     deps: fvm flutter pub get
   generate:
-    all: rps generate l10n && rps generate rust_bridge && rps generate build_runner_targets
+    all: rps generate l10n && rps generate rust_bridge
     l10n: fvm flutter gen-l10n
     rust_bridge:
       $script:

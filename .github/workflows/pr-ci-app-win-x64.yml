@@ -84,9 +84,6 @@ jobs:
     - name: Generate Dart-to-Rust bridging code
       run: msys2 -c 'flutter_rust_bridge_codegen generate'
       
-    - name: Run Code Generation
-      run: dart run build_runner build
-      
     - name: Flutter Analyze
       run: flutter analyze
 
