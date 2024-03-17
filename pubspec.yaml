@@ -45,7 +45,9 @@ dependencies:
   freezed_annotation: 2.4.1
   json_annotation: 4.8.1
 
-  # Interop
+  # Rust library/Interop
+  rust_lib_momento_booth:
+    path: rust_builder
   ffi: 2.1.2
   flutter_rust_bridge: 2.0.0-dev.28
 
@@ -81,8 +83,6 @@ dependencies:
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.3
   draggable_scrollbar: 0.1.0
-  rust_lib_momento_booth:
-    path: rust_builder
 
 dev_dependencies:
   # MVC
