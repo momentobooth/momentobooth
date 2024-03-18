@@ -524,10 +524,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "170c46e237d6eb0e6e9f0e8b3f56101e14fb64f787016e42edd74c39cf8b176a"
+      sha256: "7ecb2f391edbca5473db591b48555a8912dde60edd0fb3013bd6743033b2d3f8"
       url: "https://pub.dev"
     source: hosted
-    version: "13.2.0"
+    version: "13.2.1"
   graphs:
     dependency: transitive
     description:
@@ -1012,10 +1012,10 @@ packages:
     dependency: "direct main"
     description:
       name: screenshot
-      sha256: "455284ff1f5b911d94a43c25e1385485cf6b4f288293eba68f15dad711c7b81c"
+      sha256: "5488135006b34529bf3765a7b1900ca94ccafca300c573550a0474a7162ebf95"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.3.0"
   scroll_pos:
     dependency: transitive
     description:
@@ -1028,18 +1028,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: a524a87d096799b775530176c8c082afe7aa1f10cc31ba078fecdd74e9afc923
+      sha256: a460aa48568d47140dd0557410b624d344ffb8c05555107ac65035c1097cf1ad
       url: "https://pub.dev"
     source: hosted
-    version: "7.17.0"
+    version: "7.18.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: e0f8367f8f7c74dba9f7521f71700bce6c6ee065cf342f065d4fce411b84fc7b
+      sha256: "3d0d1d4e0e407d276ae8128d123263ccbc37e988bae906765efd6f37d544f4c6"
       url: "https://pub.dev"
     source: hosted
-    version: "7.17.0"
+    version: "7.18.0"
   shelf:
     dependency: transitive
     description:
