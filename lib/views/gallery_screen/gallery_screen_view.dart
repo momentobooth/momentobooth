@@ -12,6 +12,7 @@ import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.da
 import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_controller.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_view_model.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GalleryScreenController> {
 
@@ -31,69 +32,72 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
       children: [
         ScrollConfiguration(
           behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-          child: Observer(
-            builder: (context) => MomentoDraggableScrollbar.semicircle(
-              alwaysVisibleScrollThumb: true,
-              controller: viewModel.myScrollController,
-              labelConstraints: const BoxConstraints(maxWidth: 200, maxHeight: 50),
-              labelTextBuilder: (offset) {
-                final int numGroups = viewModel.imageGroups?.length ?? 0;
-                final List<int> groupImageNums = viewModel.imageGroups?.map((group) => group.images.length).toList() ?? [];
-                final List<DateTime> timeslots = viewModel.imageGroups?.map((group) => group.createdDayAndHour ?? DateTime(1970)).toList() ?? [];
-                final groupRows = groupImageNums.map((e) => (e / 4).ceil());
-                final double screenHeight = viewModel.myScrollController.position.viewportDimension;
-
-                final double groupHeaderHeightCompensated = groupHeaderHeight + 50.0;
-                // We need to compensate for the screenheight twice because of the way that the comparison is implemented.
-                final double pageLength = viewModel.myScrollController.position.maxScrollExtent + 2*screenHeight;
-                final double rowHeight = (pageLength - (numGroups * groupHeaderHeightCompensated)) / groupRows.sum;
-                final sectionLengths = groupRows.map((element) => element*rowHeight + groupHeaderHeightCompensated).toList();
-
-                int currentIndex = 0;
-                double currentLength = 0;
-                for (; offset > currentLength; currentIndex++) { currentLength += sectionLengths[currentIndex]; }
-                currentIndex = max(currentIndex - 1, 0);
-          
-                return Text(viewModel.formatter.format(timeslots[currentIndex]), style: const TextStyle(fontSize: 22));
-              },
-              child: CustomScrollView(
-                controller: viewModel.myScrollController,
-                slivers: [
-                  for (GalleryGroup group in viewModel.imageGroups ?? [])
-                    SliverMainAxisGroup(slivers: [
-                      SliverAppBar(
-                        pinned: true,
-                        toolbarHeight: groupHeaderHeight,
-                        forceMaterialTransparency: true,
-                        automaticallyImplyLeading: false,
-                        title: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: Text(
-                            viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
-                            style: theme.subTitleStyle,
+          child: DynMouseScroll(
+            builder: (context, scrollController, scrollPhysics) => Observer(
+              builder: (context) => MomentoDraggableScrollbar.semicircle(
+                alwaysVisibleScrollThumb: true,
+                controller: scrollController,
+                labelConstraints: const BoxConstraints(maxWidth: 200, maxHeight: 50),
+                labelTextBuilder: (offset) {
+                  final int numGroups = viewModel.imageGroups?.length ?? 0;
+                  final List<int> groupImageNums = viewModel.imageGroups?.map((group) => group.images.length).toList() ?? [];
+                  final List<DateTime> timeslots = viewModel.imageGroups?.map((group) => group.createdDayAndHour ?? DateTime(1970)).toList() ?? [];
+                  final groupRows = groupImageNums.map((e) => (e / 4).ceil());
+                  final double screenHeight = scrollController.position.viewportDimension;
+              
+                  final double groupHeaderHeightCompensated = groupHeaderHeight + 50.0;
+                  // We need to compensate for the screenheight twice because of the way that the comparison is implemented.
+                  final double pageLength = scrollController.position.maxScrollExtent + 2*screenHeight;
+                  final double rowHeight = (pageLength - (numGroups * groupHeaderHeightCompensated)) / groupRows.sum;
+                  final sectionLengths = groupRows.map((element) => element*rowHeight + groupHeaderHeightCompensated).toList();
+              
+                  int currentIndex = 0;
+                  double currentLength = 0;
+                  for (; offset > currentLength; currentIndex++) { currentLength += sectionLengths[currentIndex]; }
+                  currentIndex = max(currentIndex - 1, 0);
+                        
+                  return Text(viewModel.formatter.format(timeslots[currentIndex]), style: const TextStyle(fontSize: 22));
+                },
+                child: CustomScrollView(
+                  controller: scrollController,
+                  physics: scrollPhysics,
+                  slivers: [
+                    for (GalleryGroup group in viewModel.imageGroups ?? [])
+                      SliverMainAxisGroup(slivers: [
+                        SliverAppBar(
+                          pinned: true,
+                          toolbarHeight: groupHeaderHeight,
+                          forceMaterialTransparency: true,
+                          automaticallyImplyLeading: false,
+                          title: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Text(
+                              viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
+                              style: theme.subTitleStyle,
+                            ),
                           ),
                         ),
-                      ),
-                      SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                        sliver: SliverGrid.count(
-                          mainAxisSpacing: 20,
-                          crossAxisSpacing: 20,
-                          crossAxisCount: imagesPerRow,
-                          children: [
-                            for (GalleryImage image in group.images)
-                              GestureDetector(
-                                onTap: () => controller.openPhoto(image.file),
-                                child: AnimatedBoxDecorationHero(
-                                  tag: image.file.path,
-                                  child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+                        SliverPadding(
+                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                          sliver: SliverGrid.count(
+                            mainAxisSpacing: 20,
+                            crossAxisSpacing: 20,
+                            crossAxisCount: imagesPerRow,
+                            children: [
+                              for (GalleryImage image in group.images)
+                                GestureDetector(
+                                  onTap: () => controller.openPhoto(image.file),
+                                  child: AnimatedBoxDecorationHero(
+                                    tag: image.file.path,
+                                    child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+                                  ),
                                 ),
-                              ),
-                          ],
-                        ),
-                      )
-                    ]),
-                ],
+                            ],
+                          ),
+                        )
+                      ]),
+                  ],
+                ),
               ),
             ),
           ),
