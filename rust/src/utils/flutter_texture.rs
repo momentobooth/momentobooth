@@ -2,7 +2,7 @@ use std::ffi::{c_int, c_void};
 
 use dlopen::{symbor::{Library, Symbol}, Error as LibError};
 
-use crate::{api::simple::RawImage, helpers::log_error};
+use crate::{helpers::log_error, models::images::RawImage};
 
 #[cfg(all(target_os = "windows"))]
 lazy_static::lazy_static! {

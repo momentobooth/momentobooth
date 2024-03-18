@@ -1,7 +1,7 @@
 use std::{thread::{self, JoinHandle}, time, sync::{atomic::{AtomicBool, Ordering}, Arc}};
 use turborand::{rng::Rng, GenCore};
 
-use crate::api::simple::RawImage;
+use crate::models::images::RawImage;
 
 pub fn start_and_get_handle<F>(width: usize, height: usize, frame_callback: F) -> WhiteNoiseGeneratorHandle where F: Fn(RawImage) + Send + 'static {
     let frame_wait_time = time::Duration::from_millis(20);

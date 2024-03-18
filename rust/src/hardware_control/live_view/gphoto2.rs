@@ -6,7 +6,7 @@ use gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidget,
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 
-use crate::{api::simple::RawImage, helpers::log_debug, utils::jpeg};
+use crate::{helpers::log_debug, models::images::RawImage, utils::jpeg};
 
 static CONTEXT: OnceLock<Context> = OnceLock::new();
 

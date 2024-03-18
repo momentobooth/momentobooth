@@ -1,6 +1,6 @@
 use image::{imageops::{self, FilterType}, RgbaImage, ImageBuffer};
 
-use crate::api::simple::RawImage;
+use crate::models::images::RawImage;
 
 // /////////////////////////// //
 // Structs and Main Operations //
