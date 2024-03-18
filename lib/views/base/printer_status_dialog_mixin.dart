@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/api/cups.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';

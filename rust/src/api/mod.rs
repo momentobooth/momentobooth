@@ -3,7 +3,7 @@
 //
 
 pub mod ffsend;
-pub mod jpeg;
+pub mod images;
 pub mod nokhwa;
 pub mod cups;
 pub mod initialization;

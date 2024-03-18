@@ -1,4 +1,4 @@
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/models/live_view.dart';
 
 extension CameraStateExtension on CameraState {
 

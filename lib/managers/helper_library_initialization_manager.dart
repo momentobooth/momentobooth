@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/helpers.dart';
 
 part 'helper_library_initialization_manager.g.dart';
