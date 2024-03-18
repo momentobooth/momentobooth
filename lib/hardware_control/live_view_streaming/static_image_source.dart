@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/api/images.dart';
+import 'package:momento_booth/src/rust/models/images.dart';
+import 'package:momento_booth/src/rust/models/live_view.dart';
 import 'package:momento_booth/src/rust/utils/image_processing.dart';
 
 class StaticImageSource extends LiveViewSource {

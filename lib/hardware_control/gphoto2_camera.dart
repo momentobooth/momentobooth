@@ -8,8 +8,10 @@ import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_met
 import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/api/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
+import 'package:momento_booth/src/rust/models/images.dart';
+import 'package:momento_booth/src/rust/models/live_view.dart';
 import 'package:momento_booth/src/rust/utils/image_processing.dart';
 
 class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {

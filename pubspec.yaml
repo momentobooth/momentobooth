@@ -126,12 +126,12 @@ scripts:
     cargo-expand: cargo install cargo-expand
     flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.28
     deps: fvm flutter pub get
+  clean:
+    rust_bridge: git clean -xfd lib/src
   generate:
     all: rps generate l10n && rps generate rust_bridge
     l10n: fvm flutter gen-l10n
-    rust_bridge:
-      $script:
-        $default: flutter_rust_bridge_codegen generate
+    rust_bridge: rps clean rust_bridge && flutter_rust_bridge_codegen generate
     build_runner_targets: fvm dart run build_runner build --delete-conflicting-outputs
   update:
     rust-install: rustup update

@@ -8,7 +8,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:path/path.dart' hide context;
 

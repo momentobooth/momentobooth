@@ -2,8 +2,10 @@ import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/exceptions/nokhwa_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/api/nokhwa.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
+import 'package:momento_booth/src/rust/models/images.dart';
+import 'package:momento_booth/src/rust/models/live_view.dart';
 import 'package:momento_booth/src/rust/utils/image_processing.dart';
 
 class NokhwaCamera extends LiveViewSource {

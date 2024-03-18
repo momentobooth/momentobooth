@@ -2,7 +2,8 @@ import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
-import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/api/images.dart';
+import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 
 class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod with UiLoggy {

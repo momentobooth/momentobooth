@@ -8,7 +8,7 @@ use zune_jpeg::{JpegDecoder, zune_core::{options::DecoderOptions, colorspace::Co
 use chrono::{DateTime, Local};
 use nom_exif::ExifTag::{*};
 
-use crate::api::simple::{ExifOrientation, MomentoBoothExifTag, RawImage};
+use crate::models::images::{ExifOrientation, MomentoBoothExifTag, RawImage};
 
 pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8, exif_tags: Vec<MomentoBoothExifTag>) -> Vec<u8> {
     let mut output_buf: Vec<u8> = Vec::new();
