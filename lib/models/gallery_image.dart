@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
 
 part 'gallery_image.freezed.dart';
 

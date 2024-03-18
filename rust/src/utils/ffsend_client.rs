@@ -2,7 +2,8 @@ use std::{path::PathBuf, str::FromStr, sync::{Arc, Mutex}};
 
 use chrono::{DateTime, Utc};
 use ffsend_api::{action::{upload::Upload, params::ParamsData, delete::Delete}, url::Url, client::{Client, ClientConfig}, pipe::ProgressReporter, file::remote_file::RemoteFile};
-use flutter_rust_bridge::StreamSink;
+
+use crate::frb_generated::StreamSink;
 
 // ///////// //
 // Functions //

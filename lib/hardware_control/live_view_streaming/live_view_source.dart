@@ -1,4 +1,5 @@
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/utils/image_processing.dart';
 
 abstract class LiveViewSource {
 

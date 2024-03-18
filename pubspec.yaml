@@ -14,12 +14,12 @@ dependencies:
   # i18n
   flutter_localizations:
     sdk: flutter
-  intl: 0.18.1
+  intl: ^0.18.1
 
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.8.6
-  go_router: 13.2.0
+  go_router: 13.2.1
   flutter_svg: 2.0.10+1
   animated_text_kit: 4.2.2
   figma_squircle: 0.5.3
@@ -34,7 +34,7 @@ dependencies:
   font_awesome_flutter: 10.7.0
 
   # Printscreen/Image processing
-  screenshot: 2.1.0
+  screenshot: 2.3.0
   image: 4.1.7
 
   # MVC
@@ -45,9 +45,11 @@ dependencies:
   freezed_annotation: 2.4.1
   json_annotation: 4.8.1
 
-  # Interop
-  ffi: ^2.1.0
-  flutter_rust_bridge: 1.82.5
+  # Rust library/Interop
+  rust_lib_momento_booth:
+    path: rust_builder
+  ffi: 2.1.2
+  flutter_rust_bridge: 2.0.0-dev.28
 
   # Printing
   printing: 5.12.0
@@ -55,7 +57,7 @@ dependencies:
 
   # System
   path_provider: 2.1.2
-  path: ^1.8.3
+  path: ^1.9.0
   window_manager: 0.3.8
   file_selector: 1.0.3
   win32: 5.3.0
@@ -63,7 +65,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.17.0
+  sentry_flutter: 7.18.0
 
   # Sound output
   just_audio: 0.9.36
@@ -71,7 +73,7 @@ dependencies:
   just_audio_mpv: 0.1.7
 
   # Misc
-  meta: ^1.10.0
+  meta: ^1.11.0
   toml: 0.15.0
   synchronized: 3.1.0+1
   collection: 1.18.0
@@ -80,7 +82,7 @@ dependencies:
   package_info_plus: 5.0.1
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.3
-  draggable_scrollbar: ^0.1.0
+  draggable_scrollbar: 0.1.0
 
 dev_dependencies:
   # MVC
@@ -95,7 +97,8 @@ dev_dependencies:
 
   # Code generation
   build_runner: 2.4.8
-  ffigen: 8.0.2
+  integration_test:
+    sdk: flutter
 
 flutter:
   uses-material-design: true
@@ -121,15 +124,14 @@ scripts:
     all: rps install flutter && rps install cargo-expand && rps install flutter_rust_bridge_codegen && rps install deps
     flutter: fvm install
     cargo-expand: cargo install cargo-expand
-    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 1.82.5
+    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.28
     deps: fvm flutter pub get
   generate:
-    all: rps generate l10n && rps generate rust_bridge && rps generate build_runner_targets
+    all: rps generate l10n && rps generate rust_bridge
     l10n: fvm flutter gen-l10n
     rust_bridge:
       $script:
-        $default: flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner
-        $macos: flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --c-output macos/Runner/bridge_generated.h --skip-add-mod-to-lib --no-build-runner
+        $default: flutter_rust_bridge_codegen generate
     build_runner_targets: fvm dart run build_runner build --delete-conflicting-outputs
   update:
     rust-install: rustup update

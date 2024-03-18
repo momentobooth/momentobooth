@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
-import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/helpers.dart';
 
 part 'helper_library_initialization_manager.g.dart';
 
@@ -31,30 +31,30 @@ abstract class _HelperLibraryInitializationManagerBase with Store {
   String? _gphoto2InitializationMessage;
 
   void initialize() {
-    rustLibraryApi.initializeLog().listen(_processLogEvent);
-    rustLibraryApi.initializeHardware().listen(_processHardwareInitEvent);
+    initializeLog().listen(_processLogEvent);
+    initializeHardware().listen(_processHardwareInitEvent);
   }
 
   void _processLogEvent(LogEvent event) {
     switch (event.level) {
-      case LogLevel.Debug:
+      case LogLevel.debug:
         loggy.logDebug("Lib: ${event.message}");
-      case LogLevel.Info:
+      case LogLevel.info:
         loggy.logInfo("Lib: ${event.message}");
-      case LogLevel.Warning:
+      case LogLevel.warning:
         loggy.logWarning("Lib: ${event.message}");
-      case LogLevel.Error:
+      case LogLevel.error:
         loggy.logError("Lib: ${event.message}");
     }
   }
 
   void _processHardwareInitEvent(HardwareInitializationFinishedEvent event) {
     switch (event.step) {
-      case HardwareInitializationStep.Nokhwa:
+      case HardwareInitializationStep.nokhwa:
         _nokhwaInitializationMessage = event.message;
         _nokhwaInitializationResultCompleter.complete(event.hasSucceeded);
         loggy.logInfo("Nokhwa initialization finished with result: ${event.hasSucceeded} and message: ${event.message}");
-      case HardwareInitializationStep.Gphoto2:
+      case HardwareInitializationStep.gphoto2:
         _gphoto2InitializationMessage = event.message;
         _gphoto2InitializationResultCompleter.complete(event.hasSucceeded);
         loggy.logInfo("gPhoto2 initialization finished with result: ${event.hasSucceeded} and message: ${event.message}");

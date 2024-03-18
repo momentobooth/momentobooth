@@ -5,13 +5,15 @@ use dashmap::DashMap;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
 use ::nokhwa::CallbackCamera;
-use flutter_rust_bridge::{frb, StreamSink, ZeroCopyBuffer};
+use flutter_rust_bridge::frb;
+use num_derive::FromPrimitive;
 use turborand::rng::Rng;
+use chrono::{DateTime, Local};
 
 use tokio::sync::Mutex as AsyncMutex;
 use url::Url;
 
-use crate::{hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, log_debug, utils::{ffsend_client::{self, FfSendTransferProgress}, flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, ipp_client::{self, IppPrinterState, PrintJobState}, jpeg::{self, MomentoBoothExifTag}}, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME};
+use crate::{frb_generated::StreamSink, hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, nokhwa::{self, NokhwaCameraInfo}, white_noise::{self, WhiteNoiseGeneratorHandle}}, helpers::{self, log_debug, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME}, utils::{ffsend_client::{self, FfSendTransferProgress}, flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, ipp_client::{self, IppPrinterState, PrintJobState}, jpeg}};
 
 // ////////////// //
 // Initialization //
@@ -20,13 +22,13 @@ use crate::{hardware_control::live_view::{gphoto2::{self, GPhoto2Camera, GPhoto2
 static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
 
 pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
-    crate::initialize_log(log_sink);
+    helpers::initialize_log(log_sink);
 }
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     if !HARDWARE_INITIALIZED.load(Ordering::SeqCst) {
         // Hardware has not been initialized yet
-        crate::initialize_hardware(ready_sink);
+        helpers::initialize_hardware(ready_sink);
         HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
     } else {
         // Hardware has already been initialized (possible due to Hot Reload)
@@ -198,7 +200,7 @@ pub fn ffsend_delete_file(file_id: String) {
 // JPEG //
 // //// //
 
-pub fn jpeg_encode(raw_image: RawImage, quality: u8, exif_tags: Vec<MomentoBoothExifTag>, operations_before_encoding: Vec<ImageOperation>) -> ZeroCopyBuffer<Vec<u8>> {
+pub fn jpeg_encode(raw_image: RawImage, quality: u8, exif_tags: Vec<MomentoBoothExifTag>, operations_before_encoding: Vec<ImageOperation>) -> Vec<u8> {
     let processed_image = image_processing::execute_operations(&raw_image, &operations_before_encoding);
     jpeg::encode_raw_to_jpeg(processed_image, quality, exif_tags)
 }
@@ -363,7 +365,7 @@ pub fn gphoto2_set_extra_file_callback(handle_id: usize, image_sink: StreamSink<
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
-    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+    crate::helpers::TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
         gphoto2::set_extra_file_callback(camera, move |data| {
             image_sink.add(data);
         }).await;
@@ -515,4 +517,24 @@ pub struct CameraState {
     pub time_since_last_received_frame: Option<Duration>,
     pub frame_width: Option<usize>,
     pub frame_height: Option<usize>,
+}
+
+pub enum MomentoBoothExifTag {
+    ImageDescription(String),
+    Software(String),
+    CreateDate(DateTime<Local>),
+    Orientation(ExifOrientation),
+    MakerNote(String),
+}
+
+#[derive(FromPrimitive)]
+pub enum ExifOrientation {
+    TopLeft = 1,
+    TopRight = 2,
+    BottomRight = 3,
+    BottomLeft = 4,
+    LeftTop = 5,
+    RightTop = 6,
+    RightBottom = 7,
+    LeftBottom = 8,
 }

@@ -8,7 +8,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
-import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:path/path.dart' hide context;
 
@@ -45,7 +45,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
     for (File file in eligibleFiles) {
       imagesWithExif.add(GalleryImage(
         file: file,
-        exifTags: await rustLibraryApi.getMomentoBoothExifTagsFromFile(imageFilePath: file.path),
+        exifTags: await getMomentoBoothExifTagsFromFile(imageFilePath: file.path),
       ));
     }
 

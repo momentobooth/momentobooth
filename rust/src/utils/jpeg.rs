@@ -1,18 +1,16 @@
 use std::fs::File;
 
-use flutter_rust_bridge::ZeroCopyBuffer;
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
 use little_exif::{exif_tag::ExifTagGroup, filetype::FileExtension, metadata::Metadata};
 use num::FromPrimitive;
-use num_derive::FromPrimitive;
 use zune_jpeg::{JpegDecoder, zune_core::{options::DecoderOptions, colorspace::ColorSpace}};
 use chrono::{DateTime, Local};
 use nom_exif::ExifTag::{*};
 
-use crate::dart_bridge::api::RawImage;
+use crate::api::simple::{ExifOrientation, MomentoBoothExifTag, RawImage};
 
-pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8, exif_tags: Vec<MomentoBoothExifTag>) -> ZeroCopyBuffer<Vec<u8>> {
+pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8, exif_tags: Vec<MomentoBoothExifTag>) -> Vec<u8> {
     let mut output_buf: Vec<u8> = Vec::new();
     let encoder = Encoder::new(&mut output_buf, quality);
 
@@ -29,7 +27,7 @@ pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8, exif_tags: Vec<Momen
     let mut jpeg = Jpeg::from_bytes(Bytes::copy_from_slice(&output_buf)).expect("Error while reading JPEG data");
     jpeg.set_exif(Some(Bytes::copy_from_slice(&metadata_vec[10..])));
 
-    ZeroCopyBuffer(jpeg.encoder().bytes().to_vec())
+    jpeg.encoder().bytes().to_vec()
 }
 
 lazy_static::lazy_static! {
@@ -145,22 +143,4 @@ impl TryFrom<&little_exif::exif_tag::ExifTag> for MomentoBoothExifTag {
     }
 }
 
-pub enum MomentoBoothExifTag {
-    ImageDescription(String),
-    Software(String),
-    CreateDate(DateTime<Local>),
-    Orientation(ExifOrientation),
-    MakerNote(String),
-}
 
-#[derive(FromPrimitive)]
-pub enum ExifOrientation {
-    TopLeft = 1,
-    TopRight = 2,
-    BottomRight = 3,
-    BottomLeft = 4,
-    LeftTop = 5,
-    RightTop = 6,
-    RightBottom = 7,
-    LeftBottom = 8,
-}

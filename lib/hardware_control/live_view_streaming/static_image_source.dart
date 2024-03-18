@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/painting.dart';
 import 'package:flutter/services.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
-import 'package:momento_booth/rust_bridge/library_api.generated.dart';
-import 'package:momento_booth/rust_bridge/library_bridge.dart';
+import 'package:momento_booth/src/rust/api/simple.dart';
+import 'package:momento_booth/src/rust/utils/image_processing.dart';
 
 class StaticImageSource extends LiveViewSource {
 
@@ -27,7 +27,7 @@ class StaticImageSource extends LiveViewSource {
     _imageWidth = image.width;
     _imageHeight = image.height;
 
-    await rustLibraryApi.staticImageWriteToTexture(
+    await staticImageWriteToTexture(
       texturePtr: texturePtr,
       rawImage: image,
     );
@@ -55,7 +55,7 @@ class StaticImageSource extends LiveViewSource {
     final Image image = await decodeImageFromList(data.buffer.asUint8List());
 
     return RawImage(
-      format: RawImageFormat.Rgba,
+      format: RawImageFormat.rgba,
       width: image.width,
       height: image.height,
       data: (await image.toByteData())!.buffer.asUint8List(),

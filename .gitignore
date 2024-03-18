@@ -50,14 +50,19 @@ app.*.map.json
 *.json.dart
 *.g.dart
 
+# flutter_rust_bridge
+frb_generated.*
+lib/src/**/*.dart
+
 # Output
 dist/
 
 # mdBook output
 index.html
 
-# AppDir/AppImage
+# AppDir/AppImage/Flatpak
 AppDir/
+.flatpak-builder/
 
 # FVM Version Cache
 .fvm/

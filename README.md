@@ -84,15 +84,15 @@ On Linux:
 
 * [This list](https://docs.flutter.dev/get-started/install/linux#additional-linux-requirements) of packages from the Flutter website
   * The install command provided by the Flutter website may only work on Ubuntu, please check your distro website for the corresponding package names
-* Additional packages: llvm, libssl-dev
+* Additional packages: llvm, libssl-dev, libdigest-sha-perl
 * Rust (`x86_64-unknown-linux-gnu` target)
   * Install using `rustup` is recommended, to keep all components up to date
 
 All platforms:
 
 * `flutter_rust_bridge_codegen`
-  * Install using Cargo: `cargo install flutter_rust_bridge_codegen`
-* Flutter SDK 3.10.0+
+  * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.28`
+* Flutter SDK 3.19.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
 * Optional: For building the documentation mdBook and some extensions for mdBook are needed
@@ -116,14 +116,16 @@ Please note: This method expects global fvm and Dart installs to be available.
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
 1. Run `flutter gen-l10n`
-2. Run `flutter_rust_bridge_codegen`:
-    * Windows/Linux: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner`
-    * macOS: `flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --c-output macos/Runner/bridge_generated.h --skip-add-mod-to-lib --no-build-runner`
+2. Run `flutter_rust_bridge_codegen generate`:
     * Note: Make sure to re-run this command if you changed anything in the Rust subproject
-3. Run `dart run build_runner build --delete-conflicting-outputs`
-    * Note: During development, it may be convenient to run `watch` instead of `build` to keep the script running to process any new or changes files
-4. Run `flutter run` or use your IDE to run the application
+3. Run `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
+
+Some additional notes:
+
+* If you have changed any code in the Dart or Rust project that could change the generated bridging code, you should re-run the `flutter_rust_bridge_codegen generate` or `rps generate rust_bridge` command
+* If you have changed any code related to JSON or TOML serialization, or MobX, you should re-run the `dart run build_runner build --delete-conflicting-outputs` or `rps generate build_runner_targets` command
+* If you have changed any code related to the localization, you should re-run the `flutter gen-l10n` of `rps generate l10n` command
 
 ### Adding a new screen using the VS Code extension Template
 

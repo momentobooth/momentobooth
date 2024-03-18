@@ -7,7 +7,7 @@ targets:
             - lib/models/*.dart
             - lib/models/**/*.dart
             - lib/theme/*.dart
-            - lib/rust_bridge/library_api.generated.dart
+            - lib/src/rust/**/*.dart
         options:
           map: false
           when: false
