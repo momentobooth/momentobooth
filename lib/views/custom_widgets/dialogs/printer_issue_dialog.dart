@@ -6,12 +6,15 @@ import 'package:momento_booth/models/printer_issue_type.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/photo_booth_dialog.dart';
+import 'package:widgetbook/widgetbook.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 class PrinterIssueDialog extends StatelessWidget {
 
   final String printerName;
   final PrinterIssueType issueType;
   final String errorText;
+  final VoidCallback onIgnorePressed;
   final VoidCallback onResumeQueuePressed;
 
   const PrinterIssueDialog({
@@ -19,6 +22,7 @@ class PrinterIssueDialog extends StatelessWidget {
     required this.printerName,
     required this.issueType,
     required this.errorText,
+    required this.onIgnorePressed,
     required this.onResumeQueuePressed,
   });
 
@@ -54,20 +58,30 @@ class PrinterIssueDialog extends StatelessWidget {
         PhotoBoothOutlinedButton(
           title: localizations.printerErrorIgnoreButton,
           icon: FontAwesomeIcons.clock,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          onPressed: onIgnorePressed,
         ),
         PhotoBoothFilledButton(
           title: localizations.printerErrorResumeQueueButton,
           icon: FluentIcons.play_resume,
-          onPressed: () {
-            Navigator.of(context).pop();
-            onResumeQueuePressed();
-          },
+          onPressed: onResumeQueuePressed,
         ),
       ],
     );
   }
 
+}
+
+
+@widgetbook.UseCase(
+  name: 'No Ink',
+  type: PrinterIssueDialog,
+)
+Widget printerIssueDialog(BuildContext context) {
+  return PrinterIssueDialog(
+    printerName: 'MyBrand MyPrinter 5000',
+    issueType: context.knobs.list(label: 'Issue Type', initialOption: PrinterIssueType.noInk, options: PrinterIssueType.values),
+    errorText: context.knobs.string(label: 'Error Text', initialValue: 'The printer is out of ink. Please replace the ink cartridge.'),
+    onIgnorePressed: () {},
+    onResumeQueuePressed: () {},
+  );
 }
