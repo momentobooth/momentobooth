@@ -55,6 +55,10 @@ class QrShareDialog extends StatelessWidget {
             ),
           ],
         ShareDialogState.error => [
+            PhotoBoothOutlinedButton(
+              title: localizations.genericCancelButton,
+              onPressed: onDismiss,
+            ),
             PhotoBoothFilledButton(
               title: localizations.genericRetryButton,
               icon: FontAwesomeIcons.check,
@@ -92,7 +96,7 @@ class QrShareDialog extends StatelessWidget {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return SizedBox(
-      width: 600,
+      width: 650,
       height: 250,
       child: Row(
         mainAxisSize: MainAxisSize.min,

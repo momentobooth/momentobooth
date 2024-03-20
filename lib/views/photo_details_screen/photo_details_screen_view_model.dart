@@ -68,8 +68,9 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
         loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
         _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
-    }).onError((x) {
+    }).onError((x) async {
       loggy.error("Upload failed, file path: ${_file!.path}", x);
+      await Future.delayed(const Duration(seconds: 1));
       _uploadProgress = null;
       _uploadFailed = true;
     });

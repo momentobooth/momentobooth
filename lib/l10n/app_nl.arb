@@ -9,6 +9,7 @@
     "genericSaveButton": "Opslaan",
     "genericCloseButton": "Sluiten",
     "genericRetryButton": "Probeer opnieuw",
+    "genericCancelButton": "Annuleren",
 
     "startScreenTouchToStartButton": "Raak aan om te beginnen",
     "startScreenGalleryButton": "Galerij",

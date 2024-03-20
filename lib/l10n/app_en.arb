@@ -9,6 +9,7 @@
     "genericSaveButton": "Save",
     "genericCloseButton": "Close",
     "genericRetryButton": "Retry",
+    "genericCancelButton": "Cancel",
     
     "startScreenTouchToStartButton": "Touch to start",
     "startScreenGalleryButton": "Gallery",
