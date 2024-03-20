@@ -24,7 +24,7 @@ mixin BuildContextAbstractor {
       key: null,
       child: Padding(
         padding: const EdgeInsets.all(32),
-        child: child,
+        child: Center(child: child),
       ),
       barrierDismissible: true,
     ).createRoute(_context));

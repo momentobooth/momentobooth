@@ -5,7 +5,7 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_outlined_button.dart';
-import 'package:momento_booth/views/custom_widgets/dialogs/photo_booth_dialog.dart';
+import 'package:momento_booth/views/custom_widgets/dialogs/modal_dialog.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -29,30 +29,28 @@ class PrinterIssueDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
-    return PhotoBoothDialog(
+
+    return ModalDialog(
       title: issueType.getTitle(context),
-      body: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child: Column(
-          children: [
-            Text(
-              issueType.getBody1(context, printerName, errorText),
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16.0),
-            Lottie.asset(
-              'assets/animations/Animation - 1709936404300.json',
-              fit: BoxFit.contain,
-              alignment: Alignment.center,
-              height: 200,
-              frameRate: FrameRate.max,
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              issueType.getBody2(context),
-            ),
-          ],
-        ),
+      body: Column(
+        children: [
+          Text(
+            issueType.getBody1(context, printerName, errorText),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16.0),
+          Lottie.asset(
+            'assets/animations/Animation - 1709936404300.json',
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            height: 200,
+            frameRate: FrameRate.max,
+          ),
+          const SizedBox(height: 16.0),
+          Text(
+            issueType.getBody2(context),
+          ),
+        ],
       ),
       actions: [
         PhotoBoothOutlinedButton(
@@ -66,6 +64,7 @@ class PrinterIssueDialog extends StatelessWidget {
           onPressed: onResumeQueuePressed,
         ),
       ],
+      dialogType: ModalDialogType.warning,
     );
   }
 
