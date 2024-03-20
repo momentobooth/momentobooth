@@ -64,7 +64,6 @@ class QrShareDialog extends StatelessWidget {
         _ => const [],
       },
       dialogType: switch (state) {
-        ShareDialogState.uploaded => ModalDialogType.success,
         ShareDialogState.error => ModalDialogType.error,
         _ => null,
       },
