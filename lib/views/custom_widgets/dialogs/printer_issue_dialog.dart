@@ -41,6 +41,7 @@ class PrinterIssueDialog extends StatelessWidget {
               fit: BoxFit.contain,
               alignment: Alignment.center,
               height: 200,
+              frameRate: FrameRate.max,
             ),
             const SizedBox(height: 16.0),
             Text(

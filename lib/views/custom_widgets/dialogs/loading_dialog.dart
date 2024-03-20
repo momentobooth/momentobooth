@@ -30,6 +30,7 @@ class LoadingDialog extends StatelessWidget {
             'assets/animations/Animation - 1708738963082.json',
             fit: BoxFit.contain,
             alignment: Alignment.centerLeft,
+            frameRate: FrameRate.max,
           ),
           Flexible(
             child: Center(

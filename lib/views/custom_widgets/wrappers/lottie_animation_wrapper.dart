@@ -31,6 +31,7 @@ class LottieAnimationWrapper extends StatelessWidget {
                   File(animation.file),
                   height: animation.height,
                   width: animation.width,
+                  frameRate: FrameRate.max,
                 ),
               ),
             ),
