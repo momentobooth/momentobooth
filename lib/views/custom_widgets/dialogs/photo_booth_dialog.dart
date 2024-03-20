@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 class PhotoBoothDialog extends StatelessWidget {
 
+  final double? width;
+  final double? height;
   final String? title;
   final Widget? indicator;
   final Widget body;
@@ -11,6 +13,8 @@ class PhotoBoothDialog extends StatelessWidget {
 
   const PhotoBoothDialog({
     super.key,
+    this.width,
+    this.height,
     required this.body,
     this.title,
     this.indicator,
@@ -21,6 +25,8 @@ class PhotoBoothDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
+      height: height,
       margin: const EdgeInsets.all(32.0),
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
       decoration: ShapeDecoration(

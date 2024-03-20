@@ -6,8 +6,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
-import 'package:momento_booth/views/custom_widgets/qr_code.dart';
-import 'package:momento_booth/views/custom_widgets/wrappers/slider_widget.dart';
 import 'package:momento_booth/views/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 
@@ -47,8 +45,6 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         ),
         if (viewModel.displayConfetti)
           ... _confettiStack,
-        SizedBox.expand(child: _qrCodeBackdrop),
-        _qrCode,
       ],
     );
   }
@@ -96,11 +92,6 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       gravity: 0.3, // gravity - or fall speed
       shouldLoop: false,
       displayTarget: false,
-      // colors: const [
-      //   Colors.green,
-      //   Colors.blue,
-      //   Colors.pink
-      // ], // manually specify the colors to be used
     );
   }
 
@@ -158,24 +149,9 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
               // Get QR button
               onTap: controller.onClickGetQR,
               behavior: HitTestBehavior.translucent,
-              child: Observer(
-                builder: (context) {
-                  if (viewModel.uploadProgress != null) {
-                    return ProgressRing(
-                      value: (viewModel.uploadProgress ?? 0) * 100,
-                    );
-                  } else if (viewModel.uploadFailed) {
-                    return AutoSizeText(
-                      localizations.shareScreenRetryQrButton,
-                      style: theme.titleStyle,
-                    );
-                  }
-
-                  return AutoSizeText(
-                    localizations.shareScreenGetQrButton,
-                    style: theme.titleStyle,
-                  );
-                },
+              child: AutoSizeText(
+                localizations.photoDetailsScreenGetQrButton,
+                style: theme.titleStyle,
               ),
             ),
           ),
@@ -201,44 +177,6 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         ),
       ],
     );
-  }
-
-  Widget get _qrCodeBackdrop {
-    return Observer(builder: (_) {
-      return IgnorePointer(
-        ignoring: !viewModel.qrShown,
-        child: GestureDetector(
-          onTap: controller.onClickCloseQR,
-          child: AnimatedOpacity(
-            opacity: viewModel.qrShown ? 0.5 : 0.0,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-            child: const ColoredBox(color: Color(0xFF000000)),
-          ),
-        ),
-      );
-    });
-  }
-
-  Widget get _qrCode {
-    return Observer(builder: (context) {
-      return SliderWidget(
-        key: viewModel.sliderKey,
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: const Color(0xffffffff),
-            borderRadius: BorderRadius.circular(10),
-            border: theme.captureCounterContainerBorder,
-            boxShadow: [theme.captureCounterContainerShadow],
-          ),
-          child: QrCode(
-            size: 500,
-            data: viewModel.qrUrl ?? '',
-          ),
-        ),
-      );
-    });
   }
 
 }

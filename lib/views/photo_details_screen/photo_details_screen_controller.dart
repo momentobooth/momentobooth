@@ -1,11 +1,8 @@
-import 'dart:io';
-
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
 
 class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScreenViewModel> with UiLoggy {
@@ -21,53 +18,24 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     router.pop();
   }
 
-  String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
-
-  void onClickCloseQR() {
-    viewModel.qrShown = false;
-    viewModel.sliderKey.currentState!.animateBackward();
-  }
-  
-  Future<void> onClickGetQR() async {
-    if (viewModel.qrUrl != null) {
-      viewModel.qrShown = true;
-      viewModel.sliderKey.currentState!.animateForward();
-      return;
-    } else if (viewModel.uploadProgress != null) {
-      return;
-    }
-
-    final File file = viewModel.file; // Just take the file that we're viewing anyway
-    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
-
-    loggy.debug("Uploading ${file.path}");
-    var stream = ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
-
-    viewModel
-      ..uploadProgress = 0.0
-      ..uploadFailed = false;
-
-    stream.listen((event) {
-      if (event.isFinished) {
-        loggy.debug("Upload complete: ${event.downloadUrl}");
-
-        viewModel
-          ..uploadProgress = null
-          ..qrUrl = event.downloadUrl
-          ..qrShown = true
-          ..sliderKey.currentState!.animateForward();
-
-        StatsManager.instance.addUploadedPhoto();
-      } else {
-        loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
-        viewModel.uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
-      }
-    }).onError((x) {
-      loggy.error("Upload failed, file path: ${file.path}", x);
-      viewModel
-        ..uploadProgress = null
-        ..uploadFailed = true;
-    });
+  void onClickGetQR() {
+    viewModel.uploadPhotoToSend();
+    showUserDialog(
+      barrierDismissible: false,
+      dialog: Observer(builder: (_) {
+        return QrShareDialog(
+          state: viewModel.uploadFailed
+              ? ShareDialogState.error
+              : viewModel.uploadProgress != null
+                  ? ShareDialogState.uploading
+                  : ShareDialogState.uploaded,
+          uploadProgress: (viewModel.uploadProgress ?? 0) * 100,
+          qrText: viewModel.qrUrl,
+          onDismiss: () => navigator.pop(),
+          onRedoUpload: viewModel.uploadPhotoToSend,
+        );
+      }),
+    );
   }
 
   int successfulPrints = 0;
@@ -89,7 +57,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printText = localizations.photoDetailsScreenPrinting;
 
     // Get photo and print it.
-    final pdfData = await getImagePDF(await viewModel.file.readAsBytes());
+    final pdfData = await getImagePDF(await viewModel.file!.readAsBytes());
     final bool success = await printPDF(pdfData);
 
     viewModel.printText = success ? localizations.photoDetailsScreenPrinting : localizations.photoDetailsScreenPrintUnsuccesful;

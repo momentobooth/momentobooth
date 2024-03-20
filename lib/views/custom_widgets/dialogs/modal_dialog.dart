@@ -9,14 +9,18 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 class ModalDialog extends StatelessWidget {
 
+  final double? width;
+  final double? height;
   final String title;
-  final ModalDialogType dialogType;
+  final ModalDialogType? dialogType;
   final Widget body;
   final List<Widget>? actions;
   final VoidCallback? onDismiss;
 
   const ModalDialog({
     super.key,
+    this.width,
+    this.height,
     required this.title,
     this.dialogType = ModalDialogType.info,
     required this.body,
@@ -29,9 +33,11 @@ class ModalDialog extends StatelessWidget {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return PhotoBoothDialog(
+      width: width,
+      height: height,
       title: title,
       body: body,
-      indicator: dialogType.icon,
+      indicator: dialogType?.icon,
       actions: actions ??
           [
             PhotoBoothFilledButton(
@@ -49,7 +55,8 @@ enum ModalDialogType {
 
   info,
   warning,
-  error;
+  error,
+  success;
 
   IconData get _iconData {
     switch (this) {
@@ -59,6 +66,8 @@ enum ModalDialogType {
         return FontAwesomeIcons.triangleExclamation;
       case ModalDialogType.error:
         return FontAwesomeIcons.xmark;
+      case ModalDialogType.success:
+        return FontAwesomeIcons.check;
     }
   }
 
@@ -70,6 +79,8 @@ enum ModalDialogType {
         return const Color(0xffffb900);
       case ModalDialogType.error:
         return const Color(0xffd83b01);
+      case ModalDialogType.success:
+        return const Color(0xff107c10);
     }
   }
 

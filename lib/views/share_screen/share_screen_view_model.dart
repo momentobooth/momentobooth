@@ -1,18 +1,20 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:confetti/confetti.dart';
-import 'package:flutter/widgets.dart';
+import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
-import 'package:momento_booth/views/custom_widgets/wrappers/slider_widget.dart';
 
 part 'share_screen_view_model.g.dart';
 
 class ShareScreenViewModel = ShareScreenViewModelBase with _$ShareScreenViewModel;
 
-abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
+abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
 
   ShareScreenViewModelBase({
     required super.contextAccessor,
@@ -29,22 +31,50 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   @observable
   bool printEnabled = true;
 
-  @observable
-  double? uploadProgress;
+  @readonly
+  double? _uploadProgress;
 
-  @observable
-  bool uploadFailed = false;
+  @readonly
+  bool _uploadFailed = false;
 
-  @observable
-  bool qrShown = false;
+  @readonly
+  String? _qrUrl;
 
-  @observable
-  String? qrUrl;
+  @readonly
+  File? _file;
 
+  String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
   CaptureMode get captureMode => PhotosManager.instance.captureMode;
   String get backText => captureMode == CaptureMode.single ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;
 
-  /// Global key for controlling the slider widget.
-  GlobalKey<SliderWidgetState> sliderKey = GlobalKey<SliderWidgetState>();
+  Future<void> uploadPhotoToSend() async {
+    _file ??= await PhotosManager.instance.getOutputImageAsTempFile();
+    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
+
+    loggy.debug("Uploading ${_file!.path}");
+    var stream = ffsendUploadFile(filePath: _file!.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
+
+    _uploadProgress = 0.0;
+    _uploadFailed = false;
+
+    stream.listen((event) async {
+      if (event.isFinished) {
+        loggy.debug("Upload complete: ${event.downloadUrl}");
+
+        await Future.delayed(const Duration(milliseconds: 500));
+        _uploadProgress = null;
+        _qrUrl = event.downloadUrl;
+
+        StatsManager.instance.addUploadedPhoto();
+      } else {
+        loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
+        _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
+      }
+    }).onError((x) {
+      loggy.error("Upload failed, file path: ${_file!.path}", x);
+      _uploadProgress = null;
+      _uploadFailed = true;
+    });
+  }
 
 }

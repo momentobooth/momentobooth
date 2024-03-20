@@ -19,14 +19,14 @@ mixin BuildContextAbstractor {
 
   AppLocalizations get localizations => AppLocalizations.of(_context)!;
 
-  Future<void> showUserDialog(Widget child) async {
+  Future<void> showUserDialog({required Widget dialog, required bool barrierDismissible}) async {
     await navigator.push(PhotoBoothDialogPage(
       key: null,
       child: Padding(
         padding: const EdgeInsets.all(32),
-        child: Center(child: child),
+        child: Center(child: dialog),
       ),
-      barrierDismissible: true,
+      barrierDismissible: barrierDismissible,
     ).createRoute(_context));
   }
 

@@ -21,7 +21,8 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
 
         if (printerState.state == PrinterState.stopped) {
           await showUserDialog(
-            PrinterIssueDialog(
+            barrierDismissible: false,
+            dialog: PrinterIssueDialog(
               printerName: printerState.name,
               issueType: PrinterIssueType.fromPrinterState(printerState.stateReason),
               errorText: printerState.stateMessage,
