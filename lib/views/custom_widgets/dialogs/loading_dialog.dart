@@ -1,6 +1,7 @@
 import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 class LoadingDialog extends StatelessWidget {
 
@@ -45,3 +46,9 @@ class LoadingDialog extends StatelessWidget {
   }
 
 }
+
+@widgetbook.UseCase(
+  name: 'Loading Dialog',
+  type: LoadingDialog,
+)
+Widget loadingDialog(BuildContext context) => const LoadingDialog(title: 'Please wait...');
