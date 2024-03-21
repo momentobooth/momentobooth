@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
@@ -40,17 +39,13 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   @readonly
   String? _qrUrl;
 
-  @readonly
-  File? _file;
-
   String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
 
   Future<void> uploadPhotoToSend() async {
-    _file ??= await PhotosManager.instance.getOutputImageAsTempFile();
     final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
 
-    loggy.debug("Uploading ${_file!.path}");
-    var stream = ffsendUploadFile(filePath: _file!.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
+    loggy.debug("Uploading ${file!.path}");
+    var stream = ffsendUploadFile(filePath: file!.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
 
     _uploadProgress = 0.0;
     _uploadFailed = false;
@@ -69,7 +64,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
         _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
     }).onError((x) async {
-      loggy.error("Upload failed, file path: ${_file!.path}", x);
+      loggy.error("Upload failed, file path: ${file!.path}", x);
       await Future.delayed(const Duration(seconds: 1));
       _uploadProgress = null;
       _uploadFailed = true;
