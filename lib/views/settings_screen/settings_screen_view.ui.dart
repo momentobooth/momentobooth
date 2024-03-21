@@ -4,6 +4,13 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
   return FluentSettingsPage(
     title: "User interface",
     blocks: [
+      ColorInputCard(
+        icon: FluentIcons.color,
+        title: "Primary color",
+        subtitle: "The primary color of the app",
+        value: () => viewModel.primaryColorCodeSetting,
+        onFinishedEditing: controller.onPrimaryColorCodeChanged,
+      ),
       NumberInputCard(
         icon: FluentIcons.timer,
         title: "Return to home timeout",

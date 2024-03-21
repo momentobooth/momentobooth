@@ -141,6 +141,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
   const UiSettings._();
 
   const factory UiSettings({
+    @Default('#0078c8') String primaryColorCode,
     @Default(45) int returnToHomeTimeoutSeconds,
     @Default(Language.english) Language language,
     @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,

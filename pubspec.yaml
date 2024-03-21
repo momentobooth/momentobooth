@@ -35,6 +35,7 @@ dependencies:
   smooth_scroll_multiplatform: 1.0.8
   widgetbook: 3.7.1
   widgetbook_annotation: 3.1.0
+  flex_color_picker: 3.4.1
 
   # Printscreen/Image processing
   screenshot: 2.3.0
@@ -86,6 +87,7 @@ dependencies:
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.3
   draggable_scrollbar: 0.1.0
+  csslib: 1.0.0
 
 dev_dependencies:
   # UI
