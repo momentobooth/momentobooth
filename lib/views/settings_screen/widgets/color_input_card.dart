@@ -1,5 +1,4 @@
 
-import 'package:csslib/parser.dart' as css_parser;
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
@@ -11,8 +10,8 @@ class ColorInputCard extends StatefulWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final GetValueCallback<String> value;
-  final ValueChanged<String?> onFinishedEditing;
+  final GetValueCallback<Color> value;
+  final ValueChanged<Color?> onChanged;
 
   const ColorInputCard({
     super.key,
@@ -20,7 +19,7 @@ class ColorInputCard extends StatefulWidget {
     required this.title,
     required this.subtitle,
     required this.value,
-    required this.onFinishedEditing,
+    required this.onChanged,
   });
 
   @override
@@ -30,7 +29,7 @@ class ColorInputCard extends StatefulWidget {
 
 class _ColorInputCardState extends State<ColorInputCard> {
 
-  late String _currentValue;
+  late Color _currentValue;
 
   @override
   void initState() {
@@ -40,21 +39,19 @@ class _ColorInputCardState extends State<ColorInputCard> {
 
   @override
   Widget build(BuildContext context) {
-    Color currentColor = Color(css_parser.Color.hex('FF${_currentValue.substring(1)}').argbValue);
-
     return FluentSettingCard(
       icon: widget.icon,
       title: widget.title,
       subtitle: widget.subtitle,
       child: Focus(
         skipTraversal: true,
-        onFocusChange: (hasFocus) => !hasFocus ? widget.onFinishedEditing(_currentValue) : null,
+        onFocusChange: (hasFocus) => !hasFocus ? widget.onChanged(_currentValue) : null,
         child: ColorIndicator(
-          color: currentColor,
+          color: _currentValue,
           onSelect: () async {
             Color pickedColor = await showColorPickerDialog(
               context,
-              currentColor,
+              _currentValue,
               pickersEnabled: const <ColorPickerType, bool>{
                 ColorPickerType.wheel: true,
                 ColorPickerType.primary: false,
@@ -62,8 +59,11 @@ class _ColorInputCardState extends State<ColorInputCard> {
               },
               backgroundColor: Colors.white,
             );
-            setState(() => _currentValue = '#${pickedColor.value.toRadixString(16).toUpperCase().substring(2)}');
-            widget.onFinishedEditing(_currentValue);
+
+            if (pickedColor != _currentValue) {
+              setState(() => _currentValue = pickedColor);
+              widget.onChanged(_currentValue);
+            }
           },
         ),
       ),

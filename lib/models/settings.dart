@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:csslib/parser.dart' as css_parser;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/exceptions/default_setting_restore_exception.dart';
@@ -141,7 +142,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
   const UiSettings._();
 
   const factory UiSettings({
-    @Default('#0078c8') String primaryColorCode,
+    @Default(Color(0xFF0078C8)) @ColorColorCodeConverter() Color primaryColor,
     @Default(45) int returnToHomeTimeoutSeconds,
     @Default(Language.english) Language language,
     @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,
@@ -255,3 +256,21 @@ String _captureStorageLocationFromJson() => join(_getHome(), "Pictures", "Moment
 String _localFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Output");
 String _clientIdFromJson() => 'momentobooth-photobooth-${getRandomString()}';
 String _homeAssistantComponentIdFromJson() => 'momentobooth-${getRandomString()}';
+
+// ////////// //
+// Converters //
+// ////////// //
+
+class ColorColorCodeConverter implements JsonConverter<Color, String> {
+
+  const ColorColorCodeConverter();
+
+  @override
+  Color fromJson(String colorCode) {
+    return Color(css_parser.Color.hex('FF${colorCode.substring(1)}').argbValue);
+  }
+
+  @override
+  String toJson(Color color) => '#${color.value.toRadixString(16).toUpperCase().substring(2)}';
+
+}

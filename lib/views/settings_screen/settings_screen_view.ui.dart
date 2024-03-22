@@ -8,8 +8,8 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         icon: FluentIcons.color,
         title: "Primary color",
         subtitle: "The primary color of the app",
-        value: () => viewModel.primaryColorCodeSetting,
-        onFinishedEditing: controller.onPrimaryColorCodeChanged,
+        value: () => viewModel.primaryColorSetting,
+        onChanged: controller.onPrimaryColorChanged,
       ),
       NumberInputCard(
         icon: FluentIcons.timer,

@@ -131,7 +131,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ExportFormat get exportFormat => SettingsManager.instance.settings.output.exportFormat;
   int get jpgQuality => SettingsManager.instance.settings.output.jpgQuality;
   double get resolutionMultiplier => SettingsManager.instance.settings.output.resolutionMultiplier;
-  String get primaryColorCodeSetting => SettingsManager.instance.settings.ui.primaryColorCode;
+  Color get primaryColorSetting => SettingsManager.instance.settings.ui.primaryColor;
   int get returnToHomeTimeoutSeconds => SettingsManager.instance.settings.ui.returnToHomeTimeoutSeconds;
   bool get displayConfettiSetting => SettingsManager.instance.settings.ui.displayConfetti;
   bool get enableSfxSetting => SettingsManager.instance.settings.ui.enableSfx;
