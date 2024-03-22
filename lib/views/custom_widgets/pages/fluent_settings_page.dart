@@ -1,6 +1,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_scroll_shadow/flutter_scroll_shadow.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 
 class FluentSettingsPage extends StatelessWidget {
 
@@ -29,8 +30,14 @@ class FluentSettingsPage extends StatelessWidget {
             child: ScrollShadow(
               size: 16,
               color: theme.micaBackgroundColor.toAccentColor().lightest,
-              child: ListView(
-                children: blocks,
+              child: DynMouseScroll(
+                builder: (context, scrollController, scrollPhysics) {
+                  return ListView(
+                    controller: scrollController,
+                    physics: scrollPhysics,
+                    children: blocks,
+                  );
+                },
               ),
             ),
           ),

@@ -1,21 +1,21 @@
-import 'dart:io';
+import 'dart:async';
 
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
+import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 
-class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with UiLoggy, PrinterStatusDialogMixin<ShareScreenViewModel> {
-
+class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel>
+    with UiLoggy, PrinterStatusDialogMixin<ShareScreenViewModel> {
   // Initialization/Deinitialization
 
   ShareScreenController({
@@ -28,7 +28,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   void onClickNext() {
     router.go(StartScreen.defaultRoute);
   }
-  
+
   void onClickPrev() {
     loggy.debug("Clicked prev");
     if (PhotosManager.instance.captureMode == CaptureMode.single) {
@@ -40,53 +40,24 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     }
   }
 
-  String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
-
-  void onClickCloseQR() {
-    viewModel.qrShown = false;
-    viewModel.sliderKey.currentState!.animateBackward();
-  }
-  
-  Future<void> onClickGetQR() async {
-     if (viewModel.qrUrl != null) {
-      viewModel.qrShown = true;
-      viewModel.sliderKey.currentState!.animateForward();
-      return;
-    } else if (viewModel.uploadProgress != null) {
-      return;
-    }
-
-    File file = await PhotosManager.instance.getOutputImageAsTempFile();
-    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
-
-    loggy.debug("Uploading ${file.path}");
-    var stream = ffsendUploadFile(filePath: file.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
-
-    viewModel
-      ..uploadProgress = 0.0
-      ..uploadFailed = false;
-
-    stream.listen((event) {
-      if (event.isFinished) {
-        loggy.debug("Upload complete: ${event.downloadUrl}");
-
-        viewModel
-          ..uploadProgress = null
-          ..qrUrl = event.downloadUrl
-          ..qrShown = true
-          ..sliderKey.currentState!.animateForward();
-
-        StatsManager.instance.addUploadedPhoto();
-      } else {
-        loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
-        viewModel.uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
-      }
-    }).onError((x) {
-      loggy.error("Upload failed, file path: ${file.path}", x);
-      viewModel
-        ..uploadProgress = null
-        ..uploadFailed = true;
-    });
+  void onClickGetQR() {
+    viewModel.uploadPhotoToSend();
+    showUserDialog(
+      barrierDismissible: false,
+      dialog: Observer(builder: (_) {
+        return QrShareDialog(
+          state: viewModel.uploadFailed
+              ? ShareDialogState.error
+              : viewModel.uploadProgress != null
+                  ? ShareDialogState.uploading
+                  : ShareDialogState.uploaded,
+          uploadProgress: (viewModel.uploadProgress ?? 0) * 100,
+          qrText: viewModel.qrUrl,
+          onDismiss: () => navigator.pop(),
+          onRedoUpload: viewModel.uploadPhotoToSend,
+        );
+      }),
+    );
   }
 
   int successfulPrints = 0;
@@ -106,7 +77,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     viewModel
       ..printEnabled = false
       ..printText = localizations.shareScreenPrinting;
-    
+
     // Get photo and print it.
     final pdfData = await PhotosManager.instance.getOutputPDF();
     final bool success = await printPDF(pdfData);
@@ -117,5 +88,4 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
     await checkPrintersAndShowWarnings();
   }
-
 }

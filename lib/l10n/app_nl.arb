@@ -7,6 +7,9 @@
     "genericRefreshButton": "Vernieuwen",
     "genericClearButton": "Wissen",
     "genericSaveButton": "Opslaan",
+    "genericCloseButton": "Sluiten",
+    "genericRetryButton": "Probeer opnieuw",
+    "genericCancelButton": "Annuleren",
 
     "startScreenTouchToStartButton": "Raak aan om te beginnen",
     "startScreenGalleryButton": "Galerij",
@@ -39,6 +42,12 @@
     "shareScreenRetryQrButton": "Fout, opnieuw?",
     "shareScreenPrinting": "Afdrukken...",
     "shareScreenPrintUnsuccesful": "Afdrukken mislukt",
+
+    "qrDialogTitle": "Deel via een QR code",
+    "qrDialogUploading": "Uploaden...",
+    "qrDialogInstructions": "Je kunt je foto downloaden door deze QR code te scannen.\n\nLet op: Een downloadlink kan maar één keer gebruikt worden. Klik op 'Extra download' als je nog een download nodig hebt.",
+    "qrDialogExtraDownloadButton": "Extra download",
+    "qrDialogErrorMessage": "Er is een fout opgetreden tijdens het uploaden. Controleer de internetverbinding en klik op 'Opnieuw' om het opnieuw te proberen.",
 
     "multiCaptureScreenPhotoCounter": "Foto {current}/{total}",
     "multiCaptureScreenGetReady": "Maak je klaar",

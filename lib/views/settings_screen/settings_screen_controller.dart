@@ -307,6 +307,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onPrimaryColorChanged(Color? primaryColor) {
+    if (primaryColor != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(primaryColor: primaryColor));
+    }
+  }
+
   void onReturnToHomeTimeoutSecondsChanged(int? returnToHomeTimeoutSeconds) {
     if (returnToHomeTimeoutSeconds != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(returnToHomeTimeoutSeconds: returnToHomeTimeoutSeconds));

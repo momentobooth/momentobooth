@@ -7,6 +7,9 @@
     "genericRefreshButton": "Refresh",
     "genericClearButton": "Clear",
     "genericSaveButton": "Save",
+    "genericCloseButton": "Close",
+    "genericRetryButton": "Retry",
+    "genericCancelButton": "Cancel",
     
     "startScreenTouchToStartButton": "Touch to start",
     "startScreenGalleryButton": "Gallery",
@@ -39,6 +42,12 @@
     "shareScreenRetryQrButton": "Error, retry?",
     "shareScreenPrinting": "Printing...",
     "shareScreenPrintUnsuccesful": "Print unsuccessful",
+
+    "qrDialogTitle": "Share using a QR code",
+    "qrDialogUploading": "Uploading...",
+    "qrDialogInstructions": "You can download your photo by scanning this QR code.\n\nNote: A download link can be used once. Please click 'Extra download' if you need another download.",
+    "qrDialogExtraDownloadButton": "Extra download",
+    "qrDialogErrorMessage": "An error has occured while uploading. Check the internet connection and click 'Retry' to try again.",
 
     "multiCaptureScreenPhotoCounter": "Photo {current}/{total}",
     "multiCaptureScreenGetReady": "Get Ready",

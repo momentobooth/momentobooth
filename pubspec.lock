@@ -9,6 +9,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "67.0.0"
+  accessibility_tools:
+    dependency: transitive
+    description:
+      name: accessibility_tools
+      sha256: "0a16adc8dfa3a7ebd38775135d86443011a65d4ecbb438913e4992b5d29135fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   analyzer:
     dependency: transitive
     description:
@@ -242,7 +250,7 @@ packages:
     source: hosted
     version: "3.0.3"
   csslib:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: csslib
       sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
@@ -265,6 +273,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  device_frame:
+    dependency: transitive
+    description:
+      name: device_frame
+      sha256: afe76182aec178d171953d9b4a50a43c57c7cf3c77d8b09a48bf30c8fa04dd9d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   draggable_scrollbar:
     dependency: "direct main"
     description:
@@ -393,6 +409,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  flex_color_picker:
+    dependency: "direct main"
+    description:
+      name: flex_color_picker
+      sha256: "5c846437069fb7afdd7ade6bf37e628a71d2ab0787095ddcb1253bf9345d5f3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.1"
+  flex_seed_scheme:
+    dependency: transitive
+    description:
+      name: flex_seed_scheme
+      sha256: "29c12aba221eb8a368a119685371381f8035011d18de5ba277ad11d7dfb8657f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   fluent_ui:
     dependency: "direct main"
     description:
@@ -583,6 +615,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.7"
+  inspector:
+    dependency: transitive
+    description:
+      name: inspector
+      sha256: "40ba0ac1c819c85139bfec9d1e283804581a8985c91f19d00e93212cf29226b1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   integration_test:
     dependency: "direct dev"
     description: flutter
@@ -1028,6 +1068,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  resizable_widget:
+    dependency: transitive
+    description:
+      name: resizable_widget
+      sha256: db2919754b93f386b9b3fb15e9f48f6c9d6d41f00a24397629133c99df86606a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   rust_lib_momento_booth:
     dependency: "direct main"
     description:
@@ -1104,6 +1152,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  smooth_scroll_multiplatform:
+    dependency: "direct main"
+    description:
+      name: smooth_scroll_multiplatform
+      sha256: c3b8998c3c70eaf480e8ce16608ffc80c0aac1722697a08992fde10e1c97a742
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   source_gen:
     dependency: transitive
     description:
@@ -1337,6 +1393,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  widgetbook:
+    dependency: "direct main"
+    description:
+      name: widgetbook
+      sha256: be0588cd864a70bd2817ca2fab0dbd147c460b712cfe53fd13e6fd46b5c3f368
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.1"
+  widgetbook_annotation:
+    dependency: "direct main"
+    description:
+      name: widgetbook_annotation
+      sha256: c2d881d0241525b36aa3777d0ac406d198528ed28b84ca73b7dd9f59189d6bb0
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
+  widgetbook_generator:
+    dependency: "direct dev"
+    description:
+      name: widgetbook_generator
+      sha256: d81512780bb4d137d59f0694328f446433fe5228cf8191e918046cc4f09c128b
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.0"
   win32:
     dependency: "direct main"
     description:
