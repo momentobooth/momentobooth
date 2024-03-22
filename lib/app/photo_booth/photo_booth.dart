@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app/photo_booth/widgets/activity_monitor.dart';
 import 'package:momento_booth/app/photo_booth/widgets/photo_booth_hotkey_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
-import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
@@ -56,9 +55,15 @@ class PhotoBoothState extends State<PhotoBooth> {
             data: MomentoBoothThemeData.defaults(),
             child: SetScrollConfiguration(
               child: Observer(
-                builder: (context) => WidgetsApp.router(
+                builder: (context) => FluentApp.router(
+                  scrollBehavior: ScrollConfiguration.of(context),
+                  color: SettingsManager.instance.settings.ui.primaryColor,
+                  theme: FluentThemeData(
+                    accentColor: AccentColor.swatch(
+                      {'normal': SettingsManager.instance.settings.ui.primaryColor},
+                    ),
+                  ),
                   routerConfig: _router,
-                  color: context.theme.primaryColor,
                   localizationsDelegates: const [
                     AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
