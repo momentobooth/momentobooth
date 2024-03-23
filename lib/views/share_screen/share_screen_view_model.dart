@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:confetti/confetti.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
@@ -42,6 +43,17 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, 
 
   @readonly
   File? _file;
+
+  List<Color>? getColors() {
+    if (!SettingsManager.instance.settings.ui.customColorConfetti) return null;
+    final theme = FluentTheme.of(contextAccessor.buildContext);
+    final accentColor = HSLColor.fromColor(theme.accentColor);
+    final List<double> lValues = [0.2, 0.4, 0.5, 0.7, 0.9, 1];
+    final accentColorsHSL = lValues.map((e) => HSLColor.fromAHSL(1, accentColor.hue, accentColor.saturation, e));
+    final accentColors = accentColorsHSL.map((e) => e.toColor()).toList();
+
+    return accentColors;
+  }
 
   String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
   CaptureMode get captureMode => PhotosManager.instance.captureMode;

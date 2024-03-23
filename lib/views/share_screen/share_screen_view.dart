@@ -84,6 +84,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       blastDirection: direction,
       maximumSize: const Size(60, 30),
       minimumSize: const Size(40, 20),
+      colors: viewModel.getColors(),
       minBlastForce: force,
       maxBlastForce: force*2,
       particleDrag: 0.01, // apply drag to the confetti

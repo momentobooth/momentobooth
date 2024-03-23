@@ -43,6 +43,13 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
             value: () => viewModel.displayConfettiSetting,
             onChanged: controller.onDisplayConfettiChanged,
           ),
+          BooleanInputCard(
+            icon: FluentIcons.color,
+            title: "Colorize confetti to the theme color",
+            subtitle: "If enabled, confetti will will be various shades of the theme color. Else, random colors will be used.",
+            value: () => viewModel.customColorConfettiSetting,
+            onChanged: controller.onCustomColorConfettiChanged,
+          ),
           ComboBoxCard<ScreenTransitionAnimation>(
             icon: FluentIcons.transition_effect,
             title: "Screen transition animation",

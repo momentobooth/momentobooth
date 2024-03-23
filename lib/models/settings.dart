@@ -147,6 +147,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(Language.english) Language language,
     @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,
     @Default(true) bool displayConfetti,
+    @Default(false) bool customColorConfetti,
     @Default(false) bool enableSfx,
     @Default("") String clickSfxFile,
     @Default("") String shareScreenSfxFile,
