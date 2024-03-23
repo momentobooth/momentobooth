@@ -17,6 +17,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   // User interaction methods
 
   Future<void> onPressedContinue() async {
+    viewModel.isBusy = true;
     await checkPrintersAndShowWarnings();
     router.go(ChooseCaptureModeScreen.defaultRoute);
   }

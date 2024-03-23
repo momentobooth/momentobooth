@@ -10,6 +10,7 @@
     "genericCloseButton": "Close",
     "genericRetryButton": "Retry",
     "genericCancelButton": "Cancel",
+    "genericOneMomentPlease": "One moment please...",
     
     "startScreenTouchToStartButton": "Touch to start",
     "startScreenGalleryButton": "Gallery",
