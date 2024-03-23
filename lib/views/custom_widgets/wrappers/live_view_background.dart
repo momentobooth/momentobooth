@@ -4,7 +4,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
