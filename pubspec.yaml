@@ -36,8 +36,6 @@ dependencies:
   widgetbook: 3.7.1
   widgetbook_annotation: 3.1.0
   flex_color_picker: 3.4.1
-  webview_flutter: 3.0.4
-  flutter_linux_webview: 0.1.2
 
   # Printscreen/Image processing
   screenshot: 2.3.0
