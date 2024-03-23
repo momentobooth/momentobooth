@@ -95,6 +95,11 @@ class QrShareDialog extends StatelessWidget {
   Widget _uploadedState(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
+    final Color accentColor = FluentTheme.of(context).accentColor;
+    final HSLColor accentColorHSL = HSLColor.fromColor(accentColor);
+    final Color accentColorLight = HSLColor.fromAHSL(1, accentColorHSL.hue, accentColorHSL.saturation, 0.7).toColor();
+    final Color accentColorLightest = HSLColor.fromAHSL(1, accentColorHSL.hue, accentColorHSL.saturation, 0.8).toColor();
+
     return SizedBox(
       width: 650,
       height: 250,
@@ -116,6 +121,23 @@ class QrShareDialog extends StatelessWidget {
                   alignment: Alignment.center,
                   height: 100,
                   frameRate: FrameRate.max,
+                  delegates: LottieDelegates(
+                    values: [
+                      ValueDelegate.color(
+                        // keyPath order: ['layer name', 'group name', 'shape name']
+                        const ["Codigo-qr-big Outlines", "**"],
+                        value: accentColorLight
+                      ),
+                      ValueDelegate.color(
+                        const ["Codigo-qr-small Outlines", "**"],
+                        value: accentColorLightest
+                      ),
+                      ValueDelegate.color(
+                        const ["Linea Outlines", "**"],
+                        value: FluentTheme.of(context).accentColor
+                      ),
+                    ]
+                  )
                 ),
                 const SizedBox(height: 16.0),
                 Text(
