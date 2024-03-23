@@ -45,6 +45,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, 
   File? _file;
 
   List<Color>? getColors() {
+    if (!SettingsManager.instance.settings.ui.customColorConfetti) return null;
     final theme = FluentTheme.of(contextAccessor.buildContext);
     final accentColor = HSLColor.fromColor(theme.accentColor);
     final List<double> lValues = [0.2, 0.4, 0.5, 0.7, 0.9, 1];

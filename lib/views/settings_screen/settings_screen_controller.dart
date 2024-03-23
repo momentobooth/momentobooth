@@ -325,6 +325,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onCustomColorConfettiChanged(bool? customColorConfetti) {
+    if (customColorConfetti != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(customColorConfetti: customColorConfetti));
+    }
+  }
+
   void onEnableSfxChanged(bool? enableSfx) {
     if (enableSfx != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(enableSfx: enableSfx));

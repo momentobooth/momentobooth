@@ -134,6 +134,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   Color get primaryColorSetting => SettingsManager.instance.settings.ui.primaryColor;
   int get returnToHomeTimeoutSeconds => SettingsManager.instance.settings.ui.returnToHomeTimeoutSeconds;
   bool get displayConfettiSetting => SettingsManager.instance.settings.ui.displayConfetti;
+  bool get customColorConfettiSetting => SettingsManager.instance.settings.ui.customColorConfetti;
   bool get enableSfxSetting => SettingsManager.instance.settings.ui.enableSfx;
   String get clickSfxFileSetting => SettingsManager.instance.settings.ui.clickSfxFile;
   String get shareScreenSfxFileSetting => SettingsManager.instance.settings.ui.shareScreenSfxFile;
