@@ -1,4 +1,5 @@
 import 'package:figma_squircle/figma_squircle.dart';
+import 'package:fluent_ui/fluent_ui.dart' hide Colors;
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -12,12 +13,14 @@ class LoadingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = FluentTheme.of(context);
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       height: 200,
       width: 400,
       decoration: ShapeDecoration(
-        color: Colors.lightBlueAccent.withOpacity(0.75),
+        color: theme.accentColor.light,
         shape: SmoothRectangleBorder(
           borderRadius: SmoothBorderRadius(
             cornerRadius: 40,
