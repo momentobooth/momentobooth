@@ -71,21 +71,21 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     );
   }
 
-  final String unsedPrinterValue = "UNUSED";
+  final String unusedPrinterValue = "UNUSED";
 
-  Future<void> setPrinterList() async {
+  Future<void> setFlutterPrintingPrinterNameList() async {
     final printers = await Printing.listPrinters();
 
     printerOptions
       ..clear()
-      ..add(ComboBoxItem(value: unsedPrinterValue, child: _printerCardText("- Not used -", false, false)));
+      ..add(ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)));
 
     for (var printer in printers) {
       printerOptions.add(ComboBoxItem(value: printer.name, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
       
       // If there is no setting yet, set it to the default printer.
-      if (printer.isDefault && printersSetting.isEmpty) {
-        await updateSettings((settings) => settings.copyWith.hardware(printerNames: [printer.name]));
+      if (printer.isDefault && flutterPrintingPrinterNamesSetting.isEmpty) {
+        await updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: [printer.name]));
       }
     }
   }
@@ -117,7 +117,12 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;
   bool get saveCapturesToDiskSetting => SettingsManager.instance.settings.hardware.saveCapturesToDisk;
   String get captureStorageLocationSetting => SettingsManager.instance.settings.hardware.captureStorageLocation;
-  List<String> get printersSetting => SettingsManager.instance.settings.hardware.printerNames;
+  PrintingImplementation get printingImplementationSetting => SettingsManager.instance.settings.hardware.printingImplementation;
+  String get cupsUriSetting => SettingsManager.instance.settings.hardware.cupsUri;
+  String get cupsUsernameSetting => SettingsManager.instance.settings.hardware.cupsUsername;
+  String get cupsPasswordSetting => SettingsManager.instance.settings.hardware.cupsPassword;
+  List<String> get cupsPrinterQueuesSetting => SettingsManager.instance.settings.hardware.cupsPrinterQueues;
+  List<String> get flutterPrintingPrinterNamesSetting => SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
   double get pageHeightSetting => SettingsManager.instance.settings.hardware.pageHeight;
   double get pageWidthSetting => SettingsManager.instance.settings.hardware.pageWidth;
   bool get usePrinterSettingsSetting => SettingsManager.instance.settings.hardware.usePrinterSettings;
@@ -170,7 +175,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   SettingsScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    setPrinterList();
+    setFlutterPrintingPrinterNameList();
     setWebcamList();
     setCameraList();
   }

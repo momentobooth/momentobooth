@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
 import 'package:momento_booth/src/rust/api/cups.dart';
@@ -14,10 +15,10 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
   Future<void> checkPrintersAndShowWarnings() async {
     if (!Platform.isLinux) return;
 
-    List<String> printerIds = SettingsManager.instance.settings.hardware.printerNames;
+    List<String> printerIds = SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
     for (var printerId in printerIds) {
       try {
-        IppPrinterState printerState = await cupsGetPrinterState(printerId: printerId);
+        IppPrinterState printerState = await cupsGetPrinterState(serverInfo: CupsClient.serverInfo, queueId: printerId);
 
         if (printerState.state == PrinterState.stopped) {
           await showUserDialog(
@@ -30,7 +31,7 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
               onResumeQueuePressed: () async {
                 navigator.pop();
                 try {
-                  await cupsResumePrinter(printerId: printerId);
+                  await cupsResumePrinter(serverInfo: CupsClient.serverInfo, queueId: printerId);
                 } catch (e) {
                   loggy.debug("Failed to resume printer [$printerId] with error: $e");
                 }

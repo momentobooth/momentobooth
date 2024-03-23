@@ -53,6 +53,15 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _mqttIntegrationHomeAssistantComponentIdController;
   TextEditingController get mqttIntegrationHomeAssistantComponentIdController => _mqttIntegrationHomeAssistantComponentIdController ??= TextEditingController(text: viewModel.mqttIntegrationHomeAssistantComponentIdSetting);
 
+  TextEditingController? _cupsUriController;
+  TextEditingController get cupsUriController => _cupsUriController ??= TextEditingController(text: viewModel.cupsUriSetting);
+
+  TextEditingController? _cupsUsernameController;
+  TextEditingController get cupsUsernameController => _cupsUsernameController ??= TextEditingController(text: viewModel.cupsUsernameSetting);
+
+  TextEditingController? _cupsPasswordController;
+  TextEditingController get cupsPasswordController => _cupsPasswordController ??= TextEditingController(text: viewModel.cupsPasswordSetting);
+
   TextEditingController? _faceRecognitionServerUrlController;
   TextEditingController get faceRecognitionServerUrlController => _faceRecognitionServerUrlController ??= TextEditingController(text: viewModel.faceRecognitionServerUrlSetting);
 
@@ -211,11 +220,17 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
-  void onPrinterChanged(String? printerName, int? printerIndex) {
+  void onPrintingImplementationChanged(PrintingImplementation? printingImplementation) {
+    if (printingImplementation != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printingImplementation: printingImplementation));
+    }
+  }
+
+  void onCupsPrinterQueuesQueueChanged(String? printerName, int? printerIndex) {
     if (printerName != null && printerIndex != null) {
-      List<String> currentList = List.from(viewModel.printersSetting);
+      List<String> currentList = List.from(viewModel.cupsPrinterQueuesSetting);
       
-      if (printerName == viewModel.unsedPrinterValue) {
+      if (printerName == viewModel.unusedPrinterValue) {
         currentList.length = printerIndex;
       } else {
         if (printerIndex >= currentList.length) {
@@ -224,8 +239,44 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
           currentList[printerIndex] = printerName;
         }
       }
-      loggy.debug("Setting printerlist to $currentList");
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerNames: currentList));
+      loggy.debug("Setting CUPS printer list to $currentList");
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: currentList));
+    }
+  }
+
+  void onCupsUriChanged(String? cupsUri) {
+    if (cupsUri != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsUri: cupsUri));
+    }
+  }
+
+  void onCupsUsernameChanged(String? cupsUsername) {
+    if (cupsUsername != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsUsername: cupsUsername));
+    }
+  }
+
+  void onCupsPasswordChanged(String? cupsPassword) {
+    if (cupsPassword != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsPassword: cupsPassword));
+    }
+  }
+
+  void onFlutterPrintingPrinterChanged(String? printerName, int? printerIndex) {
+    if (printerName != null && printerIndex != null) {
+      List<String> currentList = List.from(viewModel.flutterPrintingPrinterNamesSetting);
+      
+      if (printerName == viewModel.unusedPrinterValue) {
+        currentList.length = printerIndex;
+      } else {
+        if (printerIndex >= currentList.length) {
+          currentList.add(printerName);
+        } else {
+          currentList[printerIndex] = printerName;
+        }
+      }
+      loggy.debug("Setting Flutter printing printerlist to $currentList");
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: currentList));
     }
   }
 

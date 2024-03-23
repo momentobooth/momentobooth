@@ -8,6 +8,7 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
       _getLiveViewBlock(viewModel, controller),
       _getPhotoCaptureBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
+      _getCupsBlock(viewModel, controller),
     ],
   );
 }
@@ -213,7 +214,7 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (int i = 0; i <= viewModel.printersSetting.length; i++)
+            for (int i = 0; i <= viewModel.flutterPrintingPrinterNamesSetting.length; i++)
               _printerCard(viewModel, controller, "Printer ${i+1}", i),
           ],
         ),
@@ -248,6 +249,35 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         subtitle: "Number of photos in the OS's printer queue before a warning is shown (Windows only for now).",
         value: () => viewModel.printerQueueWarningThresholdSetting,
         onFinishedEditing: controller.onPrinterQueueWarningThresholdChanged,
+      ),
+    ],
+  );
+}
+
+Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "CUPS",
+    settings: [
+      TextInputCard(
+        icon: FluentIcons.server,
+        title: "CUPS URI",
+        subtitle: "The URI of the CUPS server",
+        controller: controller.cupsUriController,
+        onFinishedEditing: controller.onCupsUriChanged,
+      ),
+      TextInputCard(
+        icon: FluentIcons.text_field,
+        title: "CUPS username",
+        subtitle: "The username for the CUPS server",
+        controller: controller.cupsUsernameController,
+        onFinishedEditing: controller.onCupsUsernameChanged,
+      ),
+      TextInputCard(
+        icon: FluentIcons.password_field,
+        title: "CUPS password",
+        subtitle: "The password for the CUPS server",
+        controller: controller.cupsPasswordController,
+        onFinishedEditing: controller.onCupsPasswordChanged,
       ),
     ],
   );
@@ -372,7 +402,7 @@ FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreen
     child: Row(
       children: [
         Button(
-          onPressed: viewModel.setPrinterList,
+          onPressed: viewModel.setFlutterPrintingPrinterNameList,
           child: const Text('Refresh'),
         ),
         const SizedBox(width: 10),
@@ -381,8 +411,8 @@ FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreen
           child: Observer(builder: (_) {
             return ComboBox<String>(
               items: viewModel.printerOptions,
-              value: index < viewModel.printersSetting.length ? viewModel.printersSetting[index] : viewModel.unsedPrinterValue,
-              onChanged: (name) => controller.onPrinterChanged(name, index),
+              value: index < viewModel.flutterPrintingPrinterNamesSetting.length ? viewModel.flutterPrintingPrinterNamesSetting[index] : viewModel.unusedPrinterValue,
+              onChanged: (name) => controller.onFlutterPrintingPrinterChanged(name, index),
             );
           }),
         ),

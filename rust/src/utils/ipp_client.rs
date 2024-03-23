@@ -1,7 +1,7 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, io::Cursor};
 use chrono::{DateTime, Utc};
 
-use ipp::prelude::*;
+use ipp::{operation::builder::PrintJobBuilder, prelude::*};
 
 /// Send an IPP request to do `op` to the given `uri` and get the response.
 ///
@@ -67,6 +67,17 @@ pub fn resume_printer(uri: String) -> bool {
 
 pub fn purge_jobs(uri: String) -> bool {
     send_ipp_request(uri, Operation::PurgeJobs).header().status_code().is_success()
+}
+
+pub fn print_job(uri: String, job_name: String, pdf_data: Vec<u8>) -> bool {
+    let uri_p: Uri = uri.parse().unwrap();
+    let pdf_data_cursor = Cursor::new(pdf_data);
+    let pdf_data_payload = IppPayload::new(pdf_data_cursor);
+    let print_job = IppOperationBuilder::print_job(uri_p.clone(), pdf_data_payload).job_title(job_name);
+
+    let client = IppClient::new(uri_p);
+    let resp = client.send(print_job.build());
+    resp.unwrap().header().status_code().is_success()
 }
 
 pub fn restart_job(uri: String, job_id: i32) -> bool {
