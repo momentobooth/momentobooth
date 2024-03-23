@@ -107,11 +107,15 @@ class QrShareDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: Center(
-              child: QrCode(size: 200, data: qrText!),
+            flex: 2,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: QrCode(size: 220, data: qrText!),
             ),
           ),
+          const SizedBox(width: 20),
           Expanded(
+            flex: 3,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
