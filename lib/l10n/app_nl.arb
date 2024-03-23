@@ -70,6 +70,8 @@
     "printerErrorMediaJamTitle": "Papier vastgelopen",
     "printerErrorMediaJamBody1": "Printer [{name}] heeft gemeld dat de papierdoorvoer vastgelopen is.",
     "printerErrorMediaJamBody2": "Volg de instructies op het display van de printer om het papier te verwijderen, indien deze er zijn. Klik daarna op 'Hervat wachtrij'.",
+    "printerErrorStuckJob": "Er zit een vastgelopen taak in de wachtrij. Klik op 'Hervat wachtrij' om te proberen deze te deblokkeren.",
+    "printerErrorStuckJobs": "Er zitten {jobCount} vastgelopen taken in de wachtrij. Klik op 'Hervat wachtrij' om te proberen deze te deblokkeren.",
     "printerErrorConnectionErrorTitle": "Verbindingsprobleem",
     "printerErrorConnectionErrorBody1": "Het afdruksysteem meldt dat de printer [{name}] niet langer is verbonden met de computer.",
     "printerErrorConnectionErrorBody2": "Controleer de verbinding tussen de printer en de computer, klik daarna op 'Hervat wachtrij'.",

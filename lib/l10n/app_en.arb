@@ -70,6 +70,8 @@
     "printerErrorMediaJamTitle": "Paper jam",
     "printerErrorMediaJamBody1": "Printer [{name}] reports that it has a paper jam.",
     "printerErrorMediaJamBody2": "Please follow any instructions displayed by the printer, if any. When the issue is resolved, click 'Resume queue'.",
+    "printerErrorStuckJob": "Additionally there is a job stuck in the queue. Clicking 'Resume queue' will attempt to unstuck it.",
+    "printerErrorStuckJobs": "Additionally there are {jobCount} jobs stuck in the queue. Clicking 'Resume queue' will attempt to unstuck them.",
     "printerErrorConnectionErrorTitle": "Connection error",
     "printerErrorConnectionErrorBody1": "The printing system report that printer [{name}] is no longer connected to the computer.",
     "printerErrorConnectionErrorBody2": "Please check the connection between the printer and the computer, then click 'Resume queue'.",
@@ -131,6 +133,13 @@
             },
             "error": {
                 "type": "String"
+            }
+        }
+    },
+    "@printerErrorStuckJobs": {
+        "placeholders": {
+            "jobCount": {
+                "type": "int"
             }
         }
     }

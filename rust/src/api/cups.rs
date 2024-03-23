@@ -36,6 +36,11 @@ pub fn cups_print_job(server_info: CupsServerInfo, queue_id: String, job_name: S
     ipp_client::print_job(uri, job_name, pdf_data);
 }
 
+pub fn cups_release_job(server_info: CupsServerInfo, queue_id: String, job_id: i32) {
+    let uri = cups_build_url(server_info, queue_id);
+    ipp_client::release_job(uri, job_id);
+}
+
 // /////// //
 // Structs //
 // /////// //

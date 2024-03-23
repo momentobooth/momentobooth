@@ -18,31 +18,48 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
     List<String> printerIds = SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
     for (var printerId in printerIds) {
       try {
+        // Verify printer ready.
         IppPrinterState printerState = await cupsGetPrinterState(serverInfo: CupsClient.serverInfo, queueId: printerId);
+        List<PrintJobState> jobs = await cupsGetJobsStates(serverInfo: CupsClient.serverInfo, queueId: printerId);
+        List<PrintJobState> stuckJobs = jobs.where((job) => job.state == JobState.pending || job.state == JobState.pendingHeld).toList();
 
-        if (printerState.state == PrinterState.stopped) {
-          await showUserDialog(
-            barrierDismissible: false,
-            dialog: PrinterIssueDialog(
-              printerName: printerState.name,
-              issueType: PrinterIssueType.fromPrinterState(printerState.stateReason),
-              errorText: printerState.stateMessage,
-              onIgnorePressed: () => navigator.pop(),
-              onResumeQueuePressed: () async {
-                navigator.pop();
-                try {
-                  await cupsResumePrinter(serverInfo: CupsClient.serverInfo, queueId: printerId);
-                } catch (e) {
-                  loggy.debug("Failed to resume printer [$printerId] with error: $e");
-                }
-              },
-            ),
-          );
+        if (printerState.state == PrinterState.stopped || stuckJobs.isNotEmpty) {
+          await _showDialog(printerState, printerId, stuckJobs);
         }
       } catch (e) {
         loggy.debug("Failed to query printer [$printerId] with error: $e");
       }
     }
+  }
+
+  Future<void> _showDialog(IppPrinterState printerState, String printerId, List<PrintJobState> stuckJobs) async {
+    await showUserDialog(
+      barrierDismissible: false,
+      dialog: PrinterIssueDialog(
+        printerName: printerState.name,
+        issueType: PrinterIssueType.fromPrinterState(printerState.stateReason),
+        stuckJobs: stuckJobs,
+        errorText: printerState.stateMessage,
+        onIgnorePressed: () => navigator.pop(),
+        onResumeQueuePressed: () async {
+          navigator.pop();
+
+          try {
+            await cupsResumePrinter(serverInfo: CupsClient.serverInfo, queueId: printerId);
+          } catch (e) {
+            loggy.debug("Failed to resume printer [$printerId] with error: $e");
+          }
+
+          for (PrintJobState job in stuckJobs) {
+            try {
+              await cupsReleaseJob(serverInfo: CupsClient.serverInfo, queueId: printerId, jobId: job.id);
+            } catch (e) {
+              loggy.debug("Failed to release stuck job [${job.name}] for printer [$printerId] with error: $e");
+            }
+          }
+        },
+      ),
+    );
   }
 
 }
