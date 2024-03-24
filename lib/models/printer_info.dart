@@ -11,7 +11,7 @@ class PrinterInfo with _$PrinterInfo {
     required String id,
     required String name,
     required bool isAvailable,
-    required bool isDefault,
+    bool? isDefault,
   }) = _PrinterInfo;
 
 }

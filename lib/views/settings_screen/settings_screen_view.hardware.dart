@@ -210,6 +210,14 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
   return FluentSettingsBlock(
     title: "Printing",
     settings: [
+      ComboBoxCard(
+        icon: FluentIcons.camera,
+        title: "Print method",
+        subtitle: "Method used for printing photos",
+        items: viewModel.printingImplementations,
+        value: () => viewModel.printingImplementationSetting,
+        onChanged: controller.onPrintingImplementationChanged,
+      ),
       Observer(builder: (context) =>
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,6 +286,15 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
         subtitle: "The password for the CUPS server",
         controller: controller.cupsPasswordController,
         onFinishedEditing: controller.onCupsPasswordChanged,
+      ),
+      Observer(
+        builder: (context) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (int i = 0; i <= viewModel.cupsPrinterQueuesSetting.length; i++)
+              _cupsQueuesCard(viewModel, controller, "Printer ${i + 1}", i),
+          ],
+        ),
       ),
     ],
   );
@@ -402,7 +419,7 @@ FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreen
     child: Row(
       children: [
         Button(
-          onPressed: viewModel.setFlutterPrintingPrinterNameList,
+          onPressed: viewModel.setFlutterPrintingQueueList,
           child: const Text('Refresh'),
         ),
         const SizedBox(width: 10),
@@ -410,9 +427,36 @@ FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreen
           constraints: const BoxConstraints(minWidth: 150),
           child: Observer(builder: (_) {
             return ComboBox<String>(
-              items: viewModel.printerOptions,
+              items: viewModel.flutterPrintingQueues,
               value: index < viewModel.flutterPrintingPrinterNamesSetting.length ? viewModel.flutterPrintingPrinterNamesSetting[index] : viewModel.unusedPrinterValue,
               onChanged: (name) => controller.onFlutterPrintingPrinterChanged(name, index),
+            );
+          }),
+        ),
+      ],
+    ),
+  );
+}
+
+FluentSettingCard _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
+  return FluentSettingCard(
+    icon: FluentIcons.print,
+    title: title,
+    subtitle: "Which printer(s) to use for printing photos",
+    child: Row(
+      children: [
+        Button(
+          onPressed: viewModel.setCupsQueueList,
+          child: const Text('Refresh'),
+        ),
+        const SizedBox(width: 10),
+        ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 150),
+          child: Observer(builder: (_) {
+            return ComboBox<String>(
+              items: viewModel.cupsQueues,
+              value: index < viewModel.cupsPrinterQueuesSetting.length ? viewModel.cupsPrinterQueuesSetting[index] : viewModel.unusedPrinterValue,
+              onChanged: (name) => controller.onCupsPrinterQueuesQueueChanged(name, index),
             );
           }),
         ),

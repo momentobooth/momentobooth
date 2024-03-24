@@ -36,7 +36,7 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
     await showUserDialog(
       barrierDismissible: false,
       dialog: PrinterIssueDialog(
-        printerName: printerState.name,
+        printerName: printerState.description,
         issueType: PrinterIssueType.fromPrinterState(printerState.stateReason),
         stuckJobs: stuckJobs,
         errorText: printerState.stateMessage,
