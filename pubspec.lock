@@ -816,10 +816,10 @@ packages:
     dependency: "direct main"
     description:
       name: mobx
-      sha256: "74ee54012dc7c1b3276eaa960a600a7418ef5f9997565deb8fca1fd88fb36b78"
+      sha256: "9812e6e8f738c2c9fb5849801681d8a8d4b2d72b72b0141048009a7e4b7a21a4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0+1"
+    version: "2.3.1"
   mobx_codegen:
     dependency: "direct dev"
     description:

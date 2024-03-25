@@ -42,7 +42,7 @@ dependencies:
   image: 4.1.7
 
   # MVC
-  mobx: 2.3.0+1
+  mobx: 2.3.1
   flutter_mobx: 2.2.0+2
 
   # Models
