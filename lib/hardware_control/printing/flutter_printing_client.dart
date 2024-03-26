@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
@@ -6,27 +5,20 @@ import 'package:loggy/loggy.dart';
 import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/models/printer_info.dart';
-import 'package:momento_booth/utils/hardware.dart';
-import 'package:path/path.dart' as path;
+import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:printing/printing.dart';
 
+/// Printing implementation that uses the flutter `printing` library to print.
+/// This should work on all operating systems.
 class FlutterPrintingClient extends PrintingSystemClient with UiLoggy {
 
-  int lastUsedPrinterIndex = -1;
-
-  static Future<List<PrinterInfo>> getPrintQueues() async {
+  @override
+  Future<List<PrintQueueInfo>> getPrintQueues() async {
     List<Printer> printers = await Printing.listPrinters();
-    return printers.map((printer) => PrinterInfo(
-      id: printer.name,
-      name: printer.name,
-      isAvailable: printer.isAvailable,
-      isDefault: printer.isDefault,
-    )).toList();
+    return printers.map((printer) => printer.asPrintQueueInfo).toList();
   }
 
-  Future<List<Printer>> _getSelectedPrinters() async {
+  Future<List<Printer>> _getSelectedPrintQueues() async {
     final sourcePrinters = await Printing.listPrinters();
     List<Printer> printers = <Printer>[];
 
@@ -46,37 +38,41 @@ class FlutterPrintingClient extends PrintingSystemClient with UiLoggy {
   }
 
   @override
-  Future<void> printPdf(String taskName, Uint8List pdfData) async {
+  Future<List<PrintQueueInfo>> getSelectedPrintQueues() async {
+    List<Printer> selectedPrintQueues = await _getSelectedPrintQueues();
+    return selectedPrintQueues.map((queue) => queue.asPrintQueueInfo).toList();
+  }
+  
+  @override
+  Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData) async {
+    // Find specific printer
+    final printers = await _getSelectedPrintQueues();
+    Printer? printer = printers.firstWhereOrNull((printer) => printer.name == queueId);
+    if (printer == null) throw PrintingException('Could not find printer with name [$queueId]');
+
+    // Print
     final settings = SettingsManager.instance.settings.hardware;
-    final printers = await _getSelectedPrinters();
-    if (printers.isEmpty) throw PrintingException('No valid printers selected');
-
-    if (++lastUsedPrinterIndex >= printers.length) lastUsedPrinterIndex = 0;
-    final printer = printers[lastUsedPrinterIndex];
-
-    loggy.debug("Printing with printer #${lastUsedPrinterIndex + 1} (${printer.name})");
-
-    try {
-      final jobList = getJobList(printer.name);
-      loggy.debug("Job list for printer ${printer.name} = $jobList");
-    } catch (e) {
-      loggy.error(e);
-    }
-
     bool success = await Printing.directPrintPdf(
       printer: printer,
       name: taskName,
       onLayout: (pageFormat) => pdfData,
       usePrinterSettings: settings.usePrinterSettings,
     );
+
     if (!success) throw PrintingException('Printing.directPrintPdf returned false');
-
-    StatsManager.instance.addPrintedPhoto();
-
-    Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);
-    final filePath = path.join(outputDir.path, 'latest-print.pdf');
-    File file = await File(filePath).create();
-    await file.writeAsBytes(pdfData);
   }
   
+}
+
+extension _PrinterExtension on Printer {
+
+  PrintQueueInfo get asPrintQueueInfo {
+    return PrintQueueInfo(
+      id: name,
+      name: name,
+      isAvailable: isAvailable,
+      isDefault: isDefault,
+    );
+  }
+
 }

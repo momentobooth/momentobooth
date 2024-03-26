@@ -4,6 +4,7 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
@@ -96,7 +97,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   }
 
   Future<void> setCupsQueueList() async {
-    final printers = await CupsClient.getPrintQueues();
+    final List<PrintQueueInfo> printers = await CupsClient().getPrintQueues();
 
     cupsQueues
       ..clear()
