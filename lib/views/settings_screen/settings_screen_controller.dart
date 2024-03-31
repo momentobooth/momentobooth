@@ -250,6 +250,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onCupsIgnoreTlsErrorsChanged(bool? cupsIgnoreTlsErrors) {
+    if (cupsIgnoreTlsErrors != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsIgnoreTlsErrors: cupsIgnoreTlsErrors));
+    }
+  }
+
   void onCupsUsernameChanged(String? cupsUsername) {
     if (cupsUsername != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsUsername: cupsUsername));

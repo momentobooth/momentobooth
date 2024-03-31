@@ -80,6 +80,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default(PrintingImplementation.flutterPrinting) PrintingImplementation printingImplementation,
     @Default([]) List<String> flutterPrintingPrinterNames,
     @Default("http://localhost:631/") String cupsUri,
+    @Default(false) bool cupsIgnoreTlsErrors,
     @Default("") String cupsUsername,
     @Default("") String cupsPassword,
     @Default([]) List<String> cupsPrinterQueues,

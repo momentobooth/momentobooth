@@ -273,6 +273,13 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
         controller: controller.cupsUriController,
         onFinishedEditing: controller.onCupsUriChanged,
       ),
+      BooleanInputCard(
+        icon: FluentIcons.server,
+        title: "Ignore TLS errors",
+        subtitle: "Whether to ignore TLS errors when connecting to the CUPS server. This is useful for self-signed certificates which are used by default by the CUPS service.",
+        value: () => viewModel.cupsIgnoreTlsErrors,
+        onChanged: controller.onCupsIgnoreTlsErrorsChanged,
+      ),
       TextInputCard(
         icon: FluentIcons.text_field,
         title: "CUPS username",

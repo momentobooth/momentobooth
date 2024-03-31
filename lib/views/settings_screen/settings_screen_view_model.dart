@@ -142,6 +142,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get captureStorageLocationSetting => SettingsManager.instance.settings.hardware.captureStorageLocation;
   PrintingImplementation get printingImplementationSetting => SettingsManager.instance.settings.hardware.printingImplementation;
   String get cupsUriSetting => SettingsManager.instance.settings.hardware.cupsUri;
+  bool get cupsIgnoreTlsErrors => SettingsManager.instance.settings.hardware.cupsIgnoreTlsErrors;
   String get cupsUsernameSetting => SettingsManager.instance.settings.hardware.cupsUsername;
   String get cupsPasswordSetting => SettingsManager.instance.settings.hardware.cupsPassword;
   List<String> get cupsPrinterQueuesSetting => SettingsManager.instance.settings.hardware.cupsPrinterQueues;

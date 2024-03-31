@@ -25,7 +25,7 @@ class CupsClient extends PrintingSystemClient {
     List<PrintQueueInfo> printers = [];
 
     // Match all printers with printers set in settings.
-    for (String id in SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames) {
+    for (String id in SettingsManager.instance.settings.hardware.cupsPrinterQueues) {
       PrintQueueInfo? selected = sourcePrinters.firstWhereOrNull((printer) => printer.id == id);
 
       // Ignore printers that are not available.
@@ -52,6 +52,7 @@ class CupsClient extends PrintingSystemClient {
   static CupsServerInfo get serverInfo {
     return CupsServerInfo(
       uri: SettingsManager.instance.settings.hardware.cupsUri,
+      ignoreTlsErrors: SettingsManager.instance.settings.hardware.cupsIgnoreTlsErrors,
       username: SettingsManager.instance.settings.hardware.cupsUsername,
       password: SettingsManager.instance.settings.hardware.cupsPassword,
     );
