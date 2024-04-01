@@ -7,14 +7,14 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "=2.0.0-dev.28", features = ["chrono"] }
+flutter_rust_bridge = { version = "=2.0.0-dev.29", features = ["chrono"] }
 anyhow = "1.0.81"
 derive_more = "0.99.17"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.114"
-chrono = "0.4.35"
-image = { version = "0.25.0", features = ["rayon"] }
+serde_json = "1.0.115"
+chrono = "0.4.37"
+image = { version = "0.25.1", features = ["rayon"] }
 ipp = "5.0.3"
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.4.11"
@@ -26,7 +26,7 @@ noise = "0.9.0"
 dashmap = "5.5.3"
 turborand = "0.10.1"
 pathsep = "0.1.1"
-tokio = { version = "1.36.0", features = ["rt-multi-thread"] }
+tokio = { version = "1.37.0", features = ["rt-multi-thread"] }
 gphoto2 = "3.2.3"
 ahash = "0.8.11"
 img-parts = "0.3.0"
