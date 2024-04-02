@@ -15,7 +15,7 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
   Future<void> checkPrintersAndShowWarnings() async {
     if (!Platform.isLinux) return;
 
-    List<String> printerIds = SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
+    List<String> printerIds = SettingsManager.instance.settings.hardware.cupsPrinterQueues;
     for (var printerId in printerIds) {
       try {
         // Verify printer ready.
