@@ -1,12 +1,10 @@
-use std::fs::File;
-
+use exif::{Tag, Value};
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
 use little_exif::{exif_tag::ExifTagGroup, filetype::FileExtension, metadata::Metadata};
 use num::FromPrimitive;
 use zune_jpeg::{JpegDecoder, zune_core::{options::DecoderOptions, colorspace::ColorSpace}};
-use chrono::{DateTime, Local};
-use nom_exif::ExifTag::{*};
+use chrono::NaiveDateTime;
 
 use crate::models::images::{ExifOrientation, MomentoBoothExifTag, RawImage};
 
@@ -59,41 +57,36 @@ pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
 // The `nom-exif` library is used for reading the EXIF data, but it does not support writing EXIF data.
 // Once `little-exif` supports reading EXIF data, the `nom-exif` library can be removed.
 
-const TAGS: &[nom_exif::ExifTag] = &[
-    Orientation,
-    CreateDate,
-    ImageDescription,
-    Software,
-    MakerNote,
-];
 
 pub fn get_momento_booth_exif_tags_from_file(image_file_path: &str) -> Vec<MomentoBoothExifTag> {
-    let mut reader = File::open(image_file_path).unwrap();
-    let exif = nom_exif::parse_jpeg_exif(&mut reader).unwrap();
+    let file = std::fs::File::open(image_file_path).unwrap();
+    let mut bufreader = std::io::BufReader::new(&file);
+    let exifreader = exif::Reader::new();
+    let exif = exifreader.read_from_container(&mut bufreader).unwrap();
 
-    let exif_tags = exif.unwrap().get_values(TAGS);
-
-    exif_tags.iter().map(|(tag, value)| {
-        println!("TAG FOUND: {:?} {:?}", tag, value);
-        match tag {
-            nom_exif::ExifTag::ImageDescription => MomentoBoothExifTag::ImageDescription(match value {
-                nom_exif::EntryValue::Text(value) => value.clone(),
-                _ => panic!("Invalid value type for ImageDescription"),
+    exif.fields().map(|field| {
+        match field.tag {
+            Tag::ImageDescription => MomentoBoothExifTag::ImageDescription(match field.value {
+                Value::Ascii(ref vec) if !vec.is_empty() => String::from_utf8(vec[0].clone()).unwrap(),
+                _ => panic!("Invalid value type or empty value for ImageDescription"),
             }),
-            nom_exif::ExifTag::Software => MomentoBoothExifTag::Software(match value {
-                nom_exif::EntryValue::Text(value) => value.clone(),
-                _ => panic!("Invalid value type for Software"),
+            Tag::Software => MomentoBoothExifTag::Software(match field.value {
+                Value::Ascii(ref vec) if !vec.is_empty() => String::from_utf8(vec[0].clone()).unwrap(),
+                _ => panic!("Invalid value type or empty value for Software"),
             }),
-            nom_exif::ExifTag::CreateDate => MomentoBoothExifTag::CreateDate(match value {
-                nom_exif::EntryValue::Time(value) => value.with_timezone(&Local).clone(),
+            Tag::DateTimeDigitized => MomentoBoothExifTag::CreateDate(match field.value {
+                Value::Ascii(ref vec) if !vec.is_empty() => {
+                    let date_time_str = String::from_utf8(vec[0].clone()).unwrap();
+                    NaiveDateTime::parse_from_str(&date_time_str.to_string(), "%Y:%m:%d %H:%M:%S").unwrap().into()
+                },
                 _ => panic!("Invalid value type for CreateDate"),
             }),
-            nom_exif::ExifTag::Orientation => MomentoBoothExifTag::Orientation(match value {
-                nom_exif::EntryValue::U16(value) => ExifOrientation::from_u16(value.clone()).unwrap(),
+            Tag::Orientation => MomentoBoothExifTag::Orientation(match field.value {
+                Value::Short(ref value) => ExifOrientation::from_u16(value[0]).unwrap(),
                 _ => panic!("Invalid value type for Orientation"),
             }),
-            nom_exif::ExifTag::MakerNote => MomentoBoothExifTag::MakerNote(match value {
-                nom_exif::EntryValue::Text(value) => value.clone(),
+            Tag::MakerNote => MomentoBoothExifTag::MakerNote(match field.value {
+                Value::Undefined(ref data, _) => String::from_utf8(data.clone()).unwrap(),
                 _ => panic!("Invalid value type for MakerNote"),
             }),
             _ => panic!("Unknown tag"),
@@ -122,9 +115,8 @@ impl TryFrom<&little_exif::exif_tag::ExifTag> for MomentoBoothExifTag {
             little_exif::exif_tag::ExifTag::ImageDescription(value) => Ok(MomentoBoothExifTag::ImageDescription(value.clone())),
             little_exif::exif_tag::ExifTag::Software(value) => Ok(MomentoBoothExifTag::Software(value.clone())),
             little_exif::exif_tag::ExifTag::CreateDate(value) => {
-                let fixed_offset_date = DateTime::parse_from_str(&value, "%Y:%m:%d %H:%M:%S").expect("Error while parsing EXIF create date");
-                let local_date = DateTime::from_timestamp(fixed_offset_date.timestamp(), 0).unwrap().with_timezone(&Local);
-                Ok(MomentoBoothExifTag::CreateDate(local_date))
+                let fixed_offset_date = NaiveDateTime::parse_from_str(&value, "%Y:%m:%d %H:%M:%S").expect("Error while parsing EXIF create date");
+                Ok(MomentoBoothExifTag::CreateDate(fixed_offset_date))
             },
             little_exif::exif_tag::ExifTag::Orientation(value) => {
                 let orientation: Option<ExifOrientation> = ExifOrientation::from_u16(value[0]);

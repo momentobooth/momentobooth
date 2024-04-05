@@ -35,7 +35,7 @@ url = "2.5.0"
 num = "0.4.1"
 num-traits = "0.2.18"
 num-derive = "0.4.2"
-nom-exif = "1.2.0"
+kamadak-exif = "0.5.5"
 
 [profile.dev]
 opt-level = 3
