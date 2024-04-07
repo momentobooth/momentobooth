@@ -59,7 +59,7 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
-          rust -> ../build/windows/x64/x64/Release/cargo/build
+          rust -> ../build/windows/x64/plugins/rust_lib_momento_booth/cargokit_build
           rust -> target
 
     - name: Setup sccache-cache
@@ -75,7 +75,7 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.0.0-dev.29"
+        version: "2.0.0-dev.30"
         args: --target x86_64-pc-windows-msvc
 
     # - name: Install flutter_distributor
@@ -110,7 +110,7 @@ jobs:
       run: |
         $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
         $bundle_script = curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls
-        echo $bundle_script | python - --copy build\windows\x64\runner\Release\momento_booth_native_helpers.dll
+        echo $bundle_script | python - --copy build\windows\x64\runner\Release\rust_lib_momento_booth.dll
 
     - name: Bundle libgphoto2 additional libs
       shell: pwsh

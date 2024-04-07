@@ -9,6 +9,7 @@ targets:
             - lib/theme/*.dart
             - lib/src/rust/**/*.dart
         options:
+          format: false
           map: false
           when: false
       json_serializable:
