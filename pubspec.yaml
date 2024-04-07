@@ -42,7 +42,7 @@ dependencies:
   image: 4.1.7
 
   # MVC
-  mobx: 2.3.3+1
+  mobx: 2.3.3+2
   flutter_mobx: 2.2.1+1
 
   # Models
@@ -53,7 +53,7 @@ dependencies:
   rust_lib_momento_booth:
     path: rust_builder
   ffi: 2.1.2
-  flutter_rust_bridge: 2.0.0-dev.29
+  flutter_rust_bridge: 2.0.0-dev.30
 
   # Printing
   printing: 5.12.0
@@ -100,7 +100,7 @@ dev_dependencies:
   flutter_lints: 3.0.2
 
   # Models
-  freezed: 2.4.7
+  freezed: 2.5.0
   json_serializable: 6.7.1
 
   # Code generation
@@ -132,7 +132,7 @@ scripts:
     all: rps install flutter && rps install cargo-expand && rps install flutter_rust_bridge_codegen && rps install deps
     flutter: fvm install
     cargo-expand: cargo install cargo-expand
-    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.29
+    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.30
     deps: fvm flutter pub get
   clean:
     rust_bridge: git clean -xfd lib/src
