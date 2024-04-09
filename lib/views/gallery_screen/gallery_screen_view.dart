@@ -151,7 +151,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
         const FilterChoice(),
         const SizedBox(width: 20,),
         OutlinedButton.icon(
-          onPressed: () {},
+          onPressed: controller.onFindMyFace,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.blue.shade700),
             foregroundColor: MaterialStateProperty.all(Colors.white),
