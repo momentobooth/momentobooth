@@ -103,6 +103,22 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
           ),
         ),
         Padding(
+          padding: const EdgeInsets.only(right: 80),
+          child: Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              height: 60,
+              width: 550,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+                color: Color.fromARGB(130, 48, 48, 48),
+              ),
+              child: getFilterBar(),
+            ),
+          ),
+        ),
+        Padding(
           padding: const EdgeInsets.all(30),
           child: Align(
             alignment: Alignment.bottomLeft,
@@ -119,4 +135,73 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
     );
   }
 
+  Widget getFilterBar() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text(
+          "Order by",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
+              height: 1),
+        ),
+        const SizedBox(width: 12,),
+        const FilterChoice(),
+        const SizedBox(width: 20,),
+        OutlinedButton.icon(
+          onPressed: () {},
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.blue.shade700),
+            foregroundColor: MaterialStateProperty.all(Colors.white),
+            overlayColor: MaterialStateProperty.all(Colors.blue.shade400),
+          ),
+          icon: const Icon(Icons.face),
+          label: const Text("Find my face"),
+        ),
+      ],
+    );
+  }
+}
+
+enum SortBy { time, people }
+
+class FilterChoice extends StatefulWidget {
+  const FilterChoice({super.key});
+
+  @override
+  State<FilterChoice> createState() => _FilterChoiceState();
+}
+
+class _FilterChoiceState extends State<FilterChoice> {
+  SortBy sortBy = SortBy.time;
+  ButtonStyle style =
+      ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.white));
+
+  @override
+  Widget build(BuildContext context) {
+    return SegmentedButton<SortBy>(
+      style: style,
+      segments: const <ButtonSegment<SortBy>>[
+        ButtonSegment<SortBy>(
+            value: SortBy.time,
+            label: Text('Time'),
+            icon: Icon(Icons.schedule_rounded)),
+        ButtonSegment<SortBy>(
+            value: SortBy.people,
+            label: Text('Group size'),
+            icon: Icon(Icons.groups)),
+      ],
+      selected: <SortBy>{sortBy},
+      onSelectionChanged: (Set<SortBy> newSelection) {
+        setState(() {
+          // By default there is only a single segment that can be
+          // selected at one time, so its value is always the first
+          // item in the selected set.
+          sortBy = newSelection.first;
+        });
+      },
+    );
+  }
 }
