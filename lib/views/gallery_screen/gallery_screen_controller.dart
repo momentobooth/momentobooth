@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:http/http.dart' as http;
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/find_face_dialog.dart';
@@ -27,13 +29,27 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
     router.pop();
   }
 
+  Future<void> filterWithFaces() async {
+    var response = await http.get(Uri.parse("http://localhost:5000/get-matching-imgs"));
+    if (response.statusCode == 200) {
+      var matchingImages = jsonDecode(response.body) as List<dynamic>?;
+      var matchingImagesStrings = matchingImages!.cast<String>().toList();
+      print(matchingImagesStrings);
+    } else {
+      loggy.warning("Error getting matching face images: ${response.body}");
+    }
+  }
+
   void onFindMyFace() {
     showUserDialog(
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
         return FindFaceDialog(
           title: 'Smile',
-          onDismiss: () => navigator.pop(),
+          onSuccess: () {
+            navigator.pop();
+            filterWithFaces();
+          },
           onCancel: () => navigator.pop(),
         );
       }),

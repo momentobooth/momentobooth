@@ -1,8 +1,11 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
@@ -10,7 +13,6 @@ import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
-import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
@@ -19,17 +21,19 @@ import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/modal_dialog.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
 
+enum FaceDetectionState { success, noFace, unknown }
+
 class FindFaceDialog extends StatefulWidget {
 
   final String title;
-  final VoidCallback onDismiss;
+  final VoidCallback onSuccess;
   final VoidCallback onCancel;
   final int countDown;
 
   FindFaceDialog({
     super.key,
     required this.title,
-    required this.onDismiss,
+    required this.onSuccess,
     required this.onCancel,
     this.countDown = 3
   });
@@ -41,6 +45,8 @@ class FindFaceDialog extends StatefulWidget {
 class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
   bool showCounter = true;
   bool captureComplete = false;
+  FaceDetectionState _faceDetectionState = FaceDetectionState.unknown;
+  int numFaces = 0;
 
   static const flashStartDuration = Duration(milliseconds: 50);
   final PhotoCaptureMethod capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
@@ -52,17 +58,36 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
   Duration get photoDelay => Duration(seconds: widget.countDown) - capturer.captureDelay + flashStartDuration;
 
   Future<void> captureAndGetPhoto() async {
+    Uint8List imageData;
     try {
       final image = await capturer.captureAndGetPhoto();
-      PhotosManager.instance.photos.add(image);
-      PhotosManager.instance.outputImage = image.data;
+      imageData = image.data;
     } catch (error) {
       loggy.warning(error);
       final errorFile = File('assets/bitmap/capture-error.png');
-      PhotosManager.instance.outputImage = await errorFile.readAsBytes();
+      imageData = await errorFile.readAsBytes();
     } finally {
       captureComplete = true;
     }
+    await uploadImage(imageData);
+  }
+
+  Future<void> uploadImage(Uint8List image) async {
+    print("inside upload function");
+    Uri uri = Uri(host: "localhost", port: 5000, scheme: "http", path: "/upload");
+    var request = http.MultipartRequest("POST", uri);
+    request.files.add(http.MultipartFile.fromBytes("file", image, contentType: MediaType('image', 'jpeg'), filename: "captured-imaged.jpg"));
+    var response = await http.Response.fromStream(await request.send());
+    setState(() {
+      _faceDetectionState = switch (response.statusCode) {
+        200 => FaceDetectionState.success,
+        422 => FaceDetectionState.noFace,
+        _ => FaceDetectionState.unknown
+      };
+      if (response.statusCode == 200) { numFaces = int.parse(response.body); }
+    });
+    print("$_faceDetectionState, $numFaces");
+    widget.onSuccess();
   }
 
   @override
@@ -122,7 +147,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
         PhotoBoothFilledButton(
           title: localizations.genericCloseButton,
           icon: FontAwesomeIcons.check,
-          onPressed: widget.onDismiss,
+          onPressed: widget.onSuccess,
         ),
       ],
     );
