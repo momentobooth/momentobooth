@@ -35,6 +35,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
       var matchingImages = jsonDecode(response.body) as List<dynamic>?;
       var matchingImagesStrings = matchingImages!.cast<String>().toList();
       print(matchingImagesStrings);
+      viewModel.filterImages(matchingImagesStrings);
     } else {
       loggy.warning("Error getting matching face images: ${response.body}");
     }

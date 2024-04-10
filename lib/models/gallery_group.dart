@@ -11,6 +11,7 @@ abstract class GalleryGroup with _$GalleryGroup {
 
   const factory GalleryGroup({
     DateTime? createdDayAndHour,
+    required String title,
     required List<GalleryImage> images,
   }) = _GalleryGroup;
 

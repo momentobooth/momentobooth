@@ -41,7 +41,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                 labelTextBuilder: (offset) {
                   final int numGroups = viewModel.imageGroups?.length ?? 0;
                   final List<int> groupImageNums = viewModel.imageGroups?.map((group) => group.images.length).toList() ?? [];
-                  final List<DateTime> timeslots = viewModel.imageGroups?.map((group) => group.createdDayAndHour ?? DateTime(1970)).toList() ?? [];
+                  final List<String> groupTitles = viewModel.imageGroups?.map((group) => group.title).toList() ?? [];
                   final groupRows = groupImageNums.map((e) => (e / 4).ceil());
                   final double screenHeight = scrollController.position.viewportDimension;
               
@@ -56,7 +56,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                   for (; offset > currentLength; currentIndex++) { currentLength += sectionLengths[currentIndex]; }
                   currentIndex = max(currentIndex - 1, 0);
                         
-                  return Text(viewModel.formatter.format(timeslots[currentIndex]), style: const TextStyle(fontSize: 22));
+                  return Text(groupTitles[currentIndex], style: const TextStyle(fontSize: 22));
                 },
                 child: CustomScrollView(
                   controller: scrollController,
@@ -72,7 +72,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                           title: Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              viewModel.formatter.format(group.createdDayAndHour ?? DateTime(1970)),
+                              group.title,
                               style: theme.subTitleStyle,
                             ),
                           ),
@@ -148,7 +148,9 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               height: 1),
         ),
         const SizedBox(width: 12,),
-        const FilterChoice(),
+        Observer(builder: (context) =>
+          FilterChoice(sortBy: viewModel.sortBy, onChanged: viewModel.onSortByChanged)
+        ),
         const SizedBox(width: 20,),
         OutlinedButton.icon(
           onPressed: controller.onFindMyFace,
@@ -167,20 +169,14 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
 
 enum SortBy { time, people }
 
-class FilterChoice extends StatefulWidget {
-  const FilterChoice({super.key});
-
-  @override
-  State<FilterChoice> createState() => _FilterChoiceState();
-}
-
-class _FilterChoiceState extends State<FilterChoice> {
-  SortBy sortBy = SortBy.time;
-  ButtonStyle style =
-      ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.white));
+class FilterChoice extends StatelessWidget {
+  const FilterChoice({super.key, required this.sortBy, required this.onChanged});
+  final SortBy sortBy;
+  final ValueChanged<SortBy> onChanged;
 
   @override
   Widget build(BuildContext context) {
+    ButtonStyle style = ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.white));
     return SegmentedButton<SortBy>(
       style: style,
       segments: const <ButtonSegment<SortBy>>[
@@ -195,12 +191,10 @@ class _FilterChoiceState extends State<FilterChoice> {
       ],
       selected: <SortBy>{sortBy},
       onSelectionChanged: (Set<SortBy> newSelection) {
-        setState(() {
-          // By default there is only a single segment that can be
-          // selected at one time, so its value is always the first
-          // item in the selected set.
-          sortBy = newSelection.first;
-        });
+        // By default there is only a single segment that can be
+        // selected at one time, so its value is always the first
+        // item in the selected set.
+        onChanged(newSelection.first);
       },
     );
   }
