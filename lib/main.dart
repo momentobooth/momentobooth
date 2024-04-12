@@ -19,7 +19,7 @@ void main() async {
 
   Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 
-  HelperLibraryInitializationManager.instance.initialize();
+  await HelperLibraryInitializationManager.instance.initialize();
   await SettingsManager.instance.load();
   await StatsManager.instance.load();
   await WindowManager.instance.initialize();

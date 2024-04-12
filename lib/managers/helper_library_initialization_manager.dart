@@ -30,9 +30,9 @@ abstract class _HelperLibraryInitializationManagerBase with Store {
   @readonly
   String? _gphoto2InitializationMessage;
 
-  void initialize() {
-    initializeLog().listen(_processLogEvent);
-    initializeHardware().listen(_processHardwareInitEvent);
+  Future initialize() async {
+    (await initializeLog()).listen(_processLogEvent);
+    (await initializeHardware()).listen(_processHardwareInitEvent);
   }
 
   void _processLogEvent(LogEvent event) {
