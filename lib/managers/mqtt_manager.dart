@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/capture_state.dart';
@@ -14,6 +15,7 @@ import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
+import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
@@ -54,7 +56,7 @@ abstract class _MqttManagerBase with Store {
     autorun((_) {
       MqttIntegrationSettings newMqttSettings = SettingsManager.instance.settings.mqttIntegration;
       _updateMqttClientInstanceLock.synchronized(() async {
-        await _recreateClient(newMqttSettings);
+        await _recreateClient(newMqttSettings, false);
       });
     });
 
@@ -65,8 +67,15 @@ abstract class _MqttManagerBase with Store {
     });
   }
 
-  Future<void> _recreateClient(MqttIntegrationSettings newSettings) async {
-    if (newSettings == _currentSettings) return;
+  void notifyPasswordChanged() {
+    _updateMqttClientInstanceLock.synchronized(() async {
+      MqttIntegrationSettings mqttSettings = SettingsManager.instance.settings.mqttIntegration;
+      await _recreateClient(mqttSettings, true);
+    });
+  }
+
+  Future<void> _recreateClient(MqttIntegrationSettings newSettings, bool passwordIsUpdated) async {
+    if (newSettings == _currentSettings && !passwordIsUpdated) return;
 
     _client?.disconnect();
     _client = null;
@@ -88,7 +97,8 @@ abstract class _MqttManagerBase with Store {
       }
 
       try {
-        MqttConnectionStatus? result = await client.connect(newSettings.username, newSettings.password);
+        String password = await getIt<SecretRepository>().getSecret(mqttPasswordSecretKey) ?? "";
+        MqttConnectionStatus? result = await client.connect(newSettings.username, password);
         if (result?.state != MqttConnectionState.connected) {
           throw MqttException("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
         }

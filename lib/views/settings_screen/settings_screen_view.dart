@@ -1,8 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
@@ -18,7 +20,7 @@ import 'package:momento_booth/views/settings_screen/widgets/combo_box_card.dart'
 import 'package:momento_booth/views/settings_screen/widgets/file_picker_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/folder_picker_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/number_input_card.dart';
-import 'package:momento_booth/views/settings_screen/widgets/password_input_card.dart';
+import 'package:momento_booth/views/settings_screen/widgets/secret_input_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/text_display_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/text_input_card.dart';
 

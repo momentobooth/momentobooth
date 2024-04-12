@@ -64,7 +64,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
       texturePtr: texturePtr,
     );
 
-    gphoto2SetExtraFileCallback(handleId: handleId).listen((element) {
+    (await gphoto2SetExtraFileCallback(handleId: handleId)).listen((element) {
       storePhotoSafe(element.filename, element.data);
     });
   }
