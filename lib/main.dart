@@ -2,13 +2,18 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:get_it/get_it.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/app/shell/shell.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+
+final GetIt getIt = GetIt.instance;
 
 void main() async {
   await RustLib.init();
@@ -16,6 +21,8 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await initialize();
+
+  getIt.registerSingleton<SecretRepository>(const SecureStorageSecretRepository());
 
   Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
 

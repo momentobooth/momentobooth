@@ -41,9 +41,6 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _mqttIntegrationUsernameController;
   TextEditingController get mqttIntegrationUsernameController => _mqttIntegrationUsernameController ??= TextEditingController(text: viewModel.mqttIntegrationUsernameSetting);
 
-  TextEditingController? _mqttIntegrationPasswordController;
-  TextEditingController get mqttIntegrationPasswordController => _mqttIntegrationPasswordController ??= TextEditingController(text: viewModel.mqttIntegrationPasswordSetting);
-
   TextEditingController? _mqttIntegratonClientIdController;
   TextEditingController get mqttIntegrationClientIdController => _mqttIntegratonClientIdController ??= TextEditingController(text: viewModel.mqttIntegrationClientIdSetting);
 
@@ -424,12 +421,6 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onMqttIntegrationUsernameChanged(String? username) {
     if (username != null) {
       viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(username: username, enable: false));
-    }
-  }
-
-  void onMqttIntegrationPasswordChanged(String? password) {
-    if (password != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(password: password, enable: false));
     }
   }
 

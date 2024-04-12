@@ -76,9 +76,13 @@ dependencies:
   just_audio_windows: 0.2.0
   just_audio_mpv: 0.1.7
 
-  # Misc
-  meta: ^1.11.0
+  # Storage
+  flutter_secure_storage: 9.0.0
   toml: 0.15.0
+
+  # Misc
+  get_it: 7.6.9
+  meta: ^1.11.0
   synchronized: 3.1.0+1
   collection: 1.18.0
   mqtt5_client: 4.2.2
@@ -88,7 +92,6 @@ dependencies:
   crypto: 3.0.3
   draggable_scrollbar: 0.1.0
   csslib: 1.0.0
-  flutter_secure_storage: 9.0.0
 
 dev_dependencies:
   # UI

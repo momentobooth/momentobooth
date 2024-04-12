@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/theme/momento_booth_theme.dart';
+import 'package:momento_booth/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/photo_booth_dialog.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -32,20 +34,25 @@ class ModalDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    return PhotoBoothDialog(
-      width: width,
-      height: height,
-      title: title,
-      body: body,
-      indicator: dialogType?.icon,
-      actions: actions ??
-          [
-            PhotoBoothFilledButton(
-              title: localizations.genericContinueButton,
-              icon: FontAwesomeIcons.check,
-              onPressed: onDismiss,
-            ),
-          ],
+    return MomentoBoothTheme(
+      data: MomentoBoothThemeData.defaults(),
+      child: Center(
+        child: PhotoBoothDialog(
+          width: width,
+          height: height,
+          title: title,
+          body: body,
+          indicator: dialogType?.icon,
+          actions: actions ??
+              [
+                PhotoBoothFilledButton(
+                  title: localizations.genericContinueButton,
+                  icon: FontAwesomeIcons.check,
+                  onPressed: onDismiss,
+                ),
+              ],
+        ),
+      ),
     );
   }
 
@@ -56,32 +63,26 @@ enum ModalDialogType {
   info,
   warning,
   error,
-  success;
+  success,
+  input;
 
   IconData get _iconData {
-    switch (this) {
-      case ModalDialogType.info:
-        return FontAwesomeIcons.circleInfo;
-      case ModalDialogType.warning:
-        return FontAwesomeIcons.triangleExclamation;
-      case ModalDialogType.error:
-        return FontAwesomeIcons.xmark;
-      case ModalDialogType.success:
-        return FontAwesomeIcons.check;
-    }
+    return switch (this) {
+      ModalDialogType.info => FontAwesomeIcons.circleInfo,
+      ModalDialogType.warning => FontAwesomeIcons.triangleExclamation,
+      ModalDialogType.error => FontAwesomeIcons.xmark,
+      ModalDialogType.success => FontAwesomeIcons.check,
+      ModalDialogType.input => FontAwesomeIcons.penToSquare
+    };
   }
 
   Color get _iconColor {
-    switch (this) {
-      case ModalDialogType.info:
-        return const Color(0xff0078d4);
-      case ModalDialogType.warning:
-        return const Color(0xffffb900);
-      case ModalDialogType.error:
-        return const Color(0xffd83b01);
-      case ModalDialogType.success:
-        return const Color(0xff107c10);
-    }
+    return switch (this) {
+      ModalDialogType.info || ModalDialogType.input => const Color(0xff0078d4),
+      ModalDialogType.warning => const Color(0xffffb900),
+      ModalDialogType.error => const Color(0xffd83b01),
+      ModalDialogType.success => const Color(0xff107c10),
+    };
   }
 
   Widget get icon {

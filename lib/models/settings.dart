@@ -208,7 +208,6 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
     @Default(true) bool verifyCertificate,
     @Default(false) bool useWebSocket,
     @Default("") String username,
-    @Default("") String password,
     @JsonKey(defaultValue: _clientIdFromJson) required String clientId,
     @Default("momentobooth") String rootTopic,
     @Default(false) bool enableHomeAssistantDiscovery,
