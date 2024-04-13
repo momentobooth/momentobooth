@@ -36,6 +36,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   List<GalleryGroup>? _imageGroups;
 
   List<String>? imageNames;
+  List<int> ranges = [1, 2, 3, 4, 6, 10, 15];
 
   @observable
   SortBy sortBy = SortBy.time;
@@ -48,6 +49,18 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   void filterImages(List<String> matchingImagesStrings) {
     imageNames = matchingImagesStrings;
     findImages();
+  }
+
+  String getBucket(int? num) {
+    if (num == null || num == 0) return "Unknown";
+    if (num == 1) return "1 person";
+
+    for (int i = 0; i < ranges.length-1; i++) {
+      bool isRange = ranges[i+1] - ranges[i] > 1;
+      if (num >= ranges[i] && num < ranges[i+1]) return isRange ? "${ranges[i]}-${ranges[i+1]-1} people" : "${ranges[i]} people";
+    }
+
+    return "> ${ranges.last} people";
   }
 
   @action
@@ -81,6 +94,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
           .entries
           .map((entry) => GalleryGroup(
               title: formatter.format(entry.key!),
+              createdDayAndHour: entry.key,
               images: entry.value
                 ..sort((a, b) => (b.createdDate ?? DateTime(1970)).compareTo(a.createdDate ?? DateTime(1970)))))
           .toList()
@@ -90,13 +104,14 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
     } else {
       // Group images and sort within groups
       List<GalleryGroup> imageGroups = imagesWithExif
-          .groupListsBy((image) => 1)
+          .groupListsBy((image) => getBucket(image.makerNoteData?.peopleCount))
           .entries
           .map((entry) => GalleryGroup(
-              title: "${entry.key} person",
+              title: entry.key,
               images: entry.value
-                ..sort((a, b) => (b.createdDate ?? DateTime(1970)).compareTo(a.createdDate ?? DateTime(1970)))))
-          .toList();
+                ..sort((a, b) => (b.makerNoteData?.peopleCount ?? 0).compareTo(b.makerNoteData?.peopleCount ?? 0))))
+          .toList()
+        ..sort((a, b) => (a.title).compareTo(b.title));
 
       _imageGroups = imageGroups;
     }
