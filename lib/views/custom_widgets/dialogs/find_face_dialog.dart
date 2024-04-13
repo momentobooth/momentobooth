@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -84,7 +85,10 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
         422 => FaceDetectionState.noFace,
         _ => FaceDetectionState.unknown
       };
-      if (response.statusCode == 200) { numFaces = int.parse(response.body); }
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body) as Map<String, dynamic>;
+        numFaces = data['num'];
+      }
     });
     print("$_faceDetectionState, $numFaces");
     widget.onSuccess();

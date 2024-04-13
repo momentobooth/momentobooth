@@ -9,6 +9,9 @@ abstract class MakerNoteData with _$MakerNoteData {
 
   const factory MakerNoteData({
     required List<SourcePhoto> sourcePhotos,
+    int? peopleCount,
+    List<List<int>>? faceLocations,
+    String? faceEncodings,
   }) = _MakerNoteData;
 
   factory MakerNoteData.fromJson(Map<String, Object?> json) => _$MakerNoteDataFromJson(json);
