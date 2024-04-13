@@ -1231,6 +1231,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "gexiv2-sys"
+version = "1.4.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c4edf7a47be383873c52eb34426723c7c9b040f9e58cf5088f2253cef149daf1"
+dependencies = [
+ "glib-sys",
+ "libc",
+ "pkg-config",
+]
+
+[[package]]
 name = "gif"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1245,6 +1256,16 @@ name = "gimli"
 version = "0.28.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4271d37baee1b8c7e4b708028c57d816cf9d2434acb33a549475f78c181f6253"
+
+[[package]]
+name = "glib-sys"
+version = "0.16.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c61a4f46316d06bfa33a7ac22df6f0524c8be58e3db2d9ca99ccb1f357b62a65"
+dependencies = [
+ "libc",
+ "system-deps",
+]
 
 [[package]]
 name = "glob"
@@ -1692,15 +1713,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "kamadak-exif"
-version = "0.5.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ef4fc70d0ab7e5b6bafa30216a6b48705ea964cdfc29c050f2412295eba58077"
-dependencies = [
- "mutate_once",
-]
-
-[[package]]
 name = "kernel32-sys"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1998,12 +2010,6 @@ dependencies = [
  "libc",
  "nasm-rs",
 ]
-
-[[package]]
-name = "mutate_once"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "16cf681a23b4d0a43fc35024c176437f9dcd818db34e0f42ab456a0ee5ad497b"
 
 [[package]]
 name = "nanorand"
@@ -2913,6 +2919,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "rexiv2"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11ecb9dccad43fea1bf58ea7bb8e34614446bea8aa00f78add6624d7ee26fb87"
+dependencies = [
+ "gexiv2-sys",
+ "glib-sys",
+ "libc",
+ "num-rational",
+]
+
+[[package]]
 name = "rgb"
 version = "0.8.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2969,7 +2987,6 @@ dependencies = [
  "img-parts",
  "ipp",
  "jpeg-encoder",
- "kamadak-exif",
  "lazy_static",
  "little_exif",
  "noise",
@@ -2978,6 +2995,7 @@ dependencies = [
  "num-derive",
  "num-traits",
  "pathsep",
+ "rexiv2",
  "serde_json",
  "static_init",
  "tokio",

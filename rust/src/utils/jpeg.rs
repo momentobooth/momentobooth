@@ -1,4 +1,3 @@
-use exif::{Tag, Value};
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
 use little_exif::{exif_tag::ExifTagGroup, filetype::FileExtension, metadata::Metadata};
@@ -54,44 +53,30 @@ pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
 // This is because the `little-exif` library is used for creating the EXIF data (in combination with img_parts for adding it to the JPEG data),
 // however `little-exif` does not correctly read the EXIF data back as of version 0.3.1.
 
-// The `nom-exif` library is used for reading the EXIF data, but it does not support writing EXIF data.
-// Once `little-exif` supports reading EXIF data, the `nom-exif` library can be removed.
-
+// We use `rexiv2` for reading the EXIF data back, as it is a more mature library and supports reading EXIF data correctly.
+// Even badly written EXIF data. In the future we might also use rexiv2 for writing EXIF data.
 
 pub fn get_momento_booth_exif_tags_from_file(image_file_path: &str) -> Vec<MomentoBoothExifTag> {
-    let file = std::fs::File::open(image_file_path).unwrap();
-    let mut bufreader = std::io::BufReader::new(&file);
-    let exifreader = exif::Reader::new();
-    let exif = exifreader.read_from_container(&mut bufreader).unwrap();
+    let metadata = rexiv2::Metadata::new_from_path(image_file_path).unwrap();
+    let exif = metadata.get_exif_tags().unwrap();
 
-    exif.fields().map(|field| {
-        match field.tag {
-            Tag::ImageDescription => MomentoBoothExifTag::ImageDescription(match field.value {
-                Value::Ascii(ref vec) if !vec.is_empty() => String::from_utf8(vec[0].clone()).unwrap(),
-                _ => panic!("Invalid value type or empty value for ImageDescription"),
-            }),
-            Tag::Software => MomentoBoothExifTag::Software(match field.value {
-                Value::Ascii(ref vec) if !vec.is_empty() => String::from_utf8(vec[0].clone()).unwrap(),
-                _ => panic!("Invalid value type or empty value for Software"),
-            }),
-            Tag::DateTimeDigitized => MomentoBoothExifTag::CreateDate(match field.value {
-                Value::Ascii(ref vec) if !vec.is_empty() => {
-                    let date_time_str = String::from_utf8(vec[0].clone()).unwrap();
-                    NaiveDateTime::parse_from_str(&date_time_str.to_string(), "%Y:%m:%d %H:%M:%S").unwrap().into()
-                },
-                _ => panic!("Invalid value type for CreateDate"),
-            }),
-            Tag::Orientation => MomentoBoothExifTag::Orientation(match field.value {
-                Value::Short(ref value) => ExifOrientation::from_u16(value[0]).unwrap(),
-                _ => panic!("Invalid value type for Orientation"),
-            }),
-            Tag::MakerNote => MomentoBoothExifTag::MakerNote(match field.value {
-                Value::Undefined(ref data, _) => String::from_utf8(data.clone()).unwrap(),
-                _ => panic!("Invalid value type for MakerNote"),
-            }),
-            _ => panic!("Unknown tag"),
+    exif.iter().map(|field| {
+        match field.as_str() {
+            "Exif.Image.ImageDescription" => Some(MomentoBoothExifTag::ImageDescription(metadata.get_tag_string(field).unwrap())),
+            "Exif.Image.Software" => Some(MomentoBoothExifTag::Software(metadata.get_tag_string(field).unwrap())),
+            "Exif.Photo.DateTimeDigitized" => Some(MomentoBoothExifTag::CreateDate(
+                NaiveDateTime::parse_from_str(
+                    &metadata.get_tag_string(field).unwrap(), "%Y:%m:%d %H:%M:%S").unwrap().into()
+            )),
+            "Exif.Image.Orientation" => Some(MomentoBoothExifTag::Orientation(
+                ExifOrientation::from_u16(metadata.get_tag_numeric(field) as u16).unwrap()
+            )),
+            "Exif.Photo.MakerNote" => Some(MomentoBoothExifTag::MakerNote(
+                String::from_utf8(metadata.get_tag_raw(field).unwrap()).unwrap())
+            ),
+            _ => None,
         }
-    }).collect()
+    }).flatten().collect()
 }
 
 impl From<MomentoBoothExifTag> for little_exif::exif_tag::ExifTag {
@@ -135,5 +120,3 @@ impl TryFrom<&little_exif::exif_tag::ExifTag> for MomentoBoothExifTag {
         }
     }
 }
-
-

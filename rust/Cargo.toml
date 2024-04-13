@@ -35,7 +35,7 @@ url = "2.5.0"
 num = "0.4.1"
 num-traits = "0.2.18"
 num-derive = "0.4.2"
-kamadak-exif = "0.5.5"
+rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 
 [profile.dev]
 opt-level = 3
