@@ -81,7 +81,7 @@ dependencies:
   toml: 0.15.0
 
   # Misc
-  get_it: 7.6.9
+  get_it: 7.7.0
   meta: ^1.11.0
   synchronized: 3.1.0+1
   collection: 1.18.0
