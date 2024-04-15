@@ -13,7 +13,7 @@ derive_more = "0.99.17"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
 serde_json = "1.0.115"
-chrono = "0.4.37"
+chrono = "0.4.38"
 image = { version = "0.25.1", features = ["rayon"] }
 ipp = "5.0.3"
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", features = ["input-native", "output-threaded"] }
@@ -30,9 +30,9 @@ tokio = { version = "1.37.0", features = ["rt-multi-thread"] }
 gphoto2 = "3.2.3"
 ahash = "0.8.11"
 img-parts = "0.3.0"
-little_exif = "0.3.1"
+little_exif = "0.3.2"
 url = "2.5.0"
-num = "0.4.1"
+num = "0.4.2"
 num-traits = "0.2.18"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
