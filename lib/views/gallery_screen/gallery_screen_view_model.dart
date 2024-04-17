@@ -35,6 +35,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   @readonly
   List<GalleryGroup>? _imageGroups;
 
+  @observable
   List<String>? imageNames;
   List<int> ranges = [1, 2, 3, 4, 6, 10, 15];
 

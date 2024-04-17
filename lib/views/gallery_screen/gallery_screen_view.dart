@@ -104,18 +104,23 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
         ),
         Padding(
           padding: const EdgeInsets.only(right: 80),
-          child: Align(
-            alignment: Alignment.topRight,
-            child: Container(
-              height: 60,
-              width: 550,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
-                color: Color.fromARGB(130, 48, 48, 48),
+          child: Row(
+            children: [
+              const Expanded(child: SizedBox()),
+              Container(
+                height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
+                  color: Color.fromARGB(130, 48, 48, 48),
+                ),
+                child: Observer(
+                  builder: (context) {
+                    return getFilterBar();
+                  }
+                ),
               ),
-              child: getFilterBar(),
-            ),
+            ],
           ),
         ),
         Padding(
@@ -148,20 +153,30 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               height: 1),
         ),
         const SizedBox(width: 12,),
-        Observer(builder: (context) =>
-          FilterChoice(sortBy: viewModel.sortBy, onChanged: viewModel.onSortByChanged)
-        ),
+        FilterChoice(sortBy: viewModel.sortBy, onChanged: viewModel.onSortByChanged),
         const SizedBox(width: 20,),
-        OutlinedButton.icon(
-          onPressed: controller.onFindMyFace,
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.blue.shade700),
-            foregroundColor: MaterialStateProperty.all(Colors.white),
-            overlayColor: MaterialStateProperty.all(Colors.blue.shade400),
+        if (viewModel.imageNames == null)
+          OutlinedButton.icon(
+            onPressed: controller.onFindMyFace,
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.blue.shade700),
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+              overlayColor: MaterialStateProperty.all(Colors.blue.shade400),
+            ),
+            icon: const Icon(Icons.face),
+            label: const Text("Find my face"),
+          )
+        else
+          OutlinedButton.icon(
+            onPressed: controller.clearImageFilter,
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.white),
+              overlayColor: MaterialStateProperty.all(Colors.red.shade900),
+              side: MaterialStateProperty.all(const BorderSide(color: Color.fromARGB(255, 255, 117, 117))),
+            ),
+            icon: const Icon(Icons.filter_alt_off),
+            label: const Text("Clear filter"),
           ),
-          icon: const Icon(Icons.face),
-          label: const Text("Find my face"),
-        ),
       ],
     );
   }

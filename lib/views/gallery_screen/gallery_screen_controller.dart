@@ -41,6 +41,11 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
     }
   }
 
+  void clearImageFilter() {
+    viewModel..imageNames = null
+             ..findImages();
+  }
+
   void onFindMyFace() {
     showUserDialog(
       barrierDismissible: false,
