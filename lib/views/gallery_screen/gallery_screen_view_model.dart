@@ -110,9 +110,9 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
           .map((entry) => GalleryGroup(
               title: entry.key,
               images: entry.value
-                ..sort((a, b) => (b.makerNoteData?.peopleCount ?? 0).compareTo(b.makerNoteData?.peopleCount ?? 0))))
+                ..sort((a, b) => (a.makerNoteData?.peopleCount ?? 0).compareTo(b.makerNoteData?.peopleCount ?? 0))))
           .toList()
-        ..sort((a, b) => (a.title).compareTo(b.title));
+        ..sort((a, b) => (a.images.first.makerNoteData?.peopleCount ?? 0).compareTo(b.images.first.makerNoteData?.peopleCount ?? 0));
 
       _imageGroups = imageGroups;
     }
