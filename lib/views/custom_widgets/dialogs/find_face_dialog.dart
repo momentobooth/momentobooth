@@ -75,7 +75,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
 
   Future<void> uploadImage(Uint8List image) async {
     print("inside upload function");
-    Uri uri = Uri(host: "localhost", port: 5000, scheme: "http", path: "/upload");
+    Uri uri = Uri(host: "localhost", port: 3232, scheme: "http", path: "/upload");
     var request = http.MultipartRequest("POST", uri);
     request.files.add(http.MultipartFile.fromBytes("file", image, contentType: MediaType('image', 'jpeg'), filename: "captured-imaged.jpg"));
     var response = await http.Response.fromStream(await request.send());

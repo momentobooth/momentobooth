@@ -30,7 +30,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   }
 
   Future<void> filterWithFaces() async {
-    var response = await http.get(Uri.parse("http://localhost:5000/get-matching-imgs"));
+    var response = await http.get(Uri.parse("http://localhost:3232/get-matching-imgs"));
     if (response.statusCode == 200) {
       var matchingImages = jsonDecode(response.body) as List<dynamic>?;
       var matchingImagesStrings = matchingImages!.cast<String>().toList();
