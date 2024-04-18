@@ -31,23 +31,24 @@ class FindFaceDialog extends StatefulWidget {
   final VoidCallback onCancel;
   final int countDown;
 
-  FindFaceDialog({
+  const FindFaceDialog({
     super.key,
     required this.title,
     required this.onSuccess,
     required this.onCancel,
-    this.countDown = 3
+    this.countDown = 3,
   });
 
   @override
   State<FindFaceDialog> createState() => _FindFaceDialogState();
+
 }
 
 class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
-  bool showCounter = true;
-  bool captureComplete = false;
+
+  bool _showCounter = true;
   FaceDetectionState _faceDetectionState = FaceDetectionState.unknown;
-  int numFaces = 0;
+  int _numFaces = 0;
 
   static const flashStartDuration = Duration(milliseconds: 50);
   final PhotoCaptureMethod capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
@@ -55,6 +56,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
     CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
     CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
   } as PhotoCaptureMethod;
+  
   @computed
   Duration get photoDelay => Duration(seconds: widget.countDown) - capturer.captureDelay + flashStartDuration;
 
@@ -67,14 +69,12 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
       loggy.warning(error);
       final errorFile = File('assets/bitmap/capture-error.png');
       imageData = await errorFile.readAsBytes();
-    } finally {
-      captureComplete = true;
     }
     await uploadImage(imageData);
   }
 
   Future<void> uploadImage(Uint8List image) async {
-    print("inside upload function");
+    loggy.debug("Uploading image to face detection server");
     Uri uri = Uri(host: "localhost", port: 3232, scheme: "http", path: "/upload");
     var request = http.MultipartRequest("POST", uri);
     request.files.add(http.MultipartFile.fromBytes("file", image, contentType: MediaType('image', 'jpeg'), filename: "captured-imaged.jpg"));
@@ -87,10 +87,10 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
       };
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body) as Map<String, dynamic>;
-        numFaces = data['num'];
+        _numFaces = data['num'];
       }
     });
-    print("$_faceDetectionState, $numFaces");
+    loggy.debug("Face detection state updated: $_faceDetectionState, $_numFaces");
     widget.onSuccess();
   }
 
@@ -101,11 +101,8 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
   }
 
   void capture() {
-    setState(() {
-      showCounter = false;
-    });
-    print("Capture");
-    print("Method = ${capturer}");
+    setState(() => _showCounter = false);
+    loggy.debug("Capture initiated with method $capturer");
   }
 
   @override
@@ -132,7 +129,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
                   constraints: const BoxConstraints(maxWidth: 300, maxHeight: 300),
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 50),
-                    opacity: showCounter ? 1.0 : 0.0,
+                    opacity: _showCounter ? 1.0 : 0.0,
                     child: CaptureCounter(
                       onCounterFinished: capture, counterStart: widget.countDown,
                     ),
@@ -156,4 +153,5 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
       ],
     );
   }
+
 }

@@ -205,7 +205,7 @@ class FilterChoice extends StatelessWidget {
             icon: Icon(Icons.groups)),
       ],
       selected: <SortBy>{sortBy},
-      onSelectionChanged: (Set<SortBy> newSelection) {
+      onSelectionChanged: (newSelection) {
         // By default there is only a single segment that can be
         // selected at one time, so its value is always the first
         // item in the selected set.
