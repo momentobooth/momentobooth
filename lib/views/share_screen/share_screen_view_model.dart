@@ -69,7 +69,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, 
     _uploadProgress = 0.0;
     _uploadFailed = false;
 
-    (await stream).listen((event) async {
+    stream.listen((event) async {
       if (event.isFinished) {
         loggy.debug("Upload complete: ${event.downloadUrl}");
 

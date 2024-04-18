@@ -53,7 +53,7 @@ dependencies:
   rust_lib_momento_booth:
     path: rust_builder
   ffi: 2.1.2
-  flutter_rust_bridge: 2.0.0-dev.31
+  flutter_rust_bridge: 2.0.0-dev.32
 
   # Printing
   printing: 5.12.0
@@ -69,7 +69,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 7.19.0
+  sentry_flutter: 7.20.0
 
   # Sound output
   just_audio: 0.9.37
@@ -87,7 +87,7 @@ dependencies:
   collection: 1.18.0
   mqtt5_client: 4.2.2
   dart_casing: 3.0.1
-  package_info_plus: 6.0.0
+  package_info_plus: 7.0.0
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.3
   draggable_scrollbar: 0.1.0
@@ -136,7 +136,7 @@ scripts:
     all: rps install flutter && rps install cargo-expand && rps install flutter_rust_bridge_codegen && rps install deps
     flutter: fvm install
     cargo-expand: cargo install cargo-expand
-    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.31
+    flutter_rust_bridge_codegen: cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.32
     deps: fvm flutter pub get
   clean:
     rust_bridge: git clean -xfd lib/src
