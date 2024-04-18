@@ -10,6 +10,7 @@ import 'package:momento_booth/views/custom_widgets/dialogs/find_face_dialog.dart
 import 'package:momento_booth/views/gallery_screen/gallery_screen_view_model.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen.dart';
 import 'package:path/path.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewModel> with UiLoggy {
 
@@ -32,14 +33,19 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
 
   Future<void> filterWithFaces() async {
     var baseUri = Uri.parse(SettingsManager.instance.settings.faceRecognition.serverUrl);
-    var response = await http.get(baseUri.resolve("get-matching-imgs"));
-    if (response.statusCode == 200) {
-      var matchingImages = jsonDecode(response.body) as List<dynamic>?;
-      var matchingImagesStrings = matchingImages!.cast<String>().toList();
-      loggy.debug("Matching images: $matchingImagesStrings");
-      viewModel.filterImages(matchingImagesStrings);
-    } else {
-      loggy.warning("Error getting matching face images: ${response.body}");
+    try {
+      var response = await http.get(baseUri.resolve("get-matching-imgs"));
+      if (response.statusCode == 200) {
+        var matchingImages = jsonDecode(response.body) as List<dynamic>?;
+        var matchingImagesStrings = matchingImages!.cast<String>().toList();
+        loggy.debug("Matching images: $matchingImagesStrings");
+        viewModel.filterImages(matchingImagesStrings);
+      } else {
+        throw Exception("Failed to get matching images, status code: ${response.statusCode}");
+      }
+    } catch (e, s) {
+      loggy.error("Failed to get matching images: $e");
+      await Sentry.captureException(e, stackTrace: s);
     }
   }
 
