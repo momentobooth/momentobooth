@@ -27,7 +27,8 @@ abstract class GalleryImage with _$GalleryImage {
       .whereType<MomentoBoothExifTag_MakerNote>()
       .firstOrNull?.field0;
 
-    return json == null ? null : MakerNoteData.fromJson(jsonDecode(json));
+    var trimmedJson = json?.replaceAll(String.fromCharCode(0), "");
+    return trimmedJson == null ? null : MakerNoteData.fromJson(jsonDecode(trimmedJson));
   }
 
 }

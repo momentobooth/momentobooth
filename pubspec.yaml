@@ -80,12 +80,16 @@ dependencies:
   flutter_secure_storage: 9.0.0
   toml: 0.15.0
 
+  # Networking
+  http: 1.2.1
+  http_parser: 4.0.2
+  mqtt5_client: 4.2.2
+
   # Misc
   get_it: 7.7.0
   meta: ^1.11.0
   synchronized: 3.1.0+1
   collection: 1.18.0
-  mqtt5_client: 4.2.2
   dart_casing: 3.0.1
   package_info_plus: 7.0.0
   lemberfpsmonitor: 0.0.3+6

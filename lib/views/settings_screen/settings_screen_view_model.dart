@@ -156,6 +156,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   bool get mqttIntegrationEnableHomeAssistantDiscoverySetting => SettingsManager.instance.settings.mqttIntegration.enableHomeAssistantDiscovery;
   String get mqttIntegrationHomeAssistantDiscoveryTopicPrefixSetting => SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
   String get mqttIntegrationHomeAssistantComponentIdSetting => SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
+  bool get faceRecognitionEnabled => SettingsManager.instance.settings.faceRecognition.enable;
+  String get faceRecognitionServerUrlSetting => SettingsManager.instance.settings.faceRecognition.serverUrl;
   bool get debugShowFpsCounter => SettingsManager.instance.settings.debug.showFpsCounter;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
