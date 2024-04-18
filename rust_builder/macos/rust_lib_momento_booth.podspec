@@ -26,7 +26,7 @@ A new Flutter FFI plugin project.
   s.swift_version = '5.0'
 
   s.frameworks = ["CoreMedia", "AVFoundation", "SystemConfiguration"]
-  s.libraries = ["gphoto2", "gphoto2_port"]
+  s.libraries = ["gphoto2", "gphoto2_port", "gexiv2", "glib-2.0"]
 
   s.script_phase = {
     :name => 'Build Rust library',
