@@ -31,8 +31,8 @@ abstract class _HelperLibraryInitializationManagerBase with Store {
   String? _gphoto2InitializationMessage;
 
   Future initialize() async {
-    (await initializeLog()).listen(_processLogEvent);
-    (await initializeHardware()).listen(_processHardwareInitEvent);
+    initializeLog().listen(_processLogEvent);
+    initializeHardware().listen(_processHardwareInitEvent);
   }
 
   void _processLogEvent(LogEvent event) {

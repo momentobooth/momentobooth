@@ -50,7 +50,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
     _uploadProgress = 0.0;
     _uploadFailed = false;
 
-    (await stream).listen((event) async {
+    stream.listen((event) async {
       if (event.isFinished) {
         loggy.debug("Upload complete: ${event.downloadUrl}");
 
