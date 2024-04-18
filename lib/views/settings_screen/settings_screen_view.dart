@@ -25,6 +25,7 @@ import 'package:momento_booth/views/settings_screen/widgets/text_display_card.da
 import 'package:momento_booth/views/settings_screen/widgets/text_input_card.dart';
 
 part 'settings_screen_view.debug.dart';
+part 'settings_screen_view.face_recognition.dart';
 part 'settings_screen_view.general.dart';
 part 'settings_screen_view.hardware.dart';
 part 'settings_screen_view.mqtt_integration.dart';
@@ -80,6 +81,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 title: const Text("MQTT integration"),
                 body: Builder(builder: (_) => _getMqttIntegrationSettings(viewModel, controller)),
                 infoBadge: const MqttConnectionStateIndicator(),
+              ),
+              PaneItem(
+                icon: const Icon(FluentIcons.diamond_user),
+                title: const Text("Face recognition"),
+                body: Builder(builder: (_) => _getFaceRecognitionSettings(viewModel, controller)),
               ),
             ],
             footerItems: [

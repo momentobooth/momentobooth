@@ -53,6 +53,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _mqttIntegrationHomeAssistantComponentIdController;
   TextEditingController get mqttIntegrationHomeAssistantComponentIdController => _mqttIntegrationHomeAssistantComponentIdController ??= TextEditingController(text: viewModel.mqttIntegrationHomeAssistantComponentIdSetting);
 
+  TextEditingController? _faceRecognitionServerUrlController;
+  TextEditingController get faceRecognitionServerUrlController => _faceRecognitionServerUrlController ??= TextEditingController(text: viewModel.faceRecognitionServerUrlSetting);
+
   // Initialization/Deinitialization
 
   SettingsScreenController({
@@ -451,6 +454,18 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onMqttIntegrationHomeAssistantComponentIdChanged(String? homeAssistantComponentId) {
     if (homeAssistantComponentId != null) {
       viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(homeAssistantComponentId: homeAssistantComponentId, enable: false));
+    }
+  }
+
+  void onFaceRecognitionEnableChanged(bool? enable) {
+    if (enable != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.faceRecognition(enable: enable));
+    }
+  }
+
+  void onFaceRecognitionServerUrlChanged(String? serverUrl) {
+    if (serverUrl != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.faceRecognition(serverUrl: serverUrl));
     }
   }
 

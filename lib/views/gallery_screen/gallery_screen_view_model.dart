@@ -31,6 +31,8 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
 
   Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   String get baseName => PhotosManager.instance.baseName;
+
+  bool get isFaceRecognitionEnabled => SettingsManager.instance.settings.faceRecognition.enable;
   
   @readonly
   List<GalleryGroup>? _imageGroups;

@@ -37,6 +37,7 @@ class Settings with _$Settings implements TomlEncodableValue {
     @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
     @JsonKey(defaultValue: UiSettings.withDefaults) required UiSettings ui,
     @JsonKey(defaultValue: MqttIntegrationSettings.withDefaults) required MqttIntegrationSettings mqttIntegration,
+    @JsonKey(defaultValue: FaceRecognitionSettings.withDefaults) required FaceRecognitionSettings faceRecognition,
     @JsonKey(defaultValue: DebugSettings.withDefaults) required DebugSettings debug,
   }) = _Settings;
 
@@ -218,6 +219,25 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
   factory MqttIntegrationSettings.withDefaults() => MqttIntegrationSettings.fromJson({});
 
   factory MqttIntegrationSettings.fromJson(Map<String, Object?> json) => _$MqttIntegrationSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+class FaceRecognitionSettings with _$FaceRecognitionSettings implements TomlEncodableValue {
+
+  const FaceRecognitionSettings._();
+
+  const factory FaceRecognitionSettings({
+    @Default(false) bool enable,
+    @Default('http://localhost:3232/') String serverUrl,
+  }) = _FaceRecognitionSettings;
+
+  factory FaceRecognitionSettings.withDefaults() => FaceRecognitionSettings.fromJson({});
+
+  factory FaceRecognitionSettings.fromJson(Map<String, Object?> json) => _$FaceRecognitionSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();

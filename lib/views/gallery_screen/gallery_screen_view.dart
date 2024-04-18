@@ -155,7 +155,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
         const SizedBox(width: 12,),
         FilterChoice(sortBy: viewModel.sortBy, onChanged: viewModel.onSortByChanged),
         const SizedBox(width: 20,),
-        if (viewModel.imageNames == null)
+        if (viewModel.imageNames == null && viewModel.isFaceRecognitionEnabled)
           OutlinedButton.icon(
             onPressed: controller.onFindMyFace,
             style: ButtonStyle(
@@ -166,7 +166,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
             icon: const Icon(Icons.face),
             label: const Text("Find my face"),
           )
-        else
+        else if (viewModel.imageNames != null)
           OutlinedButton.icon(
             onPressed: controller.clearImageFilter,
             style: ButtonStyle(
