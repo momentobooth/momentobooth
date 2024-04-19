@@ -222,7 +222,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
   Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
     return widget.debug == null
         ? PhotoContainer.memory(photos[chosen[index]].data, fit: fit, decodeCallback: decodeCallback)
-        : PhotoContainer.file(File('assets/bitmap/placeholder.png'), fit: fit, decodeCallback: decodeCallback);
+        : PhotoContainer.asset('assets/bitmap/placeholder.png', fit: fit, decodeCallback: decodeCallback);
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {

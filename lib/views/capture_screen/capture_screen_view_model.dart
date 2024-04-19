@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
@@ -130,8 +132,8 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       }
     } catch (error) {
       loggy.warning(error);
-      final errorFile = File('assets/bitmap/capture-error.png');
-      PhotosManager.instance.outputImage = await errorFile.readAsBytes();
+      final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
+      PhotosManager.instance.outputImage = data.buffer.asUint8List();
     } finally {
       captureComplete = true;
       navigateAfterCapture();

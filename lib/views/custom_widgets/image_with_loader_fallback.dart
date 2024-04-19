@@ -3,23 +3,32 @@ import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart';
 
-enum _Type { memory, file }
+enum _Type { memory, file, asset }
 
 class ImageWithLoaderFallback extends StatefulWidget {
 
   final Uint8List? bytes;
   final File? file;
+  final String? assetPath;
+
   final BoxFit? fit;
   final VoidCallback? decodeCallback;
   final _Type _type;
 
   const ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit, this.decodeCallback})
       : _type = _Type.memory,
-        file = null;
+        file = null,
+        assetPath = null;
 
   const ImageWithLoaderFallback.file(this.file, {super.key, this.fit, this.decodeCallback})
       : _type = _Type.file,
-        bytes = null;
+        bytes = null,
+        assetPath = null;
+
+  const ImageWithLoaderFallback.asset(this.assetPath, {super.key, this.fit, this.decodeCallback})
+      : _type = _Type.asset,
+        bytes = null,
+        file = null;
 
   @override
   State<ImageWithLoaderFallback> createState() => _ImageWithLoaderFallbackState();
@@ -39,17 +48,23 @@ class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
   }
 
   void _initializeFromWidget() {
-    _imageWidget = widget._type == _Type.memory
-        ? Image.memory(
-            widget.bytes!,
-            frameBuilder: _frameBuilder,
-            fit: widget.fit,
-          )
-        : Image.file(
-            widget.file!,
-            frameBuilder: _frameBuilder,
-            fit: widget.fit,
-          );
+    _imageWidget = switch(widget._type) {
+      _Type.memory => Image.memory(
+        widget.bytes!,
+        fit: widget.fit,
+        frameBuilder: _frameBuilder,
+      ),
+      _Type.file => Image.file(
+        widget.file!,
+        fit: widget.fit,
+        frameBuilder: _frameBuilder,
+      ),
+      _Type.asset => Image.asset(
+        widget.assetPath!,
+        fit: widget.fit,
+        frameBuilder: _frameBuilder,
+      ),
+    };
 
     _listener = ImageStreamListener((image, synchronousCall) => widget.decodeCallback?.call());
     _imageStream = _imageWidget.image.resolve(ImageConfiguration.empty);

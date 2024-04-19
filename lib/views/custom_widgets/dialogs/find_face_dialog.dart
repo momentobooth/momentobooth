@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -67,8 +68,8 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
       imageData = image.data;
     } catch (error) {
       loggy.warning(error);
-      final errorFile = File('assets/bitmap/capture-error.png');
-      imageData = await errorFile.readAsBytes();
+      final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
+      imageData = data.buffer.asUint8List();
     }
     await uploadImage(imageData);
   }
