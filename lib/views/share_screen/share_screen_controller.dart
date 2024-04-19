@@ -65,6 +65,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   static const _printTextDuration = Duration(seconds: 4);
 
   void resetPrint() {
+    if (!contextAccessor.buildContext.mounted) return;
     viewModel
       ..printText = successfulPrints > 0 ? "${localizations.genericPrintButton} +1" : localizations.genericPrintButton
       ..printEnabled = true;
