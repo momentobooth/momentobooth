@@ -46,7 +46,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
     loggy.debug("Uploading ${file!.path}");
 
     String basename = path.basename(file!.path);
-    Stream<FfSendTransferProgress> stream = await ffsendUploadFile(filePath: file!.path, hostUrl: ffSendUrl, downloadFilename: basename);
+    Stream<FfSendTransferProgress> stream = ffsendUploadFile(filePath: file!.path, hostUrl: ffSendUrl, downloadFilename: basename);
 
     _uploadProgress = 0.0;
     _uploadFailed = false;
