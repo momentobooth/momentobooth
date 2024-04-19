@@ -1,4 +1,4 @@
-import 'dart:io';
+// ignore_for_file: dead_code
 
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
@@ -13,7 +13,7 @@ import 'package:momento_booth/views/custom_widgets/dialogs/printer_issue_dialog.
 mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControllerBase<T>, UiLoggy {
 
   Future<void> checkPrintersAndShowWarnings() async {
-    if (!Platform.isLinux) return;
+    return; // TODO: Remove this line when the feature is ready.
 
     List<String> printerIds = SettingsManager.instance.settings.hardware.cupsPrinterQueues;
     for (var printerId in printerIds) {
