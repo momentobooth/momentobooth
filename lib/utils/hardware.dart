@@ -3,19 +3,14 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:ffi/ffi.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/exceptions/win32_exception.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:path/path.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
 import 'package:win32/win32.dart';
 
-int lastUsedPrinterIndex = -1;
 final _loggy = Loggy<UiLoggy>("hardware utils");
 
 Future<Uint8List> getImagePDF(Uint8List imageData) async {
@@ -48,21 +43,6 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
     ));
 
   return await doc.save();
-}
-
-Future<List<Printer>> getSelectedPrinters() async {
-  // Find printer that was set in settings in available printers.
-  final sourcePrinters = await Printing.listPrinters();
-  List<Printer> printers = <Printer>[];
-
-  for (String name in SettingsManager.instance.settings.hardware.printerNames) {
-    Printer? selected = sourcePrinters.firstWhereOrNull((printer) => printer.name == name);
-    if (selected == null) {
-        _loggy.error("Could not find selected printer ($name)");
-    }
-    printers.add(selected!);
-  }
-  return printers;
 }
 
 enum JobStatus {
@@ -189,37 +169,4 @@ List<JobInfo> getJobList(String printerName) {
     if (!closeSuccess) throw Win32Exception.fromLastError("Error closing printer $printerName");
     return jobList;
   });
-}
-
-Future<bool> printPDF(Uint8List pdfData) async {
-  final settings = SettingsManager.instance.settings.hardware;
-  final printers = await getSelectedPrinters();
-  if (printers.isEmpty) return false;
-
-  if (++lastUsedPrinterIndex >= printers.length) { lastUsedPrinterIndex = 0; }
-  final printer = printers[lastUsedPrinterIndex];
-
-  _loggy.debug("Printing with printer #${lastUsedPrinterIndex+1} (${printer.name})");
-
-  try {
-    final jobList = getJobList(printer.name);
-    _loggy.debug("Job list for printer ${printer.name} = $jobList");
-  } catch (e) {
-    _loggy.error(e);
-  }
-
-  bool success = await Printing.directPrintPdf(
-      printer: printer,
-      name: "MomentoBooth image",
-      onLayout: (pageFormat) => pdfData,
-      usePrinterSettings: settings.usePrinterSettings,
-  );
-  StatsManager.instance.addPrintedPhoto();
-  
-  Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);
-  final filePath = join(outputDir.path, 'latest-print.pdf');
-  File file = await File(filePath).create();
-  await file.writeAsBytes(pdfData);
-
-  return success;
 }

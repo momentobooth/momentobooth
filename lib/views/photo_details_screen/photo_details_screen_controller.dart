@@ -1,9 +1,11 @@
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
+import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
+import 'package:path/path.dart' as path;
 
 class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScreenViewModel> with UiLoggy {
 
@@ -58,7 +60,15 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
     // Get photo and print it.
     final pdfData = await getImagePDF(await viewModel.file!.readAsBytes());
-    final bool success = await printPDF(pdfData);
+    String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Reprint";
+
+    bool success = false;
+    try {
+      await PrintingManager.instance.printPdf(jobName, pdfData);
+      success = true;
+    } catch (e) {
+      loggy.error("Failed to print photo: $e");
+    }
 
     viewModel.printText = success ? localizations.photoDetailsScreenPrinting : localizations.photoDetailsScreenPrintUnsuccesful;
     successfulPrints += success ? 1 : 0;

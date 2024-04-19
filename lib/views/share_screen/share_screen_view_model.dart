@@ -3,12 +3,14 @@ import 'dart:typed_data';
 
 import 'package:confetti/confetti.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
+import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 
 part 'share_screen_view_model.g.dart';
@@ -64,7 +66,11 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, 
     final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
 
     loggy.debug("Uploading ${_file!.path}");
-    var stream = ffsendUploadFile(filePath: _file!.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
+
+    // HHmmss string
+    DateFormat formatter = DateFormat('HHmmss');
+    String filename = "MomentoBooth ${formatter.format(DateTime.now())}.$ext";
+    Stream<FfSendTransferProgress> stream = ffsendUploadFile(filePath: _file!.path, hostUrl: ffSendUrl, downloadFilename: filename);
 
     _uploadProgress = 0.0;
     _uploadFailed = false;

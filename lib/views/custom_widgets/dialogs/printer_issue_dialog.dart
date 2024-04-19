@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
+import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/modal_dialog.dart';
@@ -13,6 +14,7 @@ class PrinterIssueDialog extends StatelessWidget {
 
   final String printerName;
   final PrinterIssueType issueType;
+  final List<PrintJobState> stuckJobs;
   final String errorText;
   final VoidCallback onIgnorePressed;
   final VoidCallback onResumeQueuePressed;
@@ -21,6 +23,7 @@ class PrinterIssueDialog extends StatelessWidget {
     super.key,
     required this.printerName,
     required this.issueType,
+    required this.stuckJobs,
     required this.errorText,
     required this.onIgnorePressed,
     required this.onResumeQueuePressed,
@@ -39,6 +42,16 @@ class PrinterIssueDialog extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16.0),
+          if (stuckJobs.length == 1)
+            Text(
+              localizations.printerErrorStuckJob,
+            ),
+          if (stuckJobs.length > 1)
+            Text(
+              localizations.printerErrorStuckJobs(stuckJobs.length),
+            ),
+          if (stuckJobs.isNotEmpty)
+            const SizedBox(height: 16.0),
           Lottie.asset(
             'assets/animations/Animation - 1709936404300.json',
             fit: BoxFit.contain,
@@ -79,6 +92,7 @@ Widget printerIssueDialog(BuildContext context) {
   return PrinterIssueDialog(
     printerName: 'MyBrand MyPrinter 5000',
     issueType: context.knobs.list(label: 'Issue Type', initialOption: PrinterIssueType.noInk, options: PrinterIssueType.values),
+    stuckJobs: const [],
     errorText: context.knobs.string(label: 'Error Text', initialValue: 'The printer is out of ink. Please replace the ink cartridge.'),
     onIgnorePressed: () {},
     onResumeQueuePressed: () {},

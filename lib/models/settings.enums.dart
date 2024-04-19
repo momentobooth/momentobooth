@@ -115,7 +115,7 @@ enum ScreenTransitionAnimation {
 
   ComboBoxItem<ScreenTransitionAnimation> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
-  static List<ComboBoxItem<ScreenTransitionAnimation>> asComboBoxItems() => ScreenTransitionAnimation.values.map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<ScreenTransitionAnimation>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
 }
 
@@ -133,7 +133,7 @@ enum Flip {
 
   ComboBoxItem<Flip> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
-  static List<ComboBoxItem<Flip>> asComboBoxItems() => Flip.values.map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<Flip>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
   FlipAxis? get asFlipAxis => switch (this) {
     Flip.none => null,
@@ -162,7 +162,7 @@ enum Rotate {
 
   ComboBoxItem<Rotate> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
-  static List<ComboBoxItem<Rotate>> asComboBoxItems() => Rotate.values.map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<Rotate>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
   Rotation? get asRotation => switch (this) {
         Rotate.none => null,
@@ -186,7 +186,7 @@ enum Language {
 
   ComboBoxItem<Language> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
-  static List<ComboBoxItem<Language>> asComboBoxItems() => Language.values.map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<Language>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
   Locale toLocale() => Locale(code);
 
@@ -217,6 +217,24 @@ enum BackgroundBlur {
 
   ComboBoxItem<BackgroundBlur> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
-  static List<ComboBoxItem<BackgroundBlur>> asComboBoxItems() => BackgroundBlur.values.map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<BackgroundBlur>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
+
+}
+
+enum PrintingImplementation {
+
+  none("Disable printing"),
+  flutterPrinting("Flutter printing plugin"),
+  cups("CUPS");
+
+  // can add more properties or getters/methods if needed
+  final String name;
+
+  // can use named parameters if you want
+  const PrintingImplementation(this.name);
+
+  ComboBoxItem<PrintingImplementation> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<PrintingImplementation>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
 }

@@ -5,8 +5,9 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
+import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
-import 'package:path/path.dart' hide context;
+import 'package:path/path.dart' as path;
 
 part 'photo_details_screen_view_model.g.dart';
 
@@ -22,7 +23,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   });
   
   Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
-  File? get file => File(join(outputDir.path, photoId));
+  File? get file => File(path.join(outputDir.path, photoId));
 
   @observable
   late String printText = localizations.genericPrintButton;
@@ -42,10 +43,10 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
 
   Future<void> uploadPhotoToSend() async {
-    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
-
     loggy.debug("Uploading ${file!.path}");
-    var stream = ffsendUploadFile(filePath: file!.path, hostUrl: ffSendUrl, downloadFilename: "MomentoBooth image.$ext");
+
+    String basename = path.basename(file!.path);
+    Stream<FfSendTransferProgress> stream = ffsendUploadFile(filePath: file!.path, hostUrl: ffSendUrl, downloadFilename: basename);
 
     _uploadProgress = 0.0;
     _uploadFailed = false;

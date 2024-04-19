@@ -2,7 +2,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
+import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
@@ -38,6 +40,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<Rotate>> get liveViewAndCaptureRotateOptions => Rotate.asComboBoxItems();
   List<ComboBoxItem<Flip>> get flipOptions => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
+  List<ComboBoxItem<PrintingImplementation>> get printingImplementations => PrintingImplementation.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
   List<ComboBoxItem<ScreenTransitionAnimation>> get screenTransitionAnimations => ScreenTransitionAnimation.asComboBoxItems();
@@ -46,7 +49,10 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
   
   @observable
-  ObservableList<ComboBoxItem<String>> printerOptions = ObservableList<ComboBoxItem<String>>();
+  ObservableList<ComboBoxItem<String>> flutterPrintingQueues = ObservableList<ComboBoxItem<String>>();
+
+  @observable
+  ObservableList<ComboBoxItem<String>> cupsQueues = ObservableList<ComboBoxItem<String>>();
 
   @observable
   List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
@@ -54,14 +60,14 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   List<ComboBoxItem<String>> gPhoto2Cameras = ObservableList<ComboBoxItem<String>>();
 
-  RichText _printerCardText(String printerName, bool isAvailable, bool isDefault) {
+  RichText _printerCardText(String printerName, bool isAvailable, bool? isDefault) {
     final icon = isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
     return RichText(
       text: TextSpan(
         style: const TextStyle(color: Color(0xFF000000)),
         children: [
           TextSpan(text: "$printerName  "),
-          if (isDefault) ...[
+          if (isDefault == true) ...[
             const WidgetSpan(child: Icon(FluentIcons.default_settings)),
             const TextSpan(text: "  "),
           ],
@@ -71,21 +77,38 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     );
   }
 
-  final String unsedPrinterValue = "UNUSED";
+  final String unusedPrinterValue = "UNUSED";
 
-  Future<void> setPrinterList() async {
+  Future<void> setFlutterPrintingQueueList() async {
     final printers = await Printing.listPrinters();
 
-    printerOptions
+    flutterPrintingQueues
       ..clear()
-      ..add(ComboBoxItem(value: unsedPrinterValue, child: _printerCardText("- Not used -", false, false)));
+      ..add(ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)));
 
     for (var printer in printers) {
-      printerOptions.add(ComboBoxItem(value: printer.name, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
+      flutterPrintingQueues.add(ComboBoxItem(value: printer.name, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
       
       // If there is no setting yet, set it to the default printer.
-      if (printer.isDefault && printersSetting.isEmpty) {
-        await updateSettings((settings) => settings.copyWith.hardware(printerNames: [printer.name]));
+      if (printer.isDefault && flutterPrintingPrinterNamesSetting.isEmpty) {
+        await updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: [printer.name]));
+      }
+    }
+  }
+
+  Future<void> setCupsQueueList() async {
+    final List<PrintQueueInfo> printers = await CupsClient().getPrintQueues();
+
+    cupsQueues
+      ..clear()
+      ..add(ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)));
+
+    for (var printer in printers) {
+      cupsQueues.add(ComboBoxItem(value: printer.id, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
+      
+      // If there is no setting yet, set it to the default printer.
+      if (cupsPrinterQueuesSetting.isEmpty) {
+        await updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: [printer.id]));
       }
     }
   }
@@ -117,7 +140,13 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get captureLocationSetting => SettingsManager.instance.settings.hardware.captureLocation;
   bool get saveCapturesToDiskSetting => SettingsManager.instance.settings.hardware.saveCapturesToDisk;
   String get captureStorageLocationSetting => SettingsManager.instance.settings.hardware.captureStorageLocation;
-  List<String> get printersSetting => SettingsManager.instance.settings.hardware.printerNames;
+  PrintingImplementation get printingImplementationSetting => SettingsManager.instance.settings.hardware.printingImplementation;
+  String get cupsUriSetting => SettingsManager.instance.settings.hardware.cupsUri;
+  bool get cupsIgnoreTlsErrors => SettingsManager.instance.settings.hardware.cupsIgnoreTlsErrors;
+  String get cupsUsernameSetting => SettingsManager.instance.settings.hardware.cupsUsername;
+  String get cupsPasswordSetting => SettingsManager.instance.settings.hardware.cupsPassword;
+  List<String> get cupsPrinterQueuesSetting => SettingsManager.instance.settings.hardware.cupsPrinterQueues;
+  List<String> get flutterPrintingPrinterNamesSetting => SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
   double get pageHeightSetting => SettingsManager.instance.settings.hardware.pageHeight;
   double get pageWidthSetting => SettingsManager.instance.settings.hardware.pageWidth;
   bool get usePrinterSettingsSetting => SettingsManager.instance.settings.hardware.usePrinterSettings;
@@ -170,7 +199,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   SettingsScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    setPrinterList();
+    setFlutterPrintingQueueList();
     setWebcamList();
     setCameraList();
   }

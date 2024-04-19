@@ -11,8 +11,10 @@ class StartScreenViewModel = StartScreenViewModelBase with _$StartScreenViewMode
 abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
 
   @computed
-  List<LottieAnimationSettings> get introScreenLottieAnimations =>  SettingsManager.instance.settings.ui.introScreenLottieAnimations;
+  List<LottieAnimationSettings> get introScreenLottieAnimations => SettingsManager.instance.settings.ui.introScreenLottieAnimations;
 
+  @observable
+  bool isBusy = false;
 
   StartScreenViewModelBase({required super.contextAccessor}) {
     // Remove images in memory

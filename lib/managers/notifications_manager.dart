@@ -30,7 +30,7 @@ abstract class _NotificationsManagerBase with Store {
   }
 
   Future<void> _statusCheck() async {
-    final printerNames = SettingsManager.instance.settings.hardware.printerNames;
+    final printerNames = SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
     final printersStatus = await compute(checkPrintersStatus, printerNames);
     NotificationsManager.instance.notifications.clear();
     printersStatus.forEachIndexed((index, element) {

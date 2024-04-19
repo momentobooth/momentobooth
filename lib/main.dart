@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/app/shell/shell.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
@@ -34,6 +35,7 @@ void main() async {
   MqttManager.instance.initialize();
   await SfxManager.instance.initialize();
   NotificationsManager.instance.initialize();
+  PrintingManager.instance.initialize();
 
   await SentryFlutter.init(
     (options) {

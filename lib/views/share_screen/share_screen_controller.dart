@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -13,9 +13,10 @@ import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.da
 import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
+import 'package:path/path.dart' as path;
 
-class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel>
-    with UiLoggy, PrinterStatusDialogMixin<ShareScreenViewModel> {
+class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with UiLoggy, PrinterStatusDialogMixin<ShareScreenViewModel> {
+
   // Initialization/Deinitialization
 
   ShareScreenController({
@@ -80,7 +81,15 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel>
 
     // Get photo and print it.
     final pdfData = await PhotosManager.instance.getOutputPDF();
-    final bool success = await printPDF(pdfData);
+    String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Picture";
+
+    bool success = false;
+    try {
+      await PrintingManager.instance.printPdf(jobName, pdfData);
+      success = true;
+    } catch (e) {
+      loggy.error("Failed to print photo: $e");
+    }
 
     viewModel.printText = success ? localizations.shareScreenPrinting : localizations.shareScreenPrintUnsuccesful;
     successfulPrints += success ? 1 : 0;
@@ -88,4 +97,5 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel>
 
     await checkPrintersAndShowWarnings();
   }
+
 }
