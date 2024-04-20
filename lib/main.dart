@@ -12,6 +12,7 @@ import 'package:momento_booth/repositories/secret/secure_storage_secret_reposito
 import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
+import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 final GetIt getIt = GetIt.instance;
@@ -37,11 +38,12 @@ void main() async {
   NotificationsManager.instance.initialize();
   PrintingManager.instance.initialize();
 
+  String sentryDsn = await _resolveSentryDsnOverride() ?? const String.fromEnvironment("SENTRY_DSN", defaultValue: '');
   await SentryFlutter.init(
     (options) {
       options
         ..tracesSampleRate = 1.0
-        ..dsn = const String.fromEnvironment("SENTRY_DSN", defaultValue: "")
+        ..dsn = sentryDsn
         ..environment = const String.fromEnvironment("SENTRY_ENVIRONMENT", defaultValue: 'Development')
         ..release = const String.fromEnvironment("SENTRY_RELEASE", defaultValue: 'Development');
     },
@@ -61,4 +63,13 @@ void _ensureGPhoto2EnvironmentVariables() {
   // See: https://stackoverflow.com/questions/4788398/changes-via-setenvironmentvariable-do-not-take-effect-in-library-that-uses-geten
   putenv_s("IOLIBS", iolibsDefine);
   putenv_s("CAMLIBS", camlibsDefine);
+}
+
+Future<String?> _resolveSentryDsnOverride() async {
+  String executablePath = Platform.resolvedExecutable;
+  String possibleSentryDsnOverridePath = path.join(path.dirname(executablePath), "sentry_dsn_override.txt");
+  
+  File sentryDsnOverrideFile = File(possibleSentryDsnOverridePath);
+  if (!sentryDsnOverrideFile.existsSync()) return null;
+  return (await sentryDsnOverrideFile.readAsString()).trim();
 }
