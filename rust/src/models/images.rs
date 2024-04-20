@@ -1,4 +1,4 @@
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Local};
 use num_derive::FromPrimitive;
 
 #[derive(Clone)]
@@ -28,7 +28,7 @@ pub enum RawImageFormat {
 pub enum MomentoBoothExifTag {
     ImageDescription(String),
     Software(String),
-    CreateDate(NaiveDateTime),
+    CreateDate(DateTime<Local>),
     Orientation(ExifOrientation),
     MakerNote(String),
 }
