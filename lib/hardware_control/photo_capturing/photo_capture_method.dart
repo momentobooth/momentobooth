@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:loggy/loggy.dart' as loggy;
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
+import 'package:momento_booth/utils/file_utils.dart';
 import 'package:path/path.dart' as path;
 
 abstract class PhotoCaptureMethod {
@@ -24,9 +25,9 @@ abstract class PhotoCaptureMethod {
 
         await Directory(SettingsManager.instance.settings.hardware.captureStorageLocation).create(recursive: true);
 
-        File file = File(path.join(SettingsManager.instance.settings.hardware.captureStorageLocation, fileName));
-        await file.writeAsBytes(fileData, mode: FileMode.writeOnly);
-        loggy.logDebug("Stored incoming photo to disk: ${file.path}");
+        String filePath = path.join(SettingsManager.instance.settings.hardware.captureStorageLocation, fileName);
+        await writeBytesToFileLocked(filePath, fileData);
+        loggy.logDebug("Stored incoming photo to disk: $filePath");
       } catch (exception, stacktrace) {
         loggy.logError("Could not save photo to disk", exception, stacktrace);
       }
