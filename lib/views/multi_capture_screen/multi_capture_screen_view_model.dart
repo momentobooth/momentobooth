@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
 import 'package:loggy/loggy.dart';
@@ -20,7 +17,6 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
-import 'package:path/path.dart' as path;
 
 part 'multi_capture_screen_view_model.g.dart';
 
