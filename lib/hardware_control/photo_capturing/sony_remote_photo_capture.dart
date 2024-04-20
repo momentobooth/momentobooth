@@ -7,6 +7,7 @@ import 'package:momento_booth/exceptions/photo_capture_exception.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
+import 'package:momento_booth/utils/file_utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
@@ -63,15 +64,14 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
     final stopTime = DateTime.now().add(const Duration(seconds: 5));
     final dir = Directory(directoryPath);
     final fileListBefore = await dir.list().toList();
-    final matchingFilesBefore =
-        fileListBefore.whereType<File>().where((file) => file.path.toLowerCase().endsWith(fileExtension));
+    final matchingFilesBefore = fileListBefore.whereType<File>().where(
+          (file) => file.path.toLowerCase().endsWith(fileExtension),
+        );
 
     while (DateTime.now().isBefore(stopTime)) {
       final files = await dir.list().toList();
       final matchingFiles = files.whereType<File>().where((file) => file.path.toLowerCase().endsWith(fileExtension));
-      if (matchingFiles.length > matchingFilesBefore.length) {
-        return matchingFiles.last;
-      }
+      if (matchingFiles.length > matchingFilesBefore.length) return matchingFiles.last;
       await Future.delayed(const Duration(milliseconds: 250));
     }
     throw TimeoutException('Timed out while waiting for file to exist');
@@ -80,11 +80,9 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with UiLoggy {
   Future<String> _ensureAutoItScriptIsExtracted() async {
     final Directory docDir = await getApplicationSupportDirectory();
     final String localPath = '${docDir.path}\\$autoItScriptFileName';
-    File file = File(localPath);
-    if (!file.existsSync()) {
+    if (!File(localPath).existsSync()) {
       final imageBytes = await rootBundle.load('assets/scripts/$autoItScriptFileName');
-      final buffer = imageBytes.buffer;
-      await file.writeAsBytes(buffer.asUint8List(imageBytes.offsetInBytes, imageBytes.lengthInBytes));
+      await writeBytesToFileLocked(localPath, imageBytes.buffer.asUint8List());
       loggy.info("Written Sony Remote AutoIt capture script to: $localPath");
     }
     return localPath;

@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/animation.dart';
+import 'package:flutter/services.dart';
 import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
@@ -18,7 +17,6 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/multi_capture_screen/multi_capture_screen.dart';
-import 'package:path/path.dart' as path;
 
 part 'multi_capture_screen_view_model.g.dart';
 
@@ -103,10 +101,10 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
       PhotosManager.instance.photos.add(image);
     } catch (error) {
       loggy.warning(error);
-      final errorFile = File('assets/bitmap/capture-error.png');
+      final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
       PhotosManager.instance.photos.add(PhotoCapture(
-        data: await errorFile.readAsBytes(),
-        filename: path.basename(errorFile.path),
+        data: data.buffer.asUint8List(),
+        filename: "capture-error.png",
       ));
     } finally {
       captureComplete = true;

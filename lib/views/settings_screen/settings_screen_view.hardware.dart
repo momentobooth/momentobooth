@@ -147,7 +147,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
           return NumberInputCard(
             icon: FluentIcons.camera,
             title: "Auto focus before capture",
-            subtitle: "Time to wait for the camera to focus before capturing the image. This is useful to improve capture speed. Requires the 'Special handling' setting set. Set to 0 to disable.",
+            subtitle: "Time to wait for the camera to focus before capturing the image. This could be useful to improve capture speed in some cases (e.g. bad light, camera being slow with focusing). Might require the 'Special handling' setting set for some vendors. Also it might not work on some camera models. Set to 0 to disable.",
             value: () => viewModel.gPhoto2AutoFocusMsBeforeCaptureSetting,
             onFinishedEditing: controller.onGPhoto2AutoFocusMsBeforeCaptureChanged,
           );

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
+import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 import 'package:path_provider/path_provider.dart';
@@ -63,22 +64,20 @@ abstract class _PhotosManagerBase with Store {
     photos.clear();
     chosen.clear();
     captureMode = CaptureMode.single;
-    if (advance) { photoNumber++; }
+    if (advance) photoNumber++;
   }
 
   @action
   Future<File?> writeOutput({bool advance = false}) async {
     if (outputImage == null) return null;
     if (!photoNumberChecked) {
-      photoNumber = await findLastImageNumber()+1;
+      photoNumber = await findLastImageNumber() + 1;
       photoNumberChecked = true;
     } 
-    final extension = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
-    final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$extension');
-    File file = await File(filePath).create();
-    await file.writeAsBytes(outputImage!);
-    if (advance) { photoNumber++; }
-    return file;
+    final fileExtension = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
+    final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$fileExtension');
+    if (advance) photoNumber++;
+    return await writeBytesToFileLocked(filePath, outputImage!);
   }
   
   @action
@@ -87,27 +86,21 @@ abstract class _PhotosManagerBase with Store {
     final fileListBefore = await outputDir.list().toList();
     final matchingFiles = fileListBefore.whereType<File>().where((file) => basename(file.path).startsWith(baseName));
     
-    if (matchingFiles.isEmpty) { return 0; }
+    if (matchingFiles.isEmpty) return 0;
 
     final lastImg = matchingFiles.last;
     final pattern = RegExp(r'\d+');
     final match = pattern.firstMatch(basename(lastImg.path));
-    if (match != null) {
-      return int.parse(match.group(0) ?? "0");
-    }
-    return 0;
+    return match != null ? int.parse(match.group(0) ?? "0") : 0;
   }
 
   Future<File> getOutputImageAsTempFile() async {
     final Directory tempDir = await getTemporaryDirectory();
-    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
-    File file = await File('${tempDir.path}/image.$ext').create();
-    await file.writeAsBytes(outputImage!);
-    return file;
+    final fileExtension = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
+    final filePath = join(tempDir.path, 'image.$fileExtension');
+    return await writeBytesToFileLocked(filePath, outputImage!);
   }
 
-  Future<Uint8List> getOutputPDF() async {
-    return getImagePDF(outputImage!);
-  }
+  Future<Uint8List> getOutputPDF() => getImagePDF(outputImage!);
 
 }

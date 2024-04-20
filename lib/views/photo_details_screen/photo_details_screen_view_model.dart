@@ -56,8 +56,8 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
         loggy.debug("Upload complete: ${event.downloadUrl}");
 
         await Future.delayed(const Duration(milliseconds: 500));
-        _uploadProgress = null;
         _qrUrl = event.downloadUrl;
+        _uploadProgress = null;
 
         StatsManager.instance.addUploadedPhoto();
       } else {
