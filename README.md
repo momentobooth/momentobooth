@@ -1,15 +1,15 @@
 # MomentoBooth
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/h3x4d3c1m4l/momento-booth/release-linux-appimage-x64.yml?label=Linux%20build)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/h3x4d3c1m4l/momento-booth/release-macos-x64.yml?label=macOS%20build)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/h3x4d3c1m4l/momento-booth/release-win-x64.yml?label=Windows%20build)
-[![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/h3x4d3c1m4l/momento-booth?include_prereleases&label=Latest%20version)](https://github.com/h3x4d3c1m4l/momento-booth/releases)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-linux-appimage-x64.yml?label=Linux%20build)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-macos-x64.yml?label=macOS%20build)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-win-x64.yml?label=Windows%20build)
+[![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/momentobooth/momentobooth?include_prereleases&label=Latest%20version)](https://github.com/momentobooth/momentobooth/releases)
 
 MomentoBooth is a cross-platform open source photo booth software. Capture your events in an easy and fun way!
 
-[Download from GitHub](https://github.com/h3x4d3c1m4l/momento-booth/releases)
+[Download from GitHub](https://github.com/momentobooth/momentobooth/releases)
 
-Check the online documentation at [https://h3x4d3c1m4l.github.io/momento-booth/](https://h3x4d3c1m4l.github.io/momento-booth/).
+Check the online documentation at [https://momentobooth.github.io/momentobooth/](https://momentobooth.github.io/momentobooth/).
 
 ## Features
 
