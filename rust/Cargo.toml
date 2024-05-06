@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "=2.0.0-dev.32", features = ["chrono"] }
+flutter_rust_bridge = { version = "=2.0.0-dev.33", features = ["chrono"] }
 anyhow = "1.0.82"
 derive_more = "0.99.17"
 atom_table = "1.1.0"
@@ -33,7 +33,7 @@ img-parts = "0.3.0"
 little_exif = "0.3.2"
 url = "2.5.0"
 num = "0.4.2"
-num-traits = "0.2.18"
+num-traits = "0.2.19"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 
