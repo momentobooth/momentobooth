@@ -19,7 +19,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.8.7
-  go_router: 14.0.1
+  go_router: 14.0.2
   flutter_svg: 2.0.10+1
   animated_text_kit: 4.2.2
   figma_squircle: 0.5.3
@@ -53,7 +53,7 @@ dependencies:
   rust_lib_momento_booth:
     path: rust_builder
   ffi: 2.1.2
-  flutter_rust_bridge: 2.0.0-dev.32
+  flutter_rust_bridge: 2.0.0-dev.33
 
   # Printing
   printing: 5.12.0
@@ -69,7 +69,7 @@ dependencies:
   # Log and error handling
   loggy: 2.0.3
   flutter_loggy: 2.0.2
-  sentry_flutter: 8.0.0
+  sentry_flutter: 8.1.0
 
   # Sound output
   just_audio: 0.9.37
@@ -83,7 +83,7 @@ dependencies:
   # Networking
   http: 1.2.1
   http_parser: 4.0.2
-  mqtt5_client: 4.2.2
+  mqtt5_client: 4.2.4
 
   # Misc
   get_it: 7.7.0
@@ -91,7 +91,7 @@ dependencies:
   synchronized: 3.1.0+1
   collection: 1.18.0
   dart_casing: 3.0.1
-  package_info_plus: 7.0.0
+  package_info_plus: 8.0.0
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.3
   draggable_scrollbar: 0.1.0
