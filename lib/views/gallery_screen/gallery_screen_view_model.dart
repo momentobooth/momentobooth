@@ -83,9 +83,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
       ));
     }
 
-    var today = imagesWithExif.where((image) => image.createdDate != null && image.createdDate!.year == DateTime.now().year && image.createdDate!.month == DateTime.now().month && image.createdDate!.day == DateTime.now().day).toList();
-
-    if (sortBy == SortBy.time){
+    if (sortBy == SortBy.time) {
       // Group images and sort within groups
       List<GalleryGroup> imageGroups = imagesWithExif
           .groupListsBy((image) => image.createdDate != null
