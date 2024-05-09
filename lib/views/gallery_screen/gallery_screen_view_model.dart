@@ -26,14 +26,14 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   }
 
   ScrollController myScrollController = ScrollController();
-  
+
   final DateFormat formatter = DateFormat("MMM dd – HH:mm");
 
   Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   String get baseName => PhotosManager.instance.baseName;
 
   bool get isFaceRecognitionEnabled => SettingsManager.instance.settings.faceRecognition.enable;
-  
+
   @readonly
   List<GalleryGroup>? _imageGroups;
 
@@ -82,8 +82,8 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
         exifTags: await getMomentoBoothExifTagsFromFile(imageFilePath: file.path),
       ));
     }
-    
-    if (sortBy == SortBy.time){
+
+    if (sortBy == SortBy.time) {
       // Group images and sort within groups
       List<GalleryGroup> imageGroups = imagesWithExif
           .groupListsBy((image) => image.createdDate != null
