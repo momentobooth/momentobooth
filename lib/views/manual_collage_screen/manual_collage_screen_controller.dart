@@ -6,6 +6,7 @@ import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -44,7 +45,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
 
   Future<void> tapPhoto(SelectableImage file) async {
     loggy.debug("Tapped image #${file.index} (${path.basename(file.file.path)}), selected: ${file.isSelected} at index ${file.selectedIndex}, ctrl: ${viewModel.isControlPressed}, shift: ${viewModel.isShiftPressed}");
-    
+
     if (viewModel.isShiftPressed) {
       final lastSelected = selectedPhotos.last.index;
       final tapped = file.index;
@@ -106,9 +107,14 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     final pixelRatio = SettingsManager.instance.settings.output.resolutionMultiplier;
     final format = SettingsManager.instance.settings.output.exportFormat;
     final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
-    final exportImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
+    final exportImage = await collageKey.currentState!.getCollageImage(
+      createdByMode: CreatedByMode.manual,
+      pixelRatio: pixelRatio,
+      format: format,
+      jpgQuality: jpgQuality,
+    );
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
-  
+
     PhotosManager.instance.outputImage = exportImage;
     File? file = await PhotosManager.instance.writeOutput(advance: true);
     loggy.debug("Saved collage image to disk");

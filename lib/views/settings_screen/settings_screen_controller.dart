@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
@@ -31,7 +32,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   TextEditingController? _firefoxSendServerUrlController;
   TextEditingController get firefoxSendServerUrlController => _firefoxSendServerUrlController ??= TextEditingController(text: viewModel.firefoxSendServerUrlSetting);
-  
+
   TextEditingController? _gPhoto2CaptureTargetController;
   TextEditingController get gPhoto2CaptureTargetController => _gPhoto2CaptureTargetController ??= TextEditingController(text: viewModel.gPhoto2CaptureTargetSetting);
 
@@ -81,9 +82,14 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     final pixelRatio = viewModel.resolutionMultiplier;
     final format = viewModel.exportFormat;
     final jpgQuality = viewModel.jpgQuality;
-    PhotosManager.instance.outputImage = await viewModel.collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
+    PhotosManager.instance.outputImage = await viewModel.collageKey.currentState!.getCollageImage(
+      createdByMode: CreatedByMode.manual,
+      pixelRatio: pixelRatio,
+      format: format,
+      jpgQuality: jpgQuality,
+    );
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
-    
+
     File? file = await PhotosManager.instance.writeOutput(advance: true);
     loggy.debug("Wrote template debug export output to ${file?.path}");
   }
@@ -189,7 +195,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
       viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2AutoFocusMsBeforeCapture: gPhoto2AutoFocusMsBeforeCapture));
     }
   }
-  
+
   void onCaptureDelayGPhoto2Changed(int? captureDelayGPhoto2) {
     if (captureDelayGPhoto2 != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureDelayGPhoto2: captureDelayGPhoto2));
@@ -229,7 +235,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCupsPrinterQueuesQueueChanged(String? printerName, int? printerIndex) {
     if (printerName != null && printerIndex != null) {
       List<String> currentList = List.from(viewModel.cupsPrinterQueuesSetting);
-      
+
       if (printerName == viewModel.unusedPrinterValue) {
         currentList.length = printerIndex;
       } else {
@@ -271,7 +277,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onFlutterPrintingPrinterChanged(String? printerName, int? printerIndex) {
     if (printerName != null && printerIndex != null) {
       List<String> currentList = List.from(viewModel.flutterPrintingPrinterNamesSetting);
-      
+
       if (printerName == viewModel.unusedPrinterValue) {
         currentList.length = printerIndex;
       } else {

@@ -15,6 +15,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/capture_state.dart';
+import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
@@ -62,7 +63,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
 
   @computed
   Duration get flashAnimationDuration => showFlash ? flashStartDuration : flashEndDuration;
-  
+
   /// Global key for controlling the slider widget.
   final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
 
@@ -80,9 +81,14 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     final format = SettingsManager.instance.settings.output.exportFormat;
     final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
     await completer.future;
-    PhotosManager.instance.outputImage = await collageKey.currentState!.getCollageImage(pixelRatio: pixelRatio, format: format, jpgQuality: jpgQuality);
+    PhotosManager.instance.outputImage = await collageKey.currentState!.getCollageImage(
+      createdByMode: CreatedByMode.single,
+      pixelRatio: pixelRatio,
+      format: format,
+      jpgQuality: jpgQuality,
+    );
     loggy.debug('captureCollage took ${stopwatch.elapsed}');
-    
+
     return await PhotosManager.instance.writeOutput();
   }
 
@@ -95,7 +101,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
     } as PhotoCaptureMethod;
     capturer.clearPreviousEvents();
-    
+
     if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
       Future.delayed(autoFocusDelay).then((_) => (capturer as GPhoto2Camera).autoFocus());
     }
