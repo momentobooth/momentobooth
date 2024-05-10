@@ -11,21 +11,24 @@ class ImageWithLoaderFallback extends StatefulWidget {
   final File? file;
   final String? assetPath;
 
+  final int? cacheWidth;
+  final int? cacheHeight;
+
   final BoxFit? fit;
   final VoidCallback? decodeCallback;
   final _Type _type;
 
-  const ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit, this.decodeCallback})
+  const ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit, this.decodeCallback, this.cacheWidth, this.cacheHeight})
       : _type = _Type.memory,
         file = null,
         assetPath = null;
 
-  const ImageWithLoaderFallback.file(this.file, {super.key, this.fit, this.decodeCallback})
+  const ImageWithLoaderFallback.file(this.file, {super.key, this.fit, this.decodeCallback, this.cacheWidth, this.cacheHeight})
       : _type = _Type.file,
         bytes = null,
         assetPath = null;
 
-  const ImageWithLoaderFallback.asset(this.assetPath, {super.key, this.fit, this.decodeCallback})
+  const ImageWithLoaderFallback.asset(this.assetPath, {super.key, this.fit, this.decodeCallback, this.cacheWidth, this.cacheHeight})
       : _type = _Type.asset,
         bytes = null,
         file = null;
@@ -53,16 +56,22 @@ class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
         widget.bytes!,
         fit: widget.fit,
         frameBuilder: _frameBuilder,
+        cacheWidth: widget.cacheWidth,
+        cacheHeight: widget.cacheHeight,
       ),
       _Type.file => Image.file(
         widget.file!,
         fit: widget.fit,
         frameBuilder: _frameBuilder,
+        cacheWidth: widget.cacheWidth,
+        cacheHeight: widget.cacheHeight,
       ),
       _Type.asset => Image.asset(
         widget.assetPath!,
         fit: widget.fit,
         frameBuilder: _frameBuilder,
+        cacheWidth: widget.cacheWidth,
+        cacheHeight: widget.cacheHeight,
       ),
     };
 
