@@ -16,7 +16,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
     required super.controller,
     required super.contextAccessor,
   });
-  
+
   @override
   Widget get body {
     return Stack(

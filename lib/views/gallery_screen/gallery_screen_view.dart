@@ -21,10 +21,10 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
     required super.controller,
     required super.contextAccessor,
   });
-  
+
   static double groupHeaderHeight = 100;
   static int imagesPerRow = 4;
-  
+
   @override
   Widget get body {
     return Stack(
@@ -44,18 +44,18 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                   final List<String> groupTitles = viewModel.imageGroups?.map((group) => group.title).toList() ?? [];
                   final groupRows = groupImageNums.map((e) => (e / 4).ceil());
                   final double screenHeight = scrollController.position.viewportDimension;
-              
+
                   final double groupHeaderHeightCompensated = groupHeaderHeight + 50.0;
                   // We need to compensate for the screenheight twice because of the way that the comparison is implemented.
                   final double pageLength = scrollController.position.maxScrollExtent + 2*screenHeight;
                   final double rowHeight = (pageLength - (numGroups * groupHeaderHeightCompensated)) / groupRows.sum;
                   final sectionLengths = groupRows.map((element) => element*rowHeight + groupHeaderHeightCompensated).toList();
-              
+
                   int currentIndex = 0;
                   double currentLength = 0;
                   for (; offset > currentLength; currentIndex++) { currentLength += sectionLengths[currentIndex]; }
                   currentIndex = max(currentIndex - 1, 0);
-                        
+
                   return Text(groupTitles[currentIndex], style: const TextStyle(fontSize: 22));
                 },
                 child: CustomScrollView(
@@ -89,7 +89,11 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                                   onTap: () => controller.openPhoto(image.file),
                                   child: AnimatedBoxDecorationHero(
                                     tag: image.file.path,
-                                    child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+                                    child: ImageWithLoaderFallback.file(
+                                      image.file,
+                                      fit: BoxFit.contain,
+                                      cacheWidth: View.of(context).physicalSize.width ~/ imagesPerRow,
+                                    ),
                                   ),
                                 ),
                             ],
