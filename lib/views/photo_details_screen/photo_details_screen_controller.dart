@@ -28,7 +28,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
         return QrShareDialog(
           state: viewModel.uploadFailed
               ? ShareDialogState.error
-              : viewModel.uploadProgress != null
+              : viewModel.uploadProgress != null || viewModel.qrUrl == null
                   ? ShareDialogState.uploading
                   : ShareDialogState.uploaded,
           uploadProgress: (viewModel.uploadProgress ?? 0) * 100,
