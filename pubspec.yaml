@@ -5,16 +5,14 @@ publish_to: "none"
 version: 0.8.4+92
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
+  sdk: ">=3.4.0 <4.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
+  flutter: {sdk: flutter}
 
   # i18n
-  flutter_localizations:
-    sdk: flutter
-  intl: ^0.18.1
+  flutter_localizations: { sdk: flutter }
+  intl: any
 
   # UI
   auto_size_text: 3.0.0
@@ -87,7 +85,7 @@ dependencies:
 
   # Misc
   get_it: 7.7.0
-  meta: ^1.11.0
+  meta: any
   synchronized: 3.1.0+1
   collection: 1.18.0
   dart_casing: 3.0.1
@@ -113,8 +111,6 @@ dev_dependencies:
 
   # Code generation
   build_runner: 2.4.9
-  integration_test:
-    sdk: flutter
 
 flutter:
   uses-material-design: true

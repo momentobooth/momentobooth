@@ -61,6 +61,7 @@ class _ShellState extends State<Shell> with UiLoggy, WindowListener {
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
                 FluentLocalizations.delegate,
               ],
               supportedLocales: const [

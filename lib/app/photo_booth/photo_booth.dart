@@ -68,6 +68,7 @@ class PhotoBoothState extends State<PhotoBooth> {
                     AppLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
                     FluentLocalizations.delegate,
                   ],
                   supportedLocales: const [
