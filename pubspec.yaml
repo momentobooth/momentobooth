@@ -30,7 +30,7 @@ dependencies:
   wave: 0.2.2
   texture_rgba_renderer:
     git: https://github.com/h3x4d3c1m4l/flutter_texture_rgba_renderer
-  lottie: 3.1.0
+  lottie: 3.1.1
   font_awesome_flutter: 10.7.0
   smooth_scroll_multiplatform: 1.0.8
   widgetbook: 3.7.1
