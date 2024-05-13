@@ -1,7 +1,9 @@
 use std::{collections::HashMap, io::Cursor};
+use std::io::Read;
 use chrono::{DateTime, Utc};
 
 use ipp::prelude::*;
+use regex::Regex;
 
 /// Send an IPP request to do `op` to the given `uri` and get the response.
 ///
@@ -175,6 +177,34 @@ fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> PrintJobS
     }
 }
 
+pub fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec<PrintDimension> {
+    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes);
+    let group = resp.attributes().groups_of(DelimiterTag::PrinterAttributes).next().unwrap();
+    let attributes = group.attributes().clone();
+    let state: Vec<String> = attributes["media-supported"].value().as_array().unwrap().iter().map(|e| {e.to_string()}).collect();
+
+    let mut dimensions: Vec<PrintDimension> = Vec::new();
+    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPPD);
+    let mut payload = resp.into_payload();
+    let mut buffer = "".to_string();
+    let _ = payload.read_to_string(&mut buffer);
+    let re = Regex::new(r#"/(.+):[\t ]+"(\d+\.\d+) (\d+\.\d+)""#).unwrap();
+    let conversion_unit = 72.0/25.4;
+
+    for line in buffer.lines() {
+        if line.starts_with("*PaperDimension") {
+            let caps = re.captures(line).unwrap();
+            let name = caps.get(1).unwrap().as_str().to_string();
+            let height = caps.get(2).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
+            let width = caps.get(3).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
+            let format = &state[dimensions.len()];
+            let dim = PrintDimension { name, height, width, keyword: format.to_string() };
+            dimensions.push(dim);
+        }
+    }
+    dimensions
+}
+
 fn print_attributes(attributes: HashMap<String, IppAttribute>) {
     for attribute in attributes {
         println!("Attribute {}: {:?}", attribute.0, attribute.1.value());
@@ -202,4 +232,12 @@ pub struct PrintJobState {
     pub state: JobState,
     pub reason: String,
     pub created: DateTime<Utc>,
+}
+
+#[derive(Debug)]
+pub struct PrintDimension {
+    pub name: String,
+    pub height: f64,
+    pub width: f64,
+    pub keyword: String
 }

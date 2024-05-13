@@ -36,6 +36,7 @@ num = "0.4.3"
 num-traits = "0.2.19"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
+regex = "1.10.4"
 
 [profile.dev]
 opt-level = 3

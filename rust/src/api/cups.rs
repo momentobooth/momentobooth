@@ -5,7 +5,7 @@ use flutter_rust_bridge::frb;
 
 use url::Url;
 
-use crate::utils::ipp_client::{self, IppPrinterState, PrintJobState};
+use crate::utils::ipp_client::{self, IppPrinterState, PrintJobState, PrintDimension};
 
 fn cups_build_url(server_info: &CupsServerInfo, queue_id: Option<String>) -> String {
     let mut cups_url = Url::parse(&server_info.uri).unwrap();
@@ -48,6 +48,11 @@ pub fn cups_print_job(server_info: CupsServerInfo, queue_id: String, job_name: S
 pub fn cups_release_job(server_info: CupsServerInfo, queue_id: String, job_id: i32) {
     let uri = cups_build_url(&server_info, Some(queue_id));
     ipp_client::release_job(uri, server_info.ignore_tls_errors, job_id);
+}
+
+pub fn cups_get_printer_media_dimensions(server_info: CupsServerInfo, queue_id: String) -> Vec<PrintDimension> {
+    let uri = cups_build_url(&server_info, Some(queue_id));
+    ipp_client::get_printer_media_dimensions(uri, server_info.ignore_tls_errors)
 }
 
 // /////// //
