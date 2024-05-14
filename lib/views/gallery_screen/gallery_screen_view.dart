@@ -163,9 +163,9 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
           OutlinedButton.icon(
             onPressed: controller.onFindMyFace,
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blue.shade700),
-              foregroundColor: MaterialStateProperty.all(Colors.white),
-              overlayColor: MaterialStateProperty.all(Colors.blue.shade400),
+              backgroundColor: WidgetStateProperty.all(Colors.blue.shade700),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
+              overlayColor: WidgetStateProperty.all(Colors.blue.shade400),
             ),
             icon: const Icon(Icons.face),
             label: const Text("Find my face"),
@@ -174,9 +174,9 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
           OutlinedButton.icon(
             onPressed: controller.clearImageFilter,
             style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all(Colors.white),
-              overlayColor: MaterialStateProperty.all(Colors.red.shade900),
-              side: MaterialStateProperty.all(const BorderSide(color: Color.fromARGB(255, 255, 117, 117))),
+              foregroundColor: WidgetStateProperty.all(Colors.white),
+              overlayColor: WidgetStateProperty.all(Colors.red.shade900),
+              side: WidgetStateProperty.all(const BorderSide(color: Color.fromARGB(255, 255, 117, 117))),
             ),
             icon: const Icon(Icons.filter_alt_off),
             label: const Text("Clear filter"),
@@ -195,7 +195,7 @@ class FilterChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ButtonStyle style = ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.white));
+    ButtonStyle style = ButtonStyle(foregroundColor: WidgetStateProperty.all(Colors.white));
     return SegmentedButton<SortBy>(
       style: style,
       segments: const <ButtonSegment<SortBy>>[

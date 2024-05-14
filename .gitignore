@@ -50,6 +50,9 @@ app.*.map.json
 *.json.dart
 *.g.dart
 
+# l10n
+lib/l10n/generated/
+
 # flutter_rust_bridge
 frb_generated.*
 lib/src/**/*.dart

@@ -9,6 +9,7 @@ analyzer:
     - 'lib/src/**/*.dart'
     - 'lib/views/custom_widgets/draggable_scrollbar_override.dart'
     - 'rust_builder/**/*'
+    - 'lib/l10n/generated/*'
 
 linter:
   # More info: https://dart.dev/tools/linter-rules
