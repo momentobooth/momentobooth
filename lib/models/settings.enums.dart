@@ -238,3 +238,18 @@ enum PrintingImplementation {
   static List<ComboBoxItem<PrintingImplementation>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
 }
+
+enum PrintSize {
+
+  normal("Normal print size"),
+  split("Split normal size, e.g. for 3-collage"),
+  small("Small print size"),
+  tiny("Tiny print size");
+
+  // can add more properties or getters/methods if needed
+  final String name;
+
+  // can use named parameters if you want
+  const PrintSize(this.name);
+
+}

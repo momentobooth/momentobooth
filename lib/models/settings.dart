@@ -84,6 +84,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default("") String cupsUsername,
     @Default("") String cupsPassword,
     @Default([]) List<String> cupsPrinterQueues,
+    @JsonKey(defaultValue: PrintLayoutSettings.withDefaults) required PrintLayoutSettings printLayoutSettings,
     @Default(148) double pageHeight,
     @Default(100) double pageWidth,
     @Default(true) bool usePrinterSettings,
@@ -97,6 +98,41 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
   factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});
 
   factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
+  
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableValue {
+
+  const PrintLayoutSettings._();
+
+  const factory PrintLayoutSettings({
+    @Default("") String mediaSizeNormal,
+    @Default(0.0) double mediaSizeHeightNormal,
+    @Default(0.0) double mediaSizeWidthNormal,
+    @Default("") String mediaSizeSplit,
+    @Default(0.0) double mediaSizeHeightSplit,
+    @Default(0.0) double mediaSizeWidthSplit,
+    @Default("") String mediaSizeSmall,
+    @Default(0.0) double mediaSizeHeightSmall,
+    @Default(0.0) double mediaSizeWidthSmall,
+    @Default(1) int gridXSmall,
+    @Default(1) int gridYSmall,
+    @Default(false) bool rotateSmall,
+    @Default("") String mediaSizeTiny,
+    @Default(0.0) double mediaSizeHeightTiny,
+    @Default(0.0) double mediaSizeWidthTiny,
+    @Default(1) int gridXTiny,
+    @Default(1) int gridYTiny,
+    @Default(false) bool rotateTiny,
+  }) = _PrintLayoutSettings;
+
+  factory PrintLayoutSettings.withDefaults() => PrintLayoutSettings.fromJson({});
+
+  factory PrintLayoutSettings.fromJson(Map<String, Object?> json) => _$PrintLayoutSettingsFromJson(json);
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
