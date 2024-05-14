@@ -294,12 +294,12 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
         controller: controller.cupsPasswordController,
         onFinishedEditing: controller.onCupsPasswordChanged,
       ),
-      _cupsPageSizeCard(viewModel, controller, "Media size: Normal", FluentIcons.grid_view_large, PrintSize.normal, viewModel.mediaSizeNormal),
-      _cupsPageSizeCard(viewModel, controller, "Media size: Split", FluentIcons.cell_split_vertical, PrintSize.split, viewModel.mediaSizeSplit),
-      _cupsPageSizeCard(viewModel, controller, "Media size: Small", FluentIcons.grid_view_medium, PrintSize.small, viewModel.mediaSizeSmall),
-      _gridPrint(viewModel, controller, "small"),
-      _cupsPageSizeCard(viewModel, controller, "Media size: Tiny", FluentIcons.grid_view_small, PrintSize.tiny, viewModel.mediaSizeTiny),
-      _gridPrint(viewModel, controller, "tiny"),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Normal", FluentIcons.grid_view_large, PrintSize.normal, viewModel.mediaSizeNormal)),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Split", FluentIcons.cell_split_vertical, PrintSize.split, viewModel.mediaSizeSplit)),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Small", FluentIcons.grid_view_medium, PrintSize.small, viewModel.mediaSizeSmall)),
+      Observer(builder: (_) => _gridPrint(viewModel, controller, "small", PrintSize.small, viewModel.gridSmall)),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Tiny", FluentIcons.grid_view_small, PrintSize.tiny, viewModel.mediaSizeTiny)),
+      Observer(builder: (_) => _gridPrint(viewModel, controller, "tiny", PrintSize.tiny, viewModel.gridTiny)),
       Observer(
         builder: (context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -484,19 +484,17 @@ FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsS
     subtitle: size.name,
     child: ConstrainedBox(
       constraints: const BoxConstraints(minWidth: 150),
-      child: Observer(builder: (_) {
-        return ComboBox<String>(
-          items: viewModel.cupsPaperSizes,
-          value: currentSettings.mediaSizeString,
-          onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
-        );
-      }),
+      child: ComboBox<String>(
+        items: viewModel.cupsPaperSizes,
+        value: currentSettings.mediaSizeString,
+        onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
+      ),
     ),
   );
 }
 
 
-FluentSettingCard _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName) {
+FluentSettingCard _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName, PrintSize size, GridSettings grid) {
   const double numberWidth = 100;
   const double padding = 10;
   return FluentSettingCard(
@@ -507,30 +505,24 @@ FluentSettingCard _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenCo
       children: [
         SizedBox(
           width: numberWidth,
-          child: Observer(builder: (_) {
-            return NumberBox<int>(
-              value: viewModel.gridXSmall,
-              onChanged: (value) {},
-            );
-          }),
+          child: NumberBox<int>(
+            value: grid.x,
+            onChanged: (value) => controller.onCupsGridXChanged(value, size),
+          ),
         ),
         const SizedBox(width: padding),
         SizedBox(
           width: numberWidth,
-          child: Observer(builder: (_) {
-            return NumberBox<int>(
-              value: viewModel.gridYSmall,
-              onChanged: (value) {},
-            );
-          }),
+          child: NumberBox<int>(
+            value: grid.y,
+            onChanged: (value) => controller.onCupsGridYChanged(value, size),
+          ),
         ),
         const SizedBox(width: padding),
-        Observer(builder: (_) {
-          return ToggleSwitch(
-            checked: viewModel.rotateSmall,
-            onChanged: (value) {},
-          );
-        }),
+        ToggleSwitch(
+          checked: grid.rotate,
+          onChanged: (value)  => controller.onCupsGridRotateChanged(value, size),
+        ),
         
       ],
     ),

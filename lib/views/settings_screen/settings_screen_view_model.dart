@@ -171,13 +171,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   MediaSettings get mediaSizeNormal => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeNormal;
   MediaSettings get mediaSizeSplit => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeSplit;
   MediaSettings get mediaSizeSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeSmall;
-  int get gridXSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.gridXSmall;
-  int get gridYSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.gridYSmall;
-  bool get rotateSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.rotateSmall;
+  GridSettings get gridSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall;
   MediaSettings get mediaSizeTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeTiny;
-  int get gridXTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridXTiny;
-  int get gridYTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridYTiny;
-  bool get rotateTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.rotateTiny;
+  GridSettings get gridTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny;
   List<String> get flutterPrintingPrinterNamesSetting => SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
   double get pageHeightSetting => SettingsManager.instance.settings.hardware.pageHeight;
   double get pageWidthSetting => SettingsManager.instance.settings.hardware.pageWidth;

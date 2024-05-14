@@ -273,6 +273,42 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onCupsGridXChanged(int? x, PrintSize? printSize) {
+    if (printSize != null && x != null) {
+      switch(printSize) {
+        case PrintSize.small:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(x: x));
+        case PrintSize.tiny:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(x: x));
+        default:
+      }
+    }
+  }
+
+  void onCupsGridYChanged(int? y, PrintSize? printSize) {
+    if (printSize != null && y != null) {
+      switch(printSize) {
+        case PrintSize.small:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(y: y));
+        case PrintSize.tiny:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(y: y));
+        default:
+      }
+    }
+  }
+
+  void onCupsGridRotateChanged(bool? rotate, PrintSize? printSize) {
+    if (printSize != null && rotate != null) {
+      switch(printSize) {
+        case PrintSize.small:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(rotate: rotate));
+        case PrintSize.tiny:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(rotate: rotate));
+        default:
+      }
+    }
+  }
+
   void onCupsUriChanged(String? cupsUri) {
     if (cupsUri != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsUri: cupsUri));

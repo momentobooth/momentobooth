@@ -114,13 +114,9 @@ class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableVal
     @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeNormal,
     @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSplit,
     @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSmall,
+    @JsonKey(defaultValue: GridSettings.withDefaults) required GridSettings gridSmall,
     @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeTiny,
-    @Default(1) int gridXSmall,
-    @Default(1) int gridYSmall,
-    @Default(false) bool rotateSmall,
-    @Default(1) int gridXTiny,
-    @Default(1) int gridYTiny,
-    @Default(false) bool rotateTiny,
+    @JsonKey(defaultValue: GridSettings.withDefaults) required GridSettings gridTiny,
   }) = _PrintLayoutSettings;
 
   factory PrintLayoutSettings.withDefaults() => PrintLayoutSettings.fromJson({});
@@ -146,6 +142,26 @@ class MediaSettings with _$MediaSettings implements TomlEncodableValue {
   factory MediaSettings.withDefaults() => MediaSettings.fromJson({});
 
   factory MediaSettings.fromJson(Map<String, Object?> json) => _$MediaSettingsFromJson(json);
+  
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+class GridSettings with _$GridSettings implements TomlEncodableValue {
+
+  const GridSettings._();
+
+  const factory GridSettings({
+    @Default(1) int x,
+    @Default(1) int y,
+    @Default(false) bool rotate,
+  }) = _GridSettings;
+
+  factory GridSettings.withDefaults() => GridSettings.fromJson({});
+
+  factory GridSettings.fromJson(Map<String, Object?> json) => _$GridSettingsFromJson(json);
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();
