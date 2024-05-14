@@ -255,7 +255,10 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onCupsPageSizeChanged(String? mediaSize, PrintSize? printSize) {
     if (mediaSize != null && printSize != null) {
-      final newSize = MediaSettings(mediaSizeString: mediaSize);
+      final dimension = viewModel.mediaDimensions.where((element) => element.keyword == mediaSize).firstOrNull;
+      if (dimension == null) return;
+      final newSize = MediaSettings(mediaSizeString: dimension.keyword, mediaSizeHeight: dimension.height, mediaSizeWidth: dimension.width);
+      loggy.debug("Setting media size for $printSize to $newSize");
 
       switch(printSize) {
         case PrintSize.normal:

@@ -123,13 +123,16 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     }
   }
 
+  List<PrintDimension> _mediaDimensions = [];
+  List<PrintDimension> get mediaDimensions => _mediaDimensions;
+
   Future<void> setCupsPageSizeOptions() async {
     if (cupsPrinterQueuesSetting.isEmpty) return;
-    final List<PrintDimension> mediaDimensions = await CupsClient().getPrinterMediaDimensions(cupsPrinterQueuesSetting.first);
+    _mediaDimensions = await CupsClient().getPrinterMediaDimensions(cupsPrinterQueuesSetting.first);
 
     cupsPaperSizes
       ..clear()
-      ..addAll(mediaDimensions.map((media) => ComboBoxItem(value: media.keyword, child: _mediaSizeCardText(media))).toList());
+      ..addAll(_mediaDimensions.map((media) => ComboBoxItem(value: media.keyword, child: _mediaSizeCardText(media))).toList());
   }
   
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();

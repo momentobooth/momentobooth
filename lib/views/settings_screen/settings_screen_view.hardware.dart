@@ -483,7 +483,7 @@ FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsS
         return ComboBox<String>(
           items: viewModel.cupsPaperSizes,
           value: currentSettings.mediaSizeString,
-          onChanged: (name) => controller.onCupsPageSizeChanged(name, size),
+          onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
         );
       }),
     ),
