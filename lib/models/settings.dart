@@ -110,21 +110,14 @@ class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableVal
   const PrintLayoutSettings._();
 
   const factory PrintLayoutSettings({
-    @Default("") String mediaSizeNormal,
-    @Default(0.0) double mediaSizeHeightNormal,
-    @Default(0.0) double mediaSizeWidthNormal,
-    @Default("") String mediaSizeSplit,
-    @Default(0.0) double mediaSizeHeightSplit,
-    @Default(0.0) double mediaSizeWidthSplit,
-    @Default("") String mediaSizeSmall,
-    @Default(0.0) double mediaSizeHeightSmall,
-    @Default(0.0) double mediaSizeWidthSmall,
+    
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeNormal,
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSplit,
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSmall,
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeTiny,
     @Default(1) int gridXSmall,
     @Default(1) int gridYSmall,
     @Default(false) bool rotateSmall,
-    @Default("") String mediaSizeTiny,
-    @Default(0.0) double mediaSizeHeightTiny,
-    @Default(0.0) double mediaSizeWidthTiny,
     @Default(1) int gridXTiny,
     @Default(1) int gridYTiny,
     @Default(false) bool rotateTiny,
@@ -133,6 +126,26 @@ class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableVal
   factory PrintLayoutSettings.withDefaults() => PrintLayoutSettings.fromJson({});
 
   factory PrintLayoutSettings.fromJson(Map<String, Object?> json) => _$PrintLayoutSettingsFromJson(json);
+  
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+class MediaSettings with _$MediaSettings implements TomlEncodableValue {
+
+  const MediaSettings._();
+
+  const factory MediaSettings({
+    @Default("") String mediaSizeString,
+    @Default(0.0) double mediaSizeHeight,
+    @Default(0.0) double mediaSizeWidth,
+  }) = _MediaSettings;
+
+  factory MediaSettings.withDefaults() => MediaSettings.fromJson({});
+
+  factory MediaSettings.fromJson(Map<String, Object?> json) => _$MediaSettingsFromJson(json);
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();

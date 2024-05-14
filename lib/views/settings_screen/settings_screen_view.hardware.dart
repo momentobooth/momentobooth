@@ -471,7 +471,7 @@ FluentSettingCard _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScr
     ),
   );
 }
-FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, PrintSize size) {
+FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, PrintSize size, MediaSettings currentSettings) {
   return FluentSettingCard(
     icon: FluentIcons.print,
     title: title,
@@ -481,7 +481,7 @@ FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsS
       child: Observer(builder: (_) {
         return ComboBox<String>(
           items: viewModel.cupsPaperSizes,
-          value: "",
+          value: currentSettings.mediaSizeString,
           onChanged: (name) => controller.onCupsPageSizeChanged(name, size),
         );
       }),

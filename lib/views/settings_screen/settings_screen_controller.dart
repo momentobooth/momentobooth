@@ -251,15 +251,17 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onCupsPageSizeChanged(String? mediaSize, PrintSize? printSize) {
     if (mediaSize != null && printSize != null) {
+      final newSize = MediaSettings(mediaSizeString: mediaSize);
+
       switch(printSize) {
         case PrintSize.normal:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeNormal: mediaSize));
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeNormal: newSize));
         case PrintSize.split:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSplit: mediaSize));
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSplit: newSize));
         case PrintSize.small:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSmall: mediaSize));
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSmall: newSize));
         case PrintSize.tiny:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeTiny: mediaSize));
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeTiny: newSize));
       }
     }
   }
