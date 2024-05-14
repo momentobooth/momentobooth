@@ -294,7 +294,12 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
         controller: controller.cupsPasswordController,
         onFinishedEditing: controller.onCupsPasswordChanged,
       ),
-      _cupsPageSizeCard(viewModel, controller, "Media size: Normal", PrintSize.normal, viewModel.mediaSizeNormal),
+      _cupsPageSizeCard(viewModel, controller, "Media size: Normal", FluentIcons.grid_view_large, PrintSize.normal, viewModel.mediaSizeNormal),
+      _cupsPageSizeCard(viewModel, controller, "Media size: Split", FluentIcons.cell_split_vertical, PrintSize.split, viewModel.mediaSizeSplit),
+      _cupsPageSizeCard(viewModel, controller, "Media size: Small", FluentIcons.grid_view_medium, PrintSize.small, viewModel.mediaSizeSmall),
+      _gridPrint(viewModel, controller, "small"),
+      _cupsPageSizeCard(viewModel, controller, "Media size: Tiny", FluentIcons.grid_view_small, PrintSize.tiny, viewModel.mediaSizeTiny),
+      _gridPrint(viewModel, controller, "tiny"),
       Observer(
         builder: (context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,9 +477,9 @@ FluentSettingCard _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScr
     ),
   );
 }
-FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, PrintSize size, MediaSettings currentSettings) {
+FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, IconData icon, PrintSize size, MediaSettings currentSettings) {
   return FluentSettingCard(
-    icon: FluentIcons.print,
+    icon: icon,
     title: title,
     subtitle: size.name,
     child: ConstrainedBox(
@@ -486,6 +491,48 @@ FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsS
           onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
         );
       }),
+    ),
+  );
+}
+
+
+FluentSettingCard _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName) {
+  const double numberWidth = 100;
+  const double padding = 10;
+  return FluentSettingCard(
+    icon: FluentIcons.snap_to_grid,
+    title: "Grid for $sizeName print",
+    subtitle: "Set what grid to create for creating $sizeName prints. A grid of X by Y images is generated.\nOrder: X, Y, rotate images.",
+    child: Row(
+      children: [
+        SizedBox(
+          width: numberWidth,
+          child: Observer(builder: (_) {
+            return NumberBox<int>(
+              value: viewModel.gridXSmall,
+              onChanged: (value) {},
+            );
+          }),
+        ),
+        const SizedBox(width: padding),
+        SizedBox(
+          width: numberWidth,
+          child: Observer(builder: (_) {
+            return NumberBox<int>(
+              value: viewModel.gridYSmall,
+              onChanged: (value) {},
+            );
+          }),
+        ),
+        const SizedBox(width: padding),
+        Observer(builder: (_) {
+          return ToggleSwitch(
+            checked: viewModel.rotateSmall,
+            onChanged: (value) {},
+          );
+        }),
+        
+      ],
     ),
   );
 }
