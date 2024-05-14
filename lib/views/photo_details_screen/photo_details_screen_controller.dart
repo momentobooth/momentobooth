@@ -1,5 +1,6 @@
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart';
@@ -59,7 +60,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printText = localizations.photoDetailsScreenPrinting;
 
     // Get photo and print it.
-    final pdfData = await getImagePDF(await viewModel.file!.readAsBytes());
+    final pdfData = await getImagePdfWithPageSize(await viewModel.file!.readAsBytes(), PrintSize.tiny);
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Reprint";
 
     bool success = false;

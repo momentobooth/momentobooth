@@ -8,6 +8,7 @@ import 'package:momento_booth/exceptions/win32_exception.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:win32/win32.dart';
@@ -25,9 +26,9 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
 
   // Check if photo should be rotated
   // Do not assume any prior knowledge about the image.
-  final bool rotate = image.width! > image.height!;
+  final bool correctImgRotation = image.width! > image.height!;
   late final pw.Image imageWidget;
-  imageWidget = rotate
+  imageWidget = correctImgRotation
       ? pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight)
       : pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
 
@@ -36,8 +37,73 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
       pageFormat: pageFormat,
       build: (context) {
         return pw.Center(
-          child: rotate ? pw.Transform.rotateBox(angle: 0.5 * pi, child: imageWidget) : imageWidget,
+          child: correctImgRotation ? pw.Transform.rotateBox(angle: 0.5 * pi, child: imageWidget) : imageWidget,
         );
+      },
+    ));
+
+  return await doc.save();
+}
+
+Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSize) async {
+  const mm = PdfPageFormat.mm;
+  final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
+  final hSettings = SettingsManager.instance.settings.hardware;
+
+  switch(printSize) {
+    case PrintSize.normal:
+      
+    case PrintSize.split:
+      
+    case PrintSize.small:
+      final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeHeight * mm, settings.mediaSizeSmall.mediaSizeWidth * mm,
+                                    marginBottom: hSettings.printerMarginBottom * mm,
+                                    marginLeft: hSettings.printerMarginLeft * mm,
+                                    marginRight: hSettings.printerMarginRight * mm,
+                                    marginTop: hSettings.printerMarginTop * mm,);
+      return getImageGridPDF(imageData, settings.gridSmall.x, settings.gridSmall.y, settings.gridSmall.rotate, pageFormat);
+    case PrintSize.tiny:
+      final pageFormat = PdfPageFormat(settings.mediaSizeTiny.mediaSizeHeight * mm, settings.mediaSizeTiny.mediaSizeWidth * mm,
+                                    marginBottom: hSettings.printerMarginBottom * mm,
+                                    marginLeft: hSettings.printerMarginLeft * mm,
+                                    marginRight: hSettings.printerMarginRight * mm,
+                                    marginTop: hSettings.printerMarginTop * mm,);
+      return getImageGridPDF(imageData, settings.gridTiny.x, settings.gridTiny.y, settings.gridTiny.rotate, pageFormat);
+  }
+}
+
+Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate, PdfPageFormat pageFormat) async {
+  const mm = PdfPageFormat.mm;
+  pw.MemoryImage image = pw.MemoryImage(imageData);
+  const fit = pw.BoxFit.contain;
+
+  // Check if photo should be rotated
+  // Do not assume any prior knowledge about the image.
+  final bool correctImgRotation = image.width! > image.height!;
+  double cellHeight = pageFormat.availableHeight/y;
+  double cellWidth = pageFormat.availableWidth/x;
+  double cellRatio = cellHeight/cellWidth;
+
+  pw.Widget imageWidget = pw.Image(image, fit: fit, height: cellHeight, width: cellWidth);
+  if (correctImgRotation ^ rotate) {
+    imageWidget = pw.Transform.rotateBox(
+      angle: 0.5 * pi,
+      child: pw.Image(image, fit: fit, height: cellWidth, width: cellHeight));
+  }
+
+  final grid = pw.Column(
+    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+    children: [
+      for (int i = 0; i < 2; i++)
+      pw.Expanded(child: imageWidget)
+    ]
+  );
+
+  final doc = pw.Document(title: "MomentoBooth image")
+    ..addPage(pw.Page(
+      pageFormat: pageFormat,
+      build: (context) {
+        return grid;
       },
     ));
 
