@@ -82,7 +82,6 @@ Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate
   final bool correctImgRotation = image.width! > image.height!;
   double cellHeight = pageFormat.availableHeight/y;
   double cellWidth = pageFormat.availableWidth/x;
-  double cellRatio = cellHeight/cellWidth;
 
   pw.Widget imageWidget = pw.Image(image, fit: fit, height: cellHeight, width: cellWidth);
   if (correctImgRotation ^ rotate) {
@@ -91,12 +90,12 @@ Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate
       child: pw.Image(image, fit: fit, height: cellWidth, width: cellHeight));
   }
 
-  final grid = pw.Column(
-    mainAxisAlignment: pw.MainAxisAlignment.spaceEvenly,
+  final grid = pw.GridView(
+    crossAxisCount: x,
     children: [
-      for (int i = 0; i < 2; i++)
+      for (int i = 0; i < x*y; i++)
       pw.Expanded(child: imageWidget)
-    ]
+    ],
   );
 
   final doc = pw.Document(title: "MomentoBooth image")
