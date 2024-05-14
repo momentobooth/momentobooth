@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
@@ -25,7 +24,7 @@ part 'capture_screen_view_model.g.dart';
 
 class CaptureScreenViewModel = CaptureScreenViewModelBase with _$CaptureScreenViewModel;
 
-abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
+abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store {
 
   late final PhotoCaptureMethod capturer;
   bool flashComplete = false;
@@ -87,7 +86,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       format: format,
       jpgQuality: jpgQuality,
     );
-    loggy.debug('captureCollage took ${stopwatch.elapsed}');
+    logDebug('captureCollage took ${stopwatch.elapsed}');
 
     return await PhotosManager.instance.writeOutput();
   }
@@ -99,7 +98,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
       CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
-    } as PhotoCaptureMethod;
+    };
     capturer.clearPreviousEvents();
 
     if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
@@ -136,7 +135,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
         await PhotosManager.instance.writeOutput();
       }
     } catch (error) {
-      loggy.warning(error);
+      logWarning(error);
       final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
       PhotosManager.instance.outputImage = data.buffer.asUint8List();
     } finally {

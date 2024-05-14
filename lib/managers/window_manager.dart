@@ -1,5 +1,5 @@
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:window_manager/window_manager.dart';
 
 part 'window_manager.g.dart';
@@ -12,8 +12,8 @@ class WindowManager extends _WindowManagerBase with _$WindowManager {
 
 }
 
-abstract class _WindowManagerBase with Store, UiLoggy {
-  
+abstract class _WindowManagerBase with Store, Logger {
+
   bool _isFullScreen = false;
 
   // ////////////// //
@@ -32,7 +32,7 @@ abstract class _WindowManagerBase with Store, UiLoggy {
   @action
   void toggleFullscreen() {
     _isFullScreen = !_isFullScreen;
-    loggy.debug("Setting fullscreen to $_isFullScreen");
+    logDebug("Setting fullscreen to $_isFullScreen");
     windowManager.setFullScreen(_isFullScreen);
   }
 

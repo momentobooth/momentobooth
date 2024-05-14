@@ -1,6 +1,5 @@
 // ignore_for_file: dead_code
 
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
@@ -10,7 +9,7 @@ import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/printer_issue_dialog.dart';
 
-mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControllerBase<T>, UiLoggy {
+mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControllerBase<T> {
 
   Future<void> checkPrintersAndShowWarnings() async {
     return; // TODO: Remove this line when the feature is ready.
@@ -27,7 +26,7 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
           await _showDialog(printerState, printerId, stuckJobs);
         }
       } catch (e) {
-        loggy.debug("Failed to query printer [$printerId] with error: $e");
+        logDebug("Failed to query printer [$printerId] with error: $e");
       }
     }
   }
@@ -47,14 +46,14 @@ mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControlle
           try {
             await cupsResumePrinter(serverInfo: CupsClient.serverInfo, queueId: printerId);
           } catch (e) {
-            loggy.debug("Failed to resume printer [$printerId] with error: $e");
+            logDebug("Failed to resume printer [$printerId] with error: $e");
           }
 
           for (PrintJobState job in stuckJobs) {
             try {
               await cupsReleaseJob(serverInfo: CupsClient.serverInfo, queueId: printerId, jobId: job.id);
             } catch (e) {
-              loggy.debug("Failed to release stuck job [${job.name}] for printer [$printerId] with error: $e");
+              logDebug("Failed to release stuck job [${job.name}] for printer [$printerId] with error: $e");
             }
           }
         },

@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/app/photo_booth/photo_booth.dart';
 import 'package:momento_booth/app/shell/widgets/fps_monitor.dart';
 import 'package:momento_booth/app/shell/widgets/shell_hotkey_monitor.dart';
@@ -26,7 +25,7 @@ class Shell extends StatefulWidget {
 
 }
 
-class _ShellState extends State<Shell> with UiLoggy, WindowListener {
+class _ShellState extends State<Shell> with WindowListener {
 
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,

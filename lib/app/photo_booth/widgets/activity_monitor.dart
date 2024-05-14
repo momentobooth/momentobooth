@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart' hide Listener;
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 
 class ActivityMonitor extends StatefulWidget {
@@ -20,7 +20,7 @@ class ActivityMonitor extends StatefulWidget {
 
 }
 
-class _ActivityMonitorState extends State<ActivityMonitor> with UiLoggy {
+class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
 
   Timer? _returnHomeTimer;
   late ReactionDisposer _resetTimerReactionDisposer;
@@ -67,7 +67,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with UiLoggy {
 
   void _goHome() {
     if (widget.router.currentLocation == StartScreen.defaultRoute) return;
-    loggy.debug("Returning to homescreen because Home screen timeout was reached.");
+    logDebug("Returning to homescreen because Home screen timeout was reached.");
     widget.router.go(StartScreen.defaultRoute);
   }
 

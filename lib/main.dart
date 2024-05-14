@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_loggy/flutter_loggy.dart';
 import 'package:get_it/get_it.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/app/shell/shell.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
@@ -14,6 +12,7 @@ import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -24,9 +23,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initialize();
 
-  getIt.registerSingleton<SecretRepository>(const SecureStorageSecretRepository());
-
-  Loggy.initLoggy(logPrinter: StreamPrinter(const PrettyDeveloperPrinter()));
+  getIt
+    ..registerSingleton(Talker(
+      settings: TalkerSettings(),
+    ))
+    ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository());
 
   await HelperLibraryInitializationManager.instance.initialize();
   await SettingsManager.instance.load();
@@ -68,7 +69,7 @@ void _ensureGPhoto2EnvironmentVariables() {
 Future<String?> _resolveSentryDsnOverride() async {
   String executablePath = Platform.resolvedExecutable;
   String possibleSentryDsnOverridePath = path.join(path.dirname(executablePath), "sentry_dsn_override.txt");
-  
+
   File sentryDsnOverrideFile = File(possibleSentryDsnOverridePath);
   if (!sentryDsnOverrideFile.existsSync()) return null;
   return (await sentryDsnOverrideFile.readAsString()).trim();

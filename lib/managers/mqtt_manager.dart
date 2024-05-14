@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:dart_casing/dart_casing.dart';
 import 'package:intl/intl.dart';
-import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
 import 'package:momento_booth/main.dart';
@@ -16,6 +15,7 @@ import 'package:momento_booth/models/home_assistant/home_assistant_discovery_pay
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
@@ -32,7 +32,7 @@ class MqttManager extends _MqttManagerBase with _$MqttManager {
 }
 
 /// Class containing global state for photos in the app
-abstract class _MqttManagerBase with Store {
+abstract class _MqttManagerBase with Store, Logger {
 
   final Lock _updateMqttClientInstanceLock = Lock();
 
@@ -103,16 +103,16 @@ abstract class _MqttManagerBase with Store {
           throw MqttException("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
         }
 
-        loggy.logInfo("Connected to MQTT server");
+        logInfo("Connected to MQTT server");
         _client = client
-          ..onDisconnected = (() => loggy.logInfo("Disconnected from MQTT server"))
+          ..onDisconnected = (() => logInfo("Disconnected from MQTT server"))
           ..onAutoReconnect = (() {
             _connectionState = ConnectionState.connecting;
-            loggy.logInfo("Reconnecting to MQTT server");
+            logInfo("Reconnecting to MQTT server");
           })
           ..onAutoReconnected = (() {
             _connectionState = ConnectionState.connected;
-            loggy.logInfo("Reconnected to MQTT server");
+            logInfo("Reconnected to MQTT server");
             _forcePublishAll();
           });
 
@@ -120,7 +120,7 @@ abstract class _MqttManagerBase with Store {
         _forcePublishAll();
         _createSubscriptions();
       } catch (e) {
-        loggy.logError("Failed to connect to MQTT server: $e");
+        logError("Failed to connect to MQTT server: $e");
       }
     }
 
@@ -217,10 +217,10 @@ abstract class _MqttManagerBase with Store {
             _clearTopic("update_settings");
             _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
           default:
-            loggy.logWarning("Received unknown published MQTT message: $message");
+            logWarning("Received unknown published MQTT message: $message");
         }
       } catch (e) {
-        loggy.logError("Failed to parse published MQTT message (length: ${message?.payload.length}): $e");
+        logError("Failed to parse published MQTT message (length: ${message?.payload.length}): $e");
       }
     });
 
@@ -237,13 +237,13 @@ abstract class _MqttManagerBase with Store {
   }
 
   void _onSettingsMessage(String message) {
-    loggy.logInfo("Received settings update from MQTT");
+    logInfo("Received settings update from MQTT");
     Settings settings = Settings.fromJson(jsonDecode(message));
     SettingsManager.instance.updateAndSave(settings.copyWith(
       // Don't copy these settings from MQTT
       mqttIntegration: SettingsManager.instance.settings.mqttIntegration,
     ));
-    loggy.logInfo("Loaded settings data from MQTT");
+    logInfo("Loaded settings data from MQTT");
   }
 
   // ////////////////////////// //

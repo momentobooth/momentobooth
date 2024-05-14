@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
-class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewModel> with UiLoggy {
+class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewModel> {
 
   final comboboxKey = GlobalKey<ComboBoxState>(debugLabel: 'Combobox Key');
 
@@ -88,10 +87,10 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
       format: format,
       jpgQuality: jpgQuality,
     );
-    loggy.debug('captureCollage took ${stopwatch.elapsed}');
+    logDebug('captureCollage took ${stopwatch.elapsed}');
 
     File? file = await PhotosManager.instance.writeOutput(advance: true);
-    loggy.debug("Wrote template debug export output to ${file?.path}");
+    logDebug("Wrote template debug export output to ${file?.path}");
   }
 
   void onCaptureDelaySecondsChanged(int? captureDelaySeconds) {
@@ -245,7 +244,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
           currentList[printerIndex] = printerName;
         }
       }
-      loggy.debug("Setting CUPS printer list to $currentList");
+      logDebug("Setting CUPS printer list to $currentList");
       viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: currentList));
     }
   }
@@ -287,7 +286,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
           currentList[printerIndex] = printerName;
         }
       }
-      loggy.debug("Setting Flutter printing printerlist to $currentList");
+      logDebug("Setting Flutter printing printerlist to $currentList");
       viewModel.updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: currentList));
     }
   }

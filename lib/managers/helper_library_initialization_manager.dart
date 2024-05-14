@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:loggy/loggy.dart' as loggy;
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/helpers.dart';
+import 'package:momento_booth/utils/logger.dart';
 
 part 'helper_library_initialization_manager.g.dart';
 
@@ -16,7 +16,7 @@ class HelperLibraryInitializationManager extends _HelperLibraryInitializationMan
 }
 
 /// Class containing global state for photos in the app
-abstract class _HelperLibraryInitializationManagerBase with Store {
+abstract class _HelperLibraryInitializationManagerBase with Store, Logger {
 
   final Completer<bool> _nokhwaInitializationResultCompleter = Completer<bool>();
   final Completer<bool> _gphoto2InitializationResultCompleter = Completer<bool>();
@@ -38,13 +38,13 @@ abstract class _HelperLibraryInitializationManagerBase with Store {
   void _processLogEvent(LogEvent event) {
     switch (event.level) {
       case LogLevel.debug:
-        loggy.logDebug("Lib: ${event.message}");
+        logDebug("Lib: ${event.message}");
       case LogLevel.info:
-        loggy.logInfo("Lib: ${event.message}");
+        logInfo("Lib: ${event.message}");
       case LogLevel.warning:
-        loggy.logWarning("Lib: ${event.message}");
+        logWarning("Lib: ${event.message}");
       case LogLevel.error:
-        loggy.logError("Lib: ${event.message}");
+        logError("Lib: ${event.message}");
     }
   }
 
@@ -53,11 +53,11 @@ abstract class _HelperLibraryInitializationManagerBase with Store {
       case HardwareInitializationStep.nokhwa:
         _nokhwaInitializationMessage = event.message;
         _nokhwaInitializationResultCompleter.complete(event.hasSucceeded);
-        loggy.logInfo("Nokhwa initialization finished with result: ${event.hasSucceeded} and message: ${event.message}");
+        logInfo("Nokhwa initialization finished with result: ${event.hasSucceeded} and message: ${event.message}");
       case HardwareInitializationStep.gphoto2:
         _gphoto2InitializationMessage = event.message;
         _gphoto2InitializationResultCompleter.complete(event.hasSucceeded);
-        loggy.logInfo("gPhoto2 initialization finished with result: ${event.hasSucceeded} and message: ${event.message}");
+        logInfo("gPhoto2 initialization finished with result: ${event.hasSucceeded} and message: ${event.message}");
     }
   }
 

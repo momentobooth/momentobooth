@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
@@ -22,7 +21,7 @@ class SelectableImage {
   });
 }
 
-abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
+abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with Store {
 
   ManualCollageScreenViewModelBase({
     required super.contextAccessor,
@@ -57,13 +56,13 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
 
   @observable
   bool isSaving = false;
-  
+
   @observable
   ObservableList<SelectableImage> fileList = ObservableList<SelectableImage>();
 
   @action
   Future<void> findImages() async {
-    loggy.debug("Searching for images");
+    logDebug("Searching for images");
     final fileListBefore = await outputDir.list().toList();
     final matchingFiles = fileListBefore.whereType<File>().where((file) => file.path.toLowerCase().endsWith('.jpg'));
 
@@ -72,7 +71,7 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
     for (var file in matchingFiles) {
       fileList.add(SelectableImage(file: file, index: i++));
     }
-    loggy.debug("Found ${matchingFiles.length} images");
+    logDebug("Found ${matchingFiles.length} images");
   }
 
 }

@@ -9,7 +9,9 @@ list(APPEND FLUTTER_PLUGIN_LIST
   printing
   screen_retriever
   sentry_flutter
+  share_plus
   texture_rgba_renderer
+  url_launcher_windows
   window_manager
 )
 

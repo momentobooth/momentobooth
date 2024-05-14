@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -9,7 +8,7 @@ import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen_vi
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/share_screen/share_screen.dart';
 
-class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScreenViewModel> with UiLoggy {
+class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScreenViewModel> {
 
   // Initialization/Deinitialization
 
@@ -54,11 +53,11 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
       format: format,
       jpgQuality: jpgQuality,
     );
-    loggy.debug('captureCollage took ${stopwatch.elapsed}');
+    logDebug('captureCollage took ${stopwatch.elapsed}');
 
     if (latestCapture == thisCapture) {
       PhotosManager.instance.outputImage = exportImage;
-      loggy.debug("Written collage image to output image memory");
+      logDebug("Written collage image to output image memory");
       await PhotosManager.instance.writeOutput();
       viewModel.readyToContinue = true;
     }

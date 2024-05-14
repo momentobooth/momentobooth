@@ -1,6 +1,5 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/services.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
@@ -22,7 +21,7 @@ part 'multi_capture_screen_view_model.g.dart';
 
 class MultiCaptureScreenViewModel = MultiCaptureScreenViewModelBase with _$MultiCaptureScreenViewModel;
 
-abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
+abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with Store {
 
   late final PhotoCaptureMethod capturer;
   bool flashComplete = false;
@@ -71,7 +70,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
       CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
       CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
-    } as PhotoCaptureMethod;
+    };
     capturer.clearPreviousEvents();
 
     if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
@@ -100,7 +99,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
       StatsManager.instance.addCapturedPhoto();
       PhotosManager.instance.photos.add(image);
     } catch (error) {
-      loggy.warning(error);
+      logWarning(error);
       final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
       PhotosManager.instance.photos.add(PhotoCapture(
         data: data.buffer.asUint8List(),

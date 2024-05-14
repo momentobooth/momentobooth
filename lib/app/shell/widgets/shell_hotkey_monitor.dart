@@ -3,11 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
 
-class ShellHotkeyMonitor extends StatelessWidget with UiLoggy {
+class ShellHotkeyMonitor extends StatelessWidget {
 
   final GoRouter router;
   final Widget child;
