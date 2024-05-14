@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' show ScaffoldMessenger;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
@@ -110,8 +111,17 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
   Widget get _log {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: TalkerView(
-        talker: getIt<Talker>(),
+      child: ScaffoldMessenger(
+        child: TalkerScreen(
+          talker: getIt<Talker>(),
+          theme: TalkerScreenTheme(
+            backgroundColor: FluentTheme.of(context).navigationPaneTheme.backgroundColor!,
+            textColor: FluentTheme.of(context).typography.body!.color!,
+            cardColor: FluentTheme.of(context).cardColor,
+          ),
+          appBarLeading: const SizedBox(),
+          appBarTitle: '',
+        ),
       ),
     );
   }
