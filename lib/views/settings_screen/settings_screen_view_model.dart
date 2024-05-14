@@ -6,6 +6,7 @@ import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:printing/printing.dart';
@@ -82,6 +83,10 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     );
   }
 
+  Text _mediaSizeCardText(PrintDimension size) {
+    return Text("${size.name} (${size.height.toStringAsFixed(2)}×${size.width.toStringAsFixed(2)} mm)");
+  }
+
   final String unusedPrinterValue = "UNUSED";
 
   Future<void> setFlutterPrintingQueueList() async {
@@ -116,6 +121,15 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
         await updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: [printer.id]));
       }
     }
+  }
+
+  Future<void> setCupsPageSizeOptions() async {
+    if (cupsPrinterQueuesSetting.isEmpty) return;
+    final List<PrintDimension> mediaDimensions = await CupsClient().getPrinterMediaDimensions(cupsPrinterQueuesSetting.first);
+
+    cupsPaperSizes
+      ..clear()
+      ..addAll(mediaDimensions.map((media) => ComboBoxItem(value: media.keyword, child: _mediaSizeCardText(media))).toList());
   }
   
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
@@ -217,6 +231,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     setFlutterPrintingQueueList();
     setWebcamList();
     setCameraList();
+    setCupsPageSizeOptions();
   }
 
   // Methods

@@ -246,6 +246,10 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
       }
       logDebug("Setting CUPS printer list to $currentList");
       viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: currentList));
+      // If the first printer changed, update the available page size options
+      if (printerIndex == 0) {
+        viewModel.setCupsPageSizeOptions();
+      }
     }
   }
 

@@ -294,6 +294,7 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
         controller: controller.cupsPasswordController,
         onFinishedEditing: controller.onCupsPasswordChanged,
       ),
+      _cupsPageSizeCard(viewModel, controller, "Media size: Normal", PrintSize.normal, viewModel.mediaSizeNormal),
       Observer(
         builder: (context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,

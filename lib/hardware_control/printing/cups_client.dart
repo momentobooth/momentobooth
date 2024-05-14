@@ -49,6 +49,13 @@ class CupsClient extends PrintingSystemClient {
     );
   }
 
+  Future<List<PrintDimension>> getPrinterMediaDimensions(String queueId) async {
+    return await cupsGetPrinterMediaDimensions(
+      serverInfo: serverInfo,
+      queueId: queueId
+    );
+  }
+
   static CupsServerInfo get serverInfo {
     return CupsServerInfo(
       uri: SettingsManager.instance.settings.hardware.cupsUri,
