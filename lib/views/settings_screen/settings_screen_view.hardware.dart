@@ -471,3 +471,20 @@ FluentSettingCard _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScr
     ),
   );
 }
+FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, PrintSize size) {
+  return FluentSettingCard(
+    icon: FluentIcons.print,
+    title: title,
+    subtitle: size.name,
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 150),
+      child: Observer(builder: (_) {
+        return ComboBox<String>(
+          items: viewModel.cupsPaperSizes,
+          value: "",
+          onChanged: (name) => controller.onCupsPageSizeChanged(name, size),
+        );
+      }),
+    ),
+  );
+}

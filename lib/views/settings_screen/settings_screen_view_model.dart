@@ -57,6 +57,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ObservableList<ComboBoxItem<String>> cupsQueues = ObservableList<ComboBoxItem<String>>();
 
   @observable
+  ObservableList<ComboBoxItem<String>> cupsPaperSizes = ObservableList<ComboBoxItem<String>>();
+
+  @observable
   List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
 
   @observable
@@ -148,6 +151,24 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get cupsUsernameSetting => SettingsManager.instance.settings.hardware.cupsUsername;
   String get cupsPasswordSetting => SettingsManager.instance.settings.hardware.cupsPassword;
   List<String> get cupsPrinterQueuesSetting => SettingsManager.instance.settings.hardware.cupsPrinterQueues;
+  String get mediaSizeNormal => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeNormal;
+  double get mediaSizeHeightNormal => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeHeightNormal;
+  double get mediaSizeWidthNormal => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeWidthNormal;
+  String get mediaSizeSplit => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeSplit;
+  double get mediaSizeHeightSplit => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeHeightSplit;
+  double get mediaSizeWidthSplit => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeWidthSplit;
+  String get mediaSizeSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeSmall;
+  double get mediaSizeHeightSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeHeightSmall;
+  double get mediaSizeWidthSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeWidthSmall;
+  int get gridXSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.gridXSmall;
+  int get gridYSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.gridYSmall;
+  bool get rotateSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.rotateSmall;
+  String get mediaSizeTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeTiny;
+  double get mediaSizeHeightTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeHeightTiny;
+  double get mediaSizeWidthTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeWidthTiny;
+  int get gridXTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridXTiny;
+  int get gridYTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridYTiny;
+  bool get rotateTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.rotateTiny;
   List<String> get flutterPrintingPrinterNamesSetting => SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
   double get pageHeightSetting => SettingsManager.instance.settings.hardware.pageHeight;
   double get pageWidthSetting => SettingsManager.instance.settings.hardware.pageWidth;
