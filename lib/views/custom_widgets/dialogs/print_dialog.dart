@@ -1,6 +1,7 @@
-import 'package:fluent_ui/fluent_ui.dart' hide Colors;
+import 'package:fluent_ui/fluent_ui.dart' hide Colors, Slider;
 import 'package:flutter/material.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_outlined_button.dart';
@@ -10,11 +11,13 @@ class PrintDialog extends StatefulWidget {
 
   final VoidCallback onCancel;
   final VoidCallback onPrintPressed;
+  final int maxPrints;
 
   const PrintDialog({
     super.key,
     required this.onCancel,
     required this.onPrintPressed,
+    this.maxPrints = 5,
   });
 
   @override
@@ -24,6 +27,18 @@ class PrintDialog extends StatefulWidget {
 class _PrintDialogState extends State<PrintDialog> {
   int numPrints = 1;
   PrintSize printSize = PrintSize.normal;
+
+  int get gridX => switch(printSize) {
+    PrintSize.small => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall.x,
+    PrintSize.tiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny.x,
+    _ => 1,
+  };
+
+  int get gridY => switch(printSize) {
+    PrintSize.small => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall.y,
+    PrintSize.tiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny.y,
+    _ => 1,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -55,23 +70,24 @@ class _PrintDialogState extends State<PrintDialog> {
             textAlign: TextAlign.left,
             style: textStyle,
           ),
+          Text(
+            "$numPrints prints → ${numPrints * gridX * gridY} printed images",
+            textAlign: TextAlign.left,
+          ),
           const SizedBox(height: 16.0),
           Material(
             color: Colors.transparent,
-            child: Column(
-              children: <Widget>[
-                for (int i = 1; i <= 5; i++)
-                RadioListTile<int>(
-                  title: Text('$i'),
-                  value: i,
-                  groupValue: numPrints,
-                  onChanged: (value) {
-                    setState(() {
-                      numPrints = value!;
-                    });
-                  },
-                ),
-              ],
+            child: Slider(
+              value: numPrints.toDouble(),
+              min: 1,
+              max: widget.maxPrints.toDouble(),
+              divisions: widget.maxPrints-1,
+              label: numPrints.toString(),
+              onChanged: (value) {
+                setState(() {
+                  numPrints = value.round();
+                });
+              },
             ),
           ),
         ],

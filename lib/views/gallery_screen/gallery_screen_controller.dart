@@ -55,7 +55,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
 
   void onFindMyFace() {
     showUserDialog(
-      barrierDismissible: false,
+      barrierDismissible: true,
       dialog: Observer(builder: (_) {
         return FindFaceDialog(
           title: 'Smile',
