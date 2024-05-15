@@ -3,6 +3,7 @@ import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/custom_widgets/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
 import 'package:path/path.dart' as path;
@@ -50,7 +51,22 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printEnabled = true;
   }
 
-  Future<void> onClickPrint() async {
+  void onClickPrint() {
+    showUserDialog(
+      barrierDismissible: false,
+      dialog: Observer(builder: (_) {
+        return PrintDialog(
+          onPrintPressed: () {
+            navigator.pop();
+            onConfirmPrint();
+          },
+          onCancel: () => navigator.pop(),
+        );
+      }),
+    );
+  }
+
+  Future<void> onConfirmPrint() async {
     if (!viewModel.printEnabled) return;
 
     logDebug("Printing photo");
