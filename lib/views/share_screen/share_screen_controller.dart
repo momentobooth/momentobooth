@@ -73,6 +73,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
 
   void onClickPrint() {
+    if (!viewModel.printEnabled) return;
     showUserDialog(
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
