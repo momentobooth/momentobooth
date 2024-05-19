@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_loggy/flutter_loggy.dart';
+import 'package:flutter/material.dart' show ScaffoldMessenger;
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -23,6 +24,7 @@ import 'package:momento_booth/views/settings_screen/widgets/number_input_card.da
 import 'package:momento_booth/views/settings_screen/widgets/secret_input_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/text_display_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/text_input_card.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 part 'settings_screen_view.debug.dart';
 part 'settings_screen_view.face_recognition.dart';
@@ -107,9 +109,20 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
   }
 
   Widget get _log {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: LoggyStreamWidget(),
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ScaffoldMessenger(
+        child: TalkerScreen(
+          talker: getIt<Talker>(),
+          theme: TalkerScreenTheme(
+            backgroundColor: FluentTheme.of(context).navigationPaneTheme.backgroundColor!,
+            textColor: FluentTheme.of(context).typography.body!.color!,
+            cardColor: FluentTheme.of(context).cardColor,
+          ),
+          appBarLeading: const SizedBox(),
+          appBarTitle: '',
+        ),
+      ),
     );
   }
 

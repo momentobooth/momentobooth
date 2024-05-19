@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
+import 'package:momento_booth/utils/logger.dart';
 
-class GoRouterObserver extends NavigatorObserver with UiLoggy {
+class GoRouterObserver extends NavigatorObserver with Logger {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
@@ -11,10 +11,10 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
       String routeType = page.child.runtimeType.toString();
 
-      loggy.debug("Route push: $routeType");
+      logDebug("Route push: $routeType");
       MqttManager.instance.publishScreen(routeType);
     } else {
-      loggy.debug("Route push: Unknown (is not a CustomTransitionPage))");
+      logDebug("Route push: Unknown (is not a CustomTransitionPage))");
     }
   }
 
@@ -24,10 +24,10 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
       String routeType = page.child.runtimeType.toString();
 
-      loggy.debug("Route pop: $routeType");
+      logDebug("Route pop: $routeType");
       MqttManager.instance.publishScreen(routeType);
     } else {
-      loggy.debug("Route pop: Unknown (is not a CustomTransitionPage))");
+      logDebug("Route pop: Unknown (is not a CustomTransitionPage))");
     }
   }
 
@@ -37,9 +37,9 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
       CustomTransitionPage page = route.settings as CustomTransitionPage;
       String routeType = page.child.runtimeType.toString();
 
-      loggy.debug("Route remove: $routeType");
+      logDebug("Route remove: $routeType");
     } else {
-      loggy.debug("Route remove: Unknown (is not a CustomTransitionPage))");
+      logDebug("Route remove: Unknown (is not a CustomTransitionPage))");
     }
   }
 
@@ -61,7 +61,7 @@ class GoRouterObserver extends NavigatorObserver with UiLoggy {
       oldRouteChildName = page.child.runtimeType.toString();
     }
 
-    loggy.debug("Route replaced ${oldRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'} with ${newRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'}");
+    logDebug("Route replaced ${oldRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'} with ${newRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'}");
     if (newRouteChildName != null) MqttManager.instance.publishScreen(newRouteChildName);
   }
 

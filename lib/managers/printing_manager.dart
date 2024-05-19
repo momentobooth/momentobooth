@@ -1,7 +1,6 @@
 
 import 'dart:typed_data';
 
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/hardware_control/printing/flutter_printing_client.dart';
@@ -19,7 +18,7 @@ class PrintingManager extends _PrintingManagerBase with _$PrintingManager {
 
 }
 
-abstract class _PrintingManagerBase with Store, UiLoggy {
+abstract class _PrintingManagerBase with Store {
 
   // ////////////// //
   // Initialization //
@@ -33,7 +32,7 @@ abstract class _PrintingManagerBase with Store, UiLoggy {
     });
   }
 
-  
+
   // ///////// //
   // Reactions //
   // ///////// //

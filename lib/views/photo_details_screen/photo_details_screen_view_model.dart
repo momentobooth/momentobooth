@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -13,7 +12,7 @@ part 'photo_details_screen_view_model.g.dart';
 
 class PhotoDetailsScreenViewModel = PhotoDetailsScreenViewModelBase with _$PhotoDetailsScreenViewModel;
 
-abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
+abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with Store {
 
   final String photoId;
 
@@ -21,7 +20,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
     required super.contextAccessor,
     required this.photoId,
   });
-  
+
   Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   File? get file => File(path.join(outputDir.path, photoId));
 
@@ -43,7 +42,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
 
   Future<void> uploadPhotoToSend() async {
-    loggy.debug("Uploading ${file!.path}");
+    logDebug("Uploading ${file!.path}");
 
     String basename = path.basename(file!.path);
     Stream<FfSendTransferProgress> stream = ffsendUploadFile(filePath: file!.path, hostUrl: ffSendUrl, downloadFilename: basename);
@@ -53,7 +52,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
 
     stream.listen((event) async {
       if (event.isFinished) {
-        loggy.debug("Upload complete: ${event.downloadUrl}");
+        logDebug("Upload complete: ${event.downloadUrl}");
 
         await Future.delayed(const Duration(milliseconds: 500));
         _qrUrl = event.downloadUrl;
@@ -61,11 +60,11 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
 
         StatsManager.instance.addUploadedPhoto();
       } else {
-        loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
+        logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
         _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
     }).onError((x) async {
-      loggy.error("Upload failed, file path: ${file!.path}", x);
+      logError("Upload failed, file path: ${file!.path}", x);
       await Future.delayed(const Duration(seconds: 1));
       _uploadProgress = null;
       _uploadFailed = true;

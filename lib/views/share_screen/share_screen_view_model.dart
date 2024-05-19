@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:confetti/confetti.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -17,7 +16,7 @@ part 'share_screen_view_model.g.dart';
 
 class ShareScreenViewModel = ShareScreenViewModelBase with _$ShareScreenViewModel;
 
-abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, UiLoggy {
+abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
 
   ShareScreenViewModelBase({
     required super.contextAccessor,
@@ -65,7 +64,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, 
     _file ??= await PhotosManager.instance.getOutputImageAsTempFile();
     final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
 
-    loggy.debug("Uploading ${_file!.path}");
+    logDebug("Uploading ${_file!.path}");
 
     // HHmmss string
     DateFormat formatter = DateFormat('HHmmss');
@@ -77,7 +76,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, 
 
     stream.listen((event) async {
       if (event.isFinished) {
-        loggy.debug("Upload complete: ${event.downloadUrl}");
+        logDebug("Upload complete: ${event.downloadUrl}");
 
         await Future.delayed(const Duration(milliseconds: 500));
         _qrUrl = event.downloadUrl;
@@ -85,11 +84,11 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store, 
 
         StatsManager.instance.addUploadedPhoto();
       } else {
-        loggy.debug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
+        logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
         _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
     }).onError((x) async {
-      loggy.error("Upload failed, file path: ${_file!.path}", x);
+      logError("Upload failed, file path: ${_file!.path}", x);
       await Future.delayed(const Duration(seconds: 1));
       _uploadProgress = null;
       _uploadFailed = true;

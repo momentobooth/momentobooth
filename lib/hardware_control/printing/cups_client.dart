@@ -30,7 +30,7 @@ class CupsClient extends PrintingSystemClient {
 
       // Ignore printers that are not available.
       if (selected == null) {
-        loggy.error("Could not find selected CUPS printer [$id]");
+        logError("Could not find selected CUPS printer [$id]");
       } else {
         printers.add(selected);
       }

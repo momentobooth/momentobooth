@@ -1,8 +1,9 @@
 import 'package:meta/meta.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/base/build_context_abstractor.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
 
-abstract class ScreenViewModelBase with BuildContextAbstractor {
+abstract class ScreenViewModelBase with BuildContextAbstractor, Logger {
 
   @override
   final BuildContextAccessor contextAccessor;
@@ -13,5 +14,5 @@ abstract class ScreenViewModelBase with BuildContextAbstractor {
 
   @mustCallSuper
   void dispose() {}
-  
+
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
@@ -15,7 +14,7 @@ import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 import 'package:path/path.dart' as path;
 
-class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with UiLoggy, PrinterStatusDialogMixin<ShareScreenViewModel> {
+class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with PrinterStatusDialogMixin<ShareScreenViewModel> {
 
   // Initialization/Deinitialization
 
@@ -31,7 +30,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
 
   void onClickPrev() {
-    loggy.debug("Clicked prev");
+    logDebug("Clicked prev");
     if (PhotosManager.instance.captureMode == CaptureMode.single) {
       PhotosManager.instance.reset(advance: false);
       StatsManager.instance.addRetake();
@@ -74,7 +73,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   Future<void> onClickPrint() async {
     if (!viewModel.printEnabled) return;
 
-    loggy.debug("Printing photo");
+    logDebug("Printing photo");
 
     viewModel
       ..printEnabled = false
@@ -89,7 +88,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       await PrintingManager.instance.printPdf(jobName, pdfData);
       success = true;
     } catch (e) {
-      loggy.error("Failed to print photo: $e");
+      logError("Failed to print photo: $e");
     }
 
     viewModel.printText = success ? localizations.shareScreenPrinting : localizations.shareScreenPrintUnsuccesful;

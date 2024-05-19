@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/extensions/camera_state_extension.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
@@ -26,7 +25,7 @@ class LiveViewManager extends _LiveViewManagerBase with _$LiveViewManager {
 }
 
 /// Class containing global state for photos in the app
-abstract class _LiveViewManagerBase with Store, UiLoggy {
+abstract class _LiveViewManagerBase with Store {
 
   @readonly
   bool _lastFrameWasInvalid = false;

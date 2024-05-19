@@ -10,7 +10,6 @@ import 'package:flutter/material.dart' hide Action, RawImage;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
@@ -23,6 +22,7 @@ import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/photo_container.dart';
@@ -73,7 +73,7 @@ class PhotoCollage extends StatefulWidget {
 
 }
 
-class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
+class PhotoCollageState extends State<PhotoCollage> with Logger {
 
   @override
   void initState() {
@@ -385,7 +385,7 @@ class PhotoCollageState extends State<PhotoCollage> with UiLoggy {
       ],
       operationsBeforeEncoding: operationsBeforeEncoding,
     );
-    loggy.debug('JPEG encoding took ${stopwatch.elapsed}');
+    logDebug('JPEG encoding took ${stopwatch.elapsed}');
 
     return jpegData;
   }

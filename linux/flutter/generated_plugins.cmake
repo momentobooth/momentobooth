@@ -9,6 +9,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   screen_retriever
   sentry_flutter
   texture_rgba_renderer
+  url_launcher_linux
   window_manager
 )
 

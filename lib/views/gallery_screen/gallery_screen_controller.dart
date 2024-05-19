@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:http/http.dart' as http;
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/find_face_dialog.dart';
@@ -12,7 +11,7 @@ import 'package:momento_booth/views/photo_details_screen/photo_details_screen.da
 import 'package:path/path.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewModel> with UiLoggy {
+class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewModel> {
 
   // Initialization/Deinitialization
 
@@ -23,7 +22,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
 
   void openPhoto(File file) {
     final String filename = basename(file.path);
-    loggy.debug("Opening photo $filename");
+    logDebug("Opening photo $filename");
     router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
   }
 
@@ -38,13 +37,13 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
       if (response.statusCode == 200) {
         var matchingImages = jsonDecode(response.body) as List<dynamic>?;
         var matchingImagesStrings = matchingImages!.cast<String>().toList();
-        loggy.debug("Matching images: $matchingImagesStrings");
+        logDebug("Matching images: $matchingImagesStrings");
         viewModel.filterImages(matchingImagesStrings);
       } else {
         throw Exception("Failed to get matching images, status code: ${response.statusCode}");
       }
     } catch (e, s) {
-      loggy.error("Failed to get matching images: $e");
+      logError("Failed to get matching images: $e");
       await Sentry.captureException(e, stackTrace: s);
     }
   }

@@ -1,5 +1,4 @@
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -7,7 +6,7 @@ import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart'
 import 'package:momento_booth/views/photo_details_screen/photo_details_screen_view_model.dart';
 import 'package:path/path.dart' as path;
 
-class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScreenViewModel> with UiLoggy {
+class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScreenViewModel> {
 
   // Initialization/Deinitialization
 
@@ -53,7 +52,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   Future<void> onClickPrint() async {
     if (!viewModel.printEnabled) return;
 
-    loggy.debug("Printing photo");
+    logDebug("Printing photo");
 
     viewModel
       ..printEnabled = false
@@ -68,7 +67,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       await PrintingManager.instance.printPdf(jobName, pdfData);
       success = true;
     } catch (e) {
-      loggy.error("Failed to print photo: $e");
+      logError("Failed to print photo: $e");
     }
 
     viewModel.printText = success ? localizations.photoDetailsScreenPrinting : localizations.photoDetailsScreenPrintUnsuccesful;

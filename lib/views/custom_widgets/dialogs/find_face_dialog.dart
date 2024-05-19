@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
@@ -15,6 +14,7 @@ import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
@@ -43,7 +43,7 @@ class FindFaceDialog extends StatefulWidget {
 
 }
 
-class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
+class _FindFaceDialogState extends State<FindFaceDialog> with Logger {
 
   bool _showCounter = true;
   FaceDetectionState _faceDetectionState = FaceDetectionState.unknown;
@@ -54,8 +54,8 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
     CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
     CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
     CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
-  } as PhotoCaptureMethod;
-  
+  };
+
   @computed
   Duration get photoDelay => Duration(seconds: widget.countDown) - capturer.captureDelay + flashStartDuration;
 
@@ -65,7 +65,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
       final image = await capturer.captureAndGetPhoto();
       imageData = image.data;
     } catch (error) {
-      loggy.warning(error);
+      logWarning(error);
       final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
       imageData = data.buffer.asUint8List();
     }
@@ -73,7 +73,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
   }
 
   Future<void> uploadImage(Uint8List image) async {
-    loggy.debug("Uploading image to face detection server");
+    logDebug("Uploading image to face detection server");
     Uri uri = Uri(host: "localhost", port: 3232, scheme: "http", path: "/upload");
     var request = http.MultipartRequest("POST", uri);
     request.files.add(http.MultipartFile.fromBytes("file", image, contentType: MediaType('image', 'jpeg'), filename: "captured-imaged.jpg"));
@@ -89,7 +89,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
         _numFaces = data['num'];
       }
     });
-    loggy.debug("Face detection state updated: $_faceDetectionState, $_numFaces");
+    logDebug("Face detection state updated: $_faceDetectionState, $_numFaces");
     widget.onSuccess();
   }
 
@@ -101,7 +101,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with UiLoggy {
 
   void capture() {
     setState(() => _showCounter = false);
-    loggy.debug("Capture initiated with method $capturer");
+    logDebug("Capture initiated with method $capturer");
   }
 
   @override

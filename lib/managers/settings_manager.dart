@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' hide context;
 import 'package:path_provider/path_provider.dart';
 import 'package:toml/toml.dart';
@@ -18,7 +18,7 @@ class SettingsManager extends _SettingsManagerBase with _$SettingsManager {
 
 }
 
-abstract class _SettingsManagerBase with Store, UiLoggy {
+abstract class _SettingsManagerBase with Store, Logger {
 
   static const _fileName = "MomentoBooth_Settings.toml";
 
@@ -41,14 +41,14 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
     MqttManager.instance.publishSettings(settings);
     await _save();
   }
-  
+
   // /////////// //
   // Persistence //
   // /////////// //
 
   @action
   Future<void> load() async {
-    loggy.debug("Loading settings");
+    logDebug("Loading settings");
     await _ensureSettingsFileIsSet();
 
     if (!_settingsFile.existsSync()) {
@@ -64,7 +64,7 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
     Map<String, dynamic> settingsMap = settingsDocument.toMap();
     try {
       _settings = Settings.fromJson(settingsMap);
-      loggy.debug("Loaded settings: ${_settings?.toJson().toString() ?? "null"}");
+      logDebug("Loaded settings: ${_settings?.toJson().toString() ?? "null"}");
     } catch (_) {
       // Fixme: Failed to parse, load defaults and create settings file
       _settings = Settings.withDefaults();
@@ -73,7 +73,7 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
   }
 
   Future<void> _save() async {
-    loggy.debug("Saving settings");
+    logDebug("Saving settings");
     await _ensureSettingsFileIsSet();
 
     Map<String, dynamic> settingsMap = _settings!.toJson();
@@ -81,7 +81,7 @@ abstract class _SettingsManagerBase with Store, UiLoggy {
     String settingsAsToml = settingsDocument.toString();
     await _settingsFile.writeAsString(settingsAsToml);
 
-    loggy.debug("Saved settings");
+    logDebug("Saved settings");
   }
 
   // /////// //

@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -10,7 +9,7 @@ import 'package:printing/printing.dart';
 
 /// Printing implementation that uses the flutter `printing` library to print.
 /// This should work on all operating systems.
-class FlutterPrintingClient extends PrintingSystemClient with UiLoggy {
+class FlutterPrintingClient extends PrintingSystemClient {
 
   @override
   Future<List<PrintQueueInfo>> getPrintQueues() async {
@@ -28,7 +27,7 @@ class FlutterPrintingClient extends PrintingSystemClient with UiLoggy {
 
       // Ignore printers that are not available.
       if (selected == null) {
-        loggy.error("Could not find selected printer ($name)");
+        logError("Could not find selected printer ($name)");
       } else {
         printers.add(selected);
       }
@@ -42,7 +41,7 @@ class FlutterPrintingClient extends PrintingSystemClient with UiLoggy {
     List<Printer> selectedPrintQueues = await _getSelectedPrintQueues();
     return selectedPrintQueues.map((queue) => queue.asPrintQueueInfo).toList();
   }
-  
+
   @override
   Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData) async {
     // Find specific printer
@@ -61,7 +60,7 @@ class FlutterPrintingClient extends PrintingSystemClient with UiLoggy {
 
     if (!success) throw PrintingException('Printing.directPrintPdf returned false');
   }
-  
+
 }
 
 extension _PrinterExtension on Printer {

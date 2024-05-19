@@ -14,10 +14,10 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 ## Features
 
 * Single capture
-* Multi-capture  
+* Multi-capture\
   Shoot 4 photos and then select the ones you like to for a collage of 1, 2, 3, or 4 photos
 * User friendly touch-centered interface
-* Photo printing  
+* Photo printing\
   Lots of settings included to size and position your print well
 * Photo sharing using [`ffsend`](https://github.com/timvisee/ffsend) QR code
 * Theming with collage template images (background and foreground)
@@ -91,7 +91,7 @@ On Linux:
 All platforms:
 
 * `flutter_rust_bridge_codegen`
-  * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.33`
+  * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.34`
 * Flutter SDK 3.19.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
@@ -104,12 +104,12 @@ For all tools, we support the latest versions.
 
 ### Build steps
 
-### Using `rps` (recommended)
+### Using `just` (recommended)
 
 Please note: This method expects global fvm and Dart installs to be available.
 
-1. Install `rps` using `dart pub global activate rps`
-2. Run `rps` from the root folder of the repository
+1. Install `just` (See [here](https://github.com/casey/just?tab=readme-ov-file#packages))
+2. Run `just` from the root folder of the repository
 
 ### Manually
 
@@ -123,9 +123,11 @@ Please note: Run all commands from the root folder of the repository, unless men
 
 Some additional notes:
 
-* If you have changed any code in the Dart or Rust project that could change the generated bridging code, you should re-run the `flutter_rust_bridge_codegen generate` or `rps generate rust_bridge` command
-* If you have changed any code related to JSON or TOML serialization, or MobX, you should re-run the `dart run build_runner build --delete-conflicting-outputs` or `rps generate build_runner_targets` command
-* If you have changed any code related to the localization, you should re-run the `flutter gen-l10n` of `rps generate l10n` command
+* If you have changed any code in the Dart or Rust project that could change the generated bridging code, you should re-run the `flutter_rust_bridge_codegen generate` or `just gen-bridge` command
+  * You can also run `flutter_rust_bridge_codegen generate --watch` or `just watch-bridge` to automatically regenerate the bridging code when you save a file
+* If you have changed any code related to JSON or TOML serialization, or MobX, you should re-run the `dart run build_runner build --delete-conflicting-outputs` or `just gen-code` command
+  * You can also run `dart run build_runner watch --delete-conflicting-outputs` or `just watch-code` to automatically regenerate the code when you save a file
+* If you have changed any code related to the localization, you should re-run the `flutter gen-l10n` of `just gen-l10n` command
 
 ### Adding a new screen using the VS Code extension Template
 

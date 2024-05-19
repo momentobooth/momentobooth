@@ -42,6 +42,7 @@ class WidgetbookApp extends StatelessWidget {
             AppLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
             FluentLocalizations.delegate,
           ],
           supportedLocales: const [

@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
 
-class PhotoBoothHotkeyMonitor extends StatelessWidget with UiLoggy {
+class PhotoBoothHotkeyMonitor extends StatelessWidget with Logger {
 
   final GoRouter router;
   final Widget child;

@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:just_audio/just_audio.dart';
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/utils/logger.dart';
 
 part 'sfx_manager.g.dart';
 
@@ -13,7 +13,7 @@ class SfxManager extends _SfxManagerBase with _$SfxManager {
   SfxManager._internal();
 }
 
-abstract class _SfxManagerBase with Store, UiLoggy {
+abstract class _SfxManagerBase with Store, Logger {
 
   AudioPlayer? _audioPlayer;
 
@@ -30,7 +30,7 @@ abstract class _SfxManagerBase with Store, UiLoggy {
 
       _audioPlayer = audioPlayer;
     } catch (e) {
-      loggy.error("Error initializing audio player: $e");
+      logError("Error initializing audio player: $e");
     }
   }
 
@@ -61,7 +61,7 @@ abstract class _SfxManagerBase with Store, UiLoggy {
       await _audioPlayer?.setFilePath(filePath);
       await _audioPlayer?.play();
     } catch (e) {
-      loggy.error("Error playing sound ($filePath): $e");
+      logError("Error playing sound ($filePath): $e");
     }
   }
 

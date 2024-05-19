@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:loggy/loggy.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/models/stats.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' hide context;
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
@@ -30,7 +30,7 @@ enum StatFields {
   createdMultiCapturePhotos,
 }
 
-abstract class _StatsManagerBase with Store, UiLoggy {
+abstract class _StatsManagerBase with Store, Logger {
 
   @readonly
   Stats _stats = const Stats();
@@ -84,25 +84,25 @@ abstract class _StatsManagerBase with Store, UiLoggy {
 
   @action
   Future<void> load() async {
-    loggy.debug("Loading statistics");
+    logDebug("Loading statistics");
     await _ensureStatsFileIsSet();
 
     if (!_statsFile.existsSync()) {
       // File does not exist
       _stats = const Stats();
-      loggy.warning("Persisted statistics file not found"); 
+      logWarning("Persisted statistics file not found");
     } else {
       // File does exist
-      loggy.debug("Loading persisted statistics");
+      logDebug("Loading persisted statistics");
       try {
         String statsAsToml = await _statsFile.readAsString();
         TomlDocument statsDocument = TomlDocument.parse(statsAsToml);
         Map<String, dynamic> statsMap = statsDocument.toMap();
         _stats = Stats.fromJson(statsMap);
-        loggy.debug("Loaded persisted statistics");
+        logDebug("Loaded persisted statistics");
       } catch (_) {
         // Fixme: Failed to parse, ignore for now
-        loggy.warning("Persisted statistics could not be loaded"); 
+        logWarning("Persisted statistics could not be loaded");
       }
     }
 
@@ -111,7 +111,7 @@ abstract class _StatsManagerBase with Store, UiLoggy {
 
   Future<void> _save() async {
     await _stateSaveLock.synchronized(() async {
-      loggy.debug("Saving statistics");
+      logDebug("Saving statistics");
       await _ensureStatsFileIsSet();
 
       Map<String, dynamic> mapWithStringKey = _stats.toJson();
@@ -119,7 +119,7 @@ abstract class _StatsManagerBase with Store, UiLoggy {
       String statsAsToml = statsDocument.toString();
       await _statsFile.writeAsString(statsAsToml);
 
-      loggy.debug("Saved statistics");
+      logDebug("Saved statistics");
     });
   }
 

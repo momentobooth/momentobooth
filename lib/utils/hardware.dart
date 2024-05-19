@@ -4,14 +4,13 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
-import 'package:loggy/loggy.dart';
 import 'package:momento_booth/exceptions/win32_exception.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:win32/win32.dart';
-
-final _loggy = Loggy<UiLoggy>("hardware utils");
 
 Future<Uint8List> getImagePDF(Uint8List imageData) async {
   late final pw.MemoryImage image = pw.MemoryImage(imageData);
@@ -101,7 +100,7 @@ List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
       // If the function fails, then at least we can say there is _some_ error
       hasError = true;
       jobList = [];
-      _loggy.error(e);
+      getIt<Logger>().logError(e);
     }
     // Check if there are prints that have errored
     hasError = hasError || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.error));
@@ -141,7 +140,7 @@ List<JobInfo> getJobList(String printerName) {
     final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0;
     if (!enumSuccess) throw Win32Exception.fromLastError("Error enumerating print jobs for printer $printerName");
 
-    _loggy.debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
+    getIt<Logger>().logDebug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
 
     List<JobInfo> jobList = [];
     for (var i = 0; i < numJobs.value; i++) {
@@ -150,7 +149,7 @@ List<JobInfo> getJobList(String printerName) {
       var statusVal = job.Status;
       var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
       if (statusString.isNotEmpty) {
-        _loggy.debug("Custom statusstring for printer $printerName: $statusString");
+        getIt<Logger>().logDebug("Custom statusstring for printer $printerName: $statusString");
       }
       // Extract list of statusses
       final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
