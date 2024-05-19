@@ -5,10 +5,12 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/collage_maker_screen/collage_maker_screen.dart';
+import 'package:momento_booth/views/custom_widgets/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/share_screen/share_screen_view_model.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
@@ -70,7 +72,22 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       ..printEnabled = true;
   }
 
-  Future<void> onClickPrint() async {
+  void onClickPrint() {
+    showUserDialog(
+      barrierDismissible: false,
+      dialog: Observer(builder: (_) {
+        return PrintDialog(
+          onPrintPressed: (size, copies) {
+            navigator.pop();
+            onConfirmPrint(size, copies);
+          },
+          onCancel: () => navigator.pop(),
+        );
+      }),
+    );
+  }
+
+  Future<void> onConfirmPrint(PrintSize size, int copies) async {
     if (!viewModel.printEnabled) return;
 
     logDebug("Printing photo");
@@ -80,19 +97,19 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       ..printText = localizations.shareScreenPrinting;
 
     // Get photo and print it.
-    final pdfData = await PhotosManager.instance.getOutputPDF();
+    final pdfData = await PhotosManager.instance.getOutputPDF(size);
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Picture";
 
     bool success = false;
     try {
-      await PrintingManager.instance.printPdf(jobName, pdfData);
+      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");
     }
 
     viewModel.printText = success ? localizations.shareScreenPrinting : localizations.shareScreenPrintUnsuccesful;
-    successfulPrints += success ? 1 : 0;
+    successfulPrints += success ? copies : 0;
     Future.delayed(_printTextDuration, resetPrint);
 
     await checkPrintersAndShowWarnings();
