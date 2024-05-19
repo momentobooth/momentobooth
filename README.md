@@ -14,10 +14,10 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 ## Features
 
 * Single capture
-* Multi-capture
+* Multi-capture\
   Shoot 4 photos and then select the ones you like to for a collage of 1, 2, 3, or 4 photos
 * User friendly touch-centered interface
-* Photo printing
+* Photo printing\
   Lots of settings included to size and position your print well
 * Photo sharing using [`ffsend`](https://github.com/timvisee/ffsend) QR code
 * Theming with collage template images (background and foreground)
