@@ -47,6 +47,41 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
   return await doc.save();  
 }
 
+Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
+  late final pw.MemoryImage image = pw.MemoryImage(imageData);
+  const mm = PdfPageFormat.mm;
+  final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
+  final hSettings = SettingsManager.instance.settings.hardware;
+  final pageFormats = [
+    PdfPageFormat(settings.mediaSizeSplit.mediaSizeHeight * mm, settings.mediaSizeSplit.mediaSizeWidth * mm,
+                  marginBottom: hSettings.printerMarginBottom * mm,
+                  marginLeft: hSettings.printerMarginLeft * mm,
+                  marginRight: 0,
+                  marginTop: hSettings.printerMarginTop * mm),
+    PdfPageFormat(settings.mediaSizeSplit.mediaSizeHeight * mm, settings.mediaSizeSplit.mediaSizeWidth * mm,
+                  marginBottom: hSettings.printerMarginBottom * mm,
+                  marginLeft: 0,
+                  marginRight: hSettings.printerMarginRight * mm,
+                  marginTop: hSettings.printerMarginTop * mm),
+  ];
+  const fit = pw.BoxFit.fitHeight;
+
+  final imageWidgets = [
+    pw.Image(image, fit: fit, height: pageFormats[0].availableHeight, width: pageFormats[0].availableWidth, alignment: pw.Alignment.centerLeft),
+    pw.Image(image, fit: fit, height: pageFormats[1].availableHeight, width: pageFormats[1].availableWidth, alignment: pw.Alignment.centerRight),
+  ];
+
+  final doc = pw.Document(title: "MomentoBooth image");
+  for (int i = 0; i < 2; i++){
+    doc.addPage(pw.Page(
+      pageFormat: pageFormats[i],
+      build: (_) => pw.Center(child: imageWidgets[i]),
+    ));
+  }
+
+  return await doc.save();  
+}
+
 Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSize) async {
   const mm = PdfPageFormat.mm;
   final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
@@ -57,7 +92,7 @@ Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSi
     case PrintSize.normal:
       pdfData = await getImagePDF(imageData);
     case PrintSize.split:
-      pdfData = await getImagePDF(imageData);
+      pdfData = await getSplitImagePDF(imageData);
     case PrintSize.small:
       final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeHeight * mm, settings.mediaSizeSmall.mediaSizeWidth * mm,
                                     marginBottom: hSettings.printerMarginBottom * mm,

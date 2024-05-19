@@ -68,7 +68,12 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
-    if (!viewModel.printEnabled) return;
+    final imgSources = await viewModel.makerNoteData;
+    final sourceCount = imgSources?.sourcePhotos.length;
+    PrintSize usingSize = size;
+    if (size == PrintSize.normal && sourceCount == 3) {
+      usingSize = PrintSize.split;
+    }
 
     logDebug("Printing photo");
 
@@ -77,7 +82,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printText = localizations.photoDetailsScreenPrinting;
 
     // Get photo and print it.
-    final pdfData = await getImagePdfWithPageSize(await viewModel.file!.readAsBytes(), size);
+    final pdfData = await getImagePdfWithPageSize(await viewModel.file!.readAsBytes(), usingSize);
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Reprint";
 
     bool success = false;

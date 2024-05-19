@@ -89,9 +89,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
-    if (!viewModel.printEnabled) return;
-
-    logDebug("Printing photo");
+    loggy.debug("Printing photo");
 
     viewModel
       ..printEnabled = false
