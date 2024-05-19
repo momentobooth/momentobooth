@@ -47,7 +47,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   void resetPrint() {
     if (!contextAccessor.buildContext.mounted) return;
     viewModel
-      ..printText = successfulPrints > 0 ? "${localizations.genericPrintButton} +1" : localizations.genericPrintButton
+      ..printText = successfulPrints > 0 ? "${localizations.genericPrintButton} ↺" : localizations.genericPrintButton
       ..printEnabled = true;
   }
 
@@ -56,9 +56,9 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
         return PrintDialog(
-          onPrintPressed: () {
+          onPrintPressed: (size, copies) {
             navigator.pop();
-            onConfirmPrint();
+            onConfirmPrint(size, copies);
           },
           onCancel: () => navigator.pop(),
         );
@@ -66,7 +66,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     );
   }
 
-  Future<void> onConfirmPrint() async {
+  Future<void> onConfirmPrint(PrintSize size, int copies) async {
     if (!viewModel.printEnabled) return;
 
     logDebug("Printing photo");
@@ -76,19 +76,19 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printText = localizations.photoDetailsScreenPrinting;
 
     // Get photo and print it.
-    final pdfData = await getImagePdfWithPageSize(await viewModel.file!.readAsBytes(), PrintSize.tiny);
+    final pdfData = await getImagePdfWithPageSize(await viewModel.file!.readAsBytes(), size);
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Reprint";
 
     bool success = false;
     try {
-      await PrintingManager.instance.printPdf(jobName, pdfData);
+      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");
     }
 
     viewModel.printText = success ? localizations.photoDetailsScreenPrinting : localizations.photoDetailsScreenPrintUnsuccesful;
-    successfulPrints += success ? 1 : 0;
+    successfulPrints += success ? copies : 0;
     Future.delayed(_printTextDuration, resetPrint);
   }
 

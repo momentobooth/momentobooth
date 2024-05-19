@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
@@ -101,6 +102,6 @@ abstract class _PhotosManagerBase with Store {
     return await writeBytesToFileLocked(filePath, outputImage!);
   }
 
-  Future<Uint8List> getOutputPDF() => getImagePDF(outputImage!);
+  Future<Uint8List> getOutputPDF(PrintSize printSize) => getImagePdfWithPageSize(outputImage!, printSize);
 
 }

@@ -9,6 +9,8 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/file_utils.dart';
+import 'package:path/path.dart' as path;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:win32/win32.dart';
@@ -42,7 +44,7 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
       },
     ));
 
-  return await doc.save();
+  return await doc.save();  
 }
 
 Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSize) async {
@@ -50,30 +52,35 @@ Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSi
   final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
   final hSettings = SettingsManager.instance.settings.hardware;
 
+  late final Uint8List pdfData;
   switch(printSize) {
     case PrintSize.normal:
-      
+      pdfData = await getImagePDF(imageData);
     case PrintSize.split:
-      
+      pdfData = await getImagePDF(imageData);
     case PrintSize.small:
       final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeHeight * mm, settings.mediaSizeSmall.mediaSizeWidth * mm,
                                     marginBottom: hSettings.printerMarginBottom * mm,
                                     marginLeft: hSettings.printerMarginLeft * mm,
                                     marginRight: hSettings.printerMarginRight * mm,
                                     marginTop: hSettings.printerMarginTop * mm,);
-      return getImageGridPDF(imageData, settings.gridSmall.x, settings.gridSmall.y, settings.gridSmall.rotate, pageFormat);
+      pdfData = await getImageGridPDF(imageData, settings.gridSmall.x, settings.gridSmall.y, settings.gridSmall.rotate, pageFormat);
     case PrintSize.tiny:
       final pageFormat = PdfPageFormat(settings.mediaSizeTiny.mediaSizeHeight * mm, settings.mediaSizeTiny.mediaSizeWidth * mm,
                                     marginBottom: hSettings.printerMarginBottom * mm,
                                     marginLeft: hSettings.printerMarginLeft * mm,
                                     marginRight: hSettings.printerMarginRight * mm,
                                     marginTop: hSettings.printerMarginTop * mm,);
-      return getImageGridPDF(imageData, settings.gridTiny.x, settings.gridTiny.y, settings.gridTiny.rotate, pageFormat);
+      pdfData = await getImageGridPDF(imageData, settings.gridTiny.x, settings.gridTiny.y, settings.gridTiny.rotate, pageFormat);
   }
+  
+  Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);
+  final filePath = path.join(outputDir.path, 'latest-print.pdf');
+  await writeBytesToFileLocked(filePath, pdfData);
+  return pdfData;
 }
 
 Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate, PdfPageFormat pageFormat) async {
-  const mm = PdfPageFormat.mm;
   pw.MemoryImage image = pw.MemoryImage(imageData);
   const fit = pw.BoxFit.contain;
 

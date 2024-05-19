@@ -10,7 +10,7 @@ import 'package:momento_booth/views/custom_widgets/dialogs/modal_dialog.dart';
 class PrintDialog extends StatefulWidget {
 
   final VoidCallback onCancel;
-  final VoidCallback onPrintPressed;
+  final void Function(PrintSize size, int copies) onPrintPressed;
   final int maxPrints;
 
   const PrintDialog({
@@ -100,7 +100,7 @@ class _PrintDialogState extends State<PrintDialog> {
         PhotoBoothFilledButton(
           title: localizations.genericPrintButton,
           icon: FluentIcons.print,
-          onPressed: widget.onPrintPressed,
+          onPressed: () => widget.onPrintPressed(printSize, numPrints),
         ),
       ],
       dialogType: ModalDialogType.input,

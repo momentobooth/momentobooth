@@ -53,8 +53,8 @@ abstract class _PrintingManagerBase with Store {
     };
   }
 
-  Future<void> printPdf(String taskName, Uint8List pdfData) async {
-    await _printingImplementation!.printPdf(taskName, pdfData);
+  Future<void> printPdf(String taskName, Uint8List pdfData, {int copies=1}) async {
+    await _printingImplementation!.printPdf(taskName, pdfData, copies: copies);
   }
 
 }
