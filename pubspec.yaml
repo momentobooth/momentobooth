@@ -81,7 +81,7 @@ dependencies:
   # Networking
   http: 1.2.1
   http_parser: 4.0.2
-  mqtt5_client: 4.2.4
+  mqtt5_client: 4.2.5
 
   # Misc
   get_it: 7.7.0

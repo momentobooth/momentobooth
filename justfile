@@ -3,7 +3,7 @@ default: install-cargo-expand install-bridge-codegen install-flutter get-deps ge
 set windows-shell := ["pwsh.exe", "-NoProfile", "-c"]
 
 ##
-# Getting started
+# Basic commands
 ##
 
 install-cargo-expand:
@@ -26,6 +26,16 @@ gen-code:
 
 gen-l10n:
   fvm flutter gen-l10n
+
+##
+# Watching
+##
+
+watch-bridge:
+  flutter_rust_bridge_codegen generate --watch
+
+watch-code:
+  fvm dart run build_runner watch --delete-conflicting-outputs
 
 ##
 # Building

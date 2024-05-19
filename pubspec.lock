@@ -881,10 +881,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: f8ec6da6faf84477d87eb87f783c73cd952e1670ff999065681f0d87d288a83b
+      sha256: "9259f7493dbb7f230673761be653a8b12f9476e4a791944cc7983a5c11767b30"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.4"
+    version: "4.2.5"
   nested:
     dependency: transitive
     description:
