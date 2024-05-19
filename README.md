@@ -124,7 +124,9 @@ Please note: Run all commands from the root folder of the repository, unless men
 Some additional notes:
 
 * If you have changed any code in the Dart or Rust project that could change the generated bridging code, you should re-run the `flutter_rust_bridge_codegen generate` or `just gen-bridge` command
+  * You can also run `flutter_rust_bridge_codegen generate --watch` or `just watch-bridge` to automatically regenerate the bridging code when you save a file
 * If you have changed any code related to JSON or TOML serialization, or MobX, you should re-run the `dart run build_runner build --delete-conflicting-outputs` or `just gen-code` command
+  * You can also run `dart run build_runner watch --delete-conflicting-outputs` or `just watch-code` to automatically regenerate the code when you save a file
 * If you have changed any code related to the localization, you should re-run the `flutter gen-l10n` of `just gen-l10n` command
 
 ### Adding a new screen using the VS Code extension Template
