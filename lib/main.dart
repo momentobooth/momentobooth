@@ -22,13 +22,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   getIt
+    ..enableRegisteringMultipleInstancesOfOneType()
+
+    // Log
     ..registerSingleton(Talker(
       settings: TalkerSettings(),
     ))
-    ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository());
+
+    // Repositories
+    ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository())
+
+    // Managers
+    ..registerSingleton(HelperLibraryInitializationManager());
 
   await initializeEnvironmentInfo();
-  await HelperLibraryInitializationManager.instance.initialize();
+  //await HelperLibraryInitializationManager.initialize();
   await SettingsManager.instance.load();
   await StatsManager.instance.load();
   await WindowManager.instance.initialize();
