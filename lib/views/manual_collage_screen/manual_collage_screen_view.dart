@@ -42,7 +42,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         clipBehavior: Clip.none,
         children: [
           Center(
-            child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain),
+            child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain, cacheWidth: 256,),
           ),
           AnimatedOpacity(
             opacity: image.isSelected ? 1 : 0,

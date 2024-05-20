@@ -30,6 +30,8 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   @observable
   bool previewTemplateShowFront = true;
   @observable
+  bool previewTemplateShowMiddle = true;
+  @observable
   bool previewTemplateShowBack = true;
   String get selectedBackTemplate => collageKey.currentState?.templates[TemplateKind.back]![previewTemplate]?.path ?? "-";
   String get selectedFrontTemplate => collageKey.currentState?.templates[TemplateKind.front]![previewTemplate]?.path ?? "-";

@@ -49,6 +49,7 @@ class PhotoCollage extends StatefulWidget {
   final double padding;
   final bool showLogo;
   final bool showBackground;
+  final bool showMiddleground;
   final bool showForeground;
   final bool singleMode;
   final int? debug;
@@ -62,6 +63,7 @@ class PhotoCollage extends StatefulWidget {
     this.showLogo = false,
     this.singleMode = false,
     this.showBackground = true,
+    this.showMiddleground = true,
     this.showForeground = true,
     this.debug,
     this.decodeCallback,
@@ -177,7 +179,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
               child: ImageWithLoaderFallback.file(templates[TemplateKind.back]?[i], fit: BoxFit.cover),
             ),
         ],
-        if (widget.debug == null)
+        if (widget.showMiddleground)
           Padding(
             padding: EdgeInsets.all(gap + widget.padding),
             child: _getInnerLayout(localizations),
@@ -187,13 +189,12 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
             decoration: BoxDecoration(
               border: Border.all(width: widget.padding, color: const ui.Color.fromARGB(126, 212, 53, 53)),
             ),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(gap + widget.padding),
-                child: _getInnerLayout(localizations),
+            child: Padding(
+              padding: EdgeInsets.all(widget.padding),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
+                ),
               ),
             ),
           ),
