@@ -9,16 +9,10 @@ import 'package:talker/talker.dart';
 
 part 'helper_library_initialization_manager.g.dart';
 
-class HelperLibraryInitializationManager extends _HelperLibraryInitializationManagerBase with _$HelperLibraryInitializationManager {
-
-  static final HelperLibraryInitializationManager instance = HelperLibraryInitializationManager._internal();
-
-  HelperLibraryInitializationManager._internal();
-
-}
+class HelperLibraryInitializationManager = HelperLibraryInitializationManagerBase with _$HelperLibraryInitializationManager;
 
 /// Class containing global state for photos in the app
-abstract class _HelperLibraryInitializationManagerBase with Store, Logger {
+abstract class HelperLibraryInitializationManagerBase with Store, Logger {
 
   final Completer<bool> _nokhwaInitializationResultCompleter = Completer<bool>();
   final Completer<bool> _gphoto2InitializationResultCompleter = Completer<bool>();
