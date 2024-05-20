@@ -40,9 +40,9 @@ pub fn cups_get_jobs_states(server_info: CupsServerInfo, queue_id: String) -> Ve
     ipp_client::get_jobs_states(uri, server_info.ignore_tls_errors)
 }
 
-pub fn cups_print_job(server_info: CupsServerInfo, queue_id: String, job_name: String, pdf_data: Vec<u8>) {
+pub fn cups_print_job(server_info: CupsServerInfo, queue_id: String, job_name: String, pdf_data: Vec<u8>, media_size: String) {
     let uri = cups_build_url(&server_info, Some(queue_id));
-    ipp_client::print_job(uri, server_info.ignore_tls_errors, job_name, pdf_data);
+    ipp_client::print_job(uri, server_info.ignore_tls_errors, job_name, pdf_data, media_size);
 }
 
 pub fn cups_release_job(server_info: CupsServerInfo, queue_id: String, job_id: i32) {

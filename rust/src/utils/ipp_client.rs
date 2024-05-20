@@ -3,6 +3,7 @@ use std::io::Read;
 use chrono::{DateTime, Utc};
 
 use ipp::prelude::*;
+use ipp::value::IppValue::Keyword;
 use regex::Regex;
 
 /// Send an IPP request to do `op` to the given `uri` and get the response.
@@ -71,11 +72,13 @@ pub fn purge_jobs(uri: String, ignore_tls_errors: bool) -> bool {
     send_ipp_request(uri, ignore_tls_errors, Operation::PurgeJobs).header().status_code().is_success()
 }
 
-pub fn print_job(uri: String, ignore_tls_errors: bool, job_name: String, pdf_data: Vec<u8>) -> bool {
+pub fn print_job(uri: String, ignore_tls_errors: bool, job_name: String, pdf_data: Vec<u8>, media_size: String) -> bool {
     let uri_p: Uri = uri.parse().unwrap();
     let pdf_data_cursor = Cursor::new(pdf_data);
     let pdf_data_payload = IppPayload::new(pdf_data_cursor);
-    let print_job = IppOperationBuilder::print_job(uri_p.clone(), pdf_data_payload).job_title(job_name);
+    let print_job = IppOperationBuilder::print_job(uri_p.clone(), pdf_data_payload)
+        .job_title(job_name)
+        .attribute(IppAttribute::new("media", Keyword(media_size)));
 
     let client = IppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
     let resp = client.send(print_job.build());

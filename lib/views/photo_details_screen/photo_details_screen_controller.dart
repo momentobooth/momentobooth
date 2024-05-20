@@ -82,7 +82,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
     bool success = false;
     try {
-      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies);
+      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");
