@@ -24,12 +24,20 @@ void main() async {
   await initialize();
 
   getIt
+    ..enableRegisteringMultipleInstancesOfOneType()
+
+    // Log
     ..registerSingleton(Talker(
       settings: TalkerSettings(),
     ))
-    ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository());
 
-  await HelperLibraryInitializationManager.instance.initialize();
+    // Repositories
+    ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository())
+
+    // Managers
+    ..registerSingleton(HelperLibraryInitializationManager());
+
+  //await HelperLibraryInitializationManager.initialize();
   await SettingsManager.instance.load();
   await StatsManager.instance.load();
   await WindowManager.instance.initialize();
