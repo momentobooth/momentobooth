@@ -22,7 +22,7 @@ dependencies:
   animated_text_kit: 4.2.2
   figma_squircle: 0.5.3
   flutter_scroll_shadow: 1.2.4
-  flutter_layout_grid: 2.0.6
+  flutter_layout_grid: 2.0.7
   pretty_qr_code: 3.3.0
   confetti: 0.7.0
   wave: 0.2.2
@@ -51,7 +51,7 @@ dependencies:
   rust_lib_momento_booth:
     path: rust_builder
   ffi: 2.1.2
-  flutter_rust_bridge: 2.0.0-dev.34
+  flutter_rust_bridge: 2.0.0-dev.35
 
   # Printing
   printing: 5.12.0

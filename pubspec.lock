@@ -450,10 +450,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_layout_grid
-      sha256: "962a7ec8c7ea46c3b10606dac9c964f9143d10daa5ca28e40f4ce14eeef85b2a"
+      sha256: "88b4f8484a0874962e27c47733ad256aeb26acc694a9f029edbef771d301885a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.6"
+    version: "2.0.7"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -479,10 +479,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "43c2c170e7120df691fb31c1c06c498784ee7cae9b495257c72c934cf4dadf3e"
+      sha256: "915d48099928282c80f7f13ad7b9bbf5808bd3c2a1ec3dc76a749aefde3025ae"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0-dev.34"
+    version: "2.0.0-dev.35"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
