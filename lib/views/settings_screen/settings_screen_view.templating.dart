@@ -38,6 +38,14 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
               buttonMargin,
               Observer(builder: (context) =>
                 ToggleSwitch(
+                  checked: viewModel.previewTemplateShowMiddle,
+                  onChanged: (v) => viewModel.previewTemplateShowMiddle = v,
+                  content: const Text("Show middleground"),
+                )
+              ),
+              buttonMargin,
+              Observer(builder: (context) =>
+                ToggleSwitch(
                   checked: viewModel.previewTemplateShowFront,
                   onChanged: (v) => viewModel.previewTemplateShowFront = v,
                   content: const Text("Show foreground"),
@@ -82,6 +90,7 @@ Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenC
               aspectRatio: 1/viewModel.collageAspectRatioSetting,
               padding: viewModel.collagePaddingSetting,
               showBackground: viewModel.previewTemplateShowBack,
+              showMiddleground: viewModel.previewTemplateShowMiddle,
               showForeground: viewModel.previewTemplateShowFront,
             ),
           ),
