@@ -19,11 +19,18 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
   late final pw.MemoryImage image = pw.MemoryImage(imageData);
   const mm = PdfPageFormat.mm;
   final settings = SettingsManager.instance.settings.hardware;
-  final pageFormat = PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
-                                    marginBottom: settings.printerMarginBottom * mm,
-                                    marginLeft: settings.printerMarginLeft * mm,
-                                    marginRight: settings.printerMarginRight * mm,
-                                    marginTop: settings.printerMarginTop * mm,);
+
+  final pageFormat = settings.printingImplementation == PrintingImplementation.cups ?
+    PdfPageFormat(settings.printLayoutSettings.mediaSizeNormal.mediaSizeHeight * mm, settings.printLayoutSettings.mediaSizeNormal.mediaSizeWidth * mm,
+                  marginBottom: settings.printerMarginBottom * mm,
+                  marginLeft: settings.printerMarginLeft * mm,
+                  marginRight: 0,
+                  marginTop: settings.printerMarginTop * mm)
+    : PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
+                  marginBottom: settings.printerMarginBottom * mm,
+                  marginLeft: settings.printerMarginLeft * mm,
+                  marginRight: settings.printerMarginRight * mm,
+                  marginTop: settings.printerMarginTop * mm,);
   const fit = pw.BoxFit.contain;
 
   // Check if photo should be rotated

@@ -8,7 +8,13 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
       _getLiveViewBlock(viewModel, controller),
       _getPhotoCaptureBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
-      _getCupsBlock(viewModel, controller),
+      Observer(builder: (_) => 
+        switch(viewModel.printingImplementationSetting) {
+          PrintingImplementation.none => const SizedBox(),
+          PrintingImplementation.flutterPrinting => _getFlutterPrintingBlock(viewModel, controller),
+          PrintingImplementation.cups => _getCupsBlock(viewModel, controller),
+        }
+      ),        
     ],
   );
 }
@@ -218,39 +224,7 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         value: () => viewModel.printingImplementationSetting,
         onChanged: controller.onPrintingImplementationChanged,
       ),
-      Observer(builder: (context) =>
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (int i = 0; i <= viewModel.flutterPrintingPrinterNamesSetting.length; i++)
-              _printerCard(viewModel, controller, "Printer ${i+1}", i),
-          ],
-        ),
-      ),
-      NumberInputCard(
-        icon: FluentIcons.page,
-        title: "Page height",
-        subtitle: 'Page format height used for printing [mm]',
-        value: () => viewModel.pageHeightSetting,
-        onFinishedEditing: controller.onPageHeightChanged,
-        smallChange: 0.1,
-      ),
-      NumberInputCard(
-        icon: FluentIcons.page,
-        title: "Page width",
-        subtitle: 'Page format width used for printing [mm]',
-        value: () => viewModel.pageWidthSetting,
-        onFinishedEditing: controller.onPageWidthChanged,
-        smallChange: 0.1,
-      ),
       _printerMargins(viewModel, controller),
-      BooleanInputCard(
-        icon: FluentIcons.settings,
-        title: "usePrinterSettings for printing",
-        subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
-        value: () => viewModel.usePrinterSettingsSetting,
-        onChanged: controller.onUsePrinterSettingsChanged,
-      ),
       NumberInputCard(
         icon: FluentIcons.queue_advanced,
         title: "Queue warning threshold",
@@ -308,6 +282,46 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
               _cupsQueuesCard(viewModel, controller, "Printer ${i + 1}", i),
           ],
         ),
+      ),
+    ],
+  );
+}
+
+Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "Flutter Printing",
+    settings: [
+      Observer(builder: (context) =>
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (int i = 0; i <= viewModel.flutterPrintingPrinterNamesSetting.length; i++)
+              _printerCard(viewModel, controller, "Printer ${i+1}", i),
+          ],
+        ),
+      ),
+      NumberInputCard(
+        icon: FluentIcons.page,
+        title: "Page height",
+        subtitle: 'Page format height used for printing [mm]',
+        value: () => viewModel.pageHeightSetting,
+        onFinishedEditing: controller.onPageHeightChanged,
+        smallChange: 0.1,
+      ),
+      NumberInputCard(
+        icon: FluentIcons.page,
+        title: "Page width",
+        subtitle: 'Page format width used for printing [mm]',
+        value: () => viewModel.pageWidthSetting,
+        onFinishedEditing: controller.onPageWidthChanged,
+        smallChange: 0.1,
+      ),
+      BooleanInputCard(
+        icon: FluentIcons.settings,
+        title: "usePrinterSettings for printing",
+        subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
+        value: () => viewModel.usePrinterSettingsSetting,
+        onChanged: controller.onUsePrinterSettingsChanged,
       ),
     ],
   );
