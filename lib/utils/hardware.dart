@@ -7,9 +7,9 @@ import 'package:ffi/ffi.dart';
 import 'package:momento_booth/exceptions/win32_exception.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -51,7 +51,7 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
       },
     ));
 
-  return await doc.save();  
+  return await doc.save();
 }
 
 Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
@@ -86,7 +86,7 @@ Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
     ));
   }
 
-  return await doc.save();  
+  return await doc.save();
 }
 
 Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSize) async {
@@ -115,7 +115,7 @@ Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSi
                                     marginTop: hSettings.printerMarginTop * mm,);
       pdfData = await getImageGridPDF(imageData, settings.gridTiny.x, settings.gridTiny.y, settings.gridTiny.rotate, pageFormat);
   }
-  
+
   Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);
   final filePath = path.join(outputDir.path, 'latest-print.pdf');
   await writeBytesToFileLocked(filePath, pdfData);

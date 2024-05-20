@@ -258,9 +258,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
       final dimension = viewModel.mediaDimensions.where((element) => element.keyword == mediaSize).firstOrNull;
       if (dimension == null) return;
       final newSize = MediaSettings(mediaSizeString: dimension.keyword, mediaSizeHeight: dimension.height, mediaSizeWidth: dimension.width);
-      loggy.debug("Setting media size for $printSize to $newSize");
+      logDebug("Setting media size for $printSize to $newSize");
 
-      switch(printSize) {
+      switch (printSize) {
         case PrintSize.normal:
           viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeNormal: newSize));
         case PrintSize.split:
