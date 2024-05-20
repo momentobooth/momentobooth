@@ -91,7 +91,7 @@ On Linux:
 All platforms:
 
 * `flutter_rust_bridge_codegen`
-  * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.34`
+  * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.0.0-dev.35`
 * Flutter SDK 3.19.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`

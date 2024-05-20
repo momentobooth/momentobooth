@@ -75,7 +75,7 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.0.0-dev.34"
+        version: "2.0.0-dev.35"
         args: --target x86_64-pc-windows-msvc
 
     # - name: Install flutter_distributor
@@ -89,7 +89,10 @@ jobs:
 
     - name: Generate Dart-to-Rust bridging code
       run: msys2 -c 'flutter_rust_bridge_codegen generate'
-      
+
+    - name: Code generation
+      run: flutter pub run build_runner build --delete-conflicting-outputs
+
     - name: Flutter Analyze
       run: flutter analyze
 
