@@ -36,7 +36,7 @@ void main() async {
     ..registerSingleton(HelperLibraryInitializationManager());
 
   await initializeEnvironmentInfo();
-  //await HelperLibraryInitializationManager.initialize();
+  await getIt<HelperLibraryInitializationManager>().initialize();
   await SettingsManager.instance.load();
   await StatsManager.instance.load();
   await WindowManager.instance.initialize();

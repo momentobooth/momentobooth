@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/exceptions/gphoto2_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
@@ -132,7 +133,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   }
 
   static Future<void> _ensureLibraryInitialized() async {
-    if (!await HelperLibraryInitializationManager.instance.gphoto2InitializationResult) {
+    if (!await getIt<HelperLibraryInitializationManager>().gphoto2InitializationResult) {
       throw GPhoto2Exception('gPhoto2 implementation cannot be used due to initialization failure.');
     }
   }
