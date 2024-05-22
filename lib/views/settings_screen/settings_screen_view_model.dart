@@ -84,7 +84,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   }
 
   Text _mediaSizeCardText(PrintDimension size) {
-    return Text("${size.name} (${size.height.toStringAsFixed(2)}×${size.width.toStringAsFixed(2)} mm)");
+    return Text("${size.name} (${size.height.toStringAsFixed(2)}↕ × ${size.width.toStringAsFixed(2)}↔ mm)");
   }
 
   final String unusedPrinterValue = "UNUSED";

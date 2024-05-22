@@ -198,8 +198,8 @@ pub fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec
         if line.starts_with("*PaperDimension") {
             let caps = re.captures(line).unwrap();
             let name = caps.get(1).unwrap().as_str().to_string();
-            let height = caps.get(2).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
-            let width = caps.get(3).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
+            let width = caps.get(2).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
+            let height = caps.get(3).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
             let format = &state[dimensions.len()];
             let dim = PrintDimension { name, height, width, keyword: format.to_string() };
             dimensions.push(dim);

@@ -21,7 +21,7 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
   final settings = SettingsManager.instance.settings.hardware;
 
   final pageFormat = settings.printingImplementation == PrintingImplementation.cups ?
-    PdfPageFormat(settings.printLayoutSettings.mediaSizeNormal.mediaSizeHeight * mm, settings.printLayoutSettings.mediaSizeNormal.mediaSizeWidth * mm,
+    PdfPageFormat(settings.printLayoutSettings.mediaSizeNormal.mediaSizeWidth * mm, settings.printLayoutSettings.mediaSizeNormal.mediaSizeHeight * mm,
                   marginBottom: settings.printerMarginBottom * mm,
                   marginLeft: settings.printerMarginLeft * mm,
                   marginRight: 0,
@@ -60,12 +60,12 @@ Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
   final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
   final hSettings = SettingsManager.instance.settings.hardware;
   final pageFormats = [
-    PdfPageFormat(settings.mediaSizeSplit.mediaSizeHeight * mm, settings.mediaSizeSplit.mediaSizeWidth * mm,
+    PdfPageFormat(settings.mediaSizeSplit.mediaSizeWidth * mm, settings.mediaSizeSplit.mediaSizeHeight * mm,
                   marginBottom: hSettings.printerMarginBottom * mm,
                   marginLeft: hSettings.printerMarginLeft * mm,
                   marginRight: 0,
                   marginTop: hSettings.printerMarginTop * mm),
-    PdfPageFormat(settings.mediaSizeSplit.mediaSizeHeight * mm, settings.mediaSizeSplit.mediaSizeWidth * mm,
+    PdfPageFormat(settings.mediaSizeSplit.mediaSizeWidth * mm, settings.mediaSizeSplit.mediaSizeHeight * mm,
                   marginBottom: hSettings.printerMarginBottom * mm,
                   marginLeft: 0,
                   marginRight: hSettings.printerMarginRight * mm,
@@ -101,14 +101,14 @@ Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSi
     case PrintSize.split:
       pdfData = await getSplitImagePDF(imageData);
     case PrintSize.small:
-      final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeHeight * mm, settings.mediaSizeSmall.mediaSizeWidth * mm,
+      final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeWidth * mm, settings.mediaSizeSmall.mediaSizeHeight * mm,
                                     marginBottom: hSettings.printerMarginBottom * mm,
                                     marginLeft: hSettings.printerMarginLeft * mm,
                                     marginRight: hSettings.printerMarginRight * mm,
                                     marginTop: hSettings.printerMarginTop * mm,);
       pdfData = await getImageGridPDF(imageData, settings.gridSmall.x, settings.gridSmall.y, settings.gridSmall.rotate, pageFormat);
     case PrintSize.tiny:
-      final pageFormat = PdfPageFormat(settings.mediaSizeTiny.mediaSizeHeight * mm, settings.mediaSizeTiny.mediaSizeWidth * mm,
+      final pageFormat = PdfPageFormat(settings.mediaSizeTiny.mediaSizeWidth * mm, settings.mediaSizeTiny.mediaSizeHeight * mm,
                                     marginBottom: hSettings.printerMarginBottom * mm,
                                     marginLeft: hSettings.printerMarginLeft * mm,
                                     marginRight: hSettings.printerMarginRight * mm,
