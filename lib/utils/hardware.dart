@@ -15,12 +15,10 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:win32/win32.dart';
 
-Future<Uint8List> getImagePDF(Uint8List imageData) async {
-  late final pw.MemoryImage image = pw.MemoryImage(imageData);
+PdfPageFormat getNormalPageSize() {
   const mm = PdfPageFormat.mm;
   final settings = SettingsManager.instance.settings.hardware;
-
-  final pageFormat = settings.printingImplementation == PrintingImplementation.cups ?
+  return settings.printingImplementation == PrintingImplementation.cups ?
     PdfPageFormat(settings.printLayoutSettings.mediaSizeNormal.mediaSizeWidth * mm, settings.printLayoutSettings.mediaSizeNormal.mediaSizeHeight * mm,
                   marginBottom: settings.printerMarginBottom * mm,
                   marginLeft: settings.printerMarginLeft * mm,
@@ -31,6 +29,11 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
                   marginLeft: settings.printerMarginLeft * mm,
                   marginRight: settings.printerMarginRight * mm,
                   marginTop: settings.printerMarginTop * mm,);
+}
+
+Future<Uint8List> getImagePDF(Uint8List imageData) async {
+  late final pw.MemoryImage image = pw.MemoryImage(imageData);
+  final pageFormat = getNormalPageSize();
   const fit = pw.BoxFit.contain;
 
   // Check if photo should be rotated
@@ -139,12 +142,29 @@ Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate
       child: pw.Image(image, fit: fit, height: cellWidth, width: cellHeight));
   }
 
-  final grid = pw.GridView(
-    crossAxisCount: x,
-    children: [
-      for (int i = 0; i < x*y; i++)
-      pw.Expanded(child: imageWidget)
-    ],
+  double cellRatio = cellHeight / cellWidth;
+  double imgRatio = image.height! / image.width!;
+  // True is height constraint, false is width constraint
+  final constraint = rotate ^ (imgRatio > cellRatio);
+  final longestSide = constraint ? cellHeight : cellWidth;
+
+  PdfPageFormat normalPageFormat = getNormalPageSize();
+  double paddingRatio = SettingsManager.instance.settings.collagePadding / 1000;
+  double normalPadding = normalPageFormat.availableHeight * paddingRatio;
+  double newPadding = longestSide * paddingRatio;
+  double paddingCompensation = normalPadding - newPadding;
+
+  final grid = pw.Padding(
+    padding: pw.EdgeInsets.all(paddingCompensation),
+    child: pw.GridView(
+      crossAxisCount: x,
+      children: [
+        for (int i = 0; i < x*y; i++)
+        pw.Expanded(
+          child: imageWidget
+        )
+      ],
+    )
   );
 
   final doc = pw.Document(title: "MomentoBooth image")
