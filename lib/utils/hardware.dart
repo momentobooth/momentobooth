@@ -97,25 +97,28 @@ Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSi
   final hSettings = SettingsManager.instance.settings.hardware;
 
   late final Uint8List pdfData;
-  switch(printSize) {
-    case PrintSize.normal:
-      pdfData = await getImagePDF(imageData);
-    case PrintSize.split:
-      pdfData = await getSplitImagePDF(imageData);
-    case PrintSize.small:
-      final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeWidth * mm, settings.mediaSizeSmall.mediaSizeHeight * mm,
-                                    marginBottom: hSettings.printerMarginBottom * mm,
-                                    marginLeft: hSettings.printerMarginLeft * mm,
-                                    marginRight: hSettings.printerMarginRight * mm,
-                                    marginTop: hSettings.printerMarginTop * mm,);
-      pdfData = await getImageGridPDF(imageData, settings.gridSmall.x, settings.gridSmall.y, settings.gridSmall.rotate, pageFormat);
-    case PrintSize.tiny:
-      final pageFormat = PdfPageFormat(settings.mediaSizeTiny.mediaSizeWidth * mm, settings.mediaSizeTiny.mediaSizeHeight * mm,
-                                    marginBottom: hSettings.printerMarginBottom * mm,
-                                    marginLeft: hSettings.printerMarginLeft * mm,
-                                    marginRight: hSettings.printerMarginRight * mm,
-                                    marginTop: hSettings.printerMarginTop * mm,);
-      pdfData = await getImageGridPDF(imageData, settings.gridTiny.x, settings.gridTiny.y, settings.gridTiny.rotate, pageFormat);
+
+  // Check what print size we have and if that profile is enabled.
+  if (printSize == PrintSize.split && settings.mediaSizeSplit.mediaSizeString.isNotEmpty) {
+    pdfData = await getSplitImagePDF(imageData);
+  }
+  else if (printSize == PrintSize.small && settings.mediaSizeSmall.mediaSizeString.isNotEmpty) {
+    final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeWidth * mm, settings.mediaSizeSmall.mediaSizeHeight * mm,
+                                  marginBottom: hSettings.printerMarginBottom * mm,
+                                  marginLeft: hSettings.printerMarginLeft * mm,
+                                  marginRight: hSettings.printerMarginRight * mm,
+                                  marginTop: hSettings.printerMarginTop * mm,);
+    pdfData = await getImageGridPDF(imageData, settings.gridSmall.x, settings.gridSmall.y, settings.gridSmall.rotate, pageFormat);
+  }
+  else if (printSize == PrintSize.tiny && settings.mediaSizeTiny.mediaSizeString.isNotEmpty) {
+    final pageFormat = PdfPageFormat(settings.mediaSizeTiny.mediaSizeWidth * mm, settings.mediaSizeTiny.mediaSizeHeight * mm,
+                                  marginBottom: hSettings.printerMarginBottom * mm,
+                                  marginLeft: hSettings.printerMarginLeft * mm,
+                                  marginRight: hSettings.printerMarginRight * mm,
+                                  marginTop: hSettings.printerMarginTop * mm,);
+    pdfData = await getImageGridPDF(imageData, settings.gridTiny.x, settings.gridTiny.y, settings.gridTiny.rotate, pageFormat);
+  } else {
+    pdfData = await getImagePDF(imageData);
   }
 
   Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);

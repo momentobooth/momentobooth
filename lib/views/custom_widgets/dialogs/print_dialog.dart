@@ -116,18 +116,21 @@ class PrintSizeChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ButtonStyle style = ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.white));
+    final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
     return SegmentedButton<PrintSize>(
       // style: style,
-      segments: const <ButtonSegment<PrintSize>>[
-        ButtonSegment<PrintSize>(
+      segments: <ButtonSegment<PrintSize>>[
+        const ButtonSegment<PrintSize>(
             value: PrintSize.normal,
             label: Text('Normal'),
             icon: Icon(Icons.looks_one_outlined)),
-        ButtonSegment<PrintSize>(
+        if (settings.mediaSizeSmall.mediaSizeString.isNotEmpty)
+        const ButtonSegment<PrintSize>(
             value: PrintSize.small,
             label: Text('Small'),
             icon: Icon(Icons.looks_two_outlined)),
-        ButtonSegment<PrintSize>(
+        if (settings.mediaSizeTiny.mediaSizeString.isNotEmpty)
+        const ButtonSegment<PrintSize>(
             value: PrintSize.tiny,
             label: Text('Tiny'),
             icon: Icon(Icons.looks_3_outlined)),

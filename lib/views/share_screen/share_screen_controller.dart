@@ -90,6 +90,11 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
+    PrintSize usingSize = size;
+    if (size == PrintSize.normal && PhotosManager.instance.chosenPhotos.length == 3) {
+      usingSize = PrintSize.split;
+    }
+
     logDebug("Printing photo");
 
     viewModel
@@ -102,7 +107,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
     bool success = false;
     try {
-      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies);
+      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");

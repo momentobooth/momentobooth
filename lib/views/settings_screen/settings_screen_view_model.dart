@@ -132,6 +132,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
     cupsPaperSizes
       ..clear()
+      ..add(const ComboBoxItem(value: "", child: Text("- Not used -")))
       ..addAll(_mediaDimensions.map((media) => ComboBoxItem(value: media.keyword, child: _mediaSizeCardText(media))).toList());
   }
   

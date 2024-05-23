@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
@@ -255,7 +256,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onCupsPageSizeChanged(String? mediaSize, PrintSize? printSize) {
     if (mediaSize != null && printSize != null) {
-      final dimension = viewModel.mediaDimensions.where((element) => element.keyword == mediaSize).firstOrNull;
+      final dimension = mediaSize == ""
+              ? const PrintDimension(name: "", height: 0, width: 0, keyword: "") 
+              : viewModel.mediaDimensions.where((element) => element.keyword == mediaSize).firstOrNull;
       if (dimension == null) return;
       final newSize = MediaSettings(mediaSizeString: dimension.keyword, mediaSizeHeight: dimension.height, mediaSizeWidth: dimension.width);
       logDebug("Setting media size for $printSize to $newSize");
