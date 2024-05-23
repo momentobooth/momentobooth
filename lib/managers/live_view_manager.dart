@@ -8,6 +8,7 @@ import 'package:momento_booth/hardware_control/live_view_streaming/live_view_sou
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/static_image_source.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -152,9 +153,10 @@ abstract class _LiveViewManagerBase with Store {
         _lastFrameWasInvalid = true;
       } else {
         // Everything seems to be fine
-        StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount;
-        StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
-        StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
+        getIt<StatsManager>()
+          ..validLiveViewFrames = liveViewState.validFrameCount
+          ..invalidLiveViewFrames = liveViewState.errorFrameCount
+          ..duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
         _lastFrameWasInvalid = false;
 
         _textureWidth = liveViewState.frameWidth;

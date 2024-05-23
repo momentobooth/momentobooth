@@ -5,6 +5,7 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
@@ -96,7 +97,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
 
     try {
       final image = await capturer.captureAndGetPhoto();
-      StatsManager.instance.addCapturedPhoto();
+      getIt<StatsManager>().addCapturedPhoto();
       PhotosManager.instance.photos.add(image);
     } catch (error) {
       logWarning(error);

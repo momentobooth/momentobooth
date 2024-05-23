@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -82,7 +83,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
         _qrUrl = event.downloadUrl;
         _uploadProgress = null;
 
-        StatsManager.instance.addUploadedPhoto();
+        getIt<StatsManager>().addUploadedPhoto();
       } else {
         logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
         _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);

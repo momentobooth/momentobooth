@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/gallery_image.dart';
@@ -65,7 +66,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
         _qrUrl = event.downloadUrl;
         _uploadProgress = null;
 
-        StatsManager.instance.addUploadedPhoto();
+        getIt<StatsManager>().addUploadedPhoto();
       } else {
         logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
         _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
