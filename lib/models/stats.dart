@@ -16,10 +16,13 @@ class Stats with _$Stats implements TomlEncodableValue {
   const factory Stats({
     @Default(0) int taps,
     @Default(0) int printedPhotos,
+    @Default(0) int printedPhotosSmall,
+    @Default(0) int printedPhotosTiny,
     @Default(0) int uploadedPhotos,
     @Default(0) int capturedPhotos,
     @Default(0) int createdSinglePhotos,
     @Default(0) int retakes,
+    @Default(0) int collageChanges,
     @Default(0) int createdMultiCapturePhotos,
   }) = _Stats;
 

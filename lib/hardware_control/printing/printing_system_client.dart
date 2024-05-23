@@ -29,7 +29,7 @@ abstract class PrintingSystemClient with Logger {
 
       await printPdfToQueue(printer.id, taskName, pdfData, printSize: printSize);
 
-      StatsManager.instance.addPrintedPhoto();
+      StatsManager.instance.addPrintedPhoto(size: printSize);
     }
   }
 

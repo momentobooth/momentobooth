@@ -38,6 +38,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       StatsManager.instance.addRetake();
       router.go(CaptureScreen.defaultRoute);
     } else {
+      StatsManager.instance.addCollageChange();
       router.go(CollageMakerScreen.defaultRoute);
     }
   }

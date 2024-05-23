@@ -26,9 +26,25 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           Observer(
             builder: (context) => TextDisplayCard(
               icon: FluentIcons.print,
-              title: "Printed pictures",
+              title: "Printed pictures – Normal size",
               subtitle: "The number of prints (e.g. 2 prints of the same pictures will count as 2 as well)",
               text: StatsManager.instance.stats.printedPhotos.toString(),
+            ),
+          ),
+          Observer(
+            builder: (context) => TextDisplayCard(
+              icon: FluentIcons.print,
+              title: "Printed pictures – Small",
+              subtitle: "The number of small prints (e.g. 2 prints of the same pictures will count as 2 as well)",
+              text: StatsManager.instance.stats.printedPhotosSmall.toString(),
+            ),
+          ),
+          Observer(
+            builder: (context) => TextDisplayCard(
+              icon: FluentIcons.print,
+              title: "Printed pictures – Tiny",
+              subtitle: "The number of tiny prints (e.g. 2 prints of the same pictures will count as 2 as well)",
+              text: StatsManager.instance.stats.printedPhotosTiny.toString(),
             ),
           ),
           Observer(
@@ -51,7 +67,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             builder: (context) => TextDisplayCard(
               icon: FluentIcons.photo2,
               title: "Created single shot pictures",
-              subtitle: "The number of single capture pictures created",
+              subtitle: "The number of single capture pictures created, including retakes",
               text: StatsManager.instance.stats.createdSinglePhotos.toString(),
             ),
           ),
@@ -67,8 +83,16 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             builder: (context) => TextDisplayCard(
               icon: FluentIcons.photo_collection,
               title: "Created multi shot pictures",
-              subtitle: "The number of multi shot pictures created",
+              subtitle: "The number of multi shot pictures created, including changes",
               text: StatsManager.instance.stats.createdMultiCapturePhotos.toString(),
+            ),
+          ),
+          Observer(
+            builder: (context) => TextDisplayCard(
+              icon: FluentIcons.undo,
+              title: "Collage changes",
+              subtitle: "The number of times a user went back to change a collage",
+              text: StatsManager.instance.stats.collageChanges.toString(),
             ),
           ),
         ],
