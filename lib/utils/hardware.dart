@@ -32,33 +32,32 @@ PdfPageFormat getNormalPageSize() {
 }
 
 Future<Uint8List> getImagePDF(Uint8List imageData) async {
-  late final pw.MemoryImage image = pw.MemoryImage(imageData);
+  final pw.MemoryImage image = pw.MemoryImage(imageData);
   final pageFormat = getNormalPageSize();
   const fit = pw.BoxFit.contain;
 
   // Check if photo should be rotated
   // Do not assume any prior knowledge about the image.
   final bool correctImgRotation = image.width! > image.height!;
-  late final pw.Image imageWidget;
-  imageWidget = correctImgRotation
+  // Height and width *must* be specified in case of rotation, else the "height" of the rotated image
+  // will be the "width" it had before the rotation. In other words, it will be too small.
+  final pw.Image imageWidget = correctImgRotation
       ? pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight)
       : pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
 
   final doc = pw.Document(title: "MomentoBooth image")
     ..addPage(pw.Page(
       pageFormat: pageFormat,
-      build: (context) {
-        return pw.Center(
-          child: correctImgRotation ? pw.Transform.rotateBox(angle: 0.5 * pi, child: imageWidget) : imageWidget,
-        );
-      },
+      build: (_) => pw.Center(
+        child: correctImgRotation ? pw.Transform.rotateBox(angle: 0.5 * pi, child: imageWidget) : imageWidget,
+      ),
     ));
 
   return await doc.save();
 }
 
 Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
-  late final pw.MemoryImage image = pw.MemoryImage(imageData);
+  final pw.MemoryImage image = pw.MemoryImage(imageData);
   const mm = PdfPageFormat.mm;
   final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
   final hSettings = SettingsManager.instance.settings.hardware;
@@ -135,13 +134,6 @@ Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate
   double cellHeight = pageFormat.availableHeight/y;
   double cellWidth = pageFormat.availableWidth/x;
 
-  pw.Widget imageWidget = pw.Image(image, fit: fit, height: cellHeight, width: cellWidth);
-  if (correctImgRotation ^ rotate) {
-    imageWidget = pw.Transform.rotateBox(
-      angle: 0.5 * pi,
-      child: pw.Image(image, fit: fit, height: cellWidth, width: cellHeight));
-  }
-
   double cellRatio = cellHeight / cellWidth;
   double imgRatio = image.height! / image.width!;
   // True is height constraint, false is width constraint
@@ -154,14 +146,32 @@ Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate
   double newPadding = longestSide * paddingRatio;
   double paddingCompensation = normalPadding - newPadding;
 
+  // Re-make cell width and height
+  cellHeight = (pageFormat.availableHeight - 2*paddingCompensation)/y;
+  cellWidth = (pageFormat.availableWidth - 2*paddingCompensation)/x;
+
+  pw.Widget imageWidget = pw.Image(image, fit: fit, height: cellHeight, width: cellWidth);
+  if (correctImgRotation ^ rotate) {
+    imageWidget = pw.Transform.rotateBox(
+      angle: 0.5 * pi,
+      child: pw.Image(image, fit: fit, height: cellWidth, width: cellHeight));
+  }
+
   final grid = pw.Padding(
     padding: pw.EdgeInsets.all(paddingCompensation),
-    child: pw.GridView(
-      crossAxisCount: x,
+    // Use nested columns & rows instead of grid, because then we can use spaceBetween alignment.
+    child: pw.Column(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
       children: [
-        for (int i = 0; i < x*y; i++)
-        pw.Expanded(
-          child: imageWidget
+        for (int i = 0; i < y; i++)
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            for (int j = 0; j < x; j++)
+            pw.Expanded(
+              child: imageWidget
+            )
+          ]
         )
       ],
     )
@@ -170,9 +180,7 @@ Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate
   final doc = pw.Document(title: "MomentoBooth image")
     ..addPage(pw.Page(
       pageFormat: pageFormat,
-      build: (context) {
-        return grid;
-      },
+      build: (_) => grid,
     ));
 
   return await doc.save();
