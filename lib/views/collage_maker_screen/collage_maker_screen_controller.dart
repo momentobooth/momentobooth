@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -67,7 +68,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     if (!viewModel.readyToContinue) return;
     // Fixme: there is a possibility that a collage will not get registered in the statistic
     // because a user leaves it and after timeout navigation to the homescreen occurs.
-    StatsManager.instance.addCreatedMultiCapturePhoto();
+    getIt<StatsManager>().addCreatedMultiCapturePhoto();
     router.go(ShareScreen.defaultRoute);
   }
 
