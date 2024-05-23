@@ -12,13 +12,7 @@ import 'package:toml/toml.dart';
 
 part 'stats_manager.g.dart';
 
-class StatsManager extends _StatsManagerBase with _$StatsManager {
-
-  static final StatsManager instance = StatsManager._internal();
-
-  StatsManager._internal();
-
-}
+class StatsManager = StatsManagerBase with _$StatsManager;
 
 enum StatFields {
   taps,
@@ -34,7 +28,7 @@ enum StatFields {
   createdMultiCapturePhotos,
 }
 
-abstract class _StatsManagerBase with Store, Logger {
+abstract class StatsManagerBase with Store, Logger {
 
   @readonly
   Stats _stats = const Stats();
@@ -149,5 +143,18 @@ abstract class _StatsManagerBase with Store, Logger {
     String filePath = join(storageDirectory.path, _fileName);
     _statsFile = File(filePath);
   }
+
+}
+
+enum StatFields {
+
+  taps,
+  liveViewFrames,
+  printedPhotos,
+  uploadedPhotos,
+  capturedPhotos,
+  createdSinglePhotos,
+  retakes,
+  createdMultiCapturePhotos,
 
 }

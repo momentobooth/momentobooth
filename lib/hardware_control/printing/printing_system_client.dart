@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:momento_booth/exceptions/printing_exception.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -29,7 +30,7 @@ abstract class PrintingSystemClient with Logger {
 
       await printPdfToQueue(printer.id, taskName, pdfData, printSize: printSize);
 
-      StatsManager.instance.addPrintedPhoto(size: printSize);
+      getIt<StatsManager>().addPrintedPhoto(size: printSize);
     }
   }
 

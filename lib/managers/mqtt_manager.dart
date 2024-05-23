@@ -62,7 +62,7 @@ abstract class _MqttManagerBase with Store, Logger {
 
     // Publish stats
     autorun((_) {
-      Stats stats = StatsManager.instance.stats;
+      Stats stats = getIt<StatsManager>().stats;
       if (_client != null) _publishStats(stats);
     });
   }
@@ -144,7 +144,7 @@ abstract class _MqttManagerBase with Store, Logger {
   }
 
   void _forcePublishAll() {
-    _publishStats(StatsManager.instance.stats, true);
+    _publishStats(getIt<StatsManager>().stats, true);
     publishScreen();
     publishCaptureState();
     publishSettings();
