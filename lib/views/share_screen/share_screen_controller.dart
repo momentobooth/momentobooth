@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
@@ -24,7 +25,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     required super.viewModel,
     required super.contextAccessor,
   }) {
-    SfxManager.instance.playShareScreenSound();
+    getIt<SfxManager>().playShareScreenSound();
   }
 
   void onClickNext() {
@@ -35,7 +36,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     logDebug("Clicked prev");
     if (PhotosManager.instance.captureMode == CaptureMode.single) {
       PhotosManager.instance.reset(advance: false);
-      StatsManager.instance.addRetake();
+      getIt<StatsManager>().addRetake();
       router.go(CaptureScreen.defaultRoute);
     } else {
       StatsManager.instance.addCollageChange();

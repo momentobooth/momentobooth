@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart' hide Listener;
 import 'package:momento_booth/extensions/go_router_extension.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/start_screen/start_screen.dart';
@@ -51,8 +52,8 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
 
   void _onActivity({bool isTap = false}) {
     if (isTap) {
-      StatsManager.instance.addTap();
-      SfxManager.instance.playClickSound();
+      getIt<StatsManager>().addTap();
+      getIt<SfxManager>().playClickSound();
     }
     _resetTimer();
   }

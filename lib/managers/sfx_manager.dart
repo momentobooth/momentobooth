@@ -5,16 +5,13 @@ import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 
 part 'sfx_manager.g.dart';
 
-class SfxManager extends _SfxManagerBase with _$SfxManager {
-  static final SfxManager instance = SfxManager._internal();
+class SfxManager = SfxManagerBase with _$SfxManager;
 
-  SfxManager._internal();
-}
-
-abstract class _SfxManagerBase with Store, Logger {
+abstract class SfxManagerBase with Store, Logger, Subsystem {
 
   AudioPlayer? _audioPlayer;
 

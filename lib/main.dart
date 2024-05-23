@@ -35,15 +35,17 @@ void main() async {
     ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository())
 
     // Managers
-    ..registerSingleton(HelperLibraryInitializationManager());
+    ..registerSingleton(HelperLibraryInitializationManager())
+    ..registerSingleton(StatsManager())
+    ..registerSingleton(SfxManager());
 
   await getIt<HelperLibraryInitializationManager>().initialize();
   await SettingsManager.instance.load();
-  await StatsManager.instance.load();
+  await getIt<StatsManager>().load();
   await WindowManager.instance.initialize();
   LiveViewManager.instance.initialize();
   MqttManager.instance.initialize();
-  await SfxManager.instance.initialize();
+  await getIt<SfxManager>().initialize();
   NotificationsManager.instance.initialize();
   PrintingManager.instance.initialize();
 
