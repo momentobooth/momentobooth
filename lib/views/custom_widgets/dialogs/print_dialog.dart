@@ -22,19 +22,21 @@ class PrintDialog extends StatefulWidget {
 
   @override
   State<PrintDialog> createState() => _PrintDialogState();
+
 }
 
 class _PrintDialogState extends State<PrintDialog> {
+
   int numPrints = 1;
   PrintSize printSize = PrintSize.normal;
 
-  int get gridX => switch(printSize) {
+  int get gridX => switch (printSize) {
     PrintSize.small => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall.x,
     PrintSize.tiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny.x,
     _ => 1,
   };
 
-  int get gridY => switch(printSize) {
+  int get gridY => switch (printSize) {
     PrintSize.small => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall.y,
     PrintSize.tiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny.y,
     _ => 1,
@@ -47,31 +49,32 @@ class _PrintDialogState extends State<PrintDialog> {
     const textStyle = TextStyle(fontWeight: FontWeight.w500, fontSize: 18, height: 1);
 
     return ModalDialog(
-      title: localizations.genericPrintButton,
+      title: localizations.printDialogTitle,
       body: Column(
         children: [
           Row(
             children: [
-              const Text(
-                "Size: ",
+              Text(
+                localizations.printDialogSizeSetting,
                 style: textStyle,
               ),
-              const SizedBox(width: 12,),
-              PrintSizeChoice(printSize: printSize, onChanged: (value) => {
-                setState(() {
-                  printSize = value;
-                })
-              })
+              const SizedBox(width: 12),
+              PrintSizeChoice(
+                printSize: printSize,
+                onChanged: (value) {
+                  setState(() => printSize = value);
+                },
+              ),
             ],
           ),
           const SizedBox(height: 16.0),
-          const Text(
-            "Number of prints:",
+          Text(
+            localizations.printDialogNoOfPrintsSetting,
             textAlign: TextAlign.left,
             style: textStyle,
           ),
           Text(
-            "$numPrints prints → ${numPrints * gridX * gridY} printed images",
+            localizations.printDialogSummary(numPrints, numPrints * gridX * gridY),
             textAlign: TextAlign.left,
           ),
           const SizedBox(height: 16.0),
@@ -81,12 +84,10 @@ class _PrintDialogState extends State<PrintDialog> {
               value: numPrints.toDouble(),
               min: 1,
               max: widget.maxPrints.toDouble(),
-              divisions: widget.maxPrints-1,
+              divisions: widget.maxPrints - 1,
               label: numPrints.toString(),
               onChanged: (value) {
-                setState(() {
-                  numPrints = value.round();
-                });
+                setState(() => numPrints = value.round());
               },
             ),
           ),
@@ -106,36 +107,40 @@ class _PrintDialogState extends State<PrintDialog> {
       dialogType: ModalDialogType.input,
     );
   }
+
 }
 
 class PrintSizeChoice extends StatelessWidget {
-  const PrintSizeChoice({super.key, required this.printSize, required this.onChanged});
+
   final PrintSize printSize;
   final ValueChanged<PrintSize> onChanged;
 
+  const PrintSizeChoice({super.key, required this.printSize, required this.onChanged});
+
   @override
   Widget build(BuildContext context) {
-    // ButtonStyle style = ButtonStyle(foregroundColor: MaterialStateProperty.all(Colors.white));
     final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
     return SegmentedButton<PrintSize>(
-      // style: style,
-      segments: <ButtonSegment<PrintSize>>[
+      segments: [
         const ButtonSegment<PrintSize>(
-            value: PrintSize.normal,
-            label: Text('Normal'),
-            icon: Icon(Icons.looks_one_outlined)),
+          value: PrintSize.normal,
+          label: Text('Normal'),
+          icon: Icon(Icons.looks_one_outlined),
+        ),
         if (settings.mediaSizeSmall.mediaSizeString.isNotEmpty)
-        const ButtonSegment<PrintSize>(
+          const ButtonSegment<PrintSize>(
             value: PrintSize.small,
             label: Text('Small'),
-            icon: Icon(Icons.looks_two_outlined)),
+            icon: Icon(Icons.looks_two_outlined),
+          ),
         if (settings.mediaSizeTiny.mediaSizeString.isNotEmpty)
-        const ButtonSegment<PrintSize>(
+          const ButtonSegment<PrintSize>(
             value: PrintSize.tiny,
             label: Text('Tiny'),
-            icon: Icon(Icons.looks_3_outlined)),
+            icon: Icon(Icons.looks_3_outlined),
+          ),
       ],
-      selected: <PrintSize>{printSize},
+      selected: {printSize},
       onSelectionChanged: (newSelection) {
         // By default there is only a single segment that can be
         // selected at one time, so its value is always the first
@@ -144,4 +149,5 @@ class PrintSizeChoice extends StatelessWidget {
       },
     );
   }
+
 }

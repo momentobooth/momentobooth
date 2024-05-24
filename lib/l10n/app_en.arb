@@ -82,6 +82,11 @@
     "printerErrorIgnoreButton": "Ignore for now",
     "printerErrorResumeQueueButton": "Resume queue",
 
+    "printDialogTitle": "Print",
+    "printDialogSizeSetting": "Size:",
+    "printDialogNoOfPrintsSetting": "Number of prints:",
+    "printDialogSummary": "{numPrints} prints → {numImages} printed images",
+
     "@multiCaptureScreenPhotoCounter": {
         "placeholders": {
             "current": {
@@ -140,6 +145,16 @@
     "@printerErrorStuckJobs": {
         "placeholders": {
             "jobCount": {
+                "type": "int"
+            }
+        }
+    },
+    "@printDialogSummary": {
+        "placeholders": {
+            "numPrints": {
+                "type": "int"
+            },
+            "numImages": {
                 "type": "int"
             }
         }
