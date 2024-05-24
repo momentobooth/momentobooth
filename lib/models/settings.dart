@@ -84,6 +84,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
     @Default("") String cupsUsername,
     @Default("") String cupsPassword,
     @Default([]) List<String> cupsPrinterQueues,
+    @JsonKey(defaultValue: PrintLayoutSettings.withDefaults) required PrintLayoutSettings printLayoutSettings,
     @Default(148) double pageHeight,
     @Default(100) double pageWidth,
     @Default(true) bool usePrinterSettings,
@@ -97,6 +98,70 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
   factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});
 
   factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
+  
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableValue {
+
+  const PrintLayoutSettings._();
+
+  const factory PrintLayoutSettings({
+    
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeNormal,
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSplit,
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSmall,
+    @JsonKey(defaultValue: GridSettings.withDefaults) required GridSettings gridSmall,
+    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeTiny,
+    @JsonKey(defaultValue: GridSettings.withDefaults) required GridSettings gridTiny,
+  }) = _PrintLayoutSettings;
+
+  factory PrintLayoutSettings.withDefaults() => PrintLayoutSettings.fromJson({});
+
+  factory PrintLayoutSettings.fromJson(Map<String, Object?> json) => _$PrintLayoutSettingsFromJson(json);
+  
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+class MediaSettings with _$MediaSettings implements TomlEncodableValue {
+
+  const MediaSettings._();
+
+  const factory MediaSettings({
+    @Default("") String mediaSizeString,
+    @Default(0.0) double mediaSizeHeight,
+    @Default(0.0) double mediaSizeWidth,
+  }) = _MediaSettings;
+
+  factory MediaSettings.withDefaults() => MediaSettings.fromJson({});
+
+  factory MediaSettings.fromJson(Map<String, Object?> json) => _$MediaSettingsFromJson(json);
+  
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+class GridSettings with _$GridSettings implements TomlEncodableValue {
+
+  const GridSettings._();
+
+  const factory GridSettings({
+    @Default(1) int x,
+    @Default(1) int y,
+    @Default(false) bool rotate,
+  }) = _GridSettings;
+
+  factory GridSettings.withDefaults() => GridSettings.fromJson({});
+
+  factory GridSettings.fromJson(Map<String, Object?> json) => _$GridSettingsFromJson(json);
   
   @override
   Map<String, dynamic> toTomlValue() => toJson();

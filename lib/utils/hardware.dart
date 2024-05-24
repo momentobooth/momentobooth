@@ -7,38 +7,183 @@ import 'package:ffi/ffi.dart';
 import 'package:momento_booth/exceptions/win32_exception.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:path/path.dart' as path;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:win32/win32.dart';
 
-Future<Uint8List> getImagePDF(Uint8List imageData) async {
-  late final pw.MemoryImage image = pw.MemoryImage(imageData);
+PdfPageFormat getNormalPageSize() {
   const mm = PdfPageFormat.mm;
   final settings = SettingsManager.instance.settings.hardware;
-  final pageFormat = PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
-                                    marginBottom: settings.printerMarginBottom * mm,
-                                    marginLeft: settings.printerMarginLeft * mm,
-                                    marginRight: settings.printerMarginRight * mm,
-                                    marginTop: settings.printerMarginTop * mm,);
+  return settings.printingImplementation == PrintingImplementation.cups ?
+    PdfPageFormat(settings.printLayoutSettings.mediaSizeNormal.mediaSizeWidth * mm, settings.printLayoutSettings.mediaSizeNormal.mediaSizeHeight * mm,
+                  marginBottom: settings.printerMarginBottom * mm,
+                  marginLeft: settings.printerMarginLeft * mm,
+                  marginRight: 0,
+                  marginTop: settings.printerMarginTop * mm)
+    : PdfPageFormat(settings.pageWidth * mm, settings.pageHeight * mm,
+                  marginBottom: settings.printerMarginBottom * mm,
+                  marginLeft: settings.printerMarginLeft * mm,
+                  marginRight: settings.printerMarginRight * mm,
+                  marginTop: settings.printerMarginTop * mm,);
+}
+
+Future<Uint8List> getImagePDF(Uint8List imageData) async {
+  final pw.MemoryImage image = pw.MemoryImage(imageData);
+  final pageFormat = getNormalPageSize();
   const fit = pw.BoxFit.contain;
 
   // Check if photo should be rotated
   // Do not assume any prior knowledge about the image.
-  final bool rotate = image.width! > image.height!;
-  late final pw.Image imageWidget;
-  imageWidget = rotate
+  final bool correctImgRotation = image.width! > image.height!;
+  // Height and width *must* be specified in case of rotation, else the "height" of the rotated image
+  // will be the "width" it had before the rotation. In other words, it will be too small.
+  final pw.Image imageWidget = correctImgRotation
       ? pw.Image(image, fit: fit, height: pageFormat.availableWidth, width: pageFormat.availableHeight)
       : pw.Image(image, fit: fit, height: pageFormat.availableHeight, width: pageFormat.availableWidth);
 
   final doc = pw.Document(title: "MomentoBooth image")
     ..addPage(pw.Page(
       pageFormat: pageFormat,
-      build: (context) {
-        return pw.Center(
-          child: rotate ? pw.Transform.rotateBox(angle: 0.5 * pi, child: imageWidget) : imageWidget,
-        );
-      },
+      build: (_) => pw.Center(
+        child: correctImgRotation ? pw.Transform.rotateBox(angle: 0.5 * pi, child: imageWidget) : imageWidget,
+      ),
+    ));
+
+  return await doc.save();
+}
+
+Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
+  final pw.MemoryImage image = pw.MemoryImage(imageData);
+  const mm = PdfPageFormat.mm;
+  final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
+  final hSettings = SettingsManager.instance.settings.hardware;
+  final pageFormats = [
+    PdfPageFormat(settings.mediaSizeSplit.mediaSizeWidth * mm, settings.mediaSizeSplit.mediaSizeHeight * mm,
+                  marginBottom: hSettings.printerMarginBottom * mm,
+                  marginLeft: hSettings.printerMarginLeft * mm,
+                  marginRight: 0,
+                  marginTop: hSettings.printerMarginTop * mm),
+    PdfPageFormat(settings.mediaSizeSplit.mediaSizeWidth * mm, settings.mediaSizeSplit.mediaSizeHeight * mm,
+                  marginBottom: hSettings.printerMarginBottom * mm,
+                  marginLeft: 0,
+                  marginRight: hSettings.printerMarginRight * mm,
+                  marginTop: hSettings.printerMarginTop * mm),
+  ];
+  const fit = pw.BoxFit.fitHeight;
+
+  final imageWidgets = [
+    pw.Image(image, fit: fit, height: pageFormats[0].availableHeight, width: pageFormats[0].availableWidth, alignment: pw.Alignment.centerLeft),
+    pw.Image(image, fit: fit, height: pageFormats[1].availableHeight, width: pageFormats[1].availableWidth, alignment: pw.Alignment.centerRight),
+  ];
+
+  final doc = pw.Document(title: "MomentoBooth image");
+  for (int i = 0; i < 2; i++){
+    doc.addPage(pw.Page(
+      pageFormat: pageFormats[i],
+      build: (_) => pw.Center(child: imageWidgets[i]),
+    ));
+  }
+
+  return await doc.save();
+}
+
+Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSize) async {
+  const mm = PdfPageFormat.mm;
+  final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
+  final hSettings = SettingsManager.instance.settings.hardware;
+
+  late final Uint8List pdfData;
+
+  // Check what print size we have and if that profile is enabled.
+  if (printSize == PrintSize.split && settings.mediaSizeSplit.mediaSizeString.isNotEmpty) {
+    pdfData = await getSplitImagePDF(imageData);
+  }
+  else if (printSize == PrintSize.small && settings.mediaSizeSmall.mediaSizeString.isNotEmpty) {
+    final pageFormat = PdfPageFormat(settings.mediaSizeSmall.mediaSizeWidth * mm, settings.mediaSizeSmall.mediaSizeHeight * mm,
+                                  marginBottom: hSettings.printerMarginBottom * mm,
+                                  marginLeft: hSettings.printerMarginLeft * mm,
+                                  marginRight: hSettings.printerMarginRight * mm,
+                                  marginTop: hSettings.printerMarginTop * mm,);
+    pdfData = await getImageGridPDF(imageData, settings.gridSmall.x, settings.gridSmall.y, settings.gridSmall.rotate, pageFormat);
+  }
+  else if (printSize == PrintSize.tiny && settings.mediaSizeTiny.mediaSizeString.isNotEmpty) {
+    final pageFormat = PdfPageFormat(settings.mediaSizeTiny.mediaSizeWidth * mm, settings.mediaSizeTiny.mediaSizeHeight * mm,
+                                  marginBottom: hSettings.printerMarginBottom * mm,
+                                  marginLeft: hSettings.printerMarginLeft * mm,
+                                  marginRight: hSettings.printerMarginRight * mm,
+                                  marginTop: hSettings.printerMarginTop * mm,);
+    pdfData = await getImageGridPDF(imageData, settings.gridTiny.x, settings.gridTiny.y, settings.gridTiny.rotate, pageFormat);
+  } else {
+    pdfData = await getImagePDF(imageData);
+  }
+
+  Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);
+  final filePath = path.join(outputDir.path, 'latest-print.pdf');
+  await writeBytesToFileLocked(filePath, pdfData);
+  return pdfData;
+}
+
+Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate, PdfPageFormat pageFormat) async {
+  pw.MemoryImage image = pw.MemoryImage(imageData);
+  const fit = pw.BoxFit.contain;
+
+  // Check if photo should be rotated
+  // Do not assume any prior knowledge about the image.
+  final bool correctImgRotation = image.width! > image.height!;
+  double cellHeight = pageFormat.availableHeight/y;
+  double cellWidth = pageFormat.availableWidth/x;
+
+  double cellRatio = cellHeight / cellWidth;
+  double imgRatio = image.height! / image.width!;
+  // True is height constraint, false is width constraint
+  final constraint = rotate ^ (imgRatio > cellRatio);
+  final longestSide = constraint ? cellHeight : cellWidth;
+
+  PdfPageFormat normalPageFormat = getNormalPageSize();
+  double paddingRatio = SettingsManager.instance.settings.collagePadding / 1000;
+  double normalPadding = normalPageFormat.availableHeight * paddingRatio;
+  double newPadding = longestSide * paddingRatio;
+  double paddingCompensation = normalPadding - newPadding;
+
+  // Re-make cell width and height
+  cellHeight = (pageFormat.availableHeight - 2*paddingCompensation)/y;
+  cellWidth = (pageFormat.availableWidth - 2*paddingCompensation)/x;
+
+  pw.Widget imageWidget = pw.Image(image, fit: fit, height: cellHeight, width: cellWidth);
+  if (correctImgRotation ^ rotate) {
+    imageWidget = pw.Transform.rotateBox(
+      angle: 0.5 * pi,
+      child: pw.Image(image, fit: fit, height: cellWidth, width: cellHeight));
+  }
+
+  final grid = pw.Padding(
+    padding: pw.EdgeInsets.all(paddingCompensation),
+    // Use nested columns & rows instead of grid, because then we can use spaceBetween alignment.
+    child: pw.Column(
+      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      children: [
+        for (int i = 0; i < y; i++)
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            for (int j = 0; j < x; j++)
+            pw.Expanded(
+              child: imageWidget
+            )
+          ]
+        )
+      ],
+    )
+  );
+
+  final doc = pw.Document(title: "MomentoBooth image")
+    ..addPage(pw.Page(
+      pageFormat: pageFormat,
+      build: (_) => grid,
     ));
 
   return await doc.save();

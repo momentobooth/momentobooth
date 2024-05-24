@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' hide context;
@@ -23,10 +24,13 @@ enum StatFields {
   taps,
   liveViewFrames,
   printedPhotos,
+  printedPhotosSmall,
+  printedPhotosTiny,
   uploadedPhotos,
   capturedPhotos,
   createdSinglePhotos,
   retakes,
+  collageChanges,
   createdMultiCapturePhotos,
 }
 
@@ -56,7 +60,16 @@ abstract class _StatsManagerBase with Store, Logger {
   void addTap() => _stats = _stats.copyWith(taps: _stats.taps + 1);
 
   @action
-  void addPrintedPhoto() => _stats = _stats.copyWith(printedPhotos: _stats.printedPhotos + 1);
+  void addPrintedPhoto({PrintSize size = PrintSize.normal}) {
+    switch(size) {
+      case PrintSize.small:
+        _stats = _stats.copyWith(printedPhotos: _stats.printedPhotosSmall + 1);
+      case PrintSize.tiny:
+        _stats = _stats.copyWith(printedPhotos: _stats.printedPhotosTiny + 1);
+      case _:
+        _stats = _stats.copyWith(printedPhotos: _stats.printedPhotos + 1);
+    }
+  }
 
   @action
   void addUploadedPhoto() => _stats = _stats.copyWith(uploadedPhotos: _stats.uploadedPhotos + 1);
@@ -69,6 +82,9 @@ abstract class _StatsManagerBase with Store, Logger {
 
   @action
   void addRetake() => _stats = _stats.copyWith(retakes: _stats.retakes + 1);
+
+  @action
+  void addCollageChange() => _stats = _stats.copyWith(retakes: _stats.collageChanges + 1);
 
   @action
   void addCreatedMultiCapturePhoto() => _stats = _stats.copyWith(createdMultiCapturePhotos: _stats.createdMultiCapturePhotos + 1);

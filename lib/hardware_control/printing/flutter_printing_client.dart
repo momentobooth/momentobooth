@@ -5,6 +5,7 @@ import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:printing/printing.dart';
 
 /// Printing implementation that uses the flutter `printing` library to print.
@@ -43,7 +44,7 @@ class FlutterPrintingClient extends PrintingSystemClient {
   }
 
   @override
-  Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData) async {
+  Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData, {PrintSize printSize = PrintSize.normal}) async {
     // Find specific printer
     final printers = await _getSelectedPrintQueues();
     Printer? printer = printers.firstWhereOrNull((printer) => printer.name == queueId);

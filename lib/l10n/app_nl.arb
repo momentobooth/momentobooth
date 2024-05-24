@@ -80,5 +80,10 @@
     "printerErrorUnknownIssueBody1": "Printer [{name}] heeft een probleem gemeld:\n\n{error}",
     "printerErrorUnknownIssueBody2": "Volg de instructies op het display van de printer, indien die er zijn. Of controleer de systeeminstellingen voor meer informatie over de fout. Klik daarna op 'Hervat wachtrij'.",
     "printerErrorIgnoreButton": "Negeer voor nu",
-    "printerErrorResumeQueueButton": "Hervat wachtrij"
+    "printerErrorResumeQueueButton": "Hervat wachtrij",
+
+    "printDialogTitle": "Afdrukken",
+    "printDialogSizeSetting": "Formaat:",
+    "printDialogNoOfPrintsSetting": "Aantal prints:",
+    "printDialogSummary": "{numPrints} prints → {numImages} geprint foto's"
 }

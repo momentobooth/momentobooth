@@ -65,6 +65,8 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   void onContinueTap() {
     if (!viewModel.readyToContinue) return;
+    // Fixme: there is a possibility that a collage will not get registered in the statistic
+    // because a user leaves it and after timeout navigation to the homescreen occurs.
     StatsManager.instance.addCreatedMultiCapturePhoto();
     router.go(ShareScreen.defaultRoute);
   }

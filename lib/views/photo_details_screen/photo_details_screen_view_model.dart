@@ -3,7 +3,11 @@ import 'dart:io';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/gallery_image.dart';
+import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
+import 'package:momento_booth/src/rust/api/images.dart';
+import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:path/path.dart' as path;
@@ -23,6 +27,9 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
 
   Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
   File? get file => File(path.join(outputDir.path, photoId));
+  Future<List<MomentoBoothExifTag>> get metadata async => await getMomentoBoothExifTagsFromFile(imageFilePath: file!.path);
+  Future<GalleryImage> get galleryImage async => GalleryImage(file: file!, exifTags: await metadata);
+  Future<MakerNoteData?> get makerNoteData async => (await galleryImage).makerNoteData;
 
   @observable
   late String printText = localizations.genericPrintButton;

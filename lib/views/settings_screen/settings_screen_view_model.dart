@@ -6,6 +6,7 @@ import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:printing/printing.dart';
@@ -57,6 +58,9 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ObservableList<ComboBoxItem<String>> cupsQueues = ObservableList<ComboBoxItem<String>>();
 
   @observable
+  ObservableList<ComboBoxItem<String>> cupsPaperSizes = ObservableList<ComboBoxItem<String>>();
+
+  @observable
   List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
 
   @observable
@@ -77,6 +81,10 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
         ],
       ),
     );
+  }
+
+  Text _mediaSizeCardText(PrintDimension size) {
+    return Text("${size.name} (${size.height.toStringAsFixed(2)}↕ × ${size.width.toStringAsFixed(2)}↔ mm)");
   }
 
   final String unusedPrinterValue = "UNUSED";
@@ -114,6 +122,19 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
       }
     }
   }
+
+  List<PrintDimension> _mediaDimensions = [];
+  List<PrintDimension> get mediaDimensions => _mediaDimensions;
+
+  Future<void> setCupsPageSizeOptions() async {
+    if (cupsPrinterQueuesSetting.isEmpty) return;
+    _mediaDimensions = await CupsClient().getPrinterMediaDimensions(cupsPrinterQueuesSetting.first);
+
+    cupsPaperSizes
+      ..clear()
+      ..add(const ComboBoxItem(value: "", child: Text("- Not used -")))
+      ..addAll(_mediaDimensions.map((media) => ComboBoxItem(value: media.keyword, child: _mediaSizeCardText(media))).toList());
+  }
   
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
   Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
@@ -148,6 +169,12 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   String get cupsUsernameSetting => SettingsManager.instance.settings.hardware.cupsUsername;
   String get cupsPasswordSetting => SettingsManager.instance.settings.hardware.cupsPassword;
   List<String> get cupsPrinterQueuesSetting => SettingsManager.instance.settings.hardware.cupsPrinterQueues;
+  MediaSettings get mediaSizeNormal => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeNormal;
+  MediaSettings get mediaSizeSplit => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeSplit;
+  MediaSettings get mediaSizeSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeSmall;
+  GridSettings get gridSmall => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall;
+  MediaSettings get mediaSizeTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.mediaSizeTiny;
+  GridSettings get gridTiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny;
   List<String> get flutterPrintingPrinterNamesSetting => SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames;
   double get pageHeightSetting => SettingsManager.instance.settings.hardware.pageHeight;
   double get pageWidthSetting => SettingsManager.instance.settings.hardware.pageWidth;
@@ -204,6 +231,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     setFlutterPrintingQueueList();
     setWebcamList();
     setCameraList();
+    setCupsPageSizeOptions();
   }
 
   // Methods

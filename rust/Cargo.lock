@@ -2968,6 +2968,7 @@ dependencies = [
  "num-derive",
  "num-traits",
  "pathsep",
+ "regex",
  "rexiv2",
  "serde_json",
  "static_init",

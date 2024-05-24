@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
@@ -246,6 +247,68 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
       }
       logDebug("Setting CUPS printer list to $currentList");
       viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: currentList));
+      // If the first printer changed, update the available page size options
+      if (printerIndex == 0) {
+        viewModel.setCupsPageSizeOptions();
+      }
+    }
+  }
+
+  void onCupsPageSizeChanged(String? mediaSize, PrintSize? printSize) {
+    if (mediaSize != null && printSize != null) {
+      final dimension = mediaSize == ""
+              ? const PrintDimension(name: "", height: 0, width: 0, keyword: "") 
+              : viewModel.mediaDimensions.where((element) => element.keyword == mediaSize).firstOrNull;
+      if (dimension == null) return;
+      final newSize = MediaSettings(mediaSizeString: dimension.keyword, mediaSizeHeight: dimension.height, mediaSizeWidth: dimension.width);
+      logDebug("Setting media size for $printSize to $newSize");
+
+      switch (printSize) {
+        case PrintSize.normal:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeNormal: newSize));
+        case PrintSize.split:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSplit: newSize));
+        case PrintSize.small:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSmall: newSize));
+        case PrintSize.tiny:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeTiny: newSize));
+      }
+    }
+  }
+
+  void onCupsGridXChanged(int? x, PrintSize? printSize) {
+    if (printSize != null && x != null) {
+      switch(printSize) {
+        case PrintSize.small:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(x: x));
+        case PrintSize.tiny:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(x: x));
+        default:
+      }
+    }
+  }
+
+  void onCupsGridYChanged(int? y, PrintSize? printSize) {
+    if (printSize != null && y != null) {
+      switch(printSize) {
+        case PrintSize.small:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(y: y));
+        case PrintSize.tiny:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(y: y));
+        default:
+      }
+    }
+  }
+
+  void onCupsGridRotateChanged(bool? rotate, PrintSize? printSize) {
+    if (printSize != null && rotate != null) {
+      switch(printSize) {
+        case PrintSize.small:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(rotate: rotate));
+        case PrintSize.tiny:
+          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(rotate: rotate));
+        default:
+      }
     }
   }
 

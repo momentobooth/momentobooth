@@ -8,7 +8,13 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
       _getLiveViewBlock(viewModel, controller),
       _getPhotoCaptureBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
-      _getCupsBlock(viewModel, controller),
+      Observer(builder: (_) => 
+        switch(viewModel.printingImplementationSetting) {
+          PrintingImplementation.none => const SizedBox(),
+          PrintingImplementation.flutterPrinting => _getFlutterPrintingBlock(viewModel, controller),
+          PrintingImplementation.cups => _getCupsBlock(viewModel, controller),
+        }
+      ),        
     ],
   );
 }
@@ -218,39 +224,7 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         value: () => viewModel.printingImplementationSetting,
         onChanged: controller.onPrintingImplementationChanged,
       ),
-      Observer(builder: (context) =>
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (int i = 0; i <= viewModel.flutterPrintingPrinterNamesSetting.length; i++)
-              _printerCard(viewModel, controller, "Printer ${i+1}", i),
-          ],
-        ),
-      ),
-      NumberInputCard(
-        icon: FluentIcons.page,
-        title: "Page height",
-        subtitle: 'Page format height used for printing [mm]',
-        value: () => viewModel.pageHeightSetting,
-        onFinishedEditing: controller.onPageHeightChanged,
-        smallChange: 0.1,
-      ),
-      NumberInputCard(
-        icon: FluentIcons.page,
-        title: "Page width",
-        subtitle: 'Page format width used for printing [mm]',
-        value: () => viewModel.pageWidthSetting,
-        onFinishedEditing: controller.onPageWidthChanged,
-        smallChange: 0.1,
-      ),
       _printerMargins(viewModel, controller),
-      BooleanInputCard(
-        icon: FluentIcons.settings,
-        title: "usePrinterSettings for printing",
-        subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
-        value: () => viewModel.usePrinterSettingsSetting,
-        onChanged: controller.onUsePrinterSettingsChanged,
-      ),
       NumberInputCard(
         icon: FluentIcons.queue_advanced,
         title: "Queue warning threshold",
@@ -294,6 +268,12 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
         controller: controller.cupsPasswordController,
         onFinishedEditing: controller.onCupsPasswordChanged,
       ),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Normal", FluentIcons.grid_view_large, PrintSize.normal, viewModel.mediaSizeNormal)),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Split", FluentIcons.cell_split_vertical, PrintSize.split, viewModel.mediaSizeSplit)),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Small", FluentIcons.grid_view_medium, PrintSize.small, viewModel.mediaSizeSmall)),
+      Observer(builder: (_) => _gridPrint(viewModel, controller, "small", PrintSize.small, viewModel.gridSmall)),
+      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Tiny", FluentIcons.grid_view_small, PrintSize.tiny, viewModel.mediaSizeTiny)),
+      Observer(builder: (_) => _gridPrint(viewModel, controller, "tiny", PrintSize.tiny, viewModel.gridTiny)),
       Observer(
         builder: (context) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,6 +282,46 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
               _cupsQueuesCard(viewModel, controller, "Printer ${i + 1}", i),
           ],
         ),
+      ),
+    ],
+  );
+}
+
+Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return FluentSettingsBlock(
+    title: "Flutter Printing",
+    settings: [
+      Observer(builder: (context) =>
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (int i = 0; i <= viewModel.flutterPrintingPrinterNamesSetting.length; i++)
+              _printerCard(viewModel, controller, "Printer ${i+1}", i),
+          ],
+        ),
+      ),
+      NumberInputCard(
+        icon: FluentIcons.page,
+        title: "Page height",
+        subtitle: 'Page format height used for printing [mm]',
+        value: () => viewModel.pageHeightSetting,
+        onFinishedEditing: controller.onPageHeightChanged,
+        smallChange: 0.1,
+      ),
+      NumberInputCard(
+        icon: FluentIcons.page,
+        title: "Page width",
+        subtitle: 'Page format width used for printing [mm]',
+        value: () => viewModel.pageWidthSetting,
+        onFinishedEditing: controller.onPageWidthChanged,
+        smallChange: 0.1,
+      ),
+      BooleanInputCard(
+        icon: FluentIcons.settings,
+        title: "usePrinterSettings for printing",
+        subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
+        value: () => viewModel.usePrinterSettingsSetting,
+        onChanged: controller.onUsePrinterSettingsChanged,
       ),
     ],
   );
@@ -467,6 +487,57 @@ FluentSettingCard _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScr
             );
           }),
         ),
+      ],
+    ),
+  );
+}
+FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, IconData icon, PrintSize size, MediaSettings currentSettings) {
+  return FluentSettingCard(
+    icon: icon,
+    title: title,
+    subtitle: size.name,
+    child: ConstrainedBox(
+      constraints: const BoxConstraints(minWidth: 150),
+      child: ComboBox<String>(
+        items: viewModel.cupsPaperSizes,
+        value: currentSettings.mediaSizeString,
+        onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
+      ),
+    ),
+  );
+}
+
+
+FluentSettingCard _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName, PrintSize size, GridSettings grid) {
+  const double numberWidth = 100;
+  const double padding = 10;
+  return FluentSettingCard(
+    icon: FluentIcons.snap_to_grid,
+    title: "Grid for $sizeName print",
+    subtitle: "Set what grid to create for creating $sizeName prints. A grid of X by Y images is generated.\nOrder: X, Y, rotate images.",
+    child: Row(
+      children: [
+        SizedBox(
+          width: numberWidth,
+          child: NumberBox<int>(
+            value: grid.x,
+            onChanged: (value) => controller.onCupsGridXChanged(value, size),
+          ),
+        ),
+        const SizedBox(width: padding),
+        SizedBox(
+          width: numberWidth,
+          child: NumberBox<int>(
+            value: grid.y,
+            onChanged: (value) => controller.onCupsGridYChanged(value, size),
+          ),
+        ),
+        const SizedBox(width: padding),
+        ToggleSwitch(
+          checked: grid.rotate,
+          onChanged: (value)  => controller.onCupsGridRotateChanged(value, size),
+        ),
+        
       ],
     ),
   );
