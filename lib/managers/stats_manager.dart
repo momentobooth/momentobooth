@@ -14,20 +14,6 @@ part 'stats_manager.g.dart';
 
 class StatsManager = StatsManagerBase with _$StatsManager;
 
-enum StatFields {
-  taps,
-  liveViewFrames,
-  printedPhotos,
-  printedPhotosSmall,
-  printedPhotosTiny,
-  uploadedPhotos,
-  capturedPhotos,
-  createdSinglePhotos,
-  retakes,
-  collageChanges,
-  createdMultiCapturePhotos,
-}
-
 abstract class StatsManagerBase with Store, Logger {
 
   @readonly
@@ -151,10 +137,13 @@ enum StatFields {
   taps,
   liveViewFrames,
   printedPhotos,
+  printedPhotosSmall,
+  printedPhotosTiny,
   uploadedPhotos,
   capturedPhotos,
   createdSinglePhotos,
   retakes,
+  collageChanges,
   createdMultiCapturePhotos,
 
 }
