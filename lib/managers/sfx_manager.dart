@@ -19,18 +19,15 @@ abstract class SfxManagerBase with Store, Logger, Subsystem {
   // Initialization //
   // ////////////// //
 
-  Future<void> initialize() async {
-    try {
-      JustAudioMediaKit.ensureInitialized();
-      AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
+  @override
+  FutureOr<Null> initializeSubsystem() async {
+    JustAudioMediaKit.ensureInitialized();
+    AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
 
-      await audioPlayer.setAsset('assets/sounds/silence.wav'); // This is a hack to make sure the audio player is initialized
-      await audioPlayer.play();
+    await audioPlayer.setAsset('assets/sounds/silence.wav'); // This is a hack to make sure the audio player is initialized
+    await audioPlayer.play();
 
-      _audioPlayer = audioPlayer;
-    } catch (e) {
-      logError("Error initializing audio player: $e");
-    }
+    _audioPlayer = audioPlayer;
   }
 
   // ////////////// //
