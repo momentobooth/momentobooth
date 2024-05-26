@@ -37,17 +37,23 @@ void main() async {
     // Managers
     ..registerSingleton(HelperLibraryInitializationManager())
     ..registerSingleton(StatsManager())
-    ..registerSingleton(SfxManager());
+    ..registerSingleton(SfxManager())
+    ..registerSingleton(SettingsManager())
+    ..registerSingleton(WindowManager())
+    ..registerSingleton(LiveViewManager())
+    ..registerSingleton(MqttManager())
+    ..registerSingleton(NotificationsManager())
+    ..registerSingleton(PrintingManager());
 
   await getIt<HelperLibraryInitializationManager>().initialize();
-  await SettingsManager.instance.load();
+  await getIt<SettingsManager>().load();
   await getIt<StatsManager>().load();
-  await WindowManager.instance.initialize();
-  LiveViewManager.instance.initialize();
-  MqttManager.instance.initialize();
+  await getIt<WindowManager>().initialize();
+  getIt<LiveViewManager>().initialize();
+  getIt<MqttManager>().initialize();
   await getIt<SfxManager>().initialize();
-  NotificationsManager.instance.initialize();
-  PrintingManager.instance.initialize();
+  getIt<NotificationsManager>().initialize();
+  getIt<PrintingManager>().initialize();
 
   String sentryDsn = await _resolveSentryDsnOverride() ?? const String.fromEnvironment("SENTRY_DSN", defaultValue: '');
   await SentryFlutter.init(

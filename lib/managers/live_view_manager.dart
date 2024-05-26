@@ -17,16 +17,10 @@ import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
 part 'live_view_manager.g.dart';
 
-class LiveViewManager extends _LiveViewManagerBase with _$LiveViewManager {
-
-  static final LiveViewManager instance = LiveViewManager._internal();
-
-  LiveViewManager._internal();
-
-}
+class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 
 /// Class containing global state for photos in the app
-abstract class _LiveViewManagerBase with Store {
+abstract class LiveViewManagerBase with Store {
 
   @readonly
   bool _lastFrameWasInvalid = false;
@@ -43,7 +37,7 @@ abstract class _LiveViewManagerBase with Store {
 
     autorun((_) {
       // To make sure mobx detects that we are responding to changes to this property
-      SettingsManager.instance.settings.hardware.liveViewWebcamId;
+      getIt<SettingsManager>().settings.hardware.liveViewWebcamId;
       _updateLiveViewSourceInstanceLock.synchronized(() async {
         await _updateConfig();
       });
@@ -91,10 +85,10 @@ abstract class _LiveViewManagerBase with Store {
   LiveViewState _liveViewState = LiveViewState.initializing;
 
   Future<void> _updateConfig() async {
-    LiveViewMethod liveViewMethodSetting = SettingsManager.instance.settings.hardware.liveViewMethod;
-    CaptureMethod captureMethodSetting = SettingsManager.instance.settings.hardware.captureMethod;
-    String gPhoto2CameraIdSetting = SettingsManager.instance.settings.hardware.gPhoto2CameraId;
-    String webcamIdSetting = SettingsManager.instance.settings.hardware.liveViewWebcamId;
+    LiveViewMethod liveViewMethodSetting = getIt<SettingsManager>().settings.hardware.liveViewMethod;
+    CaptureMethod captureMethodSetting = getIt<SettingsManager>().settings.hardware.captureMethod;
+    String gPhoto2CameraIdSetting = getIt<SettingsManager>().settings.hardware.gPhoto2CameraId;
+    String webcamIdSetting = getIt<SettingsManager>().settings.hardware.liveViewWebcamId;
 
     if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
@@ -170,9 +164,9 @@ abstract class _LiveViewManagerBase with Store {
   // /////// //
 
   void restoreLiveView() {
-    LiveViewManager.instance._updateLiveViewSourceInstanceLock.synchronized(() async {
+    _updateLiveViewSourceInstanceLock.synchronized(() async {
       _currentLiveViewMethod = null;
-      await LiveViewManager.instance._updateConfig();
+      await _updateConfig();
     });
   }
 

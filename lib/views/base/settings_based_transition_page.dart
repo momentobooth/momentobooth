@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 
@@ -23,7 +24,7 @@ final class SettingsBasedTransitionPage extends CustomTransitionPage<void> {
     bool opaque = true,
     bool barrierDismissible = false,
   }) {
-    return switch (SettingsManager.instance.settings.ui.screenTransitionAnimation) {
+    return switch (getIt<SettingsManager>().settings.ui.screenTransitionAnimation) {
       ScreenTransitionAnimation.none => SettingsBasedTransitionPage._none(key: key, child: child, opaque: opaque, barrierDismissible: barrierDismissible),
       ScreenTransitionAnimation.fadeAndScale => SettingsBasedTransitionPage._fadeAndScale(key: key, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
       ScreenTransitionAnimation.fadeAndSlide => SettingsBasedTransitionPage._fadeAndSlide(key: key, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
@@ -57,7 +58,7 @@ final class SettingsBasedTransitionPage extends CustomTransitionPage<void> {
                     opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_curvedAnimation(secondaryAnimation)),
                     child: ScaleTransition(
                       scale: Tween<double>(begin: 1.0, end: 1.3).animate(_curvedAnimation(secondaryAnimation)),
-                      filterQuality: SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
+                      filterQuality: getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
                       child: child,
                     ),
                   )
@@ -68,7 +69,7 @@ final class SettingsBasedTransitionPage extends CustomTransitionPage<void> {
                     opacity: Tween<double>(begin: 0.0, end: 1.0).animate(_curvedAnimation(animation)),
                     child: ScaleTransition(
                       scale: Tween<double>(begin: 0.95, end: 1.0).animate(_curvedAnimation(animation)),
-                      filterQuality: SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
+                      filterQuality: getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
                       child: transitionOut,
                     ),
                   )

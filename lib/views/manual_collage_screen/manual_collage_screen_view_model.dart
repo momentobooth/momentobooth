@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 
@@ -33,8 +34,8 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
   @observable
   int numSelected = 0;
 
-  double get collageAspectRatio => SettingsManager.instance.settings.collageAspectRatio;
-  double get collagePadding => SettingsManager.instance.settings.collagePadding;
+  double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
+  double get collagePadding => getIt<SettingsManager>().settings.collagePadding;
 
   int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
 
@@ -50,7 +51,7 @@ abstract class ManualCollageScreenViewModelBase extends ScreenViewModelBase with
   bool clearOnSave = false;
 
   @observable
-  String directoryString = SettingsManager.instance.settings.hardware.captureLocation;
+  String directoryString = getIt<SettingsManager>().settings.hardware.captureLocation;
 
   Directory get outputDir => Directory(directoryString);
 

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:momento_booth/exceptions/photo_capture_exception.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/file_utils.dart';
@@ -26,7 +27,7 @@ class SonyRemotePhotoCapture extends PhotoCaptureMethod with Logger {
   // and up to 500 ms in bad light. Differs per lens as well.
   // Short button presses will not trigger the capture when focussing is not complete.
   @override
-  Duration get captureDelay => Duration(milliseconds: SettingsManager.instance.settings.hardware.captureDelaySony);
+  Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelaySony);
 
   Future<void> _capture() async {
     logDebug("Sending capture command to Sony Remote");
