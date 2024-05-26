@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app/photo_booth/photo_booth.dart';
+import 'package:momento_booth/app/shell/onboarding_page.dart';
 import 'package:momento_booth/app/shell/widgets/fps_monitor.dart';
 import 'package:momento_booth/app/shell/widgets/shell_hotkey_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
@@ -30,7 +31,7 @@ class _ShellState extends State<Shell> with WindowListener {
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
     observers: [HeroController()],
-    initialLocation: '/photo_booth',
+    initialLocation: '/onboarding',
   );
 
   @override

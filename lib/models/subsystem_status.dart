@@ -13,6 +13,7 @@ class SubsystemStatus with _$SubsystemStatus {
   }) = SubsystemStatusBusy;
 
   const factory SubsystemStatus.ok({
+    String? message,
     @Default({}) Map<String, Future Function()> actions,
   }) = SubsystemStatusOk;
 
