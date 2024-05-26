@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/utils/logger.dart';
 
-mixin Subsystem {
+mixin Subsystem on Logger {
 
   final Observable<SubsystemStatus> _subsystemStatus = Observable(const SubsystemStatus.busy(message: ""));
 
@@ -21,7 +22,8 @@ mixin Subsystem {
     SubsystemStatus? result;
     try {
       result = await initializeSubsystem() ?? const SubsystemStatus.ok();
-    } catch (e) {
+    } catch (e, s) {
+      logError("Init of $runtimeType failed", e, s);
       result = SubsystemStatus.error(message: "Initialization error: $e");
     }
     _subsystemStatus.value = result;
