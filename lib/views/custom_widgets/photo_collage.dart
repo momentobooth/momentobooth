@@ -12,6 +12,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
@@ -102,7 +103,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   bool firstImageDecoded = false;
 
-  String get templatesFolder => SettingsManager.instance.settings.templatesFolder;
+  String get templatesFolder => getIt<SettingsManager>().settings.templatesFolder;
 
   var templates = {
     TemplateKind.front: <int, File?>{},
@@ -426,7 +427,7 @@ class _PhotoContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: AspectRatio(
-        aspectRatio: SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio,
+        aspectRatio: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio,
         child: FittedBox(
           fit: BoxFit.cover,
           clipBehavior: ui.Clip.hardEdge,

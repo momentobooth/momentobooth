@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/rotate_flip_crop_container.dart';
@@ -54,9 +55,9 @@ class PhotoContainer extends StatelessWidget {
     };
 
     return RotateFlipCropContainer(
-      rotate: SettingsManager.instance.settings.hardware.liveViewAndCaptureRotate,
-      flip: SettingsManager.instance.settings.hardware.captureFlip,
-      aspectRatio: SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio,
+      rotate: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureRotate,
+      flip: getIt<SettingsManager>().settings.hardware.captureFlip,
+      aspectRatio: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio,
       child: img,
     );
   }

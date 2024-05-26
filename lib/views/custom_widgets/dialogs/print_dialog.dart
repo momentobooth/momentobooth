@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
@@ -31,14 +32,14 @@ class _PrintDialogState extends State<PrintDialog> {
   PrintSize printSize = PrintSize.normal;
 
   int get gridX => switch (printSize) {
-    PrintSize.small => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall.x,
-    PrintSize.tiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny.x,
+    PrintSize.small => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridSmall.x,
+    PrintSize.tiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridTiny.x,
     _ => 1,
   };
 
   int get gridY => switch (printSize) {
-    PrintSize.small => SettingsManager.instance.settings.hardware.printLayoutSettings.gridSmall.y,
-    PrintSize.tiny => SettingsManager.instance.settings.hardware.printLayoutSettings.gridTiny.y,
+    PrintSize.small => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridSmall.y,
+    PrintSize.tiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridTiny.y,
     _ => 1,
   };
 
@@ -119,7 +120,7 @@ class PrintSizeChoice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
+    final settings = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
     return SegmentedButton<PrintSize>(
       segments: [
         const ButtonSegment<PrintSize>(

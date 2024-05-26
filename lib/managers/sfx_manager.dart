@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
@@ -41,13 +42,13 @@ abstract class SfxManagerBase with Store, Logger, Subsystem {
   }
 
   Future<void> playShareScreenSound() async {
-    String filePath = SettingsManager.instance.settings.ui.shareScreenSfxFile;
+    String filePath = getIt<SettingsManager>().settings.ui.shareScreenSfxFile;
 
     await _playSound(filePath);
   }
 
   Future<void> playClickSound() async {
-    String filePath = SettingsManager.instance.settings.ui.clickSfxFile;
+    String filePath = getIt<SettingsManager>().settings.ui.clickSfxFile;
 
     await _playSound(filePath);
   }
@@ -69,7 +70,7 @@ abstract class SfxManagerBase with Store, Logger, Subsystem {
 
   Future<void> _playSound(String filePath) async {
     try {
-      if (!SettingsManager.instance.settings.ui.enableSfx || filePath.isEmpty) return;
+      if (!getIt<SettingsManager>().settings.ui.enableSfx || filePath.isEmpty) return;
       await _audioPlayer?.stop();
       await _audioPlayer?.setFilePath(filePath);
       await _audioPlayer?.play();

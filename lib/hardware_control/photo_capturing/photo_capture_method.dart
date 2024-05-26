@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:intl/intl.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/file_utils.dart';
@@ -17,15 +18,15 @@ abstract class PhotoCaptureMethod with Logger {
   Future<PhotoCapture> captureAndGetPhoto();
 
   Future<void> storePhotoSafe(String filename, Uint8List fileData) async {
-    if (SettingsManager.instance.settings.hardware.saveCapturesToDisk) {
+    if (getIt<SettingsManager>().settings.hardware.saveCapturesToDisk) {
       try {
         DateFormat formatter = DateFormat('yyyyMMdd_HHmmss');
         String currentDateTime = formatter.format(DateTime.now());
         String fileName = "${currentDateTime}_$filename";
 
-        await Directory(SettingsManager.instance.settings.hardware.captureStorageLocation).create(recursive: true);
+        await Directory(getIt<SettingsManager>().settings.hardware.captureStorageLocation).create(recursive: true);
 
-        String filePath = path.join(SettingsManager.instance.settings.hardware.captureStorageLocation, fileName);
+        String filePath = path.join(getIt<SettingsManager>().settings.hardware.captureStorageLocation, fileName);
         await writeBytesToFileLocked(filePath, fileData);
         logDebug("Stored incoming photo to disk: $filePath");
       } catch (exception, stacktrace) {

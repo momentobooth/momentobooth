@@ -4,15 +4,8 @@ import 'package:window_manager/window_manager.dart';
 
 part 'window_manager.g.dart';
 
-class WindowManager extends _WindowManagerBase with _$WindowManager {
-
-  static final WindowManager instance = WindowManager._internal();
-
-  WindowManager._internal();
-
-}
-
-abstract class _WindowManagerBase with Store, Logger {
+class WindowManager = WindowManagerBase with _$WindowManager;
+abstract class WindowManagerBase with Store, Logger {
 
   bool _isFullScreen = false;
 
