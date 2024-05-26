@@ -57,7 +57,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   }) async {
     await _ensureLibraryInitialized();
     var split = id.split("/");
-    handleId = await gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: SettingsManager.instance.settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
+    handleId = await gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: getIt<SettingsManager>().settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
     await gphoto2StartLiveview(
       handleId: handleId!,
       operations: operations,
@@ -100,7 +100,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   @override
   Future<PhotoCapture> captureAndGetPhoto() async {
     await _ensureLibraryInitialized();
-    String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
+    String captureTarget = getIt<SettingsManager>().settings.hardware.gPhoto2CaptureTarget;
     if (handleId == null) throw GPhoto2Exception("Camera not open.");
     var capture = await gphoto2CapturePhoto(handleId: handleId!, captureTargetValue: captureTarget);
     await storePhotoSafe(capture.filename, capture.data);
@@ -114,7 +114,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   }
 
   @override
-  Duration get captureDelay => Duration(milliseconds: SettingsManager.instance.settings.hardware.captureDelayGPhoto2);
+  Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2);
 
   Future<void> autoFocus() async {
     await _ensureLibraryInitialized();
@@ -127,7 +127,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     if (handleId != null) {
       await gphoto2ClearEvents(
         handleId: handleId!,
-        downloadExtraFiles: SettingsManager.instance.settings.hardware.gPhoto2DownloadExtraFiles,
+        downloadExtraFiles: getIt<SettingsManager>().settings.hardware.gPhoto2DownloadExtraFiles,
       );
     }
   }

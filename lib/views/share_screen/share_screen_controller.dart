@@ -108,7 +108,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
     bool success = false;
     try {
-      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
+      await getIt<PrintingManager>().printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");

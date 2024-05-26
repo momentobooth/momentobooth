@@ -60,7 +60,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
 
   void _resetTimer() {
     _returnHomeTimer?.cancel();
-    int timeoutSeconds = SettingsManager.instance.settings.ui.returnToHomeTimeoutSeconds;
+    int timeoutSeconds = getIt<SettingsManager>().settings.ui.returnToHomeTimeoutSeconds;
     if (timeoutSeconds > 0) {
       _returnHomeTimer = Timer(Duration(seconds: timeoutSeconds), _goHome);
     }

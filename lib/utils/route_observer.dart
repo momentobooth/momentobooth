@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
 
@@ -12,7 +13,7 @@ class GoRouterObserver extends NavigatorObserver with Logger {
       String routeType = page.child.runtimeType.toString();
 
       logDebug("Route push: $routeType");
-      MqttManager.instance.publishScreen(routeType);
+      getIt<MqttManager>().publishScreen(routeType);
     } else {
       logDebug("Route push: Unknown (is not a CustomTransitionPage))");
     }
@@ -25,7 +26,7 @@ class GoRouterObserver extends NavigatorObserver with Logger {
       String routeType = page.child.runtimeType.toString();
 
       logDebug("Route pop: $routeType");
-      MqttManager.instance.publishScreen(routeType);
+      getIt<MqttManager>().publishScreen(routeType);
     } else {
       logDebug("Route pop: Unknown (is not a CustomTransitionPage))");
     }
@@ -62,7 +63,7 @@ class GoRouterObserver extends NavigatorObserver with Logger {
     }
 
     logDebug("Route replaced ${oldRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'} with ${newRouteChildName ?? 'Unknown (is not a CustomTransitionPage)'}");
-    if (newRouteChildName != null) MqttManager.instance.publishScreen(newRouteChildName);
+    if (newRouteChildName != null) getIt<MqttManager>().publishScreen(newRouteChildName);
   }
 
 }

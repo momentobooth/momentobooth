@@ -15,7 +15,7 @@ import 'package:win32/win32.dart';
 
 PdfPageFormat getNormalPageSize() {
   const mm = PdfPageFormat.mm;
-  final settings = SettingsManager.instance.settings.hardware;
+  final settings = getIt<SettingsManager>().settings.hardware;
   return settings.printingImplementation == PrintingImplementation.cups ?
     PdfPageFormat(settings.printLayoutSettings.mediaSizeNormal.mediaSizeWidth * mm, settings.printLayoutSettings.mediaSizeNormal.mediaSizeHeight * mm,
                   marginBottom: settings.printerMarginBottom * mm,
@@ -57,8 +57,8 @@ Future<Uint8List> getImagePDF(Uint8List imageData) async {
 Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
   final pw.MemoryImage image = pw.MemoryImage(imageData);
   const mm = PdfPageFormat.mm;
-  final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
-  final hSettings = SettingsManager.instance.settings.hardware;
+  final settings = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
+  final hSettings = getIt<SettingsManager>().settings.hardware;
   final pageFormats = [
     PdfPageFormat(settings.mediaSizeSplit.mediaSizeWidth * mm, settings.mediaSizeSplit.mediaSizeHeight * mm,
                   marginBottom: hSettings.printerMarginBottom * mm,
@@ -91,8 +91,8 @@ Future<Uint8List> getSplitImagePDF(Uint8List imageData) async {
 
 Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSize) async {
   const mm = PdfPageFormat.mm;
-  final settings = SettingsManager.instance.settings.hardware.printLayoutSettings;
-  final hSettings = SettingsManager.instance.settings.hardware;
+  final settings = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
+  final hSettings = getIt<SettingsManager>().settings.hardware;
 
   late final Uint8List pdfData;
 
@@ -119,7 +119,7 @@ Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSi
     pdfData = await getImagePDF(imageData);
   }
 
-  Directory outputDir = Directory(SettingsManager.instance.settings.output.localFolder);
+  Directory outputDir = Directory(getIt<SettingsManager>().settings.output.localFolder);
   final filePath = path.join(outputDir.path, 'latest-print.pdf');
   await writeBytesToFileLocked(filePath, pdfData);
   return pdfData;
@@ -142,7 +142,7 @@ Future<Uint8List> getImageGridPDF(Uint8List imageData, int x, int y, bool rotate
   final longestSide = constraint ? cellHeight : cellWidth;
 
   PdfPageFormat normalPageFormat = getNormalPageSize();
-  double paddingRatio = SettingsManager.instance.settings.collagePadding / 1000;
+  double paddingRatio = getIt<SettingsManager>().settings.collagePadding / 1000;
   double normalPadding = normalPageFormat.availableHeight * paddingRatio;
   double newPadding = longestSide * paddingRatio;
   double paddingCompensation = normalPadding - newPadding;

@@ -34,11 +34,11 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   static const flashEndDuration = Duration(milliseconds: 2500);
   static const minimumContinueWait = Duration(milliseconds: 1500);
 
-  int get counterStart => SettingsManager.instance.settings.captureDelaySeconds;
-  int get autoFocusMsBeforeCapture => SettingsManager.instance.settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
+  int get counterStart => getIt<SettingsManager>().settings.captureDelaySeconds;
+  int get autoFocusMsBeforeCapture => getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
 
-  double get collageAspectRatio => SettingsManager.instance.settings.collageAspectRatio;
-  double get collagePadding => SettingsManager.instance.settings.collagePadding;
+  double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
+  double get collagePadding => getIt<SettingsManager>().settings.collagePadding;
 
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
@@ -77,9 +77,9 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     PhotosManager.instance.chosen.clear();
     PhotosManager.instance.chosen.add(0);
     final stopwatch = Stopwatch()..start();
-    final pixelRatio = SettingsManager.instance.settings.output.resolutionMultiplier;
-    final format = SettingsManager.instance.settings.output.exportFormat;
-    final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
+    final pixelRatio = getIt<SettingsManager>().settings.output.resolutionMultiplier;
+    final format = getIt<SettingsManager>().settings.output.exportFormat;
+    final jpgQuality = getIt<SettingsManager>().settings.output.jpgQuality;
     await completer.future;
     PhotosManager.instance.outputImage = await collageKey.currentState!.getCollageImage(
       createdByMode: CreatedByMode.single,
@@ -95,10 +95,10 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   CaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
-      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
+    capturer = switch (getIt<SettingsManager>().settings.hardware.captureMethod) {
+      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(getIt<SettingsManager>().settings.hardware.captureLocation),
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
-      CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
+      CaptureMethod.gPhoto2 => getIt<LiveViewManager>().gPhoto2Camera!,
     };
     capturer.clearPreviousEvents();
 
@@ -106,10 +106,10 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       Future.delayed(autoFocusDelay).then((_) => (capturer as GPhoto2Camera).autoFocus());
     }
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
-    MqttManager.instance.publishCaptureState(CaptureState.countdown);
+    getIt<MqttManager>().publishCaptureState(CaptureState.countdown);
   }
 
-  String get outputFolder => SettingsManager.instance.settings.output.localFolder;
+  String get outputFolder => getIt<SettingsManager>().settings.output.localFolder;
 
   Future<void> onCounterFinished() async {
     showFlash = true;
@@ -123,13 +123,13 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   }
 
   Future<void> captureAndGetPhoto() async {
-    MqttManager.instance.publishCaptureState(CaptureState.capturing);
+    getIt<MqttManager>().publishCaptureState(CaptureState.capturing);
 
     try {
       final image = await capturer.captureAndGetPhoto();
       getIt<StatsManager>().addCapturedPhoto();
       PhotosManager.instance.photos.add(image);
-      if (SettingsManager.instance.settings.singlePhotoIsCollage) {
+      if (getIt<SettingsManager>().settings.singlePhotoIsCollage) {
         await captureCollage();
       } else {
         PhotosManager.instance.outputImage = image.data;
@@ -142,7 +142,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     } finally {
       captureComplete = true;
       navigateAfterCapture();
-      MqttManager.instance.publishCaptureState(CaptureState.idle);
+      getIt<MqttManager>().publishCaptureState(CaptureState.idle);
     }
   }
 

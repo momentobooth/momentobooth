@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lemberfpsmonitor/lemberfpsmonitor.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 
 class FpsMonitor extends StatelessWidget {
@@ -12,7 +13,7 @@ class FpsMonitor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
-      if (!SettingsManager.instance.settings.debug.showFpsCounter) return child;
+      if (!getIt<SettingsManager>().settings.debug.showFpsCounter) return child;
 
       return FPSMonitor(
         showFPSChart: true,

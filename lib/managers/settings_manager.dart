@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/logger.dart';
@@ -10,13 +11,10 @@ import 'package:toml/toml.dart';
 
 part 'settings_manager.g.dart';
 
-class SettingsManager extends _SettingsManagerBase with _$SettingsManager {
-  static final SettingsManager instance = SettingsManager._internal();
+class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
-  SettingsManager._internal();
-}
+abstract class SettingsManagerBase with Store, Logger {
 
-abstract class _SettingsManagerBase with Store, Logger {
   static const _fileName = "MomentoBooth_Settings.toml";
 
   late File _settingsFile;
@@ -35,7 +33,7 @@ abstract class _SettingsManagerBase with Store, Logger {
   Future<void> updateAndSave(Settings settings) async {
     if (settings == _settings) return;
     _settings = settings;
-    MqttManager.instance.publishSettings(settings);
+    getIt<MqttManager>().publishSettings(settings);
     await _save();
   }
 
@@ -91,4 +89,5 @@ abstract class _SettingsManagerBase with Store, Logger {
     String filePath = join(storageDirectory.path, _fileName);
     _settingsFile = File(filePath);
   }
+
 }
