@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -52,12 +53,12 @@ abstract class _PhotosManagerBase with Store {
   @computed
   bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single;
 
-  Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
+  Directory get outputDir => Directory(getIt<SettingsManager>().settings.output.localFolder);
   int photoNumber = 0;
   bool photoNumberChecked = false;
 
   final String baseName = "MomentoBooth-image";
- 
+
   Iterable<PhotoCapture> get chosenPhotos => chosen.map((choice) => photos[choice]);
 
   @action
@@ -74,19 +75,19 @@ abstract class _PhotosManagerBase with Store {
     if (!photoNumberChecked) {
       photoNumber = await findLastImageNumber() + 1;
       photoNumberChecked = true;
-    } 
-    final fileExtension = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
+    }
+    final fileExtension = getIt<SettingsManager>().settings.output.exportFormat.name.toLowerCase();
     final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$fileExtension');
     if (advance) photoNumber++;
     return await writeBytesToFileLocked(filePath, outputImage!);
   }
-  
+
   @action
   Future<int> findLastImageNumber() async {
     if (!outputDir.existsSync()) outputDir.createSync();
     final fileListBefore = await outputDir.list().toList();
     final matchingFiles = fileListBefore.whereType<File>().where((file) => basename(file.path).startsWith(baseName));
-    
+
     if (matchingFiles.isEmpty) return 0;
 
     final lastImg = matchingFiles.last;
@@ -97,7 +98,7 @@ abstract class _PhotosManagerBase with Store {
 
   Future<File> getOutputImageAsTempFile() async {
     final Directory tempDir = await getTemporaryDirectory();
-    final fileExtension = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
+    final fileExtension = getIt<SettingsManager>().settings.output.exportFormat.name.toLowerCase();
     final filePath = join(tempDir.path, 'image.$fileExtension');
     return await writeBytesToFileLocked(filePath, outputImage!);
   }

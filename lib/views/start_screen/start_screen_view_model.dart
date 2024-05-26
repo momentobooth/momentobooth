@@ -1,5 +1,6 @@
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/extensions/string_extension.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -12,11 +13,11 @@ class StartScreenViewModel = StartScreenViewModelBase with _$StartScreenViewMode
 abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
 
   @computed
-  List<LottieAnimationSettings> get introScreenLottieAnimations => SettingsManager.instance.settings.ui.introScreenLottieAnimations;
+  List<LottieAnimationSettings> get introScreenLottieAnimations => getIt<SettingsManager>().settings.ui.introScreenLottieAnimations;
 
   @computed
   String get touchToStartText =>
-      SettingsManager.instance.settings.ui.introScreenTouchToStartOverrideText.nullIfEmpty ??
+      getIt<SettingsManager>().settings.ui.introScreenTouchToStartOverrideText.nullIfEmpty ??
       localizations.startScreenTouchToStartButton;
 
   @observable

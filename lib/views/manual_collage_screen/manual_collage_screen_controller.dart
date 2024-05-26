@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -96,16 +97,16 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     }
   }
 
-  String get outputFolder => SettingsManager.instance.settings.output.localFolder;
+  String get outputFolder => getIt<SettingsManager>().settings.output.localFolder;
 
   Future<void> captureCollage() async {
     if (viewModel.numSelected < 1 || viewModel.isSaving) return;
 
     viewModel.isSaving = true;
     final stopwatch = Stopwatch()..start();
-    final pixelRatio = SettingsManager.instance.settings.output.resolutionMultiplier;
-    final format = SettingsManager.instance.settings.output.exportFormat;
-    final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
+    final pixelRatio = getIt<SettingsManager>().settings.output.resolutionMultiplier;
+    final format = getIt<SettingsManager>().settings.output.exportFormat;
+    final jpgQuality = getIt<SettingsManager>().settings.output.jpgQuality;
     final exportImage = await collageKey.currentState!.getCollageImage(
       createdByMode: CreatedByMode.manual,
       pixelRatio: pixelRatio,
@@ -120,7 +121,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
 
     if (viewModel.printOnSave) {
       String jobName = file != null ? path.basenameWithoutExtension(file.path) : "MomentoBooth Collage";
-      await PrintingManager.instance.printPdf(jobName, await getImagePDF(exportImage!));
+      await getIt<PrintingManager>().printPdf(jobName, await getImagePDF(exportImage!));
     }
     if (viewModel.clearOnSave) {
       clearSelection();

@@ -6,6 +6,7 @@ import 'package:momento_booth/app/photo_booth/photo_booth.dart';
 import 'package:momento_booth/app/shell/widgets/fps_monitor.dart';
 import 'package:momento_booth/app/shell/widgets/shell_hotkey_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
@@ -64,7 +65,7 @@ class _ShellState extends State<Shell> with WindowListener {
                 Locale('en'), // English
                 Locale('nl'), // Dutch
               ],
-              locale: SettingsManager.instance.settings.ui.language.toLocale(),
+              locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
             ),
           ),
         ),
@@ -81,7 +82,7 @@ class _ShellState extends State<Shell> with WindowListener {
 
   @override
   Future<void> onWindowClose() async {
-    await LiveViewManager.instance.gPhoto2Camera?.dispose();
+    await getIt<LiveViewManager>().gPhoto2Camera?.dispose();
     await windowManager.destroy();
   }
 

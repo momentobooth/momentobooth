@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
@@ -29,9 +30,9 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground && (widget.router.currentLocation != GalleryScreen.defaultRoute && !widget.router.currentLocation.startsWith('${PhotoDetailsScreen.defaultRoute}/'));
 
-  BackgroundBlur get _backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
+  BackgroundBlur get _backgroundBlur => getIt<SettingsManager>().settings.ui.backgroundBlur;
 
-  LiveViewState get _liveViewState => LiveViewManager.instance.liveViewState;
+  LiveViewState get _liveViewState => getIt<LiveViewManager>().liveViewState;
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (InfoBar notification in NotificationsManager.instance.notifications) ...[
+            for (InfoBar notification in getIt<NotificationsManager>().notifications) ...[
               notification,
               const SizedBox(height: 8),
             ],
@@ -87,7 +88,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   Widget get _initializingState {
     return Center(
-      child: ProgressRing(activeColor: SettingsManager.instance.settings.ui.primaryColor),
+      child: ProgressRing(activeColor: getIt<SettingsManager>().settings.ui.primaryColor),
     );
   }
 
@@ -104,7 +105,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
   }
 
   Widget get _streamingState {
-    if (LiveViewManager.instance.lastFrameWasInvalid) {
+    if (getIt<LiveViewManager>().lastFrameWasInvalid) {
       return _errorState(Colors.green, "Could not decode webcam data");
     }
 

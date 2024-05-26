@@ -26,7 +26,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
     required this.photoId,
   });
 
-  Directory get outputDir => Directory(SettingsManager.instance.settings.output.localFolder);
+  Directory get outputDir => Directory(getIt<SettingsManager>().settings.output.localFolder);
   File? get file => File(path.join(outputDir.path, photoId));
   Future<List<MomentoBoothExifTag>> get metadata async => await getMomentoBoothExifTagsFromFile(imageFilePath: file!.path);
   Future<GalleryImage> get galleryImage async => GalleryImage(file: file!, exifTags: await metadata);
@@ -47,7 +47,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   @readonly
   String? _qrUrl;
 
-  String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
+  String get ffSendUrl => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
 
   Future<void> uploadPhotoToSend() async {
     logDebug("Uploading ${file!.path}");

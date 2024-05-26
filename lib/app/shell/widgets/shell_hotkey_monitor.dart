@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 
 class ShellHotkeyMonitor extends StatelessWidget {
@@ -19,7 +20,7 @@ class ShellHotkeyMonitor extends StatelessWidget {
 
     return CallbackShortcuts(
       bindings: {
-        SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): LiveViewManager.instance.restoreLiveView,
+        SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): getIt<LiveViewManager>().restoreLiveView,
         SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () {
           if (router.currentLocation == "/settings") {
             // Make sure any overlays are also closed (e.g. dropdowns)
@@ -30,8 +31,8 @@ class ShellHotkeyMonitor extends StatelessWidget {
             router.push("/settings");
           }
         },
-        SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): WindowManager.instance.toggleFullscreen,
-        const SingleActivator(LogicalKeyboardKey.enter, alt: true): WindowManager.instance.toggleFullscreen,
+        SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): getIt<WindowManager>().toggleFullscreen,
+        const SingleActivator(LogicalKeyboardKey.enter, alt: true): getIt<WindowManager>().toggleFullscreen,
       },
       child: child,
     );

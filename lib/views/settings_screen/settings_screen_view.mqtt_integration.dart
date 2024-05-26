@@ -70,7 +70,7 @@ Widget _getConnectionBlock(SettingsScreenViewModel viewModel, SettingsScreenCont
         title: "MQTT password",
         subtitle: "The password to use when connecting to the MQTT broker. The password will be stored in plain text.",
         secretStorageKey: mqttPasswordSecretKey,
-        onSecretStored: MqttManager.instance.notifyPasswordChanged,
+        onSecretStored: getIt<MqttManager>().notifyPasswordChanged,
       ),
     ],
   );

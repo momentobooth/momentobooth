@@ -1,4 +1,5 @@
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
@@ -87,7 +88,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
     bool success = false;
     try {
-      await PrintingManager.instance.printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
+      await getIt<PrintingManager>().printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");

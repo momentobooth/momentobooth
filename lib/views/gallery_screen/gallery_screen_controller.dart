@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:http/http.dart' as http;
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/find_face_dialog.dart';
@@ -31,7 +32,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   }
 
   Future<void> filterWithFaces() async {
-    var baseUri = Uri.parse(SettingsManager.instance.settings.faceRecognition.serverUrl);
+    var baseUri = Uri.parse(getIt<SettingsManager>().settings.faceRecognition.serverUrl);
     try {
       var response = await http.get(baseUri.resolve("get-matching-imgs"));
       if (response.statusCode == 200) {

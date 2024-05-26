@@ -31,9 +31,9 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   static const flashEndDuration = Duration(milliseconds: 2500);
   static const minimumContinueWait = Duration(milliseconds: 1500);
 
-  int get counterStart => SettingsManager.instance.settings.captureDelaySeconds;
-  int get autoFocusMsBeforeCapture => SettingsManager.instance.settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
-  double get aspectRatio => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
+  int get counterStart => getIt<SettingsManager>().settings.captureDelaySeconds;
+  int get autoFocusMsBeforeCapture => getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
+  double get aspectRatio => getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio;
 
   @computed
   Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
@@ -67,10 +67,10 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   MultiCaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    capturer = switch (SettingsManager.instance.settings.hardware.captureMethod) {
+    capturer = switch (getIt<SettingsManager>().settings.hardware.captureMethod) {
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
-      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(SettingsManager.instance.settings.hardware.captureLocation),
-      CaptureMethod.gPhoto2 => LiveViewManager.instance.gPhoto2Camera!,
+      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(getIt<SettingsManager>().settings.hardware.captureLocation),
+      CaptureMethod.gPhoto2 => getIt<LiveViewManager>().gPhoto2Camera!,
     };
     capturer.clearPreviousEvents();
 
@@ -78,7 +78,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
       Future.delayed(autoFocusDelay).then((_) => (capturer as GPhoto2Camera).autoFocus());
     }
     Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
-    MqttManager.instance.publishCaptureState(CaptureState.countdown);
+    getIt<MqttManager>().publishCaptureState(CaptureState.countdown);
   }
 
   Future<void> onCounterFinished() async {
@@ -93,7 +93,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   }
 
   Future<void> captureAndGetPhoto() async {
-    MqttManager.instance.publishCaptureState(CaptureState.capturing);
+    getIt<MqttManager>().publishCaptureState(CaptureState.capturing);
 
     try {
       final image = await capturer.captureAndGetPhoto();
@@ -109,7 +109,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     } finally {
       captureComplete = true;
       navigateAfterCapture();
-      MqttManager.instance.publishCaptureState(CaptureState.idle);
+      getIt<MqttManager>().publishCaptureState(CaptureState.idle);
     }
   }
 

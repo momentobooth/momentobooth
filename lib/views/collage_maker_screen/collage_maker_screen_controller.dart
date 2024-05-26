@@ -30,7 +30,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     captureCollage();
   }
 
-  String get outputFolder => SettingsManager.instance.settings.output.localFolder;
+  String get outputFolder => getIt<SettingsManager>().settings.output.localFolder;
 
   DateTime? latestCapture;
 
@@ -45,9 +45,9 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     if (viewModel.numSelected < 1) return;
 
     final stopwatch = Stopwatch()..start();
-    final pixelRatio = SettingsManager.instance.settings.output.resolutionMultiplier;
-    final format = SettingsManager.instance.settings.output.exportFormat;
-    final jpgQuality = SettingsManager.instance.settings.output.jpgQuality;
+    final pixelRatio = getIt<SettingsManager>().settings.output.resolutionMultiplier;
+    final format = getIt<SettingsManager>().settings.output.exportFormat;
+    final jpgQuality = getIt<SettingsManager>().settings.output.jpgQuality;
     final exportImage = await collageKey.currentState!.getCollageImage(
       createdByMode: CreatedByMode.multi,
       pixelRatio: pixelRatio,

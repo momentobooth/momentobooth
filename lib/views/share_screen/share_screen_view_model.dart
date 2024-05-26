@@ -23,7 +23,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
     required super.contextAccessor,
   });
 
-  bool get displayConfetti => SettingsManager.instance.settings.ui.displayConfetti;
+  bool get displayConfetti => getIt<SettingsManager>().settings.ui.displayConfetti;
   late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
   Uint8List get outputImage => PhotosManager.instance.outputImage!;
@@ -47,7 +47,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   File? _file;
 
   List<Color>? getColors() {
-    if (!SettingsManager.instance.settings.ui.customColorConfetti) return null;
+    if (!getIt<SettingsManager>().settings.ui.customColorConfetti) return null;
     final theme = FluentTheme.of(contextAccessor.buildContext);
     final accentColor = HSLColor.fromColor(theme.accentColor);
     final List<double> lValues = [0.2, 0.4, 0.5, 0.7, 0.9, 1];
@@ -57,13 +57,13 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
     return accentColors;
   }
 
-  String get ffSendUrl => SettingsManager.instance.settings.output.firefoxSendServerUrl;
+  String get ffSendUrl => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
   CaptureMode get captureMode => PhotosManager.instance.captureMode;
   String get backText => captureMode == CaptureMode.single ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;
 
   Future<void> uploadPhotoToSend() async {
     _file ??= await PhotosManager.instance.getOutputImageAsTempFile();
-    final ext = SettingsManager.instance.settings.output.exportFormat.name.toLowerCase();
+    final ext = getIt<SettingsManager>().settings.output.exportFormat.name.toLowerCase();
 
     logDebug("Uploading ${_file!.path}");
 

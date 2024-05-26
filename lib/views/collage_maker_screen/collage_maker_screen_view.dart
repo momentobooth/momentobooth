@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
@@ -17,7 +18,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
     required super.controller,
     required super.contextAccessor,
   });
-  
+
   @override
   Widget get body {
     return Stack(
@@ -106,7 +107,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                 children: [
                   SizedBox.expand(
                     child: AspectRatio(
-                      aspectRatio: SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio,
+                      aspectRatio: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio,
                       child: PhotoContainer.memory(PhotosManager.instance.photos[i].data),
                     ),
                   ),

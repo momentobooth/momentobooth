@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/stateless_widget_base.dart';
@@ -19,12 +20,12 @@ class LiveView extends StatelessWidgetBase {
     required this.blur,
   });
 
-  ui.FilterQuality get _filterQuality => SettingsManager.instance.settings.ui.liveViewFilterQuality.toUiFilterQuality();
-  int? get _textureId => LiveViewManager.instance.textureId;
+  ui.FilterQuality get _filterQuality => getIt<SettingsManager>().settings.ui.liveViewFilterQuality.toUiFilterQuality();
+  int? get _textureId => getIt<LiveViewManager>().textureId;
 
-  Rotate get _rotate => SettingsManager.instance.settings.hardware.liveViewAndCaptureRotate;
-  Flip get _flip => SettingsManager.instance.settings.hardware.liveViewFlip;
-  double get _aspectRatio => SettingsManager.instance.settings.hardware.liveViewAndCaptureAspectRatio;
+  Rotate get _rotate => getIt<SettingsManager>().settings.hardware.liveViewAndCaptureRotate;
+  Flip get _flip => getIt<SettingsManager>().settings.hardware.liveViewFlip;
+  double get _aspectRatio => getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +34,14 @@ class LiveView extends StatelessWidgetBase {
       child: Observer(
         builder: (_) {
           if (_textureId == null) return const SizedBox.shrink();
-          
+
           return RotateFlipCropContainer(
             rotate: _rotate,
             flip: _flip,
             aspectRatio: _aspectRatio,
             child: SizedBox(
-              width: LiveViewManager.instance.textureWidth?.toDouble(),
-              height: LiveViewManager.instance.textureHeight?.toDouble(),
+              width: getIt<LiveViewManager>().textureWidth?.toDouble(),
+              height: getIt<LiveViewManager>().textureHeight?.toDouble(),
               child: LayoutBuilder(
                 builder: (context, boxConstraints) {
                   // For some reason, we get unconstrained width and height when the application has just started.
