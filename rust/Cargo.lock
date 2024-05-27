@@ -1021,9 +1021,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge"
-version = "2.0.0-dev.35"
+version = "2.0.0-dev.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9b581435c54bcb7d6d4094e8dff83bc837977ca8f89fd55c8aef86a8d3315000"
+checksum = "dbafb8df6b5ec843e2b7f19f33f5b682d6bd028bf86aef2c5e02ff3e4ea37b03"
 dependencies = [
  "allo-isolate",
  "android_logger",
@@ -1049,9 +1049,9 @@ dependencies = [
 
 [[package]]
 name = "flutter_rust_bridge_macros"
-version = "2.0.0-dev.35"
+version = "2.0.0-dev.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0a11f5b9e6453db2c6c8aaadb10592b5aa05eafd5fb1f409d6ec5c9dad9dbe1e"
+checksum = "04366488e32ac18f07982356d62860e145cc7ae28e16070f240082fe1c8ed5c9"
 dependencies = [
  "hex",
  "quote 1.0.36",
@@ -1282,9 +1282,9 @@ checksum = "d2fabcfbdc87f4758337ca535fb41a6d701b65693ce38287d856d1674551ec9b"
 
 [[package]]
 name = "gphoto2"
-version = "3.2.3"
+version = "3.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "21decdf0782c9de6df613cc6168b3e90af8afa14e7a2b05eeb4f497b1bb544e3"
+checksum = "e8cf234771f501ea9e38d8f9caf7ea3eb826c400ccf302fdcdea0cb9ecb8b0bd"
 dependencies = [
  "crossbeam-channel",
  "libc",

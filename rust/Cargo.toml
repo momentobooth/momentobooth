@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "=2.0.0-dev.35", features = ["chrono"] }
+flutter_rust_bridge = { version = "=2.0.0-dev.36", features = ["chrono"] }
 anyhow = "1.0.86"
 derive_more = "0.99.17"
 atom_table = "1.1.0"
@@ -27,7 +27,7 @@ dashmap = "5.5.3"
 turborand = "0.10.1"
 pathsep = "0.1.1"
 tokio = { version = "1.37.0", features = ["rt-multi-thread"] }
-gphoto2 = "3.2.3"
+gphoto2 = "3.3.0"
 ahash = "0.8.11"
 img-parts = "0.3.0"
 little_exif = "0.3.2"
