@@ -13,8 +13,10 @@ class OnboardingPage extends StatefulWidget {
 
 class _OnboardingPageState extends State<OnboardingPage> {
 
+  static const int _gradientCount = 3;
+
   final _random = Random();
-  final List<Gradient> _gradients = [const RadialGradient(colors: []), const RadialGradient(colors: []), const RadialGradient(colors: [])];
+  late List<Gradient> _gradients;
 
   @override
   void initState() {
@@ -32,8 +34,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   void _updateGradients() {
     setState(() {
-      for (var i = 0; i < _gradients.length; i++) {
-        _gradients[i] = RadialGradient(
+      _gradients = List.generate(_gradientCount, (i) => RadialGradient(
           radius: _random.nextDouble() / 3 + 0.30,
           center: Alignment(
             _random.nextDouble() * (_random.nextBool() ? -1 : 1),
@@ -41,17 +42,22 @@ class _OnboardingPageState extends State<OnboardingPage> {
           ),
           focalRadius: 100,
           colors: [
-            [Colors.blue.light.withOpacity(_random.nextDouble()), Colors.blue.lightest.withOpacity(_random.nextDouble())][_random.nextInt(2)],
+            _getRandomLightBlueTint(),
             const Color.fromARGB(0, 255, 255, 255),
           ],
-        );
-      }
+        ), growable: false);
     });
+  }
+
+  Color _getRandomLightBlueTint() {
+    final possibleColors = [Colors.blue.light, Colors.blue.lightest];
+    final chosenColor = possibleColors[_random.nextInt(possibleColors.length)];
+    return chosenColor.withOpacity(_random.nextDouble());
   }
 
   @override
   Widget build(BuildContext context) {
-    final FluentThemeData themeData = FluentTheme.of(context);
+    //final FluentThemeData themeData = FluentTheme.of(context);
 
     return Stack(
       fit: StackFit.expand,
