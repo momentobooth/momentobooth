@@ -363,7 +363,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     //final jpg = img.encodeJpg(dartImage, quality: jpgQuality);
 
     // Rotate image and encode to JPEG
-    final rawImage = RawImage(format: RawImageFormat.rgba, data: byteData!.buffer.asUint8List(), width: image.width, height: image.height);
+    final rawImage = RawImage(format: RawImageFormat.rgba, data: byteData!.buffer.asUint8List(), width: BigInt.from(image.width), height: BigInt.from(image.height));
     final List<ImageOperation> operationsBeforeEncoding = rotation == 1 ? [const ImageOperation.rotate(Rotation.rotate270)] : [];
 
     final stopwatch = Stopwatch()..start();

@@ -16,7 +16,7 @@ class NokhwaCamera extends LiveViewSource {
   @override
   final String friendlyName;
 
-  late int handleId;
+  late BigInt handleId;
 
   NokhwaCamera({required this.id, required this.friendlyName});
 
@@ -44,7 +44,7 @@ class NokhwaCamera extends LiveViewSource {
 
   @override
   Future<void> openStream({
-    required int texturePtr,
+    required BigInt texturePtr,
     List<ImageOperation> operations = const [],
   }) async {
     await _ensureLibraryInitialized();

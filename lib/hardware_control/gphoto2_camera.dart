@@ -22,7 +22,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   @override
   final String friendlyName;
 
-  late int handleId;
+  late BigInt handleId;
   bool isOpened = false;
 
   GPhoto2Camera({required this.id, required this.friendlyName});
@@ -51,7 +51,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   @override
   Future<void> openStream({
-    required int texturePtr,
+    required BigInt texturePtr,
     List<ImageOperation> operations = const [],
   }) async {
     await _ensureLibraryInitialized();
@@ -92,7 +92,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     String captureTarget = SettingsManager.instance.settings.hardware.gPhoto2CaptureTarget;
     var capture = await gphoto2CapturePhoto(handleId: handleId, captureTargetValue: captureTarget);
     await storePhotoSafe(capture.filename, capture.data);
-    
+
     unawaited(clearPreviousEvents());
 
     return PhotoCapture(

@@ -16,13 +16,13 @@ class StaticImageSource extends LiveViewSource {
   @override
   final String friendlyName = '';
 
-  late final int _imageWidth, _imageHeight;
+  late final BigInt _imageWidth, _imageHeight;
 
   StaticImageSource();
 
   @override
   Future<void> openStream({
-    required int texturePtr,
+    required BigInt texturePtr,
     List<ImageOperation> operations = const [], // TODO: Implement
   }) async {
     RawImage image = await _getPlaceholder();
@@ -44,9 +44,9 @@ class StaticImageSource extends LiveViewSource {
   @override
   Future<CameraState?> getCameraState() async => CameraState(
     isStreaming: true,
-    validFrameCount: 1,
-    errorFrameCount: 0,
-    duplicateFrameCount: 0,
+    validFrameCount: BigInt.from(1),
+    errorFrameCount: BigInt.zero,
+    duplicateFrameCount: BigInt.zero,
     lastFrameWasValid: true,
     frameWidth: _imageWidth,
     frameHeight: _imageHeight,
@@ -58,8 +58,8 @@ class StaticImageSource extends LiveViewSource {
 
     return RawImage(
       format: RawImageFormat.rgba,
-      width: image.width,
-      height: image.height,
+      width: BigInt.from(image.width),
+      height: BigInt.from(image.height),
       data: (await image.toByteData())!.buffer.asUint8List(),
     );
   }

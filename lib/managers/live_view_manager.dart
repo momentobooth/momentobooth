@@ -128,7 +128,7 @@ abstract class _LiveViewManagerBase with Store {
 
       await _ensureTextureAvailable();
       await _currentLiveViewSource?.openStream(
-        texturePtr: _texturePointer!,
+        texturePtr: BigInt.from(_texturePointer!),
       );
 
       _liveViewState = LiveViewState.streaming;
@@ -152,13 +152,13 @@ abstract class _LiveViewManagerBase with Store {
         _lastFrameWasInvalid = true;
       } else {
         // Everything seems to be fine
-        StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount;
-        StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
-        StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
+        StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount.toInt();
+        StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount.toInt();
+        StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount.toInt();
         _lastFrameWasInvalid = false;
 
-        _textureWidth = liveViewState.frameWidth;
-        _textureHeight = liveViewState.frameHeight;
+        _textureWidth = liveViewState.frameWidth?.toInt();
+        _textureHeight = liveViewState.frameHeight?.toInt();
       }
     });
   }

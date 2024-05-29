@@ -12,13 +12,13 @@ class NoiseSource extends LiveViewSource {
   @override
   final String friendlyName = '';
 
-  late int _handleId;
+  late BigInt _handleId;
 
   NoiseSource();
 
   @override
   Future<void> openStream({
-    required int texturePtr,
+    required BigInt texturePtr,
     List<ImageOperation> operations = const [], // TODO: Implement
   }) async {
     _handleId = await noiseOpen(
