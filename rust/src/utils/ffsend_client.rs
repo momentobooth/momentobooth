@@ -9,14 +9,14 @@ use crate::frb_generated::StreamSink;
 // Functions //
 // ///////// //
 
-pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, max_downloads: Option<u8>, expires_after_seconds: Option<usize>, update_sink: StreamSink<FfSendTransferProgress>) {
+pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, max_downloads: Option<u8>, expires_after_seconds: Option<u32>, update_sink: StreamSink<FfSendTransferProgress>) {
     // Prepare upload
     let version = ffsend_api::api::Version::V3;
     let url = Url::parse(host_url.as_str()).expect("Could not parse host URL");
     let file = PathBuf::from_str(file_path.as_str()).expect("Could not parse upload file path");
     let name = download_filename;
     let password = None;
-    let params = Some(ParamsData::from(max_downloads, expires_after_seconds));
+    let params = Some(ParamsData::from(max_downloads, expires_after_seconds.map(|n| n as usize)));
 
     let action = Upload::new(version, url, file, name, password, params);
     let client = Client::new(ClientConfig::default(), true);
@@ -48,8 +48,8 @@ pub fn delete_file(file_id: String) {
 #[derive(Debug, Clone)]
 pub struct FfSendTransferProgress {
     pub is_finished: bool,
-    pub transferred_bytes: u64,
-    pub total_bytes: Option<u64>,
+    pub transferred_bytes: u32,
+    pub total_bytes: Option<u32>,
     pub download_url: Option<String>,
     pub expire_date: Option<DateTime<Utc>>,
 
@@ -87,12 +87,12 @@ impl FfSendTransferProgressReporter {
 
 impl ProgressReporter for FfSendTransferProgressReporter {
     fn start(&mut self, total: u64) {
-        self.current_progress.total_bytes = Some(total);
+        self.current_progress.total_bytes = Some(total as u32);
         self.stream_sink.add(self.current_progress.clone());
     }
 
     fn progress(&mut self, progress: u64) {
-        self.current_progress.transferred_bytes = progress;
+        self.current_progress.transferred_bytes = progress as u32;
         self.stream_sink.add(self.current_progress.clone());
     }
 

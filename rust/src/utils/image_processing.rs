@@ -39,8 +39,8 @@ pub fn execute_operations(image: &RawImage, operations: &Vec<ImageOperation>) ->
         }
     }
 
-    let width = img_buf.width() as usize;
-    let height = img_buf.height() as usize;
+    let width = img_buf.width() as u32;
+    let height = img_buf.height() as u32;
     let output_buf = image::ImageBuffer::into_vec(img_buf);
     RawImage::new_from_rgba_data(output_buf, width, height)
 }

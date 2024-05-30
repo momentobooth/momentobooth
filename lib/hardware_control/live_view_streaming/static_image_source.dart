@@ -22,7 +22,7 @@ class StaticImageSource extends LiveViewSource {
 
   @override
   Future<void> openStream({
-    required int texturePtr,
+    required BigInt texturePtr,
     List<ImageOperation> operations = const [], // TODO: Implement
   }) async {
     RawImage image = await _getPlaceholder();

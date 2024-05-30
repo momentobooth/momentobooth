@@ -18,7 +18,7 @@ class NoiseSource extends LiveViewSource {
 
   @override
   Future<void> openStream({
-    required int texturePtr,
+    required BigInt texturePtr,
     List<ImageOperation> operations = const [], // TODO: Implement
   }) async {
     _handleId = await noiseOpen(

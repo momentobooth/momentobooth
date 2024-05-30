@@ -31,13 +31,13 @@ pub type FlutterRgbaRendererPluginOnRgba = unsafe extern "C" fn(
 #[derive(Clone)]
 pub struct FlutterTexture {
     ptr: usize, // TextureRgba pointer in flutter native.
-    width: usize,
-    height: usize,
+    width: u32,
+    height: u32,
     on_rgba_func: Option<Symbol<'static, FlutterRgbaRendererPluginOnRgba>>,
 }
 
 impl FlutterTexture {
-    pub fn new(ptr: usize, width: usize, height: usize) -> Self {
+    pub fn new(ptr: usize, width: u32, height: u32) -> Self {
         let on_rgba_func = match &*TEXTURE_RGBA_RENDERER_PLUGIN {
             Ok(lib) => {
                 let find_sym_res = unsafe {
@@ -66,7 +66,7 @@ impl FlutterTexture {
 }
 
 impl FlutterTexture {
-    pub fn set_size(&mut self, width: usize, height: usize) {
+    pub fn set_size(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
     }

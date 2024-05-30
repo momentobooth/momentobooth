@@ -128,7 +128,7 @@ abstract class _LiveViewManagerBase with Store {
 
       await _ensureTextureAvailable();
       await _currentLiveViewSource?.openStream(
-        texturePtr: _texturePointer!,
+        texturePtr: BigInt.from(_texturePointer!),
       );
 
       _liveViewState = LiveViewState.streaming;

@@ -3,7 +3,7 @@ use turborand::{rng::Rng, GenCore};
 
 use crate::models::images::RawImage;
 
-pub fn start_and_get_handle<F>(width: usize, height: usize, frame_callback: F) -> WhiteNoiseGeneratorHandle where F: Fn(RawImage) + Send + 'static {
+pub fn start_and_get_handle<F>(width: u32, height: u32, frame_callback: F) -> WhiteNoiseGeneratorHandle where F: Fn(RawImage) + Send + 'static {
     let frame_wait_time = time::Duration::from_millis(20);
 
     let should_stop = Arc::new(AtomicBool::new(false));
@@ -25,8 +25,8 @@ pub fn start_and_get_handle<F>(width: usize, height: usize, frame_callback: F) -
     }
 }
 
-pub fn generate_frame(rng: &Rng, width: usize, height: usize) -> RawImage {
-    let mut noise = Vec::with_capacity(width*height*4);
+pub fn generate_frame(rng: &Rng, width: u32, height: u32) -> RawImage {
+    let mut noise = Vec::with_capacity((width*height*4) as usize);
     for _ in 0..width*height {
         let pixel_value: u8 = rng.gen_u8();
         noise.push(pixel_value);

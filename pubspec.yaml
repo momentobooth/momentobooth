@@ -17,7 +17,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.8.7
-  go_router: 14.1.2
+  go_router: 14.1.4
   flutter_svg: 2.0.10+1
   animated_text_kit: 4.2.2
   figma_squircle: 0.5.3
@@ -37,7 +37,7 @@ dependencies:
 
   # Printscreen/Image processing
   screenshot: 3.0.0
-  image: 4.1.7
+  image: 4.2.0
 
   # MVC
   mobx: 2.3.3+2
@@ -51,7 +51,7 @@ dependencies:
   rust_lib_momento_booth:
     path: rust_builder
   ffi: 2.1.2
-  flutter_rust_bridge: 2.0.0-dev.35
+  flutter_rust_bridge: 2.0.0-dev.37
 
   # Printing
   printing: 5.12.0
@@ -65,8 +65,8 @@ dependencies:
   win32: 5.5.1
 
   # Log and error handling
-  talker: 4.2.0
-  talker_flutter: 4.2.0
+  talker: 4.2.3
+  talker_flutter: 4.2.3
   sentry_flutter: 8.2.0
 
   # Sound output
@@ -75,7 +75,7 @@ dependencies:
   just_audio_mpv: 0.1.7
 
   # Storage
-  flutter_secure_storage: 9.2.1
+  flutter_secure_storage: 9.2.2
   toml: 0.15.0
 
   # Networking

@@ -1,4 +1,6 @@
 use crate::hardware_control::live_view::gphoto2;
+use crate::hardware_control::live_view::gphoto2::GPHOTO2_HANDLES;
+use crate::hardware_control::live_view::nokhwa::NOKHWA_HANDLES;
 use std::sync::atomic::{Ordering, AtomicBool};
 
 pub use ipp::model::PrinterState;
@@ -6,10 +8,8 @@ pub use ipp::model::JobState;
 
 use crate::{frb_generated::StreamSink, helpers::{self, log_debug, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME}};
 
-use super::gphoto2::GPHOTO2_HANDLES;
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
-use super::nokhwa::NOKHWA_HANDLES;
 
 // ////////////// //
 // Initialization //

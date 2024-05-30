@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "=2.0.0-dev.35", features = ["chrono"] }
+flutter_rust_bridge = { version = "=2.0.0-dev.37", features = ["chrono"] }
 anyhow = "1.0.86"
 derive_more = "0.99.17"
 atom_table = "1.1.0"
@@ -16,7 +16,6 @@ serde_json = "1.0.117"
 chrono = "0.4.38"
 image = { version = "0.25.1", features = ["rayon"] }
 ipp = "5.0.3"
-nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = false, features = ["input-native", "output-threaded"] }
 zune-jpeg = "0.4.11"
 jpeg-encoder = "0.6.0"
 static_init = "1.0.3"
@@ -27,7 +26,7 @@ dashmap = "5.5.3"
 turborand = "0.10.1"
 pathsep = "0.1.1"
 tokio = { version = "1.37.0", features = ["rt-multi-thread"] }
-gphoto2 = "3.2.3"
+gphoto2 = "3.3.0"
 ahash = "0.8.11"
 img-parts = "0.3.0"
 little_exif = "0.3.2"
@@ -37,6 +36,12 @@ num-traits = "0.2.19"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 regex = "1.10.4"
+
+[target.'cfg(unix)'.dependencies]
+nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = true, features = ["input-native", "output-threaded"] }
+
+[target.'cfg(windows)'.dependencies]
+nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = false, features = ["input-native", "output-threaded"] }
 
 [profile.dev]
 opt-level = 3
