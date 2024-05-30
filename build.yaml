@@ -2,16 +2,16 @@ targets:
   $default:
     builders:
       freezed:
-        generate_for:
-          include:
-            - lib/models/*.dart
-            - lib/models/**/*.dart
-            - lib/theme/*.dart
-            - lib/src/rust/**/*.dart
         options:
           format: false
           map: false
           when: false
+        generate_for:
+          include:
+            - lib/models/*.dart
+            - lib/models/**/*.dart
+            - lib/src/rust/**/*.dart
+            - lib/theme/*.dart
       json_serializable:
         options:
           explicit_to_json: true
@@ -21,5 +21,11 @@ targets:
             - lib/models/**/*.dart
       mobx_codegen:mobx_generator:
         generate_for:
-            - lib/views/*/*_view_model.dart
             - lib/managers/*.dart
+            - lib/views/*/*_view_model.dart
+      widgetbook_generator:use_case_builder:
+        generate_for:
+            - lib/views/custom_widgets/*.dart
+            - lib/views/custom_widgets/**/*.dart
+      widgetbook_generator:telemetry:
+        enabled: false

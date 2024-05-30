@@ -152,13 +152,13 @@ abstract class _LiveViewManagerBase with Store {
         _lastFrameWasInvalid = true;
       } else {
         // Everything seems to be fine
-        StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount.toInt();
-        StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount.toInt();
-        StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount.toInt();
+        StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount;
+        StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
+        StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
         _lastFrameWasInvalid = false;
 
-        _textureWidth = liveViewState.frameWidth?.toInt();
-        _textureHeight = liveViewState.frameHeight?.toInt();
+        _textureWidth = liveViewState.frameWidth;
+        _textureHeight = liveViewState.frameHeight;
       }
     });
   }
