@@ -85,7 +85,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
         StatsManager.instance.addUploadedPhoto();
       } else {
         logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
-        _uploadProgress = event.transferredBytes / (event.totalBytes ?? BigInt.zero);
+        _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
     }).onError((x) async {
       logError("Upload failed, file path: ${_file!.path}", x);

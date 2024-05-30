@@ -22,7 +22,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   @override
   final String friendlyName;
 
-  late BigInt handleId;
+  late int handleId;
   bool isOpened = false;
 
   GPhoto2Camera({required this.id, required this.friendlyName});

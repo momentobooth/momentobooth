@@ -16,7 +16,7 @@ class NokhwaCamera extends LiveViewSource {
   @override
   final String friendlyName;
 
-  late BigInt handleId;
+  late int handleId;
 
   NokhwaCamera({required this.id, required this.friendlyName});
 

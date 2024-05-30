@@ -1,4 +1,4 @@
-use std::{sync::{OnceLock, atomic::{AtomicBool, Ordering}, Arc}, cell::Cell, time::Instant, hash::{Hash, Hasher}};
+use std::{cell::Cell, hash::{Hash, Hasher}, sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, OnceLock}, time::Instant};
 
 use ahash::AHasher;
 
@@ -10,7 +10,7 @@ use crate::{helpers::log_debug, models::images::RawImage, utils::jpeg};
 
 use chrono::Duration;
 
-use std::sync::{Mutex, atomic::AtomicUsize};
+use std::sync::Mutex;
 
 use dashmap::DashMap;
 use flutter_rust_bridge::frb;
@@ -272,16 +272,16 @@ pub struct GPhoto2File {
 #[frb(ignore)]
 lazy_static::lazy_static! {
     #[frb(ignore)]
-    pub static ref GPHOTO2_HANDLES: DashMap<usize, Arc<Mutex<GPhoto2CameraHandle>>> = DashMap::<usize, Arc<Mutex<GPhoto2CameraHandle>>>::new();
+    pub static ref GPHOTO2_HANDLES: DashMap<u32, Arc<Mutex<GPhoto2CameraHandle>>> = DashMap::<u32, Arc<Mutex<GPhoto2CameraHandle>>>::new();
 }
 
-static GPHOTO2_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
+static GPHOTO2_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
 
 pub fn gphoto2_get_cameras() -> Vec<GPhoto2CameraInfo> {
     gphoto2::get_cameras().expect("Could not enumerate cameras")
 }
 
-pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto2CameraSpecialHandling) -> usize {
+pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto2CameraSpecialHandling) -> u32 {
     let camera = TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async {
         gphoto2::open_camera(model, port, special_handling).await
     }).expect("Could not open camera");
@@ -293,12 +293,12 @@ pub fn gphoto2_open_camera(model: String, port: String, special_handling: GPhoto
     handle_id
 }
 
-pub fn gphoto2_close_camera(handle_id: usize) {
+pub fn gphoto2_close_camera(handle_id: u32) {
     gphoto2_stop_liveview(handle_id);
     GPHOTO2_HANDLES.remove(&handle_id).expect("Invalid nokhwa handle ID");
 }
 
-pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>, texture_ptr: usize) {
+pub fn gphoto2_start_liveview(handle_id: u32, operations: Vec<ImageOperation>, texture_ptr: usize) {
     let renderer = FlutterTexture::new(texture_ptr, 0, 0);
     let renderer_mutex = Mutex::new(renderer);
 
@@ -340,13 +340,13 @@ pub fn gphoto2_start_liveview(handle_id: usize, operations: Vec<ImageOperation>,
     }).expect("Could not start live view")
 }
 
-pub fn gphoto2_set_operations(handle_id: usize, operations: Vec<ImageOperation>) {
+pub fn gphoto2_set_operations(handle_id: u32, operations: Vec<ImageOperation>) {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let mut camera_handle = camera_ref.lock().expect("Could not lock camera");
     camera_handle.operations = operations;
 }
 
-pub fn gphoto2_stop_liveview(handle_id: usize) {
+pub fn gphoto2_stop_liveview(handle_id: u32) {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
@@ -355,8 +355,8 @@ pub fn gphoto2_stop_liveview(handle_id: usize) {
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_auto_focus(handle_id: usize) {
-    let camera_ref: dashmap::mapref::one::Ref<'_, usize, Arc<Mutex<GPhoto2CameraHandle>>> = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+pub fn gphoto2_auto_focus(handle_id: u32) {
+    let camera_ref: dashmap::mapref::one::Ref<'_, u32, Arc<Mutex<GPhoto2CameraHandle>>> = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
@@ -364,7 +364,7 @@ pub fn gphoto2_auto_focus(handle_id: usize) {
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_clear_events(handle_id: usize, download_extra_files: bool) {
+pub fn gphoto2_clear_events(handle_id: u32, download_extra_files: bool) {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
@@ -373,7 +373,7 @@ pub fn gphoto2_clear_events(handle_id: usize, download_extra_files: bool) {
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_capture_photo(handle_id: usize, capture_target_value: String) -> GPhoto2File {
+pub fn gphoto2_capture_photo(handle_id: u32, capture_target_value: String) -> GPhoto2File {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
@@ -382,7 +382,7 @@ pub fn gphoto2_capture_photo(handle_id: usize, capture_target_value: String) -> 
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_get_camera_status(handle_id: usize) -> CameraState {
+pub fn gphoto2_get_camera_status(handle_id: u32) -> CameraState {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera_arc = camera_ref.clone();
     let camera = camera_arc.lock().expect("Could not lock camera");
@@ -399,14 +399,14 @@ pub fn gphoto2_get_camera_status(handle_id: usize) -> CameraState {
     }
 }
 
-pub fn gphoto2_get_last_frame(handle_id: usize) -> Option<RawImage> {
+pub fn gphoto2_get_last_frame(handle_id: u32) -> Option<RawImage> {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera_arc = camera_ref.clone();
     let camera = camera_arc.lock().expect("Could not lock camera");
     camera.last_valid_frame.clone()
 }
 
-pub fn gphoto2_set_extra_file_callback(handle_id: usize, image_sink: StreamSink<GPhoto2File>) {
+pub fn gphoto2_set_extra_file_callback(handle_id: u32, image_sink: StreamSink<GPhoto2File>) {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
@@ -425,9 +425,9 @@ pub fn gphoto2_set_extra_file_callback(handle_id: usize, image_sink: StreamSink<
 pub struct GPhoto2CameraHandle {
     pub status_sink: Option<StreamSink<CameraState>>,
     pub camera: Arc<AsyncMutex<GPhoto2Camera>>,
-    pub valid_frame_count: AtomicUsize,
-    pub error_frame_count: AtomicUsize,
-    pub duplicate_frame_count: AtomicUsize,
+    pub valid_frame_count: AtomicU32,
+    pub error_frame_count: AtomicU32,
+    pub duplicate_frame_count: AtomicU32,
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
     pub last_received_frame_timestamp: Option<Instant>,
@@ -440,9 +440,9 @@ impl GPhoto2CameraHandle {
         Self {
             status_sink: None,
             camera: Arc::new(AsyncMutex::new(camera)),
-            valid_frame_count: AtomicUsize::new(0),
-            error_frame_count: AtomicUsize::new(0),
-            duplicate_frame_count: AtomicUsize::new(0),
+            valid_frame_count: AtomicU32::new(0),
+            error_frame_count: AtomicU32::new(0),
+            duplicate_frame_count: AtomicU32::new(0),
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
             last_received_frame_timestamp: None,

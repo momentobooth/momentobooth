@@ -1,8 +1,7 @@
-use std::{sync::{atomic::{AtomicBool, AtomicUsize, Ordering}, Arc, Mutex}, time::Instant};
+use std::{sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, Mutex}, time::Instant};
 
 use chrono::Duration;
 use dashmap::DashMap;
-use derive_more::{From, Into};
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
 
 use crate::{frb_generated::StreamSink, helpers::{log_debug, log_error, log_info}, models::{images::RawImage, live_view::CameraState}, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg}};
@@ -45,8 +44,8 @@ pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamer
                 Ok(image_buffer) => {
                     Some(RawImage::new_from_rgba_data(
                         image_buffer.into_vec(),
-                        buffer.resolution().width() as usize,
-                        buffer.resolution().height() as usize,
+                        buffer.resolution().width() as u32,
+                        buffer.resolution().height() as u32,
                     ))
                 },
                 Err(error) => {
@@ -68,9 +67,6 @@ pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamer
 pub fn close_camera(camera: &mut CallbackCamera) {
     camera.set_callback(|_| {}).expect("Cannot set callback to dummy callback");
 }
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, From, Into)]
-struct Id(usize);
 
 // /////// //
 // Structs //
@@ -96,13 +92,13 @@ pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
 }
 
 lazy_static::lazy_static! {
-    pub static ref NOKHWA_HANDLES: DashMap<usize, Arc<Mutex<NokhwaCameraHandle>>> = DashMap::<usize, Arc<Mutex<NokhwaCameraHandle>>>::new();
+    pub static ref NOKHWA_HANDLES: DashMap<u32, Arc<Mutex<NokhwaCameraHandle>>> = DashMap::<u32, Arc<Mutex<NokhwaCameraHandle>>>::new();
 }
 
-static NOKHWA_HANDLE_COUNT: AtomicUsize = AtomicUsize::new(1);
+static NOKHWA_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
 
 pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize
-) -> usize {
+) -> u32 {
     let renderer = FlutterTexture::new(texture_ptr, 0, 0);
     let renderer_mutex = Mutex::new(renderer);
 
@@ -136,14 +132,14 @@ pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>
     handle_id
 }
 
-pub fn nokhwa_set_operations(handle_id: usize, operations: Vec<ImageOperation>) {
+pub fn nokhwa_set_operations(handle_id: u32, operations: Vec<ImageOperation>) {
     let camera_ref = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
     let mut handle = camera_ref.lock().expect("Could not lock on handle");
 
     handle.operations = operations;
 }
 
-pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
+pub fn nokhwa_get_camera_status(handle_id: u32) -> CameraState {
     let camera_ref = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
     let handle = camera_ref.lock().expect("Could not lock on handle");
 
@@ -159,13 +155,13 @@ pub fn nokhwa_get_camera_status(handle_id: usize) -> CameraState {
     }
 }
 
-pub fn nokhwa_get_last_frame(handle_id: usize) -> Option<RawImage> {
+pub fn nokhwa_get_last_frame(handle_id: u32) -> Option<RawImage> {
     let entry = NOKHWA_HANDLES.get(&handle_id).expect("Invalid nokhwa handle ID");
     let handle = entry.lock().expect("Could not lock on handle");
     handle.last_valid_frame.clone()
 }
 
-pub fn nokhwa_close_camera(handle_id: usize) {
+pub fn nokhwa_close_camera(handle_id: u32) {
     let handle = NOKHWA_HANDLES.remove(&handle_id).expect("Invalid nokhwa handle ID");
     close_camera(&mut handle.1.lock().expect("Could not lock on handle").camera);
 }
@@ -174,8 +170,8 @@ pub fn nokhwa_close_camera(handle_id: usize) {
 pub struct NokhwaCameraHandle {
     pub status_sink: Option<StreamSink<CameraState>>,
     pub camera: CallbackCamera,
-    pub valid_frame_count: AtomicUsize,
-    pub error_frame_count: AtomicUsize,
+    pub valid_frame_count: AtomicU32,
+    pub error_frame_count: AtomicU32,
     pub last_frame_was_valid: AtomicBool,
     pub last_valid_frame: Option<RawImage>,
     pub last_received_frame_timestamp: Option<Instant>,
@@ -187,8 +183,8 @@ impl NokhwaCameraHandle {
         Self {
             status_sink: None,
             camera,
-            valid_frame_count: AtomicUsize::new(0),
-            error_frame_count: AtomicUsize::new(0),
+            valid_frame_count: AtomicU32::new(0),
+            error_frame_count: AtomicU32::new(0),
             last_frame_was_valid: AtomicBool::new(false),
             last_valid_frame: None,
             last_received_frame_timestamp: None,

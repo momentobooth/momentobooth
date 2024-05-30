@@ -38,8 +38,8 @@ pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
 
     RawImage::new_from_rgba_data(
         pixels,
-        image_info.width as usize,
-        image_info.height as usize,
+        image_info.width as u32,
+        image_info.height as u32,
     )
 }
 

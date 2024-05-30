@@ -12,7 +12,7 @@ class NoiseSource extends LiveViewSource {
   @override
   final String friendlyName = '';
 
-  late BigInt _handleId;
+  late int _handleId;
 
   NoiseSource();
 

@@ -16,7 +16,7 @@ class StaticImageSource extends LiveViewSource {
   @override
   final String friendlyName = '';
 
-  late final BigInt _imageWidth, _imageHeight;
+  late final int _imageWidth, _imageHeight;
 
   StaticImageSource();
 
@@ -44,9 +44,9 @@ class StaticImageSource extends LiveViewSource {
   @override
   Future<CameraState?> getCameraState() async => CameraState(
     isStreaming: true,
-    validFrameCount: BigInt.from(1),
-    errorFrameCount: BigInt.zero,
-    duplicateFrameCount: BigInt.zero,
+    validFrameCount: 1,
+    errorFrameCount: 0,
+    duplicateFrameCount: 0,
     lastFrameWasValid: true,
     frameWidth: _imageWidth,
     frameHeight: _imageHeight,
@@ -58,8 +58,8 @@ class StaticImageSource extends LiveViewSource {
 
     return RawImage(
       format: RawImageFormat.rgba,
-      width: BigInt.from(image.width),
-      height: BigInt.from(image.height),
+      width: image.width,
+      height: image.height,
       data: (await image.toByteData())!.buffer.asUint8List(),
     );
   }
