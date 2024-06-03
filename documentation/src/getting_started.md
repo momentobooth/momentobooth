@@ -72,7 +72,7 @@ graph LR
 1. Set an [output directory](settings_output.md#local-photo-storage-location) to save your photos.
 1. Next, go to the **templating** tab.
 1. Set a [template directory](settings_templating.md#template-location) to look for template files.
-1. Go to that directory in your file explorer and place a background (portrait) image called `background.jpg` or `background.png`.
+1. Go to that directory in your file explorer and place a background (portrait) image called `back-template.jpg` or `back-template.png`.
 1. You are now ready to shoot your first pictures! Press `Ctrl+S` again to exit the settings screen and click on or touch the screen to get started.
 
 Once you have the basics up and running you can try [connecting a camera](camera_setup.md#camera), [adding a printer](printer_setup.md), or designing a beautiful [template](template_setup.md) for your next event.
