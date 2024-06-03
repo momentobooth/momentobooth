@@ -29,3 +29,4 @@ If you have any printers to add or any special remarks about your printer, pleas
 | - | - | - | - |
 | Canon | SELPHY CP1300 | ✅ | Works using USB (recommended) as well as WiFi; look [here](printer_setup.md) for sample settings |
 | Canon | SELPHY CP1500 | ✅ | Works using WiFi, not at all using USB (at least on Windows); look [here](printer_setup.md) for sample settings |
+| Kodak | 6850 | ✅ | Only has USB; works both with native and CUPS printing; look [here](printer_setup.md) for sample settings |

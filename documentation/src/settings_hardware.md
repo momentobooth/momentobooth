@@ -15,9 +15,16 @@ In the hardware settings, you will find settings related to live view, photo cap
 {{#include ./settings/capture_location.md}}
 
 ## Printing
+{{#include ./settings/page_margins.md}}
+{{#include ./settings/queue_threshold.md}}
+
+## Native printing
 {{#include ./settings/printer.md}}
 {{#include ./settings/page_height.md}}
 {{#include ./settings/page_width.md}}
-{{#include ./settings/page_margins.md}}
 {{#include ./settings/use_printer_settings.md}}
-{{#include ./settings/queue_threshold.md}}
+
+## CUPS printing
+{{#include ./settings/printer.md}}
+{{#include ./settings/page_size.md}}
+{{#include ./settings/print_grid.md}}
