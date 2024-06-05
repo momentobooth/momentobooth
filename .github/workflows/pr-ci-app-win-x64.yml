@@ -34,29 +34,39 @@ jobs:
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
       with:
-        msystem: MINGW64
-        update: true
-        install: mingw-w64-x86_64-libgphoto2 mingw-w64-x86_64-pkg-config mingw-w64-x86_64-gcc mingw-w64-x86_64-clang mingw-w64-x86_64-gexiv2 mingw-w64-x86_64-curl-winssl
+        msystem: clang64
         path-type: inherit
-        release: true
+        pacboy: pkgconf:c libgphoto2:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c
 
-    - name: Install minimal Rust (MSVC target)
-      uses: dtolnay/rust-toolchain@master
+    - name: Workaround MSVC compiler looking for .lib files
+      shell: pwsh
+      run: |
+        cd $(msys2 -c 'cygpath -w /clang64/lib')
+        cp libgexiv2.dll.a gexiv2.lib
+        cp libgio-2.0.dll.a gio-2.0.lib
+        cp libglib-2.0.dll.a glib-2.0.lib
+        cp libgobject-2.0.dll.a gobject-2.0.lib
+        cp libgphoto2.dll.a gphoto2.lib
+        cp libgphoto2_port.dll.a gphoto2_port.lib
+        cp libintl.dll.a intl.lib
+
+    - name: Fix environment for build and bundle
+      run: |
+        Add-Content $env:GITHUB_PATH (msys2 -c 'cygpath -w /clang64/bin')
+        echo "MINGW_BUNDLEDLLS_SEARCH_PATH=$(msys2 -c 'cygpath -w /clang64/bin')" >> $env:GITHUB_ENV
+        echo "CLANG64_LIB_PATH=$(msys2 -c 'cygpath -w /clang64/lib')" >> $env:GITHUB_ENV
+
+    - name: Install minimal Rust
+      uses: dtolnay/rust-toolchain@stable
       with:
+        toolchain: stable
         target: x86_64-pc-windows-msvc
-        toolchain: stable-gnu
-
-    - name: Install minimal Rust (GNU target)
-      uses: dtolnay/rust-toolchain@master
-      with:
-        toolchain: stable-gnu
-        target: x86_64-pc-windows-gnu
 
     - name: Setup Rust cache
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
-          rust -> ../build/windows/x64/Release/cargo/build
+          rust -> ../build/windows/x64/plugins/rust_lib_momento_booth/cargokit_build
           rust -> target
 
     - name: Setup sccache-cache
@@ -66,14 +76,12 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: cargo-expand
-        args: --target x86_64-pc-windows-msvc
 
     - name: Install flutter_rust_bridge_codegen
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
         version: "2.0.0-dev.37"
-        args: --target x86_64-pc-windows-msvc
 
     - name: Install Dependencies
       run: flutter packages get
@@ -82,37 +90,34 @@ jobs:
       run: flutter gen-l10n
 
     - name: Generate Dart-to-Rust bridging code
-      run: msys2 -c 'flutter_rust_bridge_codegen generate'
+      run: flutter_rust_bridge_codegen generate
 
     - name: Code generation
-      run: flutter pub run build_runner build --delete-conflicting-outputs
+      run: dart run build_runner build --delete-conflicting-outputs
       
     - name: Flutter Analyze
       run: flutter analyze
 
     - name: Build Project
-      run: msys2 -c 'flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs'
+      run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs
       
     - name: Bundle dependencies of the helper library
       shell: pwsh
       run: |
-        $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
         $bundle_script = curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls
         echo $bundle_script | python - --copy build\windows\x64\runner\Release\rust_lib_momento_booth.dll
 
     - name: Bundle libgphoto2 additional libs
       shell: pwsh
       run: |
-        $Env:MSYS2_ROOT = msys2 -c 'cygpath -m /'
         mkdir build\windows\x64\runner\Release\libgphoto2_iolibs
-        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2_port\*\*.dll build\windows\x64\runner\Release\libgphoto2_iolibs
+        cp $env:CLANG64_LIB_PATH\libgphoto2_port\*\*.dll build\windows\x64\runner\Release\libgphoto2_iolibs
         mkdir build\windows\x64\runner\Release\libgphoto2_camlibs
-        cp $Env:MSYS2_ROOT\mingw64\lib\libgphoto2\*\*.dll build\windows\x64\runner\Release\libgphoto2_camlibs
+        cp $env:CLANG64_LIB_PATH\libgphoto2\*\*.dll build\windows\x64\runner\Release\libgphoto2_camlibs
 
     - name: Bundle dependencies of libgphoto2 additional libs
       shell: pwsh
       run: |
-        $Env:MINGW_BUNDLEDLLS_SEARCH_PATH = ((msys2 -c 'cygpath -m /') + "mingw64/bin").Replace("/", "\")
         $bundle_script = curl https://raw.githubusercontent.com/h3x4d3c1m4l/mingw-bundledlls/master/mingw-bundledlls
 
         cd build\windows\x64\runner\Release\
