@@ -135,11 +135,7 @@ class RustBuilder {
   CargoBuildOptions? get _buildOptions =>
       environment.crateOptions.cargo[environment.configuration];
 
-  String get _toolchain {
-    // Hack to force building with GNU toolchain on Windows.
-    String toolchainBaseName = _buildOptions?.toolchain.name ?? 'stable';
-    return Platform.isWindows ? '$toolchainBaseName-gnu' : toolchainBaseName;
-  }
+  String get _toolchain => _buildOptions?.toolchain.name ?? 'stable';
 
   /// Returns the path of directory containing build artifacts.
   Future<String> build() async {
