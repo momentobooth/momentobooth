@@ -51,7 +51,7 @@ dependencies:
   rust_lib_momento_booth:
     path: rust_builder
   ffi: 2.1.2
-  flutter_rust_bridge: 2.0.0-dev.37
+  flutter_rust_bridge: 2.0.0-dev.38
 
   # Printing
   printing: 5.12.0
@@ -65,8 +65,8 @@ dependencies:
   win32: 5.5.1
 
   # Log and error handling
-  talker: 4.2.3
-  talker_flutter: 4.2.3
+  talker: 4.2.4
+  talker_flutter: 4.2.4
   sentry_flutter: 8.2.0
 
   # Sound output
