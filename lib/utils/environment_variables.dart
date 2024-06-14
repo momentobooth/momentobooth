@@ -5,13 +5,12 @@ import 'dart:io';
 
 import 'package:ffi/ffi.dart';
 
-final DynamicLibrary msvcrt = Platform.isWindows ? DynamicLibrary.open('msvcrt.dll') : DynamicLibrary.process();
+final DynamicLibrary _cRuntimeLib = Platform.isWindows ? DynamicLibrary.open('api-ms-win-crt-environment-l1-1-0.dll') : DynamicLibrary.process();
 
+final _putenv = _cRuntimeLib.lookupFunction<Int32 Function(Pointer<Utf8>), int Function(Pointer<Utf8>)>('_putenv');
 
-final _putenv_s = msvcrt.lookupFunction<Int32 Function(Pointer<Utf8>, Pointer<Utf8>), int Function(Pointer<Utf8>, Pointer<Utf8>)>('_putenv_s');
-
-int putenv_s(String e, String v) {
+int putenv(String e, String v) {
   return using((arena) {
-    return _putenv_s(e.toNativeUtf8(), v.toNativeUtf8());
+    return _putenv('$e=$v'.toNativeUtf8());
   });
 }
