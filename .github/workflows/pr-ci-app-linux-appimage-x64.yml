@@ -78,7 +78,7 @@ jobs:
       run: flutter_rust_bridge_codegen generate
 
     - name: Code generation
-      run: flutter pub run build_runner build --delete-conflicting-outputs
+      run: dart run build_runner build --delete-conflicting-outputs
 
     - name: Flutter Analyze
       run: flutter analyze
