@@ -615,7 +615,9 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/opt/homebrew/lib,
+					/opt/homebrew/Cellar/libgphoto2/2.5.31/lib,
+					/opt/homebrew/Cellar/gexiv2/0.14.2_1/lib,
+					/opt/homebrew/Cellar/glib/2.80.2/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = MomentoBooth;
@@ -750,7 +752,9 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/opt/homebrew/lib,
+					/opt/homebrew/Cellar/libgphoto2/2.5.31/lib,
+					/opt/homebrew/Cellar/gexiv2/0.14.2_1/lib,
+					/opt/homebrew/Cellar/glib/2.80.2/lib,
 				);
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -778,7 +782,9 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/opt/homebrew/lib,
+					/opt/homebrew/Cellar/libgphoto2/2.5.31/lib,
+					/opt/homebrew/Cellar/gexiv2/0.14.2_1/lib,
+					/opt/homebrew/Cellar/glib/2.80.2/lib,
 				);
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";

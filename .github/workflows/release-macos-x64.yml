@@ -62,13 +62,13 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.0.0-dev.39"
+        version: "2.0.0-dev.37"
 
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
 
     - name: Install Dependencies
-      run: flutter pub get --enforce-lockfile
+      run: flutter packages get
 
     - name: Generation l10n
       run: flutter gen-l10n
@@ -77,7 +77,7 @@ jobs:
       run: flutter_rust_bridge_codegen generate
 
     - name: Code generation
-      run: dart run build_runner build --delete-conflicting-outputs
+      run: flutter pub run build_runner build --delete-conflicting-outputs
       
     - name: Flutter Analyze
       run: flutter analyze

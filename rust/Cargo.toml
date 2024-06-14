@@ -7,7 +7,7 @@ edition = "2021"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "=2.0.0-dev.39", features = ["chrono"] }
+flutter_rust_bridge = { version = "=2.0.0-dev.37", features = ["chrono"] }
 anyhow = "1.0.86"
 derive_more = "0.99.17"
 atom_table = "1.1.0"
@@ -30,12 +30,12 @@ gphoto2 = "3.3.0"
 ahash = "0.8.11"
 img-parts = "0.3.0"
 little_exif = "0.3.2"
-url = "2.5.1"
+url = "2.5.0"
 num = "0.4.3"
 num-traits = "0.2.19"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
-regex = "1.10.5"
+regex = "1.10.4"
 
 [target.'cfg(unix)'.dependencies]
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = true, features = ["input-native", "output-threaded"] }

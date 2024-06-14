@@ -43,7 +43,7 @@ class Target {
       androidMinSdkVersion: 21,
     ),
     Target(
-      rust: 'x86_64-pc-windows-msvc',
+      rust: 'x86_64-pc-windows-gnu',
       flutter: 'windows-x64',
     ),
     Target(
