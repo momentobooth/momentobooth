@@ -55,15 +55,16 @@ void main() async {
 void _ensureGPhoto2EnvironmentVariables() {
   if (!Platform.isWindows) return;
 
-  // Read from Dart defines
+  // Read from Dart defines.
   const String iolibsDefine = String.fromEnvironment("IOLIBS");
   const String camlibsDefine = String.fromEnvironment("CAMLIBS");
   if (iolibsDefine.isEmpty || camlibsDefine.isEmpty) return;
 
-  // Set to current process using msvcrt API
-  // See: https://stackoverflow.com/questions/4788398/changes-via-setenvironmentvariable-do-not-take-effect-in-library-that-uses-geten
-  putenv_s("IOLIBS", iolibsDefine);
-  putenv_s("CAMLIBS", camlibsDefine);
+  // Set environment overrides through the C runtime.
+  // Note that this does not alter the actual environment of the application,
+  // but it does makes libgphoto2 resolve them correctly through its call to `getenv`.
+  putenv("IOLIBS", iolibsDefine);
+  putenv("CAMLIBS", camlibsDefine);
 }
 
 Future<String?> _resolveSentryDsnOverride() async {
