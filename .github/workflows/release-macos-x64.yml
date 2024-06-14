@@ -68,7 +68,7 @@ jobs:
       run: dart pub global activate flutter_distributor
 
     - name: Install Dependencies
-      run: flutter packages get
+      run: flutter pub get --enforce-lockfile
 
     - name: Generation l10n
       run: flutter gen-l10n

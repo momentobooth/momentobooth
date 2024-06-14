@@ -84,7 +84,7 @@ jobs:
         version: "2.0.0-dev.39"
 
     - name: Install Dependencies
-      run: flutter packages get
+      run: flutter pub get --enforce-lockfile
 
     - name: Generate localizations
       run: flutter gen-l10n

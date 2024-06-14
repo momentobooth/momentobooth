@@ -1,0 +1,4 @@
+cargo:
+  release: # Configuration of cargo execution for release builds
+    extra_flags: # extra arguments passed to cargo build
+      - --locked

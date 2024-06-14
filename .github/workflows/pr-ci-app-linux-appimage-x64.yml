@@ -69,7 +69,7 @@ jobs:
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
 
     - name: Install Dependencies
-      run: flutter packages get
+      run: flutter pub get --enforce-lockfile
 
     - name: Generation l10n
       run: flutter gen-l10n
