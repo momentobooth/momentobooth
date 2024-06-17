@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -20,12 +20,12 @@ class SubsystemStatusIndicator extends StatelessWidget {
       };
 
   IconData get _icon => switch (status) {
-        SubsystemStatusBusy _ => FontAwesomeIcons.spinner,
-        SubsystemStatusOk _ => FontAwesomeIcons.check,
-        SubsystemStatusDisabled _ => FontAwesomeIcons.slash,
-        SubsystemStatusWarning _ => FontAwesomeIcons.exclamation,
-        SubsystemStatusError _ => FontAwesomeIcons.xmark,
-        _ => FontAwesomeIcons.question,
+        SubsystemStatusBusy _ => LucideIcons.loader,
+        SubsystemStatusOk _ => LucideIcons.circleCheck,
+        SubsystemStatusDisabled _ => LucideIcons.ban,
+        SubsystemStatusWarning _ => LucideIcons.circleAlert,
+        SubsystemStatusError _ => LucideIcons.circleX,
+        _ => LucideIcons.messageCircleQuestion,
       };
 
   @override

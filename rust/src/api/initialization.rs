@@ -1,33 +1,29 @@
-use crate::hardware_control::live_view::gphoto2::{self, GPHOTO2_HANDLES};
-use crate::hardware_control::live_view::nokhwa::NOKHWA_HANDLES;
 use crate::models::version_info::VersionInfo;
 use std::ffi::CStr;
-use std::sync::atomic::{Ordering, AtomicBool};
+use crate::INITIALIZATION;
+use crate::LIBRARY_VERSION;
+use crate::RUST_TARGET;
+use crate::TOKIO_RUNTIME;
 use gexiv2_sys::gexiv2_get_version;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
-use crate::{frb_generated::StreamSink, helpers::{self, HardwareInitializationFinishedEvent, TOKIO_RUNTIME}};
+use tokio::runtime;
+
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
-use log::{debug, LevelFilter};
+use log::{debug, info, LevelFilter};
 use rustc_version_runtime::version;
-use pathsep::{path_separator, join_path};
 
 flutter_logger::flutter_logger_init!(LevelFilter::Trace);
-
-const RUST_COMPILE_TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
-const LIBRARY_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 // ////////////// //
 // Initialization //
 // ////////////// //
 
-static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
-
 pub fn get_version_info() -> VersionInfo {
     VersionInfo {
         rust_version: version().to_string(),
-        rust_target: RUST_COMPILE_TARGET.to_owned(),
+        rust_target: RUST_TARGET.to_owned(),
         library_version: LIBRARY_VERSION.to_owned(),
         libgphoto2_version: ::gphoto2::library_version().unwrap().to_owned(),
         libgexiv2_version: get_gexiv2_version(),
@@ -54,30 +50,46 @@ fn get_exiv2_version() -> String {
     };
 }
 
-pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
-    rexiv2::initialize().expect("Unable to initialize rexiv2");
-    if !HARDWARE_INITIALIZED.load(Ordering::SeqCst) {
-        // Hardware has not been initialized yet
-        helpers::initialize_hardware(iolibs_path, camlibs_path, ready_sink);
-        HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
-    } else {
-        // Hardware has already been initialized (possible due to Hot Reload)
-        debug!("{}", "Possible Hot Reload: Closing any open cameras and noise generators");
-        for map_entry in NOKHWA_HANDLES.iter() {
-            map_entry.value().lock().expect("Could not lock on handle").camera.set_callback(|_| {}).expect("Stream close error");
-        }
-        debug!("{}", "Possible Hot Reload: Closed nokhwa");
-        NOKHWA_HANDLES.clear();
-        for map_entry in GPHOTO2_HANDLES.iter() {
-            TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
-                gphoto2::stop_liveview(map_entry.value().lock().expect("Could not lock camera").camera.clone()).await
-            }).expect("Could not get result");
-        }
-        debug!("{}", "Possible Hot Reload: Closed gphoto2");
-        GPHOTO2_HANDLES.clear();
+// Important note: This function should be allowed to run multiple times.
+// This should only happen when Hot Restart has been invoked on the Flutter app.
+#[frb(init)]
+pub fn initialize_library() {
+    debug!("{}", "Helper library initialization started");
+
+    INITIALIZATION.call_once(|| {
+        // TODO: test what happens when we panic
+        TOKIO_RUNTIME.get_or_init(|| runtime::Builder::new_multi_thread().enable_all().build().unwrap());
+        debug!("{}", "Tokio runtime initialized");
+        rexiv2::initialize().expect("Unable to initialize rexiv2");
+        debug!("{}", "Rexiv2 initialized");
+    });
+
+    if !NOISE_HANDLES.is_empty() {
+        debug!("{}", "Possible Hot Reload: Closing noise handles");
         for map_entry in NOISE_HANDLES.iter() {
             noise_close(*map_entry.key());
         }
-        debug!("{}", "Possible Hot Reload: Closed noise");
+        NOISE_HANDLES.clear();
+        debug!("{}", "Possible Hot Reload: Closed noise handles");
     }
+
+    info!("{}", "Helper library initialization done");
+}
+
+#[cfg(all(target_os = "windows"))]
+fn set_environment_variable(key: &str, value: &str) {
+    use libc::putenv;
+    use std::ffi::CString;
+
+    // We use this as std::env::set_var does not work on Windows in our case.
+    let putenv_str = format!("{}={}", key, value);
+    let putenv_cstr =  CString::new(putenv_str).unwrap();
+    unsafe { putenv(putenv_cstr.as_ptr()) };
+}
+
+#[cfg(not(target_os = "windows"))]
+fn set_environment_variable(key: &str, value: &str) {
+    use std::env;
+
+    env::set_var(key, value);
 }

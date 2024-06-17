@@ -22,10 +22,10 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
   GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
 
   void togglePicture(int image) {
-    if (PhotosManager.instance.chosen.contains(image)) {
-      PhotosManager.instance.chosen.remove(image);
+    if (getIt<PhotosManager>().chosen.contains(image)) {
+      getIt<PhotosManager>().chosen.remove(image);
     } else {
-      PhotosManager.instance.chosen.add(image);
+      getIt<PhotosManager>().chosen.add(image);
     }
     captureCollage();
   }
@@ -57,9 +57,9 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     logDebug('captureCollage took ${stopwatch.elapsed}');
 
     if (latestCapture == thisCapture) {
-      PhotosManager.instance.outputImage = exportImage;
+      getIt<PhotosManager>().outputImage = exportImage;
       logDebug("Written collage image to output image memory");
-      await PhotosManager.instance.writeOutput();
+      await getIt<PhotosManager>().writeOutput();
       viewModel.readyToContinue = true;
     }
   }

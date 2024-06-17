@@ -60,7 +60,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   Duration get flashAnimationDuration => showFlash ? flashStartDuration : flashEndDuration;
 
   @computed
-  int get photoNumber => PhotosManager.instance.photos.length+1;
+  int get photoNumber => getIt<PhotosManager>().photos.length+1;
 
   final int maxPhotos = 4;
 
@@ -98,11 +98,11 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     try {
       final image = await capturer.captureAndGetPhoto();
       getIt<StatsManager>().addCapturedPhoto();
-      PhotosManager.instance.photos.add(image);
+      getIt<PhotosManager>().photos.add(image);
     } catch (error) {
       logWarning(error);
       final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
-      PhotosManager.instance.photos.add(PhotoCapture(
+      getIt<PhotosManager>().photos.add(PhotoCapture(
         data: data.buffer.asUint8List(),
         filename: "capture-error.png",
       ));
@@ -115,10 +115,10 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) return;
-    if (PhotosManager.instance.photos.length >= maxPhotos) {
+    if (getIt<PhotosManager>().photos.length >= maxPhotos) {
       router.go(CollageMakerScreen.defaultRoute);
     } else {
-      router.go("${MultiCaptureScreen.defaultRoute}?n=${PhotosManager.instance.photos.length}");
+      router.go("${MultiCaptureScreen.defaultRoute}?n=${getIt<PhotosManager>().photos.length}");
     }
   }
 

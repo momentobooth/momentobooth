@@ -3258,12 +3258,14 @@ dependencies = [
  "num",
  "num-derive",
  "num-traits",
+ "parking_lot 0.12.3",
  "pathsep",
  "pkg-config",
  "regex",
  "rexiv2",
  "rustc_version_runtime",
  "serde_json",
+ "susync",
  "tokio",
  "turborand",
  "url 2.5.4",
@@ -3694,6 +3696,28 @@ name = "subtle"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6bdef32e8150c2a081110b42772ffe7d7c9032b606bc226c8260fd97e0976601"
+
+[[package]]
+name = "susync"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4aecb433c88f1bbec399b9e1ab0868b40b1b7b436af4c2b927f15a476beac2d6"
+dependencies = [
+ "spin 0.9.8",
+ "susync-macros",
+ "thiserror 1.0.69",
+]
+
+[[package]]
+name = "susync-macros"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f487771db62cac0c62b8f0379bfcef5124ad8035c336e87756e3b7a9222057e8"
+dependencies = [
+ "proc-macro2 1.0.92",
+ "quote 1.0.37",
+ "syn 2.0.90",
+]
 
 [[package]]
 name = "syn"

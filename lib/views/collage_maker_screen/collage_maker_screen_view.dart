@@ -98,7 +98,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
       columnGap: 12,
       rowGap: 12,
       children: [
-        for (int i = 0; i < PhotosManager.instance.photos.length; i++)
+        for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
           GestureDetector(
             onTap: () => controller.togglePicture(i),
             child: Observer(builder: (context) {
@@ -108,11 +108,11 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                   SizedBox.expand(
                     child: AspectRatio(
                       aspectRatio: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio,
-                      child: PhotoContainer.memory(PhotosManager.instance.photos[i].data),
+                      child: PhotoContainer.memory(getIt<PhotosManager>().photos[i].data),
                     ),
                   ),
                   AnimatedOpacity(
-                    opacity: PhotosManager.instance.chosen.contains(i) ? 1 : 0,
+                    opacity: getIt<PhotosManager>().chosen.contains(i) ? 1 : 0,
                     duration: const Duration(milliseconds: 200),
                     curve: Curves.easeInOut,
                     child: Stack(
@@ -122,7 +122,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                         const ColoredBox(color: Color(0x80000000)),
                         Center(
                           child: Text(
-                            (PhotosManager.instance.chosen.indexOf(i) + 1).toString(),
+                            (getIt<PhotosManager>().chosen.indexOf(i) + 1).toString(),
                             style: theme.subTitleStyle,
                           ),
                         ),

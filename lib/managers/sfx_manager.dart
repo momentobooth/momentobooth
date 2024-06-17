@@ -21,7 +21,7 @@ abstract class SfxManagerBase with Store, Logger, Subsystem {
   // ////////////// //
 
   @override
-  FutureOr<Null> initializeSubsystem() async {
+  Future<void> initialize() async {
     JustAudioMediaKit.ensureInitialized();
     AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
 
@@ -59,7 +59,7 @@ abstract class SfxManagerBase with Store, Logger, Subsystem {
 
   Future<void> _playSoundFromAsset(String assetPath) async {
     try {
-      if (!SettingsManager.instance.settings.ui.enableSfx || assetPath.isEmpty) return;
+      if (!getIt<SettingsManager>().settings.ui.enableSfx || assetPath.isEmpty) return;
       await _audioPlayer?.stop();
       await _audioPlayer?.setAsset(assetPath);
       await _audioPlayer?.play();

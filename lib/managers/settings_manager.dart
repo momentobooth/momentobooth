@@ -5,6 +5,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:path/path.dart' hide context;
 import 'package:path_provider/path_provider.dart';
 import 'package:toml/toml.dart';
@@ -13,7 +14,7 @@ part 'settings_manager.g.dart';
 
 class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
-abstract class SettingsManagerBase with Store, Logger {
+abstract class SettingsManagerBase with Store, Logger, Subsystem {
 
   static const _fileName = "MomentoBooth_Settings.toml";
 
@@ -24,6 +25,11 @@ abstract class SettingsManagerBase with Store, Logger {
 
   @computed
   Settings get settings => _settings!;
+
+  @override
+  Future<void> initialize() async {
+    await load();
+  }
 
   // ////// //
   // Mutate //

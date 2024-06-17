@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app/photo_booth/widgets/activity_monitor.dart';
 import 'package:momento_booth/app/photo_booth/widgets/photo_booth_hotkey_monitor.dart';
+import 'package:momento_booth/app/shell/widgets/fps_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -42,37 +43,39 @@ class PhotoBoothState extends State<PhotoBooth> {
 
   @override
   Widget build(BuildContext context) {
-    return LiveViewBackground(
-      router: _router,
-      child: PhotoBoothHotkeyMonitor(
+    return FpsMonitor(
+      child: LiveViewBackground(
         router: _router,
-        child: ActivityMonitor(
+        child: PhotoBoothHotkeyMonitor(
           router: _router,
-          child: MomentoBoothTheme(
-            data: MomentoBoothThemeData.defaults(),
-            child: SetScrollConfiguration(
-              child: Observer(
-                builder: (context) => FluentApp.router(
-                  scrollBehavior: ScrollConfiguration.of(context),
-                  color: getIt<SettingsManager>().settings.ui.primaryColor,
-                  theme: FluentThemeData(
-                    accentColor: AccentColor.swatch(
-                      {'normal': getIt<SettingsManager>().settings.ui.primaryColor},
+          child: ActivityMonitor(
+            router: _router,
+            child: MomentoBoothTheme(
+              data: MomentoBoothThemeData.defaults(),
+              child: SetScrollConfiguration(
+                child: Observer(
+                  builder: (context) => FluentApp.router(
+                    scrollBehavior: ScrollConfiguration.of(context),
+                    color: getIt<SettingsManager>().settings.ui.primaryColor,
+                    theme: FluentThemeData(
+                      accentColor: AccentColor.swatch(
+                        {'normal': getIt<SettingsManager>().settings.ui.primaryColor},
+                      ),
                     ),
+                    routerConfig: _router,
+                    localizationsDelegates: const [
+                      AppLocalizations.delegate,
+                      GlobalMaterialLocalizations.delegate,
+                      GlobalWidgetsLocalizations.delegate,
+                      GlobalCupertinoLocalizations.delegate,
+                      FluentLocalizations.delegate,
+                    ],
+                    supportedLocales: const [
+                      Locale('en'), // English
+                      Locale('nl'), // Dutch
+                    ],
+                    locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
                   ),
-                  routerConfig: _router,
-                  localizationsDelegates: const [
-                    AppLocalizations.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                    FluentLocalizations.delegate,
-                  ],
-                  supportedLocales: const [
-                    Locale('en'), // English
-                    Locale('nl'), // Dutch
-                  ],
-                  locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
                 ),
               ),
             ),

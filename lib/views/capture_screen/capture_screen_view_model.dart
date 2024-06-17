@@ -74,14 +74,14 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   }
 
   Future<File?> captureCollage() async {
-    PhotosManager.instance.chosen.clear();
-    PhotosManager.instance.chosen.add(0);
+    getIt<PhotosManager>().chosen.clear();
+    getIt<PhotosManager>().chosen.add(0);
     final stopwatch = Stopwatch()..start();
     final pixelRatio = getIt<SettingsManager>().settings.output.resolutionMultiplier;
     final format = getIt<SettingsManager>().settings.output.exportFormat;
     final jpgQuality = getIt<SettingsManager>().settings.output.jpgQuality;
     await completer.future;
-    PhotosManager.instance.outputImage = await collageKey.currentState!.getCollageImage(
+    getIt<PhotosManager>().outputImage = await collageKey.currentState!.getCollageImage(
       createdByMode: CreatedByMode.single,
       pixelRatio: pixelRatio,
       format: format,
@@ -89,7 +89,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     );
     logDebug('captureCollage took ${stopwatch.elapsed}');
 
-    return await PhotosManager.instance.writeOutput();
+    return await getIt<PhotosManager>().writeOutput();
   }
 
   CaptureScreenViewModelBase({
@@ -128,17 +128,17 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     try {
       final image = await capturer.captureAndGetPhoto();
       getIt<StatsManager>().addCapturedPhoto();
-      PhotosManager.instance.photos.add(image);
+      getIt<PhotosManager>().photos.add(image);
       if (getIt<SettingsManager>().settings.singlePhotoIsCollage) {
         await captureCollage();
       } else {
-        PhotosManager.instance.outputImage = image.data;
-        await PhotosManager.instance.writeOutput();
+        getIt<PhotosManager>().outputImage = image.data;
+        await getIt<PhotosManager>().writeOutput();
       }
     } catch (error) {
       logWarning(error);
       final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
-      PhotosManager.instance.outputImage = data.buffer.asUint8List();
+      getIt<PhotosManager>().outputImage = data.buffer.asUint8List();
     } finally {
       captureComplete = true;
       navigateAfterCapture();

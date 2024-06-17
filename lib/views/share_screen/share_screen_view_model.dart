@@ -26,7 +26,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   bool get displayConfetti => getIt<SettingsManager>().settings.ui.displayConfetti;
   late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
-  Uint8List get outputImage => PhotosManager.instance.outputImage!;
+  Uint8List get outputImage => getIt<PhotosManager>().outputImage!;
 
   @observable
   late String printText = localizations.genericPrintButton;
@@ -58,11 +58,11 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   }
 
   String get ffSendUrl => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
-  CaptureMode get captureMode => PhotosManager.instance.captureMode;
+  CaptureMode get captureMode => getIt<PhotosManager>().captureMode;
   String get backText => captureMode == CaptureMode.single ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;
 
   Future<void> uploadPhotoToSend() async {
-    _file ??= await PhotosManager.instance.getOutputImageAsTempFile();
+    _file ??= await getIt<PhotosManager>().getOutputImageAsTempFile();
     final ext = getIt<SettingsManager>().settings.output.exportFormat.name.toLowerCase();
 
     logDebug("Uploading ${_file!.path}");

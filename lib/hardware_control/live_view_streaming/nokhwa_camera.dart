@@ -1,8 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
-import 'package:momento_booth/exceptions/nokhwa_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
-import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/src/rust/api/nokhwa.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
@@ -71,9 +68,7 @@ class NokhwaCamera extends LiveViewSource {
   Future<void> dispose() => nokhwaCloseCamera(handleId: handleId);
 
   static Future<void> _ensureLibraryInitialized() async {
-    if (!await getIt<HelperLibraryInitializationManager>().nokhwaInitializationResult) {
-      throw NokhwaException('Nokhwa implementation cannot be used due to initialization failure.');
-    }
+    await nokhwaInitialize();
   }
 
 }

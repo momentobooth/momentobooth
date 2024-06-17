@@ -20,7 +20,7 @@ class ShellHotkeyMonitor extends StatelessWidget {
 
     return CallbackShortcuts(
       bindings: {
-        SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): getIt<LiveViewManager>().restoreLiveView,
+        SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): () => getIt<LiveViewManager>().restoreLiveView(),
         SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () {
           if (router.currentLocation == "/settings") {
             // Make sure any overlays are also closed (e.g. dropdowns)
@@ -31,8 +31,8 @@ class ShellHotkeyMonitor extends StatelessWidget {
             router.push("/settings");
           }
         },
-        SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): getIt<WindowManager>().toggleFullscreen,
-        const SingleActivator(LogicalKeyboardKey.enter, alt: true): getIt<WindowManager>().toggleFullscreen,
+        SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): () => getIt<WindowManager>().toggleFullscreen(),
+        const SingleActivator(LogicalKeyboardKey.enter, alt: true): () => getIt<WindowManager>().toggleFullscreen(),
       },
       child: child,
     );

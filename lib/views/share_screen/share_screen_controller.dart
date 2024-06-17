@@ -34,8 +34,8 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   void onClickPrev() {
     logDebug("Clicked prev");
-    if (PhotosManager.instance.captureMode == CaptureMode.single) {
-      PhotosManager.instance.reset(advance: false);
+    if (getIt<PhotosManager>().captureMode == CaptureMode.single) {
+      getIt<PhotosManager>().reset(advance: false);
       getIt<StatsManager>().addRetake();
       router.go(CaptureScreen.defaultRoute);
     } else {
@@ -92,7 +92,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
     PrintSize usingSize = size;
-    if (size == PrintSize.normal && PhotosManager.instance.chosenPhotos.length == 3) {
+    if (size == PrintSize.normal && getIt<PhotosManager>().chosenPhotos.length == 3) {
       usingSize = PrintSize.split;
     }
 
@@ -103,7 +103,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       ..printText = localizations.shareScreenPrinting;
 
     // Get photo and print it.
-    final pdfData = await PhotosManager.instance.getOutputPDF(size);
+    final pdfData = await getIt<PhotosManager>().getOutputPDF(size);
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Picture";
 
     bool success = false;
