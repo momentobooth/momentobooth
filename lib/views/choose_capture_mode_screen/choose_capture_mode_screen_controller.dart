@@ -1,3 +1,4 @@
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -16,12 +17,12 @@ class ChooseCaptureModeScreenController extends ScreenControllerBase<ChooseCaptu
   // User interaction methods
 
   void onClickOnSinglePhoto() {
-    PhotosManager.instance.captureMode = CaptureMode.single;
+    getIt<PhotosManager>().captureMode = CaptureMode.single;
     router.go(CaptureScreen.defaultRoute);
   }
 
   void onClickOnPhotoCollage() {
-    PhotosManager.instance.captureMode = CaptureMode.collage;
+    getIt<PhotosManager>().captureMode = CaptureMode.collage;
     router.go(MultiCaptureScreen.defaultRoute);
   }
 

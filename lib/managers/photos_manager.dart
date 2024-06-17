@@ -13,30 +13,10 @@ import 'package:path_provider/path_provider.dart';
 
 part 'photos_manager.g.dart';
 
-class PhotosManager extends _PhotosManagerBase with _$PhotosManager {
-
-  static final PhotosManager instance = PhotosManager._internal();
-
-  PhotosManager._internal();
-
-}
-
-enum CaptureMode {
-
-  single(0, "Single"),
-  collage(1, "Collage");
-
-  // can add more properties or getters/methods if needed
-  final int value;
-  final String name;
-
-  // can use named parameters if you want
-  const CaptureMode(this.value, this.name);
-
-}
+class PhotosManager = PhotosManagerBase with _$PhotosManager;
 
 /// Class containing global state for photos in the app
-abstract class _PhotosManagerBase with Store {
+abstract class PhotosManagerBase with Store {
 
   @observable
   ObservableList<PhotoCapture> photos = ObservableList<PhotoCapture>();
@@ -104,5 +84,19 @@ abstract class _PhotosManagerBase with Store {
   }
 
   Future<Uint8List> getOutputPDF(PrintSize printSize) => getImagePdfWithPageSize(outputImage!, printSize);
+
+}
+
+enum CaptureMode {
+
+  single(0, "Single"),
+  collage(1, "Collage");
+
+  // can add more properties or getters/methods if needed
+  final int value;
+  final String name;
+
+  // can use named parameters if you want
+  const CaptureMode(this.value, this.name);
 
 }

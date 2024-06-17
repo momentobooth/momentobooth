@@ -9,9 +9,9 @@ List<GoRoute> _rootRoutes = [
 GoRoute _onboardingRoute = GoRoute(
   path: "/onboarding",
   pageBuilder: (context, state) {
-    return SettingsBasedTransitionPage.fromSettings(
+    return NoTransitionPage(
       key: state.pageKey,
-      enableTransitionOut: true,
+      //enableTransitionOut: true,
       child: const OnboardingPage(),
     );
   },

@@ -96,9 +96,9 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
   static const double gap = 20.0;
 
-  ObservableList<int> get chosen => PhotosManager.instance.chosen;
-  ObservableList<PhotoCapture> get photos => PhotosManager.instance.photos;
-  Iterable<PhotoCapture> get chosenPhotos => PhotosManager.instance.chosenPhotos;
+  ObservableList<int> get chosen => getIt<PhotosManager>().chosen;
+  ObservableList<PhotoCapture> get photos => getIt<PhotosManager>().photos;
+  Iterable<PhotoCapture> get chosenPhotos => getIt<PhotosManager>().chosenPhotos;
   int get nChosen => widget.debug ?? chosen.length;
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   bool firstImageDecoded = false;

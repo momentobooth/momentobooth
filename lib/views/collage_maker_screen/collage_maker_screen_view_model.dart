@@ -14,7 +14,7 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
     required super.contextAccessor,
   });
 
-  int get numSelected => PhotosManager.instance.chosen.length;
+  int get numSelected => getIt<PhotosManager>().chosen.length;
 
   double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePadding => getIt<SettingsManager>().settings.collagePadding;

@@ -8,17 +8,20 @@ import 'package:momento_booth/hardware_control/printing/printing_system_client.d
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 
 part 'printing_manager.g.dart';
 
 class PrintingManager = PrintingManagerBase with _$PrintingManager;
 
-abstract class PrintingManagerBase with Store {
+abstract class PrintingManagerBase with Store, Logger, Subsystem {
 
   // ////////////// //
   // Initialization //
   // ////////////// //
 
+  @override
   void initialize() {
     autorun((_) {
       // To make sure mobx detects that we are responding to changes to this property
