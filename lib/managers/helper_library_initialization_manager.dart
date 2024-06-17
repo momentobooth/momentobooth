@@ -38,7 +38,6 @@ abstract class HelperLibraryInitializationManagerBase with Store, Logger {
       };
       talker.log("Lib: ${msg.lbl} - ${msg.msg}", logLevel: logLevel);
     });
-    initializeHardware().listen(_processHardwareInitEvent);
   }
 
   void _processHardwareInitEvent(HardwareInitializationFinishedEvent event) {

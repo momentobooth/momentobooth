@@ -1,5 +1,9 @@
 use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, models::{images::RawImage, live_view::CameraState}, utils::image_processing::ImageOperation};
 
+pub fn gphoto2_initialize() {
+    gphoto2::initialize();
+}
+
 pub fn gphoto2_get_cameras() -> Vec<GPhoto2CameraInfo> {
     gphoto2::gphoto2_get_cameras()
 }

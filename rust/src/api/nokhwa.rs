@@ -1,5 +1,9 @@
 use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, models::{images::RawImage, live_view::CameraState}, utils::image_processing::ImageOperation};
 
+pub async fn nokhwa_initialize() -> bool {
+    nokhwa::initialize_nokhwa().await
+}
+
 pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
     nokhwa::get_cameras()
 }

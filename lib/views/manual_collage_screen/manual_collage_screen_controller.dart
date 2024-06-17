@@ -37,7 +37,7 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     for (var photo in selectedPhotos) {
       photo.isSelected= false;
     }
-    PhotosManager.instance.reset(advance: false);
+    getIt<PhotosManager>().reset(advance: false);
     viewModel.numSelected = 0;
     selectedPhotos.clear();
     logDebug("Cleared selection");
@@ -73,8 +73,8 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
 
     if (file.isSelected) {
       file.isSelected = false;
-      PhotosManager.instance.photos.removeAt(file.selectedIndex);
-      PhotosManager.instance.chosen.removeLast();
+      getIt<PhotosManager>().photos.removeAt(file.selectedIndex);
+      getIt<PhotosManager>().chosen.removeLast();
       selectedPhotos.remove(file);
       // Update indexes
       for (int i = 0; i < selectedPhotos.length; i++) {
@@ -88,11 +88,11 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
       file
         ..isSelected = true
         ..selectedIndex = index;
-      PhotosManager.instance.photos.add(PhotoCapture(
+      getIt<PhotosManager>().photos.add(PhotoCapture(
         data: await file.file.readAsBytes(),
         filename: path.basename(file.file.path),
       ));
-      PhotosManager.instance.chosen.add(index);
+      getIt<PhotosManager>().chosen.add(index);
       viewModel.numSelected = index+1;
     }
   }
@@ -115,8 +115,8 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     );
     logDebug('captureCollage took ${stopwatch.elapsed}');
 
-    PhotosManager.instance.outputImage = exportImage;
-    File? file = await PhotosManager.instance.writeOutput(advance: true);
+    getIt<PhotosManager>().outputImage = exportImage;
+    File? file = await getIt<PhotosManager>().writeOutput(advance: true);
     logDebug("Saved collage image to disk");
 
     if (viewModel.printOnSave) {

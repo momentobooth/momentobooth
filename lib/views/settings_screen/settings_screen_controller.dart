@@ -88,7 +88,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     final pixelRatio = viewModel.resolutionMultiplier;
     final format = viewModel.exportFormat;
     final jpgQuality = viewModel.jpgQuality;
-    PhotosManager.instance.outputImage = await viewModel.collageKey.currentState!.getCollageImage(
+    getIt<PhotosManager>().outputImage = await viewModel.collageKey.currentState!.getCollageImage(
       createdByMode: CreatedByMode.manual,
       pixelRatio: pixelRatio,
       format: format,
@@ -96,7 +96,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     );
     logDebug('captureCollage took ${stopwatch.elapsed}');
 
-    File? file = await PhotosManager.instance.writeOutput(advance: true);
+    File? file = await getIt<PhotosManager>().writeOutput(advance: true);
     logDebug("Wrote template debug export output to ${file?.path}");
   }
 

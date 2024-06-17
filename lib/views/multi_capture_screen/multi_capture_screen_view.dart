@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/capture_counter.dart';
@@ -68,17 +69,17 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
             maxLines: 1,
           ),
         ),
-        for (int i = 0; i < PhotosManager.instance.photos.length; i++)
+        for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: AspectRatio(
                 aspectRatio: viewModel.aspectRatio,
-                child: PhotoContainer.memory(PhotosManager.instance.photos[i].data),
+                child: PhotoContainer.memory(getIt<PhotosManager>().photos[i].data),
               ),
             ),
           ),
-        for (int i = PhotosManager.instance.photos.length; i < 4; i++)
+        for (int i = getIt<PhotosManager>().photos.length; i < 4; i++)
           Expanded(child: _photoPlaceholder),
       ],
     );
