@@ -9,3 +9,4 @@ pub mod cups;
 pub mod initialization;
 pub mod gphoto2;
 pub mod noise;
+pub mod logging;

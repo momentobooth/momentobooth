@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_layout_grid/flutter_layout_grid.dart';
+import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -58,6 +60,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     //final FluentThemeData themeData = FluentTheme.of(context);
+    ObservableList list = getIt.get<ObservableList<Subsystem>>();
+    print(list);
 
     return Stack(
       fit: StackFit.expand,
@@ -69,28 +73,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
             gradient: g,
           ),
         )),
-        LayoutGrid(
-          columnGap: 12,
-          rowGap: 12,
-          areas: '''
-                  lt t rt
-                  l  B r
-                  lb b rb
-                ''',
-          // A number of extension methods are provided for concise track sizing
-          columnSizes: [
-            1.4.fr,
-            5.0.fr,
-            1.4.fr,
-          ],
-          rowSizes: [
-            0.8.fr,
-            5.0.fr,
-            0.8.fr,
-          ],
-          children: [
-            gridArea('B').containing(Builder(builder: _getCenterWidget)),
-          ],
+        Center(
+          child: SizedBox(
+            width: 800,
+            height: 500,
+            child: _getCenterWidget(context),
+          ),
         ),
       ],
     );
@@ -99,15 +87,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Widget _getCenterWidget(BuildContext context) {
     return Acrylic(
       elevation: 16.0,
-      luminosityAlpha: 0.7,
+      luminosityAlpha: 0.9,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       child: Column(
         children: [
           Expanded(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(34, 0, 34, 34),
-              child: const Center(child: ProgressRing()),
-            ),
+            child: const Center(child: ProgressRing()),
           ),
         ],
       ),

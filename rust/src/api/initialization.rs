@@ -1,12 +1,9 @@
-use crate::hardware_control::live_view::gphoto2;
-use crate::hardware_control::live_view::gphoto2::GPHOTO2_HANDLES;
-use crate::hardware_control::live_view::nokhwa::NOKHWA_HANDLES;
-use std::sync::atomic::{Ordering, AtomicBool};
-
+use crate::logging::*;
+use crate::INITIALIZATION;
+use crate::TOKIO_RUNTIME;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
-
-use crate::{frb_generated::StreamSink, helpers::{self, log_debug, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME}};
+use tokio::runtime;
 
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
@@ -15,36 +12,27 @@ use super::noise::NOISE_HANDLES;
 // Initialization //
 // ////////////// //
 
-static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
+// Important note: This function should be allowed to run multiple times.
+// This should only happen when Hot Restart has been invoked on the Flutter app.
+pub fn initialize_library() {
+    log_debug("Helper library initialization started".to_owned());
 
-pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
-    helpers::initialize_log(log_sink);
-}
+    INITIALIZATION.call_once(|| {
+        // TODO: test what happens when we panic
+        TOKIO_RUNTIME.get_or_init(|| runtime::Builder::new_multi_thread().enable_all().build().unwrap());
+        log_debug("Tokio runtime initialized".to_owned());
+        rexiv2::initialize().expect("Unable to initialize rexiv2");
+        log_debug("Rexiv2 initialized".to_owned());
+    });
 
-pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
-    rexiv2::initialize().expect("Unable to initialize rexiv2");
-    if !HARDWARE_INITIALIZED.load(Ordering::SeqCst) {
-        // Hardware has not been initialized yet
-        helpers::initialize_hardware(ready_sink);
-        HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
-    } else {
-        // Hardware has already been initialized (possible due to Hot Reload)
-        log_debug("Possible Hot Reload: Closing any open cameras and noise generators".to_string());
-        for map_entry in NOKHWA_HANDLES.iter() {
-            map_entry.value().lock().expect("Could not lock on handle").camera.set_callback(|_| {}).expect("Stream close error");
-        }
-        log_debug("Possible Hot Reload: Closed nokhwa".to_string());
-        NOKHWA_HANDLES.clear();
-        for map_entry in GPHOTO2_HANDLES.iter() {
-            TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
-                gphoto2::stop_liveview(map_entry.value().lock().expect("Could not lock camera").camera.clone()).await
-            }).expect("Could not get result");
-        }
-        log_debug("Possible Hot Reload: Closed gphoto2".to_string());
-        GPHOTO2_HANDLES.clear();
+    if !NOISE_HANDLES.is_empty() {
+        log_debug("Possible Hot Reload: Closing noise handles".to_string());
         for map_entry in NOISE_HANDLES.iter() {
             noise_close(*map_entry.key());
         }
-        log_debug("Possible Hot Reload: Closed noise".to_string());
+        NOISE_HANDLES.clear();
+        log_debug("Possible Hot Reload: Closed noise handles".to_string());
     }
+
+    log_info("Helper library initialization done".to_owned());
 }

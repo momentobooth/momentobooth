@@ -6,18 +6,14 @@ use ::gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidge
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 
-use crate::{helpers::{log_debug, log_warning}, models::images::RawImage, utils::jpeg};
+use crate::{logging::{{log_debug, log_info}, log_warning}, models::images::RawImage, utils::jpeg, TOKIO_RUNTIME};
+use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self}, models::live_view::CameraState, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}}};
 
 use chrono::Duration;
-
 use std::sync::Mutex;
-
 use dashmap::DashMap;
 use flutter_rust_bridge::frb;
 use std::sync::LazyLock;
-
-use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self}, helpers::TOKIO_RUNTIME, models::live_view::CameraState, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}}};
-
 
 static CONTEXT: OnceLock<Context> = OnceLock::new();
 
@@ -277,6 +273,27 @@ pub struct GPhoto2File {
 
 pub static GPHOTO2_HANDLES: LazyLock<DashMap<u32, Arc<Mutex<GPhoto2CameraHandle>>>> = LazyLock::new(|| DashMap::<u32, Arc<Mutex<GPhoto2CameraHandle>>>::new());
 
+static GPHOTO2_INITIALIZED: AtomicBool = AtomicBool::new(false);
+
+pub fn gphoto2_initialize() {
+    if !GPHOTO2_INITIALIZED.load(Ordering::SeqCst) {
+        // gPhoto2 has not been initialized yet
+        gphoto2::initialize().expect("Could not initialize gPhoto2");
+        GPHOTO2_INITIALIZED.store(true, Ordering::SeqCst);
+        log_info("Initialized gPhoto2".to_owned());
+    } else {
+        // Hardware has already been initialized (possible due to Hot Reload)
+        log_debug("Possible Hot Reload: Closing open gPhoto2 handles".to_string());
+        for map_entry in GPHOTO2_HANDLES.iter() {
+            TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+                gphoto2::stop_liveview(map_entry.value().lock().expect("Could not lock camera").camera.clone()).await
+            }).expect("Could not get result");
+        }
+        log_debug("Possible Hot Reload: Closed gPhoto2 handles".to_string());
+        GPHOTO2_HANDLES.clear();
+    }
+}
+
 static GPHOTO2_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
 
 pub fn gphoto2_get_cameras() -> Vec<GPhoto2CameraInfo> {
@@ -412,7 +429,7 @@ pub fn gphoto2_set_extra_file_callback(handle_id: u32, image_sink: StreamSink<GP
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().expect("Could not lock camera").camera.clone();
 
-    crate::helpers::TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
         gphoto2::set_extra_file_callback(camera, move |data| {
             image_sink.add(data);
         }).await;

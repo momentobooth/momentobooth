@@ -3,57 +3,15 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:momento_booth/app/shell/shell.dart';
-import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/managers/printing_manager.dart';
-import 'package:momento_booth/repositories/secret/secret_repository.dart';
-import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
-import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
-import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 final GetIt getIt = GetIt.instance;
 
 void main() async {
-  await RustLib.init();
   _ensureGPhoto2EnvironmentVariables();
-
   WidgetsFlutterBinding.ensureInitialized();
-  await initialize();
-
-  getIt
-    ..enableRegisteringMultipleInstancesOfOneType()
-
-    // Log
-    ..registerSingleton(Talker(
-      settings: TalkerSettings(),
-    ))
-
-    // Repositories
-    ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository())
-
-    // Managers
-    ..registerSingleton(HelperLibraryInitializationManager())
-    ..registerSingleton(StatsManager())
-    ..registerSingleton(SfxManager())
-    ..registerSingleton(SettingsManager())
-    ..registerSingleton(WindowManager())
-    ..registerSingleton(LiveViewManager())
-    ..registerSingleton(MqttManager())
-    ..registerSingleton(NotificationsManager())
-    ..registerSingleton(PrintingManager());
-
-  await getIt<HelperLibraryInitializationManager>().initialize();
-  await getIt<SettingsManager>().load();
-  await getIt<StatsManager>().load();
-  await getIt<WindowManager>().initialize();
-  getIt<LiveViewManager>().initialize();
-  getIt<MqttManager>().initialize();
-  await getIt<SfxManager>().initialize();
-  getIt<NotificationsManager>().initialize();
-  getIt<PrintingManager>().initialize();
 
   String sentryDsn = await _resolveSentryDsnOverride() ?? const String.fromEnvironment("SENTRY_DSN", defaultValue: '');
   await SentryFlutter.init(

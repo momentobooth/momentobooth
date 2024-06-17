@@ -5,6 +5,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:path/path.dart' hide context;
 import 'package:path_provider/path_provider.dart';
 import 'package:synchronized/synchronized.dart';
@@ -14,10 +15,15 @@ part 'stats_manager.g.dart';
 
 class StatsManager = StatsManagerBase with _$StatsManager;
 
-abstract class StatsManagerBase with Store, Logger {
+abstract class StatsManagerBase with Store, Logger, Subsystem {
 
   @readonly
   Stats _stats = const Stats();
+
+  @override
+  Future<void> initialize() async {
+    await load();
+  }
 
   // /////////// //
   // Local stats //

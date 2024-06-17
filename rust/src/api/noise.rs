@@ -6,7 +6,8 @@ pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
 use turborand::rng::Rng;
 
-use crate::{hardware_control::live_view::white_noise::{self, WhiteNoiseGeneratorHandle}, helpers::log_debug, models::images::RawImage, utils::flutter_texture::FlutterTexture};
+use crate::logging::log_debug;
+use crate::{hardware_control::live_view::white_noise::{self, WhiteNoiseGeneratorHandle}, models::images::RawImage, utils::flutter_texture::FlutterTexture};
 
 pub static NOISE_HANDLES: LazyLock<DashMap<u32, WhiteNoiseGeneratorHandle>> = LazyLock::new(|| DashMap::<u32, WhiteNoiseGeneratorHandle>::new());
 

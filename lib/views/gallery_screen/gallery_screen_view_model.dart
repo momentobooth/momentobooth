@@ -31,7 +31,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   final DateFormat formatter = DateFormat("MMM dd – HH:mm");
 
   Directory get outputDir => Directory(getIt<SettingsManager>().settings.output.localFolder);
-  String get baseName => PhotosManager.instance.baseName;
+  String get baseName => getIt<PhotosManager>().baseName;
 
   bool get isFaceRecognitionEnabled => getIt<SettingsManager>().settings.faceRecognition.enable;
 
