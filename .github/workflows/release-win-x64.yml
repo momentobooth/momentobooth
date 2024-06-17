@@ -73,7 +73,7 @@ jobs:
           rust -> target
 
     - name: Setup sccache
-      uses: mozilla-actions/sccache-action@v0.0.4
+      uses: mozilla-actions/sccache-action@v0.0.5
 
     - name: Install cargo-expand
       uses: baptiste0928/cargo-install@v3
