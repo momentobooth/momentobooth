@@ -126,16 +126,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
-name = "atom_table"
-version = "1.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99b6f0df0e7ef17104409ad1d77edf06872fe3ccc2294ec43adc239a9ac19d45"
-dependencies = [
- "thiserror",
- "typed-index-collections",
-]
-
-[[package]]
 name = "atomic"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3236,7 +3226,6 @@ version = "0.2.0"
 dependencies = [
  "ahash",
  "anyhow",
- "atom_table",
  "bindgen 0.70.1",
  "chrono",
  "dashmap 6.1.0",
@@ -4160,15 +4149,6 @@ name = "typeable"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1410f6f91f21d1612654e7cc69193b0334f909dcf2c790c4826254fbb86f8887"
-
-[[package]]
-name = "typed-index-collections"
-version = "3.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8d844b11f547a6fb9dee7ed073d9860174917a072aabe05df6ee60dbe79e7afa"
-dependencies = [
- "serde",
-]
 
 [[package]]
 name = "typenum"
