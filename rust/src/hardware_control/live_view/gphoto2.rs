@@ -442,7 +442,6 @@ pub fn gphoto2_set_extra_file_callback(handle_id: u32, image_sink: StreamSink<GP
 // Structs //
 // /////// //
 
-#[frb(ignore)]
 pub struct GPhoto2CameraHandle {
     pub status_sink: Option<StreamSink<CameraState>>,
     pub camera: Arc<AsyncMutex<GPhoto2Camera>>,
@@ -456,7 +455,6 @@ pub struct GPhoto2CameraHandle {
 }
 
 impl GPhoto2CameraHandle {
-    #[frb(ignore)]
     fn new(camera: GPhoto2Camera, operations: Vec<ImageOperation>) -> Self {
         Self {
             status_sink: None,
@@ -473,7 +471,6 @@ impl GPhoto2CameraHandle {
 }
 
 impl Drop for GPhoto2CameraHandle {
-    #[frb(ignore)]
     fn drop(&mut self) {
         debug!("{}", "Dropping GPhoto2CameraHandle");
     }
