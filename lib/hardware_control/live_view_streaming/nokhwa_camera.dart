@@ -1,8 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
-import 'package:momento_booth/exceptions/nokhwa_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
-import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/src/rust/api/nokhwa.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
@@ -19,6 +16,8 @@ class NokhwaCamera extends LiveViewSource {
 
   late int handleId;
 
+  static Future<void>? _initFuture;
+
   NokhwaCamera({required this.id, required this.friendlyName});
 
   // //////////// //
@@ -26,7 +25,7 @@ class NokhwaCamera extends LiveViewSource {
   // //////////// //
 
   static Future<List<NokhwaCamera>> getAllCameras() async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     List<NokhwaCameraInfo> cameras = await nokhwaGetCameras();
     return cameras.map((camera) => NokhwaCamera(
       id: camera.friendlyName,
@@ -48,7 +47,7 @@ class NokhwaCamera extends LiveViewSource {
     required BigInt texturePtr,
     List<ImageOperation> operations = const [],
   }) async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     handleId = await nokhwaOpenCamera(
       friendlyName: friendlyName,
       operations: operations,
@@ -70,10 +69,9 @@ class NokhwaCamera extends LiveViewSource {
   @override
   Future<void> dispose() => nokhwaCloseCamera(handleId: handleId);
 
-  static Future<void> _ensureLibraryInitialized() async {
-    if (!await getIt<HelperLibraryInitializationManager>().nokhwaInitializationResult) {
-      throw NokhwaException('Nokhwa implementation cannot be used due to initialization failure.');
-    }
+  static Future<void> ensureLibraryInitialized() async {
+    _initFuture ??= nokhwaInitialize();
+    await _initFuture;
   }
 
 }

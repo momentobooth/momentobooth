@@ -11,13 +11,17 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
+import 'package:momento_booth/src/rust/api/initialization.dart';
+import 'package:momento_booth/src/rust/api/logging.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
+import 'package:momento_booth/src/rust/models/logging.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
-import 'package:momento_booth/utils/platform_and_app.dart';
+import 'package:momento_booth/utils/environment_info.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart' hide LogLevel;
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
 part 'shell.routes.dart';
@@ -94,8 +98,11 @@ class _ShellState extends State<Shell> with WindowListener {
 }
 
 Future<void> _initializeApp() async {
+  // TODO: handle errors
   await RustLib.init();
-  await initialize();
+  _initializeLoggingFromRust();
+  await initializeLibrary();
+  await initializeEnvironmentInfo();
 
   getIt
     ..enableRegisteringMultipleInstancesOfOneType()
@@ -109,7 +116,6 @@ Future<void> _initializeApp() async {
     ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository())
 
     // Managers
-    ..registerManager(HelperLibraryInitializationManager())
     ..registerManager(StatsManager())
     ..registerManager(SfxManager())
     ..registerManager(SettingsManager())
@@ -127,4 +133,14 @@ Future<void> _initializeApp() async {
   await getIt<SfxManager>().initialize();
   getIt<NotificationsManager>().initialize();
   getIt<PrintingManager>().initialize();
+}
+
+void _initializeLoggingFromRust() {
+  Logger logger = getIt<Logger>();
+  initializeLogging().listen((event) => switch (event.level) {
+    LogLevel.debug => logger.logDebug("Lib: ${event.message}"),
+    LogLevel.info => logger.logInfo("Lib: ${event.message}"),
+    LogLevel.warning => logger.logWarning("Lib: ${event.message}"),
+    LogLevel.error => logger.logError("Lib: ${event.message}"),
+  });
 }

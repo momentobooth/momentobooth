@@ -16,6 +16,6 @@ String get osFriendlyName => switch (Platform.operatingSystem) {
   _ => 'Unknown',
 };
 
-Future<void> initialize() async {
+Future<void> initializeEnvironmentInfo() async {
   packageInfo = await PackageInfo.fromPlatform();
 }
