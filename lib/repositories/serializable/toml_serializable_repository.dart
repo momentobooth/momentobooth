@@ -8,12 +8,13 @@ import 'package:toml/toml.dart';
 
 typedef MapDeserializer<TData> = TData Function(Map<String, dynamic> map);
 
-class TomlSerializablesRepository<TData extends TomlEncodableValue> implements SerialiablesRepository<TData> {
+/// File backed repository for a single TOML encodable and decodable value.
+class TomlSerializableRepository<TData extends TomlEncodableValue> implements SerialiableRepository<TData> {
 
   final File file;
   final MapDeserializer<TData> deserializer;
 
-  TomlSerializablesRepository(String filePath, this.deserializer) : file = File(filePath);
+  TomlSerializableRepository(String filePath, this.deserializer) : file = File(filePath);
 
   @override
   Future<bool> hasExistingData() async => await file.exists();

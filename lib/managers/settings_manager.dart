@@ -1,14 +1,11 @@
-import 'dart:io';
-
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
-import 'package:path/path.dart' hide context;
-import 'package:path_provider/path_provider.dart';
-import 'package:toml/toml.dart';
 
 part 'settings_manager.g.dart';
 
@@ -16,31 +13,30 @@ class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
 abstract class SettingsManagerBase with Store, Logger, Subsystem {
 
-  static const _fileName = ;
-
-  late File _settingsFile;
-
-  @observable
-  Settings? _settings;
-
-  @computed
-  Settings get settings => _settings!;
+  @readonly
+  late Settings _settings;
 
   @override
-  Future<void> initialize() async {
-    await load();
-  }
+  Future<SubsystemStatus> initialize() async {
+    try {
+      SerialiableRepository<Settings> settingsRepository = getIt<SerialiableRepository<Settings>>();
+      bool hasExistingSettings = await settingsRepository.hasExistingData();
 
-  // ////// //
-  // Mutate //
-  // ////// //
-
-  @action
-  Future<void> updateAndSave(Settings settings) async {
-    if (settings == _settings) return;
-    _settings = settings;
-    getIt<MqttManager>().publishSettings(settings);
-    await _save();
+      if (!hasExistingSettings) {
+        _settings = Settings.withDefaults();
+        return const SubsystemStatus.ok(
+          message: "No existing settings found, a new settings file has been created.",
+        );
+      } else {
+        _settings = await settingsRepository.get();
+        return const SubsystemStatus.ok();
+      }
+    } catch (e) {
+      _settings = Settings.withDefaults();
+      return SubsystemStatus.warning(
+        message: "Could not read existing settings: $e\n\nDefault settings have been loaded. Your current settings file will be overwritten if you alter any settings. Backup your current settings file in case you need anything from it.",
+      );
+    }
   }
 
   // /////////// //
@@ -48,52 +44,15 @@ abstract class SettingsManagerBase with Store, Logger, Subsystem {
   // /////////// //
 
   @action
-  Future<void> load() async {
-    logDebug("Loading settings");
-    await _ensureSettingsFileIsSet();
+  Future<void> updateAndSave(Settings settings) async {
+    if (settings == _settings) return;
 
-    if (!_settingsFile.existsSync()) {
-      // File does not exist, load defaults and create settings file
-      _settings = Settings.withDefaults();
-      await _save();
-      return;
-    }
-
-    // File does exist
-    String settingsAsToml = await _settingsFile.readAsString();
-    TomlDocument settingsDocument = TomlDocument.parse(settingsAsToml);
-    Map<String, dynamic> settingsMap = settingsDocument.toMap();
-    try {
-      _settings = Settings.fromJson(settingsMap);
-      logDebug("Loaded settings: ${_settings?.toJson().toString() ?? "null"}");
-    } catch (_) {
-      // Fixme: Failed to parse, load defaults and create settings file
-      _settings = Settings.withDefaults();
-    }
-    await _save();
-  }
-
-  Future<void> _save() async {
     logDebug("Saving settings");
-    await _ensureSettingsFileIsSet();
-
-    Map<String, dynamic> settingsMap = _settings!.toJson();
-    TomlDocument settingsDocument = TomlDocument.fromMap(settingsMap);
-    String settingsAsToml = settingsDocument.toString();
-    await _settingsFile.writeAsString(settingsAsToml);
-
+    await getIt<SerialiableRepository<Settings>>().write(settings);
     logDebug("Saved settings");
-  }
 
-  // /////// //
-  // Helpers //
-  // /////// //
-
-  Future<void> _ensureSettingsFileIsSet() async {
-    // Find path
-    Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String filePath = join(storageDirectory.path, _fileName);
-    _settingsFile = File(filePath);
+    _settings = settings;
+    getIt<MqttManager>().publishSettings(settings);
   }
 
 }

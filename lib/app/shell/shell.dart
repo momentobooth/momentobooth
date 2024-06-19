@@ -114,11 +114,11 @@ Future<void> _initializeApp() async {
   getIt
     // Repositories
     ..registerSingleton<SecretsRepository>(const SecureStorageSecretsRepository())
-    ..registerSingleton<SerialiablesRepository<Settings>>(
-      TomlSerializablesRepository(path.join(documentsPath, "MomentoBooth_Settings.toml"), Settings.fromJson),
+    ..registerSingleton<SerialiableRepository<Settings>>(
+      TomlSerializableRepository(path.join(documentsPath, "MomentoBooth_Settings.toml"), Settings.fromJson),
     )
-    ..registerSingleton<SerialiablesRepository<Stats>>(
-      TomlSerializablesRepository(path.join(documentsPath, "MomentoBooth_Stats.toml"), Stats.fromJson),
+    ..registerSingleton<SerialiableRepository<Stats>>(
+      TomlSerializableRepository(path.join(documentsPath, "MomentoBoothstats.toml"), Stats.fromJson),
     )
 
     // Managers
@@ -131,8 +131,8 @@ Future<void> _initializeApp() async {
     ..registerManager(NotificationsManager())
     ..registerManager(PrintingManager());
 
-  await getIt<SettingsManager>().load();
-  await getIt<StatsManager>().load();
+  await getIt<SettingsManager>().initialize();
+  await getIt<StatsManager>().initialize();
   await getIt<WindowManager>().initialize();
   getIt<LiveViewManager>().initialize();
   getIt<MqttManager>().initialize();
