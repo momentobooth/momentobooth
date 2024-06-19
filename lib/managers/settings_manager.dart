@@ -16,7 +16,7 @@ class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
 abstract class SettingsManagerBase with Store, Logger, Subsystem {
 
-  static const _fileName = "MomentoBooth_Settings.toml";
+  static const _fileName = ;
 
   late File _settingsFile;
 

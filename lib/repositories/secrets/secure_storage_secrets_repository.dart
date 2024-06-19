@@ -1,12 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 
-/// A [SecretRepository] that uses [FlutterSecureStorage] to store secrets.
-class SecureStorageSecretRepository extends SecretRepository {
+/// A [SecretsRepository] that uses [FlutterSecureStorage] to store secrets.
+class SecureStorageSecretsRepository extends SecretsRepository {
 
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
-  const SecureStorageSecretRepository();
+  const SecureStorageSecretsRepository();
 
   @override
   Future<void> storeSecret(String key, String value) async {

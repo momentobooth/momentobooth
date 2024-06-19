@@ -9,8 +9,12 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/repositories/secret/secret_repository.dart';
-import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/stats.dart';
+import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
+import 'package:momento_booth/repositories/secrets/secure_storage_secrets_repository.dart';
+import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
+import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/api/logging.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
@@ -21,6 +25,7 @@ import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
+import 'package:path/path.dart' as path;
 import 'package:talker_flutter/talker_flutter.dart' hide LogLevel;
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
@@ -108,12 +113,16 @@ Future<void> _initializeApp() async {
     ..enableRegisteringMultipleInstancesOfOneType()
 
     // Log
-    ..registerSingleton(Talker(
-      settings: TalkerSettings(),
-    ))
+    ..registerSingleton(Talker(settings: TalkerSettings()))
 
     // Repositories
-    ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository())
+    ..registerSingleton<SecretsRepository>(const SecureStorageSecretsRepository())
+    ..registerSingleton<SerialiablesRepository<Settings>>(
+      TomlSerializablesRepository(path.join(documentsPath, "MomentoBooth_Settings.toml"), Settings.fromJson),
+    )
+    ..registerSingleton<SerialiablesRepository<Stats>>(
+      TomlSerializablesRepository(path.join(documentsPath, "MomentoBooth_Stats.toml"), Stats.fromJson),
+    )
 
     // Managers
     ..registerManager(StatsManager())

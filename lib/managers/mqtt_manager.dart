@@ -14,7 +14,7 @@ import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
-import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
@@ -91,7 +91,7 @@ abstract class MqttManagerBase with Store, Logger {
       }
 
       try {
-        String password = await getIt<SecretRepository>().getSecret(mqttPasswordSecretKey) ?? "";
+        String password = await getIt<SecretsRepository>().getSecret(mqttPasswordSecretKey) ?? "";
         MqttConnectionStatus? result = await client.connect(newSettings.username, password);
         if (result?.state != MqttConnectionState.connected) {
           throw MqttException("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
