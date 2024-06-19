@@ -25,6 +25,8 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   int? handleId;
   bool isDisposed = false;
 
+  static Future<void>? _initFuture;
+
   GPhoto2Camera({required this.id, required this.friendlyName});
 
   // //////////// //
@@ -98,7 +100,6 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   @override
   Future<PhotoCapture> captureAndGetPhoto() async {
-    await _ensureLibraryInitialized();
     String captureTarget = getIt<SettingsManager>().settings.hardware.gPhoto2CaptureTarget;
     if (handleId == null) throw GPhoto2Exception("Camera not open.");
     var capture = await gphoto2CapturePhoto(handleId: handleId!, captureTargetValue: captureTarget);
@@ -134,7 +135,8 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   static Future<void> _ensureLibraryInitialized() async {
     const String iolibsDefine = String.fromEnvironment("IOLIBS");
     const String camlibsDefine = String.fromEnvironment("CAMLIBS");
-    await gphoto2Initialize(iolibsPath: iolibsDefine, camlibsPath: camlibsDefine);
+    _initFuture ??= gphoto2Initialize(iolibsPath: iolibsDefine, camlibsPath: camlibsDefine);
+    await _initFuture;
   }
 
 }

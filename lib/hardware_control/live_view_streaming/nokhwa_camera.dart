@@ -16,6 +16,8 @@ class NokhwaCamera extends LiveViewSource {
 
   late int handleId;
 
+  static Future<void>? _initFuture;
+
   NokhwaCamera({required this.id, required this.friendlyName});
 
   // //////////// //
@@ -68,7 +70,8 @@ class NokhwaCamera extends LiveViewSource {
   Future<void> dispose() => nokhwaCloseCamera(handleId: handleId);
 
   static Future<void> _ensureLibraryInitialized() async {
-    await nokhwaInitialize();
+    _initFuture ??= nokhwaInitialize();
+    await _initFuture;
   }
 
 }
