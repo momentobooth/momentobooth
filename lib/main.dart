@@ -6,6 +6,7 @@ import 'package:momento_booth/app/shell/shell.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
 
+// ignore: unreachable_from_main
 final GetIt getIt = GetIt.instance;
 
 void main() async {
