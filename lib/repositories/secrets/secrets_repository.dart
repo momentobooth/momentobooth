@@ -1,8 +1,8 @@
 const String mqttPasswordSecretKey = 'mqtt_password';
 
-abstract class SecretRepository {
-  
-  const SecretRepository();
+abstract class SecretsRepository {
+
+  const SecretsRepository();
 
   Future<void> storeSecret(String key, String value);
 
