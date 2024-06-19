@@ -11,6 +11,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
+import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/utils/environment_info.dart';
@@ -18,7 +19,8 @@ import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker/talker.dart';
+import 'package:talker_flutter/talker_flutter.dart' hide LogLevel;
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
 part 'shell.routes.dart';
@@ -96,6 +98,8 @@ class _ShellState extends State<Shell> with WindowListener {
 
 Future<void> _initializeApp() async {
   await RustLib.init();
+  await _initializeLog();
+  await initializeLibrary();
 
   getIt
     ..enableRegisteringMultipleInstancesOfOneType()
@@ -112,7 +116,6 @@ Future<void> _initializeApp() async {
     ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository())
 
     // Managers
-    ..registerManager(HelperLibraryInitializationManager())
     ..registerManager(StatsManager())
     ..registerManager(SfxManager())
     ..registerManager(SettingsManager())
@@ -145,4 +148,18 @@ Future<void> _createPathsSafe() async {
   for (String path in paths) {
     createPathSafe(path);
   }
+}
+
+Future _initializeLog() async {
+  Talker talker = getIt<Talker>();
+  setupLogStream().listen((msg) {
+    LogLevel logLevel = switch (msg.logLevel) {
+      Level.error => LogLevel.error,
+      Level.warn => LogLevel.warning,
+      Level.info => LogLevel.info,
+      Level.debug => LogLevel.debug,
+      Level.trace => LogLevel.verbose,
+    };
+    talker.log("Lib: ${msg.lbl} - ${msg.msg}", logLevel: logLevel);
+  });
 }

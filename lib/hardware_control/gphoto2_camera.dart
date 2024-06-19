@@ -6,7 +6,6 @@ import 'package:momento_booth/exceptions/gphoto2_exception.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/helper_library_initialization_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/src/rust/api/gphoto2.dart';
@@ -26,6 +25,8 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   int? handleId;
   bool isDisposed = false;
 
+  static Future<void>? _initFuture;
+
   GPhoto2Camera({required this.id, required this.friendlyName});
 
   // //////////// //
@@ -33,7 +34,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   // //////////// //
 
   static Future<List<GPhoto2Camera>> getAllCameras() async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     List<GPhoto2CameraInfo> cameras = await gphoto2GetCameras();
     return cameras.map((camera) => GPhoto2Camera(
       id: "${camera.port}/${camera.model}",
@@ -55,7 +56,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     required BigInt texturePtr,
     List<ImageOperation> operations = const [],
   }) async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     var split = id.split("/");
     handleId = await gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: getIt<SettingsManager>().settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
     await gphoto2StartLiveview(
@@ -99,7 +100,6 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   @override
   Future<PhotoCapture> captureAndGetPhoto() async {
-    await _ensureLibraryInitialized();
     String captureTarget = getIt<SettingsManager>().settings.hardware.gPhoto2CaptureTarget;
     if (handleId == null) throw GPhoto2Exception("Camera not open.");
     var capture = await gphoto2CapturePhoto(handleId: handleId!, captureTargetValue: captureTarget);
@@ -117,13 +117,13 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2);
 
   Future<void> autoFocus() async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     if (handleId != null) await gphoto2AutoFocus(handleId: handleId!);
   }
 
   @override
   Future<void> clearPreviousEvents() async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     if (handleId != null) {
       await gphoto2ClearEvents(
         handleId: handleId!,
@@ -132,10 +132,9 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     }
   }
 
-  static Future<void> _ensureLibraryInitialized() async {
-    if (!await getIt<HelperLibraryInitializationManager>().gphoto2InitializationResult) {
-      throw GPhoto2Exception('gPhoto2 implementation cannot be used due to initialization failure.');
-    }
+  static Future<void> ensureLibraryInitialized() async {
+    _initFuture ??= gphoto2Initialize();
+    await _initFuture;
   }
 
 }
