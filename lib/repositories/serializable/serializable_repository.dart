@@ -1,6 +1,7 @@
-abstract class SerialiablesRepository<TData> {
+/// Repository for a single serializable and deserializable value.
+abstract class SerialiableRepository<TData> {
 
-  const SerialiablesRepository();
+  const SerialiableRepository();
 
   Future<bool> hasExistingData();
 

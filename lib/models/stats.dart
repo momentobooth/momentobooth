@@ -10,7 +10,7 @@ part 'stats.g.dart';
 
 @freezed
 class Stats with _$Stats implements TomlEncodableValue {
-  
+
   const Stats._();
 
   const factory Stats({
@@ -24,10 +24,10 @@ class Stats with _$Stats implements TomlEncodableValue {
     @Default(0) int retakes,
     @Default(0) int collageChanges,
     @Default(0) int createdMultiCapturePhotos,
-  }) = _Stats;
+  }) = stats;
 
   factory Stats.fromJson(Map<String, Object?> json) => _$StatsFromJson(json);
-  
+
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 

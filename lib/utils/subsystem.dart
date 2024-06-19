@@ -15,14 +15,15 @@ mixin Subsystem on Logger {
   // Initialization //
   // ////////////// //
 
-  FutureOr<void> initialize() {}
+  FutureOr<SubsystemStatus?> initialize() {
+    return const SubsystemStatus.ok();
+  }
 
   @nonVirtual
   Future<void> initializeSafe() async {
     SubsystemStatus? result;
     try {
-      await initialize();
-      result = const SubsystemStatus.ok();
+      result = await initialize() ?? const SubsystemStatus.ok();
     } catch (e, s) {
       logError("Init of $runtimeType failed", e, s);
       result = SubsystemStatus.error(message: "Initialization error: $e");

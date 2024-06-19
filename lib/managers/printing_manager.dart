@@ -22,7 +22,7 @@ abstract class PrintingManagerBase with Store, Logger, Subsystem {
   // ////////////// //
 
   @override
-  void initialize() {
+  Null initialize() {
     autorun((_) {
       // To make sure mobx detects that we are responding to changes to this property
       getIt<SettingsManager>().settings.hardware.printingImplementation;
