@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/update_secret_dialog.dart';
 
@@ -42,7 +42,7 @@ class SecretInputCard extends StatelessWidget {
         onDismiss: () => Navigator.of(context).pop(),
         onSavePressed: (value) async {
           Navigator.of(context).pop();
-          await getIt<SecretRepository>().storeSecret(secretStorageKey, value);
+          await getIt<SecretsRepository>().storeSecret(secretStorageKey, value);
           onSecretStored?.call();
         },
       ),
