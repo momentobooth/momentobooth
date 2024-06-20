@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:momento_booth/app/shell/shell.dart';
-import 'package:momento_booth/utils/environment_variables.dart';
+import 'package:momento_booth/utils/system/environment_helpers.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
 
