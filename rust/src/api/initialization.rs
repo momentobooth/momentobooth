@@ -8,6 +8,7 @@ use gexiv2_sys::gexiv2_get_version;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
 use tokio::runtime;
+use rustc_version_runtime::version;
 
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
