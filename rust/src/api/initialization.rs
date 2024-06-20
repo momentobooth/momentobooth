@@ -13,7 +13,6 @@ use rustc_version_runtime::version;
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
 use log::{debug, info, LevelFilter};
-use rustc_version_runtime::version;
 
 flutter_logger::flutter_logger_init!(LevelFilter::Trace);
 

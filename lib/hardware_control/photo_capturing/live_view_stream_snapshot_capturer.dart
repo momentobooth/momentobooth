@@ -4,7 +4,7 @@ import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
-import 'package:momento_booth/utils/environment_info.dart';
+import 'package:momento_booth/utils/system/app_version_helpers.dart';
 
 class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod {
 
@@ -19,7 +19,7 @@ class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod {
       quality: 80,
       exifTags: [
         const MomentoBoothExifTag.imageDescription("Live view capture"),
-        MomentoBoothExifTag.software(exifSoftwareName),
+        MomentoBoothExifTag.software(exifTagSoftwareName),
         MomentoBoothExifTag.createDate(DateTime.now()),
       ],
       operationsBeforeEncoding: const [],

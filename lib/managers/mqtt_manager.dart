@@ -15,8 +15,8 @@ import 'package:momento_booth/models/home_assistant/home_assistant_discovery_pay
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
-import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/system/app_version_helpers.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:synchronized/synchronized.dart';

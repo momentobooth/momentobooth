@@ -4,9 +4,7 @@ import 'dart:math';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/src/rust/models/version_info.dart';
 import 'package:momento_booth/utils/subsystem.dart';
-import 'package:momento_booth/views/custom_widgets/onboarding_version_info.dart';
 
 class OnboardingPage extends StatefulWidget {
 

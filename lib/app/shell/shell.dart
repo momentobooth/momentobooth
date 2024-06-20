@@ -24,7 +24,7 @@ import 'package:path/path.dart' as path;
 import 'package:talker/talker.dart';
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
-part 'shell.initialization.dart';
+part "shell.initialization.dart";
 part 'shell.routes.dart';
 
 class Shell extends StatefulWidget {
