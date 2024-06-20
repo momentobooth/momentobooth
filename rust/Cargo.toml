@@ -35,6 +35,7 @@ rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 regex = "1.10.6"
 parking_lot = "0.12.3"
 susync = "0.2.0"
+rustc_version_runtime = "0.3.0"
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", rev = "74a98ace10368320cfcc2186118ae10d5308ca59", default-features = true, features = ["input-native", "output-threaded", "flume"] }
 
 [patch.crates-io]

@@ -11,7 +11,7 @@ mod hardware_control;
 mod utils;
 mod logging;
 
-const TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
+const RUST_COMPILER_TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
 
 pub(crate) static INITIALIZATION: Once = Once::new();
 

@@ -1,9 +1,12 @@
 use crate::logging::*;
+use crate::models::version_info::VersionInfo;
 use crate::INITIALIZATION;
+use crate::RUST_COMPILER_TARGET;
 use crate::TOKIO_RUNTIME;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
 use tokio::runtime;
+use rustc_version_runtime::version;
 
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
@@ -14,7 +17,7 @@ use super::noise::NOISE_HANDLES;
 
 // Important note: This function should be allowed to run multiple times.
 // This should only happen when Hot Restart has been invoked on the Flutter app.
-pub fn initialize_library() {
+pub fn initialize_library() -> VersionInfo {
     log_debug("Helper library initialization started".to_owned());
 
     INITIALIZATION.call_once(|| {
@@ -35,4 +38,8 @@ pub fn initialize_library() {
     }
 
     log_info("Helper library initialization done".to_owned());
+    VersionInfo {
+        rust_version: version().to_string(),
+        rust_target: RUST_COMPILER_TARGET.to_owned(),
+    }
 }
