@@ -6,10 +6,6 @@ extension GetItExtension on GetIt {
 
   T registerManager<T extends Object>(T instance) {
     if (instance is Subsystem) {
-      if (!isRegistered<ObservableList<Subsystem>>()) {
-        registerSingleton(ObservableList<Subsystem>());
-      }
-
       get<ObservableList<Subsystem>>().add(instance);
     }
 
