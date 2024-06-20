@@ -23,8 +23,8 @@ import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
-import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/system/app_version_helpers.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/custom_widgets/photo_container.dart';
 import 'package:path/path.dart';
@@ -373,7 +373,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
       quality: jpgQuality,
       exifTags: [
         const MomentoBoothExifTag.imageDescription("Photo collage created with MomentoBooth"),
-        MomentoBoothExifTag.software(exifSoftwareName),
+        MomentoBoothExifTag.software(exifTagSoftwareName),
         MomentoBoothExifTag.createDate(DateTime.now()),
         MomentoBoothExifTag.makerNote(jsonEncode(MakerNoteData(
           sourcePhotos: chosenPhotos.map(

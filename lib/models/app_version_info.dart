@@ -10,6 +10,7 @@ abstract class AppVersionInfo with _$AppVersionInfo {
 
   const factory AppVersionInfo({
     required String appVersion,
+    required int appBuild,
     required String flutterVersion,
     required String rustVersion,
     required String rustTarget,
