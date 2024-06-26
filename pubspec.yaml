@@ -49,7 +49,7 @@ dependencies:
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
   ffi: 2.1.2
-  flutter_rust_bridge: 2.0.0-dev.40
+  flutter_rust_bridge: 2.0.0
 
   # Printing
   printing: 5.12.0
