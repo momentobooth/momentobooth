@@ -99,9 +99,9 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
 
     // PhotoBoothDialog
     photoBoothDialogButtonStyle: ButtonStyle(
-      textStyle: ButtonState.all(const TextStyle(fontSize: 16.0)),
-      padding: ButtonState.all(const EdgeInsets.symmetric(horizontal: 32.0, vertical: 18.0)),
-      shape: ButtonState.all(
+      textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 16.0)),
+      padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 32.0, vertical: 18.0)),
+      shape: WidgetStateProperty.all(
         SmoothRectangleBorder(
           borderRadius: SmoothBorderRadius(
             cornerRadius: 18,
