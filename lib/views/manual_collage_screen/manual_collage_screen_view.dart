@@ -15,7 +15,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
     required super.controller,
     required super.contextAccessor,
   });
-  
+
   @override
   Widget get body {
     return KeyboardListener(
@@ -90,8 +90,8 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
   }
 
   static final checkboxStyle = CheckboxThemeData(
-    foregroundColor: ButtonState.all(Colors.white),
-    uncheckedDecoration: ButtonState.all(BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(6))),
+    foregroundColor: WidgetStateProperty.all(Colors.white),
+    uncheckedDecoration: WidgetStateProperty.all(BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(6))),
   );
 
   Widget get _rightColumn {
