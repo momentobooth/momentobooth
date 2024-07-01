@@ -12,7 +12,7 @@ anyhow = "1.0.86"
 derive_more = "0.99.18"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.117"
+serde_json = "1.0.119"
 chrono = "0.4.38"
 image = { version = "0.25.1", features = ["rayon"] }
 ipp = "5.0.3"
