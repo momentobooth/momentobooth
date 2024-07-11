@@ -10,7 +10,6 @@ runtime: org.gnome.Platform
 runtime-version: '46'
 sdk: org.gnome.Sdk
 sdk-extensions:
-  - org.freedesktop.Sdk.Extension.rust-stable
   - org.freedesktop.Sdk.Extension.llvm18
 command: run.sh
 # add-extensions:
@@ -27,7 +26,7 @@ finish-args:
 build-options:
   build-args:
     - --share=network
-  append-path: "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm18/bin"
+  append-path: "/usr/lib/sdk/llvm18/bin"
   env:
     - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
     - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
@@ -68,12 +67,18 @@ modules:
     build-commands:
       - |
         export PATH="$PATH:$HOME/fvm/default/bin:$HOME/.fvm_flutter/bin:$HOME/.cargo/bin"
+
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rustup-init.sh
+        sh rustup-init.sh -y
+
         cargo install cargo-expand
         cargo install flutter_rust_bridge_codegen@2.1.0
+
         curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/main/scripts/install.sh | bash || true
         fvm install -s --skip-pub-get
         fvm global $(jq -r '.flutter' .fvmrc) -f
         fvm flutter precache --linux
+
         fvm flutter packages get
         flutter_rust_bridge_codegen generate
         fvm dart run build_runner build --delete-conflicting-outputs
