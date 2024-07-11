@@ -2,16 +2,16 @@
 #
 # Run (from repo root):
 # - flatpak install org.freedesktop.Sdk.Extension.rust-stable
-# - flatpak install rg.freedesktop.Sdk.Extension.llvm17
+# - flatpak install org.freedesktop.Sdk.Extension.llvm18
 # - flatpak-builder build/flatpak linux/packaging/flatpak/com.h3xsoftware.MomentoBooth.yml --force-clean
 
 id: com.h3xsoftware.MomentoBooth
-runtime: org.freedesktop.Platform
-runtime-version: '23.08'
-sdk: org.freedesktop.Sdk
+runtime: org.gnome.Platform
+runtime-version: '46'
+sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
-  - org.freedesktop.Sdk.Extension.llvm17
+  - org.freedesktop.Sdk.Extension.llvm18
 command: run.sh
 # add-extensions:
 #   - org.freedesktop.Platform.GL.default
@@ -27,7 +27,7 @@ finish-args:
 build-options:
   build-args:
     - --share=network
-  append-path: "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm16/bin"
+  append-path: "/usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm18/bin"
   env:
     - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
     - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
@@ -45,20 +45,39 @@ modules:
       - type: archive
         url: "https://github.com/gphoto/libgphoto2/releases/download/v2.5.31/libgphoto2-2.5.31.tar.bz2"
         sha256: "4f81c34c0b812bee67afd5f144940fbcbe01a2055586a6a1fa2d0626024a545b"
-  - name: momento-booth
+  - name: exiv2
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DEXIV2_BUILD_DOC:BOOL=OFF
+      - -DEXIV2_BUILD_EXIV2_COMMAND=OFF
+      - -DEXIV2_ENABLE_BMFF=ON
+      - -DEXIV2_BUILD_SAMPLES=OFF
+    sources:
+      - type: archive
+        url: https://github.com/Exiv2/exiv2/releases/download/v0.27.7/exiv2-0.27.7-Source.tar.gz
+        sha256: 70629dc27e3d4dd5c3fa91afbea93166d338b1de284e6a4c44bbf9dcfe7bbc6d
+  - name: gexiv2
+    buildsystem: meson
+    sources:
+      - type: archive
+        url: "https://download.gnome.org/sources/gexiv2/0.14/gexiv2-0.14.3.tar.xz"
+        sha256: "21e64d2c56e9b333d44fef3f2a4b25653d922c419acd972fa96fab695217e2c8"
+  - name: momentobooth
     buildsystem: simple
     build-commands:
       - |
-        curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/main/scripts/install.sh | bash || true
-        export PATH="$PATH:$HOME/.fvm_flutter/bin:$HOME/.cargo/bin"
-        ls
-        fvm install
-        fvm flutter packages get
+        export PATH="$PATH:$HOME/fvm/default/bin:$HOME/.fvm_flutter/bin:$HOME/.cargo/bin"
         cargo install cargo-expand
-        cargo install flutter_rust_bridge 1.82.5
-        flutter_rust_bridge_codegen --rust-input rust/src/dart_bridge/api.rs --dart-output lib/rust_bridge/library_api.generated.dart --rust-output rust/src/dart_bridge/ffi_exports.rs --skip-add-mod-to-lib --no-build-runner
+        cargo install flutter_rust_bridge_codegen@2.1.0
+        curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/main/scripts/install.sh | bash || true
+        fvm install -s --skip-pub-get
+        fvm global $(jq -r '.flutter' .fvmrc) -f
+        fvm flutter precache --linux
+        fvm flutter packages get
+        flutter_rust_bridge_codegen generate
         fvm dart run build_runner build --delete-conflicting-outputs
-        fvm flutter build linux --release
+        fvm flutter build linux --release -v
     sources:
       - type: dir
         path: ../../../
