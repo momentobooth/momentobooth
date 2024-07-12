@@ -11,9 +11,8 @@ runtime-version: '46'
 sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.llvm18
-command: run.sh
-# add-extensions:
-#   - org.freedesktop.Platform.GL.default
+command: momentobooth-wrapper
+separate-locales: false
 finish-args:
   - --socket=fallback-x11
   - --share=ipc
@@ -44,6 +43,13 @@ modules:
       - type: archive
         url: "https://github.com/gphoto/libgphoto2/releases/download/v2.5.31/libgphoto2-2.5.31.tar.bz2"
         sha256: "4f81c34c0b812bee67afd5f144940fbcbe01a2055586a6a1fa2d0626024a545b"
+    cleanup:
+      - "/bin"
+      - "*.la"
+      - "/lib/pkgconfig"
+      - "/include"
+      - "/share/doc"
+      - "/share/man"
   - name: exiv2
     buildsystem: cmake-ninja
     config-opts:
@@ -56,13 +62,21 @@ modules:
       - type: archive
         url: https://github.com/Exiv2/exiv2/releases/download/v0.27.7/exiv2-0.27.7-Source.tar.gz
         sha256: 70629dc27e3d4dd5c3fa91afbea93166d338b1de284e6a4c44bbf9dcfe7bbc6d
+    cleanup:
+      - "/lib/cmake"
+      - "/lib/pkgconfig"
+      - "/include"
+      - "/share/man"
   - name: gexiv2
     buildsystem: meson
     sources:
       - type: archive
         url: "https://download.gnome.org/sources/gexiv2/0.14/gexiv2-0.14.3.tar.xz"
         sha256: "21e64d2c56e9b333d44fef3f2a4b25653d922c419acd972fa96fab695217e2c8"
-  - name: momentobooth
+    cleanup:
+      - "/lib/pkgconfig"
+      - "/include"
+  - name: momentobooth-build
     buildsystem: simple
     build-commands:
       - |
@@ -83,6 +97,15 @@ modules:
         flutter_rust_bridge_codegen generate
         fvm dart run build_runner build --delete-conflicting-outputs
         fvm flutter build linux --release -v
+
+        mkdir -p /app/opt/momentobooth
+        cp -r ../momentobooth-build/build/linux/x64/release/bundle/* /app/opt/momentobooth/
     sources:
       - type: dir
         path: ../../../
+    post-install:
+      - install -Dm755 linux/packaging/flatpak/momentobooth-wrapper.sh /app/bin/momentobooth-wrapper
+    cleanup:
+      - "/lib"
+cleanup:
+  - "/lib/debug"
