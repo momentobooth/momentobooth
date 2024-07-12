@@ -6,5 +6,6 @@ export LD_LIBRARY_PATH="lib:../lib:${LD_LIBRARY_PATH}"
 export IOLIBS="../iolibs"
 export CAMLIBS="../camlibs"
 export GTK_PATH="../gtk"
+export LIBMPV_LIBRARY_PATH="../lib/libmpv.so"
 
 exec ./momento_booth 
