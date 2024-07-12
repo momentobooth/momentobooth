@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
@@ -23,6 +24,7 @@ abstract class _SfxManagerBase with Store, Logger {
 
   Future<void> initialize() async {
     try {
+      JustAudioMediaKit.ensureInitialized();
       AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
 
       await audioPlayer.setAsset('assets/sounds/silence.wav'); // This is a hack to make sure the audio player is initialized

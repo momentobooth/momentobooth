@@ -8,7 +8,7 @@
 
 #include <file_selector_windows/file_selector_windows.h>
 #include <flutter_secure_storage_windows/flutter_secure_storage_windows_plugin.h>
-#include <just_audio_windows/just_audio_windows_plugin.h>
+#include <media_kit_libs_windows_audio/media_kit_libs_windows_audio_plugin_c_api.h>
 #include <printing/printing_plugin.h>
 #include <screen_retriever/screen_retriever_plugin.h>
 #include <sentry_flutter/sentry_flutter_plugin.h>
@@ -22,8 +22,8 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
       registry->GetRegistrarForPlugin("FileSelectorWindows"));
   FlutterSecureStorageWindowsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FlutterSecureStorageWindowsPlugin"));
-  JustAudioWindowsPluginRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("JustAudioWindowsPlugin"));
+  MediaKitLibsWindowsAudioPluginCApiRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("MediaKitLibsWindowsAudioPluginCApi"));
   PrintingPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("PrintingPlugin"));
   ScreenRetrieverPluginRegisterWithRegistrar(
