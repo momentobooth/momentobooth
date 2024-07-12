@@ -1,6 +1,6 @@
 param ([string] $executablePath, [string] $copyTo)
 
-$libc_libs = "ld-linux-x86-64", "libBrokenLocale", "libanl", "libc", "libc_malloc_debug", "libdl", "libm", "libmemusage", "libmvec", "libnsl", "libnss_compat", "libnss_dns", "libnss_files", "libnss_hesiod", "libpcprofile", "libpthread", "libresolv", "librt", "libthread_db", "libutil"
+$libc_libs = "ld-linux-x86-64", "libBrokenLocale", "libanl", "libc", "libc_malloc_debug", "libdl", "libm", "libmemusage", "libmvec", "libnsl", "libnss_compat", "libnss_dns", "libnss_files", "libnss_hesiod", "libpcprofile", "libpthread", "libresolv", "librt", "libthread_db", "libutil", "libstdc++"
 $skip_libs = $libc_libs # + $other_libs + $more_other_libs
 
 $absolute_path = Resolve-Path $executablePath
@@ -33,10 +33,10 @@ foreach ($lddtree_line in $lddtree_output_split) {
         $lib_name = (Get-Item $lib_path).Name.ToString().Split(".")[0]
 
         if ($lib_path.Contains($absolute_path_directory)) {
-            Write-Output "Skipping (found at destination): $lib_path"
+            # Write-Output "Skipping (found at destination): $lib_path"
             continue
         } elseif ($skip_libs.Contains($lib_name)) {
-            Write-Output "Skipping (blocklist): $lib_path"
+            # Write-Output "Skipping (blocklist): $lib_path"
             continue
         }
 
