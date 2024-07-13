@@ -1,8 +1,7 @@
 param ([string] $executablePath, [string] $copyTo)
 
 $libc_libs = "ld-linux-x86-64", "libBrokenLocale", "libanl", "libc", "libc_malloc_debug", "libdl", "libm", "libmemusage", "libmvec", "libnsl", "libnss_compat", "libnss_dns", "libnss_files", "libnss_hesiod", "libpcprofile", "libpthread", "libresolv", "librt", "libthread_db", "libutil", "libstdc++"
-$gl_libs = "libGLX", "libGL", "libGLdispatch", "libEGL"
-$skip_libs = $libc_libs + $gl_libs
+$skip_libs = $libc_libs
 
 $absolute_path = Resolve-Path $executablePath
 $absolute_copy_to_path = Resolve-Path $copyTo
