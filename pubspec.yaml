@@ -17,7 +17,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.9.0
-  go_router: 14.2.0
+  go_router: 14.2.1
   flutter_svg: 2.0.10+1
   animated_text_kit: 4.2.2
   figma_squircle: 0.5.3
@@ -30,7 +30,7 @@ dependencies:
   lottie: 3.1.2
   font_awesome_flutter: 10.7.0
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.8.0
+  widgetbook: 3.8.1
   widgetbook_annotation: 3.1.0
   flex_color_picker: 3.5.1
 
@@ -43,7 +43,7 @@ dependencies:
   flutter_mobx: 2.2.1+1
 
   # Models
-  freezed_annotation: 2.4.2
+  freezed_annotation: 2.4.4
   json_annotation: 4.9.0
 
   # Rust library/Interop
@@ -65,10 +65,10 @@ dependencies:
   # Log and error handling
   talker: 4.3.2
   talker_flutter: 4.3.2
-  sentry_flutter: 8.3.0
+  sentry_flutter: 8.4.0
 
   # Sound output
-  just_audio: 0.9.38
+  just_audio: 0.9.39
   just_audio_windows: 0.2.1
   just_audio_mpv: 0.1.7
 
