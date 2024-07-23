@@ -63,8 +63,8 @@ dependencies:
   win32: 5.5.1
 
   # Log and error handling
-  talker: 4.3.2
-  talker_flutter: 4.3.2
+  talker: 4.3.4
+  talker_flutter: 4.3.4
   sentry_flutter: 8.4.0
 
   # Sound output
@@ -77,7 +77,7 @@ dependencies:
   toml: 0.16.0
 
   # Networking
-  http: 1.2.1
+  http: 1.2.2
   http_parser: 4.0.2
   mqtt5_client: 4.3.0
 
