@@ -4,20 +4,16 @@ use dlopen::{symbor::{Library, Symbol}, Error as LibError};
 
 use crate::{helpers::log_error, models::images::RawImage};
 
+use std::sync::LazyLock;
+
 #[cfg(all(target_os = "windows"))]
-lazy_static::lazy_static! {
-    pub static ref TEXTURE_RGBA_RENDERER_PLUGIN: Result<Library, LibError> = Library::open("texture_rgba_renderer_plugin.dll");
-}
+pub static TEXTURE_RGBA_RENDERER_PLUGIN: LazyLock<Result<Library, LibError>> = LazyLock::new(|| Library::open("texture_rgba_renderer_plugin.dll"));
 
 #[cfg(all(target_os = "linux"))]
-lazy_static::lazy_static! {
-    pub static ref TEXTURE_RGBA_RENDERER_PLUGIN: Result<Library, LibError> = Library::open("libtexture_rgba_renderer_plugin.so");
-}
+pub static TEXTURE_RGBA_RENDERER_PLUGIN: LazyLock<Result<Library, LibError>> = LazyLock::new(|| Library::open("libtexture_rgba_renderer_plugin.so"));
 
 #[cfg(all(target_os = "macos"))]
-lazy_static::lazy_static! {
-    pub static ref TEXTURE_RGBA_RENDERER_PLUGIN: Result<Library, LibError> = Library::open_self();
-}
+pub static TEXTURE_RGBA_RENDERER_PLUGIN: LazyLock<Result<Library, LibError>> = LazyLock::new(|| Library::open_self());
 
 pub type FlutterRgbaRendererPluginOnRgba = unsafe extern "C" fn(
     texture_rgba: *mut c_void,

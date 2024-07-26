@@ -2,6 +2,7 @@
 name = "rust_lib_momento_booth"
 version = "0.2.0"
 edition = "2021"
+rust-version = "1.80"
 
 [lib]
 crate-type = ["cdylib", "staticlib"]
@@ -12,20 +13,18 @@ anyhow = "1.0.86"
 derive_more = "0.99.18"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.119"
+serde_json = "1.0.120"
 chrono = "0.4.38"
 image = { version = "0.25.2", features = ["rayon"] }
 ipp = "5.0.3"
 zune-jpeg = "0.4.13"
 jpeg-encoder = "0.6.0"
-static_init = "1.0.3"
-lazy_static = "1.5.0"
 dlopen = "0.1.8"
 noise = "0.9.0"
 dashmap = "6.0.1"
 turborand = "0.10.1"
 pathsep = "0.1.1"
-tokio = { version = "1.38.1", features = ["rt-multi-thread"] }
+tokio = { version = "1.39.1", features = ["rt-multi-thread"] }
 gphoto2 = "3.3.0"
 ahash = "0.8.11"
 img-parts = "0.3.0"
@@ -36,11 +35,6 @@ num-traits = "0.2.19"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 regex = "1.10.5"
-
-[target.'cfg(unix)'.dependencies]
-nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = true, features = ["input-native", "output-threaded"] }
-
-[target.'cfg(windows)'.dependencies]
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = false, features = ["input-native", "output-threaded"] }
 
 [profile.dev]
