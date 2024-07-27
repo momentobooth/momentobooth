@@ -35,6 +35,11 @@ pub fn cups_resume_printer(server_info: CupsServerInfo, queue_id: String) {
     ipp_client::resume_printer(uri, server_info.ignore_tls_errors);
 }
 
+pub fn cups_purge_jobs(server_info: CupsServerInfo, queue_id: String) {
+    let uri = cups_build_url(&server_info, Some(queue_id));
+    ipp_client::purge_jobs(uri, server_info.ignore_tls_errors);
+}
+
 pub fn cups_get_jobs_states(server_info: CupsServerInfo, queue_id: String) -> Vec<PrintJobState> {
     let uri = cups_build_url(&server_info, Some(queue_id));
     ipp_client::get_jobs_states(uri, server_info.ignore_tls_errors)
@@ -45,9 +50,19 @@ pub fn cups_print_job(server_info: CupsServerInfo, queue_id: String, job_name: S
     ipp_client::print_job(uri, server_info.ignore_tls_errors, job_name, pdf_data, media_size);
 }
 
+pub fn cups_restart_job(server_info: CupsServerInfo, queue_id: String, job_id: i32) {
+    let uri = cups_build_url(&server_info, Some(queue_id));
+    ipp_client::restart_job(uri, server_info.ignore_tls_errors, job_id);
+}
+
 pub fn cups_release_job(server_info: CupsServerInfo, queue_id: String, job_id: i32) {
     let uri = cups_build_url(&server_info, Some(queue_id));
     ipp_client::release_job(uri, server_info.ignore_tls_errors, job_id);
+}
+
+pub fn cups_cancel_job(server_info: CupsServerInfo, queue_id: String, job_id: i32) {
+    let uri = cups_build_url(&server_info, Some(queue_id));
+    ipp_client::cancel_job(uri, server_info.ignore_tls_errors, job_id);
 }
 
 pub fn cups_get_printer_media_dimensions(server_info: CupsServerInfo, queue_id: String) -> Vec<PrintDimension> {

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io::Cursor};
+use std::io::Cursor;
 use std::io::Read;
 use chrono::{DateTime, Utc};
 
@@ -99,9 +99,8 @@ pub fn cancel_job(uri: String, ignore_tls_errors: bool, job_id: i32) -> bool {
 
 pub fn get_printers(uri: String, ignore_tls_errors: bool) -> Vec<IppPrinterState> {
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPrinters);
-    let mut vec: Vec<IppPrinterState> = Vec::new();
 
-    for printer in resp.attributes().groups_of(DelimiterTag::PrinterAttributes) {
+    resp.attributes().groups_of(DelimiterTag::PrinterAttributes).map(|printer| {
         let group = printer.attributes().clone();
         let state = group["printer-state"]
             .value()
@@ -113,10 +112,8 @@ pub fn get_printers(uri: String, ignore_tls_errors: bool) -> Vec<IppPrinterState
         let queue_name = group["printer-name"].value().to_string().clone();
         let description = group["printer-info"].value().to_string().clone();
         let state_reason = group["printer-state-reasons"].value().to_string().clone();
-        vec.push(IppPrinterState { queue_name, description, state, job_count, state_message, state_reason });
-    }
-
-    vec
+        IppPrinterState { queue_name, description, state, job_count, state_message, state_reason }
+    }).collect()
 }
 
 pub fn get_printer_state(uri: String, ignore_tls_errors: bool) -> IppPrinterState {
@@ -135,21 +132,17 @@ pub fn get_printer_state(uri: String, ignore_tls_errors: bool) -> IppPrinterStat
     let queue_name = attributes["printer-name"].value().to_string().clone();
     let description = attributes["printer-info"].value().to_string().clone();
     let state_reason = attributes["printer-state-reasons"].value().to_string().clone();
-    //print_attributes(attributes);
+
     IppPrinterState { queue_name, description, state, job_count, state_message, state_reason }
 }
 
 pub fn get_jobs_states(uri: String, ignore_tls_errors: bool) -> Vec<PrintJobState> {
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetJobs);
-    let mut vec: Vec<PrintJobState> = Vec::new();
 
-    for job in resp.attributes().groups_of(DelimiterTag::JobAttributes) {
+    resp.attributes().groups_of(DelimiterTag::JobAttributes).map(|job| {
         let job_id = job.attributes()["job-id"].value().as_integer().unwrap().clone();
-        vec.push(get_job_state(uri.clone(), ignore_tls_errors, job_id));
-    }
-
-    // print_attributes(attributes);
-    vec
+        get_job_state(uri.clone(), ignore_tls_errors, job_id)
+    }).collect()
 }
 
 fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> PrintJobState {
@@ -157,8 +150,6 @@ fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> PrintJobS
 
     let group = resp.attributes().groups_of(DelimiterTag::JobAttributes).next().unwrap();
     let attributes = group.attributes().clone();
-
-    // print_attributes(attributes.clone());
 
     let state = group.attributes()["job-state"]
         .value()
@@ -174,7 +165,7 @@ fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> PrintJobS
     PrintJobState {
         name: job_name,
         id: attributes["job-id"].value().as_integer().unwrap().clone(),
-        state: state,
+        state,
         reason: attributes["job-state-reasons"].value().to_string().clone(),
         created: creation_time,
     }
@@ -208,11 +199,12 @@ pub fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec
     dimensions
 }
 
-fn print_attributes(attributes: HashMap<String, IppAttribute>) {
-    for attribute in attributes {
-        println!("Attribute {}: {:?}", attribute.0, attribute.1.value());
-    }
-}
+// Use for debugging:
+// fn print_attributes(attributes: HashMap<String, IppAttribute>) {
+//     for attribute in attributes {
+//         println!("Attribute {}: {:?}", attribute.0, attribute.1.value());
+//     }
+// }
 
 // /////// //
 // Structs //

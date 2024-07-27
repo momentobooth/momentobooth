@@ -81,19 +81,19 @@ impl FfSendTransferProgressReporter {
         self.current_progress.download_url = Some(file.download_url(true).to_string());
         self.current_progress.expire_date = if file.expire_uncertain() { None } else { Some(file.expire_at()) };
         self.current_progress.file_id = Some(serde_json::to_string(&file).expect("Could not serialize UploadFile to JSON"));
-        self.stream_sink.add(self.current_progress.clone());
+        let _ = self.stream_sink.add(self.current_progress.clone());
     }
 }
 
 impl ProgressReporter for FfSendTransferProgressReporter {
     fn start(&mut self, total: u64) {
         self.current_progress.total_bytes = Some(total as u32);
-        self.stream_sink.add(self.current_progress.clone());
+        let _ = self.stream_sink.add(self.current_progress.clone());
     }
 
     fn progress(&mut self, progress: u64) {
         self.current_progress.transferred_bytes = progress as u32;
-        self.stream_sink.add(self.current_progress.clone());
+        let _ = self.stream_sink.add(self.current_progress.clone());
     }
 
     fn finish(&mut self) {

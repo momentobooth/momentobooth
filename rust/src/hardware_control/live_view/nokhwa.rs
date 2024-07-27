@@ -1,4 +1,4 @@
-use std::{sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, Mutex}, time::Instant};
+use std::{sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, LazyLock, Mutex}, time::Instant};
 
 use chrono::Duration;
 use dashmap::DashMap;
@@ -91,9 +91,7 @@ pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
     get_cameras()
 }
 
-lazy_static::lazy_static! {
-    pub static ref NOKHWA_HANDLES: DashMap<u32, Arc<Mutex<NokhwaCameraHandle>>> = DashMap::<u32, Arc<Mutex<NokhwaCameraHandle>>>::new();
-}
+pub static NOKHWA_HANDLES: LazyLock<DashMap<u32, Arc<Mutex<NokhwaCameraHandle>>>> = LazyLock::new(|| DashMap::<u32, Arc<Mutex<NokhwaCameraHandle>>>::new());
 
 static NOKHWA_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
 

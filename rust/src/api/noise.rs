@@ -1,4 +1,5 @@
 use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::LazyLock;
 
 use dashmap::DashMap;
 pub use ipp::model::PrinterState;
@@ -7,9 +8,7 @@ use turborand::rng::Rng;
 
 use crate::{hardware_control::live_view::white_noise::{self, WhiteNoiseGeneratorHandle}, helpers::log_debug, models::images::RawImage, utils::flutter_texture::FlutterTexture};
 
-lazy_static::lazy_static! {
-    pub static ref NOISE_HANDLES: DashMap<u32, WhiteNoiseGeneratorHandle> = DashMap::<u32, WhiteNoiseGeneratorHandle>::new();
-}
+pub static NOISE_HANDLES: LazyLock<DashMap<u32, WhiteNoiseGeneratorHandle>> = LazyLock::new(|| DashMap::<u32, WhiteNoiseGeneratorHandle>::new());
 
 static NOISE_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
 

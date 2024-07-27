@@ -14,6 +14,7 @@ use std::sync::Mutex;
 
 use dashmap::DashMap;
 use flutter_rust_bridge::frb;
+use std::sync::LazyLock;
 
 use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self}, helpers::TOKIO_RUNTIME, models::live_view::CameraState, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}}};
 
@@ -269,11 +270,7 @@ pub struct GPhoto2File {
 // FRB API //
 // /////// //
 
-#[frb(ignore)]
-lazy_static::lazy_static! {
-    #[frb(ignore)]
-    pub static ref GPHOTO2_HANDLES: DashMap<u32, Arc<Mutex<GPhoto2CameraHandle>>> = DashMap::<u32, Arc<Mutex<GPhoto2CameraHandle>>>::new();
-}
+pub static GPHOTO2_HANDLES: LazyLock<DashMap<u32, Arc<Mutex<GPhoto2CameraHandle>>>> = LazyLock::new(|| DashMap::<u32, Arc<Mutex<GPhoto2CameraHandle>>>::new());
 
 static GPHOTO2_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
 

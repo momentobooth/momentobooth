@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
 use little_exif::{exif_tag::ExifTagGroup, filetype::FileExtension, metadata::Metadata};
@@ -27,9 +29,7 @@ pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8, exif_tags: Vec<Momen
     jpeg.encoder().bytes().to_vec()
 }
 
-lazy_static::lazy_static! {
-    static ref JPEG_TO_RGBA_DECODER_OPTIONS: DecoderOptions = DecoderOptions::new_fast().jpeg_set_out_colorspace(ColorSpace::RGBA);
-}
+static JPEG_TO_RGBA_DECODER_OPTIONS: LazyLock<DecoderOptions> = LazyLock::new(|| DecoderOptions::new_fast().jpeg_set_out_colorspace(ColorSpace::RGBA));
 
 pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
     let mut decoder = JpegDecoder::new_with_options(jpeg_data, *JPEG_TO_RGBA_DECODER_OPTIONS);

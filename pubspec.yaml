@@ -65,7 +65,7 @@ dependencies:
   # Log and error handling
   talker: 4.3.4
   talker_flutter: 4.3.4
-  sentry_flutter: 8.4.0
+  sentry_flutter: 8.5.0
 
   # Sound output
   just_audio: 0.9.39
