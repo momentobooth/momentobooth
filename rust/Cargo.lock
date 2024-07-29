@@ -2088,6 +2088,7 @@ name = "nokhwa"
 version = "0.10.4"
 source = "git+https://github.com/l1npengtul/nokhwa?branch=0.10#c5a56bd2c89c6f7e8ac68f1772fbe01e138640f8"
 dependencies = [
+ "flume 0.10.14",
  "image 0.24.9",
  "nokhwa-bindings-linux",
  "nokhwa-bindings-macos",

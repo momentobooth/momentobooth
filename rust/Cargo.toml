@@ -35,7 +35,7 @@ num-traits = "0.2.19"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 regex = "1.10.5"
-nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = false, features = ["input-native", "output-threaded"] }
+nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = false, features = ["input-native", "output-threaded", "flume"] }
 
 [profile.dev]
 opt-level = 3
