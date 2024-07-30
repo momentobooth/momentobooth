@@ -10,7 +10,7 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ButtonCard(
             icon: FluentIcons.speakers,
             title: "Play audio sample",
-            subtitle: "The application will play a sample mp3 file, to verify whether audio file playback is working.",
+            subtitle: "Play a sample mp3 file, to verify whether audio file playback is working. Please note that the User interface > Sound Effects > Enable Sound Effects setting needs to be enabled.",
             buttonText: "Audio test",
             onPressed: controller.onPlayAudioSamplePressed,
           ),

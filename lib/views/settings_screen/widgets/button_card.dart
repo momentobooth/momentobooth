@@ -24,12 +24,9 @@ class ButtonCard extends StatelessWidget {
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 150),
-        child: Button(
-          onPressed: onPressed,
-          child: Text(buttonText),
-        ),
+      child: Button(
+        onPressed: onPressed,
+        child: Text(buttonText),
       ),
     );
   }
