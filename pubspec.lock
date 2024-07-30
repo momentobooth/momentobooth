@@ -349,10 +349,10 @@ packages:
     dependency: transitive
     description:
       name: file_selector_android
-      sha256: e7610bcdaee3ad5310c075dc7535c91db06ae03bf8f6ec8fff04e1f6d071d7ed
+      sha256: d1e8655c1a4850a900a0cfaed55fdd273881d53a4bb78e4736dc170a0b17db78
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1+4"
+    version: "0.5.1+5"
   file_selector_ios:
     dependency: transitive
     description:
@@ -721,10 +721,10 @@ packages:
     dependency: "direct main"
     description:
       name: just_audio_media_kit
-      sha256: bbecbd43959c230d9f9610df0e0165855e711b4c960ce730c08f31107cc3bd26
+      sha256: "7f57d317fafa04cb3e70b924e8f632ffb7eca7a97a369e1e44738ed89fbd5da1"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   just_audio_platform_interface:
     dependency: transitive
     description:
@@ -945,10 +945,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_android
-      sha256: e84c8a53fe1510ef4582f118c7b4bdf15b03002b51d7c2b66983c65843d61193
+      sha256: "490539678396d4c3c0b06efdaab75ae60675c3e0c66f72bc04c2e2c1e0e2abeb"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.8"
+    version: "2.2.9"
   path_provider_foundation:
     dependency: transitive
     description:

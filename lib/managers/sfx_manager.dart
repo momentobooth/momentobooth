@@ -40,6 +40,12 @@ abstract class _SfxManagerBase with Store, Logger {
   // Public methods //
   // ////////////// //
 
+  Future<void> playSampleSound() async {
+    String filePath = 'assets/sounds/audio_test.mp3';
+
+    await _playSoundFromAsset(filePath);
+  }
+
   Future<void> playShareScreenSound() async {
     String filePath = SettingsManager.instance.settings.ui.shareScreenSfxFile;
 
@@ -55,6 +61,17 @@ abstract class _SfxManagerBase with Store, Logger {
   // ////////////// //
   // Helper methods //
   // ////////////// //
+
+  Future<void> _playSoundFromAsset(String assetPath) async {
+    try {
+      if (!SettingsManager.instance.settings.ui.enableSfx || assetPath.isEmpty) return;
+      await _audioPlayer?.stop();
+      await _audioPlayer?.setAsset(assetPath);
+      await _audioPlayer?.play();
+    } catch (e) {
+      logError("Error playing asset sound ($assetPath): $e");
+    }
+  }
 
   Future<void> _playSound(String filePath) async {
     try {

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
@@ -257,7 +258,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCupsPageSizeChanged(String? mediaSize, PrintSize? printSize) {
     if (mediaSize != null && printSize != null) {
       final dimension = mediaSize == ""
-              ? const PrintDimension(name: "", height: 0, width: 0, keyword: "") 
+              ? const PrintDimension(name: "", height: 0, width: 0, keyword: "")
               : viewModel.mediaDimensions.where((element) => element.keyword == mediaSize).firstOrNull;
       if (dimension == null) return;
       final newSize = MediaSettings(mediaSizeString: dimension.keyword, mediaSizeHeight: dimension.height, mediaSizeWidth: dimension.width);
@@ -598,6 +599,10 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     if (showFpsCounter != null) {
       viewModel.updateSettings((settings) => settings.copyWith.debug(showFpsCounter: showFpsCounter));
     }
+  }
+
+  void onPlayAudioSamplePressed() {
+    SfxManager.instance.playSampleSound();
   }
 
 }

@@ -27,6 +27,7 @@ import 'package:momento_booth/views/settings_screen/widgets/text_input_card.dart
 import 'package:talker_flutter/talker_flutter.dart';
 
 part 'settings_screen_view.debug.dart';
+part 'settings_screen_view.stats.dart';
 part 'settings_screen_view.face_recognition.dart';
 part 'settings_screen_view.general.dart';
 part 'settings_screen_view.hardware.dart';
@@ -91,6 +92,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               ),
             ],
             footerItems: [
+              PaneItem(
+                icon: const Icon(FluentIcons.chart),
+                title: const Text("Statistics"),
+                body: Builder(builder: (_) => _getStatsTab(viewModel, controller)),
+              ),
               PaneItem(
                 icon: const Icon(FluentIcons.device_bug),
                 title: const Text("Debug"),
