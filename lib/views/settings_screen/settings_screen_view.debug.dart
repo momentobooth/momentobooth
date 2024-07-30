@@ -2,98 +2,24 @@ part of 'settings_screen_view.dart';
 
 Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
   return FluentSettingsPage(
-    title: "Debug and Stats",
+    title: "Debug",
     blocks: [
       FluentSettingsBlock(
-        title: "Stats",
+        title: "Actions",
         settings: [
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.touch,
-              title: "Taps",
-              subtitle: "The number of taps in the app (outside settings)",
-              text: StatsManager.instance.stats.taps.toString(),
-            ),
+          ButtonCard(
+            icon: FluentIcons.speakers,
+            title: "Play audio sample",
+            subtitle: "Play a sample mp3 file, to verify whether audio file playback is working. Please note that the User interface > Sound Effects > Enable Sound Effects setting needs to be enabled.",
+            buttonText: "Audio test",
+            onPressed: controller.onPlayAudioSamplePressed,
           ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.front_camera,
-              title: "Live view frames",
-              subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames / Duplicate frames",
-              text: "${StatsManager.instance.validLiveViewFrames} / ${StatsManager.instance.invalidLiveViewFrames} / ${StatsManager.instance.duplicateLiveViewFrames}",
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.print,
-              title: "Printed pictures – Normal size",
-              subtitle: "The number of prints (e.g. 2 prints of the same pictures will count as 2 as well)",
-              text: StatsManager.instance.stats.printedPhotos.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.print,
-              title: "Printed pictures – Small",
-              subtitle: "The number of small prints (e.g. 2 prints of the same pictures will count as 2 as well)",
-              text: StatsManager.instance.stats.printedPhotosSmall.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.print,
-              title: "Printed pictures – Tiny",
-              subtitle: "The number of tiny prints (e.g. 2 prints of the same pictures will count as 2 as well)",
-              text: StatsManager.instance.stats.printedPhotosTiny.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.upload,
-              title: "Uploaded pictures",
-              subtitle: "The number of uploaded pictures",
-              text: StatsManager.instance.stats.uploadedPhotos.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.camera,
-              title: "Captured photos",
-              subtitle: "The number of photo captures (e.g. a multi capture picture would increase this by 4)",
-              text: StatsManager.instance.stats.capturedPhotos.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.photo2,
-              title: "Created single shot pictures",
-              subtitle: "The number of single capture pictures created, including retakes",
-              text: StatsManager.instance.stats.createdSinglePhotos.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.undo,
-              title: "Retakes",
-              subtitle: "The number of retakes for (single) photo captures",
-              text: StatsManager.instance.stats.retakes.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.photo_collection,
-              title: "Created multi shot pictures",
-              subtitle: "The number of multi shot pictures created, including changes",
-              text: StatsManager.instance.stats.createdMultiCapturePhotos.toString(),
-            ),
-          ),
-          Observer(
-            builder: (context) => TextDisplayCard(
-              icon: FluentIcons.undo,
-              title: "Collage changes",
-              subtitle: "The number of times a user went back to change a collage",
-              text: StatsManager.instance.stats.collageChanges.toString(),
-            ),
+          ButtonCard(
+            icon: FluentIcons.error,
+            title: "Report fake error",
+            subtitle: "Test whether error reporting (to Sentry) works",
+            buttonText: "Report Fake Error",
+            onPressed: () => throw Exception("This is a fake error to test error reporting"),
           ),
         ],
       ),
@@ -106,18 +32,6 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
             subtitle: "Show the FPS count in the upper right corner.",
             value: () => viewModel.debugShowFpsCounter,
             onChanged: controller.onDebugShowFpsCounterChanged,
-          ),
-        ],
-      ),
-      FluentSettingsBlock(
-        title: "Debug actions",
-        settings: [
-          ButtonCard(
-            icon: FluentIcons.error,
-            title: "Report fake error",
-            subtitle: "Test whether error reporting (to Sentry) works",
-            buttonText: "Report Fake Error",
-            onPressed: () => throw Exception("This is a fake error to test error reporting"),
           ),
         ],
       ),

@@ -11,15 +11,12 @@ import 'package:toml/toml.dart';
 part 'settings_manager.g.dart';
 
 class SettingsManager extends _SettingsManagerBase with _$SettingsManager {
-
   static final SettingsManager instance = SettingsManager._internal();
 
   SettingsManager._internal();
-
 }
 
 abstract class _SettingsManagerBase with Store, Logger {
-
   static const _fileName = "MomentoBooth_Settings.toml";
 
   late File _settingsFile;
@@ -94,5 +91,4 @@ abstract class _SettingsManagerBase with Store, Logger {
     String filePath = join(storageDirectory.path, _fileName);
     _settingsFile = File(filePath);
   }
-
 }

@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
 
-class ButtonCard<TValue> extends StatelessWidget {
+class ButtonCard extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -24,12 +24,9 @@ class ButtonCard<TValue> extends StatelessWidget {
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 150),
-        child: Button(
-          onPressed: onPressed,
-          child: Text(buttonText),
-        ),
+      child: Button(
+        onPressed: onPressed,
+        child: Text(buttonText),
       ),
     );
   }
