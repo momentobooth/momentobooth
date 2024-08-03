@@ -11,6 +11,7 @@ import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/set_scroll_configuration.dart';
+import 'package:momento_booth/views/custom_widgets/wrappers/touch_effect.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -51,23 +52,25 @@ class _ShellState extends State<Shell> with WindowListener {
     return FpsMonitor(
       child: ShellHotkeyMonitor(
         router: _router,
-        child: SetScrollConfiguration(
-          child: Observer(
-            builder: (context) => FluentApp.router(
-              scrollBehavior: ScrollConfiguration.of(context),
-              routerConfig: _router,
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                FluentLocalizations.delegate,
-              ],
-              supportedLocales: const [
-                Locale('en'), // English
-                Locale('nl'), // Dutch
-              ],
-              locale: SettingsManager.instance.settings.ui.language.toLocale(),
+        child: TouchEffect(
+          child: SetScrollConfiguration(
+            child: Observer(
+              builder: (context) => FluentApp.router(
+                scrollBehavior: ScrollConfiguration.of(context),
+                routerConfig: _router,
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  FluentLocalizations.delegate,
+                ],
+                supportedLocales: const [
+                  Locale('en'), // English
+                  Locale('nl'), // Dutch
+                ],
+                locale: SettingsManager.instance.settings.ui.language.toLocale(),
+              ),
             ),
           ),
         ),
