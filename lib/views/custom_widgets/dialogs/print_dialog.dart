@@ -125,19 +125,16 @@ class PrintSizeChoice extends StatelessWidget {
         const ButtonSegment<PrintSize>(
           value: PrintSize.normal,
           label: Text('Normal'),
-          icon: Icon(Icons.looks_one_outlined),
         ),
         if (settings.mediaSizeSmall.mediaSizeString.isNotEmpty)
           const ButtonSegment<PrintSize>(
             value: PrintSize.small,
             label: Text('Small'),
-            icon: Icon(Icons.looks_two_outlined),
           ),
         if (settings.mediaSizeTiny.mediaSizeString.isNotEmpty)
           const ButtonSegment<PrintSize>(
             value: PrintSize.tiny,
             label: Text('Tiny'),
-            icon: Icon(Icons.looks_3_outlined),
           ),
       ],
       selected: {printSize},
