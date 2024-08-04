@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
@@ -47,7 +47,7 @@ class ModalDialog extends StatelessWidget {
               [
                 PhotoBoothFilledButton(
                   title: localizations.genericContinueButton,
-                  icon: FontAwesomeIcons.check,
+                  icon: LucideIcons.check,
                   onPressed: onDismiss,
                 ),
               ],
@@ -68,11 +68,11 @@ enum ModalDialogType {
 
   IconData get _iconData {
     return switch (this) {
-      ModalDialogType.info => FontAwesomeIcons.circleInfo,
-      ModalDialogType.warning => FontAwesomeIcons.triangleExclamation,
-      ModalDialogType.error => FontAwesomeIcons.xmark,
-      ModalDialogType.success => FontAwesomeIcons.check,
-      ModalDialogType.input => FontAwesomeIcons.penToSquare
+      ModalDialogType.info => LucideIcons.info,
+      ModalDialogType.warning => LucideIcons.circleAlert,
+      ModalDialogType.error => LucideIcons.circleAlert,
+      ModalDialogType.success => LucideIcons.circleCheck,
+      ModalDialogType.input => LucideIcons.penLine,
     };
   }
 

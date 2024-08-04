@@ -1,5 +1,5 @@
-import 'package:fluent_ui/fluent_ui.dart' hide Colors, Slider;
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -100,7 +100,7 @@ class _PrintDialogState extends State<PrintDialog> {
         ),
         PhotoBoothFilledButton(
           title: localizations.genericPrintButton,
-          icon: FluentIcons.print,
+          icon: LucideIcons.printer,
           onPressed: () => widget.onPrintPressed(printSize, numPrints),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
 
 class FolderPickerCard extends StatelessWidget {
@@ -28,7 +29,7 @@ class FolderPickerCard extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(FluentIcons.folder, size: 24.0),
+            icon: const Icon(LucideIcons.folderOpen, size: 24.0),
             onPressed: () async {
               String? selectedDirectory =
                   await getDirectoryPath(initialDirectory: controller.text);

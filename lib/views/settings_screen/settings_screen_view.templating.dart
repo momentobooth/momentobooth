@@ -105,14 +105,14 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
     title: "Creative",
     settings: [
       FolderPickerCard(
-        icon: FluentIcons.fabric_report_library,
+        icon: LucideIcons.folder,
         title: "Collage background templates location",
         subtitle: "Location to look for template files",
         controller: controller.templatesFolderSettingController,
         onChanged: controller.onTemplatesFolderChanged,
       ),
       NumberInputCard(
-        icon: FluentIcons.aspect_ratio,
+        icon: LucideIcons.ratio,
         title: "Collage aspect ratio",
         subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
         smallChange: 0.1,
@@ -120,7 +120,7 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
         onFinishedEditing: controller.onCollageAspectRatioChanged,
       ),
       NumberInputCard(
-        icon: FluentIcons.field_filled,
+        icon: LucideIcons.squareDashedMousePointer,
         title: "Collage padding",
         subtitle: "Controls the padding around the aspect ratio of the generated collages. Think about this together with paper print size.",
         value: () => viewModel.collagePaddingSetting,
@@ -133,7 +133,7 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
         ),
       ),
       NumberInputCard(
-        icon: FluentIcons.picture_stretch,
+        icon: LucideIcons.proportions,
         title: "Output resolution multiplier     (same setting as output tab)",
         subtitle: 'Controls image resolution',
         value: () => viewModel.resolutionMultiplier,
