@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
@@ -22,8 +23,8 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
     required super.contextAccessor,
   });
 
-  static double groupHeaderHeight = 100;
-  static int imagesPerRow = 4;
+  static const double groupHeaderHeight = 100;
+  static const int imagesPerRow = 4;
 
   @override
   Widget get body {
@@ -45,15 +46,17 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                   final groupRows = groupImageNums.map((e) => (e / 4).ceil());
                   final double screenHeight = scrollController.position.viewportDimension;
 
-                  final double groupHeaderHeightCompensated = groupHeaderHeight + 50.0;
-                  // We need to compensate for the screenheight twice because of the way that the comparison is implemented.
-                  final double pageLength = scrollController.position.maxScrollExtent + 2*screenHeight;
+                  const double groupHeaderHeightCompensated = groupHeaderHeight + 50.0;
+                  // We need to compensate for the screen height twice because of the way that the comparison is implemented.
+                  final double pageLength = scrollController.position.maxScrollExtent + 2 * screenHeight;
                   final double rowHeight = (pageLength - (numGroups * groupHeaderHeightCompensated)) / groupRows.sum;
                   final sectionLengths = groupRows.map((element) => element*rowHeight + groupHeaderHeightCompensated).toList();
 
                   int currentIndex = 0;
                   double currentLength = 0;
-                  for (; offset > currentLength; currentIndex++) { currentLength += sectionLengths[currentIndex]; }
+                  for (; offset > currentLength; currentIndex++) {
+                    currentLength += sectionLengths[currentIndex];
+                  }
                   currentIndex = max(currentIndex - 1, 0);
 
                   return Text(groupTitles[currentIndex], style: const TextStyle(fontSize: 22));
@@ -98,7 +101,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                                 ),
                             ],
                           ),
-                        )
+                        ),
                       ]),
                   ],
                 ),
@@ -119,9 +122,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                   color: Color.fromARGB(130, 48, 48, 48),
                 ),
                 child: Observer(
-                  builder: (context) {
-                    return getFilterBar();
-                  }
+                  builder: (context) => getFilterBar(),
                 ),
               ),
             ],
@@ -151,14 +152,15 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
         const Text(
           "Order by",
           style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-              height: 1),
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            height: 1,
+          ),
         ),
-        const SizedBox(width: 12,),
+        const SizedBox(width: 12),
         FilterChoice(sortBy: viewModel.sortBy, onChanged: viewModel.onSortByChanged),
-        const SizedBox(width: 20,),
+        const SizedBox(width: 20),
         if (viewModel.imageNames == null && viewModel.isFaceRecognitionEnabled)
           OutlinedButton.icon(
             onPressed: controller.onFindMyFace,
@@ -167,7 +169,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               foregroundColor: WidgetStateProperty.all(Colors.white),
               overlayColor: WidgetStateProperty.all(Colors.blue.shade400),
             ),
-            icon: const Icon(Icons.face),
+            icon: const Icon(LucideIcons.scanFace),
             label: const Text("Find my face"),
           )
         else if (viewModel.imageNames != null)
@@ -178,37 +180,41 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               overlayColor: WidgetStateProperty.all(Colors.red.shade900),
               side: WidgetStateProperty.all(const BorderSide(color: Color.fromARGB(255, 255, 117, 117))),
             ),
-            icon: const Icon(Icons.filter_alt_off),
+            icon: const Icon(LucideIcons.filterX),
             label: const Text("Clear filter"),
           ),
       ],
     );
   }
+
 }
 
 enum SortBy { time, people }
 
 class FilterChoice extends StatelessWidget {
+
   const FilterChoice({super.key, required this.sortBy, required this.onChanged});
   final SortBy sortBy;
   final ValueChanged<SortBy> onChanged;
 
   @override
   Widget build(BuildContext context) {
-    ButtonStyle style = ButtonStyle(foregroundColor: WidgetStateProperty.all(Colors.white));
-    return SegmentedButton<SortBy>(
-      style: style,
-      segments: const <ButtonSegment<SortBy>>[
-        ButtonSegment<SortBy>(
-            value: SortBy.time,
-            label: Text('Time'),
-            icon: Icon(Icons.schedule_rounded)),
-        ButtonSegment<SortBy>(
-            value: SortBy.people,
-            label: Text('Group size'),
-            icon: Icon(Icons.groups)),
+    return SegmentedButton(
+      style: ButtonStyle(foregroundColor: WidgetStateProperty.all(Colors.white)),
+      showSelectedIcon: false,
+      segments: const [
+        ButtonSegment(
+          value: SortBy.time,
+          label: Text('Time'),
+          icon: Icon(LucideIcons.clock),
+        ),
+        ButtonSegment(
+          value: SortBy.people,
+          label: Text('Group size'),
+          icon: Icon(LucideIcons.users),
+        ),
       ],
-      selected: <SortBy>{sortBy},
+      selected: {sortBy},
       onSelectionChanged: (newSelection) {
         // By default there is only a single segment that can be
         // selected at one time, so its value is always the first
@@ -217,4 +223,5 @@ class FilterChoice extends StatelessWidget {
       },
     );
   }
+
 }
