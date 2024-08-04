@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/dialogs/modal_dialog.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -42,12 +42,12 @@ class _UpdateSecretDialogState extends State<UpdateSecretDialog> {
       actions: [
         PhotoBoothFilledButton(
           title: 'Cancel',
-          icon: FontAwesomeIcons.ban,
+          icon: LucideIcons.ban,
           onPressed: widget.onDismiss,
         ),
         PhotoBoothFilledButton(
           title: 'Save',
-          icon: FontAwesomeIcons.floppyDisk,
+          icon: LucideIcons.save,
           onPressed: () => widget.onSavePressed(_input),
         ),
       ],

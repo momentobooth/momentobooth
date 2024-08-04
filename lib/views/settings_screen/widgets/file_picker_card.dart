@@ -1,5 +1,6 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
 
 class FilePickerCard extends StatelessWidget {
@@ -30,7 +31,7 @@ class FilePickerCard extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(FluentIcons.open_file, size: 24.0),
+            icon: const Icon(LucideIcons.folderOpen, size: 24.0),
             onPressed: () async {
               XFile? selectedFile = await openFile();
               if (selectedFile == null) return;
@@ -48,7 +49,7 @@ class FilePickerCard extends StatelessWidget {
                 controller: controller,
                 onChanged: onChanged,
                 suffix: clearable ? IconButton(
-                  icon: const Icon(FluentIcons.clear),
+                  icon: const Icon(LucideIcons.x),
                   onPressed: () {
                     controller.clear();
                     onChanged('');

@@ -5,29 +5,29 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
     title: "User interface",
     blocks: [
       ColorInputCard(
-        icon: FluentIcons.color,
+        icon: LucideIcons.paintbrushVertical,
         title: "Primary color",
         subtitle: "The primary color of the app",
         value: () => viewModel.primaryColorSetting,
         onChanged: controller.onPrimaryColorChanged,
       ),
       NumberInputCard(
-        icon: FluentIcons.timer,
+        icon: LucideIcons.timer,
         title: "Return to home timeout",
         subtitle: "The time in seconds before the app returns to the home screen. Set to 0 to disable.",
         value: () => viewModel.returnToHomeTimeoutSeconds,
         onFinishedEditing: controller.onReturnToHomeTimeoutSecondsChanged,
       ),
       ComboBoxCard<Language>(
-        icon: FluentIcons.locale_language,
+        icon: LucideIcons.languages,
         title: "Language",
-        subtitle: "The language used in the app (except for this settings screen)",
+        subtitle: "The language used in the app (except for this settings screen).",
         items: viewModel.languages,
         value: () => viewModel.languageSetting,
         onChanged: controller.onLanguageChanged,
       ),
       BooleanInputCard(
-        icon: FluentIcons.scroll_up_down,
+        icon: LucideIcons.mouse,
         title: "Allow scroll gesture with mouse",
         subtitle: "If enabled, the touch scrolling gesture can be simulated using click and drag with a standard mouse. This might workaround Flutter touch gesture support on Linux also.",
         value: () => viewModel.allowScrollGestureWithMouse,
@@ -37,21 +37,21 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         title: "Animations",
         settings: [
           BooleanInputCard(
-            icon: FluentIcons.favorite_star,
+            icon: LucideIcons.partyPopper,
             title: "Display confetti 🎉",
             subtitle: "If enabled, confetti will shower the share screen!",
             value: () => viewModel.displayConfettiSetting,
             onChanged: controller.onDisplayConfettiChanged,
           ),
           BooleanInputCard(
-            icon: FluentIcons.color,
+            icon: LucideIcons.palette,
             title: "Colorize confetti to the theme color",
             subtitle: "If enabled, confetti will will be various shades of the theme color. Else, random colors will be used.",
             value: () => viewModel.customColorConfettiSetting,
             onChanged: controller.onCustomColorConfettiChanged,
           ),
           ComboBoxCard<ScreenTransitionAnimation>(
-            icon: FluentIcons.transition_effect,
+            icon: LucideIcons.arrowRightLeft,
             title: "Screen transition animation",
             subtitle: "The animation used when switching between screens",
             items: viewModel.screenTransitionAnimations,
@@ -64,7 +64,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         title: "Sound effects",
         settings: [
           BooleanInputCard(
-            icon: FluentIcons.volume3,
+            icon: LucideIcons.volume2,
             title: "Enable sound effects 🔊",
             subtitle: "If enabled, sound effects will be enabled",
             value: () => viewModel.enableSfxSetting,
@@ -73,7 +73,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           Observer(builder: (_) {
             if (viewModel.enableSfxSetting) {
               return FilePickerCard(
-                icon: FluentIcons.clicked,
+                icon: LucideIcons.mousePointerClick,
                 title: "Click sound effect",
                 subtitle: "The sound effect that will be played when the screen is tapped or something is clicked",
                 controller: controller.clickSfxFileController,
@@ -85,7 +85,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           Observer(builder: (_) {
             if (viewModel.enableSfxSetting) {
               return FilePickerCard(
-                icon: FluentIcons.volume3,
+                icon: LucideIcons.share,
                 title: "Share screen sound effect",
                 subtitle: "The sound effect that will be played when the share screen is opened",
                 controller: controller.shareScreenSfxFileController,
@@ -100,7 +100,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         title: "Advanced",
         settings: [
           ComboBoxCard<BackgroundBlur>(
-            icon: FluentIcons.blur,
+            icon: LucideIcons.brickWall,
             title: "Background blur",
             subtitle: "Sets the background blur implementation. Currently there are no options for this setting except disabling it for testing.",
             items: viewModel.backgroundBlurOptions,
@@ -108,7 +108,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
             onChanged: controller.onBackgroundBlurChanged,
           ),
           ComboBoxCard<FilterQuality>(
-            icon: FluentIcons.transition_effect,
+            icon: LucideIcons.arrowRightLeft,
             title: "Filter quality for screen transitions",
             subtitle: "The filter quality used for the screen transition scale animation",
             items: viewModel.filterQualityOptions,
@@ -116,7 +116,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
             onChanged: controller.onScreenTransitionAnimationFilterQualityChanged,
           ),
           ComboBoxCard<FilterQuality>(
-            icon: FluentIcons.front_camera,
+            icon: LucideIcons.cctv,
             title: "Filter quality for live view",
             subtitle: "The filter quality used for the live view",
             items: viewModel.filterQualityOptions,

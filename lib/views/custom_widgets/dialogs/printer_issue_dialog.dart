@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
@@ -68,12 +68,12 @@ class PrinterIssueDialog extends StatelessWidget {
       actions: [
         PhotoBoothOutlinedButton(
           title: localizations.printerErrorIgnoreButton,
-          icon: FontAwesomeIcons.clock,
+          icon: LucideIcons.clockArrowUp,
           onPressed: onIgnorePressed,
         ),
         PhotoBoothFilledButton(
           title: localizations.printerErrorResumeQueueButton,
-          icon: FluentIcons.play_resume,
+          icon: LucideIcons.stepForward,
           onPressed: onResumeQueuePressed,
         ),
       ],

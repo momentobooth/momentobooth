@@ -1,18 +1,18 @@
 part of 'settings_screen_view.dart';
 
-Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) { 
+Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
   return FluentSettingsPage(
     title: "General",
     blocks: [
       NumberInputCard(
-        icon: FluentIcons.timer,
+        icon: LucideIcons.timer,
         title: "Capture delay",
         subtitle: 'In seconds',
         value: () => viewModel.captureDelaySecondsSetting,
         onFinishedEditing: controller.onCaptureDelaySecondsChanged,
       ),
       BooleanInputCard(
-        icon: FluentIcons.picture_center,
+        icon: LucideIcons.image,
         title: "Treat single photo as collage",
         subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
         value: () => viewModel.singlePhotoIsCollageSetting,

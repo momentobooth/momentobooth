@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show ScaffoldMessenger;
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -55,55 +56,55 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
             items: [
               PaneItemSeparator(color: Colors.transparent),
               PaneItem(
-                icon: const Icon(FluentIcons.settings),
+                icon: const Icon(LucideIcons.settings),
                 title: const Text("General"),
                 body: Builder(builder: (_) => _getGeneralSettings(viewModel, controller)),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.devices4),
+                icon: const Icon(LucideIcons.cable),
                 title: const Text("Hardware"),
                 body: Builder(builder: (_) => _getHardwareSettings(viewModel, controller)),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.send),
+                icon: const Icon(LucideIcons.send),
                 title: const Text("Output"),
                 body: Builder(builder: (_) => _getOutputSettings(viewModel, controller)),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.open_in_new_window),
+                icon: const Icon(LucideIcons.appWindow),
                 title: const Text("User interface"),
                 body: Builder(builder: (_) => _getUiSettings(viewModel, controller)),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.design),
+                icon: const Icon(LucideIcons.layoutTemplate),
                 title: const Text("Templating"),
                 body: Builder(builder: (_) => _getTemplatingSettings(viewModel, controller)),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.automate_flow),
+                icon: const Icon(LucideIcons.workflow),
                 title: const Text("MQTT integration"),
                 body: Builder(builder: (_) => _getMqttIntegrationSettings(viewModel, controller)),
                 infoBadge: const MqttConnectionStateIndicator(),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.diamond_user),
+                icon: const Icon(LucideIcons.scanFace),
                 title: const Text("Face recognition"),
                 body: Builder(builder: (_) => _getFaceRecognitionSettings(viewModel, controller)),
               ),
             ],
             footerItems: [
               PaneItem(
-                icon: const Icon(FluentIcons.chart),
+                icon: const Icon(LucideIcons.chartLine),
                 title: const Text("Statistics"),
                 body: Builder(builder: (_) => _getStatsTab(viewModel, controller)),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.device_bug),
+                icon: const Icon(LucideIcons.bug),
                 title: const Text("Debug"),
                 body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
               ),
               PaneItem(
-                icon: const Icon(FluentIcons.data_flow),
+                icon: const Icon(LucideIcons.scrollText),
                 title: const Text("Log"),
                 body: Builder(builder: (_) => _log),
               ),
