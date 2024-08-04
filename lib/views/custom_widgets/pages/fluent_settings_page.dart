@@ -47,7 +47,7 @@ class FluentSettingsPage extends StatelessWidget {
               width: double.maxFinite,
               child: InfoBar(title: Text('Changes will be saved automatically')),
             ),
-          ),  
+          ),
         ],
       ),
     );

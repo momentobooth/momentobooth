@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
@@ -146,7 +146,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with Logger {
         ),
         PhotoBoothFilledButton(
           title: localizations.genericCloseButton,
-          icon: FontAwesomeIcons.check,
+          icon: LucideIcons.check,
           onPressed: widget.onSuccess,
         ),
       ],

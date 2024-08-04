@@ -8,7 +8,7 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
         title: "Local",
         settings: [
           FolderPickerCard(
-            icon: FluentIcons.fabric_picture_library,
+            icon: LucideIcons.folderInput,
             title: "Local photo storage location",
             subtitle: "Location where the output images will be stored",
             controller: controller.localFolderSettingController,
@@ -20,7 +20,7 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
         title: "Share using internet",
         settings: [
           TextInputCard(
-            icon: FluentIcons.my_network,
+            icon: LucideIcons.globe,
             title: "Firefox Send URL",
             subtitle: "Firefox Send Server URL",
             controller: controller.firefoxSendServerUrlController,
@@ -32,7 +32,7 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
         title: "Image settings",
         settings: [
           ComboBoxCard(
-            icon: FluentIcons.file_image,
+            icon: LucideIcons.fileImage,
             title: "Image file type",
             subtitle: "What kind of file to generate",
             items: viewModel.exportFormats,
@@ -40,14 +40,14 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
             onChanged: controller.onExportFormatChanged,
           ),
           NumberInputCard(
-            icon: FluentIcons.equalizer,
+            icon: LucideIcons.fileSliders,
             title: "JPG quality",
             subtitle: 'Export quality (higher is bigger files)',
             value: () => viewModel.jpgQuality,
             onFinishedEditing: controller.onJpgQualityChanged,
           ),
           NumberInputCard(
-            icon: FluentIcons.picture_stretch,
+            icon: LucideIcons.proportions,
             title: "Output resolution multiplier",
             subtitle: 'Controls image resolution',
             value: () => viewModel.resolutionMultiplier,
