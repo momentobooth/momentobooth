@@ -16,7 +16,7 @@ dependencies:
 
   # UI
   auto_size_text: 3.0.0
-  fluent_ui: 4.9.0
+  fluent_ui: { git: { url: https://github.com/h3x4d3c1m4l/fluent_ui, ref: "flutter-3.24-compatibility" } }
   go_router: 14.2.3
   flutter_svg: 2.0.10+1
   animated_text_kit: 4.2.2

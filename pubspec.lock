@@ -433,10 +433,11 @@ packages:
   fluent_ui:
     dependency: "direct main"
     description:
-      name: fluent_ui
-      sha256: "6f4200eab911f783c6bd7892569fdc1f85d77cef5b02fde24595ea5ce72f97c9"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: "flutter-3.24-compatibility"
+      resolved-ref: "94f5f356aaf54c07359377e557dead4d51cf64e1"
+      url: "https://github.com/h3x4d3c1m4l/fluent_ui"
+    source: git
     version: "4.9.0"
   flutter:
     dependency: "direct main"
