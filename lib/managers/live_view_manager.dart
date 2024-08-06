@@ -59,7 +59,7 @@ abstract class _LiveViewManagerBase with Store {
   @readonly
   int? _textureId;
 
-  int? _texturePointer;
+  late int _texturePointer;
 
   Future<void> _ensureTextureAvailable() async {
     if (_textureId != null) return;
@@ -128,7 +128,7 @@ abstract class _LiveViewManagerBase with Store {
 
       await _ensureTextureAvailable();
       await _currentLiveViewSource?.openStream(
-        texturePtr: BigInt.from(_texturePointer!),
+        texturePtr: BigInt.from(_texturePointer),
       );
 
       _liveViewState = LiveViewState.streaming;
