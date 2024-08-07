@@ -10,7 +10,6 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 flutter_rust_bridge = { version = "=2.2.0", features = ["chrono"] }
 anyhow = "1.0.86"
-derive_more = "0.99.18"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
 serde_json = "1.0.122"
@@ -35,7 +34,11 @@ num-traits = "0.2.19"
 num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 regex = "1.10.6"
-nokhwa = { git = "https://github.com/l1npengtul/nokhwa", branch="0.10", default-features = false, features = ["input-native", "output-threaded", "flume"] }
+nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", rev = "74a98ace10368320cfcc2186118ae10d5308ca59", default-features = true, features = ["input-native", "output-threaded", "flume"] }
+
+[patch.crates-io]
+# patch nokhwa core until https://github.com/l1npengtul/nokhwa/pull/178 is merged and released
+nokhwa-core = { git = "https://github.com/l1npengtul/nokhwa.git", rev = "74a98ace10368320cfcc2186118ae10d5308ca59"}
 
 [profile.dev]
 opt-level = 3
