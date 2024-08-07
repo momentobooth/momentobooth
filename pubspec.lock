@@ -433,12 +433,11 @@ packages:
   fluent_ui:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "flutter-3.24-compatibility"
-      resolved-ref: "94f5f356aaf54c07359377e557dead4d51cf64e1"
-      url: "https://github.com/h3x4d3c1m4l/fluent_ui"
-    source: git
-    version: "4.9.0"
+      name: fluent_ui
+      sha256: ae97c15cbf41594e31d9582a359b5a725cb66753bef73ed845ba534d3c7ec053
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.9.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -477,10 +476,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: fac14d2dd67eeba29a20e5d99fac0d4d9fcd552cdf6bf4f8945f7679c6b07b1d
+      sha256: "7beb9cb4690916a6c4fd151d91dba53555ea258dbc029dd5f1bfba2e7bd32b86"
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.0"
+    version: "2.2.0"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
@@ -1585,5 +1584,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.5.0-259.0.dev <4.0.0"
+  dart: ">=3.5.0 <4.0.0"
   flutter: ">=3.22.0"
