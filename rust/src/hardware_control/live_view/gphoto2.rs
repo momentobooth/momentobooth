@@ -6,7 +6,7 @@ use ::gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidge
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 
-use crate::{helpers::log_debug, models::images::RawImage, utils::jpeg};
+use crate::{helpers::{log_debug, log_warning}, models::images::RawImage, utils::jpeg};
 
 use chrono::Duration;
 
@@ -81,10 +81,15 @@ pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, fr
 
     loop {
       let camera = camera_ref.lock().await;
-      let preview = camera.camera.capture_preview().await.expect("Could not capture preview");
+      let mut preview = camera.camera.capture_preview().await;
+      if preview.is_err() {
+        log_warning("Capture preview error, waiting 2s before trying again...".to_owned());
+        sleep(tokio::time::Duration::from_millis(2000)).await;
+        preview = camera.camera.capture_preview().await;
+      }
       drop(camera);
 
-      let data = preview.get_data(&context).await.expect("Could not get preview data");
+      let data = preview.unwrap().get_data(&context).await.expect("Could not get preview data");
       let hash = hash_box(&data);
       if hash == last_hash.get() {
         // Frame is the same as the last one, skip
