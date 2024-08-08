@@ -119,9 +119,9 @@ class _ShellState extends State<Shell> with WindowListener {
       ..registerManager(NotificationsManager())
       ..registerManager(PrintingManager());
 
-    await getIt<SettingsManager>().initialize();
-    await getIt<StatsManager>().initialize();
-    await getIt<WindowManager>().initialize();
+    await getIt<SettingsManager>().initializeSafe();
+    await getIt<StatsManager>().initializeSafe();
+    await getIt<WindowManager>().initializeSafe();
     getIt<LiveViewManager>().initialize();
     getIt<MqttManager>().initialize();
     await getIt<SfxManager>().initialize();

@@ -16,6 +16,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:momento_booth/utils/system/app_version_helpers.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
@@ -26,7 +27,7 @@ part 'mqtt_manager.g.dart';
 class MqttManager = MqttManagerBase with _$MqttManager;
 
 /// Class containing global state for photos in the app
-abstract class MqttManagerBase with Store, Logger {
+abstract class MqttManagerBase with Store, Logger, Subsystem {
 
   final Lock _updateMqttClientInstanceLock = Lock();
 
@@ -45,6 +46,7 @@ abstract class MqttManagerBase with Store, Logger {
   // Initialization and client management //
   // //////////////////////////////////// //
 
+  @override
   void initialize() {
     // Respond to settings changes
     autorun((_) {

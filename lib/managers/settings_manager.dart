@@ -2,7 +2,6 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
@@ -17,23 +16,23 @@ abstract class SettingsManagerBase with Store, Logger, Subsystem {
   late Settings _settings;
 
   @override
-  Future<SubsystemStatus> initialize() async {
+  Future<void> initialize() async {
     try {
       SerialiableRepository<Settings> settingsRepository = getIt<SerialiableRepository<Settings>>();
       bool hasExistingSettings = await settingsRepository.hasExistingData();
 
       if (!hasExistingSettings) {
         _settings = Settings.withDefaults();
-        return const SubsystemStatus.ok(
+        reportSubsystemOk(
           message: "No existing settings found, a new settings file has been created.",
         );
       } else {
         _settings = await settingsRepository.get();
-        return const SubsystemStatus.ok();
+        reportSubsystemOk();
       }
     } catch (e) {
       _settings = Settings.withDefaults();
-      return SubsystemStatus.warning(
+      reportSubsystemWarning(
         message: "Could not read existing settings: $e\n\nDefault settings have been loaded. Your current settings file will be overwritten if you alter any settings. Backup your current settings file in case you need anything from it.",
       );
     }

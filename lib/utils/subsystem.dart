@@ -7,7 +7,7 @@ import 'package:momento_booth/utils/logger.dart';
 
 mixin Subsystem on Logger {
 
-  final Observable<SubsystemStatus> _subsystemStatus = Observable(const SubsystemStatus.busy(message: ""));
+  final Observable<SubsystemStatus> _subsystemStatus = Observable(const SubsystemStatus.initial());
 
   SubsystemStatus get subsystemStatus => _subsystemStatus.value;
 
@@ -15,20 +15,20 @@ mixin Subsystem on Logger {
   // Initialization //
   // ////////////// //
 
-  FutureOr<SubsystemStatus?> initialize() {
-    return const SubsystemStatus.ok();
-  }
+  FutureOr<void> initialize() {}
 
   @nonVirtual
   Future<void> initializeSafe() async {
-    SubsystemStatus? result;
     try {
-      result = await initialize() ?? const SubsystemStatus.ok();
+      await initialize();
+      if (_subsystemStatus.value is SubsystemStatusInitial) {
+
+      }
+      _subsystemStatus.value = const SubsystemStatus.ok();
     } catch (e, s) {
       logError("Init of $runtimeType failed", e, s);
-      result = SubsystemStatus.error(message: "Initialization error: $e");
+      _subsystemStatus.value = SubsystemStatus.error(message: "Initialization error: $e");
     }
-    _subsystemStatus.value = result;
   }
 
   // /////////////////////// //
@@ -42,8 +42,9 @@ mixin Subsystem on Logger {
     );
   }
 
-  void reportSubsystemOk({Map<String, Future Function()> actions = const {}}) {
+  void reportSubsystemOk({String? message, Map<String, Future Function()> actions = const {}}) {
     _subsystemStatus.value = SubsystemStatus.ok(
+      message: message,
       actions: actions,
     );
   }

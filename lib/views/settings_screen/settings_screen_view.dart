@@ -15,7 +15,6 @@ import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 import 'package:momento_booth/views/settings_screen/widgets/boolean_input_card.dart';
-import 'package:momento_booth/views/settings_screen/widgets/button_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/color_input_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/combo_box_card.dart';
 import 'package:momento_booth/views/settings_screen/widgets/file_picker_card.dart';
