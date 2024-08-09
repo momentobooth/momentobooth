@@ -24,9 +24,13 @@ Future<File> writeStringFileLocked(String path, String data) {
   return writeBytesToFileLocked(path, bytes);
 }
 
-Future<void> createPathSafe(String path) async {
+void createPathSafe(String path) {
   try {
-    await Directory(path).create(recursive: true);
+    Directory directory = Directory(path);
+    if (!directory.existsSync()) {
+      directory.createSync(recursive: true);
+      getIt<Talker>().info("Created path [$path]");
+    }
   } catch (s) {
     getIt<Talker>().warning("Could not create path [$path]: $s");
   }

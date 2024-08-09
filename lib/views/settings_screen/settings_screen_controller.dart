@@ -6,6 +6,7 @@ import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
+import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 
@@ -122,6 +123,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onTemplatesFolderChanged(String? templatesFolder) {
     if (templatesFolder != null) {
       viewModel.updateSettings((settings) => settings.copyWith(templatesFolder: templatesFolder));
+      createPathSafe(templatesFolder);
     }
   }
 
@@ -212,6 +214,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCaptureLocationChanged(String? captureLocation) {
     if (captureLocation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureLocation: captureLocation));
+      createPathSafe(captureLocation);
     }
   }
 
@@ -224,6 +227,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onCaptureStorageLocationChanged(String? captureStorageLocation) {
     if (captureStorageLocation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureStorageLocation: captureStorageLocation));
+      createPathSafe(captureStorageLocation);
     }
   }
 
@@ -406,6 +410,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onLocalFolderChanged(String? localFolder) {
     if (localFolder != null) {
       viewModel.updateSettings((settings) => settings.copyWith.output(localFolder: localFolder));
+      createPathSafe(localFolder);
     }
   }
 

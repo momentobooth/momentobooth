@@ -79,7 +79,7 @@ Future<void> _createPathsSafe() async {
   ];
 
   for (String path in paths) {
-    await createPathSafe(path);
+    createPathSafe(path);
   }
 }
 
