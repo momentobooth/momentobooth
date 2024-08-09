@@ -9,7 +9,6 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
-import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
