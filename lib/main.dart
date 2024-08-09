@@ -9,6 +9,7 @@ import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
+import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -39,6 +40,8 @@ void main() async {
   NotificationsManager.instance.initialize();
   PrintingManager.instance.initialize();
 
+  await _createPathsSafe();
+
   String sentryDsn = await _resolveSentryDsnOverride() ?? const String.fromEnvironment("SENTRY_DSN", defaultValue: '');
   await SentryFlutter.init(
     (options) {
@@ -65,6 +68,19 @@ void _ensureGPhoto2EnvironmentVariables() {
   // but it does makes libgphoto2 resolve them correctly through its call to `getenv`.
   putenv("IOLIBS", iolibsDefine);
   putenv("CAMLIBS", camlibsDefine);
+}
+
+Future<void> _createPathsSafe() async {
+  List<String> paths = [
+    SettingsManager.instance.settings.templatesFolder,
+    SettingsManager.instance.settings.output.localFolder,
+    SettingsManager.instance.settings.hardware.captureLocation,
+    SettingsManager.instance.settings.hardware.captureStorageLocation,
+  ];
+
+  for (String path in paths) {
+    await createPathSafe(path);
+  }
 }
 
 Future<String?> _resolveSentryDsnOverride() async {
