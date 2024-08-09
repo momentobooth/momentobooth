@@ -13,6 +13,7 @@ import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:win32/win32.dart';
 
 PdfPageFormat getNormalPageSize() {
@@ -245,7 +246,7 @@ List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
       // If the function fails, then at least we can say there is _some_ error
       hasError = true;
       jobList = [];
-      getIt<Logger>().logError(e);
+      getIt<Talker>().error('Could not get joblist', e);
     }
     // Check if there are prints that have errored
     hasError = hasError || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.error));
@@ -285,7 +286,7 @@ List<JobInfo> getJobList(String printerName) {
     final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0;
     if (!enumSuccess) throw Win32Exception.fromLastError("Error enumerating print jobs for printer $printerName");
 
-    getIt<Logger>().logDebug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
+    getIt<Talker>().debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
 
     List<JobInfo> jobList = [];
     for (var i = 0; i < numJobs.value; i++) {
@@ -294,7 +295,7 @@ List<JobInfo> getJobList(String printerName) {
       var statusVal = job.Status;
       var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
       if (statusString.isNotEmpty) {
-        getIt<Logger>().logDebug("Custom statusstring for printer $printerName: $statusString");
+        getIt<Talker>().debug("Custom statusstring for printer $printerName: $statusString");
       }
       // Extract list of statusses
       final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
