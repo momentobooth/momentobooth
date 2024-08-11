@@ -1,10 +1,8 @@
 use std::ffi::{c_int, c_void};
-
 use dlopen::{symbor::{Library, Symbol}, Error as LibError};
-
-use crate::{helpers::log_error, models::images::RawImage};
-
+use crate::models::images::RawImage;
 use std::sync::LazyLock;
+use log::error;
 
 #[cfg(all(target_os = "windows"))]
 pub static TEXTURE_RGBA_RENDERER_PLUGIN: LazyLock<Result<Library, LibError>> = LazyLock::new(|| Library::open("texture_rgba_renderer_plugin.dll"));
@@ -42,13 +40,13 @@ impl FlutterTexture {
                 match find_sym_res {
                     Ok(sym) => Some(sym),
                     Err(error) => {
-                        log_error("Failed to find symbol FlutterRgbaRendererPluginOnRgba: ".to_string() + &error.to_string());
+                        error!("Failed to find symbol FlutterRgbaRendererPluginOnRgba: {}", &error);
                         None
                     }
                 }
             }
             Err(error) => {
-                log_error("Failed to load texture rgba renderer plugin: ".to_string() + &error.to_string());
+                error!("Failed to load texture rgba renderer plugin: {}", &error);
                 None
             }
         };

@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/helpers.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:talker/talker.dart';
 
 part 'helper_library_initialization_manager.g.dart';
 
@@ -31,21 +33,18 @@ abstract class _HelperLibraryInitializationManagerBase with Store, Logger {
   String? _gphoto2InitializationMessage;
 
   Future initialize() async {
-    initializeLog().listen(_processLogEvent);
+    Talker talker = getIt<Talker>();
+    setupLogStream().listen((msg) {
+      LogLevel logLevel = switch (msg.logLevel) {
+        Level.error => LogLevel.error,
+        Level.warn => LogLevel.warning,
+        Level.info => LogLevel.info,
+        Level.debug => LogLevel.debug,
+        Level.trace => LogLevel.verbose,
+      };
+      talker.log("Lib: ${msg.lbl} - ${msg.msg}", logLevel: logLevel);
+    });
     initializeHardware().listen(_processHardwareInitEvent);
-  }
-
-  void _processLogEvent(LogEvent event) {
-    switch (event.level) {
-      case LogLevel.debug:
-        logDebug("Lib: ${event.message}");
-      case LogLevel.info:
-        logInfo("Lib: ${event.message}");
-      case LogLevel.warning:
-        logWarning("Lib: ${event.message}");
-      case LogLevel.error:
-        logError("Lib: ${event.message}");
-    }
   }
 
   void _processHardwareInitEvent(HardwareInitializationFinishedEvent event) {
