@@ -3,8 +3,9 @@ use std::{sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, LazyLock, Mutex
 use chrono::Duration;
 use dashmap::DashMap;
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
+use log::{error, info, debug};
 
-use crate::{frb_generated::StreamSink, helpers::{log_debug, log_error, log_info}, models::{images::RawImage, live_view::CameraState}, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg}};
+use crate::{frb_generated::StreamSink, models::{images::RawImage, live_view::CameraState}, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg}};
 
 pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
     if cfg!(target_os = "macos") {
@@ -23,7 +24,7 @@ pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
 }
 
 pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamera where F: Fn(Option<RawImage>) + Send + Sync + 'static {
-    log_debug("nokhwa::open_camera() opening '".to_string() + &friendly_name + "'");
+    debug!("nokhwa::open_camera() opening '{}'", &friendly_name);
     let format = RequestedFormat::new::<RgbAFormat>(RequestedFormatType::AbsoluteHighestResolution);
 
     // Look up device name
@@ -49,7 +50,7 @@ pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamer
                     ))
                 },
                 Err(error) => {
-                    log_error("Image decoding error: ".to_string() + &error.to_string());
+                    error!("Image decoding error: {}", &error);
                     None
                 },
             };
@@ -59,7 +60,7 @@ pub fn open_camera<F>(friendly_name: String, frame_callback: F) -> CallbackCamer
 
     camera.open_stream().expect("Could not open camera stream");
     let camera_format_str = &camera.camera_format().expect("Could not get camera format").to_string();
-    log_info("nokhwa::open_camera() opened '".to_string() + &friendly_name + "' (" + camera_format_str + ")");
+    info!("nokhwa::open_camera() opened '{}' ({})", &friendly_name, camera_format_str);
 
     camera
 }
@@ -193,6 +194,6 @@ impl NokhwaCameraHandle {
 
 impl Drop for NokhwaCameraHandle {
     fn drop(&mut self) {
-        log_debug("Dropping NokhwaCameraHandle".to_string());
+        debug!("{}", "Dropping NokhwaCameraHandle");
     }
 }

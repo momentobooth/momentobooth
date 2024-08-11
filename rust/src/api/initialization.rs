@@ -6,20 +6,20 @@ use std::sync::atomic::{Ordering, AtomicBool};
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
 
-use crate::{frb_generated::StreamSink, helpers::{self, log_debug, HardwareInitializationFinishedEvent, LogEvent, TOKIO_RUNTIME}};
+use crate::{frb_generated::StreamSink, helpers::{self, HardwareInitializationFinishedEvent, TOKIO_RUNTIME}};
 
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
+
+use log::debug;
+
+flutter_logger::flutter_logger_init!();
 
 // ////////////// //
 // Initialization //
 // ////////////// //
 
 static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
-
-pub fn initialize_log(log_sink: StreamSink<LogEvent>) {
-    helpers::initialize_log(log_sink);
-}
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     rexiv2::initialize().expect("Unable to initialize rexiv2");
@@ -29,22 +29,22 @@ pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinished
         HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
     } else {
         // Hardware has already been initialized (possible due to Hot Reload)
-        log_debug("Possible Hot Reload: Closing any open cameras and noise generators".to_string());
+        debug!("{}", "Possible Hot Reload: Closing any open cameras and noise generators");
         for map_entry in NOKHWA_HANDLES.iter() {
             map_entry.value().lock().expect("Could not lock on handle").camera.set_callback(|_| {}).expect("Stream close error");
         }
-        log_debug("Possible Hot Reload: Closed nokhwa".to_string());
+        debug!("{}", "Possible Hot Reload: Closed nokhwa");
         NOKHWA_HANDLES.clear();
         for map_entry in GPHOTO2_HANDLES.iter() {
             TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
                 gphoto2::stop_liveview(map_entry.value().lock().expect("Could not lock camera").camera.clone()).await
             }).expect("Could not get result");
         }
-        log_debug("Possible Hot Reload: Closed gphoto2".to_string());
+        debug!("{}", "Possible Hot Reload: Closed gphoto2");
         GPHOTO2_HANDLES.clear();
         for map_entry in NOISE_HANDLES.iter() {
             noise_close(*map_entry.key());
         }
-        log_debug("Possible Hot Reload: Closed noise".to_string());
+        debug!("{}", "Possible Hot Reload: Closed noise");
     }
 }

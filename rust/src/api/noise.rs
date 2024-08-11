@@ -5,8 +5,9 @@ use dashmap::DashMap;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
 use turborand::rng::Rng;
+use log::debug;
 
-use crate::{hardware_control::live_view::white_noise::{self, WhiteNoiseGeneratorHandle}, helpers::log_debug, models::images::RawImage, utils::flutter_texture::FlutterTexture};
+use crate::{hardware_control::live_view::white_noise::{self, WhiteNoiseGeneratorHandle}, models::images::RawImage, utils::flutter_texture::FlutterTexture};
 
 pub static NOISE_HANDLES: LazyLock<DashMap<u32, WhiteNoiseGeneratorHandle>> = LazyLock::new(|| DashMap::<u32, WhiteNoiseGeneratorHandle>::new());
 
@@ -37,7 +38,7 @@ pub fn noise_close(handle_id: u32) {
     // Retrieve handle
     let handle = NOISE_HANDLES.remove(&handle_id).expect("Invalid noise handle ID");
 
-    log_debug("Stopping white noise generator with handle ".to_string() + &handle_id.to_string());
+    debug!("Stopping white noise generator with handle {}", &handle_id);
     handle.1.stop();
-    log_debug("Stopped white noise generator with handle ".to_string() + &handle_id.to_string());
+    debug!("Stopped white noise generator with handle {}", &handle_id);
 }

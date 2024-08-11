@@ -106,7 +106,7 @@ abstract class _LiveViewManagerBase with Store {
       _currentGPhoto2CameraId = gPhoto2CameraIdSetting;
 
       // GPhoto2
-      if (_gPhoto2Camera != null && _gPhoto2Camera!.isOpened) {
+      if (_gPhoto2Camera != null) {
         await _gPhoto2Camera!.dispose();
         _gPhoto2Camera = null;
       }

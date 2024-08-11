@@ -5,8 +5,9 @@ use ahash::AHasher;
 use ::gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidget, TextWidget, ToggleWidget}, Camera, Context, Error};
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
+use log::{warn, debug};
 
-use crate::{helpers::{log_debug, log_warning}, models::images::RawImage, utils::jpeg};
+use crate::{models::images::RawImage, utils::jpeg};
 
 use chrono::Duration;
 
@@ -83,7 +84,7 @@ pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, fr
       let camera = camera_ref.lock().await;
       let mut preview = camera.camera.capture_preview().await;
       if preview.is_err() {
-        log_warning("Capture preview error, waiting 2s before trying again...".to_owned());
+        warn!("{}", "Capture preview error, waiting 2s before trying again...");
         sleep(tokio::time::Duration::from_millis(2000)).await;
         preview = camera.camera.capture_preview().await;
       }
@@ -161,19 +162,19 @@ pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, download_e
     match event {
       CameraEvent::NewFile(event) => {
         if !download_extra_files {
-          log_debug(format!("download_extra_files is false, ignoring file: {}/{}", event.folder(), event.name()));
+          debug!("download_extra_files is false, ignoring file: {}/{}", event.folder(), event.name());
         } else if let Some(callback) = &camera.extra_file_callback {
-          log_debug(format!("Downloading file from camera: {}/{}", event.folder(), event.name()));
+          debug!("Downloading file from camera: {}/{}", event.folder(), event.name());
           let file = camera.camera.fs().download(&event.folder(), &event.name()).await?;
           let data = file.get_data(get_context()?).await?;
-          log_debug(format!("Calling extra file callback"));
+          debug!("{}", "Calling extra file callback");
           callback(GPhoto2File {
             source_folder: event.folder().to_string(),
             filename: event.name().to_string(),
             data: data.to_vec(),
           });
         } else {
-          log_debug(format!("No extra file callback set, ignoring file: {}/{}", event.folder(), event.name()));
+          debug!("No extra file callback set, ignoring file: {}/{}", event.folder(), event.name());
         }
       },
       CameraEvent::Timeout => break,
@@ -182,7 +183,7 @@ pub async fn clear_events(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, download_e
   }
 
   let elapsed = start.elapsed();
-  log_debug(format!("Cleared {} events in {}ms", n_events - 1, elapsed.as_millis()));
+  debug!("Cleared {} events in {}ms", n_events - 1, elapsed.as_millis());
 
   Ok(())
 }
@@ -203,7 +204,7 @@ pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_t
   }
 
   let capture = camera.camera.capture_image().await?;
-  log_debug(format!("Downloading file from camera: {}/{}", capture.folder(), capture.name()));
+  debug!("Downloading file from camera: {}/{}", capture.folder(), capture.name());
 
   let file = camera.camera.fs().download(&capture.folder(), &capture.name()).await?;
   let data = file.get_data(get_context()?).await?;
@@ -456,6 +457,6 @@ impl GPhoto2CameraHandle {
 impl Drop for GPhoto2CameraHandle {
     #[frb(ignore)]
     fn drop(&mut self) {
-        log_debug("Dropping GPhoto2CameraHandle".to_string());
+        debug!("{}", "Dropping GPhoto2CameraHandle");
     }
 }
