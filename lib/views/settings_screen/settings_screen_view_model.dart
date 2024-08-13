@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
@@ -50,7 +51,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<BackgroundBlur>> get backgroundBlurOptions => BackgroundBlur.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
   List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
-  
+
   @observable
   ObservableList<ComboBoxItem<String>> flutterPrintingQueues = ObservableList<ComboBoxItem<String>>();
 
@@ -67,14 +68,14 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<String>> gPhoto2Cameras = ObservableList<ComboBoxItem<String>>();
 
   RichText _printerCardText(String printerName, bool isAvailable, bool? isDefault) {
-    final icon = isAvailable ? FluentIcons.plug_connected : FluentIcons.plug_disconnected;
+    final icon = isAvailable ? LucideIcons.plug : LucideIcons.unplug;
     return RichText(
       text: TextSpan(
         style: const TextStyle(color: Color(0xFF000000)),
         children: [
           TextSpan(text: "$printerName  "),
           if (isDefault == true) ...[
-            const WidgetSpan(child: Icon(FluentIcons.default_settings)),
+            const WidgetSpan(child: Icon(LucideIcons.printerCheck)),
             const TextSpan(text: "  "),
           ],
           WidgetSpan(child: Icon(icon)),
@@ -98,7 +99,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
     for (var printer in printers) {
       flutterPrintingQueues.add(ComboBoxItem(value: printer.name, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
-      
+
       // If there is no setting yet, set it to the default printer.
       if (printer.isDefault && flutterPrintingPrinterNamesSetting.isEmpty) {
         await updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: [printer.name]));
@@ -115,7 +116,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
     for (var printer in printers) {
       cupsQueues.add(ComboBoxItem(value: printer.id, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
-      
+
       // If there is no setting yet, set it to the default printer.
       if (cupsPrinterQueuesSetting.isEmpty) {
         await updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: [printer.id]));
@@ -135,7 +136,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
       ..add(const ComboBoxItem(value: "", child: Text("- Not used -")))
       ..addAll(_mediaDimensions.map((media) => ComboBoxItem(value: media.keyword, child: _mediaSizeCardText(media))).toList());
   }
-  
+
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
   Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
 

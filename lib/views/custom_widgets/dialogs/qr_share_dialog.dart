@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/custom_widgets/buttons/photo_booth_outlined_button.dart';
@@ -45,12 +45,12 @@ class QrShareDialog extends StatelessWidget {
         ShareDialogState.uploaded => [
             PhotoBoothOutlinedButton(
               title: localizations.qrDialogExtraDownloadButton,
-              icon: FontAwesomeIcons.repeat,
+              icon: LucideIcons.repeat,
               onPressed: onRedoUpload,
             ),
             PhotoBoothFilledButton(
               title: localizations.genericCloseButton,
-              icon: FontAwesomeIcons.check,
+              icon: LucideIcons.check,
               onPressed: onDismiss,
             ),
           ],
@@ -61,7 +61,7 @@ class QrShareDialog extends StatelessWidget {
             ),
             PhotoBoothFilledButton(
               title: localizations.genericRetryButton,
-              icon: FontAwesomeIcons.check,
+              icon: LucideIcons.check,
               onPressed: onRedoUpload,
             ),
           ],
