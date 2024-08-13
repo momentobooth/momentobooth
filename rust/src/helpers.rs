@@ -1,17 +1,13 @@
 use std::sync::OnceLock;
 
 use crate::hardware_control::live_view::nokhwa;
-use pathsep::{path_separator, join_path};
 use tokio::runtime::{self, Runtime};
 use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2};
 use log::debug;
 
-pub const TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
-
 pub static TOKIO_RUNTIME: OnceLock<Runtime> = OnceLock::new();
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
-    debug!("Compiled for target {}", TARGET);
     debug!("{}", "initialize_hardware() started");
 
     // Tokio runtime

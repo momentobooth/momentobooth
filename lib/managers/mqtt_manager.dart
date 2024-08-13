@@ -16,7 +16,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/utils/platform_and_app.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:synchronized/synchronized.dart';

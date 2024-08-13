@@ -3,7 +3,7 @@ import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
-import 'package:momento_booth/utils/platform_and_app.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 
 class LiveViewStreamSnapshotCapturer extends PhotoCaptureMethod {
 
