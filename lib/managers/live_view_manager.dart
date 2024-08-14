@@ -12,6 +12,8 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
@@ -20,7 +22,7 @@ part 'live_view_manager.g.dart';
 class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 
 /// Class containing global state for photos in the app
-abstract class LiveViewManagerBase with Store {
+abstract class LiveViewManagerBase with Store, Logger, Subsystem {
 
   @readonly
   bool _lastFrameWasInvalid = false;
@@ -32,6 +34,7 @@ abstract class LiveViewManagerBase with Store {
   // Initialization //
   // ////////////// //
 
+  @override
   void initialize() {
     Timer.periodic(const Duration(seconds: 1), (_) => _checkLiveViewState());
 

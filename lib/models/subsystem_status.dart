@@ -9,6 +9,8 @@ class SubsystemStatus with _$SubsystemStatus {
 
   const SubsystemStatus._();
 
+  const factory SubsystemStatus.initial() = SubsystemStatusInitial;
+
   const factory SubsystemStatus.busy({
     required String message,
     @Default({}) ActionMap actions,

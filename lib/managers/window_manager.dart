@@ -18,7 +18,7 @@ abstract class WindowManagerBase with Store, Logger, Subsystem {
   // ////////////// //
 
   @override
-  Future<Null> initialize() async {
+  Future<void> initialize() async {
     await windowManager.ensureInitialized();
     _isFullScreen = await windowManager.isFullScreen();
   }
