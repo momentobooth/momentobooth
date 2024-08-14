@@ -99,7 +99,7 @@ jobs:
       run: flutter analyze
 
     - name: Build project
-      run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs
+      run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
     - name: Bundle dependencies
       shell: pwsh

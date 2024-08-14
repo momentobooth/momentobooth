@@ -1,25 +1,35 @@
 use crate::hardware_control::live_view::gphoto2;
 use crate::hardware_control::live_view::gphoto2::GPHOTO2_HANDLES;
 use crate::hardware_control::live_view::nokhwa::NOKHWA_HANDLES;
+use crate::models::version_info::VersionInfo;
 use std::sync::atomic::{Ordering, AtomicBool};
-
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
-
 use crate::{frb_generated::StreamSink, helpers::{self, HardwareInitializationFinishedEvent, TOKIO_RUNTIME}};
-
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
-
 use log::debug;
+use rustc_version_runtime::version;
+use pathsep::{path_separator, join_path};
 
 flutter_logger::flutter_logger_init!();
+
+const RUST_COMPILE_TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
+const LIBRARY_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 // ////////////// //
 // Initialization //
 // ////////////// //
 
 static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
+
+pub fn get_version_info() -> VersionInfo {
+    VersionInfo {
+        rust_version: version().to_string(),
+        rust_target: RUST_COMPILE_TARGET.to_owned(),
+        library_version: LIBRARY_VERSION.to_owned(),
+    }
+}
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     rexiv2::initialize().expect("Unable to initialize rexiv2");

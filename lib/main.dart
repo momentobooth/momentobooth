@@ -8,9 +8,9 @@ import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:momento_booth/utils/file_utils.dart';
-import 'package:momento_booth/utils/platform_and_app.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -22,7 +22,6 @@ void main() async {
   _ensureGPhoto2EnvironmentVariables();
 
   WidgetsFlutterBinding.ensureInitialized();
-  await initialize();
 
   getIt
     ..registerSingleton(Talker(
@@ -30,6 +29,7 @@ void main() async {
     ))
     ..registerSingleton<SecretRepository>(const SecureStorageSecretRepository());
 
+  await initializeEnvironmentInfo();
   await HelperLibraryInitializationManager.instance.initialize();
   await SettingsManager.instance.load();
   await StatsManager.instance.load();
