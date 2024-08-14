@@ -4,7 +4,6 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
-import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
@@ -19,31 +18,27 @@ abstract class StatsManagerBase with Store, Logger, Subsystem {
   late Stats _stats;
 
   @override
-  Future<SubsystemStatus> initialize() async {
+  Future<void> initialize() async {
     SerialiableRepository<Stats> statsRepository = getIt<SerialiableRepository<Stats>>();
-    SubsystemStatus status;
 
     try {
       bool hasExistingStats = await statsRepository.hasExistingData();
 
       if (!hasExistingStats) {
         _stats = const Stats();
-        status = const SubsystemStatus.ok(
-          message: "No existing settings found, a new settings file has been created.",
-        );
+        reportSubsystemOk(message: "No existing settings found, a new settings file has been created.");
       } else {
         _stats = await statsRepository.get();
-        status = const SubsystemStatus.ok();
+        reportSubsystemOk();
       }
     } catch (e) {
       _stats = const Stats();
-      status = SubsystemStatus.warning(
+      reportSubsystemWarning(
         message: "Could not read existing stats: $e\n\nThe stats have been cleared. As such the existing stats file will be overwritten.",
       );
     }
 
     Timer.periodic(statsSaveTimerInterval, (timer) => _save);
-    return status;
   }
 
   // /////////// //

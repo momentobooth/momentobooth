@@ -10,6 +10,7 @@ Future<void> _initializeApp() async {
 
   await RustLib.init();
   _initializeLog();
+  await initializeEnvironmentInfo();
   await initializeLibrary();
 
   getIt
@@ -34,9 +35,9 @@ Future<void> _initializeApp() async {
 
   await _createPathsSafe();
 
-  await getIt<SettingsManager>().initialize();
-  await getIt<StatsManager>().initialize();
-  await getIt<WindowManager>().initialize();
+  await getIt<SettingsManager>().initializeSafe();
+  await getIt<StatsManager>().initializeSafe();
+  await getIt<WindowManager>().initializeSafe();
   getIt<LiveViewManager>().initialize();
   getIt<MqttManager>().initialize();
   await getIt<SfxManager>().initialize();
