@@ -67,8 +67,14 @@ pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, fr
 
   match camera.special_handling {
     GPhoto2CameraSpecialHandling::NikonDSLR => {
+      // Tried other ways but gPhoto2 keeps telling me it only allows this while in P, A, S or M mode.
       let opcode = camera.camera.config_key::<TextWidget>("opcode").await?;
       opcode.set_value("0x9201")?;
+      camera.camera.set_config(&opcode).await?;
+    },
+    GPhoto2CameraSpecialHandling::CanonDSLR => {
+      let opcode = camera.camera.config_key::<ToggleWidget>("viewfinder").await?;
+      opcode.set_toggled(true);
       camera.camera.set_config(&opcode).await?;
     },
     _ => {},
@@ -243,6 +249,7 @@ pub enum GPhoto2CameraSpecialHandling {
   NikonDSLR,
   NikonGeneric,
   Sony,
+  CanonDSLR,
 }
 
 // ////// //

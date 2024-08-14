@@ -40,7 +40,8 @@ enum GPhoto2SpecialHandling {
   none("None"),
   nikonDSLR("Nikon DSLR"),
   nikonGeneric("Nikon"),
-  sony("Sony");
+  sony("Sony"),
+  canonDSLR("Canon DSLR");
 
   final String name;
 
@@ -56,6 +57,7 @@ enum GPhoto2SpecialHandling {
       GPhoto2SpecialHandling.nikonDSLR => GPhoto2CameraSpecialHandling.nikonDslr,
       GPhoto2SpecialHandling.nikonGeneric => GPhoto2CameraSpecialHandling.nikonGeneric,
       GPhoto2SpecialHandling.sony => GPhoto2CameraSpecialHandling.sony,
+      GPhoto2SpecialHandling.canonDSLR => GPhoto2CameraSpecialHandling.canonDslr,
     };
   }
 
