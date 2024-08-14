@@ -32,7 +32,7 @@ dependencies:
   widgetbook: 3.8.1
   widgetbook_annotation: 3.1.0
   flex_color_picker: 3.5.1
-  lucide_icons_flutter: 1.1.4
+  lucide_icons_flutter: 1.1.5
 
   # Printscreen/Image processing
   screenshot: 3.0.0
@@ -48,24 +48,24 @@ dependencies:
 
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
-  ffi: 2.1.2
+  ffi: 2.1.3
   flutter_rust_bridge: 2.2.0
 
   # Printing
   printing: 5.13.1
-  pdf: 3.11.0
+  pdf: 3.11.1
 
   # System
   path_provider: 2.1.4
   path: ^1.9.0
-  window_manager: 0.3.9
+  window_manager: 0.4.0
   file_selector: 1.0.3
-  win32: 5.5.3
+  win32: 5.5.4
 
   # Log and error handling
-  talker: 4.4.0
+  talker: 4.4.1
   talker_flutter: 4.4.0
-  sentry_flutter: 8.6.0
+  sentry_flutter: 8.7.0
 
   # Sound output
   just_audio: 0.9.39
@@ -86,11 +86,11 @@ dependencies:
   get_it: 7.7.0
   meta: any
   synchronized: 3.1.0+1
-  collection: 1.18.0
+  collection: any
   dart_casing: 3.0.1
-  package_info_plus: 8.0.1
+  package_info_plus: 8.0.2
   lemberfpsmonitor: 0.0.3+6
-  crypto: 3.0.3
+  crypto: 3.0.4
   draggable_scrollbar: 0.1.0
   csslib: 1.0.0
 
