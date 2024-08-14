@@ -28,7 +28,6 @@ pub fn get_version_info() -> VersionInfo {
         rust_version: version().to_string(),
         rust_target: RUST_COMPILE_TARGET.to_owned(),
         library_version: LIBRARY_VERSION.to_owned(),
-        r: gphoto2::
     }
 }
 

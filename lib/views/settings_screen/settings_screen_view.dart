@@ -1,12 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show ScaffoldMessenger;
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
 import 'package:momento_booth/views/custom_widgets/cards/fluent_setting_card.dart';
@@ -27,6 +29,7 @@ import 'package:momento_booth/views/settings_screen/widgets/text_display_card.da
 import 'package:momento_booth/views/settings_screen/widgets/text_input_card.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+part 'settings_screen_view.about.dart';
 part 'settings_screen_view.debug.dart';
 part 'settings_screen_view.stats.dart';
 part 'settings_screen_view.face_recognition.dart';
@@ -107,6 +110,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: const Icon(LucideIcons.scrollText),
                 title: const Text("Log"),
                 body: Builder(builder: (_) => _log),
+              ),
+              PaneItem(
+                icon: const Icon(LucideIcons.info),
+                title: const Text("About"),
+                body: Builder(builder: (_) => _aboutTab),
               ),
             ],
           ),
