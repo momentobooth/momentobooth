@@ -35,6 +35,9 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   TextEditingController? _firefoxSendServerUrlController;
   TextEditingController get firefoxSendServerUrlController => _firefoxSendServerUrlController ??= TextEditingController(text: viewModel.firefoxSendServerUrlSetting);
 
+  TextEditingController? _introScreenTouchToStartOverrideTextController;
+  TextEditingController get introScreenTouchToStartOverrideTextController => _introScreenTouchToStartOverrideTextController ??= TextEditingController(text: viewModel.introScreenTouchToStartOverrideTextSetting);
+
   TextEditingController? _gPhoto2CaptureTargetController;
   TextEditingController get gPhoto2CaptureTargetController => _gPhoto2CaptureTargetController ??= TextEditingController(text: viewModel.gPhoto2CaptureTargetSetting);
 
@@ -447,6 +450,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
   void onReturnToHomeTimeoutSecondsChanged(int? returnToHomeTimeoutSeconds) {
     if (returnToHomeTimeoutSeconds != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(returnToHomeTimeoutSeconds: returnToHomeTimeoutSeconds));
+    }
+  }
+
+  void onIntroScreenTouchToStartOverrideText(String? introScreenTouchToStartOverrideText) {
+    if (introScreenTouchToStartOverrideText != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(introScreenTouchToStartOverrideText: introScreenTouchToStartOverrideText));
     }
   }
 

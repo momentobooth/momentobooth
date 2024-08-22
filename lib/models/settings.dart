@@ -24,7 +24,7 @@ part 'settings.g.dart';
 
 @Freezed(fromJson: true, toJson: true)
 class Settings with _$Settings implements TomlEncodableValue {
-  
+
   const Settings._();
 
   const factory Settings({
@@ -44,7 +44,7 @@ class Settings with _$Settings implements TomlEncodableValue {
   factory Settings.withDefaults() => Settings.fromJson({});
 
   factory Settings.fromJson(Map<String, Object?> json) => _$SettingsFromJson(json);
-  
+
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
@@ -98,7 +98,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
   factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});
 
   factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
-  
+
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
@@ -110,7 +110,7 @@ class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableVal
   const PrintLayoutSettings._();
 
   const factory PrintLayoutSettings({
-    
+
     @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeNormal,
     @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSplit,
     @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSmall,
@@ -122,7 +122,7 @@ class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableVal
   factory PrintLayoutSettings.withDefaults() => PrintLayoutSettings.fromJson({});
 
   factory PrintLayoutSettings.fromJson(Map<String, Object?> json) => _$PrintLayoutSettingsFromJson(json);
-  
+
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
@@ -142,7 +142,7 @@ class MediaSettings with _$MediaSettings implements TomlEncodableValue {
   factory MediaSettings.withDefaults() => MediaSettings.fromJson({});
 
   factory MediaSettings.fromJson(Map<String, Object?> json) => _$MediaSettingsFromJson(json);
-  
+
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
@@ -162,7 +162,7 @@ class GridSettings with _$GridSettings implements TomlEncodableValue {
   factory GridSettings.withDefaults() => GridSettings.fromJson({});
 
   factory GridSettings.fromJson(Map<String, Object?> json) => _$GridSettingsFromJson(json);
-  
+
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
@@ -218,6 +218,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(45) int returnToHomeTimeoutSeconds,
     @Default(Language.english) Language language,
     @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,
+    @Default("") String introScreenTouchToStartOverrideText,
     @Default(true) bool displayConfetti,
     @Default(false) bool customColorConfetti,
     @Default(false) bool enableSfx,

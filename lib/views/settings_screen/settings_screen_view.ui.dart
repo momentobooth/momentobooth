@@ -11,6 +11,13 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         value: () => viewModel.primaryColorSetting,
         onChanged: controller.onPrimaryColorChanged,
       ),
+      TextInputCard(
+        icon: LucideIcons.heading,
+        title: "Alternative 'Touch to start' title text",
+        subtitle: "The override text that will be shown on the Start screen instead of 'Touch to start'. Leave empty to show the default text from the translations data.",
+        controller: controller.introScreenTouchToStartOverrideTextController,
+        onFinishedEditing: controller.onIntroScreenTouchToStartOverrideText,
+      ),
       NumberInputCard(
         icon: LucideIcons.timer,
         title: "Return to home timeout",

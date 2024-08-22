@@ -192,6 +192,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   double get resolutionMultiplier => SettingsManager.instance.settings.output.resolutionMultiplier;
   Color get primaryColorSetting => SettingsManager.instance.settings.ui.primaryColor;
   int get returnToHomeTimeoutSeconds => SettingsManager.instance.settings.ui.returnToHomeTimeoutSeconds;
+  String get introScreenTouchToStartOverrideTextSetting => SettingsManager.instance.settings.ui.introScreenTouchToStartOverrideText;
   bool get displayConfettiSetting => SettingsManager.instance.settings.ui.displayConfetti;
   bool get customColorConfettiSetting => SettingsManager.instance.settings.ui.customColorConfetti;
   bool get enableSfxSetting => SettingsManager.instance.settings.ui.enableSfx;
