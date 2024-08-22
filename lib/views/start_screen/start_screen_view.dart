@@ -69,8 +69,9 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
           flex: 2,
           child: Center(
             child: AutoSizeText(
-              localizations.startScreenTouchToStartButton,
+              viewModel.touchToStartText,
               style: theme.titleStyle,
+              textAlign: TextAlign.center,
             ),
           ),
         ),

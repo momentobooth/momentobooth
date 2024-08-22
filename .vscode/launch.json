@@ -5,20 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "momento-booth",
+            "name": "MomentoBooth",
             "request": "launch",
             "type": "dart",
             "program": "lib/main.dart"
         },
         {
-            "name": "momento-booth (profile mode)",
+            "name": "MomentoBooth (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile",
             "program": "lib/main.dart"
         },
         {
-            "name": "momento-booth (release mode)",
+            "name": "MomentoBooth (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release",

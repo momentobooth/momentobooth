@@ -1,4 +1,5 @@
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/extensions/string_extension.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -12,6 +13,11 @@ abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
 
   @computed
   List<LottieAnimationSettings> get introScreenLottieAnimations => SettingsManager.instance.settings.ui.introScreenLottieAnimations;
+
+  @computed
+  String get touchToStartText =>
+      SettingsManager.instance.settings.ui.introScreenTouchToStartOverrideText.nullIfEmpty ??
+      localizations.startScreenTouchToStartButton;
 
   @observable
   bool isBusy = false;
