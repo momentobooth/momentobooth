@@ -36,7 +36,18 @@ jobs:
       with:
         msystem: clang64
         path-type: inherit
-        pacboy: pkgconf:c libgphoto2:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c
+        pacboy: pkgconf:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c libusb:c gcc:c
+        install: git patch
+
+    - name: Build libgphoto2 from master
+      shell: msys2 {0}
+      env:
+        MSYS2_PATH_TYPE: minimal
+      run: |
+        git clone https://github.com/momentobooth/MINGW-packages
+        cd MINGW-packages/mingw-w64-libgphoto2
+        makepkg -s --noconfirm
+        pacman -U mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst --noconfirm
 
     - name: Workaround MSVC compiler looking for .lib files
       shell: pwsh
@@ -100,6 +111,13 @@ jobs:
 
     - name: Build project
       run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+
+    - name: Workaround bundle script not working
+      shell: msys2 {0}
+      env:
+        MSYS2_PATH_TYPE: minimal
+      run: |
+        pacboy -Rc llvm --noconfirm
 
     - name: Bundle dependencies
       shell: pwsh
