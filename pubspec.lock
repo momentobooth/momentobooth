@@ -98,10 +98,10 @@ packages:
     dependency: transitive
     description:
       name: bidi
-      sha256: "1a7d0c696324b2089f72e7671fd1f1f64fef44c980f3cebc84e803967c597b63"
+      sha256: "9a712c7ddf708f7c41b1923aa83648a3ed44cfd75b04f72d598c45e5be287f9d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.10"
+    version: "2.0.12"
   boolean_selector:
     dependency: transitive
     description:
@@ -838,10 +838,10 @@ packages:
     dependency: transitive
     description:
       name: media_kit
-      sha256: "3289062540e3b8b9746e5c50d95bd78a9289826b7227e253dff806d002b9e67a"
+      sha256: "1f1deee148533d75129a6f38251ff8388e33ee05fc2d20a6a80e57d6051b7b62"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.10+1"
+    version: "1.1.11"
   media_kit_libs_linux:
     dependency: "direct main"
     description:

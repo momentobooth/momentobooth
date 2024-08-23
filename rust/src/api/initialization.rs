@@ -1,5 +1,4 @@
-use crate::hardware_control::live_view::gphoto2;
-use crate::hardware_control::live_view::gphoto2::GPHOTO2_HANDLES;
+use crate::hardware_control::live_view::gphoto2::{self, GPHOTO2_HANDLES};
 use crate::hardware_control::live_view::nokhwa::NOKHWA_HANDLES;
 use crate::models::version_info::VersionInfo;
 use std::sync::atomic::{Ordering, AtomicBool};
@@ -28,6 +27,7 @@ pub fn get_version_info() -> VersionInfo {
         rust_version: version().to_string(),
         rust_target: RUST_COMPILE_TARGET.to_owned(),
         library_version: LIBRARY_VERSION.to_owned(),
+        libgphoto2_version: ::gphoto2::library_version().unwrap().to_owned(),
     }
 }
 
