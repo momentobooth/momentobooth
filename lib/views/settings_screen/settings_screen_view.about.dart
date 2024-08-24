@@ -19,6 +19,7 @@ Widget get _aboutTab {
             Text('Helper library target: ${helperLibraryVersionInfo.rustTarget}'),
             const SizedBox(height: 8),
             Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}'),
+            Text('libgexiv2 version: ${helperLibraryVersionInfo.libgexiv2Version}'),
           ],
         ),
       ],

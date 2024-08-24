@@ -3007,6 +3007,7 @@ dependencies = [
  "ffsend-api",
  "flutter_logger",
  "flutter_rust_bridge",
+ "gexiv2-sys",
  "gphoto2",
  "image 0.25.2",
  "img-parts",
