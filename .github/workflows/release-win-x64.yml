@@ -51,6 +51,9 @@ jobs:
         cd MINGW-packages/mingw-w64-libgphoto2
         makepkg -s --noconfirm
         pacman -U mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst --noconfirm
+        cd src/libgphoto2
+        LIBGPHOTO2_GIT_REV=$(git rev-parse HEAD)
+        echo "LIBGPHOTO2_GIT_REV=$LIBGPHOTO2_GIT_REV" >> $GITHUB_ENV
 
     - name: Workaround MSVC compiler looking for .lib files
       shell: pwsh
@@ -122,7 +125,7 @@ jobs:
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
     - name: Build project
-      run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+      run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }} --dart-define LIBGPHOTO2_GIT_REV=${{ env.LIBGPHOTO2_GIT_REV }}
 
     - name: Workaround bundle script not working
       shell: msys2 {0}

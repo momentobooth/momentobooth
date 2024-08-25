@@ -1,6 +1,8 @@
 part of 'settings_screen_view.dart';
 
 Widget get _aboutTab {
+  String libgphoto2GitRev = const String.fromEnvironment("LIBGPHOTO2_GIT_REV");
+
   return Center(
     child: ListView(
       shrinkWrap: true,
@@ -18,7 +20,7 @@ Widget get _aboutTab {
             Text('Helper library Rust version: ${helperLibraryVersionInfo.rustVersion}'),
             Text('Helper library target: ${helperLibraryVersionInfo.rustTarget}'),
             const SizedBox(height: 8),
-            Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}'),
+            Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}${libgphoto2GitRev.isNotEmpty ? ' (git rev ${libgphoto2GitRev.substring(0, 7)})' : ''}'),
             Text('libgexiv2 version: ${helperLibraryVersionInfo.libgexiv2Version}'),
             Text('libexiv2 version: ${helperLibraryVersionInfo.libexiv2Version}'),
           ],
