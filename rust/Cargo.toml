@@ -40,6 +40,10 @@ flutter_logger = "0.6.1"
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", rev = "74a98ace10368320cfcc2186118ae10d5308ca59", default-features = true, features = ["input-native", "output-threaded", "flume"] }
 rustc_version_runtime = "0.3.0"
 
+[build-dependencies]
+bindgen = "0.70.1"
+pkg-config = "0.3.30"
+
 [patch.crates-io]
 # patch nokhwa core until https://github.com/l1npengtul/nokhwa/pull/178 is merged and released
 nokhwa-core = { git = "https://github.com/l1npengtul/nokhwa.git", rev = "74a98ace10368320cfcc2186118ae10d5308ca59" }

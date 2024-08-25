@@ -20,6 +20,7 @@ Widget get _aboutTab {
             const SizedBox(height: 8),
             Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}'),
             Text('libgexiv2 version: ${helperLibraryVersionInfo.libgexiv2Version}'),
+            Text('libexiv2 version: ${helperLibraryVersionInfo.libexiv2Version}'),
           ],
         ),
       ],

@@ -267,6 +267,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "bindgen"
+version = "0.70.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f49d8fed880d473ea71efb9bf597651e77201bdd4893efe54c9e5d65ae04ce6f"
+dependencies = [
+ "bitflags 2.6.0",
+ "cexpr",
+ "clang-sys",
+ "itertools",
+ "log 0.4.22",
+ "prettyplease",
+ "proc-macro2 1.0.86",
+ "quote 1.0.37",
+ "regex",
+ "rustc-hash",
+ "shlex",
+ "syn 2.0.75",
+]
+
+[[package]]
 name = "bit_field"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1806,7 +1826,7 @@ version = "1.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "63434be819e4b8933a4df944b3033a1799259f1e37b219a4fb11f2fc01123a9e"
 dependencies = [
- "bindgen",
+ "bindgen 0.65.1",
  "pkg-config",
 ]
 
@@ -3001,6 +3021,7 @@ dependencies = [
  "ahash",
  "anyhow",
  "atom_table",
+ "bindgen 0.70.1",
  "chrono",
  "dashmap 6.0.1",
  "dlopen",
@@ -3021,6 +3042,7 @@ dependencies = [
  "num-derive",
  "num-traits",
  "pathsep",
+ "pkg-config",
  "regex",
  "rexiv2",
  "rustc_version_runtime",
@@ -3969,7 +3991,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6779878362b9bacadc7893eac76abe69612e8837ef746573c4a5239daf11990b"
 dependencies = [
- "bindgen",
+ "bindgen 0.65.1",
 ]
 
 [[package]]

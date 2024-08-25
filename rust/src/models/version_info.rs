@@ -5,4 +5,5 @@ pub struct VersionInfo {
     pub library_version: String,
     pub libgphoto2_version: String,
     pub libgexiv2_version: String,
+    pub libexiv2_version: String,
 }

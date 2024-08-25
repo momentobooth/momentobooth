@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Change: Show libgphoto2 and libgexiv2 versions in About screen
+- Change: Show libgphoto2, libgexiv2 and libexiv2 versions in About screen
 
 ## 0.11.0
 

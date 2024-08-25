@@ -1,6 +1,7 @@
 use crate::hardware_control::live_view::gphoto2::{self, GPHOTO2_HANDLES};
 use crate::hardware_control::live_view::nokhwa::NOKHWA_HANDLES;
 use crate::models::version_info::VersionInfo;
+use std::ffi::CStr;
 use std::sync::atomic::{Ordering, AtomicBool};
 use gexiv2_sys::gexiv2_get_version;
 pub use ipp::model::PrinterState;
@@ -30,6 +31,7 @@ pub fn get_version_info() -> VersionInfo {
         library_version: LIBRARY_VERSION.to_owned(),
         libgphoto2_version: ::gphoto2::library_version().unwrap().to_owned(),
         libgexiv2_version: get_gexiv2_version(),
+        libexiv2_version: get_exiv2_version(),
     }
 }
 
@@ -43,6 +45,13 @@ fn get_gexiv2_version() -> String {
     let patch = raw_version % 100;
 
     format!("{}.{}.{}", major, minor, patch)
+}
+
+fn get_exiv2_version() -> String {
+    return unsafe {
+        let c_str = crate::Exiv2_version();
+        CStr::from_ptr(c_str).to_string_lossy().into_owned()
+    };
 }
 
 pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
