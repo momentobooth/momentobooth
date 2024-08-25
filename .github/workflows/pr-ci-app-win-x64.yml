@@ -39,18 +39,35 @@ jobs:
         pacboy: pkgconf:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c libusb:c gcc:c
         install: git patch
 
-    - name: Build libgphoto2 from master
+    - name: Get latest git rev of MINGW-packages and libgphoto2
       shell: msys2 {0}
-      env:
-        MSYS2_PATH_TYPE: minimal
       run: |
-        git clone https://github.com/momentobooth/MINGW-packages
+        git clone --depth=1 https://github.com/momentobooth/MINGW-packages
         cd MINGW-packages/mingw-w64-libgphoto2
-        makepkg -s --noconfirm
-        pacman -U mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst --noconfirm
-        cd src/libgphoto2
+
+        git clone --depth=1 https://github.com/gphoto/libgphoto2
         LIBGPHOTO2_GIT_REV=$(git rev-parse HEAD)
         echo "LIBGPHOTO2_GIT_REV=$LIBGPHOTO2_GIT_REV" >> $GITHUB_ENV
+
+    - name: Cache libgphoto2 package
+      id: cache-libgphoto2-package
+      uses: actions/cache@v4
+      with:
+        path: MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
+        key: ${{ env.LIBGPHOTO2_GIT_REV }}
+
+    - name: Build libgphoto2 from git
+      shell: msys2 {0}
+      if: steps.cache-libgphoto2-package.outputs.cache-hit != 'true'
+      run: |
+        cd MINGW-packages/mingw-w64-libgphoto2
+        makepkg -s --noconfirm
+
+    - name: Install libgphoto2 package
+      shell: msys2 {0}
+      run: |
+        cd MINGW-packages/mingw-w64-libgphoto2
+        pacman -U --noconfirm mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
 
     - name: Workaround MSVC compiler looking for .lib files
       shell: pwsh
