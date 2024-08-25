@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Change: Show libgphoto2, libgexiv2 and libexiv2 versions in About screen
+
 ## 0.11.0
 
 - New feature: Allow overriding the default 'Touch to start' text (#468)

@@ -83,6 +83,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
   ```powershell
     cd $MSYS_INSTALL_PATH\clang64\lib
     cp libgexiv2.dll.a gexiv2.lib
+    cp libexiv2.dll.a exiv2.lib
     cp libgio-2.0.dll.a gio-2.0.lib
     cp libglib-2.0.dll.a glib-2.0.lib
     cp libgobject-2.0.dll.a gobject-2.0.lib

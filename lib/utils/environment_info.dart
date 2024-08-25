@@ -36,5 +36,7 @@ Future<void> initializeEnvironmentInfo() async {
     "Helper library version": helperLibraryVersionInfo.libraryVersion,
     "Helper library Rust compiler version": helperLibraryVersionInfo.rustVersion,
     "Helper library Rust target": helperLibraryVersionInfo.rustTarget,
+    "libgphoto2 version": helperLibraryVersionInfo.libgphoto2Version,
+    "libgexiv2 version": helperLibraryVersionInfo.libgexiv2Version,
   });
 }
