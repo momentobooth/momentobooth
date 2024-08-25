@@ -31,6 +31,9 @@ jobs:
         addPubCacheBinToPath: 'true'
         flutterPrecache: '--windows'
 
+    - name: Disable Flutter analytics and CLI animations
+      run: flutter config --no-analytics --no-cli-animations
+
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
       with:
@@ -39,7 +42,7 @@ jobs:
         pacboy: pkgconf:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c libusb:c gcc:c
         install: git patch
 
-    - name: Get latest git rev of MINGW-packages and libgphoto2
+    - name: Clone MINGW-packages and libgphoto2
       shell: msys2 {0}
       run: |
         git clone --depth=1 https://github.com/momentobooth/MINGW-packages
