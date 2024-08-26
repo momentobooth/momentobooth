@@ -32,6 +32,7 @@ jobs:
         Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
         Write-Output "CARGO_HOME=$($Volume.DriveLetter):\.cargo" >> $env:GITHUB_ENV
         Write-Output "RUSTUP_HOME=$($Volume.DriveLetter):\.rustup" >> $env:GITHUB_ENV
+        Write-Output "SCCACHE_DIR=$($Volume.DriveLetter):\.sccache-cache" >> $env:GITHUB_ENV
 
     - name: Copy Git Repo to Dev Drive
       run: |
@@ -47,6 +48,7 @@ jobs:
         setFlutterRootPath: 'true'
         addPubCacheBinToPath: 'true'
         flutterPrecache: '--windows'
+        setPubCachePath: '${{ env.DEV_DRIVE }}/.pub-cache'
         installationPath: '${{ env.DEV_DRIVE }}/flutter'
 
     - name: Disable Flutter analytics and CLI animations
@@ -88,8 +90,7 @@ jobs:
     - name: Install libgphoto2 package
       working-directory: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2
       shell: msys2 {0}
-      run: |
-        pacman -U --noconfirm mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
+      run: pacman -U --noconfirm mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
 
     - name: Workaround MSVC compiler looking for .lib files
       shell: pwsh
@@ -137,7 +138,7 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "2.3.0"
 
-    - name: Install Dependencies
+    - name: Install dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter pub get --enforce-lockfile
 
