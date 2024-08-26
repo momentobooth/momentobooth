@@ -23,7 +23,7 @@ jobs:
     # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
     - name: Create Dev Drive using ReFS
       run: |
-        $Volume = New-VHD -Path C:/mb_dev_drive.vhdx -SizeBytes 10GB |
+        $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 10GB |
                   Mount-VHD -Passthru |
                   Initialize-Disk -Passthru |
                   New-Partition -AssignDriveLetter -UseMaximumSize |
