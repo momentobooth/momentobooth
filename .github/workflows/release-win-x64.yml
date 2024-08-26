@@ -82,7 +82,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
-        key: ${{ env.LIBGPHOTO2_GIT_REV }}
+        key: libgphoto2_${{ env.LIBGPHOTO2_GIT_REV }}
 
     - name: Build libgphoto2 from git
       working-directory: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2
@@ -217,7 +217,7 @@ jobs:
     - name: Archive Release
       uses: thedoctor0/zip-release@0.7.6
       with:
-        type: 'zip'
+        type: zip
         directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip'
 

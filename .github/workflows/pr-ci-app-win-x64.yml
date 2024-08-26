@@ -6,6 +6,10 @@ on:
     paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
     types: [opened, synchronize, reopened, ready_for_review]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
@@ -79,7 +83,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
-        key: ${{ env.LIBGPHOTO2_GIT_REV }}
+        key: libgphoto2_${{ env.LIBGPHOTO2_GIT_REV }}
 
     - name: Build libgphoto2 from git
       working-directory: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2
