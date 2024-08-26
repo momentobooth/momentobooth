@@ -12,10 +12,10 @@ flutter_rust_bridge = { version = "=2.3.0", features = ["chrono"] }
 anyhow = "1.0.86"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.125"
+serde_json = "1.0.127"
 chrono = "0.4.38"
 image = { version = "0.25.2", features = ["rayon"] }
-ipp = "5.0.3"
+ipp = "5.0.4"
 zune-jpeg = "0.4.13"
 jpeg-encoder = "0.6.0"
 dlopen = "0.1.8"
