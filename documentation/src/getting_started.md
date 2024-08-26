@@ -61,7 +61,7 @@ graph LR
 
 ## Running the application
 
-1. Download the latest MomentoBooth release for your OS from the [GitHub releases page](https://github.com/h3x4d3c1m4l/momento-booth/releases).
+1. Download the latest MomentoBooth release for your OS from the [GitHub releases page](https://github.com/momentobooth/momentobooth/releases).
 1. Extract the zip file and run the MomentoBooth executable.
     - It may be convenient to place a shortcut on your desktop.
 1. You will be greeted by the homescreen saying "Touch to start" and a green background. Press `Ctrl+S` to open the settings panel. → [See all shortcuts](settings_general.md#hotkeys).
@@ -95,4 +95,4 @@ While the application has been used a few times already at different kinds of ev
   - As many Nikon cameras use the same commands for activating and deactivating live view, other Nikon DSLR models which support live view over USB may work.
   - Many mirrorless (non-DSLR) cameras may work fine anyway due to live view mode being activated automatically (e.g. Sony α6400).
   - The camera handling code is written with future special cases for different brands and models in mind, however we do not have any devices available for development and testing currently.
-  - **Workaround**: Try the different options available in the settings screen. If these don't work, your help might needed to fix the issue if possible at all. Please let us know by [raising an issue on GitHub](https://github.com/h3x4d3c1m4l/momento-booth/issues/new). Be sure to first check whether your model is listed on the [gPhoto2 compatibility list](http://www.gphoto.org/proj/libgphoto2/support.php). We might be able to expand the compatibility of the application with some remote testing. No guarantees however.
+  - **Workaround**: Try the different options available in the settings screen. If these don't work, your help might needed to fix the issue if possible at all. Please let us know by [raising an issue on GitHub](https://github.com/momentobooth/momentobooth/issues/new). Be sure to first check whether your model is listed on the [gPhoto2 compatibility list](http://www.gphoto.org/proj/libgphoto2/support.php). We might be able to expand the compatibility of the application with some remote testing. No guarantees however.
