@@ -37,6 +37,9 @@ jobs:
         addPubCacheBinToPath: 'true'
         flutterPrecache: '--macos'
 
+    - name: Disable Flutter analytics and CLI animations
+      run: flutter config --no-analytics --no-cli-animations
+
     - name: Install minimal Rust
       uses: dtolnay/rust-toolchain@master
       with:

@@ -6,6 +6,10 @@ on:
     paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
     types: [opened, synchronize, reopened, ready_for_review]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
@@ -20,6 +24,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
+    - name: Create Dev Drive using ReFS
+      run: |
+        $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 10GB |
+                  Mount-VHD -Passthru |
+                  Initialize-Disk -Passthru |
+                  New-Partition -AssignDriveLetter -UseMaximumSize |
+                  Format-Volume -FileSystem ReFS -Confirm:$false -Force
+        Write-Output $Volume
+        Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
+        Write-Output "CARGO_HOME=$($Volume.DriveLetter):\.cargo" >> $env:GITHUB_ENV
+        Write-Output "RUSTUP_HOME=$($Volume.DriveLetter):\.rustup" >> $env:GITHUB_ENV
+        Write-Output "SCCACHE_DIR=$($Volume.DriveLetter):\.sccache-cache" >> $env:GITHUB_ENV
+
+    - name: Copy Git Repo to Dev Drive
+      run: |
+        Copy-Item -Path "${{ github.workspace }}" -Destination "${{ env.DEV_DRIVE }}/momentobooth" -Recurse
+
     - name: Detect Flutter Version
       uses: kuhnroyal/flutter-fvm-config-action@v2
 
@@ -30,6 +52,11 @@ jobs:
         setFlutterRootPath: 'true'
         addPubCacheBinToPath: 'true'
         flutterPrecache: '--windows'
+        setPubCachePath: '${{ env.DEV_DRIVE }}/.pub-cache'
+        installationPath: '${{ env.DEV_DRIVE }}/flutter'
+
+    - name: Disable Flutter analytics and CLI animations
+      run: flutter config --no-analytics --no-cli-animations
 
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
@@ -38,19 +65,36 @@ jobs:
         path-type: inherit
         pacboy: pkgconf:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c libusb:c gcc:c
         install: git patch
+        location: '${{ env.DEV_DRIVE }}/msys2'
 
-    - name: Build libgphoto2 from master
+    - name: Clone MINGW-packages and libgphoto2
       shell: msys2 {0}
-      env:
-        MSYS2_PATH_TYPE: minimal
       run: |
-        git clone https://github.com/momentobooth/MINGW-packages
+        cd ${{ env.DEV_DRIVE }}
+        git clone --depth=1 https://github.com/momentobooth/MINGW-packages
         cd MINGW-packages/mingw-w64-libgphoto2
-        makepkg -s --noconfirm
-        pacman -U mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst --noconfirm
-        cd src/libgphoto2
+
+        git clone --depth=1 https://github.com/gphoto/libgphoto2
         LIBGPHOTO2_GIT_REV=$(git rev-parse HEAD)
         echo "LIBGPHOTO2_GIT_REV=$LIBGPHOTO2_GIT_REV" >> $GITHUB_ENV
+
+    - name: Cache libgphoto2 package
+      id: cache-libgphoto2-package
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
+        key: libgphoto2_${{ env.LIBGPHOTO2_GIT_REV }}
+
+    - name: Build libgphoto2 from git
+      working-directory: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2
+      shell: msys2 {0}
+      if: steps.cache-libgphoto2-package.outputs.cache-hit != 'true'
+      run: makepkg -s --noconfirm
+
+    - name: Install libgphoto2 package
+      working-directory: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2
+      shell: msys2 {0}
+      run: pacman -U --noconfirm mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
 
     - name: Workaround MSVC compiler looking for .lib files
       shell: pwsh
@@ -81,8 +125,8 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
-          rust -> ../build/windows/x64/plugins/rust_lib_momento_booth/cargokit_build
-          rust -> target
+          ${{ env.DEV_DRIVE }}/momentobooth/rust -> ../build/windows/x64/plugins/rust_lib_momento_booth/cargokit_build
+          ${{ env.DEV_DRIVE }}/momentobooth/rust -> target
 
     - name: Setup sccache
       uses: mozilla-actions/sccache-action@v0.0.5
@@ -98,22 +142,28 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "2.3.0"
 
-    - name: Install Dependencies
+    - name: Install dependencies
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter pub get --enforce-lockfile
 
     - name: Generate localizations
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter gen-l10n
 
     - name: Generate Dart/Rust bridging code
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter_rust_bridge_codegen generate
 
     - name: Run build_runner code generation
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: dart run build_runner build --delete-conflicting-outputs
       
     - name: Flutter analyze
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter analyze
 
     - name: Build project
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }} --dart-define LIBGPHOTO2_GIT_REV=${{ env.LIBGPHOTO2_GIT_REV }}
 
     - name: Workaround bundle script not working
@@ -124,6 +174,7 @@ jobs:
         pacboy -Rc llvm --noconfirm
 
     - name: Bundle dependencies
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       shell: pwsh
       run: |
         $bundle_script = curl https://raw.githubusercontent.com/momentobooth/mingw-bundledlls/master/mingw-bundledlls
@@ -160,11 +211,11 @@ jobs:
       uses: thedoctor0/zip-release@0.7.6
       with:
         type: zip
-        directory: build/windows/x64/runner/Release
+        directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: MomentoBooth-Win-x64.zip
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: Windows x64
-        path: build/windows/x64/runner/Release/MomentoBooth-Win-x64.zip
+        path: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/MomentoBooth-Win-x64.zip
