@@ -214,14 +214,14 @@ jobs:
           }
         }
 
-    - name: Archive Release
+    - name: Archive release
       uses: thedoctor0/zip-release@0.7.6
       with:
         type: zip
         directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip'
 
-    - name: Create GitHub Release
+    - name: Create GitHub release
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: true
