@@ -370,7 +370,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Runner",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.h3xsoftware.MomentoBooth;
+				PRODUCT_BUNDLE_IDENTIFIER = com.momentobooth.photobooth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_STYLE = debugging;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -504,7 +504,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Runner",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.h3xsoftware.MomentoBooth;
+				PRODUCT_BUNDLE_IDENTIFIER = com.momentobooth.photobooth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_STYLE = debugging;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -532,7 +532,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Runner",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.h3xsoftware.MomentoBooth;
+				PRODUCT_BUNDLE_IDENTIFIER = com.momentobooth.photobooth;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_STYLE = debugging;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";

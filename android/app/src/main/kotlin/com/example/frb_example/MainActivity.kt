@@ -1,4 +1,4 @@
-package com.h3xsoftware.momentobooth
+package com.momentobooth.photobooth
 
 import io.flutter.embedding.android.FlutterActivity
 
