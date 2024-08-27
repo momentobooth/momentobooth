@@ -74,3 +74,4 @@ AppDir/
 .bundle
 vendor/
 .env
+fastlane/report.xml
