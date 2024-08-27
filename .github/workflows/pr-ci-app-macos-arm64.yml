@@ -27,6 +27,10 @@ jobs:
     - name: Install build dependencies
       run: brew install ruby libgphoto2 gexiv2
 
+    - uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.MATCH_CERTIFICATES_GIT_ACCESS_TOKEN }}
+
     - name: Install keys, certificates and profiles
       env:
         MATCH_CERTIFICATES_GIT_URL: ${{ secrets.MATCH_CERTIFICATES_GIT_URL }}
