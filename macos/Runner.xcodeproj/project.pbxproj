@@ -37,6 +37,8 @@
 		5F60D5A22BD1653900C7C9E6 /* libgexiv2.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 5F60D5A02BD1653900C7C9E6 /* libgexiv2.dylib */; };
 		5F60D5A72BD16AF600C7C9E6 /* libglib-2.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F60D5A62BD16AF600C7C9E6 /* libglib-2.0.dylib */; };
 		5F60D5A82BD16AF600C7C9E6 /* libglib-2.0.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 5F60D5A62BD16AF600C7C9E6 /* libglib-2.0.dylib */; };
+		5F9A5C152C7E9BA90022EF6E /* libexiv2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9A5C142C7E9BA90022EF6E /* libexiv2.dylib */; };
+		5F9A5C162C7E9BA90022EF6E /* libexiv2.dylib in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 5F9A5C142C7E9BA90022EF6E /* libexiv2.dylib */; };
 		5FBC34592AD5435100473197 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBC34572AD5435100473197 /* SystemConfiguration.framework */; };
 		5FBC345B2AD5435800473197 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBC345A2AD5435800473197 /* CoreFoundation.framework */; };
 		A4A2F8093FD57D07EC2B3BDD /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4FA69507CE9BC7034C564D05 /* Pods_Runner.framework */; };
@@ -67,6 +69,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				5F3E6D822A95E4A7004DA4EF /* libgphoto2.dylib in Bundle Framework */,
+				5F9A5C162C7E9BA90022EF6E /* libexiv2.dylib in Bundle Framework */,
 				5F60D5A82BD16AF600C7C9E6 /* libglib-2.0.dylib in Bundle Framework */,
 				5F60D5A22BD1653900C7C9E6 /* libgexiv2.dylib in Bundle Framework */,
 				5F3E6D882A95E51C004DA4EF /* libgphoto2_port.dylib in Bundle Framework */,
@@ -102,7 +105,8 @@
 		5F3E6D852A95E51C004DA4EF /* libgphoto2_port.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgphoto2_port.dylib; path = /opt/homebrew/lib/libgphoto2_port.dylib; sourceTree = "<group>"; };
 		5F3E6D8B2A95E582004DA4EF /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5F60D5A02BD1653900C7C9E6 /* libgexiv2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgexiv2.dylib; path = /opt/homebrew/lib/libgexiv2.dylib; sourceTree = "<group>"; };
-		5F60D5A62BD16AF600C7C9E6 /* libglib-2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libglib-2.0.dylib"; path = "/opt/homebrew/lib/libglib-2.0.dylib"; sourceTree = "<group>"; };
+		5F60D5A62BD16AF600C7C9E6 /* libglib-2.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglib-2.0.dylib; path = /opt/homebrew/lib/libglib-2.0.dylib; sourceTree = "<group>"; };
+		5F9A5C142C7E9BA90022EF6E /* libexiv2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libexiv2.dylib; path = /opt/homebrew/lib/libexiv2.dylib; sourceTree = "<group>"; };
 		5FBC34572AD5435100473197 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5FBC345A2AD5435800473197 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
@@ -130,6 +134,7 @@
 				5F60D5A12BD1653900C7C9E6 /* libgexiv2.dylib in Frameworks */,
 				5F3E6D8D2A95E582004DA4EF /* AVFoundation.framework in Frameworks */,
 				5FBC345B2AD5435800473197 /* CoreFoundation.framework in Frameworks */,
+				5F9A5C152C7E9BA90022EF6E /* libexiv2.dylib in Frameworks */,
 				5F60D5A72BD16AF600C7C9E6 /* libglib-2.0.dylib in Frameworks */,
 				5FBC34592AD5435100473197 /* SystemConfiguration.framework in Frameworks */,
 				A4A2F8093FD57D07EC2B3BDD /* Pods_Runner.framework in Frameworks */,
@@ -230,6 +235,7 @@
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5F9A5C142C7E9BA90022EF6E /* libexiv2.dylib */,
 				5F60D5A62BD16AF600C7C9E6 /* libglib-2.0.dylib */,
 				5F60D5A02BD1653900C7C9E6 /* libgexiv2.dylib */,
 				5FBC345A2AD5435800473197 /* CoreFoundation.framework */,
@@ -616,6 +622,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/lib,
+					/opt/homebrew/Cellar/exiv2/0.28.3/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = MomentoBooth;
@@ -753,6 +760,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/lib,
+					/opt/homebrew/Cellar/exiv2/0.28.3/lib,
 				);
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -783,6 +791,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/lib,
+					/opt/homebrew/Cellar/exiv2/0.28.3/lib,
 				);
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
