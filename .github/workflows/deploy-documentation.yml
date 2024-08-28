@@ -23,7 +23,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 20
+
     env:
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"

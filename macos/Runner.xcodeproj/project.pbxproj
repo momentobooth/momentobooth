@@ -622,7 +622,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/lib,
-					/opt/homebrew/Cellar/exiv2/0.28.3/lib,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = MomentoBooth;
@@ -760,7 +759,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/lib,
-					/opt/homebrew/Cellar/exiv2/0.28.3/lib,
 				);
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -791,7 +789,6 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/opt/homebrew/lib,
-					/opt/homebrew/Cellar/exiv2/0.28.3/lib,
 				);
 				PRODUCT_NAME = MomentoBooth;
 				PROVISIONING_PROFILE_SPECIFIER = "";
