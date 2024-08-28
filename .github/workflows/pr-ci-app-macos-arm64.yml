@@ -42,7 +42,7 @@ jobs:
         PATH=/opt/homebrew/opt/ruby/bin:$HOME/.gem:$PATH
         gem install bundler --user-install
         bundle install
-        bundle exec fastlane install_release_cert_using_api
+        bundle exec fastlane ci_install_release_cert_using_api
 
     - name: Detect Flutter Version
       uses: kuhnroyal/flutter-fvm-config-action@v2
