@@ -69,3 +69,9 @@ AppDir/
 
 # FVM Version Cache
 .fvm/
+
+# Fastlane
+.bundle
+vendor/
+.env
+fastlane/report.xml

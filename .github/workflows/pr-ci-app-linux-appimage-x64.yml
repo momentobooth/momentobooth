@@ -15,6 +15,7 @@ jobs:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
 
     env:
       SCCACHE_GHA_ENABLED: "true"
@@ -75,7 +76,7 @@ jobs:
     - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: flutter pub get --enforce-lockfile
 
     - name: Generation l10n
@@ -87,7 +88,7 @@ jobs:
     - name: Code generation
       run: dart run build_runner build --delete-conflicting-outputs
 
-    - name: Flutter Analyze
+    - name: Flutter analyze
       run: flutter analyze
 
     - name: Flutter build
@@ -124,7 +125,7 @@ jobs:
     - name: Pack as AppImage and rename
       run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-Linux-x86_64.AppImage
 
-    - name: Upload Artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: Linux x86_64 AppImage

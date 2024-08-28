@@ -14,6 +14,7 @@ jobs:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
 
     runs-on: macos-latest
+    timeout-minutes: 30
 
     env:
       SCCACHE_GHA_ENABLED: "true"
@@ -70,7 +71,7 @@ jobs:
     - name: Install flutter_distributor
       run: dart pub global activate flutter_distributor
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: flutter pub get --enforce-lockfile
 
     - name: Generation l10n
@@ -82,11 +83,11 @@ jobs:
     - name: Code generation
       run: dart run build_runner build --delete-conflicting-outputs
       
-    - name: Flutter Analyze
+    - name: Flutter analyze
       run: flutter analyze
 
     # Extract version from branch name
-    - name: Extract Release version
+    - name: Extract release version
       id: extract_release_version
       shell: bash
       run: |
@@ -94,7 +95,7 @@ jobs:
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
-    - name: Build Project
+    - name: Build project
       run: flutter build macos -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
     - name: Copy binary to bundle and bundle dependency dylibs
@@ -103,7 +104,7 @@ jobs:
         cp -R build/macos/Build/Products/Release/MomentoBooth.app macos_package/
 
     # Pack
-    - name: Archive Release
+    - name: Archive release
       uses: thedoctor0/zip-release@0.7.6
       with:
         type: 'zip'
@@ -111,7 +112,7 @@ jobs:
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-x64.zip'
 
     # Create GitHub release
-    - name: Create GitHub Release
+    - name: Create GitHub release
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: true

@@ -15,6 +15,7 @@ jobs:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
     runs-on: windows-latest
+    timeout-minutes: 30
     
     env:
       SCCACHE_GHA_ENABLED: "true"
@@ -207,14 +208,14 @@ jobs:
           }
         }
 
-    - name: Archive Release
+    - name: Archive release
       uses: thedoctor0/zip-release@0.7.6
       with:
         type: zip
         directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: MomentoBooth-Win-x64.zip
 
-    - name: Upload Artifact
+    - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: Windows x64

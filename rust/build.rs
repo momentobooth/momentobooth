@@ -24,8 +24,10 @@ fn insert_target_name() {
 fn generate_exiv2_bindings() {
     let pkg_config_result = pkg_config::Config::new().probe("exiv2").unwrap();
 
-    let mut builder = bindgen::Builder::default();
+    let mut builder = bindgen::Builder::default().clang_arg("-xc++").clang_arg("-std=c++11");
     for path in pkg_config_result.include_paths {
+        builder = builder.clang_arg(format!("-I{}", path.to_str().unwrap()));
+
         let header_path = path.join("exiv2").join("exiv2.hpp");
         if header_path.exists() {
             builder = builder.header(header_path.to_str().unwrap())

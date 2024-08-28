@@ -14,6 +14,7 @@ jobs:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
 
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
 
     env:
       SCCACHE_GHA_ENABLED: "true"
@@ -74,7 +75,7 @@ jobs:
     - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
 
-    - name: Install Dependencies
+    - name: Install dependencies
       run: flutter pub get --enforce-lockfile
 
     - name: Generation l10n
@@ -86,11 +87,11 @@ jobs:
     - name: Code generation
       run: dart run build_runner build --delete-conflicting-outputs
 
-    - name: Flutter Analyze
+    - name: Flutter analyze
       run: flutter analyze
 
     # Extract version from branch name
-    - name: Extract Release version
+    - name: Extract release version
       id: extract_release_version
       shell: bash
       run: |
@@ -132,7 +133,7 @@ jobs:
     - name: Pack as AppImage and rename
       run: appimagetool AppDir && mv MomentoBooth-x86_64.AppImage MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-x86_64.AppImage
 
-    - name: Create GitHub Release
+    - name: Create GitHub release
       uses: ncipollo/release-action@v1
       with:
         allowUpdates: true

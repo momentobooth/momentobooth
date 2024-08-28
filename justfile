@@ -28,6 +28,16 @@ gen-l10n:
   fvm flutter gen-l10n
 
 ##
+# Signing
+##
+
+install-dev-cert:
+  bundle exec fastlane match development
+
+install-release-cert:
+  bundle exec fastlane match developer_id
+
+##
 # Watching
 ##
 
