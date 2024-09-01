@@ -215,8 +215,19 @@ jobs:
         directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: MomentoBooth-Win-x64.zip
 
-    - name: Upload artifact
+    - name: Compile Inno Setup installer
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
+      with:
+        path: ${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss
+
+    - name: Upload zip artifact
       uses: actions/upload-artifact@v4
       with:
-        name: Windows x64
+        name: Windows x64 (zip)
         path: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/MomentoBooth-Win-x64.zip
+
+    - name: Upload installer artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows x64 (installer)
+        path: ${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.exe
