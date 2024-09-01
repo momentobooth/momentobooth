@@ -215,20 +215,18 @@ jobs:
           }
         }
 
+    - name: Compile Inno Setup installer
+      shell: pwsh
+      run: |
+        &"${Env:ProgramFiles(x86)}/Inno Setup 6/iscc.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss"
+        mv "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64-Setup.exe"
+
     - name: Archive release
       uses: thedoctor0/zip-release@0.7.6
       with:
         type: zip
         directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip'
-
-    - name: Compile Inno Setup installer
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
-      with:
-        path: ${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss
-
-    - name: Rename installer
-      run: mv "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64-Setup.exe"
 
     - name: Create GitHub release
       uses: ncipollo/release-action@v1
@@ -238,3 +236,5 @@ jobs:
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
         artifacts: "${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip,${{ env.DEV_DRIVE }}/momentobooth/windows/installer/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64-Setup.exe"
+        body: |
+          For Windows users: MomentoBooth needs the [Visual C++ Redistributable runtime libraries](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170). The setup version will install these automatically. When using the zip, install them manually.

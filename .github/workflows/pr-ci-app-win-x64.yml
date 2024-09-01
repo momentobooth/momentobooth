@@ -208,17 +208,17 @@ jobs:
           }
         }
 
+    - name: Compile Inno Setup installer
+      shell: pwsh
+      run: |
+        &"${Env:ProgramFiles(x86)}/Inno Setup 6/iscc.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss"
+
     - name: Archive release
       uses: thedoctor0/zip-release@0.7.6
       with:
         type: zip
         directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: MomentoBooth-Win-x64.zip
-
-    - name: Compile Inno Setup installer
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.2
-      with:
-        path: ${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss
 
     - name: Upload zip artifact
       uses: actions/upload-artifact@v4
