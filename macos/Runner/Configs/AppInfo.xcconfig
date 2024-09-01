@@ -11,4 +11,4 @@ PRODUCT_NAME = MomentoBooth
 PRODUCT_BUNDLE_IDENTIFIER = com.momentobooth.photobooth
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 h3x Software. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 MomentoBooth team. All rights reserved.

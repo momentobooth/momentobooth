@@ -7,4 +7,4 @@ export IOLIBS="../iolibs"
 export CAMLIBS="../camlibs"
 export GTK_PATH="../gtk"
 
-exec ./momento_booth 
+exec ./photobooth

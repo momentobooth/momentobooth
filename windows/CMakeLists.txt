@@ -4,7 +4,7 @@ project(momento_booth LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "momento_booth")
+set(BINARY_NAME "photobooth")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

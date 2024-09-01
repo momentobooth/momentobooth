@@ -252,8 +252,8 @@ abstract class _MqttManagerBase with Store, Logger {
 
   HomeAssistantDevice get homeAssistantDevice => HomeAssistantDevice(
       identifiers: [SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId],
-      manufacturer: "h3x Software",
-      model: "MomentoBooth",
+      manufacturer: "MomentoBooth",
+      model: "Photobooth",
       name: "MomentoBooth instance on ${Platform.localHostname}",
       softwareVersion: '${packageInfo.version} build ${packageInfo.buildNumber}',
     );

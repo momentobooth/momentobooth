@@ -84,11 +84,11 @@ While the application has been used a few times already at different kinds of ev
 ```
 
 - Webcam support (and as such HDMI capturing) is not working on Linux and macOS currently.
-  - As of 2023 Q3 there is are some bugs in the library that is used for this functionality, these will be resolved in future versions.
+  - As of 2024 Q3 there is are some bugs in the library that is used for this functionality, these will be resolved in future versions.
   - Due to this bug, HDMI capture also will not work. As such camera's which don't support live view over USB through gPhoto2 but do support live view using HDMI out (e.g. Nikon D3100) current will not work on Linux and macOS.
   - **Workaround**: Use a camera which supports live view using USB, or use Windows.
 - macOS: No native builds for Apple Silicon available yet.
-  - As cross compilation with native libraries is pretty challenging and GitHub not supporting Apple Silicon runners yet as of 2023 Q3, native Apple Silicon builds for macOS cannot be provided yet.
+  - As cross compilation with native libraries is pretty challenging and GitHub not supporting Apple Silicon runners yet as of 2024 Q3, native Apple Silicon builds for macOS cannot be provided yet.
   - This will be fixed when Apple Silicon runners are made available by GitHub.
   - **Workaround**: Use the Intel/x86_64 builds for now. These should work on Apple Silicon machines without any performance or hardware compatibility issues.
 - Live view through gPhoto2: Currently only Nikon D3400 and Sony α6400 have been tested.
