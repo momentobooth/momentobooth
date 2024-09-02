@@ -52,7 +52,7 @@ dependencies:
   flutter_rust_bridge: 2.3.0
 
   # Printing
-  printing: 5.13.1
+  printing: 5.13.2
   pdf: 3.11.1
 
   # System
@@ -64,11 +64,11 @@ dependencies:
 
   # Log and error handling
   talker: 4.4.1
-  talker_flutter: 4.4.0
-  sentry_flutter: 8.7.0
+  talker_flutter: 4.4.1
+  sentry_flutter: 8.8.0
 
   # Sound output
-  just_audio: 0.9.39
+  just_audio: 0.9.40
   just_audio_media_kit: 2.0.5
   media_kit_libs_linux: any
   media_kit_libs_windows_audio: any
