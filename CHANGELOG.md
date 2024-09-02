@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 0.12.0
+
 - Change: Show libgphoto2, libgexiv2 and libexiv2 versions in About screen
+- Change: App now available as installer
 
 ## 0.11.0
 
