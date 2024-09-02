@@ -14,6 +14,7 @@ jobs:
   build:
     permissions:
       contents: write
+      pull-requests: write
 
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
@@ -28,7 +29,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Install build dependencies
@@ -112,8 +112,9 @@ jobs:
         rm macos/Podfile.lock
         FLUTTER_XCODE_ARCHS=arm64 flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v9
+    - name: Commit changes to macOS build files and create PR
+      uses: peter-evans/create-pull-request@v6
       with:
-        add: macos
-        message: 'Update macOS build files'
+        add-paths: macos
+        commit-message: Update macOS build files
+        title: Update macOS build files
