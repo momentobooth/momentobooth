@@ -113,8 +113,17 @@ jobs:
         FLUTTER_XCODE_ARCHS=arm64 flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
     - name: Commit changes to macOS build files and create PR
+      id: cpr
       uses: peter-evans/create-pull-request@v6
       with:
         add-paths: macos
         commit-message: Update macOS build files
         title: Update macOS build files
+        body: This PR is created by the macOS CI pipeline, to help keeping the macOS build working.
+        branch: chore/update-macos-build-files
+
+    - name: Add comment to remind of created PR
+      if: ${{ steps.cpr.outputs.pull-request-number }}
+      uses: thollander/actions-comment-pull-request@v2
+      with:
+        message: I created PR \#${{ steps.cpr.outputs.pull-request-number }} for you to update the macOS build.
