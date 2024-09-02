@@ -27,7 +27,7 @@ jobs:
     # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
     - name: Create Dev Drive using ReFS
       run: |
-        $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 10GB |
+        $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 20GB |
                   Mount-VHD -Passthru |
                   Initialize-Disk -Passthru |
                   New-Partition -AssignDriveLetter -UseMaximumSize |
@@ -227,6 +227,7 @@ jobs:
         type: zip
         directory: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release
         filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip'
+        custom: -mx9
 
     - name: Create GitHub release
       uses: ncipollo/release-action@v1
