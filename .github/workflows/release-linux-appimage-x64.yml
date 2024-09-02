@@ -139,5 +139,6 @@ jobs:
         allowUpdates: true
         prerelease: true
         replacesArtifacts: true
+        omitBodyDuringUpdate: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
         artifacts: "MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-x86_64.AppImage"
