@@ -75,3 +75,6 @@ AppDir/
 vendor/
 .env
 fastlane/report.xml
+
+# Inno Setup output
+installer.exe

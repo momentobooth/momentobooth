@@ -1,0 +1,1 @@
+CodeDependencies.iss copied from https://github.com/DomGries/InnoDependencyInstaller

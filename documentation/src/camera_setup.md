@@ -20,7 +20,7 @@ For using a external camera, two methods are available at the moment.
 
 ### gphoto2
 
-[Camera support overview](http://www.gphoto.org/doc/remote/) – Needs at least `capture support` and `liveview`.  
+[Camera support overview](http://www.gphoto.org/doc/remote/) – Needs at least `capture support` and `liveview`.
 Alternatively, see the [libgphoto2 supported cameras](http://www.gphoto.org/proj/libgphoto2/support.php) – Needs at least `Image Capture` and `Liveview`.
 
 Using the `gphoto2` implementation is very convenient, as it allows for both live view and high quality photo capture through a single USB connection. Check the above link for which cameras are supported.
@@ -30,13 +30,13 @@ Using the `gphoto2` implementation is very convenient, as it allows for both liv
 When a camera is not suported by `gphoto2`, it may be an option to use a vendor tethering program for photo capture through an [AutoIt](https://www.autoitscript.com/site/) script. This works as long as the vendor program writes JPG images to a specified directory.
 Live view must then be obtained from a camera feed.
 
-* This can either be with a video capture device (usually HDMI)  
+* This can either be with a video capture device (usually HDMI)
   You need the capture device and camera video out cable.
-* or by capturing the thethering software with [OBS Studio](https://obsproject.com/) and working with the [OSB virtual webcam](https://obsproject.com/kb/virtual-camera-guide) output.
+* or by capturing the tethering software with [OBS Studio](https://obsproject.com/) and working with the [OSB virtual webcam](https://obsproject.com/kb/virtual-camera-guide) output.
 
 The right webcam source can then be selected in the live view settings.
 
-To activate the AutoIt script, select `Sony Imaging Edge Remote` as capture source, set the image input directory, and set the AutoIt script contents in `sony_remote_capture_photo.au3` in `%AppData%\h3x Software\MomentoBooth`.
+To activate the AutoIt script, select `Sony Imaging Edge Remote` as capture source and set the image input directory.
 
 ### Physical camera set-up
 

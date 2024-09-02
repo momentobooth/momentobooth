@@ -98,7 +98,7 @@ jobs:
       run: mkdir -p AppDir/app && cp -r build/linux/x64/release/bundle/* AppDir/app/
 
     - name: Bundle main executable dependency libraries
-      run: mkdir AppDir/lib && pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath AppDir/app/momento_booth -copyTo AppDir/lib
+      run: mkdir AppDir/lib && pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath AppDir/app/photobooth -copyTo AppDir/lib
 
     - name: Bundle Rust library and Flutter plugin dependency libraries
       run: for f in AppDir/app/lib/*; do pwsh linux/packaging/appimage/bundle_deps.ps1 -executablePath "$f" -copyTo AppDir/lib; done
