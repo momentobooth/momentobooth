@@ -116,5 +116,4 @@ jobs:
       uses: EndBug/add-and-commit@v9
       with:
         add: macos
-        default_author: github_actions
         message: 'Update macOS build files'
