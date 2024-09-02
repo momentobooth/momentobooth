@@ -12,6 +12,9 @@ concurrency:
 
 jobs:
   build:
+    permissions:
+      contents: write
+
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
     runs-on: macos-latest
@@ -24,6 +27,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Install build dependencies
       run: brew install ruby libgphoto2 gexiv2
@@ -102,4 +108,13 @@ jobs:
       run: flutter analyze
 
     - name: Build project
-      run: FLUTTER_XCODE_ARCHS=arm64 flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+      run: |
+        rm macos/Podfile.lock
+        FLUTTER_XCODE_ARCHS=arm64 flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v9
+      with:
+        add: macos
+        default_author: github_actions
+        message: 'Update macOS build files'
