@@ -5,14 +5,12 @@ import 'dart:typed_data';
 
 import 'package:ffi/ffi.dart';
 import 'package:momento_booth/exceptions/win32_exception.dart';
-import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:win32/win32.dart';
 
 PdfPageFormat getNormalPageSize() {
@@ -240,12 +238,13 @@ List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
     bool paperOut = false;
     late final List<JobInfo> jobList;
     try {
-      jobList = getJobList(printerName);
+      jobList = _getJobList(printerName);
     } catch (e) {
       // If the function fails, then at least we can say there is _some_ error
       hasError = true;
       jobList = [];
-      getIt<Talker>().error('Could not get joblist', e);
+      // FIXME: This is being run in an isolate, because of that `getIt<Talker>()` does not work here.
+      //getIt<Talker>().error('Could not get joblist', e);
     }
     // Check if there are prints that have errored
     hasError = hasError || jobList.fold(false, (previousValue, element) => previousValue || element.status.contains(JobStatus.error));
@@ -255,7 +254,7 @@ List<PrinterStatus> checkPrintersStatus(List<String> printerNames) {
   return output;
 }
 
-List<JobInfo> getJobList(String printerName) {
+List<JobInfo> _getJobList(String printerName) {
   // Todo: eventually add OSx and Linux support
   if (!Platform.isWindows) return [];
   return using((alloc) {
@@ -285,7 +284,8 @@ List<JobInfo> getJobList(String printerName) {
     final bool enumSuccess = EnumJobs(printerHandleValue, 0, 100, returnType, jobs, numBytes, usedBytes, numJobs) != 0;
     if (!enumSuccess) throw Win32Exception.fromLastError("Error enumerating print jobs for printer $printerName");
 
-    getIt<Talker>().debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
+    // FIXME: This is being run in an isolate, because of that `getIt<Talker>()` does not work here.
+    //getIt<Talker>().debug("Printer $printerName (handle ${printerHandleValue.toHexString(32)}) has ${numJobs.value} jobs (object is ${usedBytes.value} bytes)");
 
     List<JobInfo> jobList = [];
     for (var i = 0; i < numJobs.value; i++) {
@@ -294,7 +294,8 @@ List<JobInfo> getJobList(String printerName) {
       var statusVal = job.Status;
       var statusString = job.pStatus.address != 0 ? job.pStatus.toDartString() : "";
       if (statusString.isNotEmpty) {
-        getIt<Talker>().debug("Custom statusstring for printer $printerName: $statusString");
+        // FIXME: This is being run in an isolate, because of that `getIt<Talker>()` does not work here.
+        //getIt<Talker>().debug("Custom statusstring for printer $printerName: $statusString");
       }
       // Extract list of statusses
       final List<JobStatus> status = JobStatus.values.where((element) => element.value & statusVal > 0).toList();
