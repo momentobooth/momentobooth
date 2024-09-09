@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bugfix: Workaround error spam caused by Windows printer status detection
+
 ## 0.12.0
 
 - Change: Show libgphoto2, libgexiv2 and libexiv2 versions in About screen
