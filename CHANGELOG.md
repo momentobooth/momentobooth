@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.12.1
+
 - Bugfix: Workaround error spam caused by Windows printer status detection
 
 ## 0.12.0
