@@ -9,10 +9,10 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 flutter_rust_bridge = { version = "=2.3.0", features = ["chrono"] }
-anyhow = "1.0.86"
+anyhow = "1.0.87"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.127"
+serde_json = "1.0.128"
 chrono = "0.4.38"
 image = { version = "0.25.2", features = ["rayon"] }
 ipp = "5.0.4"
@@ -20,7 +20,7 @@ zune-jpeg = "0.4.13"
 jpeg-encoder = "0.6.0"
 dlopen = "0.1.8"
 noise = "0.9.0"
-dashmap = "6.0.1"
+dashmap = "6.1.0"
 turborand = "0.10.1"
 pathsep = "0.1.1"
 tokio = { version = "1.40.0", features = ["rt-multi-thread"] }
