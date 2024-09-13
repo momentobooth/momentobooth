@@ -141,7 +141,7 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.3.0"
+        version: "2.4.0"
 
     - name: Install dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
