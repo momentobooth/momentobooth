@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
