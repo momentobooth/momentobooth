@@ -141,7 +141,7 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.3.0"
+        version: "2.4.0"
 
     - name: Install dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
@@ -155,10 +155,6 @@ jobs:
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter_rust_bridge_codegen generate
 
-    - name: Run build_runner code generation
-      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: dart run build_runner build --delete-conflicting-outputs
-      
     - name: Flutter analyze
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter analyze

@@ -1,4 +1,4 @@
-default: install-cargo-expand install-bridge-codegen install-flutter get-deps gen-bridge gen-code gen-l10n
+default: install-cargo-expand install-bridge-codegen install-flutter get-deps gen-bridge gen-l10n
 
 set windows-shell := ["pwsh.exe", "-NoProfile", "-c"]
 
@@ -10,7 +10,7 @@ install-cargo-expand:
   cargo install cargo-expand
 
 install-bridge-codegen:
-  cargo install flutter_rust_bridge_codegen@2.3.0
+  cargo install flutter_rust_bridge_codegen@2.4.0
 
 install-flutter:
   fvm install -s --skip-pub-get

@@ -65,7 +65,7 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.3.0"
+        version: "2.4.0"
 
     - name: Install lddtree
       uses: baptiste0928/cargo-install@v3
@@ -83,9 +83,6 @@ jobs:
 
     - name: Generate Dart-to-Rust bridging code
       run: flutter_rust_bridge_codegen generate
-
-    - name: Code generation
-      run: dart run build_runner build --delete-conflicting-outputs
 
     - name: Flutter analyze
       run: flutter analyze
