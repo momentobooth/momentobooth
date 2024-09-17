@@ -85,7 +85,7 @@ dependencies:
   # Misc
   get_it: 7.7.0
   meta: any
-  synchronized: 3.2.0
+  synchronized: 3.3.0+2
   collection: any
   dart_casing: 3.0.1
   package_info_plus: 8.0.2
