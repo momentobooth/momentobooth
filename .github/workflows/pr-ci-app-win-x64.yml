@@ -15,7 +15,7 @@ jobs:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
     runs-on: windows-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     
     env:
       SCCACHE_GHA_ENABLED: "true"
