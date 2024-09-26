@@ -1,4 +1,3 @@
-import 'package:figma_squircle/figma_squircle.dart';
 import 'package:fluent_ui/fluent_ui.dart' hide Colors;
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -21,11 +20,8 @@ class LoadingDialog extends StatelessWidget {
       width: 400,
       decoration: ShapeDecoration(
         color: theme.accentColor.light,
-        shape: SmoothRectangleBorder(
-          borderRadius: SmoothBorderRadius(
-            cornerRadius: 40,
-            cornerSmoothing: 1,
-          ),
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(40),
         ),
       ),
       child: Row(
