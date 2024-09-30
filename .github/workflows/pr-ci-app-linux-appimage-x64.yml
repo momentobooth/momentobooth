@@ -29,7 +29,7 @@ jobs:
       run: sudo apt update && sudo apt install build-essential git clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev llvm libfuse2 libgphoto2-dev libdigest-sha-perl libgexiv2-dev
 
     - name: Detect Flutter Version
-      uses: kuhnroyal/flutter-fvm-config-action@v2
+      uses: kuhnroyal/flutter-fvm-config-action@v3
 
     - name: Setup Flutter
       uses: hrishikesh-kadam/setup-flutter@v1
@@ -55,7 +55,7 @@ jobs:
           rust -> target
 
     - name: Setup sccache-cache
-      uses: mozilla-actions/sccache-action@v0.0.5
+      uses: mozilla-actions/sccache-action@v0.0.6
 
     - name: Install cargo-expand
       uses: baptiste0928/cargo-install@v3

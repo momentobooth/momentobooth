@@ -44,7 +44,7 @@ jobs:
         Copy-Item -Path "${{ github.workspace }}" -Destination "${{ env.DEV_DRIVE }}/momentobooth" -Recurse
 
     - name: Detect Flutter Version
-      uses: kuhnroyal/flutter-fvm-config-action@v2
+      uses: kuhnroyal/flutter-fvm-config-action@v3
 
     - name: Setup Flutter
       uses: hrishikesh-kadam/setup-flutter@v1
@@ -130,7 +130,7 @@ jobs:
           ${{ env.DEV_DRIVE }}/momentobooth/rust -> target
 
     - name: Setup sccache
-      uses: mozilla-actions/sccache-action@v0.0.5
+      uses: mozilla-actions/sccache-action@v0.0.6
 
     - name: Install cargo-expand
       uses: baptiste0928/cargo-install@v3
