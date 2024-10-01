@@ -31,7 +31,7 @@ class PhotoBoothDialog extends StatelessWidget {
       decoration: ShapeDecoration(
         color: const Color(0xFFFFFFFF).withOpacity(0.90),
         shape: ContinuousRectangleBorder(
-          borderRadius: BorderRadius.circular(42),
+          borderRadius: BorderRadius.circular(96),
         ),
         shadows: const [
           BoxShadow(

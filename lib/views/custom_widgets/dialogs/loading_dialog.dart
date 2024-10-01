@@ -21,7 +21,7 @@ class LoadingDialog extends StatelessWidget {
       decoration: ShapeDecoration(
         color: theme.accentColor.light,
         shape: ContinuousRectangleBorder(
-          borderRadius: BorderRadius.circular(40),
+          borderRadius: BorderRadius.circular(96),
         ),
       ),
       child: Row(
