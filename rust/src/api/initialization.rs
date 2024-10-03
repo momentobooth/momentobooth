@@ -1,6 +1,7 @@
 use crate::hardware_control::live_view::gphoto2::{self, GPHOTO2_HANDLES};
 use crate::hardware_control::live_view::nokhwa::NOKHWA_HANDLES;
 use crate::models::version_info::VersionInfo;
+use std::env;
 use std::ffi::CStr;
 use std::sync::atomic::{Ordering, AtomicBool};
 use gexiv2_sys::gexiv2_get_version;
@@ -21,6 +22,12 @@ const LIBRARY_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 // ////////////// //
 // Initialization //
 // ////////////// //
+
+#[frb(init)]
+pub fn library_init() {
+    env::set_var("RUST_BACKTRACE", "1");
+    debug!("{}", "library_init() succeeded");
+}
 
 static HARDWARE_INITIALIZED: AtomicBool = AtomicBool::new(false);
 

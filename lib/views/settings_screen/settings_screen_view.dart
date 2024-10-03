@@ -8,6 +8,7 @@ import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/src/rust/api/debug.dart' as debug;
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/blocks/fluent_settings_block.dart';
