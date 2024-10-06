@@ -1,4 +1,3 @@
-import 'package:figma_squircle/figma_squircle.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -102,11 +101,8 @@ class MomentoBoothThemeData with _$MomentoBoothThemeData {
       textStyle: WidgetStateProperty.all(const TextStyle(fontSize: 16.0)),
       padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 32.0, vertical: 18.0)),
       shape: WidgetStateProperty.all(
-        SmoothRectangleBorder(
-          borderRadius: SmoothBorderRadius(
-            cornerRadius: 18,
-            cornerSmoothing: 2,
-          ),
+        ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(42),
         ),
       ),
     ),

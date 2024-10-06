@@ -1,4 +1,3 @@
-import 'package:figma_squircle/figma_squircle.dart';
 import 'package:flutter/material.dart';
 
 class PhotoBoothDialog extends StatelessWidget {
@@ -31,11 +30,8 @@ class PhotoBoothDialog extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
       decoration: ShapeDecoration(
         color: const Color(0xFFFFFFFF).withOpacity(0.90),
-        shape: SmoothRectangleBorder(
-          borderRadius: SmoothBorderRadius(
-            cornerRadius: 42,
-            cornerSmoothing: 1,
-          ),
+        shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(96),
         ),
         shadows: const [
           BoxShadow(
