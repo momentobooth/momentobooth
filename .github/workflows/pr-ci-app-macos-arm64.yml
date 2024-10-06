@@ -107,7 +107,7 @@ jobs:
       run: flutter gen-l10n
 
     - name: Generate Dart-to-Rust bridging code
-      run: PKG_CONFIG_PATH=build/ventura/lib/pkgconfig PKG_CONFIG_PATH=build/arm64_ventura/lib/pkgconfig flutter_rust_bridge_codegen generate
+      run: PKG_CONFIG_PATH=$(realpath build/ventura/lib/pkgconfig):$(realpath build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
 
     - name: Flutter analyze
       run: flutter analyze
@@ -115,7 +115,7 @@ jobs:
     - name: Build project
       run: |
         rm macos/Podfile.lock
-        PKG_CONFIG_PATH=build/ventura/lib/pkgconfig PKG_CONFIG_PATH=build/arm64_ventura/lib/pkgconfig flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+        PKG_CONFIG_PATH=$(realpath build/ventura/lib/pkgconfig):$(realpath build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
     - name: Commit changes to macOS build files and create PR
       id: cpr
