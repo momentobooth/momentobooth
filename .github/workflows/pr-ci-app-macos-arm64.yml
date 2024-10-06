@@ -34,7 +34,7 @@ jobs:
     - name: Install build dependencies
       run: |
         brew unlink pkg-config
-        brew install ruby pkgconf
+        brew install ruby pkgconf create-dmg
 
     - name: Download and unpack Homebrew libraries
       run: |
@@ -135,20 +135,38 @@ jobs:
     - name: Bundle libraries
       run: |
         cd ci_build/arm64_bundle
-        dylibbundler -od -b -x ./MomentoBooth.app/Contents/MacOS/MomentoBooth -d ./MomentoBooth.app/Contents/libs/ -s ../arm64_ventura/lib
-        mkdir ./MomentoBooth.app/Contents/libs/{CAMLIBS,IOLIBS}
-        cp ../arm64_ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/libs/CAMLIBS
-        cp ../arm64_ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/libs/IOLIBS
-        dylibbundler -od -b -x ./MomentoBooth.app/Contents/libs/IOLIBS/usb1.so -d ./MomentoBooth.app/Contents/libs/ -s ../arm64_ventura/lib
-        dylibbundler -od -b -x ./MomentoBooth.app/Contents/libs/CAMLIBS/ptp2.so -d ./MomentoBooth.app/Contents/libs/ -s ../arm64_ventura/lib
+        python3 ../../macos/bundle.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Frameworks ../arm64_ventura/lib
+        mkdir ./MomentoBooth.app/Contents/Frameworks/{CAMLIBS,IOLIBS}
+        cp ../arm64_ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Frameworks/CAMLIBS
+        cp ../arm64_ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Frameworks/IOLIBS
+        python3 ../../macos/bundle.py MomentoBooth.app/Contents/Frameworks/CAMLIBS MomentoBooth.app/Contents/Frameworks ../arm64_ventura/lib
+        python3 ../../macos/bundle.py MomentoBooth.app/Contents/Frameworks/IOLIBS MomentoBooth.app/Contents/Frameworks ../arm64_ventura/lib
 
         cd ../ci_build/x86_64_bundle
-        dylibbundler -od -b -x ./MomentoBooth.app/Contents/MacOS/MomentoBooth -d ./MomentoBooth.app/Contents/libs/ -s ../ventura/lib
-        mkdir ./MomentoBooth.app/Contents/libs/{CAMLIBS,IOLIBS}
-        cp ../ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/libs/CAMLIBS
-        cp ../ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/libs/IOLIBS
-        dylibbundler -od -b -x ./MomentoBooth.app/Contents/libs/IOLIBS/usb1.so -d ./MomentoBooth.app/Contents/libs/ -s ../ventura/lib
-        dylibbundler -od -b -x ./MomentoBooth.app/Contents/libs/CAMLIBS/ptp2.so -d ./MomentoBooth.app/Contents/libs/ -s ../ventura/lib
+        python3 ../../macos/bundle.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Frameworks ../ventura/lib
+        mkdir ./MomentoBooth.app/Contents/Frameworks/{CAMLIBS,IOLIBS}
+        cp ../ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Frameworks/CAMLIBS
+        cp ../ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Frameworks/IOLIBS
+        python3 ../../macos/bundle.py MomentoBooth.app/Contents/Frameworks/CAMLIBS MomentoBooth.app/Contents/Frameworks ../ventura/lib
+        python3 ../../macos/bundle.py MomentoBooth.app/Contents/Frameworks/IOLIBS MomentoBooth.app/Contents/Frameworks ../ventura/lib
+
+    - name: Create dmg installers
+      run: |
+        cd ci_build
+        create-dmg --volname "MomentoBooth (Apple Silicon) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-AppleSilicon.dmg" "arm64_bundle/MomentoBooth.app"
+        create-dmg --volname "MomentoBooth (Intel) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-Intel.dmg" "x86_64_bundle/MomentoBooth.app"
+
+    - name: Upload arm64 dmg
+      uses: actions/upload-artifact@v4
+      with:
+        name: MomentoBooth-AppleSilicon.dmg
+        path: ci_build/MomentoBooth-AppleSilicon.dmg
+
+    - name: Upload x86_64 dmg
+      uses: actions/upload-artifact@v4
+      with:
+        name: MomentoBooth-Intel.dmg
+        path: .ci_build/MomentoBooth-Intel.dmg
 
     - name: Commit changes to macOS build files and create PR
       id: cpr
