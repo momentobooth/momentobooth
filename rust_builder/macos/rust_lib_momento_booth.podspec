@@ -42,6 +42,6 @@ A new Flutter FFI plugin project.
     'DEFINES_MODULE' => 'YES',
     # Flutter.framework does not contain a i386 slice.
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-    'OTHER_LDFLAGS' => '-force_load ${BUILT_PRODUCTS_DIR}/librust_lib_momento_booth.a -L/opt/homebrew/lib -L../../build/arm64_ventura/lib -L../../build/ventura/lib',
+    'OTHER_LDFLAGS' => '-force_load ${BUILT_PRODUCTS_DIR}/librust_lib_momento_booth.a -L${PODS_TARGET_SRCROOT}../build/ventura/lib -L${PODS_TARGET_SRCROOT}../build/arm64_ventura/lib',
   }
 end
