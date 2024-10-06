@@ -32,7 +32,7 @@ jobs:
         ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Install build dependencies
-      run: brew install ruby
+      run: brew install ruby pkg-config
 
     - name: Download and unpack Homebrew libraries
       run: |
@@ -115,8 +115,8 @@ jobs:
     - name: Build project
       run: |
         rm macos/Podfile.lock
-        PKG_CONFIG_PATH=$(realpath build/ventura/lib/pkgconfig) FLUTTER_XCODE_ARCHS=x86_64 flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
         PKG_CONFIG_PATH=$(realpath build/arm64_ventura/lib/pkgconfig) FLUTTER_XCODE_ARCHS=arm64 flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+        #PKG_CONFIG_PATH=$(realpath build/ventura/lib/pkgconfig) FLUTTER_XCODE_ARCHS=x86_64 flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
     - name: Commit changes to macOS build files and create PR
       id: cpr
