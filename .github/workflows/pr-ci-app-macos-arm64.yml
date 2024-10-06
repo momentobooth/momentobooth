@@ -120,7 +120,9 @@ jobs:
 
         mkdir ci_build/arm64_bundle
         cp -r build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle
+
         flutter clean
+        flutter pub get --enforce-lockfile
 
     - name: Build project (x86_64)
       run: |

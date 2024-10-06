@@ -42,9 +42,11 @@ A new Flutter FFI plugin project.
     'DEFINES_MODULE' => 'YES',
     # Flutter.framework does not contain a i386 slice.
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
-    'OTHER_LDFLAGS' => '-force_load ${BUILT_PRODUCTS_DIR}/librust_lib_momento_booth.a -L${GITHUB_WORKSPACE}/ci_build/ventura/lib -L${GITHUB_WORKSPACE}/ci_build/arm64_ventura/lib',
+    'OTHER_LDFLAGS[arch=x86_64]' => '-force_load ${BUILT_PRODUCTS_DIR}/librust_lib_momento_booth.a -L${GITHUB_WORKSPACE}/ci_build/ventura/lib',
+    'OTHER_LDFLAGS[arch=arm64]' => '-force_load ${BUILT_PRODUCTS_DIR}/librust_lib_momento_booth.a -L${GITHUB_WORKSPACE}/ci_build/arm64_ventura/lib'
   }
   s.user_target_xcconfig = {
-    'OTHER_LDFLAGS' => '-L${GITHUB_WORKSPACE}/ci_build/ventura/lib -L${GITHUB_WORKSPACE}/ci_build/arm64_ventura/lib',
+    'OTHER_LDFLAGS[arch=x86_64]' => '-L${GITHUB_WORKSPACE}/ci_build/ventura/lib',
+    'OTHER_LDFLAGS[arch=arm64]' => '-L${GITHUB_WORKSPACE}/ci_build/arm64_ventura/lib'
   }
 end
