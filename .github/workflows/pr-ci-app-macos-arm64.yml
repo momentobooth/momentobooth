@@ -32,7 +32,7 @@ jobs:
         ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Install build dependencies
-      run: brew install ruby
+      run: brew install ruby pkgconf
 
     - name: Download and unpack Homebrew libraries
       run: |
