@@ -54,11 +54,11 @@ fn get_exiv2_version() -> String {
     };
 }
 
-pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
+pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     rexiv2::initialize().expect("Unable to initialize rexiv2");
     if !HARDWARE_INITIALIZED.load(Ordering::SeqCst) {
         // Hardware has not been initialized yet
-        helpers::initialize_hardware(ready_sink);
+        helpers::initialize_hardware(iolibs_path, camlibs_path, ready_sink);
         HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
     } else {
         // Hardware has already been initialized (possible due to Hot Reload)

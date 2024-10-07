@@ -9,7 +9,6 @@ import 'package:momento_booth/repositories/secret/secret_repository.dart';
 import 'package:momento_booth/repositories/secret/secure_storage_secret_repository.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/utils/environment_info.dart';
-import 'package:momento_booth/utils/environment_variables.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -19,7 +18,6 @@ final GetIt getIt = GetIt.instance;
 
 void main() async {
   await RustLib.init();
-  _ensureGPhoto2EnvironmentVariables();
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -53,21 +51,6 @@ void main() async {
     },
     appRunner: () => runApp(const Shell()),
   );
-}
-
-void _ensureGPhoto2EnvironmentVariables() {
-  if (!Platform.isWindows) return;
-
-  // Read from Dart defines.
-  const String iolibsDefine = String.fromEnvironment("IOLIBS");
-  const String camlibsDefine = String.fromEnvironment("CAMLIBS");
-  if (iolibsDefine.isEmpty || camlibsDefine.isEmpty) return;
-
-  // Set environment overrides through the C runtime.
-  // Note that this does not alter the actual environment of the application,
-  // but it does makes libgphoto2 resolve them correctly through its call to `getenv`.
-  putenv("IOLIBS", iolibsDefine);
-  putenv("CAMLIBS", camlibsDefine);
 }
 
 Future<void> _createPathsSafe() async {

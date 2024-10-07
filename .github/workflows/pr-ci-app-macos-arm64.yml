@@ -116,7 +116,7 @@ jobs:
     - name: Build project (arm64)
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
         mkdir ci_build/arm64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/
@@ -127,7 +127,7 @@ jobs:
     - name: Build project (x86_64)
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=x86_64 PKG_CONFIG_PATH=$(realpath ci_build/ventura/lib/pkgconfig) PKG_CONFIG_SYSROOT_DIR=$(realpath ci_build/ventura) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+        FLUTTER_XCODE_ARCHS=x86_64 PKG_CONFIG_PATH=$(realpath ci_build/ventura/lib/pkgconfig) PKG_CONFIG_SYSROOT_DIR=$(realpath ci_build/ventura) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
         mkdir ci_build/x86_64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/x86_64_bundle/
@@ -137,20 +137,20 @@ jobs:
         cd ci_build/arm64_bundle
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Frameworks MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
-        mkdir -p ./MomentoBooth.app/Contents/Libs/{CAMLIBS,IOLIBS}
-        cp ../arm64_ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/CAMLIBS
-        cp ../arm64_ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/IOLIBS
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/CAMLIBS MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/IOLIBS MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
+        mkdir -p ./MomentoBooth.app/Contents/Libs/{Camlibs,Iolibs}
+        cp ../arm64_ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/Camlibs
+        cp ../arm64_ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/Iolibs
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Camlibs MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Iolibs MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
 
         cd ../x86_64_bundle
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Libs ../ventura/lib
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Frameworks MomentoBooth.app/Contents/Libs ../ventura/lib
-        mkdir -p ./MomentoBooth.app/Contents/Libs/{CAMLIBS,IOLIBS}
-        cp ../ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/CAMLIBS
-        cp ../ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/IOLIBS
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/CAMLIBS MomentoBooth.app/Contents/Libs ../ventura/lib
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/IOLIBS MomentoBooth.app/Contents/Libs ../ventura/lib
+        mkdir -p ./MomentoBooth.app/Contents/Libs/{Camlibs,Iolibs}
+        cp ../ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/Camlibs
+        cp ../ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/Iolibs
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Camlibs MomentoBooth.app/Contents/Libs ../ventura/lib
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Iolibs MomentoBooth.app/Contents/Libs ../ventura/lib
 
     - name: Resign bundles
       run: |
