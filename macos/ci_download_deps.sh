@@ -1,10 +1,10 @@
- #!/bin/bash
+#!/bin/bash
 
 show_help() {
   echo "Usage: $0 [options] <package1> <package2> ..."
   echo ""
   echo "Options:"
-  echo "  -a, --architectures <arch1,arch2,...>   Comma-separated list of architectures (default: arm64_ventura,x86_64_catalina)"
+  echo "  -a, --architectures <arch1,arch2,...>   Comma-separated list of architectures"
   echo "  -h, --help                              Show this help message"
 }
 

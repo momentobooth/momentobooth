@@ -25,7 +25,33 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install build dependencies
-      run: brew install create-dmg
+      run: |
+        brew unlink pkg-config
+        brew install ruby pkgconf create-dmg
+
+    - name: Download and unpack Homebrew libraries
+      run: |
+        mkdir ci_build && cd ci_build
+        ../macos/ci_download_deps.sh -a arm64_ventura,ventura libgphoto2 gexiv2
+        ../macos/ci_adapt_pkgconf_dirs.sh ventura/lib/pkgconfig
+        ../macos/ci_adapt_pkgconf_dirs.sh arm64_ventura/lib/pkgconfig
+
+    - uses: webfactory/ssh-agent@v0.9.0
+      with:
+        ssh-private-key: ${{ secrets.MATCH_CERTIFICATES_GIT_ACCESS_TOKEN }}
+
+    - name: Install keys, certificates and profiles
+      env:
+        MATCH_CERTIFICATES_GIT_URL: ${{ secrets.MATCH_CERTIFICATES_GIT_URL }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
+      run: |
+        PATH=/opt/homebrew/opt/ruby/bin:$HOME/.gem:$PATH
+        gem install bundler --user-install
+        bundle install
+        bundle exec fastlane ci_install_release_cert_using_api
 
     - name: Detect Flutter Version
       uses: kuhnroyal/flutter-fvm-config-action@v3
@@ -51,7 +77,7 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
-          rust -> ../build/macos/Build/Intermediates.noindex/momento_booth_native_helpers.build/cargo_target
+          rust -> ../build/macos/Build/Intermediates.noindex/Pods.build/Release/rust_lib_momento_booth.build
           rust -> target
       
     - name: Setup sccache-cache
@@ -68,9 +94,6 @@ jobs:
         crate: flutter_rust_bridge_codegen
         version: "2.4.0"
 
-    - name: Install flutter_distributor
-      run: dart pub global activate flutter_distributor
-
     - name: Install dependencies
       run: flutter pub get --enforce-lockfile
 
@@ -78,7 +101,7 @@ jobs:
       run: flutter gen-l10n
 
     - name: Generate Dart-to-Rust bridging code
-      run: flutter_rust_bridge_codegen generate
+      run: PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
 
     - name: Flutter analyze
       run: flutter analyze
@@ -92,21 +115,62 @@ jobs:
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
-    - name: Build project
-      run: flutter build macos -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
-
-    - name: Copy binary to bundle and bundle dependency dylibs
+    - name: Build project (arm64)
       run: |
-        mkdir macos_package
-        cp -R build/macos/Build/Products/Release/MomentoBooth.app macos_package/
+        rm macos/Podfile.lock
+        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
 
-    # Pack
-    - name: Archive release
-      uses: thedoctor0/zip-release@0.7.6
-      with:
-        type: 'zip'
-        directory: macos_package
-        filename: 'MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-x64.zip'
+        mkdir ci_build/arm64_bundle
+        mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/
+
+        flutter clean
+        flutter pub get --enforce-lockfile
+
+    - name: Build project (x86_64)
+      run: |
+        rm macos/Podfile.lock
+        FLUTTER_XCODE_ARCHS=x86_64 PKG_CONFIG_PATH=$(realpath ci_build/ventura/lib/pkgconfig) PKG_CONFIG_SYSROOT_DIR=$(realpath ci_build/ventura) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+
+        mkdir ci_build/x86_64_bundle
+        mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/x86_64_bundle/
+
+    - name: Bundle libraries
+      run: |
+        cd ci_build/arm64_bundle
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Frameworks MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
+        mkdir -p ./MomentoBooth.app/Contents/Libs/{CAMLIBS,IOLIBS}
+        cp ../arm64_ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/CAMLIBS
+        cp ../arm64_ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/IOLIBS
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/CAMLIBS MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/IOLIBS MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
+
+        cd ../x86_64_bundle
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Libs ../ventura/lib
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Frameworks MomentoBooth.app/Contents/Libs ../ventura/lib
+        mkdir -p ./MomentoBooth.app/Contents/Libs/{CAMLIBS,IOLIBS}
+        cp ../ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/CAMLIBS
+        cp ../ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/IOLIBS
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/CAMLIBS MomentoBooth.app/Contents/Libs ../ventura/lib
+        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/IOLIBS MomentoBooth.app/Contents/Libs ../ventura/lib
+
+    - name: Resign bundles
+      run: |
+        cd ci_build
+        python3 ../macos/ci_resign_everything.py arm64_bundle/MomentoBooth.app "${{ secrets.APPLE_SIGNING_IDENTITY }}"
+        python3 ../macos/ci_resign_everything.py x86_64_bundle/MomentoBooth.app "${{ secrets.APPLE_SIGNING_IDENTITY }}"
+
+    - name: Create dmg installers and sign
+      run: |
+        cd ci_build
+        create-dmg --volname "MomentoBooth (Apple Silicon) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-AppleSilicon.dmg" "arm64_bundle/MomentoBooth.app"
+        create-dmg --volname "MomentoBooth (Intel) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-Intel.dmg" "x86_64_bundle/MomentoBooth.app"
+
+        python3 ../macos/ci_resign_everything.py MomentoBooth-AppleSilicon.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
+        python3 ../macos/ci_resign_everything.py MomentoBooth-Intel.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
+
+        mv MomentoBooth.AppleSilicon.dmg MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-AppleSilicon.dmg
+        mv MomentoBooth.Intel.dmg MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-Intel.dmg
 
     # Create GitHub release
     - name: Create GitHub release
@@ -116,4 +180,4 @@ jobs:
         prerelease: true
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
-        artifacts: "macos_package/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-x64.zip"
+        artifacts: "ci_build/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-AppleSilicon.dmg,ci_build/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-Intel.dmg"

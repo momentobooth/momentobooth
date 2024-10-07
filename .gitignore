@@ -78,3 +78,6 @@ fastlane/report.xml
 
 # Inno Setup output
 installer.exe
+
+# CI/CD
+ci_build
