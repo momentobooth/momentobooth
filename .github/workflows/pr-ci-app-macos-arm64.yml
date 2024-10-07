@@ -142,7 +142,7 @@ jobs:
         python3 ../../macos/bundle.py MomentoBooth.app/Contents/Frameworks/CAMLIBS MomentoBooth.app/Contents/Frameworks ../arm64_ventura/lib
         python3 ../../macos/bundle.py MomentoBooth.app/Contents/Frameworks/IOLIBS MomentoBooth.app/Contents/Frameworks ../arm64_ventura/lib
 
-        cd ../ci_build/x86_64_bundle
+        cd ../x86_64_bundle
         python3 ../../macos/bundle.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Frameworks ../ventura/lib
         mkdir ./MomentoBooth.app/Contents/Frameworks/{CAMLIBS,IOLIBS}
         cp ../ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Frameworks/CAMLIBS
