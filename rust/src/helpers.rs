@@ -18,14 +18,16 @@ pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink
         let mut full_iolibs_path = env::current_exe().unwrap();
         full_iolibs_path.pop();
         full_iolibs_path.push(iolibs_path);
-        env::set_var("IOLIBS", full_iolibs_path.canonicalize().unwrap().to_str().unwrap());
+        let full_iolibs_path_str = full_iolibs_path.canonicalize().unwrap().to_str().unwrap().trim_start_matches(r"\\?\").to_owned();
+        env::set_var("IOLIBS", &full_iolibs_path_str);
 
         let mut full_camlibs_path = env::current_exe().unwrap();
         full_camlibs_path.pop();
         full_camlibs_path.push(camlibs_path);
-        env::set_var("CAMLIBS", full_camlibs_path.canonicalize().unwrap().to_str().unwrap());
+        let full_camlibs_path_str = full_camlibs_path.canonicalize().unwrap().to_str().unwrap().trim_start_matches(r"\\?\").to_owned();
+        env::set_var("CAMLIBS", &full_camlibs_path_str);
 
-        debug!("initialize_hardware(): iolibs: {}, camlibs: {}", full_iolibs_path.canonicalize().unwrap().to_str().unwrap(), full_camlibs_path.canonicalize().unwrap().to_str().unwrap());
+        debug!("initialize_hardware(): iolibs: {}, camlibs: {}", full_iolibs_path_str, full_camlibs_path_str);
     } else {
         debug!("{}", "initialize_hardware(): no override of iolibs or camlibs path");
     }
