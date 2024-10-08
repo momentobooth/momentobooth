@@ -1,18 +1,28 @@
-use std::{env, ffi::CString, sync::OnceLock};
+use std::{env, sync::OnceLock};
 
 use crate::hardware_control::live_view::nokhwa;
-use libc::putenv;
 use tokio::runtime::{self, Runtime};
 use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2};
 use log::debug;
 
 pub static TOKIO_RUNTIME: OnceLock<Runtime> = OnceLock::new();
 
+#[cfg(all(target_os = "windows"))]
 fn set_environment_variable(key: &str, value: &str) {
+    use libc::putenv;
+    use std::ffi::CString;
+
     // We use this as std::env::set_var does not work on Windows in our case.
     let putenv_str = format!("{}={}", key, value);
     let putenv_cstr =  CString::new(putenv_str).unwrap();
-    unsafe { putenv(putenv_cstr.as_ptr() as *mut i8) };
+    unsafe { putenv(putenv_cstr.as_ptr()) };
+}
+
+#[cfg(not(target_os = "windows"))]
+fn set_environment_variable(key: &str, value: &str) {
+    use std::env;
+
+    env::set_var(key, value);
 }
 
 pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
