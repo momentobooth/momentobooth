@@ -8,7 +8,7 @@ rust-version = "1.80"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "=2.4.0", features = ["chrono"] }
+flutter_rust_bridge = { version = "=2.5.0", features = ["chrono"] }
 anyhow = "1.0.89"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
