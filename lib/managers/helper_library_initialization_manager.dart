@@ -44,7 +44,10 @@ abstract class _HelperLibraryInitializationManagerBase with Store, Logger {
       };
       talker.log("Lib: ${msg.lbl} - ${msg.msg}", logLevel: logLevel);
     });
-    initializeHardware().listen(_processHardwareInitEvent);
+
+    const String iolibsDefine = String.fromEnvironment("IOLIBS");
+    const String camlibsDefine = String.fromEnvironment("CAMLIBS");
+    initializeHardware(iolibsPath: iolibsDefine, camlibsPath: camlibsDefine).listen(_processHardwareInitEvent);
   }
 
   void _processHardwareInitEvent(HardwareInitializationFinishedEvent event) {

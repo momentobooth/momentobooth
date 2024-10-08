@@ -346,34 +346,34 @@ packages:
     dependency: transitive
     description:
       name: file_selector_android
-      sha256: b8c9717a0177ca6fa035554b82cd6c83b838ddc66b7704eb6df0f77f027ecc90
+      sha256: "00aafa9ae05a8663d0b4f17abd2a02316911ca0f46f9b9dacb9578b324d99590"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1+7"
+    version: "0.5.1+9"
   file_selector_ios:
     dependency: transitive
     description:
       name: file_selector_ios
-      sha256: "38ebf91ecbcfa89a9639a0854ccaed8ab370c75678938eebca7d34184296f0bb"
+      sha256: "94b98ad950b8d40d96fee8fa88640c2e4bd8afcdd4817993bd04e20310f45420"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.3"
+    version: "0.5.3+1"
   file_selector_linux:
     dependency: transitive
     description:
       name: file_selector_linux
-      sha256: "045d372bf19b02aeb69cacf8b4009555fb5f6f0b7ad8016e5f46dd1387ddd492"
+      sha256: "712ce7fab537ba532c8febdb1a8f167b32441e74acd68c3ccb2e36dcb52c4ab2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.2+1"
+    version: "0.9.3"
   file_selector_macos:
     dependency: transitive
     description:
       name: file_selector_macos
-      sha256: cb284e267f8e2a45a904b5c094d2ba51d0aabfc20b1538ab786d9ef7dc2bf75c
+      sha256: "271ab9986df0c135d45c3cdb6bd0faa5db6f4976d3e4b437cf7d0f258d941bfc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.4+1"
+    version: "0.9.4+2"
   file_selector_platform_interface:
     dependency: transitive
     description:
@@ -468,10 +468,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: a43a6649385b853bc836ef2bc1b056c264d476c35e131d2d69c38219b5e799f1
+      sha256: "0ad5079de35d317650fec59b26cb4d0c116ebc2ce703a29f9367513b8a91c287"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "2.5.0"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
@@ -590,10 +590,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "5cf5fdcf853b0629deb35891c7af643be900c3dcaed7489009f9e7dbcfe55ab6"
+      sha256: "6f1b756f6e863259a99135ff3c95026c3cdca17d10ebef2bba2261a25ddc8bbc"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.8"
+    version: "14.3.0"
   graphs:
     dependency: transitive
     description:
@@ -702,10 +702,10 @@ packages:
     dependency: "direct main"
     description:
       name: just_audio
-      sha256: d8e8aaf417d33e345299c17f6457f72bd4ba0c549dc34607abb5183a354edc4d
+      sha256: b41646a8241688f1d99c2e69c4da2bb26aa4b3a99795f6ff205c2a165e033fda
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.40"
+    version: "0.9.41"
   just_audio_media_kit:
     dependency: "direct main"
     description:
@@ -950,10 +950,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_android
-      sha256: "6f01f8e37ec30b07bc424b4deabac37cacb1bc7e2e515ad74486039918a37eb7"
+      sha256: c464428172cb986b758c6d1724c603097febb8fb855aa265aeecc9280c294d4a
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.10"
+    version: "2.2.12"
   path_provider_foundation:
     dependency: transitive
     description:
@@ -1539,10 +1539,10 @@ packages:
     dependency: "direct main"
     description:
       name: win32
-      sha256: "68d1e89a91ed61ad9c370f9f8b6effed9ae5e0ede22a270bdfa6daf79fc2290a"
+      sha256: "4d45dc9069dba4619dc0ebd93c7cec5e66d8482cb625a370ac806dcc8165f2ec"
       url: "https://pub.dev"
     source: hosted
-    version: "5.5.4"
+    version: "5.5.5"
   window_manager:
     dependency: "direct main"
     description:
@@ -1555,10 +1555,10 @@ packages:
     dependency: transitive
     description:
       name: xdg_directories
-      sha256: faea9dee56b520b55a566385b84f2e8de55e7496104adada9962e0bd11bcff1d
+      sha256: "7a3f37b05d989967cdddcbb571f1ea834867ae2faa29725fd085180e0883aa15"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4"
+    version: "1.1.0"
   xml:
     dependency: transitive
     description:

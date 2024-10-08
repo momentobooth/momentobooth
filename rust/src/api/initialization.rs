@@ -9,11 +9,11 @@ pub use ipp::model::JobState;
 use crate::{frb_generated::StreamSink, helpers::{self, HardwareInitializationFinishedEvent, TOKIO_RUNTIME}};
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
-use log::debug;
+use log::{debug, LevelFilter};
 use rustc_version_runtime::version;
 use pathsep::{path_separator, join_path};
 
-flutter_logger::flutter_logger_init!();
+flutter_logger::flutter_logger_init!(LevelFilter::Trace);
 
 const RUST_COMPILE_TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
 const LIBRARY_VERSION: &'static str = env!("CARGO_PKG_VERSION");
@@ -54,11 +54,11 @@ fn get_exiv2_version() -> String {
     };
 }
 
-pub fn initialize_hardware(ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
+pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     rexiv2::initialize().expect("Unable to initialize rexiv2");
     if !HARDWARE_INITIALIZED.load(Ordering::SeqCst) {
         // Hardware has not been initialized yet
-        helpers::initialize_hardware(ready_sink);
+        helpers::initialize_hardware(iolibs_path, camlibs_path, ready_sink);
         HARDWARE_INITIALIZED.store(true, Ordering::SeqCst);
     } else {
         // Hardware has already been initialized (possible due to Hot Reload)

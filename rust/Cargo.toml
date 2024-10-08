@@ -8,7 +8,7 @@ rust-version = "1.80"
 crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
-flutter_rust_bridge = { version = "=2.4.0", features = ["chrono"] }
+flutter_rust_bridge = { version = "=2.5.0", features = ["chrono"] }
 anyhow = "1.0.89"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
@@ -39,6 +39,7 @@ log = "0.4.22"
 flutter_logger = "0.6.1"
 nokhwa = { version = "0.10.4", features = ["input-native", "output-threaded", "flume"], git = "https://github.com/kendfrey/nokhwa.git", branch = "0.10" }
 rustc_version_runtime = "0.3.0"
+libc = "0.2.159"
 
 [build-dependencies]
 bindgen = "0.70.1"
