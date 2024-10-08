@@ -71,7 +71,7 @@ jobs:
       uses: dtolnay/rust-toolchain@master
       with:
         toolchain: stable
-        target: aarch64-apple-darwin
+        targets: aarch64-apple-darwin,x86_64-apple-darwin
 
     - name: Setup Rust cache
       uses: Swatinem/rust-cache@v2
@@ -144,6 +144,7 @@ jobs:
         cp ../arm64_ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/Iolibs
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Camlibs MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Iolibs MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
+        chmod 755 MomentoBooth.app/Contents/Libs/* MomentoBooth.app/Contents/Libs/Camlibs/* MomentoBooth.app/Contents/Libs/Iolibs/*
 
         cd ../x86_64_bundle
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Libs ../ventura/lib
@@ -153,6 +154,7 @@ jobs:
         cp ../ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/Iolibs
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Camlibs MomentoBooth.app/Contents/Libs ../ventura/lib
         python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Iolibs MomentoBooth.app/Contents/Libs ../ventura/lib
+        chmod 755 MomentoBooth.app/Contents/Libs/* MomentoBooth.app/Contents/Libs/Camlibs/* MomentoBooth.app/Contents/Libs/Iolibs/*
 
     - name: Resign bundles
       run: |
