@@ -6,7 +6,7 @@ def sign_file(file_path, signing_identity):
     try:
         print(f"Signing {file_path} with identity {signing_identity}")
         subprocess.run(
-            ["codesign", "--force", "--deep", "--sign", signing_identity, file_path],
+            ["codesign", "--force", "--sign", signing_identity, file_path],
             check=True,
         )
     except subprocess.CalledProcessError as e:
@@ -19,7 +19,7 @@ def sign_app_bundle(app_bundle_path, signing_identity):
         for file in files:
             file_path = os.path.join(root, file)
             # Onderteken alleen uitvoerbare bestanden en dynamische libraries
-            if file_path.endswith(".dylib") or os.access(file_path, os.X_OK):
+            if file_path.endswith(".dylib") or (os.access(file_path, os.X_OK) and not file_path.endswith(".so")):
                 sign_file(file_path, signing_identity)
 
     # Uiteindelijk de hele app-bundle ondertekenen
