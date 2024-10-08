@@ -19,7 +19,7 @@ def sign_app_bundle(app_bundle_path, signing_identity):
         for file in files:
             file_path = os.path.join(root, file)
             # Onderteken alleen uitvoerbare bestanden en dynamische libraries
-            if file_path.endswith(".dylib") or (os.access(file_path, os.X_OK) and not file_path.endswith(".so")):
+            if file_path.endswith(".dylib") or os.access(file_path, os.X_OK):
                 sign_file(file_path, signing_identity)
 
     # Uiteindelijk de hele app-bundle ondertekenen
