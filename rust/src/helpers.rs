@@ -12,7 +12,7 @@ fn set_environment_variable(key: &str, value: &str) {
     // We use this as std::env::set_var does not work on Windows in our case.
     let putenv_str = format!("{}={}", key, value);
     let putenv_cstr =  CString::new(putenv_str).unwrap();
-    unsafe { putenv(putenv_cstr.as_ptr()) };
+    unsafe { putenv(putenv_cstr.as_ptr() as *mut i8) };
 }
 
 pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
