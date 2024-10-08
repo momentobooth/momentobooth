@@ -3147,6 +3147,7 @@ dependencies = [
  "img-parts",
  "ipp",
  "jpeg-encoder",
+ "libc",
  "little_exif",
  "log 0.4.22",
  "noise",

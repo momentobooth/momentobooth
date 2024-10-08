@@ -1,11 +1,19 @@
-use std::{env, sync::OnceLock};
+use std::{env, ffi::CString, sync::OnceLock};
 
 use crate::hardware_control::live_view::nokhwa;
+use libc::putenv;
 use tokio::runtime::{self, Runtime};
 use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2};
 use log::debug;
 
 pub static TOKIO_RUNTIME: OnceLock<Runtime> = OnceLock::new();
+
+fn set_environment_variable(key: &str, value: &str) {
+    // We use this as std::env::set_var does not work on Windows in our case.
+    let putenv_str = format!("{}={}", key, value);
+    let putenv_cstr =  CString::new(putenv_str).unwrap();
+    unsafe { putenv(putenv_cstr.as_ptr()) };
+}
 
 pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink: StreamSink<HardwareInitializationFinishedEvent>) {
     debug!("{}", "initialize_hardware() started");
@@ -19,13 +27,13 @@ pub fn initialize_hardware(iolibs_path: String, camlibs_path: String, ready_sink
         full_iolibs_path.pop();
         full_iolibs_path.push(iolibs_path);
         let full_iolibs_path_str = full_iolibs_path.canonicalize().unwrap().to_str().unwrap().trim_start_matches(r"\\?\").to_owned();
-        env::set_var("IOLIBS", &full_iolibs_path_str);
+        set_environment_variable("IOLIBS", &full_iolibs_path_str);
 
         let mut full_camlibs_path = env::current_exe().unwrap();
         full_camlibs_path.pop();
         full_camlibs_path.push(camlibs_path);
         let full_camlibs_path_str = full_camlibs_path.canonicalize().unwrap().to_str().unwrap().trim_start_matches(r"\\?\").to_owned();
-        env::set_var("CAMLIBS", &full_camlibs_path_str);
+        set_environment_variable("CAMLIBS", &full_camlibs_path_str);
 
         debug!("initialize_hardware(): iolibs: {}, camlibs: {}", full_iolibs_path_str, full_camlibs_path_str);
     } else {
