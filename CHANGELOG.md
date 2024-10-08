@@ -2,14 +2,20 @@
 
 ## Unreleased
 
+## 0.13.0
+
+- Change: App releases are being build for macOS now (Apple Silicon and Intel) (#499)
+- Dependency update: Updated Flutter to 3.24.3 (#490)
+- Dependency update: Updated several Dart and Rust packages (#490, #496, #499)
+
 ## 0.12.1
 
-- Bugfix: Workaround error spam caused by Windows printer status detection
+- Bugfix: Workaround error spam caused by Windows printer status detection (#486)
 
 ## 0.12.0
 
-- Change: Show libgphoto2, libgexiv2 and libexiv2 versions in About screen
-- Change: App now available as installer
+- Change: Show libgphoto2, libgexiv2 and libexiv2 versions in About screen (#462)
+- Change: App now available as installer (#478)
 
 ## 0.11.0
 
