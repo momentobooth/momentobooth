@@ -171,8 +171,8 @@ jobs:
         python3 ../macos/ci_resign_everything.py MomentoBooth-AppleSilicon.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
         python3 ../macos/ci_resign_everything.py MomentoBooth-Intel.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
 
-        mv MomentoBooth.AppleSilicon.dmg MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-AppleSilicon.dmg
-        mv MomentoBooth.Intel.dmg MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-Intel.dmg
+        mv MomentoBooth-AppleSilicon.dmg MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-AppleSilicon.dmg
+        mv MomentoBooth-Intel.dmg MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-Intel.dmg
 
     # Create GitHub release
     - name: Create GitHub release
