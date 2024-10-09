@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.13.1
+
+- Bugfix: Fix macOS release script (no effect on Windows and Linux) (#503)
+
 ## 0.13.0
 
 - Change: App releases are being build for macOS now (Apple Silicon and Intel) (#499)
