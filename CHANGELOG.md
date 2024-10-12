@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dependency update: Updated several Dart and Rust packages (#505)
+
 ## 0.13.1
 
 - Bugfix: Fix macOS release script (no effect on Windows and Linux) (#503)
