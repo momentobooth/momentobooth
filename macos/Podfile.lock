@@ -87,14 +87,14 @@ SPEC CHECKSUMS:
   flutter_secure_storage_macos: 59459653abe1adb92abbc8ea747d79f8d19866c9
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   just_audio: 9b67ca7b97c61cfc9784ea23cd8cc55eb226d489
-  package_info_plus: fa739dd842b393193c5ca93c26798dff6e3d0e0c
+  package_info_plus: d2f71247aab4b6521434f887276093acc70d214c
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   printing: 1dd6a1fce2209ec240698e2439a4adbb9b427637
   rust_lib_momento_booth: d43a01b1d47afc3530b2f17956170b4256c0b166
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
   Sentry: f8374b5415bc38dfb5645941b3ae31230fbeae57
   sentry_flutter: 0eb93e5279eb41e2392212afe1ccd2fecb4f8cbe
-  share_plus: 36537c04ce0c3e3f5bd297ce4318b6d5ee5fd6cf
+  share_plus: a182a58e04e51647c0481aadabbc4de44b3a2bce
   texture_rgba_renderer: cbed959a3c127122194a364e14b8577bd62dc8f2
   window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
