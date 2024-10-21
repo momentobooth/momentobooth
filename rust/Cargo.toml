@@ -9,12 +9,12 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 flutter_rust_bridge = { version = "=2.5.0", features = ["chrono"] }
-anyhow = "1.0.89"
+anyhow = "1.0.90"
 atom_table = "1.1.0"
 ffsend-api = "0.7.3"
-serde_json = "1.0.128"
+serde_json = "1.0.132"
 chrono = "0.4.38"
-image = { version = "0.25.2", features = ["rayon"] }
+image = { version = "0.25.4", features = ["rayon"] }
 ipp = "5.0.4"
 zune-jpeg = "0.4.13"
 jpeg-encoder = "0.6.0"
@@ -39,7 +39,7 @@ log = "0.4.22"
 flutter_logger = "0.6.1"
 nokhwa = { version = "0.10.5", features = ["input-native", "output-threaded", "flume"] }
 rustc_version_runtime = "0.3.0"
-libc = "0.2.159"
+libc = "0.2.161"
 
 [build-dependencies]
 bindgen = "0.70.1"
