@@ -26,16 +26,15 @@ dependencies:
   confetti: 0.8.0
   wave: 0.2.2
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
-  lottie: 3.1.2
+  lottie: 3.1.3
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.9.0
+  widgetbook: 3.10.0
   widgetbook_annotation: 3.2.0
   flex_color_picker: 3.6.0
-  lucide_icons_flutter: 1.2.1
+  lucide_icons_flutter: 1.2.2
 
   # Printscreen/Image processing
   screenshot: 3.0.0
-  image: 4.2.0
 
   # MVC
   mobx: 2.3.3+2
@@ -48,7 +47,7 @@ dependencies:
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
   ffi: 2.1.3
-  flutter_rust_bridge: 2.5.0
+  flutter_rust_bridge: 2.5.1
 
   # Printing
   printing: 5.13.3
@@ -59,7 +58,7 @@ dependencies:
   path: ^1.9.0
   window_manager: 0.4.2
   file_selector: 1.0.3
-  win32: 5.6.0
+  win32: 5.7.1
 
   # Log and error handling
   talker: 4.4.1
@@ -68,7 +67,7 @@ dependencies:
 
   # Sound output
   just_audio: 0.9.41
-  just_audio_media_kit: 2.0.5
+  just_audio_media_kit: 2.0.6
   media_kit_libs_linux: any
   media_kit_libs_windows_audio: any
 
@@ -82,14 +81,14 @@ dependencies:
   mqtt5_client: 4.5.3
 
   # Misc
-  get_it: 8.0.0
+  get_it: 8.0.1
   meta: any
   synchronized: 3.3.0+3
   collection: any
   dart_casing: 3.0.1
-  package_info_plus: 8.0.3
+  package_info_plus: 8.1.0
   lemberfpsmonitor: 0.0.3+6
-  crypto: 3.0.5
+  crypto: 3.0.6
   draggable_scrollbar: 0.1.0
   csslib: 1.0.0
 
