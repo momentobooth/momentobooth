@@ -1698,13 +1698,13 @@ dependencies = [
 
 [[package]]
 name = "img-parts"
-version = "0.3.0"
+version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b19358258d99a5fc34466fed27a5318f92ae636c3e36165cf9b1e87b5b6701f0"
+checksum = "8cd653b443fbb9271d937a4b2c1c7489af95c284a56f84d76bbd00eac857cb1c"
 dependencies = [
  "bytes 1.8.0",
  "crc32fast",
- "miniz_oxide 0.5.4",
+ "miniz_oxide 0.8.0",
 ]
 
 [[package]]
@@ -2056,15 +2056,6 @@ name = "minimal-lexical"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
-
-[[package]]
-name = "miniz_oxide"
-version = "0.5.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96590ba8f175222643a85693f33d26e9c8a015f599c216509b1a6894af675d34"
-dependencies = [
- "adler",
-]
 
 [[package]]
 name = "miniz_oxide"
