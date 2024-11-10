@@ -10,7 +10,7 @@ install-cargo-expand:
   cargo install cargo-expand
 
 install-bridge-codegen:
-  cargo install flutter_rust_bridge_codegen@2.5.1
+  cargo install flutter_rust_bridge_codegen@2.6.0
 
 install-flutter:
   fvm install -s --skip-pub-get
