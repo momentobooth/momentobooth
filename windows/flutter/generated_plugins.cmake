@@ -7,7 +7,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   flutter_secure_storage_windows
   media_kit_libs_windows_audio
   printing
-  screen_retriever
+  screen_retriever_windows
+  sentry_flutter
   share_plus
   texture_rgba_renderer
   url_launcher_windows
@@ -16,7 +17,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
   rust_lib_momento_booth
-  sentry_flutter
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
