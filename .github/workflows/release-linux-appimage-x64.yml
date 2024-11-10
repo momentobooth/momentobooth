@@ -13,7 +13,7 @@ jobs:
   build:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
 
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
 
     env:
@@ -25,7 +25,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Install apt packages
-      run: sudo apt update && sudo apt install build-essential git clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev llvm libfuse2 libgphoto2-dev libdigest-sha-perl libgexiv2-dev
+      run: sudo apt update && sudo apt install build-essential git clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev llvm libfuse2 libgphoto2-dev libdigest-sha-perl libgexiv2-dev libsecret-1-dev
 
     - name: Detect Flutter Version
       uses: kuhnroyal/flutter-fvm-config-action@v3
