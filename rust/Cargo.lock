@@ -1893,9 +1893,9 @@ checksum = "ddc24109865250148c2e0f3d25d4f0f479571723792d3802153c60922a4fb708"
 
 [[package]]
 name = "ipp"
-version = "5.0.5"
+version = "5.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d82bf822291c5e451cfe4a5941e45ef00c7afc63359ec9d8eb041ed323bfb197"
+checksum = "fdaa4f2268b444c2bae9f005f511b4e7cc1cdcf710a76dd15647e4119df4bd58"
 dependencies = [
  "base64 0.22.1",
  "bytes 1.8.0",
@@ -1910,7 +1910,6 @@ dependencies = [
  "reqwest 0.12.9",
  "thiserror",
  "tokio-util",
- "ureq",
 ]
 
 [[package]]
@@ -2051,9 +2050,9 @@ checksum = "643cb0b8d4fcc284004d5fd0d67ccf61dfffadb7f75e1e71bc420f4688a3a704"
 
 [[package]]
 name = "little_exif"
-version = "0.5.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8201487fa998c3bcac297c50b8a5daceef9f41b66f67381403e1e3c36b1813c1"
+checksum = "84831b8de10947cb83436373bdb603e9038d8f6c9e2b2eb892c211d448af0c89"
 dependencies = [
  "crc",
  "miniz_oxide",
@@ -4205,19 +4204,6 @@ name = "untrusted"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ecb6da28b8a351d773b68d5825ac39017e680750f980f3a1a85cd8dd28a47c1"
-
-[[package]]
-name = "ureq"
-version = "2.10.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b74fc6b57825be3373f7054754755f03ac3a8f5d70015ccad699ba2029956f4a"
-dependencies = [
- "base64 0.22.1",
- "log 0.4.22",
- "native-tls",
- "once_cell",
- "url 2.5.3",
-]
 
 [[package]]
 name = "url"
