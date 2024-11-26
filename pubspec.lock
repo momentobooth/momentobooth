@@ -532,10 +532,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: "578bd8c508144fdaffd4f77b8ef2d8c523602275cd697cc3db284dbd762ef4ce"
+      sha256: "936d9c1c010d3e234d1672574636f3352b4941ca3decaddd3cafaeb9ad49c471"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.14"
+    version: "2.0.15"
   flutter_test:
     dependency: transitive
     description: flutter
@@ -590,10 +590,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: ce89c5a993ca5eea74535f798478502c30a625ecb10a1de4d7fef5cd1bcac2a4
+      sha256: "8660b74171fafae4aa8202100fa2e55349e078281dadc73a241eb8e758534d9d"
       url: "https://pub.dev"
     source: hosted
-    version: "14.4.1"
+    version: "14.6.1"
   graphs:
     dependency: transitive
     description:
@@ -694,10 +694,10 @@ packages:
     dependency: "direct dev"
     description:
       name: json_serializable
-      sha256: ea1432d167339ea9b5bb153f0571d0039607a873d6e04e0117af043f14a1fd4b
+      sha256: c2fcb3920cf2b6ae6845954186420fca40bc0a8abcc84903b7801f17d7050d7c
       url: "https://pub.dev"
     source: hosted
-    version: "6.8.0"
+    version: "6.9.0"
   just_audio:
     dependency: "direct main"
     description:
@@ -790,10 +790,10 @@ packages:
     dependency: "direct main"
     description:
       name: lucide_icons_flutter
-      sha256: "2e1c185c167740115579c0fba25c8b54aa0234de2b2bce08bf4fd89cd035e45d"
+      sha256: fcdca2fc189693c35f5fb9bd9bbdb6916dae54a2662bf6d0b9edde20fd0d5596
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.3"
+    version: "1.2.4"
   macros:
     dependency: transitive
     description:
@@ -1322,26 +1322,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: "30bbc526bb2e7d465c630f087479616b6b84570728539fde536a3b652acad2f6"
+      sha256: f387ad9137b211ae8cd754325680b7fb76feadaf1f142be7580ae59043a81651
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.1"
+    version: "4.5.1"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "51e1f26a726dced6952c2070ae2bc7e23393c319e2f98def2009fdbcdfbda7aa"
+      sha256: "4918292d1ac70f6cd23172f4292c7e777ab059edf68196993b912c24b30b236e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.1"
+    version: "4.5.1"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: "515d2e5803928b2bab42108f710c814743965f939be2b4261f9c3045ef8a3fba"
+      sha256: f52be00b01a7cf74ab6ffbb69da8d33755d42b5381a16b963dbd36d75cc98c50
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.1"
+    version: "4.5.1"
   term_glyph:
     dependency: transitive
     description:
