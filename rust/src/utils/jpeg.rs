@@ -2,7 +2,7 @@ use std::sync::LazyLock;
 
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
-use little_exif::{exif_tag::ExifTagGroup, filetype::FileExtension, metadata::Metadata};
+use little_exif::{filetype::FileExtension, ifd::ExifTagGroup, metadata::Metadata};
 use num::FromPrimitive;
 use zune_jpeg::{JpegDecoder, zune_core::{options::DecoderOptions, colorspace::ColorSpace}};
 use chrono::{Local, NaiveDateTime};
@@ -20,7 +20,7 @@ pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8, exif_tags: Vec<Momen
     for tag in exif_tags {
         metadata.set_tag(tag.into());
     }
-    let metadata_vec = metadata.as_u8_vec(FileExtension::JPEG);
+    let metadata_vec = metadata.as_u8_vec(FileExtension::JPEG).unwrap();
 
     // Write EXIF metadata to the JPEG in memory
     let mut jpeg = Jpeg::from_bytes(Bytes::copy_from_slice(&output_buf)).expect("Error while reading JPEG data");
@@ -89,7 +89,7 @@ impl From<MomentoBoothExifTag> for little_exif::exif_tag::ExifTag {
                 little_exif::exif_tag::ExifTag::CreateDate(value.format("%Y:%m:%d %H:%M:%S").to_string())
             },
             MomentoBoothExifTag::Orientation(value) => little_exif::exif_tag::ExifTag::Orientation(vec!(value as u16)),
-            MomentoBoothExifTag::MakerNote(value) => little_exif::exif_tag::ExifTag::UnknownUNDEF(value.as_bytes().to_vec(), 0x927C, ExifTagGroup::ExifIFD),
+            MomentoBoothExifTag::MakerNote(value) => little_exif::exif_tag::ExifTag::UnknownUNDEF(value.as_bytes().to_vec(), 0x927C, ExifTagGroup::EXIF),
         }
     }
 }
