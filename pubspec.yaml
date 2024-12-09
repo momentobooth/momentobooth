@@ -17,7 +17,7 @@ dependencies:
   # UI
   auto_size_text: 3.0.0
   fluent_ui: 4.9.2
-  go_router: 14.6.1
+  go_router: 14.6.2
   flutter_svg: 2.0.16
   animated_text_kit: 4.2.2
   flutter_scroll_shadow: 1.2.4
@@ -26,12 +26,12 @@ dependencies:
   confetti: 0.8.0
   wave: 0.2.2
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
-  lottie: 3.1.3
+  lottie: 3.2.0
   smooth_scroll_multiplatform: 1.0.8
   widgetbook: 3.10.0
   widgetbook_annotation: 3.2.0
   flex_color_picker: 3.6.0
-  lucide_icons_flutter: 1.2.4
+  lucide_icons_flutter: 1.2.5
 
   # Printscreen/Image processing
   screenshot: 3.0.0
