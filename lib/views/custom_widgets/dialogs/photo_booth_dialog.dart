@@ -29,7 +29,7 @@ class PhotoBoothDialog extends StatelessWidget {
       margin: const EdgeInsets.all(32.0),
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
       decoration: ShapeDecoration(
-        color: const Color(0xFFFFFFFF).withOpacity(0.90),
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.1),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(96),
         ),
@@ -68,7 +68,7 @@ class PhotoBoothDialog extends StatelessWidget {
                 ),
               ),
             if (title != null || indicator != null)
-              Divider(color: Colors.black.withOpacity(0.5)),
+              Divider(color: Colors.black.withValues(alpha: 0.5)),
             Padding(
               padding: bodyPadding,
               child: body,
