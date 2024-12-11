@@ -81,3 +81,6 @@ installer.exe
 
 # CI/CD
 ci_build
+
+# Sentry
+.sentry-native/

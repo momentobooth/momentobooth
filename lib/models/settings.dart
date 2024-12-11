@@ -364,10 +364,10 @@ class ColorColorCodeConverter implements JsonConverter<Color, String> {
 
   @override
   String toJson(Color color) {
-    int r = (color.r * 255).round();
-    int g = (color.g * 255).round();
-    int b = (color.b * 255).round();
-    return '#${(r << 16 | g << 8 | b).toRadixString(16).toUpperCase().substring(2)}';
+    String r = (color.r * 255).round().toRadixString(16).padLeft(2, '0').toUpperCase();
+    String g = (color.g * 255).round().toRadixString(16).padLeft(2, '0').toUpperCase();
+    String b = (color.b * 255).round().toRadixString(16).padLeft(2, '0').toUpperCase();
+    return '#$r$g$b';
   }
 
 }
