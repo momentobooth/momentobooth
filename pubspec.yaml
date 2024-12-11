@@ -63,7 +63,7 @@ dependencies:
   # Log and error handling
   talker: 4.5.2
   talker_flutter: 4.5.2
-  sentry_flutter: 8.10.1
+  sentry_flutter: 8.11.0
 
   # Sound output
   just_audio: 0.9.42
@@ -77,7 +77,7 @@ dependencies:
 
   # Networking
   http: 1.2.2
-  http_parser: 4.0.2
+  http_parser: 4.1.1
   mqtt5_client: 4.5.3
 
   # Misc
