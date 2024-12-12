@@ -1,4 +1,4 @@
-name: Release - macOS x64
+name: Release - macOS ARM64 & x64
 
 on:
   pull_request:
@@ -26,7 +26,6 @@ jobs:
 
     - name: Install build dependencies
       run: |
-        brew unlink pkg-config
         brew install ruby pkgconf create-dmg
 
     - name: Download and unpack Homebrew libraries
