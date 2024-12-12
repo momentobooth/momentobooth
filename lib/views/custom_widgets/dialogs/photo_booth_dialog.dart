@@ -29,7 +29,7 @@ class PhotoBoothDialog extends StatelessWidget {
       margin: const EdgeInsets.all(32.0),
       padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
       decoration: ShapeDecoration(
-        color: const Color(0xFFFFFFFF).withValues(alpha: 0.1),
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.9),
         shape: ContinuousRectangleBorder(
           borderRadius: BorderRadius.circular(96),
         ),
