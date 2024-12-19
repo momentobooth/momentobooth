@@ -22,7 +22,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
     required super.contextAccessor,
   });
 
-  static const double groupHeaderHeight = 100;
+  static const double groupHeaderHeight = 112;
   static const int imagesPerRow = 4;
 
   @override
