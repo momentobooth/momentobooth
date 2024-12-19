@@ -8,7 +8,6 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/theme/momento_booth_theme.dart';
 import 'package:momento_booth/theme/momento_booth_theme_data.dart';
-import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/capture_screen/capture_screen.dart';
@@ -36,10 +35,7 @@ class PhotoBooth extends StatefulWidget {
 class PhotoBoothState extends State<PhotoBooth> {
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
-    observers: [
-      GoRouterObserver(),
-      HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin, end: end)),
-    ],
+    observers: [GoRouterObserver(), HeroController()],
     initialLocation: StartScreen.defaultRoute,
   );
 
