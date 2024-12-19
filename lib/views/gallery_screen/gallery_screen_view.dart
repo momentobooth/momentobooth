@@ -10,7 +10,6 @@ import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/custom_widgets/draggable_scrollbar_override.dart';
 import 'package:momento_booth/views/custom_widgets/image_with_loader_fallback.dart';
-import 'package:momento_booth/views/custom_widgets/wrappers/animated_box_decoration_hero.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_controller.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen_view_model.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
@@ -90,7 +89,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                               for (GalleryImage image in group.images)
                                 GestureDetector(
                                   onTap: () => controller.openPhoto(image.file),
-                                  child: AnimatedBoxDecorationHero(
+                                  child: Hero(
                                     tag: image.file.path,
                                     child: ImageWithLoaderFallback.file(
                                       image.file,
