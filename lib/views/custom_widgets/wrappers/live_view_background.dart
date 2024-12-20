@@ -7,6 +7,7 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/live_view.dart';
 import 'package:momento_booth/views/gallery_screen/gallery_screen.dart';
+import 'package:momento_booth/views/photo_details_screen/photo_details_screen.dart';
 
 class LiveViewBackground extends StatefulWidget {
 
@@ -26,7 +27,7 @@ class LiveViewBackground extends StatefulWidget {
 
 class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
-  bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground && widget.router.currentLocation != GalleryScreen.defaultRoute;
+  bool get _showLiveViewBackground => PhotosManager.instance.showLiveViewBackground && (widget.router.currentLocation != GalleryScreen.defaultRoute && !widget.router.currentLocation.startsWith('${PhotoDetailsScreen.defaultRoute}/'));
 
   BackgroundBlur get _backgroundBlur => SettingsManager.instance.settings.ui.backgroundBlur;
 

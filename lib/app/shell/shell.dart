@@ -7,7 +7,6 @@ import 'package:momento_booth/app/shell/widgets/fps_monitor.dart';
 import 'package:momento_booth/app/shell/widgets/shell_hotkey_monitor.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/utils/custom_rect_tween.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/custom_widgets/wrappers/set_scroll_configuration.dart';
@@ -29,9 +28,7 @@ class _ShellState extends State<Shell> with WindowListener {
 
   final GoRouter _router = GoRouter(
     routes: _rootRoutes,
-    observers: [
-      HeroController(createRectTween: (begin, end) => CustomRectTween(begin: begin, end: end)),
-    ],
+    observers: [HeroController()],
     initialLocation: '/photo_booth',
   );
 
