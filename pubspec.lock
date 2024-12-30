@@ -410,18 +410,18 @@ packages:
     dependency: "direct main"
     description:
       name: flex_color_picker
-      sha256: "12dc855ae8ef5491f529b1fc52c655f06dcdf4114f1f7fdecafa41eec2ec8d79"
+      sha256: c083b79f1c57eaeed9f464368be376951230b3cb1876323b784626152a86e480
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.0"
+    version: "3.7.0"
   flex_seed_scheme:
     dependency: transitive
     description:
       name: flex_seed_scheme
-      sha256: "7639d2c86268eff84a909026eb169f008064af0fb3696a651b24b0fa24a40334"
+      sha256: d3ba3c5c92d2d79d45e94b4c6c71d01fac3c15017da1545880c53864da5dfeb0
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.1"
+    version: "3.5.0"
   fluent_ui:
     dependency: "direct main"
     description:
@@ -1189,18 +1189,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: b1ead7ca4da0949aed9482c4962f172021a4417f0a126fa974878c2301c16df7
+      sha256: "576ad83415102ba2060142a6701611abc6e67a55af1d7ab339cedd3ba1b0f84c"
       url: "https://pub.dev"
     source: hosted
-    version: "8.11.2"
+    version: "8.12.0"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: d978861bc413ef98b663b065a65e780b255bfcdc0e2fa307884f7f6df0f1a406
+      sha256: dc3761e8659839cc67a18432d9f12e5531affb7ff68e196dbb56846909b5dfdc
       url: "https://pub.dev"
     source: hosted
-    version: "8.11.2"
+    version: "8.12.0"
   share_plus:
     dependency: transitive
     description:
@@ -1322,26 +1322,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: "1d9e1b10704296ea3247c88f1d155fdc6482707811f344ce26b839ad5fe3999f"
+      sha256: "055619b04297af0c7fa44224afaef0fb0f9fbdc7663d5cfadce0a28b633354e3"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.3"
+    version: "4.5.5"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: d019510f5941f82407def51daa5505e6cdd5ba02d2f27fc66c99d0b1fa2261e9
+      sha256: "0ceaea02636c9b578ecd8424f41d271ae68140204f963d90d664359934185137"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.3"
+    version: "4.5.5"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: ac4e090e9af4ff23a1e82cfcc0647c5c3f56bada480f2154414903be5c1ebcf9
+      sha256: "53f247ec9c20e56a85902ccf134873163c24a57759490de620087d0d08eef695"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.3"
+    version: "4.5.5"
   term_glyph:
     dependency: transitive
     description:
