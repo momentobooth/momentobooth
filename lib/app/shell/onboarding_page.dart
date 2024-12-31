@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/utils/subsystem.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -100,14 +103,70 @@ class _OnboardingPageState extends State<OnboardingPage> {
       elevation: 16.0,
       luminosityAlpha: 0.9,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-      child: const Column(
+      child: Column(
         children: [
           Expanded(
-            child: Center(child: ProgressRing()),
+            child: Column(
+              children: [
+                Text(
+                  "Initializing app",
+                  style: FluentTheme.of(context).typography.title,
+                ),
+                Observer(
+                  builder: (context) => Column(
+                    children: [
+                      _subsystemStatusCard("Window manager", getIt<WindowManager>().subsystemStatus, context),
+                      _subsystemStatusCard("Settings", getIt<SettingsManager>().subsystemStatus, context),
+                      _subsystemStatusCard("Statistics", getIt<StatsManager>().subsystemStatus, context),
+                      _subsystemStatusCard("Live view", getIt<LiveViewManager>().subsystemStatus, context),
+                      _subsystemStatusCard("MQTT", getIt<MqttManager>().subsystemStatus, context),
+                      _subsystemStatusCard("Printing", getIt<PrintingManager>().subsystemStatus, context),
+                      _subsystemStatusCard("Sounds", getIt<SfxManager>().subsystemStatus, context),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
+}
+
+Widget _subsystemStatusCard(String name, SubsystemStatus status, BuildContext context) {
+  const defaultMessage = "No message";
+  final String message = switch(status) {
+    SubsystemStatusOk(message: var m) => m ?? defaultMessage,
+    SubsystemStatusBusy(message: var m) => m,
+    SubsystemStatusWarning(message: var m) => m,
+    SubsystemStatusError(message: var m) => m,
+    _ => defaultMessage
+  };
+
+  final ActionMap actions = switch(status) {
+    SubsystemStatusOk(actions: var a) => a,
+    // SubsystemStatusDeferred(actions: var a) => a,
+    SubsystemStatusDisabled(actions: var a) => a,
+    SubsystemStatusBusy(actions: var a) => a,
+    SubsystemStatusWarning(actions: var a) => a,
+    SubsystemStatusError(actions: var a) => a,
+    _ => {}
+  };
+
+  return Card(
+    backgroundColor: Colors.transparent,
+    child: Column(
+      children: [
+        Text(name, style: FluentTheme.of(context).typography.subtitle),
+        Text(status.toString(), style: FluentTheme.of(context).typography.bodyStrong),
+        Text(message, style: FluentTheme.of(context).typography.body),
+        Row(children: [
+          for (final e in actions.entries)
+            Button(onPressed: e.value, child: Text(e.key))
+        ],)
+      ],
+    )
+  );
 }
