@@ -6,6 +6,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
@@ -129,6 +130,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              // What a nice way of making a bigger button /s
+              child: Transform.scale(scale: 1.3, child: Button(onPressed: () { context.router.go('/photo_booth'); }, child: Text("Continue to app"))),
+            )
           ],
         ),
       ),
