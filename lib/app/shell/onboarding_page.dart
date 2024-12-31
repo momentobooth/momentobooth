@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
@@ -82,9 +84,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
               ),
             )),
         Center(
-          child: SizedBox(
-            width: 800,
-            height: 500,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 800,
+              minHeight: 500,
+            ),
             child: _getCenterWidget(context),
           ),
         ),
@@ -103,32 +107,30 @@ class _OnboardingPageState extends State<OnboardingPage> {
       elevation: 16.0,
       luminosityAlpha: 0.9,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-      child: Column(
-        children: [
-          Expanded(
-            child: Column(
-              children: [
-                Text(
-                  "Initializing app",
-                  style: FluentTheme.of(context).typography.title,
-                ),
-                Observer(
-                  builder: (context) => Column(
-                    children: [
-                      _subsystemStatusCard("Window manager", getIt<WindowManager>().subsystemStatus, context),
-                      _subsystemStatusCard("Settings", getIt<SettingsManager>().subsystemStatus, context),
-                      _subsystemStatusCard("Statistics", getIt<StatsManager>().subsystemStatus, context),
-                      _subsystemStatusCard("Live view", getIt<LiveViewManager>().subsystemStatus, context),
-                      _subsystemStatusCard("MQTT", getIt<MqttManager>().subsystemStatus, context),
-                      _subsystemStatusCard("Printing", getIt<PrintingManager>().subsystemStatus, context),
-                      _subsystemStatusCard("Sounds", getIt<SfxManager>().subsystemStatus, context),
-                    ],
-                  ),
-                ),
-              ],
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Initializing app",
+              style: FluentTheme.of(context).typography.title,
             ),
-          ),
-        ],
+            Observer(
+              builder: (context) => Column(
+                children: [
+                  _subsystemStatusCard("Window manager", getIt<WindowManager>().subsystemStatus, context),
+                  _subsystemStatusCard("Settings", getIt<SettingsManager>().subsystemStatus, context),
+                  _subsystemStatusCard("Statistics", getIt<StatsManager>().subsystemStatus, context),
+                  _subsystemStatusCard("Live view", getIt<LiveViewManager>().subsystemStatus, context),
+                  _subsystemStatusCard("MQTT", getIt<MqttManager>().subsystemStatus, context),
+                  _subsystemStatusCard("Printing", getIt<PrintingManager>().subsystemStatus, context),
+                  _subsystemStatusCard("Sounds", getIt<SfxManager>().subsystemStatus, context),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -155,18 +157,53 @@ Widget _subsystemStatusCard(String name, SubsystemStatus status, BuildContext co
     _ => {}
   };
 
-  return Card(
-    backgroundColor: Colors.transparent,
+  final icon = switch(status) {
+    SubsystemStatusInitial() => Icons.pending_outlined,
+    SubsystemStatusOk() => Icons.check,
+    // SubsystemStatusDeferred() => a,
+    SubsystemStatusDisabled() => Icons.do_disturb_alt,
+    SubsystemStatusBusy() => Icons.hourglass_empty,
+    SubsystemStatusWarning() => Icons.warning_amber,
+    SubsystemStatusError() => Icons.error,
+    _ => Icons.question_mark
+  };
+
+  final statusStr = status.toString().substring(16).split('(').first.capitalize;
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0),
     child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(name, style: FluentTheme.of(context).typography.subtitle),
-        Text(status.toString(), style: FluentTheme.of(context).typography.bodyStrong),
-        Text(message, style: FluentTheme.of(context).typography.body),
         Row(children: [
-          for (final e in actions.entries)
-            Button(onPressed: e.value, child: Text(e.key))
-        ],)
+          SizedBox(
+            width: 150,
+            // Create row with subsystem status
+            child: Row(
+              children: [
+                Text("Status: ", style: FluentTheme.of(context).typography.body),
+                Text(statusStr, style: FluentTheme.of(context).typography.bodyStrong),
+                SizedBox(width: 5.0),
+                Transform.translate(
+                  offset: Offset(0, 1),
+                  child: Icon(icon)
+                ),
+              ],
+            )),
+          
+          // Display action buttons, if available
+          if (actions.isEmpty)
+            Opacity(opacity: 0.5, child: Text("No actions", style: FluentTheme.of(context).typography.body)),
+          if (actions.isNotEmpty)
+            Row(children: [
+              for (final e in actions.entries)
+                Button(onPressed: e.value, child: Text(e.key))
+            ],),
+        ],),
+        // Display detailed status message
+        Text(message, style: FluentTheme.of(context).typography.body),
       ],
-    )
+    ),
   );
 }
