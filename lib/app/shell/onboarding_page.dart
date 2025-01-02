@@ -79,11 +79,9 @@ class _OnboardingPageState extends State<OnboardingPage> {
               ),
             )),
         Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: 800,
-              minHeight: 500,
-            ),
+          child: SizedBox(
+            width: 800,
+            height: 500,
             child: _getCenterWidget(context),
           ),
         ),
@@ -112,17 +110,19 @@ class _OnboardingPageState extends State<OnboardingPage> {
               "Initializing app",
               style: FluentTheme.of(context).typography.title,
             ),
-            Observer(
-              builder: (context) => Column(
-                children: [
-                  _subsystemStatusCard("Window manager", getIt<WindowManager>().subsystemStatus, context),
-                  _subsystemStatusCard("Settings", getIt<SettingsManager>().subsystemStatus, context),
-                  _subsystemStatusCard("Statistics", getIt<StatsManager>().subsystemStatus, context),
-                  _subsystemStatusCard("Live view", getIt<LiveViewManager>().subsystemStatus, context),
-                  _subsystemStatusCard("MQTT", getIt<MqttManager>().subsystemStatus, context),
-                  _subsystemStatusCard("Printing", getIt<PrintingManager>().subsystemStatus, context),
-                  _subsystemStatusCard("Sounds", getIt<SfxManager>().subsystemStatus, context),
-                ],
+            Expanded(
+              child: Observer(
+                builder: (context) => ListView(
+                  children: [
+                    _subsystemStatusCard("Window manager", getIt<WindowManager>().subsystemStatus, context),
+                    _subsystemStatusCard("Settings", getIt<SettingsManager>().subsystemStatus, context),
+                    _subsystemStatusCard("Statistics", getIt<StatsManager>().subsystemStatus, context),
+                    _subsystemStatusCard("Live view", getIt<LiveViewManager>().subsystemStatus, context),
+                    _subsystemStatusCard("MQTT", getIt<MqttManager>().subsystemStatus, context),
+                    _subsystemStatusCard("Printing", getIt<PrintingManager>().subsystemStatus, context),
+                    _subsystemStatusCard("Sounds", getIt<SfxManager>().subsystemStatus, context),
+                  ],
+                ),
               ),
             ),
             Padding(
