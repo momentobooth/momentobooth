@@ -5,12 +5,10 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
-import 'package:momento_booth/utils/subsystem.dart';
 
 class OnboardingPage extends StatefulWidget {
 
@@ -65,15 +63,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
   Color _getRandomLightBlueTint() {
     final possibleColors = [Colors.blue.light, Colors.blue.lightest];
     final chosenColor = possibleColors[_random.nextInt(possibleColors.length)];
-    return chosenColor.withOpacity(_random.nextDouble());
+    return chosenColor.withValues(alpha: _random.nextDouble());
   }
 
   @override
   Widget build(BuildContext context) {
-    //final FluentThemeData themeData = FluentTheme.of(context);
-    ObservableList list = getIt.get<ObservableList<Subsystem>>();
-    print(list);
-
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -93,6 +87,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             child: _getCenterWidget(context),
           ),
         ),
+        // FIXME: Crashes due to info not initialized yet
         // Align(
         //   alignment: Alignment.bottomCenter,
         //   child: OnboardingVersionInfo(
@@ -197,7 +192,7 @@ Widget _subsystemStatusCard(String name, SubsystemStatus status, BuildContext co
                 ),
               ],
             )),
-          
+
           // Display action buttons, if available
           if (actions.isEmpty)
             Opacity(opacity: 0.5, child: Text("No actions", style: FluentTheme.of(context).typography.body)),

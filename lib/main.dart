@@ -18,7 +18,6 @@ import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:talker/talker.dart';
 
-// ignore: unreachable_from_main
 final GetIt getIt = GetIt.instance;
 
 void main() async {
@@ -79,7 +78,8 @@ Future<void> _initializeApp() async {
     ..registerManager(LiveViewManager())
     ..registerManager(MqttManager())
     ..registerManager(NotificationsManager())
-    ..registerManager(PrintingManager());
+    ..registerManager(PrintingManager())
+    ..registerManager(PhotosManager());
 
   await getIt<SettingsManager>().initializeSafe();
   await _createPathsSafe();
