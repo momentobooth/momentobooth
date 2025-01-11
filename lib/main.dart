@@ -54,21 +54,10 @@ Future<void> _initializeApp() async {
 
     // Log
     ..registerSingleton(Talker(settings: TalkerSettings()))
-    ..registerSingleton(ObservableList<Subsystem>());
+    ..registerSingleton(ObservableList<Subsystem>())
 
-  await RustLib.init();
-  _initializeLog();
-  await initializeEnvironmentInfo();
-
-  getIt
     // Repositories
     ..registerSingleton<SecretsRepository>(const SecureStorageSecretsRepository())
-    ..registerSingleton<SerialiableRepository<Settings>>(
-      TomlSerializableRepository(path.join(documentsPath, "MomentoBooth_Settings.toml"), Settings.fromJson),
-    )
-    ..registerSingleton<SerialiableRepository<Stats>>(
-      TomlSerializableRepository(path.join(documentsPath, "MomentoBoothstats.toml"), Stats.fromJson),
-    )
 
     // Managers
     ..registerManager(StatsManager())
@@ -80,6 +69,18 @@ Future<void> _initializeApp() async {
     ..registerManager(NotificationsManager())
     ..registerManager(PrintingManager())
     ..registerManager(PhotosManager());
+
+  await RustLib.init();
+  _initializeLog();
+  await initializeEnvironmentInfo();
+
+  getIt
+    ..registerSingleton<SerialiableRepository<Settings>>(
+      TomlSerializableRepository(path.join(documentsPath, "MomentoBooth_Settings.toml"), Settings.fromJson),
+    )
+    ..registerSingleton<SerialiableRepository<Stats>>(
+      TomlSerializableRepository(path.join(documentsPath, "MomentoBoothstats.toml"), Stats.fromJson),
+    );
 
   await getIt<SettingsManager>().initializeSafe();
   await _createPathsSafe();
