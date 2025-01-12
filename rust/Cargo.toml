@@ -35,7 +35,6 @@ rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 gexiv2-sys = "1.4.0"
 regex = "1.11.1"
 log = "0.4.22"
-flutter_logger = "0.6.1"
 nokhwa = { version = "0.10.7", features = ["input-native", "output-threaded"] }
 parking_lot = "0.12.3"
 susync = "0.2.0"

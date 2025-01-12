@@ -11,6 +11,7 @@ import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/repositories/_all.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
+import 'package:momento_booth/src/rust/models/logging.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/subsystem.dart';
@@ -70,12 +71,10 @@ Future<void> _initializeApp() async {
     ..registerManager(PrintingManager())
     ..registerManager(PhotosManager());
 
-  try {
-    await RustLib.init();
-    _initializeLog();
-  } catch (_) {
+  await RustLib.init();
+  _initializeLog();
+  await initializeLibrary();
 
-  }
   await initializeEnvironmentInfo();
 
   getIt
@@ -100,7 +99,7 @@ Future<void> _initializeApp() async {
 
 void _initializeLog() {
   Talker talker = getIt<Talker>();
-  setupLogStream().listen((msg) {
+  initializeLog().listen((msg) {
     LogLevel logLevel = switch (msg.logLevel) {
       Level.error => LogLevel.error,
       Level.warn => LogLevel.warning,

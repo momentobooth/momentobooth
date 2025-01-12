@@ -1,13 +1,19 @@
-#[derive(Debug, Clone)]
-pub struct LogEvent {
-    pub message: String,
-    pub level: LogLevel,
+use flutter_rust_bridge::frb;
+pub use log::Level;
+
+#[derive(Clone)]
+pub struct LogEntry {
+    pub time_millis: i64,
+    pub msg: String,
+    pub log_level: Level,
+    pub lbl: String,
 }
 
-#[derive(Debug, Clone)]
-pub enum LogLevel {
-    Debug,
+#[frb(mirror(Level))]
+pub enum _Level {
+    Error = 1,
+    Warn,
     Info,
-    Warning,
-    Error,
+    Debug,
+    Trace,
 }

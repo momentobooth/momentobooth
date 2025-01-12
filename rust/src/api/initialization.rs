@@ -1,5 +1,9 @@
+use crate::frb_generated::StreamSink;
+use crate::models::logging::LogEntry;
 use crate::models::version_info::VersionInfo;
 use std::ffi::CStr;
+use std::path::Path;
+use std::time;
 use crate::INITIALIZATION;
 use crate::LIBRARY_VERSION;
 use crate::RUST_TARGET;
@@ -7,14 +11,14 @@ use crate::TOKIO_RUNTIME;
 use gexiv2_sys::gexiv2_get_version;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
+use log::LevelFilter;
+use parking_lot::RwLock;
 use tokio::runtime;
 use rustc_version_runtime::version;
 
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
-use log::{debug, info, LevelFilter};
-
-flutter_logger::flutter_logger_init!(LevelFilter::Trace);
+use log::{debug, info};
 
 // ////////////// //
 // Initialization //
@@ -50,9 +54,63 @@ fn get_exiv2_version() -> String {
     };
 }
 
+// /////// //
+// Logging //
+// /////// //
+
+static START: RwLock<Option<time::Instant>> = RwLock::new(None);
+static LOG_SINK: RwLock<Option<StreamSink<LogEntry>>> = RwLock::new(None);
+
+#[must_use]
+fn get_lbl(path: &str) -> &str {
+    let filename = Path::new(path).file_name().unwrap().to_str().unwrap();
+    &filename[..filename.len() - 3]
+}
+
+struct FlutterLogger {}
+
+impl log::Log for FlutterLogger {
+    fn enabled(&self, metadata: &log::Metadata) -> bool {
+        metadata.level() <= log::max_level()
+    }
+
+    fn log(&self, record: &log::Record) {
+        if !self.enabled(record.metadata()) {
+            return;
+        }
+
+        let start = START.read().unwrap();
+        if LOG_SINK.is_locked_exclusive() {
+            println!("LOG_SINK locked, but line is: {}", &std::fmt::format(record.args().to_owned()));
+            return;
+        }
+
+        LOG_SINK.read().clone().unwrap().add(LogEntry {
+            #[allow(clippy::cast_possible_truncation)]
+            time_millis: start.elapsed().as_millis() as i64,
+            msg: String::from(&std::fmt::format(record.args().to_owned())),
+            log_level: record.level(),
+            lbl: String::from(record.file().map_or("unknown", get_lbl)),
+        }).unwrap();
+    }
+
+    fn flush(&self) {}
+}
+
+pub fn initialize_log(log_sink: StreamSink<LogEntry>) {
+    if LOG_SINK.read().is_none() {
+        let logger = FlutterLogger {};
+        let _ = log::set_boxed_logger(Box::new(logger)).map(|()| log::set_max_level(LevelFilter::Trace)).unwrap();
+    }
+
+    *START.write() = Some(time::Instant::now());
+    *LOG_SINK.write() = Some(log_sink);
+
+    info!("Logging initialized");
+}
+
 // Important note: This function should be allowed to run multiple times.
 // This should only happen when Hot Restart has been invoked on the Flutter app.
-#[frb(init)]
 pub fn initialize_library() {
     debug!("{}", "Helper library initialization started");
 
@@ -90,6 +148,7 @@ fn set_environment_variable(key: &str, value: &str) {
 #[cfg(not(target_os = "windows"))]
 fn set_environment_variable(key: &str, value: &str) {
     use std::env;
+    use std::sync::Once;
 
     env::set_var(key, value);
 }
