@@ -5,6 +5,7 @@ import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
@@ -102,34 +103,49 @@ class _OnboardingPageState extends State<OnboardingPage> {
       luminosityAlpha: 0.9,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+        padding: const EdgeInsets.all(32.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              "Initializing app",
-              style: FluentTheme.of(context).typography.title,
-            ),
             Expanded(
-              child: Observer(
-                builder: (context) => ListView(
-                  children: [
-                    _subsystemStatusCard("Window manager", getIt<WindowManager>().subsystemStatus, context),
-                    _subsystemStatusCard("Settings", getIt<SettingsManager>().subsystemStatus, context),
-                    _subsystemStatusCard("Statistics", getIt<StatsManager>().subsystemStatus, context),
-                    _subsystemStatusCard("Live view", getIt<LiveViewManager>().subsystemStatus, context),
-                    _subsystemStatusCard("MQTT", getIt<MqttManager>().subsystemStatus, context),
-                    _subsystemStatusCard("Printing", getIt<PrintingManager>().subsystemStatus, context),
-                    _subsystemStatusCard("Sounds", getIt<SfxManager>().subsystemStatus, context),
-                  ],
-                ),
+              child: SvgPicture.asset(
+                'assets/svg/undraw_server-status_f685.svg',
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              // What a nice way of making a bigger button /s
-              child: Transform.scale(scale: 1.3, child: Button(onPressed: () { context.router.go('/photo_booth'); }, child: Text("Continue to app"))),
-            )
+            const SizedBox(width: 64.0),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Initializing app",
+                    style: FluentTheme.of(context).typography.title,
+                  ),
+                  Expanded(
+                    child: Observer(
+                      builder: (context) => ListView(
+                        children: [
+                          _subsystemStatusCard("Window manager", getIt<WindowManager>().subsystemStatus, context),
+                          _subsystemStatusCard("Settings", getIt<SettingsManager>().subsystemStatus, context),
+                          _subsystemStatusCard("Statistics", getIt<StatsManager>().subsystemStatus, context),
+                          _subsystemStatusCard("Live view", getIt<LiveViewManager>().subsystemStatus, context),
+                          _subsystemStatusCard("MQTT", getIt<MqttManager>().subsystemStatus, context),
+                          _subsystemStatusCard("Printing", getIt<PrintingManager>().subsystemStatus, context),
+                          _subsystemStatusCard("Sounds", getIt<SfxManager>().subsystemStatus, context),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton(
+                      onPressed: () { context.router.go('/photo_booth'); }, child: Text("Continue to app"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
