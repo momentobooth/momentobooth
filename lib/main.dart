@@ -70,8 +70,12 @@ Future<void> _initializeApp() async {
     ..registerManager(PrintingManager())
     ..registerManager(PhotosManager());
 
-  await RustLib.init();
-  _initializeLog();
+  try {
+    await RustLib.init();
+    _initializeLog();
+  } catch (_) {
+
+  }
   await initializeEnvironmentInfo();
 
   getIt
