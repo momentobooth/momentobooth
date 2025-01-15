@@ -1,10 +1,29 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/app/shell/onboarding_page.dart';
 import 'package:momento_booth/app/shell/widgets/wizard_pages/status_page.dart';
+import 'package:momento_booth/app/shell/widgets/wizard_pages/welcome_page.dart';
 
-class Wizard extends StatelessWidget {
+class Wizard extends StatefulWidget {
 
   const Wizard({super.key});
+
+  @override
+  State<Wizard> createState() => _WizardState();
+
+}
+
+class _WizardState extends State<Wizard> {
+
+  late final WizardController controller;
+
+  @override
+  void initState() {
+    controller = WizardController([
+      const WelcomePage(),
+      const StatusPage(),
+    ]);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +31,17 @@ class Wizard extends StatelessWidget {
       elevation: 16.0,
       luminosityAlpha: 0.9,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-      child: Navigator(
+      child: WizardProvider(
+        controller: controller,
+        child: Navigator(
+          onGenerateInitialRoutes: (navigator, initialRoute) {
+            return [
+              FluentPageRoute(
+                builder: (context) => controller.pages[0],
+              ),
+            ];
+          },
+        ),
       ),
     );
   }

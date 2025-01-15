@@ -3,7 +3,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:momento_booth/app/shell/widgets/wizard.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
@@ -11,12 +10,7 @@ import 'package:momento_booth/models/subsystem_status.dart';
 
 class StatusPage extends StatelessWidget {
 
-  final WizardController wizardController;
-
-  const StatusPage({
-    required this.wizardController,
-    super.key,
-  });
+  const StatusPage({super.key});
 
   @override
   Widget build(BuildContext context) {
