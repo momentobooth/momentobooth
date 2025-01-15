@@ -3,7 +3,7 @@ PODS:
     - FlutterMacOS
   - file_selector_macos (0.0.1):
     - FlutterMacOS
-  - flutter_secure_storage_macos (6.1.1):
+  - flutter_secure_storage_macos (6.1.3):
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - just_audio (0.0.1):
@@ -19,11 +19,11 @@ PODS:
     - FlutterMacOS
   - screen_retriever_macos (0.0.1):
     - FlutterMacOS
-  - Sentry/HybridSDK (8.41.0)
-  - sentry_flutter (8.11.1):
+  - Sentry/HybridSDK (8.42.0)
+  - sentry_flutter (8.12.0):
     - Flutter
     - FlutterMacOS
-    - Sentry/HybridSDK (= 8.41.0)
+    - Sentry/HybridSDK (= 8.42.0)
   - share_plus (0.0.1):
     - FlutterMacOS
   - texture_rgba_renderer (0.0.1):
@@ -82,21 +82,21 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
-  audio_session: dea1f41890dbf1718f04a56f1d6150fd50039b72
-  file_selector_macos: cc3858c981fe6889f364731200d6232dac1d812d
-  flutter_secure_storage_macos: 59459653abe1adb92abbc8ea747d79f8d19866c9
+  audio_session: 48ab6500f7a5e7c64363e206565a5dfe5a0c1441
+  file_selector_macos: 6280b52b459ae6c590af5d78fc35c7267a3c4b31
+  flutter_secure_storage_macos: 7f45e30f838cf2659862a4e4e3ee1c347c2b3b54
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
-  just_audio: 9b67ca7b97c61cfc9784ea23cd8cc55eb226d489
-  package_info_plus: 12f1c5c2cfe8727ca46cbd0b26677728972d9a5b
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
-  printing: 1dd6a1fce2209ec240698e2439a4adbb9b427637
-  rust_lib_momento_booth: d43a01b1d47afc3530b2f17956170b4256c0b166
-  screen_retriever_macos: 776e0fa5d42c6163d2bf772d22478df4b302b161
-  Sentry: 54d0fe6c0df448497c8ed4cce66ccf7027e1823e
-  sentry_flutter: d8bce6e1d6c4f57d0208e274f745d1eee8bae249
-  share_plus: 1fa619de8392a4398bfaf176d441853922614e89
-  texture_rgba_renderer: cbed959a3c127122194a364e14b8577bd62dc8f2
-  window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
+  just_audio: eb8b016ac4493159ab24db4f7215e55303b39a84
+  package_info_plus: f0052d280d17aa382b932f399edf32507174e870
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  printing: c4cf83c78fd684f9bc318e6aadc18972aa48f617
+  rust_lib_momento_booth: c45ee7d2e5d3020a5512404d9e5a263228366acb
+  screen_retriever_macos: 452e51764a9e1cdb74b3c541238795849f21557f
+  Sentry: 38ed8bf38eab5812787274bf591e528074c19e02
+  sentry_flutter: a72ca0eb6e78335db7c4ddcddd1b9f6c8ed5b764
+  share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
+  texture_rgba_renderer: 6661f577ea5d4990e964c7e3840e544ac798e6da
+  window_manager: 1d01fa7ac65a6e6f83b965471b1a7fdd3f06166c
 
 PODFILE CHECKSUM: 3d7cd7f90b4de5948ed6e76869b40159643b2f0c
 
