@@ -8,20 +8,20 @@ class WelcomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      spacing: 64,
+    return Stack(
+      fit: StackFit.expand,
       children: [
-        Expanded(
-          child: Column(
-            children: [
-              SvgPicture.asset('assets/svg/logo.svg'),
-              Text("You're here, awesome! Now let's make memories <3"),
-            ],
-          ),
+        Column(
+          spacing: 32,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset('assets/svg/logo.svg'),
+            Text("You're here, awesome! Now let's make memories <3"),
+          ],
         ),
-        Align(
+        Container(
           alignment: Alignment.bottomRight,
+          padding: EdgeInsets.only(right: 32, bottom: 24),
           child: FilledButton(
             onPressed: () {
               WizardProvider.of(context).next(context);

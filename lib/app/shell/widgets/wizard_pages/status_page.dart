@@ -15,7 +15,7 @@ class StatusPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(32.0),
+      padding: const EdgeInsets.fromLTRB(32, 24, 32, 24),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
