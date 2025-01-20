@@ -77,7 +77,7 @@ checksum = "c494134f746c14dc653a35a4ea5aca24ac368529da5370ecf41fe0341c35772f"
 dependencies = [
  "android_log-sys",
  "env_logger",
- "log 0.4.22",
+ "log 0.4.25",
  "once_cell",
 ]
 
@@ -164,7 +164,7 @@ checksum = "6678909d8c5d46a42abcf571271e15fdbc0a225e3646cf23762cd415046c78bf"
 dependencies = [
  "anyhow",
  "arrayvec",
- "log 0.4.22",
+ "log 0.4.25",
  "nom",
  "num-rational",
  "v_frame",
@@ -248,7 +248,7 @@ dependencies = [
  "clang-sys",
  "lazy_static",
  "lazycell",
- "log 0.4.22",
+ "log 0.4.25",
  "peeking_take_while",
  "prettyplease",
  "proc-macro2 1.0.92",
@@ -270,7 +270,7 @@ dependencies = [
  "cexpr",
  "clang-sys",
  "itertools 0.13.0",
- "log 0.4.22",
+ "log 0.4.25",
  "prettyplease",
  "proc-macro2 1.0.92",
  "quote 1.0.37",
@@ -941,7 +941,7 @@ version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4cd405aab171cb85d6735e5c8d9db038c17d3ca007a4d2c25f337935c3d90580"
 dependencies = [
- "log 0.4.22",
+ "log 0.4.25",
  "regex",
 ]
 
@@ -1056,7 +1056,7 @@ version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6a3d407fd7ed76065e3d7ddbc574af50082d4301dcbf19000badc3c4367fdbd0"
 dependencies = [
- "log 0.4.22",
+ "log 0.4.25",
  "once_cell",
 ]
 
@@ -1080,7 +1080,7 @@ dependencies = [
  "futures 0.3.31",
  "js-sys",
  "lazy_static",
- "log 0.4.22",
+ "log 0.4.25",
  "oslog",
  "portable-atomic",
  "threadpool",
@@ -1334,7 +1334,7 @@ dependencies = [
  "crossbeam-channel",
  "libc",
  "libgphoto2_sys",
- "log 0.4.22",
+ "log 0.4.25",
 ]
 
 [[package]]
@@ -1831,9 +1831,9 @@ dependencies = [
 
 [[package]]
 name = "img-parts"
-version = "0.3.1"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cd653b443fbb9271d937a4b2c1c7489af95c284a56f84d76bbd00eac857cb1c"
+checksum = "6b4e24cfdc6f897b582508e3c382eaf5378076898f80500a80d10d761ae85e90"
 dependencies = [
  "bytes 1.9.0",
  "crc32fast",
@@ -1904,7 +1904,7 @@ dependencies = [
  "futures-executor",
  "futures-util",
  "http 1.2.0",
- "log 0.4.22",
+ "log 0.4.25",
  "native-tls",
  "num-traits",
  "reqwest 0.12.9",
@@ -2086,14 +2086,14 @@ version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e19e8d5c34a3e0e2223db8e060f9e8264aeeb5c5fc64a4ee9965c062211c024b"
 dependencies = [
- "log 0.4.22",
+ "log 0.4.25",
 ]
 
 [[package]]
 name = "log"
-version = "0.4.22"
+version = "0.4.25"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7a70ba024b9dc04c27ea2f0c0548feb474ec5c54bba33a7f72f873a39d07b24"
+checksum = "04cbf5b083de1c7e0222a7a51dbfdba1cbe1c6ab0b15e29fff3f6c077fd9cd9f"
 
 [[package]]
 name = "loop9"
@@ -2162,7 +2162,7 @@ dependencies = [
  "cocoa",
  "core-graphics",
  "foreign-types",
- "log 0.4.22",
+ "log 0.4.25",
  "objc",
 ]
 
@@ -2219,7 +2219,7 @@ dependencies = [
  "iovec",
  "kernel32-sys",
  "libc",
- "log 0.4.22",
+ "log 0.4.25",
  "miow",
  "net2",
  "slab",
@@ -2299,7 +2299,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a8614eb2c83d59d1c8cc974dd3f920198647674a0a035e1af1fa58707e317466"
 dependencies = [
  "libc",
- "log 0.4.22",
+ "log 0.4.25",
  "openssl",
  "openssl-probe",
  "openssl-sys",
@@ -2612,7 +2612,7 @@ checksum = "8343ce955f18e7e68c0207dd0ea776ec453035685395ababd2ea651c569728b3"
 dependencies = [
  "cc",
  "dashmap 4.0.2",
- "log 0.4.22",
+ "log 0.4.25",
 ]
 
 [[package]]
@@ -2988,7 +2988,7 @@ dependencies = [
  "itertools 0.12.1",
  "libc",
  "libfuzzer-sys",
- "log 0.4.22",
+ "log 0.4.25",
  "maybe-rayon",
  "new_debug_unreachable",
  "noop_proc_macro",
@@ -3113,7 +3113,7 @@ dependencies = [
  "hyper-tls 0.5.0",
  "ipnet",
  "js-sys",
- "log 0.4.22",
+ "log 0.4.25",
  "mime 0.3.17",
  "native-tls",
  "once_cell",
@@ -3156,7 +3156,7 @@ dependencies = [
  "hyper-util",
  "ipnet",
  "js-sys",
- "log 0.4.22",
+ "log 0.4.25",
  "mime 0.3.17",
  "native-tls",
  "once_cell",
@@ -3252,7 +3252,7 @@ dependencies = [
  "jpeg-encoder",
  "libc",
  "little_exif",
- "log 0.4.22",
+ "log 0.4.25",
  "noise",
  "nokhwa",
  "num",
@@ -3335,7 +3335,7 @@ version = "0.21.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f56a14d1f48b391359b22f731fd4bd7e43c97f3c50eee276f3aa09c94784d3e"
 dependencies = [
- "log 0.4.22",
+ "log 0.4.25",
  "ring 0.17.8",
  "rustls-webpki",
  "sct",
@@ -3478,9 +3478,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.134"
+version = "1.0.137"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d00f4175c42ee48b15416f6193a959ba3a0d67fc699a0db9ad12df9f83991c7d"
+checksum = "930cfb6e6abf99298aaad7d29abbef7a9999a9a8806a40088f55f0dcec03146b"
 dependencies = [
  "itoa",
  "memchr",
@@ -3943,9 +3943,9 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.42.0"
+version = "1.43.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5cec9b21b0450273377fc97bd4c33a8acffc8c996c987a7c5b319a0083707551"
+checksum = "3d61fa4ffa3de412bfea335c6ecff681de2b609ba3c77ef3e00e521813a9ed9e"
 dependencies = [
  "backtrace",
  "bytes 1.9.0",
@@ -3985,7 +3985,7 @@ checksum = "57fc868aae093479e3131e3d165c93b1c7474109d13c90ec0dda2a1bbfff0674"
 dependencies = [
  "bytes 0.4.12",
  "futures 0.1.31",
- "log 0.4.22",
+ "log 0.4.25",
 ]
 
 [[package]]
@@ -4007,7 +4007,7 @@ dependencies = [
  "crossbeam-utils 0.7.2",
  "futures 0.1.31",
  "lazy_static",
- "log 0.4.22",
+ "log 0.4.25",
  "mio 0.6.23",
  "num_cpus",
  "parking_lot 0.9.0",
@@ -4239,7 +4239,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "02d1a66277ed75f640d608235660df48c8e3c19f3b4edb6a263315626cc3c01d"
 dependencies = [
  "base64 0.22.1",
- "log 0.4.22",
+ "log 0.4.25",
  "once_cell",
  "url 2.5.4",
 ]
@@ -4379,7 +4379,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5f89bb38646b4f81674e8f5c3fb81b562be1fd936d84320f3264486418519c79"
 dependencies = [
  "bumpalo",
- "log 0.4.22",
+ "log 0.4.25",
  "proc-macro2 1.0.92",
  "quote 1.0.37",
  "syn 2.0.90",
