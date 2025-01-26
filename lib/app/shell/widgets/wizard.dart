@@ -1,5 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/app/shell/onboarding_page.dart';
+import 'package:momento_booth/app/shell/widgets/fluent_wizard_page_route.dart';
 import 'package:momento_booth/app/shell/widgets/wizard_pages/status_page.dart';
 import 'package:momento_booth/app/shell/widgets/wizard_pages/welcome_page.dart';
 
@@ -36,7 +36,7 @@ class _WizardState extends State<Wizard> {
         child: Navigator(
           onGenerateInitialRoutes: (navigator, initialRoute) {
             return [
-              FluentPageRoute(
+              FluentWizardPageRoute(
                 builder: (context) => controller.pages[0],
               ),
             ];
@@ -91,7 +91,7 @@ class WizardController {
       currentIndex++;
       Navigator.push(
         context,
-        FluentPageRoute(builder: (_) => pages[currentIndex]),
+        FluentWizardPageRoute(builder: (_) => pages[currentIndex]),
       );
     }
   }
