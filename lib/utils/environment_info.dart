@@ -26,7 +26,7 @@ String get osFriendlyName => switch (Platform.operatingSystem) {
 
 Future<void> initializeEnvironmentInfo() async {
   packageInfo = await PackageInfo.fromPlatform();
-  documentsPath = (await getApplicationDocumentsDirectory()).toString();
+  documentsPath = (await getApplicationDocumentsDirectory()).path;
   helperLibraryVersionInfo = await lib_init_api.getVersionInfo();
 
   getIt<Talker>().info({
