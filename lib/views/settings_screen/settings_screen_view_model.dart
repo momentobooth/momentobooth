@@ -10,7 +10,7 @@ import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
-import 'package:momento_booth/views/custom_widgets/photo_collage.dart';
+import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:printing/printing.dart';
 
 part 'settings_screen_view_model.g.dart';

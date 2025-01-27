@@ -90,7 +90,8 @@ dependencies:
   package_info_plus: 8.1.2
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.6
-  draggable_scrollbar: 0.1.0
+  draggable_scrollbar:
+    git: https://github.com/momentobooth/flutter-draggable-scrollbar
   csslib: 1.0.2
 
 dev_dependencies:

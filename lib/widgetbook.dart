@@ -2,8 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:momento_booth/app_localizations.dart';
-import 'package:momento_booth/theme/momento_booth_theme.dart';
-import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

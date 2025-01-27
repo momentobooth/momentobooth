@@ -305,10 +305,11 @@ packages:
   draggable_scrollbar:
     dependency: "direct main"
     description:
-      name: draggable_scrollbar
-      sha256: a906e27fc1ee056e2942d66989dd0cb5b70a361e7d44af566cfa1b584054eac3
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: HEAD
+      resolved-ref: e63fb005ae2fc8c56b8fe8baca58f1831513afa4
+      url: "https://github.com/momentobooth/flutter-draggable-scrollbar"
+    source: git
     version: "0.1.0"
   event_bus:
     dependency: transitive

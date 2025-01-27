@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:momento_booth/theme/momento_booth_theme.dart';
-import 'package:momento_booth/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 
 extension BuildContextExtension on BuildContext {
 

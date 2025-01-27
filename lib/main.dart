@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/app/shell/shell.dart';
+import 'package:momento_booth/app.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/_all.dart';
