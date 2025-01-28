@@ -21,10 +21,10 @@ mixin Subsystem on Logger {
   Future<void> initializeSafe() async {
     try {
       await initialize();
-      Action(() => _subsystemStatus.value = const SubsystemStatus.ok());
+      reportSubsystemOk();
     } catch (e, s) {
       logError("Init of $runtimeType failed", e, s);
-      Action(() => _subsystemStatus.value = SubsystemStatus.error(message: "Initialization error: $e"));
+      reportSubsystemError(message: "Initialization error: $e");
     }
   }
 
@@ -32,57 +32,69 @@ mixin Subsystem on Logger {
   // Report subsystem status //
   // /////////////////////// //
 
+  Action? _reportSubsystemBusy;
+
   void reportSubsystemBusy({required String message, Map<String, Future Function()> actions = const {}}) {
-    Action(() {
+    (_reportSubsystemBusy ??= Action(() {
       _subsystemStatus.value = SubsystemStatus.busy(
         message: message,
         actions: actions,
       );
-    });
+    }))();
   }
 
+  Action? _reportSubsystemOk;
+
   void reportSubsystemOk({String? message, Map<String, Future Function()> actions = const {}}) {
-    Action(() {
+    (_reportSubsystemOk ??= Action(() {
       _subsystemStatus.value = SubsystemStatus.ok(
         message: message,
         actions: actions,
       );
-    });
+    }))();
   }
 
+  Action? _reportSubsystemDisabled;
+
   void reportSubsystemDisabled({Map<String, Future Function()> actions = const {}}) {
-    Action(() {
+    (_reportSubsystemDisabled ??= Action(() {
       _subsystemStatus.value = SubsystemStatus.disabled(
         actions: actions,
       );
-    });
+    }))();
   }
 
+  Action? _reportSubsystemWarning;
+
   void reportSubsystemWarning({required String message, Map<String, Future Function()> actions = const {}}) {
-    Action(() {
+    (_reportSubsystemWarning ??= Action(() {
       _subsystemStatus.value = SubsystemStatus.busy(
         message: message,
         actions: actions,
       );
-    });
+    }))();
   }
 
+  Action? _reportSubsystemError;
+
   void reportSubsystemError({required String message, Map<String, Future Function()> actions = const {}}) {
-    Action(() {
+    (_reportSubsystemError ??= Action(() {
       _subsystemStatus.value = SubsystemStatus.error(
         message: message,
         actions: actions,
       );
-    });
+    }))();
   }
 
+  Action? _reportSubsystemDeferred;
+
   void reportSubsystemDeferred({required List<SubsystemStatus> children, Map<String, Future Function()> actions = const {}}) {
-    Action(() {
+    (_reportSubsystemDeferred ??= Action(() {
       _subsystemStatus.value = SubsystemStatus.deferred(
         children: children,
         actions: actions,
       );
-    });
+    }))();
   }
 
 }
