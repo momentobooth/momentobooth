@@ -79,11 +79,7 @@ abstract class MqttManagerBase with Store, Logger, Subsystem {
 
     if (newSettings.enable) {
       _connectionState = ConnectionState.connecting;
-      MqttServerClient client = MqttServerClient.withPort(
-        newSettings.host,
-        newSettings.clientId,
-        newSettings.port,
-      )
+      MqttServerClient client = MqttServerClient.withPort(newSettings.host, newSettings.clientId, newSettings.port)
         ..useWebSocket = newSettings.useWebSocket
         ..secure = newSettings.secure
         ..autoReconnect = true;
@@ -93,6 +89,7 @@ abstract class MqttManagerBase with Store, Logger, Subsystem {
       }
 
       try {
+        reportSubsystemBusy(message: 'Connecting to MQTT server');
         String password = await getIt<SecretsRepository>().getSecret(mqttPasswordSecretKey) ?? "";
         MqttConnectionStatus? result = await client.connect(newSettings.username, password);
         if (result?.state != MqttConnectionState.connected) {
@@ -101,23 +98,35 @@ abstract class MqttManagerBase with Store, Logger, Subsystem {
 
         logInfo("Connected to MQTT server");
         _client = client
-          ..onDisconnected = (() => logInfo("Disconnected from MQTT server"))
+          ..onDisconnected = (() {
+            _connectionState = ConnectionState.disconnected;
+            String errorDescription = "Disconnected from MQTT server";
+            reportSubsystemError(message: errorDescription);
+            logError("Disconnected from MQTT server");
+          })
           ..onAutoReconnect = (() {
             _connectionState = ConnectionState.connecting;
-            logInfo("Reconnecting to MQTT server");
+            reportSubsystemBusy(message: 'Connecting to MQTT server');
+            logWarning("Reconnecting to MQTT server");
           })
           ..onAutoReconnected = (() {
             _connectionState = ConnectionState.connected;
+            reportSubsystemOk();
             logInfo("Reconnected to MQTT server");
             _forcePublishAll();
           });
 
         _connectionState = ConnectionState.connected;
+        reportSubsystemOk();
         _forcePublishAll();
         _createSubscriptions();
-      } catch (e) {
-        logError("Failed to connect to MQTT server: $e");
+      } catch (e, s) {
+        String errorDescription = "Failed to connect to MQTT server";
+        reportSubsystemError(message: '$errorDescription: $e');
+        logError(errorDescription, e, s);
       }
+    } else {
+      reportSubsystemDisabled();
     }
 
     _currentSettings = newSettings;
