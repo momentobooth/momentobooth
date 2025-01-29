@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:talker/talker.dart';
 
 late final PackageInfo packageInfo;
-late final String documentsPath;
+late final String appDataPath;
 late final lib_version_info_models.VersionInfo helperLibraryVersionInfo;
 const String flutterVersion = String.fromEnvironment("FLUTTER_VERSION");
 
@@ -26,7 +26,7 @@ String get osFriendlyName => switch (Platform.operatingSystem) {
 
 Future<void> initializeEnvironmentInfo() async {
   packageInfo = await PackageInfo.fromPlatform();
-  documentsPath = (await getApplicationDocumentsDirectory()).path;
+  appDataPath = (await getApplicationSupportDirectory()).path;
   helperLibraryVersionInfo = await lib_init_api.getVersionInfo();
 
   getIt<Talker>().info({

@@ -21,7 +21,7 @@ abstract class SfxManagerBase with Store, Logger, Subsystem {
   // ////////////// //
 
   @override
-  Future<Null> initialize() async {
+  Future<void> initialize() async {
     JustAudioMediaKit.ensureInitialized();
     AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
 

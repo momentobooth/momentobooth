@@ -21,10 +21,10 @@ mixin Subsystem on Logger {
   Future<void> initializeSafe() async {
     try {
       await initialize();
-      reportSubsystemOk();
+      if (subsystemStatus is SubsystemStatusInitial) reportSubsystemOk();
     } catch (e, s) {
       logError("Init of $runtimeType failed", e, s);
-      reportSubsystemError(message: "Initialization error: $e");
+      if (subsystemStatus is SubsystemStatusInitial) reportSubsystemError(message: "Initialization error: $e");
     }
   }
 
@@ -77,10 +77,11 @@ mixin Subsystem on Logger {
 
   Action? _reportSubsystemError;
 
-  void reportSubsystemError({required String message, Map<String, Future Function()> actions = const {}}) {
+  void reportSubsystemError({required String message, String? exception, Map<String, Future Function()> actions = const {}}) {
     (_reportSubsystemError ??= Action(() {
       _subsystemStatus.value = SubsystemStatus.error(
         message: message,
+        exception: exception,
         actions: actions,
       );
     }))();

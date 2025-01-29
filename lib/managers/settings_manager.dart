@@ -23,18 +23,22 @@ abstract class SettingsManagerBase with Store, Logger, Subsystem {
 
       if (!hasExistingSettings) {
         _settings = Settings.withDefaults();
-        reportSubsystemOk(
-          message: "No existing settings found, a new settings file has been created.",
-        );
+        reportSubsystemOk(message: "No existing settings data found, a new file will be created.");
       } else {
         _settings = await settingsRepository.get();
         reportSubsystemOk();
       }
     } catch (e) {
       _settings = Settings.withDefaults();
-      reportSubsystemWarning(
-        message: "Could not read existing settings: $e\n\nDefault settings have been loaded. Your current settings file will be overwritten if you alter any settings. Backup your current settings file in case you need anything from it.",
+      reportSubsystemError(
+        message: "Could not read existing settings. Open the details view for details and solutions.",
+        exception: e.toString(),
+        actions: {
+          'Accept default settings': unblockSavingAndSave,
+          'Retry': initialize,
+        }
       );
+      _blockSaving = true;
     }
   }
 
@@ -42,13 +46,28 @@ abstract class SettingsManagerBase with Store, Logger, Subsystem {
   // Persistence //
   // /////////// //
 
+  @readonly
+  bool _blockSaving = false;
+
+  Future<void> unblockSavingAndSave() async {
+    _blockSaving = false;
+    logInfo("Unblocked saving of settings, now saving settings");
+    await getIt<SerialiableRepository<Settings>>().write(_settings);
+    logDebug("Saved settings");
+    reportSubsystemOk(message: "Default settings accepted.");
+  }
+
   @action
   Future<void> updateAndSave(Settings settings) async {
     if (settings == _settings) return;
 
-    logDebug("Saving settings");
-    await getIt<SerialiableRepository<Settings>>().write(settings);
-    logDebug("Saved settings");
+    if (!_blockSaving) {
+      logDebug("Saving settings");
+      await getIt<SerialiableRepository<Settings>>().write(settings);
+      logDebug("Saved settings");
+    } else {
+      logDebug("Saving blocked");
+    }
 
     _settings = settings;
     getIt<MqttManager>().publishSettings(settings);

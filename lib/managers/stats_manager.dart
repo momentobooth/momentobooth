@@ -26,7 +26,7 @@ abstract class StatsManagerBase with Store, Logger, Subsystem {
 
       if (!hasExistingStats) {
         _stats = const Stats();
-        reportSubsystemOk(message: "No existing settings found, a new settings file has been created.");
+        reportSubsystemOk(message: "No existing stats data found, a new file will be created.");
       } else {
         _stats = await statsRepository.get();
         reportSubsystemOk();

@@ -2,10 +2,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'subsystem_status.freezed.dart';
 
-typedef ActionMap = Map<String, Future Function()>;
+typedef ActionMap = Map<String, Future<void> Function()>;
 
 @freezed
-class SubsystemStatus with _$SubsystemStatus {
+sealed class SubsystemStatus with _$SubsystemStatus {
 
   const SubsystemStatus._();
 
@@ -33,6 +33,7 @@ class SubsystemStatus with _$SubsystemStatus {
   const factory SubsystemStatus.error({
     required String message,
     @Default({}) ActionMap actions,
+    String? exception,
   }) = SubsystemStatusError;
 
   const factory SubsystemStatus.deferred({

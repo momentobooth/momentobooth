@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
@@ -51,20 +50,18 @@ class _ShellState extends State<Shell> with WindowListener {
   Widget build(BuildContext context) {
     return _HotkeyResponder(
       router: _router,
-      child: Observer(
-        builder: (context) => FluentApp.router(
-          scrollBehavior: ScrollConfiguration.of(context),
-          routerConfig: _router,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            FluentLocalizations.delegate,
-          ],
-          supportedLocales: const [Locale('en')],
-          locale: const Locale('en'),
-        ),
+      child: FluentApp.router(
+        scrollBehavior: ScrollConfiguration.of(context),
+        routerConfig: _router,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          FluentLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale('en')],
+        locale: const Locale('en'),
       ),
     );
   }

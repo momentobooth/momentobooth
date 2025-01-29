@@ -1,6 +1,6 @@
 import 'package:momento_booth/models/app_version_info.dart';
 import 'package:momento_booth/src/rust/models/version_info.dart';
-import 'package:momento_booth/utils/system/platform_helpers.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 late final PackageInfo packageInfo;

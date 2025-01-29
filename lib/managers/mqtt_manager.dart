@@ -15,9 +15,9 @@ import 'package:momento_booth/models/home_assistant/home_assistant_discovery_pay
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
+import 'package:momento_booth/utils/app_version_helpers.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
-import 'package:momento_booth/utils/system/app_version_helpers.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:synchronized/synchronized.dart';
@@ -122,7 +122,7 @@ abstract class MqttManagerBase with Store, Logger, Subsystem {
         _createSubscriptions();
       } catch (e, s) {
         String errorDescription = "Failed to connect to MQTT server";
-        reportSubsystemError(message: '$errorDescription: $e');
+        reportSubsystemError(message: errorDescription, exception: e.toString());
         logError(errorDescription, e, s);
       }
     } else {

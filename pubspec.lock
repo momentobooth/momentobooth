@@ -799,10 +799,10 @@ packages:
     dependency: "direct main"
     description:
       name: lucide_icons_flutter
-      sha256: eb8910814ece9165f94c8af8da3971dbdd0862e04e3f5678083c4177ca96bb78
+      sha256: "134e125da5497ec3ed17bbbabaf93e0337bdfd0fe4b953c0088dd8545affff21"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.5"
+    version: "1.2.6"
   macros:
     dependency: transitive
     description:

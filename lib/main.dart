@@ -79,10 +79,10 @@ Future<void> _initializeApp() async {
 
   getIt
     ..registerSingleton<SerialiableRepository<Settings>>(
-      TomlSerializableRepository(path.join(documentsPath, "MomentoBooth_Settings.toml"), Settings.fromJson),
+      TomlSerializableRepository(path.join(appDataPath, "Settings.toml"), Settings.fromJson),
     )
     ..registerSingleton<SerialiableRepository<Stats>>(
-      TomlSerializableRepository(path.join(documentsPath, "MomentoBoothstats.toml"), Stats.fromJson),
+      TomlSerializableRepository(path.join(appDataPath, "Stats.toml"), Stats.fromJson),
     );
 
   await getIt<SettingsManager>().initializeSafe();
@@ -90,11 +90,11 @@ Future<void> _initializeApp() async {
 
   await getIt<StatsManager>().initializeSafe();
   await getIt<WindowManager>().initializeSafe();
-  getIt<LiveViewManager>().initialize();
-  getIt<MqttManager>().initialize();
-  await getIt<SfxManager>().initialize();
+  await getIt<LiveViewManager>().initializeSafe();
+  await getIt<MqttManager>().initializeSafe();
+  await getIt<SfxManager>().initializeSafe();
+  await getIt<PrintingManager>().initializeSafe();
   getIt<NotificationsManager>().initialize();
-  getIt<PrintingManager>().initialize();
 }
 
 void _initializeLog() {
