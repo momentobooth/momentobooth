@@ -12,7 +12,7 @@ GoRoute _onboardingRoute = GoRoute(
     return NoTransitionPage(
       key: state.pageKey,
       //enableTransitionOut: true,
-      child: const OnboardingPage(),
+      child: const OnboardingScreen(),
     );
   },
 );

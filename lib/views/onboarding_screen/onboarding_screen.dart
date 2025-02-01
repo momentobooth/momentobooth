@@ -4,16 +4,16 @@ import 'dart:math';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
 
-class OnboardingPage extends StatefulWidget {
+class OnboardingScreen extends StatefulWidget {
 
-  const OnboardingPage({super.key});
+  const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingPage> createState() => _OnboardingPageState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 
 }
 
-class _OnboardingPageState extends State<OnboardingPage> {
+class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static const int _gradientCount = 3;
 

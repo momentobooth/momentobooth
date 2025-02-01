@@ -10,7 +10,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
-import 'package:momento_booth/views/onboarding_screen/onboarding_page.dart';
+import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;

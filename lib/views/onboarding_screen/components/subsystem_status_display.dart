@@ -104,7 +104,7 @@ class _SubsystemStatusDisplayState extends State<SubsystemStatusDisplay> {
                   for (var entry in _actions.entries) HyperlinkButton(onPressed: entry.value, child: Text(entry.key)),
                 ],
               ),
-            )
+            ),
         ],
       ),
     );
