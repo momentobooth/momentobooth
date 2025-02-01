@@ -8,7 +8,9 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/models/_all.dart';
+import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/repositories/_all.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
@@ -89,12 +91,21 @@ Future<void> _initializeApp(ArgResults args) async {
     )
     ..registerSingleton<SerialiableRepository<Stats>>(
       TomlSerializableRepository(path.join(appDataPath, "Stats.toml"), Stats.fromJson),
+    )
+    ..registerSingleton<SerialiableRepository<ProjectsList>>(
+      TomlSerializableRepository(path.join(appDataPath, "Projects.toml"), ProjectsList.fromJson),
     );
 
   await getIt<SettingsManager>().initializeSafe();
   await _createPathsSafe();
 
   await getIt<StatsManager>().initializeSafe();
+  await getIt<ProjectManager>().initializeSafe();
+  // Open a project if a directory is given
+  // TODO decide what to do if the folder does not exist yet.
+  if (args.option("open") != null)  {
+    getIt<ProjectManager>().open(args.option("open")!);
+  }
   await getIt<WindowManager>().initializeSafe();
   if (args.flag("fullscreen")) {
     getIt<WindowManager>().setFullscreen(true);
@@ -121,6 +132,7 @@ void _initializeLog() {
 }
 
 Future<void> _createPathsSafe() async {
+  // TODO Remove the global paths here, replace by project based paths
   List<String> paths = [
     getIt<SettingsManager>().settings.templatesFolder,
     getIt<SettingsManager>().settings.output.localFolder,
