@@ -93,6 +93,7 @@ dependencies:
   draggable_scrollbar:
     git: https://github.com/momentobooth/flutter-draggable-scrollbar
   csslib: 1.0.2
+  args: ^2.6.0
 
 dev_dependencies:
   # UI

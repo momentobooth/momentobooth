@@ -27,9 +27,13 @@ abstract class WindowManagerBase with Store, Logger, Subsystem {
   // Methods //
   // /////// //
 
-  @action
   void toggleFullscreen() {
-    _isFullScreen = !_isFullScreen;
+    setFullscreen(!_isFullScreen);
+  }
+
+  @action
+  void setFullscreen(bool fullscreen) {
+    _isFullScreen = fullscreen;
     logDebug("Setting fullscreen to $_isFullScreen");
     windowManager.setFullScreen(_isFullScreen);
   }

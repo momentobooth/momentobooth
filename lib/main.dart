@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
@@ -21,11 +22,16 @@ import 'package:talker/talker.dart';
 
 final GetIt getIt = GetIt.instance;
 
-void main() async {
+void main(List<String> arguments) async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  var parser = ArgParser()
+  ..addFlag("fullscreen", abbr: 'f', help: 'Run in fullscreen mode', defaultsTo: false)
+  ..addOption("open", abbr: 'o', help: 'Open a file or directory');
+  final args = parser.parse(arguments);
+
   // This can be unawaited, as onboarding flow will keep user from entering core functionality while this is still ongoing.
-  unawaited(_initializeApp());
+  unawaited(_initializeApp(args));
 
   String sentryDsn = await _resolveSentryDsnOverride() ?? const String.fromEnvironment("SENTRY_DSN", defaultValue: '');
   await SentryFlutter.init(
@@ -49,7 +55,7 @@ Future<String?> _resolveSentryDsnOverride() async {
   return (await sentryDsnOverrideFile.readAsString()).trim();
 }
 
-Future<void> _initializeApp() async {
+Future<void> _initializeApp(ArgResults args) async {
   getIt
     ..enableRegisteringMultipleInstancesOfOneType()
 
@@ -90,6 +96,9 @@ Future<void> _initializeApp() async {
 
   await getIt<StatsManager>().initializeSafe();
   await getIt<WindowManager>().initializeSafe();
+  if (args.flag("fullscreen")) {
+    getIt<WindowManager>().setFullscreen(true);
+  }
   await getIt<LiveViewManager>().initializeSafe();
   await getIt<MqttManager>().initializeSafe();
   await getIt<SfxManager>().initializeSafe();
