@@ -70,6 +70,7 @@ Future<void> _initializeApp(ArgResults args) async {
 
     // Managers
     ..registerManager(StatsManager())
+    ..registerManager(ProjectManager())
     ..registerManager(SfxManager())
     ..registerManager(SettingsManager())
     ..registerManager(WindowManager())

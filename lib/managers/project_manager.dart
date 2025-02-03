@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
-import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' hide context;
 
 part 'project_manager.g.dart';
 
@@ -21,7 +19,6 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
   List<Directory> projects = [];
 
   static const subDirs = ["Input", "Output", "Templates"];
-  final projectsFile = File(join(appDataPath, "Projects.json"));
   
   @readonly
   late ProjectsList _projectsList;
@@ -93,11 +90,11 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
   }
 
   Directory getInputDir() {
-    return Directory(join(_path!.path, subDirs[2]));
+    return Directory(join(_path!.path, subDirs[0]));
   }
 
   Directory getOutputDir() {
-    return Directory(join(_path!.path, subDirs[2]));
+    return Directory(join(_path!.path, subDirs[1]));
   }
 
 }

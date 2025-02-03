@@ -7,6 +7,8 @@ part 'project_data.g.dart';
 @freezed
 abstract class ProjectsList with _$ProjectsList implements TomlEncodableValue  {
 
+  const ProjectsList._();
+
   const factory ProjectsList({
     @Default([]) List<ProjectData> list,
   }) = _ProjectsList;
@@ -20,6 +22,8 @@ abstract class ProjectsList with _$ProjectsList implements TomlEncodableValue  {
 
 @freezed
 abstract class ProjectData with _$ProjectData implements TomlEncodableValue  {
+
+  const ProjectData._();
 
   const factory ProjectData({
     required String path,
