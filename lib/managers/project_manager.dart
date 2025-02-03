@@ -58,19 +58,22 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     var directory = Directory(projectPath);
     final absPath = canonicalize(directory.path);
     // Check if there is already an entry for this path in the projects list
-    final existingProjectEntry = _projectsList.list.where((e) => canonicalize(e.path) == absPath).indexed.toList();
+    final List<ProjectData> currentList = List.from(_projectsList.list);
+    final existingProjectEntry = currentList.where((e) => canonicalize(e.path) == absPath).indexed.toList();
     if (existingProjectEntry.isEmpty) {
       // Create directory and add entry to our projects list
       directory.createSync();
-      _projectsList.list.add(ProjectData(opened: DateTime.now(), path: directory.path));
+      currentList.add(ProjectData(opened: DateTime.now(), path: directory.path));
     } else {
       // Update the entry in the projects list.
       final (index, entry) = existingProjectEntry.first;
       final newEntry = entry.copyWith(opened: DateTime.now());
-      _projectsList.list[index] = newEntry;
+      currentList[index] = newEntry;
     }
+    _projectsList = _projectsList.copyWith(list: currentList);
     _path = directory;
     isOpen = true;
+    _saveProjectsList();
   }
 
   Future<void> browseOpen() async {
