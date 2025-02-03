@@ -12,6 +12,7 @@ import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/components/indicators/connection_state_indicator.dart';
+import 'package:momento_booth/views/components/indicators/subsystem_status_list.dart';
 import 'package:momento_booth/views/settings_screen/components/boolean_input_card.dart';
 import 'package:momento_booth/views/settings_screen/components/button_card.dart';
 import 'package:momento_booth/views/settings_screen/components/color_input_card.dart';
@@ -37,6 +38,7 @@ part 'pages/settings_screen_view.hardware.dart';
 part 'pages/settings_screen_view.mqtt_integration.dart';
 part 'pages/settings_screen_view.output.dart';
 part 'pages/settings_screen_view.stats.dart';
+part 'pages/settings_screen_view.subsystem_status.dart';
 part 'pages/settings_screen_view.templating.dart';
 part 'pages/settings_screen_view.ui.dart';
 
@@ -96,6 +98,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
               ),
             ],
             footerItems: [
+              PaneItem(
+                icon: const Icon(LucideIcons.messageSquareWarning),
+                title: const Text("Subsystem status"),
+                body: Builder(builder: (_) => _getSubsystemStatusTab(viewModel, controller)),
+              ),
               PaneItem(
                 icon: const Icon(LucideIcons.chartLine),
                 title: const Text("Statistics"),

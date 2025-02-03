@@ -1,9 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/views/onboarding_screen/components/subsystem_status_display.dart';
+import 'package:momento_booth/views/components/indicators/subsystem_status_list.dart';
 import 'package:momento_booth/views/onboarding_screen/components/wizard_page.dart';
 
 class StatusPage extends StatelessWidget {
@@ -40,19 +37,7 @@ class StatusPage extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: Observer(
-                      builder: (context) => ListView(
-                        children: [
-                          SubsystemStatusDisplay(title: "Window manager", status: getIt<WindowManager>().subsystemStatus),
-                          SubsystemStatusDisplay(title: "Settings", status: getIt<SettingsManager>().subsystemStatus),
-                          SubsystemStatusDisplay(title: "Statistics", status: getIt<StatsManager>().subsystemStatus),
-                          SubsystemStatusDisplay(title: "Live view", status: getIt<LiveViewManager>().subsystemStatus),
-                          SubsystemStatusDisplay(title: "MQTT", status: getIt<MqttManager>().subsystemStatus),
-                          SubsystemStatusDisplay(title: "Printing", status: getIt<PrintingManager>().subsystemStatus),
-                          SubsystemStatusDisplay(title: "Sounds", status: getIt<SfxManager>().subsystemStatus),
-                        ],
-                      ),
-                    ),
+                    child: SubsystemStatusList(),
                   ),
                 ],
               ),
