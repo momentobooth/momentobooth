@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
 
@@ -13,6 +14,7 @@ class WizardPage extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
+        child,
         if (WizardProvider.of(context).canGoBack)
           Container(
             alignment: Alignment.topLeft,
@@ -27,12 +29,16 @@ class WizardPage extends StatelessWidget {
           padding: EdgeInsets.only(right: 32, bottom: 24),
           child: FilledButton(
             onPressed: () {
-              WizardProvider.of(context).next(context);
+              if (WizardProvider.of(context).canGoNext) {
+                WizardProvider.of(context).next(context);
+              } else {
+                context.replace('/photo_booth');
+              }
             },
             child: Text(WizardProvider.of(context).canGoNext ? "Next step" : "Finish"),
           ),
         ),
-        child,
+
       ],
     );
   }
