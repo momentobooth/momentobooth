@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/gallery_image.dart';
@@ -26,7 +27,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
     required this.photoId,
   });
 
-  Directory get outputDir => Directory(getIt<SettingsManager>().settings.output.localFolder);
+  Directory get outputDir => getIt<ProjectManager>().getOutputDir();
   File? get file => File(path.join(outputDir.path, photoId));
   Future<List<MomentoBoothExifTag>> get metadata async => await getMomentoBoothExifTagsFromFile(imageFilePath: file!.path);
   Future<GalleryImage> get galleryImage async => GalleryImage(file: file!, exifTags: await metadata);

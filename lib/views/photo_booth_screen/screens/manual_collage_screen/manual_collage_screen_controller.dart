@@ -97,8 +97,6 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     }
   }
 
-  String get outputFolder => getIt<SettingsManager>().settings.output.localFolder;
-
   Future<void> captureCollage() async {
     if (viewModel.numSelected < 1 || viewModel.isSaving) return;
 

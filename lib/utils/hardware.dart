@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
 import 'package:momento_booth/exceptions/win32_exception.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
@@ -120,7 +121,7 @@ Future<Uint8List> getImagePdfWithPageSize(Uint8List imageData, PrintSize printSi
     pdfData = await getImagePDF(imageData);
   }
 
-  Directory outputDir = Directory(getIt<SettingsManager>().settings.output.localFolder);
+  Directory outputDir = getIt<ProjectManager>().getOutputDir();
   final filePath = path.join(outputDir.path, 'latest-print.pdf');
   await writeBytesToFileLocked(filePath, pdfData);
   return pdfData;

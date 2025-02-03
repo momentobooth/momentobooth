@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -33,7 +34,7 @@ abstract class PhotosManagerBase with Store {
   @computed
   bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single;
 
-  Directory get outputDir => Directory(getIt<SettingsManager>().settings.output.localFolder);
+  Directory get outputDir => getIt<ProjectManager>().getOutputDir();
   int photoNumber = 0;
   bool photoNumberChecked = false;
 

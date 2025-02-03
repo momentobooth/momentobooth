@@ -14,6 +14,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/photo_capture.dart';
@@ -103,7 +104,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   bool firstImageDecoded = false;
 
-  String get templatesFolder => getIt<SettingsManager>().settings.templatesFolder;
+  Directory get templatesFolder => getIt<ProjectManager>().getTemplateDir();
 
   var templates = {
     TemplateKind.front: <int, File?>{},
@@ -129,7 +130,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
 
   /// Checks if a given template file exists and returns it if it does.
   Future<File?> _templateTest(String fileName) async {
-    var template = File(join(templatesFolder, fileName));
+    var template = File(join(templatesFolder.path, fileName));
     if (template.existsSync()) return template;
     return null;
   }

@@ -109,8 +109,6 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     getIt<MqttManager>().publishCaptureState(CaptureState.countdown);
   }
 
-  String get outputFolder => getIt<SettingsManager>().settings.output.localFolder;
-
   Future<void> onCounterFinished() async {
     showFlash = true;
     showCounter = false;
