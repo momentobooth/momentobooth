@@ -7,13 +7,13 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
       FluentSettingsBlock(
         title: "Local",
         settings: [
-          FolderPickerCard(
-            icon: LucideIcons.folderInput,
-            title: "Local photo storage location",
-            subtitle: "Location where the output images will be stored",
-            controller: controller.localFolderSettingController,
-            onChanged: controller.onLocalFolderChanged,
-          ),
+          // FolderPickerCard(
+          //   icon: LucideIcons.folderInput,
+          //   title: "Local photo storage location",
+          //   subtitle: "Location where the output images will be stored",
+          //   controller: controller.localFolderSettingController,
+          //   onChanged: controller.onLocalFolderChanged,
+          // ),
         ],
       ),
       FluentSettingsBlock(

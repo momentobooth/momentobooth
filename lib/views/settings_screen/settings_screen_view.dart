@@ -33,6 +33,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 part 'pages/settings_screen_view.about.dart';
 part 'pages/settings_screen_view.debug.dart';
 part 'pages/settings_screen_view.face_recognition.dart';
+part 'pages/settings_screen_view.project.dart';
 part 'pages/settings_screen_view.general.dart';
 part 'pages/settings_screen_view.hardware.dart';
 part 'pages/settings_screen_view.mqtt_integration.dart';
@@ -60,6 +61,13 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
             onChanged: controller.onNavigationPaneIndexChanged,
             items: [
               PaneItemSeparator(color: Colors.transparent),
+              PaneItemHeader(header: const Text('Project')),
+              PaneItem(
+                icon: const Icon(LucideIcons.folderCog),
+                title: const Text("Project"),
+                body: Builder(builder: (_) => _getProjectSettings(viewModel, controller)),
+              ),
+              PaneItemHeader(header: const Text('App')),
               PaneItem(
                 icon: const Icon(LucideIcons.settings),
                 title: const Text("General"),
