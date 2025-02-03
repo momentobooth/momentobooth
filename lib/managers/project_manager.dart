@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/project_data.dart';
@@ -70,6 +71,13 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     }
     _path = directory;
     isOpen = true;
+  }
+
+  Future<void> browseOpen() async {
+    final pathToOpen = await getDirectoryPath(confirmButtonText: "Open folder as project");
+    if (pathToOpen != null) {
+      open(pathToOpen);
+    }
   }
 
   Future<List<ProjectData>> listProjects() async {
