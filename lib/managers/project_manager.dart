@@ -76,15 +76,17 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     _saveProjectsList();
   }
 
-  Future<void> browseOpen() async {
+  Future<bool> browseOpen() async {
     final pathToOpen = await getDirectoryPath(confirmButtonText: "Open folder as project");
     if (pathToOpen != null) {
       open(pathToOpen);
+      return true;
     }
+    return false;
   }
 
-  Future<List<ProjectData>> listProjects() async {
-    return (await getIt<SerialiableRepository<ProjectsList>>().get()).list;
+  List<ProjectData> listProjects() {
+    return _projectsList.list;
   }
 
   Future<List<String>> listProjectsAsStrings() async {
