@@ -51,27 +51,18 @@ class _ShellState extends State<Shell> with WindowListener {
   Widget build(BuildContext context) {
     return _HotkeyResponder(
       router: _router,
-      child:
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _menuBarWrapper(context, _router),
-          Expanded(
-            child: FluentApp.router(
-              scrollBehavior: ScrollConfiguration.of(context),
-              routerConfig: _router,
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-                FluentLocalizations.delegate,
-              ],
-              supportedLocales: const [Locale('en')],
-              locale: const Locale('en'),
-            ),
-          ),
+      child: FluentApp.router(
+        scrollBehavior: ScrollConfiguration.of(context),
+        routerConfig: _router,
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          FluentLocalizations.delegate,
         ],
+        supportedLocales: const [Locale('en')],
+        locale: const Locale('en'),
       ),
     );
   }
@@ -89,57 +80,4 @@ class _ShellState extends State<Shell> with WindowListener {
     await windowManager.destroy();
   }
 
-}
-
-Widget _menuBarWrapper(BuildContext context, GoRouter router) {
-  return FluentTheme(data: FluentThemeData(),
-    child: Directionality(
-      textDirection: TextDirection.ltr,
-      child: Container(
-        color: Color(0xFFFFFFFF),
-        child: _menuBar(context, router)
-      ),
-    )
-  );
-}
-
-Widget _menuBar(BuildContext context, GoRouter router) {
-  return MenuBar(
-    items: [
-      MenuBarItem(title: 'File', items: [
-        MenuFlyoutSubItem(
-          text: const Text('Recent projects'),
-          items: (context) {
-            return [
-              MenuFlyoutItem(
-                text: const Text('Plain Text Documents'),
-                onPressed: () {},
-              ),
-              MenuFlyoutItem(
-                text: const Text('Rich Text Documents'),
-                onPressed: () {},
-              ),
-              MenuFlyoutItem(
-                text: const Text('Other Formats'),
-                onPressed: () {},
-              ),
-            ];
-          },
-        ),
-        MenuFlyoutItem(text: const Text('Open'), onPressed: getIt<ProjectManager>().browseOpen),
-        MenuFlyoutItem(text: const Text('Settings'), onPressed: () { router.push("/settings"); }),
-        const MenuFlyoutSeparator(),
-        MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
-      ]),
-      MenuBarItem(title: 'Edit', items: [
-        MenuFlyoutItem(text: const Text('Undo'), onPressed: () {}),
-        MenuFlyoutItem(text: const Text('Cut'), onPressed: () {}),
-        MenuFlyoutItem(text: const Text('Copy'), onPressed: () {}),
-        MenuFlyoutItem(text: const Text('Paste'), onPressed: () {}),
-      ]),
-      MenuBarItem(title: 'Help', items: [
-        MenuFlyoutItem(text: const Text('About'), onPressed: () {}),
-      ]),
-    ],
-  );
 }
