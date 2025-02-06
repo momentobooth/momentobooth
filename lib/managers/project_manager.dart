@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
@@ -57,26 +60,33 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
   void open(String projectPath) {
     var directory = Directory(projectPath);
     final absPath = canonicalize(directory.path);
-    // Check if there is already an entry for this path in the projects list
+    // Check if there is already an entry for this path in the projects list. This is done by comparing the path.
     final List<ProjectData> currentList = List.from(_projectsList.list);
-    final existingProjectEntry = currentList.where((e) => canonicalize(e.path) == absPath).indexed.toList();
-    if (existingProjectEntry.isEmpty) {
+    final existingProjectEntries = currentList.indexed.where((e) => canonicalize(e.$2.path) == absPath).toList();
+    late final ProjectData entry;
+    if (existingProjectEntries.isEmpty) {
       // Create directory and add entry to our projects list
       directory.createSync();
-      currentList.add(ProjectData(opened: DateTime.now(), path: directory.path));
+      entry = ProjectData(opened: DateTime.now(), path: directory.path);
+      currentList.add(entry);
     } else {
       // Update the entry in the projects list.
-      final (index, entry) = existingProjectEntry.first;
-      final newEntry = entry.copyWith(opened: DateTime.now());
-      currentList[index] = newEntry;
+      final (index, currentEntry) = existingProjectEntries.first;
+      // final currentEntry = currentList.removeAt(index);
+      entry = currentEntry.copyWith(opened: DateTime.now());
+      currentList[index] = entry;
     }
+    // Sort list based on last opened
+    currentList.sort((a, b) => b.opened.compareTo(a.opened));
     _projectsList = _projectsList.copyWith(list: currentList);
     _path = directory;
     isOpen = true;
+    getIt<WindowManager>().setTitle(entry.name);
     _saveProjectsList();
   }
 
   Future<bool> browseOpen() async {
+    // TODO get a translation delegate in here somehow
     final pathToOpen = await getDirectoryPath(confirmButtonText: "Open folder as project");
     if (pathToOpen != null) {
       open(pathToOpen);

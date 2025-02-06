@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:toml/toml.dart';
+import 'package:path/path.dart' show basename;
 
 part 'project_data.freezed.dart';
 part 'project_data.g.dart';
@@ -32,6 +33,8 @@ abstract class ProjectData with _$ProjectData implements TomlEncodableValue  {
   }) = _ProjectData;
 
   factory ProjectData.fromJson(Map<String, Object?> json) => _$ProjectDataFromJson(json);
+
+  String get name => basename(path);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();

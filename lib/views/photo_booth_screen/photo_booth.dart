@@ -5,11 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
@@ -28,6 +31,8 @@ import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/shar
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'photo_booth.hotkey_monitor.dart';
 part 'photo_booth.routes.dart';
@@ -116,36 +121,38 @@ Widget _menuBar(BuildContext context, GoRouter router) {
             text: const Text('Recent projects'),
             items: (context) {
               return [
-                MenuFlyoutItem(
-                  text: const Text('Plain Text Documents'),
-                  onPressed: () {},
-                ),
-                MenuFlyoutItem(
-                  text: const Text('Rich Text Documents'),
-                  onPressed: () {},
-                ),
-                MenuFlyoutItem(
-                  text: const Text('Other Formats'),
-                  onPressed: () {},
-                ),
+                for (final project in getIt<ProjectManager>().listProjects())
+                  MenuFlyoutItem(
+                    text: Text(project.name),
+                    onPressed: () { getIt<ProjectManager>().open(project.path); },
+                  ),
               ];
             },
           ),
-          MenuFlyoutItem(text: const Text('Open'), onPressed: getIt<ProjectManager>().browseOpen),
-          MenuFlyoutItem(text: const Text('Settings'), onPressed: () { router.push("/settings"); }),
+          MenuFlyoutItem(text: const Text('Open project'), onPressed: getIt<ProjectManager>().browseOpen, leading: Icon(LucideIcons.folderInput), trailing: shortcut("Ctrl+O")),
+          MenuFlyoutItem(text: const Text('Settings'), onPressed: () { router.go("/settings"); }, leading: Icon(LucideIcons.settings), trailing: shortcut("Ctrl+S")),
+          MenuFlyoutItem(text: const Text('Restore live view'), onPressed: () { getIt<LiveViewManager>().restoreLiveView(); }, leading: Icon(LucideIcons.rotateCcw), trailing: shortcut("Ctrl+R")),
           const MenuFlyoutSeparator(),
+          // TODO I don't know how to exit nicely. Basically want to do the things currently in `app.dart` in `onWindowClose`.
           MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
         ]),
-        MenuBarItem(title: 'Edit', items: [
-          MenuFlyoutItem(text: const Text('Undo'), onPressed: () {}),
-          MenuFlyoutItem(text: const Text('Cut'), onPressed: () {}),
-          MenuFlyoutItem(text: const Text('Copy'), onPressed: () {}),
-          MenuFlyoutItem(text: const Text('Paste'), onPressed: () {}),
+        MenuBarItem(title: 'View', items: [
+          MenuFlyoutItem(text: const Text('Full screen'), onPressed: () { getIt<WindowManager>().toggleFullscreen(); }, leading: Icon(LucideIcons.expand), trailing: shortcut("Ctrl+F/Alt+Enter")),
+          const MenuFlyoutSeparator(),
+          MenuFlyoutItem(text: const Text('Start screen'), onPressed: () { router.go(StartScreen.defaultRoute); }, leading: Icon(LucideIcons.play), trailing: shortcut("Ctrl+H")),
+          MenuFlyoutItem(text: const Text('Gallery'), onPressed: () { router.go(GalleryScreen.defaultRoute); }, leading: Icon(LucideIcons.images)),
+          MenuFlyoutItem(text: const Text('Manual collage'), onPressed: () { router.go(ManualCollageScreen.defaultRoute); }, leading: Icon(LucideIcons.layoutDashboard), trailing: shortcut("Ctrl+M")),
         ]),
         MenuBarItem(title: 'Help', items: [
-          MenuFlyoutItem(text: const Text('About'), onPressed: () {}),
+          MenuFlyoutItem(text: const Text('Documentation'), onPressed: () { launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")); }, leading: Icon(LucideIcons.book)),
+          // TODO go to about screen in settings
+          MenuFlyoutItem(text: const Text('About'), onPressed: () {}, leading: Icon(LucideIcons.info)),
         ]),
       ],
     ),
   );
+}
+
+Widget shortcut(String shortcut) {
+  return Text(shortcut, style: TextStyle(color: Color.fromARGB(255, 128, 128, 128)),);
 }

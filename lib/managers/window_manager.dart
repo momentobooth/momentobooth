@@ -27,6 +27,10 @@ abstract class WindowManagerBase with Store, Logger, Subsystem {
   // Methods //
   // /////// //
 
+  void setTitle(String title) {
+    windowManager.setTitle("$title – MomentoBooth");
+  }
+
   void toggleFullscreen() {
     setFullscreen(!_isFullScreen);
   }

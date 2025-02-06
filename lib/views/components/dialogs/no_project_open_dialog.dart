@@ -7,7 +7,6 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
-import 'package:path/path.dart' as path;
 
 class NoProjectOpenDialog extends StatelessWidget {
 
@@ -57,7 +56,7 @@ class NoProjectOpenDialog extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(children: [
-                        Text(path.basename(project.path), style: FluentTheme.of(context).typography.bodyStrong),
+                        Text(project.name, style: FluentTheme.of(context).typography.bodyStrong),
                         Text("Opened: ${project.opened}"),
                       ],),
                     ),
