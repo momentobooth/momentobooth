@@ -56,9 +56,11 @@ class LiveView extends StatelessWidget {
     );
 
     if (blur) {
-      return ImageFiltered(
-        imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-        child: box,
+      return ClipRect(
+        child: ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: box,
+        ),
       );
     } else {
       return box;
