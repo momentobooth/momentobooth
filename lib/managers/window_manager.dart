@@ -11,6 +11,7 @@ class WindowManager = WindowManagerBase with _$WindowManager;
 
 abstract class WindowManagerBase with Store, Logger, Subsystem {
 
+  @readonly
   bool _isFullScreen = false;
 
   // ////////////// //

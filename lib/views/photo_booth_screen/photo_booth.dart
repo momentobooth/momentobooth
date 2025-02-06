@@ -56,7 +56,9 @@ class PhotoBoothState extends State<PhotoBooth> {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _menuBar(context, _router),
+          Observer(
+            builder: (context) => !getIt<WindowManager>().isFullScreen ? _menuBar(context, _router) : SizedBox()
+          ),
           Expanded(
             child: FramerateMonitor(
               child: LiveViewBackground(
