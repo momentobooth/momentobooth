@@ -45,21 +45,19 @@ class NoProjectOpenDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
             for (final project in recentProjects)
-              Container(
-                child: Material(
-                  color: Color.fromARGB(0, 0, 0, 0),
-                  child: InkWell(
-                    onTap: () {
-                      getIt<ProjectManager>().open(project.path);
-                      onOpened();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(children: [
-                        Text(project.name, style: FluentTheme.of(context).typography.bodyStrong),
-                        Text("Opened: ${project.opened}"),
-                      ],),
-                    ),
+              Material(
+                color: Color.fromARGB(0, 0, 0, 0),
+                child: InkWell(
+                  onTap: () {
+                    getIt<ProjectManager>().open(project.path);
+                    onOpened();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(children: [
+                      Text(project.name, style: FluentTheme.of(context).typography.bodyStrong),
+                      Text("Opened: ${project.opened}"),
+                    ],),
                   ),
                 ),
               )

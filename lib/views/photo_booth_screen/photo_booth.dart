@@ -132,11 +132,14 @@ Widget _menuBar(BuildContext context, GoRouter router) {
             },
           ),
           MenuFlyoutItem(text: const Text('Open project'), onPressed: getIt<ProjectManager>().browseOpen, leading: Icon(LucideIcons.folderInput), trailing: shortcut("Ctrl+O")),
-          MenuFlyoutItem(text: const Text('Settings'), onPressed: () { router.go("/settings"); }, leading: Icon(LucideIcons.settings), trailing: shortcut("Ctrl+S")),
+          MenuFlyoutItem(text: const Text('View project in explorer'), onPressed: () {
+            final uri = Uri.parse("file:///${getIt<ProjectManager>().path!.path}");
+            launchUrl(uri);
+          }, leading: Icon(LucideIcons.folderClosed)),
+          MenuFlyoutItem(text: const Text('Settings'), onPressed: () { GoRouter.of(context).push(SettingsScreen.defaultRoute); }, leading: Icon(LucideIcons.settings), trailing: shortcut("Ctrl+S")),
           MenuFlyoutItem(text: const Text('Restore live view'), onPressed: () { getIt<LiveViewManager>().restoreLiveView(); }, leading: Icon(LucideIcons.rotateCcw), trailing: shortcut("Ctrl+R")),
           const MenuFlyoutSeparator(),
-          // TODO I don't know how to exit nicely. Basically want to do the things currently in `app.dart` in `onWindowClose`.
-          MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
+          MenuFlyoutItem(text: const Text('Exit'), onPressed: getIt<WindowManager>().close,)
         ]),
         MenuBarItem(title: 'View', items: [
           MenuFlyoutItem(text: const Text('Full screen'), onPressed: () { getIt<WindowManager>().toggleFullscreen(); }, leading: Icon(LucideIcons.expand), trailing: shortcut("Ctrl+F/Alt+Enter")),
@@ -148,7 +151,7 @@ Widget _menuBar(BuildContext context, GoRouter router) {
         MenuBarItem(title: 'Help', items: [
           MenuFlyoutItem(text: const Text('Documentation'), onPressed: () { launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")); }, leading: Icon(LucideIcons.book)),
           // TODO go to about screen in settings
-          MenuFlyoutItem(text: const Text('About'), onPressed: () {}, leading: Icon(LucideIcons.info)),
+          MenuFlyoutItem(text: const Text('About'), onPressed: () { GoRouter.of(context).push(SettingsScreen.defaultRoute); }, leading: Icon(LucideIcons.info)),
         ]),
       ],
     ),

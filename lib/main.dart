@@ -133,12 +133,8 @@ void _initializeLog() {
 }
 
 Future<void> _createPathsSafe() async {
-  // TODO Remove the global paths here, replace by project based paths
   List<String> paths = [
-    getIt<SettingsManager>().settings.templatesFolder,
-    getIt<SettingsManager>().settings.output.localFolder,
     getIt<SettingsManager>().settings.hardware.captureLocation,
-    getIt<SettingsManager>().settings.hardware.captureStorageLocation,
   ];
 
   for (String path in paths) {

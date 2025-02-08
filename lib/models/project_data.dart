@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:toml/toml.dart';
 import 'package:path/path.dart' show basename;
+import 'package:toml/toml.dart';
 
 part 'project_data.freezed.dart';
 part 'project_data.g.dart';

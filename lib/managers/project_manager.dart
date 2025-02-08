@@ -1,9 +1,7 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/project_data.dart';
@@ -18,7 +16,9 @@ class ProjectManager = ProjectManagerBase with _$ProjectManager;
 
 abstract class ProjectManagerBase with Store, Logger, Subsystem {
 
-  bool isOpen = false;
+  @readonly
+  bool _isOpen = false;
+  @readonly
   Directory? _path;
   List<Directory> projects = [];
 
@@ -49,7 +49,7 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     }
   }
 
-  void ensureSubDirs() {
+  void _ensureSubDirs() {
     if (_path != null) {
       for (final subDir in subDirs){
         Directory(join(_path!.path, subDir)).createSync();
@@ -80,8 +80,9 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     currentList.sort((a, b) => b.opened.compareTo(a.opened));
     _projectsList = _projectsList.copyWith(list: currentList);
     _path = directory;
-    isOpen = true;
+    _isOpen = true;
     getIt<WindowManager>().setTitle(entry.name);
+    _ensureSubDirs();
     _saveProjectsList();
   }
 

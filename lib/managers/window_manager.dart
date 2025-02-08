@@ -22,6 +22,7 @@ abstract class WindowManagerBase with Store, Logger, Subsystem {
   Future<void> initialize() async {
     await windowManager.ensureInitialized();
     _isFullScreen = await windowManager.isFullScreen();
+    setTitle("");
   }
 
   // /////// //
@@ -29,7 +30,11 @@ abstract class WindowManagerBase with Store, Logger, Subsystem {
   // /////// //
 
   void setTitle(String title) {
-    windowManager.setTitle("$title – MomentoBooth");
+    if (title.isEmpty) {
+      windowManager.setTitle("MomentoBooth");
+    } else {
+      windowManager.setTitle("$title – MomentoBooth");
+    }
   }
 
   void toggleFullscreen() {
@@ -41,6 +46,10 @@ abstract class WindowManagerBase with Store, Logger, Subsystem {
     _isFullScreen = fullscreen;
     logDebug("Setting fullscreen to $_isFullScreen");
     windowManager.setFullScreen(_isFullScreen);
+  }
+
+  void close() {
+    windowManager.close();
   }
 
 }
