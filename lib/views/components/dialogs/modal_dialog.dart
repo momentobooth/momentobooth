@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/dialogs/photo_booth_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
@@ -78,7 +80,7 @@ enum ModalDialogType {
 
   Color get _iconColor {
     return switch (this) {
-      ModalDialogType.info || ModalDialogType.input => const Color(0xff0078d4),
+      ModalDialogType.info || ModalDialogType.input => getIt<ProjectManager>().settings.primaryColor,
       ModalDialogType.warning => const Color(0xffffb900),
       ModalDialogType.error => const Color(0xffd83b01),
       ModalDialogType.success => const Color(0xff107c10),
