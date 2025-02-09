@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/project_data.dart';
+import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
+import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
 import 'package:path/path.dart' hide context;
@@ -22,10 +25,23 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
   Directory? _path;
   List<Directory> projects = [];
 
+  @readonly
+  ProjectSettings _settings = ProjectSettings();
+
+  Color get primaryColor => _isOpen ? _settings.primaryColor : defaultThemeColor;
+
+  @readonly
+  bool _blockSaving = false;
+
   static const subDirs = ["Input", "Output", "Templates"];
   
   @readonly
   late ProjectsList _projectsList;
+
+  SerialiableRepository<ProjectSettings>? getRepo(){
+    if (!_isOpen) return null;
+    return TomlSerializableRepository(join(_path!.path, "ProjectSettings.toml"), ProjectSettings.fromJson);
+  }
 
   @override
   Future<void> initialize() async {
@@ -49,6 +65,23 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     }
   }
 
+  @action
+  Future<void> updateAndSave(ProjectSettings settings) async {
+    if (!_isOpen) return;
+    if (settings == _settings) return;
+
+    if (!_blockSaving) {
+      logDebug("Saving settings");
+      await getRepo()!.write(settings);
+      logDebug("Saved settings");
+    } else {
+      logDebug("Saving blocked");
+    }
+
+    _settings = settings;
+    // getIt<MqttManager>().publishSettings(settings);
+  }
+
   void _ensureSubDirs() {
     if (_path != null) {
       for (final subDir in subDirs){
@@ -57,7 +90,8 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     }
   }
 
-  void open(String projectPath) {
+  Future<void> open(String projectPath) async {
+    // First task: find or create project list item
     var directory = Directory(projectPath);
     final absPath = canonicalize(directory.path);
     // Check if there is already an entry for this path in the projects list. This is done by comparing the path.
@@ -79,11 +113,32 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     // Sort list based on last opened
     currentList.sort((a, b) => b.opened.compareTo(a.opened));
     _projectsList = _projectsList.copyWith(list: currentList);
+
+    // Second task: set project as being opened
     _path = directory;
     _isOpen = true;
     getIt<WindowManager>().setTitle(entry.name);
     _ensureSubDirs();
-    _saveProjectsList();
+    await _saveProjectsList();
+
+    // Load project settings
+    try {
+      final repo = getRepo()!;
+      bool hasExistingProjectsList = await repo.hasExistingData();
+
+      if (!hasExistingProjectsList) {
+        _settings = const ProjectSettings();
+        reportSubsystemOk(message: "No existing ProjectsList data found, a new file will be created.");
+      } else {
+        _settings = await repo.get();
+        reportSubsystemOk();
+      }
+    } catch (e) {
+      _projectsList = const ProjectsList();
+      reportSubsystemWarning(
+        message: "Could not read existing ProjectSettings: $e\n\nThe ProjectSettings have been cleared. As such the existing ProjectSettings file will be overwritten.",
+      );
+    }
   }
 
   Future<bool> browseOpen() async {

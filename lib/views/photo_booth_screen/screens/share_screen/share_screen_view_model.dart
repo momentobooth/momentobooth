@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
@@ -23,7 +24,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
     required super.contextAccessor,
   });
 
-  bool get displayConfetti => getIt<SettingsManager>().settings.ui.displayConfetti;
+  bool get displayConfetti => getIt<ProjectManager>().settings.displayConfetti;
   late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
   Uint8List get outputImage => getIt<PhotosManager>().outputImage!;
@@ -47,7 +48,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   File? _file;
 
   List<Color>? getColors() {
-    if (!getIt<SettingsManager>().settings.ui.customColorConfetti) return null;
+    if (!getIt<ProjectManager>().settings.customColorConfetti) return null;
     final theme = FluentTheme.of(contextAccessor.buildContext);
     final accentColor = HSLColor.fromColor(theme.accentColor);
     final List<double> lValues = [0.2, 0.4, 0.5, 0.7, 0.9, 1];

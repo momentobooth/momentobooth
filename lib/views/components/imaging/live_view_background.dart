@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
@@ -88,7 +89,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   Widget get _initializingState {
     return Center(
-      child: ProgressRing(activeColor: getIt<SettingsManager>().settings.ui.primaryColor),
+      child: ProgressRing(activeColor: getIt<ProjectManager>().settings.primaryColor),
     );
   }
 

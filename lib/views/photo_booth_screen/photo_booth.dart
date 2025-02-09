@@ -74,10 +74,10 @@ class PhotoBoothState extends State<PhotoBooth> {
                           builder: (context) => FluentApp.router(
                             debugShowCheckedModeBanner: false,
                             scrollBehavior: ScrollConfiguration.of(context),
-                            color: getIt<SettingsManager>().settings.ui.primaryColor,
+                            color: getIt<ProjectManager>().settings.primaryColor,
                             theme: FluentThemeData(
                               accentColor: AccentColor.swatch(
-                                {'normal': getIt<SettingsManager>().settings.ui.primaryColor},
+                                {'normal': getIt<ProjectManager>().settings.primaryColor},
                               ),
                             ),
                             routerConfig: _router,

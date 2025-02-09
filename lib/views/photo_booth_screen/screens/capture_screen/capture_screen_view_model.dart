@@ -12,6 +12,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/capture_state.dart';
@@ -127,7 +128,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
       final image = await capturer.captureAndGetPhoto();
       getIt<StatsManager>().addCapturedPhoto();
       getIt<PhotosManager>().photos.add(image);
-      if (getIt<SettingsManager>().settings.singlePhotoIsCollage) {
+      if (getIt<ProjectManager>().settings.singlePhotoIsCollage) {
         await captureCollage();
       } else {
         getIt<PhotosManager>().outputImage = image.data;

@@ -4,20 +4,6 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
   return SettingsPage(
     title: "User interface",
     blocks: [
-      ColorInputCard(
-        icon: LucideIcons.paintbrushVertical,
-        title: "Primary color",
-        subtitle: "The primary color of the app",
-        value: () => viewModel.primaryColorSetting,
-        onChanged: controller.onPrimaryColorChanged,
-      ),
-      TextInputCard(
-        icon: LucideIcons.heading,
-        title: "Alternative 'Touch to start' title text",
-        subtitle: "The override text that will be shown on the Start screen instead of 'Touch to start'. Leave empty to show the default text from the translations data.",
-        controller: controller.introScreenTouchToStartOverrideTextController,
-        onFinishedEditing: controller.onIntroScreenTouchToStartOverrideText,
-      ),
       NumberInputCard(
         icon: LucideIcons.timer,
         title: "Return to home timeout",
@@ -43,20 +29,13 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
       FluentSettingsBlock(
         title: "Animations",
         settings: [
-          BooleanInputCard(
-            icon: LucideIcons.partyPopper,
-            title: "Display confetti 🎉",
-            subtitle: "If enabled, confetti will shower the share screen!",
-            value: () => viewModel.displayConfettiSetting,
-            onChanged: controller.onDisplayConfettiChanged,
-          ),
-          BooleanInputCard(
-            icon: LucideIcons.palette,
-            title: "Colorize confetti to the theme color",
-            subtitle: "If enabled, confetti will will be various shades of the theme color. Else, random colors will be used.",
-            value: () => viewModel.customColorConfettiSetting,
-            onChanged: controller.onCustomColorConfettiChanged,
-          ),
+          // BooleanInputCard(
+          //   icon: LucideIcons.partyPopper,
+          //   title: "Display confetti 🎉",
+          //   subtitle: "If enabled, confetti will shower the share screen!",
+          //   value: () => viewModel.displayConfettiSetting,
+          //   onChanged: controller.onDisplayConfettiChanged,
+          // ),
           ComboBoxCard<ScreenTransitionAnimation>(
             icon: LucideIcons.arrowRightLeft,
             title: "Screen transition animation",

@@ -120,7 +120,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onSinglePhotoIsCollageChanged(bool? singlePhotoIsCollage) {
     if (singlePhotoIsCollage != null) {
-      viewModel.updateSettings((settings) => settings.copyWith(singlePhotoIsCollage: singlePhotoIsCollage));
+      viewModel.updateProjectSettings((settings) => settings.copyWith(singlePhotoIsCollage: singlePhotoIsCollage));
     }
   }
 
@@ -444,7 +444,7 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onPrimaryColorChanged(Color? primaryColor) {
     if (primaryColor != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.ui(primaryColor: primaryColor));
+      viewModel.updateProjectSettings((settings) => settings.copyWith(primaryColor: primaryColor));
     }
   }
 
@@ -456,19 +456,19 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
 
   void onIntroScreenTouchToStartOverrideText(String? introScreenTouchToStartOverrideText) {
     if (introScreenTouchToStartOverrideText != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.ui(introScreenTouchToStartOverrideText: introScreenTouchToStartOverrideText));
+      viewModel.updateProjectSettings((settings) => settings.copyWith(introScreenTouchToStartOverrideText: introScreenTouchToStartOverrideText));
     }
   }
 
   void onDisplayConfettiChanged(bool? displayConfetti) {
     if (displayConfetti != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.ui(displayConfetti: displayConfetti));
+      viewModel.updateProjectSettings((settings) => settings.copyWith(displayConfetti: displayConfetti));
     }
   }
 
   void onCustomColorConfettiChanged(bool? customColorConfetti) {
     if (customColorConfetti != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.ui(customColorConfetti: customColorConfetti));
+      viewModel.updateProjectSettings((settings) => settings.copyWith(customColorConfetti: customColorConfetti));
     }
   }
 
