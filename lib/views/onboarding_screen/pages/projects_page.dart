@@ -1,9 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get_it/get_it.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
-import 'package:momento_booth/views/components/indicators/subsystem_status_list.dart';
 import 'package:momento_booth/views/onboarding_screen/components/wizard_page.dart';
 
 class ProjectsPage extends StatelessWidget {

@@ -5,7 +5,6 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
-import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
 class NoProjectOpenDialog extends StatelessWidget {
@@ -65,11 +64,6 @@ class NoProjectOpenDialog extends StatelessWidget {
         ],
       ),
       actions: [
-        // PhotoBoothOutlinedButton(
-        //   title: localizations.printerErrorIgnoreButton,
-        //   icon: LucideIcons.clockArrowUp,
-        //   onPressed: onIgnorePressed,
-        // ),
         PhotoBoothFilledButton(
           title: "Open a project folder",
           icon: LucideIcons.folderInput,
