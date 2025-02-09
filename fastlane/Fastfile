@@ -1,5 +1,7 @@
 fastlane_require 'dotenv'
 
+opt_out_usage
+
 lane :ci_install_release_cert_using_api do
   api_key = app_store_connect_api_key(
     key_id: ENV['APP_STORE_CONNECT_KEY_ID'],
@@ -10,5 +12,5 @@ lane :ci_install_release_cert_using_api do
   )
 
   setup_ci
-  match(type: "developer_id", readonly: true)
+  match(type: "developer_id")
 end
