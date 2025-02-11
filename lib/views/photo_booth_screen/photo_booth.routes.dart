@@ -103,13 +103,3 @@ GoRoute _manualCollageRoute = GoRoute(
     );
   },
 );
-
-GoRoute _settingsRoute = GoRoute(
-  path: SettingsScreen.defaultRoute,
-  pageBuilder: (context, state) {
-    return SettingsBasedTransitionPage.fromSettings(
-      key: state.pageKey,
-      child: const SettingsScreen(),
-    );
-  },
-);

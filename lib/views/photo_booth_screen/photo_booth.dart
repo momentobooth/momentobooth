@@ -27,7 +27,6 @@ import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/shar
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
-import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 
 part 'photo_booth.hotkey_monitor.dart';
 part 'photo_booth.routes.dart';
