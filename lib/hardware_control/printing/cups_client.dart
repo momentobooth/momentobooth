@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -26,7 +27,7 @@ class CupsClient extends PrintingSystemClient {
     List<PrintQueueInfo> printers = [];
 
     // Match all printers with printers set in settings.
-    for (String id in SettingsManager.instance.settings.hardware.cupsPrinterQueues) {
+    for (String id in getIt<SettingsManager>().settings.hardware.cupsPrinterQueues) {
       PrintQueueInfo? selected = sourcePrinters.firstWhereOrNull((printer) => printer.id == id);
 
       // Ignore printers that are not available.
@@ -42,7 +43,7 @@ class CupsClient extends PrintingSystemClient {
 
   @override
   Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData, {PrintSize printSize = PrintSize.normal}) async {
-    final printLayoutSettings = SettingsManager.instance.settings.hardware.printLayoutSettings;
+    final printLayoutSettings = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
     final String mediaSizeName = switch(printSize) {
       PrintSize.normal => printLayoutSettings.mediaSizeNormal.mediaSizeString,
       PrintSize.split => printLayoutSettings.mediaSizeSplit.mediaSizeString,
@@ -68,10 +69,10 @@ class CupsClient extends PrintingSystemClient {
 
   static CupsServerInfo get serverInfo {
     return CupsServerInfo(
-      uri: SettingsManager.instance.settings.hardware.cupsUri,
-      ignoreTlsErrors: SettingsManager.instance.settings.hardware.cupsIgnoreTlsErrors,
-      username: SettingsManager.instance.settings.hardware.cupsUsername,
-      password: SettingsManager.instance.settings.hardware.cupsPassword,
+      uri: getIt<SettingsManager>().settings.hardware.cupsUri,
+      ignoreTlsErrors: getIt<SettingsManager>().settings.hardware.cupsIgnoreTlsErrors,
+      username: getIt<SettingsManager>().settings.hardware.cupsUsername,
+      password: getIt<SettingsManager>().settings.hardware.cupsPassword,
     );
   }
 

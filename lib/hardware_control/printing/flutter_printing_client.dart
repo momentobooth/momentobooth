@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -23,7 +24,7 @@ class FlutterPrintingClient extends PrintingSystemClient {
     List<Printer> printers = <Printer>[];
 
     // Match all printers with printers set in settings.
-    for (String name in SettingsManager.instance.settings.hardware.flutterPrintingPrinterNames) {
+    for (String name in getIt<SettingsManager>().settings.hardware.flutterPrintingPrinterNames) {
       Printer? selected = sourcePrinters.firstWhereOrNull((printer) => printer.name == name);
 
       // Ignore printers that are not available.
@@ -51,7 +52,7 @@ class FlutterPrintingClient extends PrintingSystemClient {
     if (printer == null) throw PrintingException('Could not find printer with name [$queueId]');
 
     // Print
-    final settings = SettingsManager.instance.settings.hardware;
+    final settings = getIt<SettingsManager>().settings.hardware;
     bool success = await Printing.directPrintPdf(
       printer: printer,
       name: taskName,

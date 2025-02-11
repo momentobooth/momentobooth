@@ -1,20 +1,21 @@
 // ignore_for_file: dead_code
 
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/printer_issue_type.dart';
 import 'package:momento_booth/src/rust/api/cups.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
-import 'package:momento_booth/views/custom_widgets/dialogs/printer_issue_dialog.dart';
+import 'package:momento_booth/views/components/dialogs/printer_issue_dialog.dart';
 
 mixin PrinterStatusDialogMixin<T extends ScreenViewModelBase> on ScreenControllerBase<T> {
 
   Future<void> checkPrintersAndShowWarnings() async {
     return; // TODO: Remove this line when the feature is ready.
 
-    List<String> printerIds = SettingsManager.instance.settings.hardware.cupsPrinterQueues;
+    List<String> printerIds = getIt<SettingsManager>().settings.hardware.cupsPrinterQueues;
     for (var printerId in printerIds) {
       try {
         // Verify printer ready.

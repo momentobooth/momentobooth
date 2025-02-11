@@ -1,94 +1,76 @@
-import 'dart:io';
-
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:path/path.dart' hide context;
-import 'package:path_provider/path_provider.dart';
-import 'package:toml/toml.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 
 part 'settings_manager.g.dart';
 
-class SettingsManager extends _SettingsManagerBase with _$SettingsManager {
-  static final SettingsManager instance = SettingsManager._internal();
+class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
-  SettingsManager._internal();
-}
+abstract class SettingsManagerBase with Store, Logger, Subsystem {
 
-abstract class _SettingsManagerBase with Store, Logger {
-  static const _fileName = "MomentoBooth_Settings.toml";
+  @readonly
+  late Settings _settings;
 
-  late File _settingsFile;
+  @override
+  Future<void> initialize() async {
+    try {
+      SerialiableRepository<Settings> settingsRepository = getIt<SerialiableRepository<Settings>>();
+      bool hasExistingSettings = await settingsRepository.hasExistingData();
 
-  @observable
-  Settings? _settings;
-
-  @computed
-  Settings get settings => _settings!;
-
-  // ////// //
-  // Mutate //
-  // ////// //
-
-  @action
-  Future<void> updateAndSave(Settings settings) async {
-    if (settings == _settings) return;
-    _settings = settings;
-    MqttManager.instance.publishSettings(settings);
-    await _save();
+      if (!hasExistingSettings) {
+        _settings = Settings.withDefaults();
+        reportSubsystemOk(message: "No existing settings data found, a new file will be created.");
+      } else {
+        _settings = await settingsRepository.get();
+        reportSubsystemOk();
+      }
+    } catch (e) {
+      _settings = Settings.withDefaults();
+      reportSubsystemError(
+        message: "Could not read existing settings. Open the details view for details and solutions.",
+        exception: e.toString(),
+        actions: {
+          'Accept default settings': unblockSavingAndSave,
+          'Retry': initialize,
+        }
+      );
+      _blockSaving = true;
+    }
   }
 
   // /////////// //
   // Persistence //
   // /////////// //
 
-  @action
-  Future<void> load() async {
-    logDebug("Loading settings");
-    await _ensureSettingsFileIsSet();
+  @readonly
+  bool _blockSaving = false;
 
-    if (!_settingsFile.existsSync()) {
-      // File does not exist, load defaults and create settings file
-      _settings = Settings.withDefaults();
-      await _save();
-      return;
-    }
-
-    // File does exist
-    String settingsAsToml = await _settingsFile.readAsString();
-    TomlDocument settingsDocument = TomlDocument.parse(settingsAsToml);
-    Map<String, dynamic> settingsMap = settingsDocument.toMap();
-    try {
-      _settings = Settings.fromJson(settingsMap);
-      logDebug("Loaded settings: ${_settings?.toJson().toString() ?? "null"}");
-    } catch (_) {
-      // Fixme: Failed to parse, load defaults and create settings file
-      _settings = Settings.withDefaults();
-    }
-    await _save();
-  }
-
-  Future<void> _save() async {
-    logDebug("Saving settings");
-    await _ensureSettingsFileIsSet();
-
-    Map<String, dynamic> settingsMap = _settings!.toJson();
-    TomlDocument settingsDocument = TomlDocument.fromMap(settingsMap);
-    String settingsAsToml = settingsDocument.toString();
-    await _settingsFile.writeAsString(settingsAsToml);
-
+  Future<void> unblockSavingAndSave() async {
+    _blockSaving = false;
+    logInfo("Unblocked saving of settings, now saving settings");
+    await getIt<SerialiableRepository<Settings>>().write(_settings);
     logDebug("Saved settings");
+    reportSubsystemOk(message: "Default settings accepted.");
   }
 
-  // /////// //
-  // Helpers //
-  // /////// //
+  @action
+  Future<void> updateAndSave(Settings settings) async {
+    if (settings == _settings) return;
 
-  Future<void> _ensureSettingsFileIsSet() async {
-    // Find path
-    Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String filePath = join(storageDirectory.path, _fileName);
-    _settingsFile = File(filePath);
+    if (!_blockSaving) {
+      logDebug("Saving settings");
+      await getIt<SerialiableRepository<Settings>>().write(settings);
+      logDebug("Saved settings");
+    } else {
+      logDebug("Saving blocked");
+    }
+
+    _settings = settings;
+    getIt<MqttManager>().publishSettings(settings);
   }
+
 }

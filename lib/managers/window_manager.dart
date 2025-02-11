@@ -1,18 +1,15 @@
+import 'dart:async';
+
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:window_manager/window_manager.dart';
 
 part 'window_manager.g.dart';
 
-class WindowManager extends _WindowManagerBase with _$WindowManager {
+class WindowManager = WindowManagerBase with _$WindowManager;
 
-  static final WindowManager instance = WindowManager._internal();
-
-  WindowManager._internal();
-
-}
-
-abstract class _WindowManagerBase with Store, Logger {
+abstract class WindowManagerBase with Store, Logger, Subsystem {
 
   bool _isFullScreen = false;
 
@@ -20,6 +17,7 @@ abstract class _WindowManagerBase with Store, Logger {
   // Initialization //
   // ////////////// //
 
+  @override
   Future<void> initialize() async {
     await windowManager.ensureInitialized();
     _isFullScreen = await windowManager.isFullScreen();

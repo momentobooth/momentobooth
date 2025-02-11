@@ -88,13 +88,41 @@ impl NokhwaCameraInfo {
 // FRB API //
 // /////// //
 
-pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
-    get_cameras()
-}
-
 pub static NOKHWA_HANDLES: LazyLock<DashMap<u32, Arc<Mutex<NokhwaCameraHandle>>>> = LazyLock::new(|| DashMap::<u32, Arc<Mutex<NokhwaCameraHandle>>>::new());
 
 static NOKHWA_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
+
+static NOKHWA_INITIALIZED: AtomicBool = AtomicBool::new(false);
+
+pub async fn initialize_nokhwa() -> bool {
+    let (future, handle) = susync::create();
+
+    if !NOKHWA_INITIALIZED.load(Ordering::SeqCst) {
+        // Hardware has not been initialized yet
+        nokhwa::nokhwa_initialize(move |success| {
+            debug!("initialize_hardware() nokhwa init result: {}", &success);
+            handle.clone().complete(success);
+        });
+
+        NOKHWA_INITIALIZED.store(true, Ordering::SeqCst);
+        info!("{}", "Initialized Nokhwa");
+    } else {
+        // Hardware has already been initialized (possible due to Hot Reload)
+        debug!("{}", "Possible Hot Reload: Closing open Nokhwa handles");
+        for map_entry in NOKHWA_HANDLES.iter() {
+            map_entry.value().lock().expect("Could not lock on handle").camera.set_callback(|_| {}).expect("Stream close error");
+        }
+        debug!("{}", "Possible Hot Reload: Closed Nokhwa handles");
+        NOKHWA_HANDLES.clear();
+        handle.complete(true);
+    };
+
+    future.await.unwrap()
+}
+
+pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
+    get_cameras()
+}
 
 pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize
 ) -> u32 {

@@ -13,10 +13,10 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-### install_release_cert_using_api
+### ci_install_release_cert_using_api
 
 ```sh
-[bundle exec] fastlane install_release_cert_using_api
+[bundle exec] fastlane ci_install_release_cert_using_api
 ```
 
 

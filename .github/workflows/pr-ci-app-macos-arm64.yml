@@ -31,20 +31,16 @@ jobs:
       with:
         ref: ${{ github.event.pull_request.head.ref }}
 
-    - name: Install build dependencies
-      run: |
-        brew install ruby pkgconf create-dmg
-
-    - name: Download and unpack Homebrew libraries
-      run: |
-        mkdir ci_build && cd ci_build
-        ../macos/ci_download_deps.sh -a arm64_ventura,ventura libgphoto2 gexiv2
-        ../macos/ci_adapt_pkgconf_dirs.sh ventura/lib/pkgconfig
-        ../macos/ci_adapt_pkgconf_dirs.sh arm64_ventura/lib/pkgconfig
-
-    - uses: webfactory/ssh-agent@v0.9.0
+    - name: Run ssh-agent
+      uses: webfactory/ssh-agent@v0.9.0
       with:
         ssh-private-key: ${{ secrets.MATCH_CERTIFICATES_GIT_ACCESS_TOKEN }}
+
+    - name: Install Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3'
+        bundler-cache: true 
 
     - name: Install keys, certificates and profiles
       env:
@@ -53,11 +49,7 @@ jobs:
         APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
-      run: |
-        PATH=/opt/homebrew/opt/ruby/bin:$HOME/.gem:$PATH
-        gem install bundler --user-install
-        bundle install
-        bundle exec fastlane ci_install_release_cert_using_api
+      run: bundle exec fastlane ci_install_release_cert_using_api
 
     - name: Detect Flutter Version
       uses: kuhnroyal/flutter-fvm-config-action@v3
@@ -98,13 +90,24 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.7.0"
+        version: "2.7.1"
 
     - name: Install dependencies
       run: flutter pub get --enforce-lockfile
 
     - name: Generation l10n
       run: flutter gen-l10n
+
+    - name: Install build dependencies
+      run: |
+        brew install pkgconf create-dmg
+
+    - name: Download and unpack Homebrew libraries
+      run: |
+        mkdir ci_build && cd ci_build
+        ../macos/ci_download_deps.sh -a arm64_ventura,ventura libgphoto2 gexiv2
+        ../macos/ci_adapt_pkgconf_dirs.sh ventura/lib/pkgconfig
+        ../macos/ci_adapt_pkgconf_dirs.sh arm64_ventura/lib/pkgconfig
 
     - name: Generate Dart-to-Rust bridging code
       run: PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate

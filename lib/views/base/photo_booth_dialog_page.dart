@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 
 final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
@@ -40,12 +41,12 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
                 opacity: Tween<double>(begin: 0.0, end: 1.0).animate(_fadeAndScaleAnimation(animation)),
                 child: ScaleTransition(
                   scale: Tween<double>(begin: 0.0, end: 1.0).animate(_fadeAndScaleAnimation(animation)),
-                  filterQuality: SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
+                  filterQuality: getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
                   child: FadeTransition(
                     opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeAndScaleAnimation(secondaryAnimation)),
                     child: ScaleTransition(
                       scale: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeAndScaleAnimation(secondaryAnimation)),
-                      filterQuality: SettingsManager.instance.settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
+                      filterQuality: getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
                       child: child,
                     ),
                   ),

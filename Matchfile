@@ -2,6 +2,7 @@ storage_mode("git")
 git_url(ENV['MATCH_CERTIFICATES_GIT_URL'])
 git_full_name(ENV['MATCH_CERTIFICATES_GIT_FULL_NAME'])
 git_user_email(ENV['MATCH_CERTIFICATES_GIT_EMAIL'])
+git_branch("master")
 
 username(ENV['FASTLANE_USER'])
 

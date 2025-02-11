@@ -8,24 +8,21 @@ import 'package:momento_booth/hardware_control/live_view_streaming/live_view_sou
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/static_image_source.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
 part 'live_view_manager.g.dart';
 
-class LiveViewManager extends _LiveViewManagerBase with _$LiveViewManager {
-
-  static final LiveViewManager instance = LiveViewManager._internal();
-
-  LiveViewManager._internal();
-
-}
+class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 
 /// Class containing global state for photos in the app
-abstract class _LiveViewManagerBase with Store {
+abstract class LiveViewManagerBase with Store, Logger, Subsystem {
 
   @readonly
   bool _lastFrameWasInvalid = false;
@@ -37,12 +34,13 @@ abstract class _LiveViewManagerBase with Store {
   // Initialization //
   // ////////////// //
 
+  @override
   void initialize() {
     Timer.periodic(const Duration(seconds: 1), (_) => _checkLiveViewState());
 
     autorun((_) {
       // To make sure mobx detects that we are responding to changes to this property
-      SettingsManager.instance.settings.hardware.liveViewWebcamId;
+      getIt<SettingsManager>().settings.hardware.liveViewWebcamId;
       _updateLiveViewSourceInstanceLock.synchronized(() async {
         await _updateConfig();
       });
@@ -90,10 +88,10 @@ abstract class _LiveViewManagerBase with Store {
   LiveViewState _liveViewState = LiveViewState.initializing;
 
   Future<void> _updateConfig() async {
-    LiveViewMethod liveViewMethodSetting = SettingsManager.instance.settings.hardware.liveViewMethod;
-    CaptureMethod captureMethodSetting = SettingsManager.instance.settings.hardware.captureMethod;
-    String gPhoto2CameraIdSetting = SettingsManager.instance.settings.hardware.gPhoto2CameraId;
-    String webcamIdSetting = SettingsManager.instance.settings.hardware.liveViewWebcamId;
+    LiveViewMethod liveViewMethodSetting = getIt<SettingsManager>().settings.hardware.liveViewMethod;
+    CaptureMethod captureMethodSetting = getIt<SettingsManager>().settings.hardware.captureMethod;
+    String gPhoto2CameraIdSetting = getIt<SettingsManager>().settings.hardware.gPhoto2CameraId;
+    String webcamIdSetting = getIt<SettingsManager>().settings.hardware.liveViewWebcamId;
 
     if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
@@ -152,9 +150,10 @@ abstract class _LiveViewManagerBase with Store {
         _lastFrameWasInvalid = true;
       } else {
         // Everything seems to be fine
-        StatsManager.instance.validLiveViewFrames = liveViewState.validFrameCount;
-        StatsManager.instance.invalidLiveViewFrames = liveViewState.errorFrameCount;
-        StatsManager.instance.duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
+        getIt<StatsManager>()
+          ..validLiveViewFrames = liveViewState.validFrameCount
+          ..invalidLiveViewFrames = liveViewState.errorFrameCount
+          ..duplicateLiveViewFrames = liveViewState.duplicateFrameCount;
         _lastFrameWasInvalid = false;
 
         _textureWidth = liveViewState.frameWidth;
@@ -168,9 +167,9 @@ abstract class _LiveViewManagerBase with Store {
   // /////// //
 
   void restoreLiveView() {
-    LiveViewManager.instance._updateLiveViewSourceInstanceLock.synchronized(() async {
+    _updateLiveViewSourceInstanceLock.synchronized(() async {
       _currentLiveViewMethod = null;
-      await LiveViewManager.instance._updateConfig();
+      await _updateConfig();
     });
   }
 

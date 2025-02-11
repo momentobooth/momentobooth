@@ -14,25 +14,20 @@ import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
-import 'package:momento_booth/repositories/secret/secret_repository.dart';
+import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:synchronized/synchronized.dart';
 
 part 'mqtt_manager.g.dart';
 
-class MqttManager extends _MqttManagerBase with _$MqttManager {
-
-  static final MqttManager instance = MqttManager._internal();
-
-  MqttManager._internal();
-
-}
+class MqttManager = MqttManagerBase with _$MqttManager;
 
 /// Class containing global state for photos in the app
-abstract class _MqttManagerBase with Store, Logger {
+abstract class MqttManagerBase with Store, Logger, Subsystem {
 
   final Lock _updateMqttClientInstanceLock = Lock();
 
@@ -42,7 +37,7 @@ abstract class _MqttManagerBase with Store, Logger {
   Map<String, dynamic> _lastPublishedStats = {};
   String _lastPublishedRoute = "";
   CaptureState _lastPublishedCaptureState = CaptureState.idle;
-  Settings _settings = SettingsManager.instance.settings;
+  Settings get _settings => getIt<SettingsManager>().settings;
 
   @readonly
   ConnectionState _connectionState = ConnectionState.disconnected;
@@ -51,10 +46,11 @@ abstract class _MqttManagerBase with Store, Logger {
   // Initialization and client management //
   // //////////////////////////////////// //
 
+  @override
   void initialize() {
     // Respond to settings changes
     autorun((_) {
-      MqttIntegrationSettings newMqttSettings = SettingsManager.instance.settings.mqttIntegration;
+      MqttIntegrationSettings newMqttSettings = getIt<SettingsManager>().settings.mqttIntegration;
       _updateMqttClientInstanceLock.synchronized(() async {
         await _recreateClient(newMqttSettings, false);
       });
@@ -62,14 +58,14 @@ abstract class _MqttManagerBase with Store, Logger {
 
     // Publish stats
     autorun((_) {
-      Stats stats = StatsManager.instance.stats;
+      Stats stats = getIt<StatsManager>().stats;
       if (_client != null) _publishStats(stats);
     });
   }
 
   void notifyPasswordChanged() {
     _updateMqttClientInstanceLock.synchronized(() async {
-      MqttIntegrationSettings mqttSettings = SettingsManager.instance.settings.mqttIntegration;
+      MqttIntegrationSettings mqttSettings = getIt<SettingsManager>().settings.mqttIntegration;
       await _recreateClient(mqttSettings, true);
     });
   }
@@ -83,11 +79,7 @@ abstract class _MqttManagerBase with Store, Logger {
 
     if (newSettings.enable) {
       _connectionState = ConnectionState.connecting;
-      MqttServerClient client = MqttServerClient.withPort(
-        newSettings.host,
-        newSettings.clientId,
-        newSettings.port,
-      )
+      MqttServerClient client = MqttServerClient.withPort(newSettings.host, newSettings.clientId, newSettings.port)
         ..useWebSocket = newSettings.useWebSocket
         ..secure = newSettings.secure
         ..autoReconnect = true;
@@ -97,7 +89,8 @@ abstract class _MqttManagerBase with Store, Logger {
       }
 
       try {
-        String password = await getIt<SecretRepository>().getSecret(mqttPasswordSecretKey) ?? "";
+        reportSubsystemBusy(message: 'Connecting to MQTT server');
+        String password = await getIt<SecretsRepository>().getSecret(mqttPasswordSecretKey) ?? "";
         MqttConnectionStatus? result = await client.connect(newSettings.username, password);
         if (result?.state != MqttConnectionState.connected) {
           throw MqttException("Failed to connect to MQTT server: ${result?.reasonCode} ${result?.reasonString}");
@@ -105,23 +98,35 @@ abstract class _MqttManagerBase with Store, Logger {
 
         logInfo("Connected to MQTT server");
         _client = client
-          ..onDisconnected = (() => logInfo("Disconnected from MQTT server"))
+          ..onDisconnected = (() {
+            _connectionState = ConnectionState.disconnected;
+            String errorDescription = "Disconnected from MQTT server";
+            reportSubsystemError(message: errorDescription);
+            logError("Disconnected from MQTT server");
+          })
           ..onAutoReconnect = (() {
             _connectionState = ConnectionState.connecting;
-            logInfo("Reconnecting to MQTT server");
+            reportSubsystemBusy(message: 'Connecting to MQTT server');
+            logWarning("Reconnecting to MQTT server");
           })
           ..onAutoReconnected = (() {
             _connectionState = ConnectionState.connected;
+            reportSubsystemOk();
             logInfo("Reconnected to MQTT server");
             _forcePublishAll();
           });
 
         _connectionState = ConnectionState.connected;
+        reportSubsystemOk();
         _forcePublishAll();
         _createSubscriptions();
-      } catch (e) {
-        logError("Failed to connect to MQTT server: $e");
+      } catch (e, s) {
+        String errorDescription = "Failed to connect to MQTT server";
+        reportSubsystemError(message: errorDescription, exception: e.toString());
+        logError(errorDescription, e, s);
       }
+    } else {
+      reportSubsystemDisabled();
     }
 
     _currentSettings = newSettings;
@@ -134,7 +139,7 @@ abstract class _MqttManagerBase with Store, Logger {
   void _publish(String topic, String message, {bool retain = false}) {
     if (_client == null) return;
 
-    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.publishMessage(
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
@@ -144,7 +149,7 @@ abstract class _MqttManagerBase with Store, Logger {
   }
 
   void _forcePublishAll() {
-    _publishStats(StatsManager.instance.stats, true);
+    _publishStats(getIt<StatsManager>().stats, true);
     publishScreen();
     publishCaptureState();
     publishSettings();
@@ -173,7 +178,6 @@ abstract class _MqttManagerBase with Store, Logger {
   }
 
   void publishSettings([Settings? settings]) {
-    if (settings != null) _settings = settings;
     _publish(
       "running_settings",
       jsonEncode(
@@ -190,7 +194,7 @@ abstract class _MqttManagerBase with Store, Logger {
   void _clearTopic(String topic) {
     if (_client == null) return;
 
-    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.publishMessage(
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
@@ -204,7 +208,7 @@ abstract class _MqttManagerBase with Store, Logger {
   // ///////////// //
 
   void _createSubscriptions() {
-    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.updates.listen((messageList) {
       MqttPublishMessage? message;
       try {
@@ -229,7 +233,7 @@ abstract class _MqttManagerBase with Store, Logger {
 
   void _subscribeToTopic(String relativeTopic) {
     _client!.subscribe(
-      "${SettingsManager.instance.settings.mqttIntegration.rootTopic}/$relativeTopic",
+      "${getIt<SettingsManager>().settings.mqttIntegration.rootTopic}/$relativeTopic",
       MqttQos.atMostOnce,
     );
 
@@ -239,9 +243,9 @@ abstract class _MqttManagerBase with Store, Logger {
   void _onSettingsMessage(String message) {
     logInfo("Received settings update from MQTT");
     Settings settings = Settings.fromJson(jsonDecode(message));
-    SettingsManager.instance.updateAndSave(settings.copyWith(
+    getIt<SettingsManager>().updateAndSave(settings.copyWith(
       // Don't copy these settings from MQTT
-      mqttIntegration: SettingsManager.instance.settings.mqttIntegration,
+      mqttIntegration: getIt<SettingsManager>().settings.mqttIntegration,
     ));
     logInfo("Loaded settings data from MQTT");
   }
@@ -251,7 +255,7 @@ abstract class _MqttManagerBase with Store, Logger {
   // ////////////////////////// //
 
   HomeAssistantDevice get homeAssistantDevice => HomeAssistantDevice(
-      identifiers: [SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId],
+      identifiers: [getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId],
       manufacturer: "MomentoBooth",
       model: "Photobooth",
       name: "MomentoBooth instance on ${Platform.localHostname}",
@@ -259,9 +263,9 @@ abstract class _MqttManagerBase with Store, Logger {
     );
 
   void publishHomeAssistantDiscoveryTopics() {
-    if (_client == null || !SettingsManager.instance.settings.mqttIntegration.enableHomeAssistantDiscovery) return;
+    if (_client == null || !getIt<SettingsManager>().settings.mqttIntegration.enableHomeAssistantDiscovery) return;
 
-    String rootTopic = SettingsManager.instance.settings.mqttIntegration.rootTopic;
+    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
 
     // Stats
     for (MapEntry<String, dynamic> statsEntry in _lastPublishedStats.entries) {
@@ -300,8 +304,8 @@ abstract class _MqttManagerBase with Store, Logger {
   }
 
   void publishHomeAssistantSensorDiscoveryTopic({required String integrationName, required String stateTopic}) {
-    final String discoveryTopicPrefix = SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
-    final String componentId = SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
+    final String discoveryTopicPrefix = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
+    final String componentId = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
 
     _client!.publishMessage(
       '$discoveryTopicPrefix/sensor/$componentId/${Casing.snakeCase(integrationName)}/config',
@@ -317,8 +321,8 @@ abstract class _MqttManagerBase with Store, Logger {
   }
 
   void publishHomeAssistantDeviceTriggerDiscoveryTopic({required String integrationName, required String payload, required String stateTopic}) {
-    final String discoveryTopicPrefix = SettingsManager.instance.settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
-    final String componentId = SettingsManager.instance.settings.mqttIntegration.homeAssistantComponentId;
+    final String discoveryTopicPrefix = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
+    final String componentId = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
 
     final String triggerType = Casing.snakeCase(integrationName);
     final String triggerSubType = Casing.snakeCase(payload);

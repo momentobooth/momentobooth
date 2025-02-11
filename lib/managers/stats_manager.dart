@@ -1,43 +1,45 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
+import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:path/path.dart' hide context;
-import 'package:path_provider/path_provider.dart';
-import 'package:synchronized/synchronized.dart';
-import 'package:toml/toml.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 
 part 'stats_manager.g.dart';
 
-class StatsManager extends _StatsManagerBase with _$StatsManager {
+class StatsManager = StatsManagerBase with _$StatsManager;
 
-  static final StatsManager instance = StatsManager._internal();
-
-  StatsManager._internal();
-
-}
-
-enum StatFields {
-  taps,
-  liveViewFrames,
-  printedPhotos,
-  printedPhotosSmall,
-  printedPhotosTiny,
-  uploadedPhotos,
-  capturedPhotos,
-  createdSinglePhotos,
-  retakes,
-  collageChanges,
-  createdMultiCapturePhotos,
-}
-
-abstract class _StatsManagerBase with Store, Logger {
+abstract class StatsManagerBase with Store, Logger, Subsystem {
 
   @readonly
-  Stats _stats = const Stats();
+  late Stats _stats;
+
+  @override
+  Future<void> initialize() async {
+    SerialiableRepository<Stats> statsRepository = getIt<SerialiableRepository<Stats>>();
+
+    try {
+      bool hasExistingStats = await statsRepository.hasExistingData();
+
+      if (!hasExistingStats) {
+        _stats = const Stats();
+        reportSubsystemOk(message: "No existing stats data found, a new file will be created.");
+      } else {
+        _stats = await statsRepository.get();
+        reportSubsystemOk();
+      }
+    } catch (e) {
+      _stats = const Stats();
+      reportSubsystemWarning(
+        message: "Could not read existing stats: $e\n\nThe stats have been cleared. As such the existing stats file will be overwritten.",
+      );
+    }
+
+    Timer.periodic(statsSaveTimerInterval, (timer) => _save);
+  }
 
   // /////////// //
   // Local stats //
@@ -93,61 +95,28 @@ abstract class _StatsManagerBase with Store, Logger {
   // Persistence //
   // /////////// //
 
-  late File _statsFile;
-  static const _fileName = "Statistics.toml";
-  static const _statsSaveTimerInterval = Duration(minutes: 1);
-  static final _stateSaveLock = Lock();
-
-  @action
-  Future<void> load() async {
-    logDebug("Loading statistics");
-    await _ensureStatsFileIsSet();
-
-    if (!_statsFile.existsSync()) {
-      // File does not exist
-      _stats = const Stats();
-      logWarning("Persisted statistics file not found");
-    } else {
-      // File does exist
-      logDebug("Loading persisted statistics");
-      try {
-        String statsAsToml = await _statsFile.readAsString();
-        TomlDocument statsDocument = TomlDocument.parse(statsAsToml);
-        Map<String, dynamic> statsMap = statsDocument.toMap();
-        _stats = Stats.fromJson(statsMap);
-        logDebug("Loaded persisted statistics");
-      } catch (_) {
-        // Fixme: Failed to parse, ignore for now
-        logWarning("Persisted statistics could not be loaded");
-      }
-    }
-
-    Timer.periodic(_statsSaveTimerInterval, (timer) => _save());
-  }
+  static const statsSaveTimerInterval = Duration(minutes: 1);
 
   Future<void> _save() async {
-    await _stateSaveLock.synchronized(() async {
-      logDebug("Saving statistics");
-      await _ensureStatsFileIsSet();
-
-      Map<String, dynamic> mapWithStringKey = _stats.toJson();
-      TomlDocument statsDocument = TomlDocument.fromMap(mapWithStringKey);
-      String statsAsToml = statsDocument.toString();
-      await _statsFile.writeAsString(statsAsToml);
-
-      logDebug("Saved statistics");
-    });
+    logDebug("Saving statistics");
+    await getIt<SerialiableRepository<Stats>>().write(_stats);
+    logDebug("Saved statistics");
   }
 
-  // /////// //
-  // Helpers //
-  // /////// //
+}
 
-  Future<void> _ensureStatsFileIsSet() async {
-    // Find path
-    Directory storageDirectory = await getApplicationDocumentsDirectory();
-    String filePath = join(storageDirectory.path, _fileName);
-    _statsFile = File(filePath);
-  }
+enum StatsField {
+
+  taps,
+  liveViewFrames,
+  printedPhotos,
+  printedPhotosSmall,
+  printedPhotosTiny,
+  uploadedPhotos,
+  capturedPhotos,
+  createdSinglePhotos,
+  retakes,
+  collageChanges,
+  createdMultiCapturePhotos,
 
 }

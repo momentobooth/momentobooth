@@ -5,33 +5,30 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/hardware_control/printing/flutter_printing_client.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 
 part 'printing_manager.g.dart';
 
-class PrintingManager extends _PrintingManagerBase with _$PrintingManager {
+class PrintingManager = PrintingManagerBase with _$PrintingManager;
 
-  static final PrintingManager instance = PrintingManager._internal();
-
-  PrintingManager._internal();
-
-}
-
-abstract class _PrintingManagerBase with Store {
+abstract class PrintingManagerBase with Store, Logger, Subsystem {
 
   // ////////////// //
   // Initialization //
   // ////////////// //
 
-  void initialize() {
+  @override
+  Null initialize() {
     autorun((_) {
       // To make sure mobx detects that we are responding to changes to this property
-      SettingsManager.instance.settings.hardware.printingImplementation;
+      getIt<SettingsManager>().settings.hardware.printingImplementation;
       _updateConfig();
     });
   }
-
 
   // ///////// //
   // Reactions //
@@ -41,7 +38,7 @@ abstract class _PrintingManagerBase with Store {
   PrintingSystemClient? _printingImplementation;
 
   void _updateConfig() {
-    PrintingImplementation printingImplementationSetting = SettingsManager.instance.settings.hardware.printingImplementation;
+    PrintingImplementation printingImplementationSetting = getIt<SettingsManager>().settings.hardware.printingImplementation;
     if (_printingImplementation == null && printingImplementationSetting == PrintingImplementation.none) return;
     if (_printingImplementation is FlutterPrintingClient && printingImplementationSetting == PrintingImplementation.flutterPrinting) return;
     if (_printingImplementation is CupsClient && printingImplementationSetting == PrintingImplementation.cups) return;
