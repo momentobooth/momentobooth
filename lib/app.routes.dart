@@ -22,7 +22,7 @@ GoRoute _photoBoothRoute = GoRoute(
   pageBuilder: (context, state) {
     return SettingsBasedTransitionPage.fromSettings(
       key: state.pageKey,
-      enableTransitionOut: true,
+      enableTransitionOut: false,
       child: const PhotoBooth(),
     );
   },

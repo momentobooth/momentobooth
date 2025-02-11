@@ -60,6 +60,7 @@ class PhotoBoothState extends State<PhotoBooth> {
               child: SetScrollConfiguration(
                 child: Observer(
                   builder: (context) => FluentApp.router(
+                    debugShowCheckedModeBanner: false,
                     scrollBehavior: ScrollConfiguration.of(context),
                     color: getIt<SettingsManager>().settings.ui.primaryColor,
                     theme: FluentThemeData(

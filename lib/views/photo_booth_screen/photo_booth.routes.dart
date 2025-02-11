@@ -10,7 +10,6 @@ List<GoRoute> _rootRoutes = [
   _galleryRoute,
   _photoDetailsRoute,
   _manualCollageRoute,
-  _settingsRoute,
 ];
 
 GoRoute _startRoute = GoRoute(
