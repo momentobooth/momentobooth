@@ -25,19 +25,19 @@ class NoProjectOpenDialog extends StatelessWidget {
     final recentProjects = getIt<ProjectManager>().listProjects().take(5);
 
     return ModalDialog(
-      title: "No project opened",
+      title: localizations.projectNotOpened,
       body: Column(
         children: [
           Text(
-            "You did not open a project folder yet. Open one to start capturing.",
+            localizations.projectNotOpenedInstructions,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text(
-            "MomentoBooth needs to know where to store images and look for collage templates.",
+            localizations.projectNotOpenedExplanation,
           ),
           SizedBox(height: 20.0,),
           Text(
-            "Recent projects:",
+            "${localizations.projectsRecent}:",
           ),
           SizedBox(height: 8.0,),
           Column(
@@ -55,7 +55,7 @@ class NoProjectOpenDialog extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(children: [
                       Text(project.name, style: FluentTheme.of(context).typography.bodyStrong),
-                      Text("Opened: ${project.opened}"),
+                      Text("${localizations.opened}: ${project.opened}"),
                     ],),
                   ),
                 ),
@@ -65,7 +65,7 @@ class NoProjectOpenDialog extends StatelessWidget {
       ),
       actions: [
         PhotoBoothFilledButton(
-          title: "Open a project folder",
+          title: localizations.projectOpenButton,
           icon: LucideIcons.folderInput,
           onPressed: () async {
             final opened = await getIt<ProjectManager>().browseOpen();

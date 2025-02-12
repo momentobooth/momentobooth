@@ -25,6 +25,8 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
   Directory? _path;
   List<Directory> projects = [];
 
+  // Loading the settings with default values to prevent errors from use before initialization.
+  // This is fine as the initialize method overwrites the value anyway.
   @readonly
   ProjectSettings _settings = ProjectSettings();
 
@@ -145,7 +147,7 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     // TODO get a translation delegate in here somehow
     final pathToOpen = await getDirectoryPath(confirmButtonText: "Open folder as project");
     if (pathToOpen != null) {
-      open(pathToOpen);
+      await open(pathToOpen);
       return true;
     }
     return false;

@@ -3,4 +3,9 @@ template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
 synthetic-package: false
 output-dir: lib/l10n/generated
-
+# Flutter extract to ARB plugin specific
+# key-prefix: AppLocalizations.of(context)!.
+key-prefix: localizations.
+main-locale: en
+update-all-arb-files: true
+# auto-translate: true

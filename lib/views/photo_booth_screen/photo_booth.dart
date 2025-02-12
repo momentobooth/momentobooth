@@ -114,13 +114,14 @@ class PhotoBoothState extends State<PhotoBooth> {
 }
 
 Widget _menuBar(BuildContext context, GoRouter router) {
+  AppLocalizations localizations = AppLocalizations.of(context)!;
   return ColoredBox(
     color: Color(0xFFFFFFFF),
     child: MenuBar(
       items: [
-        MenuBarItem(title: 'File', items: [
+        MenuBarItem(title: localizations.genericFile, items: [
           MenuFlyoutSubItem(
-            text: const Text('Recent projects'),
+            text: Text(localizations.projectsRecent),
             items: (context) {
               return [
                 for (final project in getIt<ProjectManager>().listProjects())
@@ -131,27 +132,27 @@ Widget _menuBar(BuildContext context, GoRouter router) {
               ];
             },
           ),
-          MenuFlyoutItem(text: const Text('Open project'), onPressed: getIt<ProjectManager>().browseOpen, leading: Icon(LucideIcons.folderInput), trailing: shortcut("Ctrl+O")),
-          MenuFlyoutItem(text: const Text('View project in explorer'), onPressed: () {
+          MenuFlyoutItem(text: Text(localizations.projectOpenShort), onPressed: getIt<ProjectManager>().browseOpen, leading: Icon(LucideIcons.folderInput), trailing: shortcut("Ctrl+O")),
+          MenuFlyoutItem(text: Text(localizations.projectViewInExplorer), onPressed: () {
             final uri = Uri.parse("file:///${getIt<ProjectManager>().path!.path}");
             launchUrl(uri);
           }, leading: Icon(LucideIcons.folderClosed)),
-          MenuFlyoutItem(text: const Text('Settings'), onPressed: () { GoRouter.of(context).push(SettingsScreen.defaultRoute); }, leading: Icon(LucideIcons.settings), trailing: shortcut("Ctrl+S")),
-          MenuFlyoutItem(text: const Text('Restore live view'), onPressed: () { getIt<LiveViewManager>().restoreLiveView(); }, leading: Icon(LucideIcons.rotateCcw), trailing: shortcut("Ctrl+R")),
+          MenuFlyoutItem(text: Text(localizations.genericSettings), onPressed: () { GoRouter.of(context).push(SettingsScreen.defaultRoute); }, leading: Icon(LucideIcons.settings), trailing: shortcut("Ctrl+S")),
+          MenuFlyoutItem(text: Text(localizations.actionRestoreLiveView), onPressed: () { getIt<LiveViewManager>().restoreLiveView(); }, leading: Icon(LucideIcons.rotateCcw), trailing: shortcut("Ctrl+R")),
           const MenuFlyoutSeparator(),
-          MenuFlyoutItem(text: const Text('Exit'), onPressed: getIt<WindowManager>().close,)
+          MenuFlyoutItem(text: Text(localizations.actionsExit), onPressed: getIt<WindowManager>().close,)
         ]),
-        MenuBarItem(title: 'View', items: [
-          MenuFlyoutItem(text: const Text('Full screen'), onPressed: () { getIt<WindowManager>().toggleFullscreen(); }, leading: Icon(LucideIcons.expand), trailing: shortcut("Ctrl+F/Alt+Enter")),
+        MenuBarItem(title: localizations.genericView, items: [
+          MenuFlyoutItem(text: Text(localizations.genericFullScreen), onPressed: () { getIt<WindowManager>().toggleFullscreen(); }, leading: Icon(LucideIcons.expand), trailing: shortcut("Ctrl+F/Alt+Enter")),
           const MenuFlyoutSeparator(),
-          MenuFlyoutItem(text: const Text('Start screen'), onPressed: () { router.go(StartScreen.defaultRoute); }, leading: Icon(LucideIcons.play), trailing: shortcut("Ctrl+H")),
-          MenuFlyoutItem(text: const Text('Gallery'), onPressed: () { router.go(GalleryScreen.defaultRoute); }, leading: Icon(LucideIcons.images)),
-          MenuFlyoutItem(text: const Text('Manual collage'), onPressed: () { router.go(ManualCollageScreen.defaultRoute); }, leading: Icon(LucideIcons.layoutDashboard), trailing: shortcut("Ctrl+M")),
+          MenuFlyoutItem(text: Text(localizations.screensStart), onPressed: () { router.go(StartScreen.defaultRoute); }, leading: Icon(LucideIcons.play), trailing: shortcut("Ctrl+H")),
+          MenuFlyoutItem(text: Text(localizations.screensGallery), onPressed: () { router.go(GalleryScreen.defaultRoute); }, leading: Icon(LucideIcons.images)),
+          MenuFlyoutItem(text: Text(localizations.screensManualCollage), onPressed: () { router.go(ManualCollageScreen.defaultRoute); }, leading: Icon(LucideIcons.layoutDashboard), trailing: shortcut("Ctrl+M")),
         ]),
-        MenuBarItem(title: 'Help', items: [
-          MenuFlyoutItem(text: const Text('Documentation'), onPressed: () { launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")); }, leading: Icon(LucideIcons.book)),
+        MenuBarItem(title: localizations.genericHelp, items: [
+          MenuFlyoutItem(text: Text(localizations.genericDocumentation), onPressed: () { launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")); }, leading: Icon(LucideIcons.book)),
           // TODO go to about screen in settings
-          MenuFlyoutItem(text: const Text('About'), onPressed: () { GoRouter.of(context).push(SettingsScreen.defaultRoute); }, leading: Icon(LucideIcons.info)),
+          MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () { GoRouter.of(context).push(SettingsScreen.defaultRoute); }, leading: Icon(LucideIcons.info)),
         ]),
       ],
     ),

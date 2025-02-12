@@ -12,8 +12,10 @@ class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
 abstract class SettingsManagerBase with Store, Logger, Subsystem {
 
+  // Loading the settings with default values to prevent errors from use before initialization.
+  // This is fine as the initialize method overwrites the value anyway.
   @readonly
-  late Settings _settings;
+  Settings _settings = Settings.withDefaults();
 
   @override
   Future<void> initialize() async {
