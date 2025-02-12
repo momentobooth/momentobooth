@@ -13,8 +13,9 @@ pub static NOISE_HANDLES: LazyLock<DashMap<u32, WhiteNoiseGeneratorHandle>> = La
 
 static NOISE_HANDLE_COUNT: AtomicU32 = AtomicU32::new(1);
 
-const NOISE_WIDTH: u32 = 1280;
-const NOISE_HEIGHT: u32 = 720;
+pub const NOISE_WIDTH: u32 = 1280;
+
+pub const NOISE_HEIGHT: u32 = 720;
 
 pub fn noise_open(texture_ptr: usize) -> u32 {
     // Initialize noise and push noise frames to Flutter texture
