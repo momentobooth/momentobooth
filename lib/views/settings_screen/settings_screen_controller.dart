@@ -106,6 +106,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     }
   }
 
+  void onLoadLastProjectChanged(bool? loadLastProject) {
+    if (loadLastProject != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(loadLastProject: loadLastProject));
+    }
+  }
+
   void onCollageAspectRatioChanged(double? collageAspectRatio) {
     if (collageAspectRatio != null) {
       viewModel.updateSettings((settings) => settings.copyWith(collageAspectRatio: collageAspectRatio));

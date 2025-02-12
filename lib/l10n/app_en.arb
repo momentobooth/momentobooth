@@ -18,7 +18,8 @@
     "genericFile": "File",
     "genericFullScreen": "Full screen",
     "genericSettings": "Settings",
-    
+    "genericCanBeChangedInSettings": "this can be changed in settings",
+
     "actionRestoreLiveView": "Restore live view",
     "actionsExit": "Exit",
 
@@ -109,6 +110,7 @@
     "projectOpenButton": "Open a project folder",
     "projectOpenShort": "Open project",
     "projectViewInExplorer": "View project in explorer",
+    "projectLoadLastOnStart": "Load last project on start up",
 
     "@multiCaptureScreenPhotoCounter": {
         "placeholders": {

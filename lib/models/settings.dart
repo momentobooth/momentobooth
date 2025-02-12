@@ -29,6 +29,7 @@ class Settings with _$Settings implements TomlEncodableValue {
 
   const factory Settings({
     @Default(5) int captureDelaySeconds,
+    @Default(false) bool loadLastProject,
     @Default(1.5) double collageAspectRatio,
     @Default(0) double collagePadding,
     @JsonKey(defaultValue: _templatesFolderFromJson) required String templatesFolder,

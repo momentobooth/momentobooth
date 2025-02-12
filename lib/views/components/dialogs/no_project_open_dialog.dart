@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
@@ -60,7 +61,21 @@ class NoProjectOpenDialog extends StatelessWidget {
                   ),
                 ),
               )
-          ],)
+            ],
+          ),
+          SizedBox(height: 8.0,),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(localizations.projectLoadLastOnStart),
+              SizedBox(width: 8.0,),
+              ToggleSwitch(
+                checked: getIt<SettingsManager>().settings.loadLastProject,
+                onChanged: (val) => getIt<SettingsManager>().updateAndSave(getIt<SettingsManager>().settings.copyWith(loadLastProject: val)),
+              ),
+            ],
+          ),
+          Text("(${localizations.genericCanBeChangedInSettings})"),
         ],
       ),
       actions: [

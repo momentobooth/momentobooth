@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/models/project_settings.dart';
@@ -65,6 +67,10 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
         message: "Could not read existing ProjectsList: $e\n\nThe ProjectsList have been cleared. As such the existing ProjectsList file will be overwritten.",
       );
     }
+
+    if (getIt<SettingsManager>().settings.loadLastProject) {
+      await openLastProject();
+    }
   }
 
   @action
@@ -90,6 +96,10 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
         Directory(join(_path!.path, subDir)).createSync();
       }
     }
+  }
+
+  Future<void> openLastProject() async {
+    return open(_projectsList.list.sorted((a, b) => b.opened.compareTo(a.opened)).first.path);
   }
 
   Future<void> open(String projectPath) async {

@@ -18,6 +18,7 @@
     "genericFile": "Bestand",
     "genericFullScreen": "Volledig scherm",
     "genericSettings": "Instellingen",
+    "genericCanBeChangedInSettings": "dit kan worden aangepast in de instellingen",
 
     "actionRestoreLiveView": "Reset live view",
     "actionsExit": "Sluiten",
@@ -108,5 +109,6 @@
     "projectsRecent": "Recente projecten",
     "projectOpenButton": "Open een projectmap",
     "projectOpenShort": "Open project",
-    "projectViewInExplorer": "Open projectmap in verkenner"
+    "projectViewInExplorer": "Open projectmap in verkenner",
+    "projectLoadLastOnStart": "Open het laatste project bij starten"
 }

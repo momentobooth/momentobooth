@@ -153,6 +153,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   // System settings current values
   int get captureDelaySecondsSetting => getIt<SettingsManager>().settings.captureDelaySeconds;
+  bool get loadLastProjectSetting => getIt<SettingsManager>().settings.loadLastProject;
   double get collageAspectRatioSetting => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePaddingSetting => getIt<SettingsManager>().settings.collagePadding;
   String get templatesFolderSetting => getIt<SettingsManager>().settings.templatesFolder;
