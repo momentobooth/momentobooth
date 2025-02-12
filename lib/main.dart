@@ -8,7 +8,6 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/repositories/_all.dart';
@@ -105,7 +104,7 @@ Future<void> _initializeApp(ArgResults args) async {
   // Open a project if a directory is given
   // TODO decide what to do if the folder does not exist yet.
   if (args.option("open") != null)  {
-    getIt<ProjectManager>().open(args.option("open")!);
+    await getIt<ProjectManager>().open(args.option("open")!);
   }
   await getIt<WindowManager>().initializeSafe();
   if (args.flag("fullscreen")) {

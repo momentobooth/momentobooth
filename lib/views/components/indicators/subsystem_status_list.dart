@@ -2,7 +2,6 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/onboarding_screen/components/subsystem_status_display.dart';
 
 class SubsystemStatusList extends StatelessWidget {

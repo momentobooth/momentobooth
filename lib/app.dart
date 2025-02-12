@@ -9,7 +9,6 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/settings_based_transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
