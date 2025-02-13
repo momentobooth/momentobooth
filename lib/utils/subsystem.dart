@@ -5,11 +5,14 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/utils/logger.dart';
 
-mixin Subsystem on Logger {
+part 'subsystem.g.dart';
 
-  final Observable<SubsystemStatus> _subsystemStatus = Observable(const SubsystemStatus.initial());
+abstract class Subsystem = SubsystemBase with _$Subsystem;
 
-  SubsystemStatus get subsystemStatus => _subsystemStatus.value;
+abstract class SubsystemBase with Store, Logger {
+
+  @readonly
+  SubsystemStatus _subsystemStatus = const SubsystemStatus.initial();
 
   // ////////////// //
   // Initialization //
@@ -21,10 +24,10 @@ mixin Subsystem on Logger {
   Future<void> initializeSafe() async {
     try {
       await initialize();
-      if (subsystemStatus is SubsystemStatusInitial) reportSubsystemOk();
+      if (_subsystemStatus is SubsystemStatusInitial) reportSubsystemOk();
     } catch (e, s) {
       logError("Init of $runtimeType failed", e, s);
-      if (subsystemStatus is SubsystemStatusInitial) reportSubsystemError(message: "Initialization error: $e");
+      if (_subsystemStatus is SubsystemStatusInitial) reportSubsystemError(message: "Initialization error: $e");
     }
   }
 
@@ -32,70 +35,52 @@ mixin Subsystem on Logger {
   // Report subsystem status //
   // /////////////////////// //
 
-  Action? _reportSubsystemBusy;
-
+  @action
   void reportSubsystemBusy({required String message, Map<String, Future Function()> actions = const {}}) {
-    (_reportSubsystemBusy ??= Action(() {
-      _subsystemStatus.value = SubsystemStatus.busy(
-        message: message,
-        actions: actions,
-      );
-    }))();
+    _subsystemStatus = SubsystemStatus.busy(
+      message: message,
+      actions: actions,
+    );
   }
 
-  Action? _reportSubsystemOk;
-
+  @action
   void reportSubsystemOk({String? message, Map<String, Future Function()> actions = const {}}) {
-    (_reportSubsystemOk ??= Action(() {
-      _subsystemStatus.value = SubsystemStatus.ok(
-        message: message,
-        actions: actions,
-      );
-    }))();
+    _subsystemStatus = SubsystemStatus.ok(
+      message: message,
+      actions: actions,
+    );
   }
 
-  Action? _reportSubsystemDisabled;
-
+  @action
   void reportSubsystemDisabled({Map<String, Future Function()> actions = const {}}) {
-    (_reportSubsystemDisabled ??= Action(() {
-      _subsystemStatus.value = SubsystemStatus.disabled(
-        actions: actions,
-      );
-    }))();
+    _subsystemStatus = SubsystemStatus.disabled(
+      actions: actions,
+    );
   }
 
-  Action? _reportSubsystemWarning;
-
+  @action
   void reportSubsystemWarning({required String message, Map<String, Future Function()> actions = const {}}) {
-    (_reportSubsystemWarning ??= Action(() {
-      _subsystemStatus.value = SubsystemStatus.busy(
-        message: message,
-        actions: actions,
-      );
-    }))();
+    _subsystemStatus = SubsystemStatus.busy(
+      message: message,
+      actions: actions,
+    );
   }
 
-  Action? _reportSubsystemError;
-
+  @action
   void reportSubsystemError({required String message, String? exception, Map<String, Future Function()> actions = const {}}) {
-    (_reportSubsystemError ??= Action(() {
-      _subsystemStatus.value = SubsystemStatus.error(
-        message: message,
-        exception: exception,
-        actions: actions,
-      );
-    }))();
+    _subsystemStatus = SubsystemStatus.error(
+      message: message,
+      exception: exception,
+      actions: actions,
+    );
   }
 
-  Action? _reportSubsystemDeferred;
-
+  @action
   void reportSubsystemDeferred({required List<SubsystemStatus> children, Map<String, Future Function()> actions = const {}}) {
-    (_reportSubsystemDeferred ??= Action(() {
-      _subsystemStatus.value = SubsystemStatus.deferred(
-        children: children,
-        actions: actions,
-      );
-    }))();
+    _subsystemStatus = SubsystemStatus.deferred(
+      children: children,
+      actions: actions,
+    );
   }
 
 }
