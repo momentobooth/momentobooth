@@ -12,7 +12,7 @@ part 'sfx_manager.g.dart';
 
 class SfxManager = SfxManagerBase with _$SfxManager;
 
-abstract class SfxManagerBase with Store, Logger, Subsystem {
+abstract class SfxManagerBase extends Subsystem with Store, Logger {
 
   AudioPlayer? _audioPlayer;
 

@@ -15,7 +15,7 @@ part 'printing_manager.g.dart';
 
 class PrintingManager = PrintingManagerBase with _$PrintingManager;
 
-abstract class PrintingManagerBase with Store, Logger, Subsystem {
+abstract class PrintingManagerBase extends Subsystem with Store, Logger {
 
   // ////////////// //
   // Initialization //
