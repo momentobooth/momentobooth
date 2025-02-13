@@ -29,6 +29,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
       FluentSettingsBlock(
         title: "Animations",
         settings: [
+          // FIXME: Add functionality
           // BooleanInputCard(
           //   icon: LucideIcons.partyPopper,
           //   title: "Disable confetti 🚫🎉",

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
@@ -17,7 +18,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
     required super.viewModel,
     required super.contextAccessor,
   }) {
-    Timer.run(noProjectOpenedDialog);
+    WidgetsBinding.instance.addPostFrameCallback((_) => noProjectOpenedDialog());
   }
 
   Future<void> noProjectOpenedDialog() async {
