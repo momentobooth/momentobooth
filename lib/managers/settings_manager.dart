@@ -24,14 +24,12 @@ abstract class SettingsManagerBase with Store, Logger, Subsystem {
       bool hasExistingSettings = await settingsRepository.hasExistingData();
 
       if (!hasExistingSettings) {
-        _settings = Settings.withDefaults();
         reportSubsystemOk(message: "No existing settings data found, a new file will be created.");
       } else {
         _settings = await settingsRepository.get();
         reportSubsystemOk();
       }
     } catch (e) {
-      _settings = Settings.withDefaults();
       reportSubsystemError(
         message: "Could not read existing settings. Open the details view for details and solutions.",
         exception: e.toString(),

@@ -24,7 +24,7 @@ abstract class PhotoCaptureMethod with Logger {
         String currentDateTime = formatter.format(DateTime.now());
         String fileName = "${currentDateTime}_$filename";
 
-        // FIXME can I conclude that this is not necessary anymore as the folder gets created when a project is opened, or must we assume that the folder can be deleted in the mean time?
+        // The folder gets created when a project is opened, but the folder could be deleted in the mean time
         await getIt<ProjectManager>().getInputDir().create(recursive: true);
 
         String filePath = path.join(getIt<ProjectManager>().getInputDir().path, fileName);

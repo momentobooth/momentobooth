@@ -31,10 +31,10 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         settings: [
           // BooleanInputCard(
           //   icon: LucideIcons.partyPopper,
-          //   title: "Display confetti 🎉",
-          //   subtitle: "If enabled, confetti will shower the share screen!",
-          //   value: () => viewModel.displayConfettiSetting,
-          //   onChanged: controller.onDisplayConfettiChanged,
+          //   title: "Disable confetti 🚫🎉",
+          //   subtitle: "If enabled, confetti will be disabled on the share screen, even if enabled by the project.",
+          //   value: () => viewModel.disableConfettiSetting,
+          //   onChanged: controller.onDisableConfettiChanged,
           // ),
           ComboBoxCard<ScreenTransitionAnimation>(
             icon: LucideIcons.arrowRightLeft,

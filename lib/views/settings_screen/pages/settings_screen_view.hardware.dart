@@ -196,18 +196,6 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
         }
         return const SizedBox();
       }),
-      // Observer(builder: (_) {
-      //   if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop && viewModel.saveCapturesToDiskSetting) {
-      //     return FolderPickerCard(
-      //       icon: LucideIcons.folderInput,
-      //       title: "Capture storage location",
-      //       subtitle: "Location where all captured photos (as retrieved from the capture implementation) will be saved to",
-      //       controller: controller.captureStorageLocationController,
-      //       onChanged: controller.onCaptureStorageLocationChanged,
-      //     );
-      //   }
-      //   return const SizedBox();
-      // }),
     ],
   );
 }

@@ -87,6 +87,7 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     }
 
     _settings = settings;
+    // TODO implement MQTT project related property publishing
     // getIt<MqttManager>().publishSettings(settings);
   }
 
@@ -118,7 +119,6 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
     } else {
       // Update the entry in the projects list.
       final (index, currentEntry) = existingProjectEntries.first;
-      // final currentEntry = currentList.removeAt(index);
       entry = currentEntry.copyWith(opened: DateTime.now());
       currentList[index] = entry;
     }
