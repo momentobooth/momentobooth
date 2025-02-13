@@ -104,13 +104,6 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
   return FluentSettingsBlock(
     title: "Creative",
     settings: [
-      FolderPickerCard(
-        icon: LucideIcons.folder,
-        title: "Collage background templates location",
-        subtitle: "Location to look for template files",
-        controller: controller.templatesFolderSettingController,
-        onChanged: controller.onTemplatesFolderChanged,
-      ),
       NumberInputCard(
         icon: LucideIcons.ratio,
         title: "Collage aspect ratio",

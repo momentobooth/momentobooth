@@ -11,6 +11,21 @@
     "genericRetryButton": "Probeer opnieuw",
     "genericCancelButton": "Annuleren",
     "genericOneMomentPlease": "Een moment geduld...",
+    "genericDocumentation": "Documentatie",
+    "genericAbout": "Over",
+    "genericHelp": "Help",
+    "genericView": "Weergave",
+    "genericFile": "Bestand",
+    "genericFullScreen": "Volledig scherm",
+    "genericSettings": "Instellingen",
+    "genericCanBeChangedInSettings": "dit kan worden aangepast in de instellingen",
+
+    "actionRestoreLiveView": "Reset live view",
+    "actionsExit": "Sluiten",
+
+    "screensStart": "Startscherm",
+    "screensGallery": "Galerij",
+    "screensManualCollage": "Handmatige collage",
 
     "startScreenTouchToStartButton": "Raak aan om te beginnen",
     "startScreenGalleryButton": "Galerij",
@@ -85,5 +100,15 @@
     "printDialogTitle": "Afdrukken",
     "printDialogSizeSetting": "Formaat:",
     "printDialogNoOfPrintsSetting": "Aantal prints:",
-    "printDialogSummary": "{numPrints} prints → {numImages} geprint foto's"
+    "printDialogSummary": "{numPrints} prints → {numImages} geprint foto's",
+
+    "projectNotOpened": "Geen project geopend",
+    "opened": "Geopend op",
+    "projectNotOpenedInstructions": "Je hebt nog geen projectmap geopend. Open er een om te beginnen met foto's schieten.",
+    "projectNotOpenedExplanation": "MomentoBooth moet weten waar afbeeldingen moeten worden opgeslagen en waar collagetemplates te vinden zijn.",
+    "projectsRecent": "Recente projecten",
+    "projectOpenButton": "Open een projectmap",
+    "projectOpenShort": "Open project",
+    "projectViewInExplorer": "Open projectmap in verkenner",
+    "projectLoadLastOnStart": "Open het laatste project bij starten"
 }

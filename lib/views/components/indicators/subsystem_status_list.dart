@@ -23,6 +23,9 @@ class SubsystemStatusList extends StatelessWidget {
           return SubsystemStatusDisplay(title: "Statistics", status: getIt<StatsManager>().subsystemStatus);
         }),
         Observer(builder: (_) {
+          return SubsystemStatusDisplay(title: "Projects", status: getIt<ProjectManager>().subsystemStatus);
+        }),
+        Observer(builder: (_) {
           return SubsystemStatusDisplay(title: "Live view", status: getIt<LiveViewManager>().subsystemStatus);
         }),
         Observer(builder: (_) {

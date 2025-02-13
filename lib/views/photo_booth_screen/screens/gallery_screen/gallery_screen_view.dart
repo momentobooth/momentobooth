@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
+import 'package:fluent_ui/fluent_ui.dart' show FluentTheme;
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -199,7 +200,18 @@ class FilterChoice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SegmentedButton(
-      style: ButtonStyle(foregroundColor: WidgetStateProperty.all(Colors.white)),
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color>(
+          (states) {
+              if (states.contains(WidgetState.selected)) {
+                return FluentTheme.of(context).accentColor;
+              }
+              return Colors.transparent;
+            },
+        ),
+        iconColor: WidgetStateProperty.all(Colors.white),
+        foregroundColor: WidgetStateProperty.all(Colors.white)
+      ),
       showSelectedIcon: false,
       segments: const [
         ButtonSegment(

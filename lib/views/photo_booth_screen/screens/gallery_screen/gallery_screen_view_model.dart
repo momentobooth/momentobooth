@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
@@ -30,7 +31,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
 
   final DateFormat formatter = DateFormat("MMM dd – HH:mm");
 
-  Directory get outputDir => Directory(getIt<SettingsManager>().settings.output.localFolder);
+  Directory get outputDir => getIt<ProjectManager>().getOutputDir();
   String get baseName => getIt<PhotosManager>().baseName;
 
   bool get isFaceRecognitionEnabled => getIt<SettingsManager>().settings.faceRecognition.enable;

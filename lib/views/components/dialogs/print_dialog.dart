@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart' show Colors, FluentTheme;
+import 'package:flutter/material.dart' hide Colors;
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
@@ -82,6 +83,7 @@ class _PrintDialogState extends State<PrintDialog> {
           Material(
             color: Colors.transparent,
             child: Slider(
+              activeColor: FluentTheme.of(context).accentColor,
               value: numPrints.toDouble(),
               min: 1,
               max: widget.maxPrints.toDouble(),
@@ -122,6 +124,17 @@ class PrintSizeChoice extends StatelessWidget {
   Widget build(BuildContext context) {
     final settings = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
     return SegmentedButton<PrintSize>(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color>(
+          (states) {
+              if (states.contains(WidgetState.selected)) {
+                return FluentTheme.of(context).accentColor;
+              }
+              return Colors.transparent;
+            },
+        ),
+        iconColor: WidgetStateProperty.all(Colors.white)
+      ),
       segments: [
         const ButtonSegment<PrintSize>(
           value: PrintSize.normal,

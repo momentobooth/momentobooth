@@ -9,6 +9,7 @@ import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/find_face_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:path/path.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -28,7 +29,11 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   }
 
   void onPressedBack() {
-    router.pop();
+    if (router.canPop()) {
+      router.pop();
+    } else {
+      router.go(StartScreen.defaultRoute);
+    }
   }
 
   Future<void> filterWithFaces() async {

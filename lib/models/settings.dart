@@ -29,9 +29,9 @@ class Settings with _$Settings implements TomlEncodableValue {
 
   const factory Settings({
     @Default(5) int captureDelaySeconds,
+    @Default(false) bool loadLastProject,
     @Default(1.5) double collageAspectRatio,
     @Default(0) double collagePadding,
-    @Default(true) bool singlePhotoIsCollage,
     @JsonKey(defaultValue: _templatesFolderFromJson) required String templatesFolder,
     @JsonKey(defaultValue: HardwareSettings.withDefaults) required HardwareSettings hardware,
     @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
@@ -214,13 +214,9 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
   const UiSettings._();
 
   const factory UiSettings({
-    @Default(Color(0xFF0078C8)) @ColorColorCodeConverter() Color primaryColor,
     @Default(45) int returnToHomeTimeoutSeconds,
     @Default(Language.english) Language language,
     @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,
-    @Default("") String introScreenTouchToStartOverrideText,
-    @Default(true) bool displayConfetti,
-    @Default(false) bool customColorConfetti,
     @Default(false) bool enableSfx,
     @Default("") String clickSfxFile,
     @Default("") String shareScreenSfxFile,

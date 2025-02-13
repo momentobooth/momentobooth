@@ -12,8 +12,10 @@ class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
 abstract class SettingsManagerBase with Store, Logger, Subsystem {
 
+  // Loading the settings with default values to prevent errors from use before initialization.
+  // This is fine as the initialize method overwrites the value anyway.
   @readonly
-  late Settings _settings;
+  Settings _settings = Settings.withDefaults();
 
   @override
   Future<void> initialize() async {
@@ -22,14 +24,12 @@ abstract class SettingsManagerBase with Store, Logger, Subsystem {
       bool hasExistingSettings = await settingsRepository.hasExistingData();
 
       if (!hasExistingSettings) {
-        _settings = Settings.withDefaults();
         reportSubsystemOk(message: "No existing settings data found, a new file will be created.");
       } else {
         _settings = await settingsRepository.get();
         reportSubsystemOk();
       }
     } catch (e) {
-      _settings = Settings.withDefaults();
       reportSubsystemError(
         message: "Could not read existing settings. Open the details view for details and solutions.",
         exception: e.toString(),

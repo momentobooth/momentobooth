@@ -16,6 +16,7 @@ import screen_retriever_macos
 import sentry_flutter
 import share_plus
 import texture_rgba_renderer
+import url_launcher_macos
 import window_manager
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
@@ -30,5 +31,6 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   SentryFlutterPlugin.register(with: registry.registrar(forPlugin: "SentryFlutterPlugin"))
   SharePlusMacosPlugin.register(with: registry.registrar(forPlugin: "SharePlusMacosPlugin"))
   TextureRgbaRendererPlugin.register(with: registry.registrar(forPlugin: "TextureRgbaRendererPlugin"))
+  UrlLauncherPlugin.register(with: registry.registrar(forPlugin: "UrlLauncherPlugin"))
   WindowManagerPlugin.register(with: registry.registrar(forPlugin: "WindowManagerPlugin"))
 }

@@ -5,8 +5,10 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
+import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
@@ -16,6 +18,7 @@ import 'package:printing/printing.dart';
 part 'settings_screen_view_model.g.dart';
 
 typedef UpdateSettingsCallback = Settings Function(Settings settings);
+typedef UpdateProjectSettingsCallback = ProjectSettings Function(ProjectSettings settings);
 
 class SettingsScreenViewModel = SettingsScreenViewModelBase with _$SettingsScreenViewModel;
 
@@ -141,12 +144,18 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
   Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
 
-  // Current values
+  // Project settings current values
+  String get introScreenTouchToStartOverrideTextSetting => getIt<ProjectManager>().settings.introScreenTouchToStartOverrideText;
+  bool get displayConfettiSetting => getIt<ProjectManager>().settings.displayConfetti;
+  bool get customColorConfettiSetting => getIt<ProjectManager>().settings.customColorConfetti;
+  bool get singlePhotoIsCollageSetting => getIt<ProjectManager>().settings.singlePhotoIsCollage;
+  Color get primaryColorSetting => getIt<ProjectManager>().settings.primaryColor;
 
+  // System settings current values
   int get captureDelaySecondsSetting => getIt<SettingsManager>().settings.captureDelaySeconds;
+  bool get loadLastProjectSetting => getIt<SettingsManager>().settings.loadLastProject;
   double get collageAspectRatioSetting => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePaddingSetting => getIt<SettingsManager>().settings.collagePadding;
-  bool get singlePhotoIsCollageSetting => getIt<SettingsManager>().settings.singlePhotoIsCollage;
   String get templatesFolderSetting => getIt<SettingsManager>().settings.templatesFolder;
   Rotate get liveViewAndCaptureRotateSetting => getIt<SettingsManager>().settings.hardware.liveViewAndCaptureRotate;
   Flip get liveViewFlipSetting => getIt<SettingsManager>().settings.hardware.liveViewFlip;
@@ -191,11 +200,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   ExportFormat get exportFormat => getIt<SettingsManager>().settings.output.exportFormat;
   int get jpgQuality => getIt<SettingsManager>().settings.output.jpgQuality;
   double get resolutionMultiplier => getIt<SettingsManager>().settings.output.resolutionMultiplier;
-  Color get primaryColorSetting => getIt<SettingsManager>().settings.ui.primaryColor;
   int get returnToHomeTimeoutSeconds => getIt<SettingsManager>().settings.ui.returnToHomeTimeoutSeconds;
-  String get introScreenTouchToStartOverrideTextSetting => getIt<SettingsManager>().settings.ui.introScreenTouchToStartOverrideText;
-  bool get displayConfettiSetting => getIt<SettingsManager>().settings.ui.displayConfetti;
-  bool get customColorConfettiSetting => getIt<SettingsManager>().settings.ui.customColorConfetti;
   bool get enableSfxSetting => getIt<SettingsManager>().settings.ui.enableSfx;
   String get clickSfxFileSetting => getIt<SettingsManager>().settings.ui.clickSfxFile;
   String get shareScreenSfxFileSetting => getIt<SettingsManager>().settings.ui.shareScreenSfxFile;
@@ -243,6 +248,12 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     Settings currentSettings = getIt<SettingsManager>().settings;
     Settings updatedSettings = updateCallback(currentSettings);
     await getIt<SettingsManager>().updateAndSave(updatedSettings);
+  }
+
+  Future<void> updateProjectSettings(UpdateProjectSettingsCallback updateCallback) async {
+    ProjectSettings currentSettings = getIt<ProjectManager>().settings;
+    ProjectSettings updatedSettings = updateCallback(currentSettings);
+    await getIt<ProjectManager>().updateAndSave(updatedSettings);
   }
 
 }

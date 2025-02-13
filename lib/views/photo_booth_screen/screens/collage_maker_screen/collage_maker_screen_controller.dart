@@ -1,3 +1,4 @@
+
 import 'package:flutter/widgets.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
@@ -29,8 +30,6 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     }
     captureCollage();
   }
-
-  String get outputFolder => getIt<SettingsManager>().settings.output.localFolder;
 
   DateTime? latestCapture;
 

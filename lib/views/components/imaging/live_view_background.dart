@@ -88,7 +88,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   Widget get _initializingState {
     return Center(
-      child: ProgressRing(activeColor: getIt<SettingsManager>().settings.ui.primaryColor),
+      child: ProgressRing(activeColor: getIt<ProjectManager>().settings.primaryColor),
     );
   }
 

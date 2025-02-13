@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
@@ -55,10 +56,13 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
         Expanded(
           flex: 2,
           child: Center(
-            child: AutoSizeText(
-              viewModel.touchToStartText,
-              style: theme.titleStyle,
-              textAlign: TextAlign.center,
+            child: Observer(
+              builder: (context) =>
+                AutoSizeText(
+                  viewModel.touchToStartText,
+                  style: theme.titleStyle,
+                  textAlign: TextAlign.center,
+                )
             ),
           ),
         ),

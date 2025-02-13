@@ -11,6 +11,21 @@
     "genericRetryButton": "Retry",
     "genericCancelButton": "Cancel",
     "genericOneMomentPlease": "One moment please...",
+    "genericDocumentation": "Documentation",
+    "genericAbout": "About",
+    "genericHelp": "Help",
+    "genericView": "View",
+    "genericFile": "File",
+    "genericFullScreen": "Full screen",
+    "genericSettings": "Settings",
+    "genericCanBeChangedInSettings": "this can be changed in settings",
+
+    "actionRestoreLiveView": "Restore live view",
+    "actionsExit": "Exit",
+
+    "screensStart": "Start screen",
+    "screensGallery": "Gallery",
+    "screensManualCollage": "Manual collage",
     
     "startScreenTouchToStartButton": "Touch to start",
     "startScreenGalleryButton": "Gallery",
@@ -86,6 +101,16 @@
     "printDialogSizeSetting": "Size:",
     "printDialogNoOfPrintsSetting": "Number of prints:",
     "printDialogSummary": "{numPrints} prints → {numImages} printed images",
+
+    "projectNotOpened": "No project opened",
+    "opened": "Opened",
+    "projectNotOpenedInstructions": "You did not open a project folder yet. Open one to start capturing.",
+    "projectNotOpenedExplanation": "MomentoBooth needs to know where to store images and look for collage templates.",
+    "projectsRecent": "Recent projects",
+    "projectOpenButton": "Open a project folder",
+    "projectOpenShort": "Open project",
+    "projectViewInExplorer": "View project in explorer",
+    "projectLoadLastOnStart": "Load last project on start up",
 
     "@multiCaptureScreenPhotoCounter": {
         "placeholders": {

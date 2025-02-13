@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:intl/intl.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/file_utils.dart';
@@ -24,9 +24,10 @@ abstract class PhotoCaptureMethod with Logger {
         String currentDateTime = formatter.format(DateTime.now());
         String fileName = "${currentDateTime}_$filename";
 
-        await Directory(getIt<SettingsManager>().settings.hardware.captureStorageLocation).create(recursive: true);
+        // The folder gets created when a project is opened, but the folder could be deleted in the mean time
+        await getIt<ProjectManager>().getInputDir().create(recursive: true);
 
-        String filePath = path.join(getIt<SettingsManager>().settings.hardware.captureStorageLocation, fileName);
+        String filePath = path.join(getIt<ProjectManager>().getInputDir().path, fileName);
         await writeBytesToFileLocked(filePath, fileData);
         logDebug("Stored incoming photo to disk: $filePath");
       } catch (exception, stacktrace) {

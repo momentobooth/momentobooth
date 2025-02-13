@@ -12,11 +12,11 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
         onFinishedEditing: controller.onCaptureDelaySecondsChanged,
       ),
       BooleanInputCard(
-        icon: LucideIcons.image,
-        title: "Treat single photo as collage",
-        subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
-        value: () => viewModel.singlePhotoIsCollageSetting,
-        onChanged: controller.onSinglePhotoIsCollageChanged,
+        icon: LucideIcons.folderDot,
+        title: "Load last project on start",
+        subtitle: "When enabled, MomentoBooth will load the last opened project when it starts.",
+        value: () => viewModel.loadLastProjectSetting,
+        onChanged: controller.onLoadLastProjectChanged,
       ),
       const FluentSettingsBlock(
         title: "Hotkeys",

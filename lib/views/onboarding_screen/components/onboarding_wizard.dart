@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:momento_booth/views/onboarding_screen/pages/projects_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/status_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/welcome_page.dart';
 
@@ -24,6 +25,7 @@ class _OnboardingWizardState extends State<OnboardingWizard> {
     controller = WizardController([
       const WelcomePage(),
       const StatusPage(),
+      const ProjectsPage(),
     ]);
     super.initState();
   }
