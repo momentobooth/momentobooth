@@ -131,10 +131,11 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
           _currentLiveViewSource = StaticImageSource();
       }
 
-      await _ensureTextureAvailable();
       try {
         _lastFrameWasInvalid = false;
-        await _currentLiveViewSource?.openStream(
+        if (_currentLiveViewSource == null) throw Exception('Invalid camera selection');
+        await _ensureTextureAvailable();
+        await _currentLiveViewSource!.openStream(
           texturePtr: BigInt.from(_texturePointer),
         );
         reportSubsystemOk();
