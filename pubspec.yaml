@@ -95,6 +95,7 @@ dependencies:
   csslib: 1.0.2
   args: ^2.6.0
   url_launcher: ^6.3.1
+  super_drag_and_drop: ^0.8.24
 
 dev_dependencies:
   # UI
