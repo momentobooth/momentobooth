@@ -43,11 +43,17 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     if (_printingImplementation is FlutterPrintingClient && printingImplementationSetting == PrintingImplementation.flutterPrinting) return;
     if (_printingImplementation is CupsClient && printingImplementationSetting == PrintingImplementation.cups) return;
 
-    _printingImplementation = switch (printingImplementationSetting) {
-      PrintingImplementation.none => null,
-      PrintingImplementation.flutterPrinting => FlutterPrintingClient(),
-      PrintingImplementation.cups => CupsClient(),
-    };
+    switch (printingImplementationSetting) {
+      case PrintingImplementation.none:
+        _printingImplementation = null;
+        reportSubsystemDisabled();
+      case PrintingImplementation.flutterPrinting:
+        _printingImplementation = FlutterPrintingClient();
+        reportSubsystemOk();
+      case PrintingImplementation.cups:
+        _printingImplementation = CupsClient();
+        reportSubsystemOk();
+    }
   }
 
   Future<void> printPdf(String taskName, Uint8List pdfData, {int copies=1, PrintSize printSize = PrintSize.normal}) async {
