@@ -13,6 +13,7 @@ import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/components/indicators/connection_state_indicator.dart';
+import 'package:momento_booth/views/components/indicators/subsystem_status_icon.dart';
 import 'package:momento_booth/views/components/indicators/subsystem_status_list.dart';
 import 'package:momento_booth/views/settings_screen/components/boolean_input_card.dart';
 import 'package:momento_booth/views/settings_screen/components/button_card.dart';
@@ -119,6 +120,7 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 icon: const Icon(LucideIcons.messageSquareWarning),
                 title: const Text("Subsystem status"),
                 body: Builder(builder: (_) => _getSubsystemStatusTab(viewModel, controller)),
+                infoBadge: SubsystemStatusIcon(status: viewModel.badgeStatus),
               ),
               PaneItem(
                 icon: const Icon(LucideIcons.chartLine),
