@@ -47,17 +47,18 @@ jobs:
       uses: kuhnroyal/flutter-fvm-config-action@v3
 
     - name: Setup Flutter
-      uses: hrishikesh-kadam/setup-flutter@v1
+      uses: flutter-actions/setup-flutter@v4
       with:
-        ref: ${{ env.FLUTTER_VERSION }}
-        setFlutterRootPath: 'true'
-        addPubCacheBinToPath: 'true'
-        flutterPrecache: '--windows'
-        setPubCachePath: '${{ env.DEV_DRIVE }}/.pub-cache'
-        installationPath: '${{ env.DEV_DRIVE }}/flutter'
+        channel: stable
+        version: ${{ env.FLUTTER_VERSION }}
+        cache: true
+        cache-sdk: true
 
     - name: Disable Flutter analytics and CLI animations
       run: flutter config --no-analytics --no-cli-animations
+
+    - name: Flutter SDK precache
+      run: flutter precache --linux
 
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
