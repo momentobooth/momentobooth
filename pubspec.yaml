@@ -29,8 +29,8 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.1
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.10.2
-  widgetbook_annotation: 3.2.0
+  widgetbook: 3.11.0
+  widgetbook_annotation: 3.3.0
   flex_color_picker: 3.7.0
   lucide_icons_flutter: 1.2.7
 
@@ -84,7 +84,7 @@ dependencies:
   # Misc
   get_it: 8.0.3
   meta: any
-  synchronized: 3.3.0+3
+  synchronized: 3.3.1
   collection: any
   dart_casing: 3.0.1
   package_info_plus: 8.2.1
@@ -96,9 +96,17 @@ dependencies:
   args: ^2.6.0
   url_launcher: ^6.3.1
 
+dependency_overrides:
+  # Remove when fixed: https://github.com/anusii/solidpod/issues/245
+  flutter_secure_storage_linux:
+    git:
+      url: https://github.com/juliansteenbakker/flutter_secure_storage.git
+      ref: v9.2.4
+      path: flutter_secure_storage_linux
+
 dev_dependencies:
   # UI
-  widgetbook_generator: 3.9.1
+  widgetbook_generator: 3.10.0
 
   # MVC
   mobx_codegen: 2.7.0
