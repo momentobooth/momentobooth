@@ -26,6 +26,7 @@ class SettingsImportDialog extends StatelessWidget {
     return ModalDialog(
       title: "Import settings",
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             "Do you want to apply the following settings?",
@@ -33,27 +34,27 @@ class SettingsImportDialog extends StatelessWidget {
           ),
           Text("Items in bold are different from your current settings"),
           SizedBox(height: 20.0,),
-          Container(
-            padding: EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey[30],
+          Flexible(
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey[30],
+                ),
+                borderRadius: BorderRadius.circular(8),
               ),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: 1000, minHeight: 50),
-              // FIXME somehow make this scrollable
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (final update in updates)
-                  if (update.newValue != update.oldValue)
-                    Text("${update.path}: old=${update.oldValue} new=${update.newValue}", style: TextStyle(fontWeight: FontWeight.bold))
-                  else
-                    Text("${update.path}: value=${update.newValue}")
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final update in updates)
+                    if (update.newValue != update.oldValue)
+                      Text("${update.path}: old=${update.oldValue} new=${update.newValue}", style: TextStyle(fontWeight: FontWeight.bold))
+                    else
+                      Text("${update.path}: value=${update.newValue}")
+                  ],
+                ),
               ),
             ),
           )
