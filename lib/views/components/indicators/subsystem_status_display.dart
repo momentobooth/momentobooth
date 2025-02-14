@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/views/components/indicators/subsystem_status_icon.dart';
 
 class SubsystemStatusDisplay extends StatefulWidget {
 
@@ -34,15 +35,6 @@ class _SubsystemStatusDisplayState extends State<SubsystemStatusDisplay> {
         SubsystemStatusWithChildren() => '',
       };
 
-  IconData? get _icon => switch (widget.status) {
-        SubsystemStatusInitial() || SubsystemStatusBusy() => LucideIcons.circleEllipsis,
-        SubsystemStatusOk() => LucideIcons.circleCheckBig,
-        SubsystemStatusDisabled() => LucideIcons.ban,
-        SubsystemStatusWarning() => LucideIcons.circleAlert,
-        SubsystemStatusError() => LucideIcons.circleX,
-        SubsystemStatusWithChildren() => null,
-      };
-
   ActionMap get _actions => switch (widget.status) {
         SubsystemStatusInitial() => const {},
         SubsystemStatusBusy(:final actions) => actions,
@@ -51,16 +43,6 @@ class _SubsystemStatusDisplayState extends State<SubsystemStatusDisplay> {
         SubsystemStatusWarning(:final actions) => actions,
         SubsystemStatusError(:final actions) => actions,
         SubsystemStatusWithChildren(:final actions) => actions,
-      };
-
-  Color get _iconColor => switch (widget.status) {
-        SubsystemStatusInitial() => Colors.grey,
-        SubsystemStatusBusy() => Colors.blue,
-        SubsystemStatusOk() => Colors.successPrimaryColor,
-        SubsystemStatusDisabled() => Colors.grey,
-        SubsystemStatusWarning() => Colors.yellow,
-        SubsystemStatusError() => Colors.errorPrimaryColor,
-        SubsystemStatusWithChildren() => Colors.green,
       };
 
   String? get _exception => switch (widget.status) {
@@ -80,7 +62,7 @@ class _SubsystemStatusDisplayState extends State<SubsystemStatusDisplay> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ListTile(
-            leading: Icon(_icon, color: _iconColor),
+            leading: SubsystemStatusIcon(status: widget.status),
             title: Text(widget.title),
             subtitle: Text(_message),
             trailing: _canExpand ? AnimatedRotation(

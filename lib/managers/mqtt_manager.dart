@@ -27,7 +27,7 @@ part 'mqtt_manager.g.dart';
 class MqttManager = MqttManagerBase with _$MqttManager;
 
 /// Class containing global state for photos in the app
-abstract class MqttManagerBase with Store, Logger, Subsystem {
+abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   final Lock _updateMqttClientInstanceLock = Lock();
 

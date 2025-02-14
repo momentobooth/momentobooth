@@ -12,7 +12,7 @@ part 'stats_manager.g.dart';
 
 class StatsManager = StatsManagerBase with _$StatsManager;
 
-abstract class StatsManagerBase with Store, Logger, Subsystem {
+abstract class StatsManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   late Stats _stats;

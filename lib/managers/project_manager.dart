@@ -19,7 +19,7 @@ part 'project_manager.g.dart';
 
 class ProjectManager = ProjectManagerBase with _$ProjectManager;
 
-abstract class ProjectManagerBase with Store, Logger, Subsystem {
+abstract class ProjectManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   bool _isOpen = false;
@@ -38,7 +38,7 @@ abstract class ProjectManagerBase with Store, Logger, Subsystem {
   bool _blockSaving = false;
 
   static const subDirs = ["Input", "Output", "Templates"];
-  
+
   @readonly
   late ProjectsList _projectsList;
 

@@ -9,7 +9,7 @@ part 'window_manager.g.dart';
 
 class WindowManager = WindowManagerBase with _$WindowManager;
 
-abstract class WindowManagerBase with Store, Logger, Subsystem {
+abstract class WindowManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   bool _isFullScreen = false;

@@ -33,7 +33,15 @@ class NoiseSource extends LiveViewSource {
   Future<RawImage> getLastFrame() => noiseGetFrame();
 
   @override
-  Future<CameraState?> getCameraState() async => null;
+  Future<CameraState?> getCameraState() async => CameraState(
+        isStreaming: true,
+        validFrameCount: 1,
+        errorFrameCount: 0,
+        duplicateFrameCount: 0,
+        lastFrameWasValid: true,
+        frameWidth: 1280,
+        frameHeight: 720,
+      );
 
   @override
   Future<void> dispose() => noiseClose(handleId: _handleId);
