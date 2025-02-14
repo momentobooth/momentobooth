@@ -99,6 +99,15 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger {
       _updates = updates;
       _newSettings = settings;
     });
+    // BuildContextAbstractor is not available, so neither is showUserDialog
+    await context.navigator.push(PhotoBoothDialogPage(
+      key: null,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Center(child: SettingsImportDialog(onAccept: () {}, onCancel: () {}, updates: updates)),
+      ),
+      barrierDismissible: true,
+    ).createRoute(context));
   }
 
   void _onDropLeave(DropEvent event) {
