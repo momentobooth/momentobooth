@@ -30,7 +30,6 @@ import 'package:momento_booth/views/settings_screen/components/text_display_card
 import 'package:momento_booth/views/settings_screen/components/text_input_card.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
-import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
