@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -26,17 +27,47 @@ class MyDropRegion extends StatefulWidget {
 
 }
 
-class _MyDropRegionState extends State<MyDropRegion> with Logger {
+class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProviderStateMixin {
 
   static const tomlFormat = SimpleFileFormat(
     uniformTypeIdentifiers: ['public.toml'],
     mimeTypes: ['application/toml', 'text/x-toml'],
   );
 
-  bool _isDragOver = false;
+  set _isDragOver(bool val) {
+    if (val) {
+      colorController.forward();
+    } else {
+      colorController.reverse();
+    }
+  }
 
-  List<UpdateRecord>? _updates;
-  Settings? _newSettings;
+  late AnimationController colorController;
+  late Animation colorAnimation1, colorAnimation2;
+
+   @override
+  void initState() {
+    super.initState();
+
+    colorController = AnimationController(
+      duration: const Duration(milliseconds: 100), //controll animation duration
+      vsync: this,
+    )..addListener(() {
+        setState(() {});
+    });
+
+    final curvedAnimation = CurvedAnimation(parent: colorController, curve: Curves.ease);
+
+    colorAnimation1 = ColorTween(
+      begin: Colors.grey[100],
+      end: getIt<ProjectManager>().primaryColor,
+    ).animate(curvedAnimation);
+
+    colorAnimation2 = ColorTween(
+      begin: Colors.grey[130],
+      end: getIt<ProjectManager>().primaryColor,
+    ).animate(curvedAnimation);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +83,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger {
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.grey[100],
+            color: colorAnimation1.value,
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(14),
@@ -61,9 +92,11 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger {
         alignment: Alignment.center,
         child: Column(
           children: [
-            Icon(LucideIcons.squareMousePointer, size: 48.0, color: Colors.grey[130],),
+            Icon(LucideIcons.squareMousePointer, size: 48.0, color: colorAnimation2.value),
             SizedBox(height: 8.0),
             Text("Drop settings stub here"),
+            SizedBox(height: 8.0),
+            Button(onPressed: _onBrowsePress, child: Text("Browse settings file")),
           ],
         ),
       ),
@@ -88,7 +121,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger {
     final name = await reader.getSuggestedName() ?? "unknown";
     logDebug('Dropped file: $name');
 
-    // For macOS, where you get a file URI
+    // In case of file URI
     if (reader.canProvide(Formats.fileUri)) {
       reader.getValue<Uri>(Formats.fileUri, (fileUrl) async {
         if (fileUrl != null) {
@@ -101,9 +134,8 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger {
         logWarning('Error reading value $error');
       });
     }
-
-    // For Windows, where you get a virtual file
-    if (reader.canProvide(tomlFormat)) {
+    // In case of virtual file
+    else if (reader.canProvide(tomlFormat)) {
       reader.getFile(tomlFormat, (f) async {
         final valueBytes = await f.readAll();
         final value = String.fromCharCodes(valueBytes);
@@ -113,15 +145,54 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger {
         logWarning('Error reading file $error');
       });
     }
+    // In case of plain text drag and drop
+    else if (reader.canProvide(Formats.plainText)) {
+      reader.getValue<String>(Formats.plainText, (content) async {
+        if (content == null) { return; }
+        final name = "plaintext drag";
+        unawaited(_processFile(name, content));
+      }, onError: (error) {
+        logWarning('Error reading file $error');
+      });
+    }
+  }
+
+  Future<void> _onBrowsePress() async {
+    var tomlXTypeGroup = XTypeGroup(label: "TOML files", extensions: [".toml"], mimeTypes: tomlFormat.mimeTypes,
+                                    uniformTypeIdentifiers: tomlFormat.uniformTypeIdentifiers);
+    final file = await openFile(acceptedTypeGroups: [tomlXTypeGroup]);
+    if (file == null) { return; }
+    final content = await file.readAsString();
+    final name = path.basename(file.path);
+    unawaited(_processFile(name, content));
   }
 
   Future<void> _processFile(String filename, String content) async {
     final settingsRepo = TomlSerializableRepository(path.join(appDataPath, "Settings.toml"), Settings.fromJson);
-    // TomlSerializableRepository<Settings> settingsRepository = getIt<SerialiableRepository<Settings>>();
-    final (settings, updates) = await settingsRepo.overlayWithMap(settingsRepo.getMapFromString(content));
+
+    if (!filename.toLowerCase().endsWith(".toml")) {
+      logWarning("Filename $filename does not end with .toml, trying to use anyway.");
+    }
+
+    late final Map<String, dynamic> overlayMap;
+    try {
+      overlayMap = settingsRepo.getMapFromString(content);
+    } on Exception catch (e) {
+      logError("Error parsing overlay file: $e");
+      return;
+    }
+
+    late final Settings settings;
+    late final List<UpdateRecord> updates;
+    try {
+      (settings, updates) = await settingsRepo.overlayWithMap(overlayMap);
+    } on Exception catch (e) {
+      logError("Error applying overlay: $e");
+      return;
+    }
+
     setState(() {
-      _updates = updates;
-      _newSettings = settings;
+      _isDragOver = false;
     });
     // BuildContextAbstractor is not available, so neither is showUserDialog
     await context.navigator.push(PhotoBoothDialogPage(
