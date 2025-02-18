@@ -5,7 +5,6 @@ import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/_all.dart';
@@ -44,6 +43,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     }
   }
 
+  bool imported = false;
   late AnimationController colorController;
   late Animation colorAnimation1, colorAnimation2;
 
@@ -73,6 +73,20 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
 
   @override
   Widget build(BuildContext context) {
+    return Column(children: [
+      _dropRegion(),
+      if (imported)
+      ...[
+        SizedBox(height: 16.0),
+        Text(
+          "Settings successfully imported",
+          style: TextStyle(color: Colors.successPrimaryColor, fontWeight: FontWeight.bold),
+        ),
+      ]
+    ],);
+  }
+
+  Widget _dropRegion() {
     return DropRegion(
       formats: const [
         ...Formats.standardFormats,
@@ -197,12 +211,15 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
       _isDragOver = false;
     });
     // BuildContextAbstractor is not available, so neither is showUserDialog
-    await context.navigator.push(PhotoBoothDialogPage(
+    await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Center(child: SettingsImportDialog(onAccept: () {
           // Save the settings using the settings manager
           getIt<SettingsManager>().updateAndSave(settings);
+          setState(() {
+            imported = true;
+          });
           widget.onAccept?.call();
           GoRouter.of(context).pop();
         }, onCancel: () {
