@@ -20,7 +20,9 @@ import 'package:super_drag_and_drop/super_drag_and_drop.dart';
 
 class MyDropRegion extends StatefulWidget {
 
-  const MyDropRegion({super.key});
+  final VoidCallback? onAccept;
+
+  const MyDropRegion({super.key, this.onAccept});
 
   @override
   State<StatefulWidget> createState() => _MyDropRegionState();
@@ -201,6 +203,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
         child: Center(child: SettingsImportDialog(onAccept: () {
           // Save the settings using the settings manager
           getIt<SettingsManager>().updateAndSave(settings);
+          widget.onAccept?.call();
           GoRouter.of(context).pop();
         }, onCancel: () {
           GoRouter.of(context).pop();
