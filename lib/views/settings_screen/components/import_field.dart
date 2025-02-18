@@ -44,6 +44,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   }
 
   bool imported = false;
+  String? error;
   late AnimationController colorController;
   late Animation colorAnimation1, colorAnimation2;
 
@@ -75,14 +76,18 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   Widget build(BuildContext context) {
     return Column(children: [
       _dropRegion(),
+      if (imported || error != null)
+      SizedBox(height: 16.0),
+      if (error != null)
+      Text(
+        error!,
+        style: TextStyle(color: Colors.errorPrimaryColor, fontWeight: FontWeight.bold),
+      ),
       if (imported)
-      ...[
-        SizedBox(height: 16.0),
-        Text(
-          "Settings successfully imported",
-          style: TextStyle(color: Colors.successPrimaryColor, fontWeight: FontWeight.bold),
-        ),
-      ]
+      Text(
+        "Settings successfully imported",
+        style: TextStyle(color: Colors.successPrimaryColor, fontWeight: FontWeight.bold),
+      ),
     ],);
   }
 
@@ -126,6 +131,13 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     return event.session.allowedOperations.firstOrNull ?? DropOperation.none;
   }
 
+  void processError(String msg) {
+    logError(msg);
+    setState(() {
+      error = msg;
+    });
+  }
+
   Future<void> _onPerformDrop(PerformDropEvent event) async {
     // Called when user dropped the item. You can now request the data.
     // Note that data must be requested before the performDrop callback
@@ -143,22 +155,33 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
         if (fileUrl != null) {
           final file = File(fileUrl.toFilePath());
           final name = path.basename(file.path);
-          final value = await file.readAsString();
+          late final String value;
+          try {
+            value = await file.readAsString();
+          } on Exception catch (e) {
+            processError('Error reading file: $e');
+            return;
+          }
           unawaited(_processFile(name, value));
         }
       }, onError: (error) {
-        logWarning('Error reading value $error');
+        processError('Error reading file URL: $error');
       });
     }
     // In case of virtual file
     else if (reader.canProvide(tomlFormat)) {
       reader.getFile(tomlFormat, (f) async {
-        final valueBytes = await f.readAll();
-        final value = String.fromCharCodes(valueBytes);
+        late final String value;
+        try {
+          final valueBytes = await f.readAll();
+           value = String.fromCharCodes(valueBytes);
+        } on Exception catch (e) {
+          processError('Error reading virtual file: $e');
+        }
         final name = f.fileName ?? "unknown";
         unawaited(_processFile(name, value));
       }, onError: (error) {
-        logWarning('Error reading file $error');
+        processError('Error reading file: $error');
       });
     }
     // In case of plain text drag and drop
@@ -170,6 +193,8 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
       }, onError: (error) {
         logWarning('Error reading file $error');
       });
+    } else {
+      processError("Could not read the dropped content. Is it the right type?");
     }
   }
 
@@ -194,7 +219,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     try {
       overlayMap = settingsRepo.getMapFromString(content);
     } on Exception catch (e) {
-      logError("Error parsing overlay file: $e");
+      processError("Error parsing overlay file: $e");
       return;
     }
 
@@ -203,7 +228,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     try {
       (settings, updates) = await settingsRepo.overlayWithMap(overlayMap);
     } on Exception catch (e) {
-      logError("Error applying overlay: $e");
+      processError("Error applying overlay: $e");
       return;
     }
 
@@ -219,6 +244,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
           getIt<SettingsManager>().updateAndSave(settings);
           setState(() {
             imported = true;
+            error = null;
           });
           widget.onAccept?.call();
           GoRouter.of(context).pop();
