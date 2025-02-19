@@ -31,10 +31,6 @@ class WidgetbookApp extends StatelessWidget {
         ),
         InspectorAddon(enabled: true),
       ],
-      integrations: [
-        // To make addons & knobs work with Widgetbook Cloud
-        WidgetbookCloudIntegration(),
-      ],
       appBuilder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
