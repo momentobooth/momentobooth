@@ -2044,9 +2044,9 @@ checksum = "4ee93343901ab17bd981295f2cf0026d4ad018c7c31ba84549a4ddbb47a45104"
 
 [[package]]
 name = "little_exif"
-version = "0.6.2"
+version = "0.6.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "84831b8de10947cb83436373bdb603e9038d8f6c9e2b2eb892c211d448af0c89"
+checksum = "272a15b42e25d266583441073642e8ebb6cf747a383d3b76e4e2763c8fd37b6c"
 dependencies = [
  "crc",
  "miniz_oxide",
