@@ -25,7 +25,7 @@ PODS:
   - screen_retriever_macos (0.0.1):
     - FlutterMacOS
   - Sentry/HybridSDK (8.44.0)
-  - sentry_flutter (8.13.0):
+  - sentry_flutter (8.13.2):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.44.0)
@@ -116,7 +116,7 @@ SPEC CHECKSUMS:
   rust_lib_momento_booth: d43a01b1d47afc3530b2f17956170b4256c0b166
   screen_retriever_macos: 776e0fa5d42c6163d2bf772d22478df4b302b161
   Sentry: 0f9bc9adfc0b960e7f3bb5ec67e9a3d8193f3bdb
-  sentry_flutter: c4c3e7feec83e061daf829f6f9359efefab00d87
+  sentry_flutter: 64a43fb39ab4c7f67d8a4cad52b49e22439e58b7
   share_plus: 1fa619de8392a4398bfaf176d441853922614e89
   super_native_extensions: 85efee3a7495b46b04befcfc86ed12069264ebf3
   texture_rgba_renderer: cbed959a3c127122194a364e14b8577bd62dc8f2
