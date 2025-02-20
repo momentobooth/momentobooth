@@ -69,9 +69,11 @@ class PhotoBoothDialog extends StatelessWidget {
               ),
             if (title != null || indicator != null)
               Divider(color: Colors.black.withValues(alpha: 0.5)),
-            Padding(
-              padding: bodyPadding,
-              child: body,
+            Flexible(
+              child: Padding(
+                padding: bodyPadding,
+                child: body,
+              ),
             ),
             if (actions.isNotEmpty)
               Padding(

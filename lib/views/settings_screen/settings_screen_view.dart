@@ -22,6 +22,7 @@ import 'package:momento_booth/views/settings_screen/components/file_picker_card.
 import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
 import 'package:momento_booth/views/settings_screen/components/fluent_settings_block.dart';
 import 'package:momento_booth/views/settings_screen/components/folder_picker_card.dart';
+import 'package:momento_booth/views/settings_screen/components/import_field.dart';
 import 'package:momento_booth/views/settings_screen/components/number_input_card.dart';
 import 'package:momento_booth/views/settings_screen/components/secret_input_card.dart';
 import 'package:momento_booth/views/settings_screen/components/settings_page.dart';
@@ -30,10 +31,12 @@ import 'package:momento_booth/views/settings_screen/components/text_input_card.d
 import 'package:momento_booth/views/settings_screen/settings_screen_controller.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen_view_model.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'pages/settings_screen_view.about.dart';
 part 'pages/settings_screen_view.debug.dart';
 part 'pages/settings_screen_view.face_recognition.dart';
+part 'pages/settings_screen_view.import.dart';
 part 'pages/settings_screen_view.project.dart';
 part 'pages/settings_screen_view.general.dart';
 part 'pages/settings_screen_view.hardware.dart';
@@ -69,6 +72,11 @@ class SettingsScreenView extends ScreenViewBase<SettingsScreenViewModel, Setting
                 body: Builder(builder: (_) => _getProjectSettings(viewModel, controller)),
               ),
               PaneItemHeader(header: const Text('App')),
+              PaneItem(
+                icon: const Icon(LucideIcons.import),
+                title: const Text("Import"),
+                body: Builder(builder: (_) => _getImportSettings(viewModel, controller)),
+              ),
               PaneItem(
                 icon: const Icon(LucideIcons.settings),
                 title: const Text("General"),

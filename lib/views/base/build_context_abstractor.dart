@@ -22,7 +22,6 @@ mixin BuildContextAbstractor {
 
   Future<void> showUserDialog({required Widget dialog, required bool barrierDismissible}) async {
     await navigator.push(PhotoBoothDialogPage(
-      key: null,
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Center(child: dialog),

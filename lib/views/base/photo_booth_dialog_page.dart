@@ -26,8 +26,8 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
   }
 
   PhotoBoothDialogPage({
-    required super.key,
     required super.child,
+    super.key,
     super.barrierDismissible = false,
   }) : super(
           opaque: false,

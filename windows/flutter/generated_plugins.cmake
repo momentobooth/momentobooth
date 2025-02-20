@@ -5,11 +5,13 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   flutter_secure_storage_windows
+  irondash_engine_context
   media_kit_libs_windows_audio
   printing
   screen_retriever_windows
   sentry_flutter
   share_plus
+  super_native_extensions
   texture_rgba_renderer
   url_launcher_windows
   window_manager
