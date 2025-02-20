@@ -48,15 +48,18 @@ jobs:
       uses: kuhnroyal/flutter-fvm-config-action@v3
 
     - name: Setup Flutter
-      uses: hrishikesh-kadam/setup-flutter@v1
+      uses: flutter-actions/setup-flutter@v4
       with:
-        ref: ${{ env.FLUTTER_VERSION }}
-        setFlutterRootPath: 'true'
-        addPubCacheBinToPath: 'true'
-        flutterPrecache: '--macos'
+        channel: stable
+        version: ${{ env.FLUTTER_VERSION }}
+        cache: true
+        cache-sdk: true
 
     - name: Disable Flutter analytics and CLI animations
       run: flutter config --no-analytics --no-cli-animations
+
+    - name: Flutter SDK precache
+      run: flutter precache --macos
 
     - name: Install minimal Rust
       uses: dtolnay/rust-toolchain@master
@@ -83,7 +86,7 @@ jobs:
       uses: baptiste0928/cargo-install@v3
       with:
         crate: flutter_rust_bridge_codegen
-        version: "2.7.1"
+        version: "2.8.0"
 
     - name: Install dependencies
       run: flutter pub get --enforce-lockfile
