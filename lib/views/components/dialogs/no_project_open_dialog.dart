@@ -28,6 +28,7 @@ class NoProjectOpenDialog extends StatelessWidget {
     return ModalDialog(
       title: localizations.projectNotOpened,
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             localizations.projectNotOpenedInstructions,
@@ -41,27 +42,32 @@ class NoProjectOpenDialog extends StatelessWidget {
             "${localizations.projectsRecent}:",
           ),
           SizedBox(height: 8.0,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-            for (final project in recentProjects)
-              Material(
-                color: Color.fromARGB(0, 0, 0, 0),
-                child: InkWell(
-                  onTap: () {
-                    getIt<ProjectManager>().open(project.path);
-                    onOpened();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(children: [
-                      Text(project.name, style: FluentTheme.of(context).typography.bodyStrong),
-                      Text("${localizations.opened}: ${project.opened}"),
-                    ],),
-                  ),
-                ),
-              )
-            ],
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                for (final project in recentProjects)
+                  Material(
+                    color: Color.fromARGB(0, 0, 0, 0),
+                    child: InkWell(
+                      onTap: () {
+                        getIt<ProjectManager>().open(project.path);
+                        onOpened();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(children: [
+                          Text(project.name, style: FluentTheme.of(context).typography.bodyStrong),
+                          Text("${localizations.opened}: ${project.opened}"),
+                        ],),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
           SizedBox(height: 8.0,),
           Row(

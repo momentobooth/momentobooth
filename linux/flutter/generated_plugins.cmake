@@ -5,10 +5,12 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
   flutter_secure_storage_linux
+  irondash_engine_context
   media_kit_libs_linux
   printing
   screen_retriever_linux
   sentry_flutter
+  super_native_extensions
   texture_rgba_renderer
   url_launcher_linux
   window_manager
