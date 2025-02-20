@@ -1247,18 +1247,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: ba82fde87e35fb0d520c9164ba8df2c1586ec2038893976f2952e980af201c4b
+      sha256: "90c2f956c146bcc9c4843406dd4a65d08b25575828dc2ad51de0ca5cd713209f"
       url: "https://pub.dev"
     source: hosted
-    version: "8.13.1"
+    version: "8.13.2"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "1c4c23796e51a978a01e6abe699625d70e52c949a198d9f98f3b54fbe28bde36"
+      sha256: ee6b41956ad570706bf5c2489915d71d75522d154200c0df24be2c4e5654ca21
       url: "https://pub.dev"
     source: hosted
-    version: "8.13.1"
+    version: "8.13.2"
   share_plus:
     dependency: transitive
     description:
@@ -1404,18 +1404,18 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: a67ee21b020c060efefd18dd0d8c52c9d670eb6089c227f22136c6ff09454b0a
+      sha256: b6d5e53370f6d1bf0bb5cc7ae1db84edb11031ed1cd0a8637a8a78c8e18c6aeb
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.11"
+    version: "4.6.12"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "3f6f0d6637de38824055feff34a7705a664e5108e441fafa93422b4229b014ff"
+      sha256: "760fbcf215695d1b6a09b47dce3692e938580092ca574158838e05cdef58f16e"
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.11"
+    version: "4.6.12"
   talker_logger:
     dependency: transitive
     description:
