@@ -48,7 +48,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   late AnimationController colorController;
   late Animation colorAnimation1, colorAnimation2;
 
-   @override
+  @override
   void initState() {
     super.initState();
 
@@ -77,18 +77,18 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     return Column(children: [
       _dropRegion(),
       if (imported || error != null)
-      SizedBox(height: 16.0),
+        SizedBox(height: 16.0),
       if (error != null)
-      Text(
-        error!,
-        style: TextStyle(color: Colors.errorPrimaryColor, fontWeight: FontWeight.bold),
-      ),
+        Text(
+          error!,
+          style: TextStyle(color: Colors.errorPrimaryColor, fontWeight: FontWeight.bold),
+        ),
       if (imported)
-      Text(
-        "Settings successfully imported",
-        style: TextStyle(color: Colors.successPrimaryColor, fontWeight: FontWeight.bold),
-      ),
-    ],);
+        Text(
+          "Settings successfully imported",
+          style: TextStyle(color: Colors.successPrimaryColor, fontWeight: FontWeight.bold),
+        ),
+    ]);
   }
 
   Widget _dropRegion() {
@@ -125,17 +125,13 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   }
 
   DropOperation _onDropOver(DropOverEvent event) {
-    setState(() {
-      _isDragOver = true;
-    });
+    setState(() =>  _isDragOver = true);
     return event.session.allowedOperations.firstOrNull ?? DropOperation.none;
   }
 
   void processError(String msg) {
     logError(msg);
-    setState(() {
-      error = msg;
-    });
+    setState(() => error = msg);
   }
 
   Future<void> _onPerformDrop(PerformDropEvent event) async {
@@ -187,7 +183,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     // In case of plain text drag and drop
     else if (reader.canProvide(Formats.plainText)) {
       reader.getValue<String>(Formats.plainText, (content) async {
-        if (content == null) { return; }
+        if (content == null) return;
         final name = "plaintext drag";
         unawaited(_processFile(name, content));
       }, onError: (error) {
@@ -199,10 +195,14 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   }
 
   Future<void> _onBrowsePress() async {
-    var tomlXTypeGroup = XTypeGroup(label: "TOML files", extensions: [".toml"], mimeTypes: tomlFormat.mimeTypes,
-                                    uniformTypeIdentifiers: tomlFormat.uniformTypeIdentifiers);
+    var tomlXTypeGroup = XTypeGroup(
+      label: "TOML files",
+      extensions: [".toml"],
+      mimeTypes: tomlFormat.mimeTypes,
+      uniformTypeIdentifiers: tomlFormat.uniformTypeIdentifiers,
+    );
     final file = await openFile(acceptedTypeGroups: [tomlXTypeGroup]);
-    if (file == null) { return; }
+    if (file == null) return;
     final content = await file.readAsString();
     final name = path.basename(file.path);
     unawaited(_processFile(name, content));
@@ -232,9 +232,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
       return;
     }
 
-    setState(() {
-      _isDragOver = false;
-    });
+    setState(() => _isDragOver = false);
     // BuildContextAbstractor is not available, so neither is showUserDialog
     await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
       child: Padding(
@@ -257,9 +255,13 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   }
 
   void _onDropLeave(DropEvent event) {
-    setState(() {
-      _isDragOver = false;
-    });
+    setState(() => _isDragOver = false);
+  }
+
+  @override
+  void dispose() {
+    colorController.dispose();
+    super.dispose();
   }
 
 }
