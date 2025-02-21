@@ -31,7 +31,7 @@ jobs:
                   Mount-VHD -Passthru |
                   Initialize-Disk -Passthru |
                   New-Partition -AssignDriveLetter -UseMaximumSize |
-                  Format-Volume -FileSystem ReFS -Confirm:$false -Force
+                  Format-Volume -FileSystem NTFS -Confirm:$false -Force
         Write-Output $Volume
         Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
         Write-Output "CARGO_HOME=$($Volume.DriveLetter):\.cargo" >> $env:GITHUB_ENV
