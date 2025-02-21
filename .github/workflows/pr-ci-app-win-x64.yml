@@ -26,13 +26,13 @@ jobs:
       uses: actions/checkout@v4
 
     # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
-    - name: Create Dev Drive using ReFS
+    - name: Create Dev Drive
       run: |
         $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 20GB |
                   Mount-VHD -Passthru |
                   Initialize-Disk -Passthru |
                   New-Partition -AssignDriveLetter -UseMaximumSize |
-                  Format-Volume -FileSystem ReFS -Confirm:$false -Force
+                  Format-Volume -FileSystem NTFS -Confirm:$false -Force
         Write-Output $Volume
         Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
         Write-Output "CARGO_HOME=$($Volume.DriveLetter):\.cargo" >> $env:GITHUB_ENV

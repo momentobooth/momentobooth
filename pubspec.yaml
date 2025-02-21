@@ -47,7 +47,7 @@ dependencies:
 
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
-  ffi: 2.1.3
+  ffi: 2.1.4
   flutter_rust_bridge: 2.8.0
 
   # Printing
@@ -59,12 +59,12 @@ dependencies:
   path: ^1.9.0
   window_manager: 0.4.3
   file_selector: 1.0.3
-  win32: 5.10.1
+  win32: 5.11.0
 
   # Log and error handling
-  talker: 4.6.11
-  talker_flutter: 4.6.11
-  sentry_flutter: 8.13.0
+  talker: 4.6.12
+  talker_flutter: 4.6.12
+  sentry_flutter: 8.13.2
 
   # Sound output
   just_audio: 0.9.46
@@ -79,7 +79,7 @@ dependencies:
   # Networking
   http: 1.3.0
   http_parser: 4.1.2
-  mqtt5_client: 4.7.0
+  mqtt5_client: 4.9.0
 
   # Misc
   get_it: 8.0.3
