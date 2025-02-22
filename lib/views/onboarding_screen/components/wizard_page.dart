@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 
 class WizardPage extends StatelessWidget {
 
@@ -32,7 +33,7 @@ class WizardPage extends StatelessWidget {
               if (WizardProvider.of(context).canGoNext) {
                 WizardProvider.of(context).next(context);
               } else {
-                context.replace('/photo_booth');
+                context.replace(StartScreen.defaultRoute);
               }
             },
             child: Text(WizardProvider.of(context).canGoNext ? "Next step" : "Finish"),
