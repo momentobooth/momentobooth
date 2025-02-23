@@ -12,10 +12,8 @@ class WizardPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
+    return Column(
       children: [
-        child,
         if (Wizard.of(context).hasPrevious)
           Container(
             alignment: Alignment.topLeft,
@@ -25,6 +23,7 @@ class WizardPage extends StatelessWidget {
               onPressed: Wizard.of(context).back,
             ),
           ),
+        Expanded(child: child),
         Container(
           alignment: Alignment.bottomRight,
           padding: EdgeInsets.only(right: 32, bottom: 24),

@@ -11,7 +11,7 @@ class StatusPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WizardPage(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(32, 24, 32, 24),
+        padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

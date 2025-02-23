@@ -91,6 +91,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     builders: {
                       defaultTargetPlatform: SharedAxisPageTransitionsBuilder(
                         transitionType: SharedAxisTransitionType.horizontal,
+                        fillColor: Colors.transparent,
                       ),
                     },
                   ),
