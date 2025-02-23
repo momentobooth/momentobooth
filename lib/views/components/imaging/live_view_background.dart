@@ -112,7 +112,6 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        ColoredBox(color: Colors.green),
         if (_backgroundBlur == BackgroundBlur.textureBlur)
           const LiveView(
             fit: BoxFit.cover,
