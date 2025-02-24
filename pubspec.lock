@@ -451,10 +451,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: a4f1e8388ac06cc45b741cfa155db98d83f4b8b998b34a8c5a7b8c2c98c773d0
+      sha256: "8e41dd62b321ec9a4a14cebe1dcb9144d7a32b9cef326332687c1da45d537540"
       url: "https://pub.dev"
     source: hosted
-    version: "4.11.1"
+    version: "4.11.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -928,10 +928,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: "57c34a31dcd4aca3f21039f9b0bab8be3a6ff5f7b4d4b9338d31ccf7287a17e0"
+      sha256: "6a027aa573b3e7c8de87b06e8b4fc34ba091d99a1bc94629e687c1e5ac98ec25"
       url: "https://pub.dev"
     source: hosted
-    version: "4.9.0"
+    version: "4.9.1"
   nested:
     dependency: transitive
     description:
@@ -1404,26 +1404,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: b6d5e53370f6d1bf0bb5cc7ae1db84edb11031ed1cd0a8637a8a78c8e18c6aeb
+      sha256: "04e5a12409717dc3d5b3f80a16c4a38f6b9c4cc4df6e368640b543993386bdc7"
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.12"
+    version: "4.6.13"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "760fbcf215695d1b6a09b47dce3692e938580092ca574158838e05cdef58f16e"
+      sha256: "2816be1233b927e3e82e82a0b919434c02751d8907d547305d61c6a1282566e5"
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.12"
+    version: "4.6.13"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: f5c28e76997ece14137fa1b3decbdba40cc5c23db41dfb185dd770d1ec6c3eee
+      sha256: da499df6aaa5d31232e58fb5975a00764746d76d7c1cbdfbe870ec67c017a5be
       url: "https://pub.dev"
     source: hosted
-    version: "4.6.12"
+    version: "4.6.13"
   term_glyph:
     dependency: transitive
     description:

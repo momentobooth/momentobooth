@@ -17,7 +17,7 @@ dependencies:
   # UI
   animations: 2.0.11
   auto_size_text: 3.0.0
-  fluent_ui: 4.11.1
+  fluent_ui: 4.11.2
   go_router: 14.8.0
   flutter_svg: 2.0.17
   animated_text_kit: 4.2.3
@@ -62,8 +62,8 @@ dependencies:
   win32: 5.11.0
 
   # Log and error handling
-  talker: 4.6.12
-  talker_flutter: 4.6.12
+  talker: 4.6.13
+  talker_flutter: 4.6.13
   sentry_flutter: 8.13.2
 
   # Sound output
@@ -79,7 +79,7 @@ dependencies:
   # Networking
   http: 1.3.0
   http_parser: 4.1.2
-  mqtt5_client: 4.9.0
+  mqtt5_client: 4.9.1
 
   # Misc
   get_it: 8.0.3
