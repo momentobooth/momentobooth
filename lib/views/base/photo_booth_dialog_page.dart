@@ -45,7 +45,7 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
                   child: FadeTransition(
                     opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeAndScaleAnimation(secondaryAnimation)),
                     child: ScaleTransition(
-                      scale: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeAndScaleAnimation(secondaryAnimation)),
+                      scale: Tween<double>(begin: 1.0, end: 1.0).animate(_fadeAndScaleAnimation(secondaryAnimation)),
                       filterQuality: getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
                       child: child,
                     ),

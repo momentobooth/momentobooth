@@ -43,7 +43,7 @@ void main(List<String> arguments) async {
         ..environment = const String.fromEnvironment("SENTRY_ENVIRONMENT", defaultValue: 'Development')
         ..release = const String.fromEnvironment("SENTRY_RELEASE", defaultValue: 'Development');
     },
-    appRunner: () => runApp(const Shell()),
+    appRunner: () => runApp(const App()),
   );
 }
 

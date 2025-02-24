@@ -11,10 +11,9 @@ import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/star
 
 class ActivityMonitor extends StatefulWidget {
 
-  final GoRouter router;
   final Widget child;
 
-  const ActivityMonitor({super.key, required this.router, required this.child});
+  const ActivityMonitor({super.key, required this.child});
 
   @override
   State<ActivityMonitor> createState() => _ActivityMonitorState();
@@ -30,7 +29,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   void initState() {
     super.initState();
 
-    widget.router.routerDelegate.addListener(_resetTimer);
+    GoRouter.of(context).routerDelegate.addListener(_resetTimer);
     _resetTimerReactionDisposer = autorun((_) => _resetTimer());
   }
 
@@ -67,15 +66,15 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   }
 
   void _goHome() {
-    if (widget.router.currentLocation == StartScreen.defaultRoute) return;
+    if (GoRouter.of(context).currentLocation == StartScreen.defaultRoute) return;
     logDebug("Returning to homescreen because Home screen timeout was reached.");
-    widget.router.go(StartScreen.defaultRoute);
+    GoRouter.of(context).go(StartScreen.defaultRoute);
   }
 
   @override
   void dispose() {
     _returnHomeTimer?.cancel();
-    widget.router.routerDelegate.removeListener(_resetTimer);
+    GoRouter.of(context).routerDelegate.removeListener(_resetTimer);
     _resetTimerReactionDisposer();
     super.dispose();
   }
