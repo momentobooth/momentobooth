@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart' as material show Colors;
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 
@@ -20,11 +21,11 @@ class SubsystemStatusIcon extends StatelessWidget {
   Color get _iconColor => switch (status) {
         SubsystemStatusInitial() => Colors.grey,
         SubsystemStatusBusy() => Colors.blue,
-        SubsystemStatusOk() => Colors.successPrimaryColor,
+        SubsystemStatusOk() => material.Colors.lightGreen,
         SubsystemStatusDisabled() => Colors.grey,
         SubsystemStatusWarning() => Colors.yellow,
-        SubsystemStatusError() => Colors.errorPrimaryColor,
-        SubsystemStatusWithChildren() => Colors.green,
+        SubsystemStatusError() => material.Colors.red,
+        SubsystemStatusWithChildren() => Colors.grey,
       };
 
   @override
