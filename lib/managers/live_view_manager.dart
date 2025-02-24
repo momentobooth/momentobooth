@@ -139,6 +139,7 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
           texturePtr: BigInt.from(_texturePointer),
         );
         reportSubsystemOk();
+        unawaited(_checkLiveViewState());
       } catch (e, s) {
         logError("Failed to open ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}", e, s);
         reportSubsystemBusy(message: 'Failed to open live view stream, disposing resources');
