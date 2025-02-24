@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:mobx/mobx.dart';
@@ -10,7 +11,9 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
+import 'package:momento_booth/utils/subsystem.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:printing/printing.dart';
@@ -70,6 +73,18 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
 
   @observable
   List<ComboBoxItem<String>> gPhoto2Cameras = ObservableList<ComboBoxItem<String>>();
+
+  SubsystemStatus get badgeStatus {
+    if (getIt<ObservableList<Subsystem>>().firstWhereOrNull((s) => s.subsystemStatus is SubsystemStatusError) != null) {
+      return const SubsystemStatus.error(message: '');
+    } else if (getIt<ObservableList<Subsystem>>().firstWhereOrNull((s) => s.subsystemStatus is SubsystemStatusWarning) != null) {
+      return const SubsystemStatus.warning(message: '');
+    } else if (getIt<ObservableList<Subsystem>>().firstWhereOrNull((s) => s.subsystemStatus is SubsystemStatusBusy) != null) {
+      return const SubsystemStatus.busy(message: '');
+    } else {
+      return const SubsystemStatus.ok();
+    }
+  }
 
   RichText _printerCardText(String printerName, bool isAvailable, bool? isDefault) {
     final icon = isAvailable ? LucideIcons.plug : LucideIcons.unplug;

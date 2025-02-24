@@ -6,6 +6,7 @@ import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
@@ -32,7 +33,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   BackgroundBlur get _backgroundBlur => getIt<SettingsManager>().settings.ui.backgroundBlur;
 
-  LiveViewState get _liveViewState => getIt<LiveViewManager>().liveViewState;
+  SubsystemStatus get _liveViewState => getIt<LiveViewManager>().subsystemStatus;
 
   @override
   void initState() {
@@ -75,14 +76,12 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   Widget get _viewState {
     return Observer(builder: (context) {
-      switch (_liveViewState) {
-        case LiveViewState.initializing:
-          return _initializingState;
-        case LiveViewState.error:
-          return _errorState(Colors.red, null);
-        case LiveViewState.streaming:
-          return _streamingState;
-      }
+      return switch (_liveViewState) {
+        SubsystemStatusBusy _ => _initializingState,
+        SubsystemStatusError error => _errorState(Colors.red, error.message),
+        SubsystemStatusOk _ || SubsystemStatusWarning _ => _streamingState,
+        _ => throw Exception('Unsupported subsystem status $_liveViewState'),
+      };
     });
   }
 
@@ -113,7 +112,6 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        ColoredBox(color: Colors.green),
         if (_backgroundBlur == BackgroundBlur.textureBlur)
           const LiveView(
             fit: BoxFit.cover,

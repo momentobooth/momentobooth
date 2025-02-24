@@ -24,7 +24,7 @@ import 'package:talker/talker.dart';
 final GetIt getIt = GetIt.instance;
 
 void main(List<String> arguments) async {
-  WidgetsFlutterBinding.ensureInitialized();
+  SentryWidgetsFlutterBinding.ensureInitialized();
 
   var parser = ArgParser()
   ..addFlag("fullscreen", abbr: 'f', help: 'Run in fullscreen mode', defaultsTo: false)

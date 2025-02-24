@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/extensions/camera_state_extension.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
@@ -12,6 +11,8 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/src/rust/models/live_view.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
 import 'package:synchronized/synchronized.dart';
@@ -22,7 +23,7 @@ part 'live_view_manager.g.dart';
 class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 
 /// Class containing global state for photos in the app
-abstract class LiveViewManagerBase with Store, Logger, Subsystem {
+abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   bool _lastFrameWasInvalid = false;
@@ -84,8 +85,13 @@ abstract class LiveViewManagerBase with Store, Logger, Subsystem {
   CaptureMethod? _currentCaptureMethod;
   String? _currentGPhoto2CameraId;
 
-  @readonly
-  LiveViewState _liveViewState = LiveViewState.initializing;
+  Future<void> _disposeCurrentLiveViewSourceSafe() async {
+    try {
+      await _currentLiveViewSource?.dispose();
+    } catch (e, s) {
+      logError("Disposing of ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType} failed", e, s);
+    }
+  }
 
   Future<void> _updateConfig() async {
     LiveViewMethod liveViewMethodSetting = getIt<SettingsManager>().settings.hardware.liveViewMethod;
@@ -95,8 +101,9 @@ abstract class LiveViewManagerBase with Store, Logger, Subsystem {
 
     if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting) {
       // Webcam was not initialized yet or webcam ID setting changed
-      _liveViewState = LiveViewState.initializing;
-      await _currentLiveViewSource?.dispose();
+      reportSubsystemBusy(message: "Disconnecting live view source");
+      await _disposeCurrentLiveViewSourceSafe();
+      reportSubsystemBusy(message: "Connecting live view source");
 
       _currentLiveViewMethod = liveViewMethodSetting;
       _currentLiveViewWebcamId = webcamIdSetting;
@@ -124,30 +131,45 @@ abstract class LiveViewManagerBase with Store, Logger, Subsystem {
           _currentLiveViewSource = StaticImageSource();
       }
 
-      await _ensureTextureAvailable();
-      await _currentLiveViewSource?.openStream(
-        texturePtr: BigInt.from(_texturePointer),
-      );
-
-      _liveViewState = LiveViewState.streaming;
-      _lastFrameWasInvalid = false;
+      try {
+        _lastFrameWasInvalid = false;
+        if (_currentLiveViewSource == null) throw Exception('Invalid camera selection');
+        await _ensureTextureAvailable();
+        await _currentLiveViewSource!.openStream(
+          texturePtr: BigInt.from(_texturePointer),
+        );
+        reportSubsystemOk();
+        unawaited(_checkLiveViewState());
+      } catch (e, s) {
+        logError("Failed to open ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}", e, s);
+        reportSubsystemBusy(message: 'Failed to open live view stream, disposing resources');
+        await _disposeCurrentLiveViewSourceSafe();
+        _currentLiveViewSource = null;
+        reportSubsystemError(message: 'Failed to open live view stream', exception: e.toString(), actions: {
+          'Restart stream': restoreLiveView,
+        });
+      }
     }
   }
 
   Future<void> _checkLiveViewState() async {
     await _updateLiveViewSourceInstanceLock.synchronized(() async {
-      var liveViewState = await _currentLiveViewSource?.getCameraState();
-      if (liveViewState == null) return;
+      CameraState? liveViewState = await _currentLiveViewSource?.getCameraState();
+      if (liveViewState == null || subsystemStatus is SubsystemStatusBusy) return;
 
-      if (liveViewState.streamHasProbablyFailed) {
+      Duration? timeSinceLastFrame = liveViewState.timeSinceLastReceivedFrame;
+      if (timeSinceLastFrame != null && timeSinceLastFrame > const Duration(seconds: 5)) {
         // Stop live view source and set error state
-        await _currentLiveViewSource?.dispose();
+        reportSubsystemError(message: "No frames received for 5 seconds, stopping");
+        await _disposeCurrentLiveViewSourceSafe();
+        reportSubsystemError(message: "No frames received for 5 seconds, stopped", actions: {
+          'Restart stream': restoreLiveView,
+        });
         _currentLiveViewSource = null;
-        _liveViewState = LiveViewState.error;
-        // TODO: restart automatically?
-      } else if (!liveViewState.lastFrameWasValid) {
+      } else if (liveViewState.timeSinceLastReceivedFrame != null && !liveViewState.lastFrameWasValid) {
         // Camera still running but last frame could not be decoded
         _lastFrameWasInvalid = true;
+        reportSubsystemWarning(message: 'Last frame was invalid, total invalid frames: ${liveViewState.errorFrameCount}');
       } else {
         // Everything seems to be fine
         getIt<StatsManager>()
@@ -158,6 +180,8 @@ abstract class LiveViewManagerBase with Store, Logger, Subsystem {
 
         _textureWidth = liveViewState.frameWidth;
         _textureHeight = liveViewState.frameHeight;
+
+        reportSubsystemOk(message: 'Active and streaming, total valid frames: ${liveViewState.validFrameCount}');
       }
     });
   }
@@ -166,17 +190,11 @@ abstract class LiveViewManagerBase with Store, Logger, Subsystem {
   // Methods //
   // /////// //
 
-  void restoreLiveView() {
-    _updateLiveViewSourceInstanceLock.synchronized(() async {
+  Future<void> restoreLiveView() async {
+    await _updateLiveViewSourceInstanceLock.synchronized(() async {
       _currentLiveViewMethod = null;
       await _updateConfig();
     });
   }
 
-}
-
-enum LiveViewState {
-  initializing,
-  error,
-  streaming,
 }

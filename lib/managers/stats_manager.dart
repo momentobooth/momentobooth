@@ -12,7 +12,7 @@ part 'stats_manager.g.dart';
 
 class StatsManager = StatsManagerBase with _$StatsManager;
 
-abstract class StatsManagerBase with Store, Logger, Subsystem {
+abstract class StatsManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   late Stats _stats;
@@ -38,7 +38,7 @@ abstract class StatsManagerBase with Store, Logger, Subsystem {
       );
     }
 
-    Timer.periodic(statsSaveTimerInterval, (timer) => _save);
+    Timer.periodic(statsSaveTimerInterval, (timer) => _save());
   }
 
   // /////////// //
@@ -63,14 +63,11 @@ abstract class StatsManagerBase with Store, Logger, Subsystem {
 
   @action
   void addPrintedPhoto({PrintSize size = PrintSize.normal}) {
-    switch(size) {
-      case PrintSize.small:
-        _stats = _stats.copyWith(printedPhotos: _stats.printedPhotosSmall + 1);
-      case PrintSize.tiny:
-        _stats = _stats.copyWith(printedPhotos: _stats.printedPhotosTiny + 1);
-      case _:
-        _stats = _stats.copyWith(printedPhotos: _stats.printedPhotos + 1);
-    }
+    _stats = switch (size) {
+      PrintSize.small => _stats.copyWith(printedPhotos: _stats.printedPhotosSmall + 1),
+      PrintSize.tiny => _stats.copyWith(printedPhotos: _stats.printedPhotosTiny + 1),
+      _ => _stats.copyWith(printedPhotos: _stats.printedPhotos + 1),
+    };
   }
 
   @action

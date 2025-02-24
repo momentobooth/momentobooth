@@ -22,6 +22,7 @@ targets:
       mobx_codegen:mobx_generator:
         generate_for:
             - lib/managers/*.dart
+            - lib/utils/*.dart
             - lib/views/**/*_view_model.dart
       widgetbook_generator:use_case_builder:
         generate_for:
