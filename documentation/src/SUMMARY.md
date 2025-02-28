@@ -1,6 +1,7 @@
 # Summary
 
 [Introduction](./introduction.md)
+[The concept](./concept.md)
 
 # Set up
 

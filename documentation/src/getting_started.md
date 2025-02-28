@@ -61,19 +61,20 @@ graph LR
 
 ## Running the application
 
-1. Download the latest MomentoBooth release for your OS from the [GitHub releases page](https://github.com/momentobooth/momentobooth/releases).
-1. Extract the zip file and run the MomentoBooth executable.
+1. **Download the latest MomentoBooth release for your OS** from the [GitHub releases page](https://github.com/momentobooth/momentobooth/releases).
+1. Use the installer or extract the zip file and **run the MomentoBooth executable**.
     - It may be convenient to place a shortcut on your desktop.
-1. You will be greeted by the homescreen saying "Touch to start" and a green background. Press `Ctrl+S` to open the settings panel. → [See all shortcuts](settings_general.md#hotkeys).
+1. You will be greeted by the **onboarding wizard** to run some checks and get some things set up.
+    - If you have a file with setting presets to use, drop the file or text in the box on the respective page of the onboarding wizard and press *accept*.
+    - During the wizard you will be prompted to **open your first project folder**. This folder is used to look for templates and store the captures, output images/collages. We will come back to it later.
+1. Once you complete the wizard, you will see the **homescreen**, with the text "Touch to start" and a green background.
+1. Use the menubar or press `Ctrl+S` to **open the settings panel**. → [See all shortcuts](settings_general.md#hotkeys).
 1. Go to the **hardware** tab
-1. Ensure [live view method](settings_hardware.md#live-view-method) is set to "Webcam" and select your webcam from the list in the [webcam setting](settings_hardware.md#webcam). The [capture method](settings_hardware.md#capture-method) is set to "Live view source" by default.
-    - If you do not have a webcam available you can also select "Static noise" as a live view source for testing.
-1. Next, go to the **output** tab.
-1. Set an [output directory](settings_output.md#local-photo-storage-location) to save your photos.
-1. Next, go to the **templating** tab.
-1. Set a [template directory](settings_templating.md#template-location) to look for template files.
-1. Go to that directory in your file explorer and place a background (portrait) image called `back-template.jpg` or `back-template.png`.
-1. You are now ready to shoot your first pictures! Press `Ctrl+S` again to exit the settings screen and click on or touch the screen to get started.
+1. Ensure [live view method](settings_hardware.md#live-view-method) is set to "Webcam" and **select your webcam** from the list in the [webcam setting](settings_hardware.md#webcam). The [capture method](settings_hardware.md#capture-method) is set to "Live view source" by default.
+    - If you do not have a webcam available you can also select e.g. "Static noise" as a live view source for testing.
+1. Press `Ctrl+S` again or click outside the settings to **exit the settings screen**.
+1. Go to your project directory (using your file explorer or by using the menubar), go to the `Templates` subdirectory, and **place a background image** (in portrait orientation) called `back-template.jpg` or `back-template.png`.
+1. _You are now ready to shoot your first pictures!_
 
 Once you have the basics up and running you can try [connecting a camera](camera_setup.md#camera), [adding a printer](printer_setup.md), or designing a beautiful [template](template_setup.md) for your next event.
 
