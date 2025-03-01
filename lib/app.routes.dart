@@ -110,7 +110,7 @@ GoRoute _photoDetailsRoute = GoRoute(
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
-      opaque: false,
+      opaque: true,
       barrierDismissible: true,
       child: PhotoDetailsScreen(photoId: state.pathParameters['pid']!),
     );
