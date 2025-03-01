@@ -29,14 +29,12 @@ class _UpdateSecretDialogState extends State<UpdateSecretDialog> {
     return ModalDialog(
       title: "Update password/secret [${widget.secretName}]",
       dialogType: ModalDialogType.input,
-      body: Column(
-        children: [
-          PasswordBox(
-            placeholder: "Enter the new password/secret",
-            revealMode: PasswordRevealMode.peekAlways,
-            onChanged: (value) => _input = value,
-          ),
-        ],
+      body: IntrinsicHeight(
+        child: PasswordBox(
+          placeholder: "Enter the new password/secret",
+          revealMode: PasswordRevealMode.peekAlways,
+          onChanged: (value) => _input = value,
+        ),
       ),
       onDismiss: widget.onDismiss,
       actions: [

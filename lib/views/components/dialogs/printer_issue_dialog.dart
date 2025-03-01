@@ -36,6 +36,7 @@ class PrinterIssueDialog extends StatelessWidget {
     return ModalDialog(
       title: issueType.getTitle(context),
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             issueType.getBody1(context, printerName, errorText),
