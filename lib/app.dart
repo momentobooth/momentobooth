@@ -11,7 +11,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/full_screen_dialog.dart';
-import 'package:momento_booth/views/base/settings_based_transition_page.dart';
+import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/capture_screen/capture_screen.dart';
