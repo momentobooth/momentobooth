@@ -26,6 +26,7 @@ GoRoute _settingsRoute = GoRoute(
         child: SettingsScreen(),
       ),
       barrierDismissible: true,
+      enableTransitionOut: false,
     );
   },
 );
