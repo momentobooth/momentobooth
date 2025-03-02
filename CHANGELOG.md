@@ -7,6 +7,9 @@
 - New feature: Onboarding wizard showing app status, allowing to pick the project folder, etc.
 - New feature: Settings screen now has a subsystem status page showing app status
 - New feature: Having an invalid setting file now results in a subsystem warning (granting the opportunity to fix the issue) instead of just writing defaults to the file
+- New feature: Menu bar (hidden when full screen) showing the options that were previously only available as hotkey
+- New feature: Command line options (`--fullscreen` of `-f` to open the app in full screen, `--open` or `-o` to open a project at startup)
+- New feature: Settings import (to merge the provided settings with the existing settings)
 - Bugfix: Fix animation glitchyness when opening a photo from the Gallery
 - Bugfix: Improve camera live view (re)connect stability
 - Change: When in Photo Details screen, don't show the live view (except the blurry background) to decrease amount of visual clutter
