@@ -53,6 +53,7 @@ class _PrintDialogState extends State<PrintDialog> {
     return ModalDialog(
       title: localizations.printDialogTitle,
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [

@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
-import 'package:momento_booth/views/base/settings_based_transition_page.dart';
+import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/components/animations/animated_delayed_fade_in.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen_controller.dart';
@@ -37,7 +37,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: AnimatedDelayedFadeIn(
-            delay: SettingsBasedTransitionPage.defaultTransitionDuration,
+            delay: TransitionPage.defaultTransitionDuration,
             child: _foregroundElements,
           ),
         ),

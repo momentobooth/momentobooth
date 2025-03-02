@@ -13,7 +13,7 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
     return CurvedAnimation(
       parent: parent,
       curve: Curves.elasticInOut,
-      reverseCurve: Curves.elasticIn,
+      reverseCurve: Curves.easeInOutBack,
     );
   }
 
@@ -40,16 +40,9 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
               child: FadeTransition(
                 opacity: Tween<double>(begin: 0.0, end: 1.0).animate(_fadeAndScaleAnimation(animation)),
                 child: ScaleTransition(
-                  scale: Tween<double>(begin: 0.0, end: 1.0).animate(_fadeAndScaleAnimation(animation)),
+                  scale: Tween<double>(begin: animation.status == AnimationStatus.reverse ? 0.9 : 0.0, end: 1.0).animate(_fadeAndScaleAnimation(animation)),
                   filterQuality: getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
-                  child: FadeTransition(
-                    opacity: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeAndScaleAnimation(secondaryAnimation)),
-                    child: ScaleTransition(
-                      scale: Tween<double>(begin: 1.0, end: 0.0).animate(_fadeAndScaleAnimation(secondaryAnimation)),
-                      filterQuality: getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality.toUiFilterQuality(),
-                      child: child,
-                    ),
-                  ),
+                  child: child,
                 ),
               ),
             );

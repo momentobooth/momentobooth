@@ -447,6 +447,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.5.0"
+  flow_builder:
+    dependency: transitive
+    description:
+      name: flow_builder
+      sha256: "9e66aa7209e9a31c347bb316abf191d2300db41cd6b7254f89abd4e76d9b3f8d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   fluent_ui:
     dependency: "direct main"
     description:
@@ -1179,6 +1187,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  safe_change_notifier:
+    dependency: transitive
+    description:
+      name: safe_change_notifier
+      sha256: e7cce266bfede647355866fa3bd054feda57c220d2383f4203f28d4dcdb3b82e
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   safe_local_storage:
     dependency: transitive
     description:
@@ -1344,6 +1360,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.12.1"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: b8677376aa54f2d7c58280d5a007f9e8774f1968d1fb1c096adcb4792fba29bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   stream_channel:
     dependency: transitive
     description:
@@ -1705,6 +1729,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.3"
+  wizard_router:
+    dependency: "direct main"
+    description:
+      name: wizard_router
+      sha256: "6e0445f272d96c686556a562416188f46bdcb9358d8d8d953419030cad5f5ca6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.0"
   xdg_directories:
     dependency: transitive
     description:

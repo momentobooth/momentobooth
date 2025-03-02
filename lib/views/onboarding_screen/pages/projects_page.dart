@@ -11,9 +11,8 @@ class ProjectsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WizardPage(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(32, 24, 32, 24),
+        padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
         child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Center(
@@ -22,16 +21,16 @@ class ProjectsPage extends StatelessWidget {
                 style: FluentTheme.of(context).typography.title,
               ),
             ),
-            SizedBox(height: 16.0,),
+            SizedBox(height: 16.0),
             Text(
               "Open a directory (create one if you like) to use for a project. This directory will be used to store your pictures and collages. It is also where MomentoBooth will look for templates.",
               style: FluentTheme.of(context).typography.body,
             ),
-            SizedBox(height: 16.0,),
+            SizedBox(height: 16.0),
             FilledButton(
-              onPressed: () { getIt<ProjectManager>().browseOpen(); },
+              onPressed: () => getIt<ProjectManager>().browseOpen(),
               child: Text("Open folder"),
-            )
+            ),
           ],
         ),
       ),
