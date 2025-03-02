@@ -42,6 +42,9 @@ jobs:
       run: |
         Copy-Item -Path "${{ github.workspace }}" -Destination "${{ env.DEV_DRIVE }}/momentobooth" -Recurse
 
+    - name: Detect Flutter Version
+      uses: kuhnroyal/flutter-fvm-config-action@v3
+
     - name: Setup Flutter
       uses: flutter-actions/setup-flutter@v4
       with:
