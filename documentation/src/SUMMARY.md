@@ -24,5 +24,10 @@
   - [Output settings](./settings_output.md)
   - [User interface settings](./settings_ui.md)
   - [Templating settings](./settings_templating.md)
+  - [MQTT settings](./settings_mqtt.md)
+  - [Face recognition settings](./settings_face_recognition.md)
   - [Statistics & debug settings](./settings_debug.md)
   - [Log panel](./settings_log.md)
+
+# Misc
+- [Command Line Arguments](./cli.md)

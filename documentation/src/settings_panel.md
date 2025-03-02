@@ -6,5 +6,7 @@ The settings panel can be opened using the menubar or by pressing `Ctrl+S`. When
  * [Output](settings_output.md)
  * [User interface](settings_ui.md)
  * [Templating](settings_templating.md)
+ * [MQTT](settings_mqtt.md)
+ * [Face recognition](settings_face_recognition.md)
  * [Debug](settings_debug.md)
  * [Log](settings_log.md)
