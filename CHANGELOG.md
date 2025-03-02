@@ -2,7 +2,17 @@
 
 ## Unreleased
 
-- Dependency update: Updated several Dart and Rust packages (#505)
+## 0.14.0
+
+- New feature: Onboarding wizard showing app status, allowing to pick the project folder, etc.
+- New feature: Settings screen now has a subsystem status page showing app status
+- New feature: Having an invalid setting file now results in a subsystem warning (granting the opportunity to fix the issue) instead of just writing defaults to the file
+- Bugfix: Fix animation glitchyness when opening a photo from the Gallery
+- Bugfix: Improve camera live view (re)connect stability
+- Change: When in Photo Details screen, don't show the live view (except the blurry background) to decrease amount of visual clutter
+- Change: App requires a project folder now (used for storing project specific settings, photos, templates, etc.)
+- Dependency update: Updated Flutter to 3.29.0
+- Dependency update: Updated several Dart and Rust packages
 
 ## 0.13.1
 
