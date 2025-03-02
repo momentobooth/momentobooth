@@ -68,7 +68,7 @@ Widget _getConnectionBlock(SettingsScreenViewModel viewModel, SettingsScreenCont
       SecretInputCard(
         icon: LucideIcons.squareAsterisk,
         title: "MQTT password",
-        subtitle: "The password to use when connecting to the MQTT broker. The password will be stored in plain text.",
+        subtitle: "The password to use when connecting to the MQTT broker. The password will be stored using encrypted storage.",
         secretStorageKey: mqttPasswordSecretKey,
         onSecretStored: getIt<MqttManager>().notifyPasswordChanged,
       ),
