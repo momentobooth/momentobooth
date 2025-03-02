@@ -1,10 +1,14 @@
 # Hardware settings
 In the hardware settings, you will find settings related to live view, photo capture and printing. Everything related to the hardware the program interfaces with.
 
+## General
+{{#include ./settings/rotate_image.md}}
+{{#include ./settings/flip_image_preview.md}}
+{{#include ./settings/flip_image_capture.md}}
+
 ## Live View
 {{#include ./settings/live_view_method.md}}
 {{#include ./settings/webcam_selection.md}}
-{{#include ./settings/flip_image.md}}
 
 ## Photo Capture
 {{#include ./settings/capture_method.md}}

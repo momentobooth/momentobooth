@@ -1,5 +1,6 @@
 # Settings panel
-The settings panel can be opened by pressing `Ctrl+S`. When opened you will be greeted by a screen with a few tabs. These tabs are:
+The settings panel can be opened using the menubar or by pressing `Ctrl+S`. When opened you will be greeted by a screen with a few tabs. These tabs are:
+ * [Project](settings_project.md)
  * [General](settings_general.md)
  * [Hardware](settings_hardware.md)
  * [Output](settings_output.md)

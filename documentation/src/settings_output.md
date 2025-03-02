@@ -1,8 +1,8 @@
-# Hardware settings
-In the hardware settings, you will find settings related to live view, photo capture and printing. Everything related to the hardware the program interfaces with.
+# Output settings
+In the output settings, you can customize the output file generation and sharing of the results.
 
 ## Local
-{{#include ./settings/output_local_folder.md}}
+Output files will be saved to the `Output` subdirectory of your project folder.
 
 ## Share using internet
 {{#include ./settings/ffsend_url.md}}

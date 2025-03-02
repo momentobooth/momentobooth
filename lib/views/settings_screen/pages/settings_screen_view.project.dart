@@ -35,6 +35,7 @@ Widget _getProjectSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
               ),
               BooleanInputCard(
                 icon: LucideIcons.palette,
+                // FIXME why do we call it theme color here and primary color above?
                 title: "Colorize confetti to the theme color",
                 subtitle: "If enabled, confetti will will be various shades of the theme color. Else, random colors will be used.",
                 value: () => viewModel.customColorConfettiSetting,
@@ -42,8 +43,8 @@ Widget _getProjectSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
               ),
               TextInputCard(
                 icon: LucideIcons.heading,
-                title: "Alternative 'Touch to start' title text",
-                subtitle: "The override text that will be shown on the Start screen instead of 'Touch to start'. Leave empty to show the default text from the translations data.",
+                title: "Alternative ‘Touch to start’ title text",
+                subtitle: "The override text that will be shown on the Start screen instead of ‘Touch to start’. Leave empty to show the default text from the translations data.",
                 controller: controller.introScreenTouchToStartOverrideTextController,
                 onFinishedEditing: controller.onIntroScreenTouchToStartOverrideText,
               ),
