@@ -36,16 +36,8 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 
 ### Planned
 
-* Linux, macOS support
-  * App already runs but:
-    * Webcam support doesn't work properly
-    * Libgphoto2 is not bundled correctly yet
-* User manual
-
-### Maybe
-
-* Direct printing support (using libusb) to fully control printing queue
-  * Focus would be on Canon CP1300, Canon CP1500
+* Linux Flatpak distribution (x86_64 and arm64)
+* Windows arm64 distribution (waiting for public GitHub Actions runners)
 
 ## Development
 
@@ -58,7 +50,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
   * Routing: [go_router](https://pub.dev/packages/go_router)
 * Webcam: [Nokhwa](https://crates.io/crates/nokhwa)
 * Printing: [Printing](https://pub.dev/packages/printing)
-* Logging: [Loggy](https://pub.dev/packages/loggy)
+* Logging: [Talker](https://pub.dev/packages/talker)
 * Data classes: [Freezed](https://pub.dev/packages/freezed)
 * Firefox Send client: [ffsend-api](https://crates.io/crates/ffsend-api)
 * JPEG decoding: [zune-jpeg](https://crates.io/crates/zune-jpeg), encoding: [jpeg-encoder](https://crates.io/crates/jpeg-encoder)
@@ -109,7 +101,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 
 * [This list](https://docs.flutter.dev/get-started/install/linux#additional-linux-requirements) of packages from the Flutter website
   * The install command provided by the Flutter website may only work on Ubuntu, please check your distro website for the corresponding package names
-* Additional packages: llvm, libssl-dev, libdigest-sha-perl
+* Additional packages: llvm, libssl-dev, libdigest-sha-perl, libcurl4-openssl-dev
 * Rust (`x86_64-unknown-linux-gnu` or `aarch64-unknown-linux-gnu` depending on your architecture)
   * Install using `rustup` is recommended, to keep all components up to date
 
@@ -120,7 +112,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 
 * `flutter_rust_bridge_codegen`
   * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.8.0`
-* Flutter SDK 3.24.0+
+* Flutter SDK 3.29.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
 * Optional: For building the documentation mdBook and some extensions for mdBook are needed

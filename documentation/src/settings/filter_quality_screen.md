@@ -4,6 +4,6 @@ This setting controls the filter quality used during the screen transition scale
 
 **Available Options:**  
 - None
-- Low
+- Low (**default**)
 - Medium
 - High
