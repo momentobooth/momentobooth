@@ -28,7 +28,7 @@ void main(List<String> arguments) async {
 
   var parser = ArgParser()
   ..addFlag("fullscreen", abbr: 'f', help: 'Run in fullscreen mode', defaultsTo: false)
-  ..addOption("open", abbr: 'o', help: 'Open a file or directory');
+  ..addOption("open", abbr: 'o', help: 'Open given directory as a project');
   final args = parser.parse(arguments);
 
   // This can be unawaited, as onboarding flow will keep user from entering core functionality while this is still ongoing.

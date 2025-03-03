@@ -2,7 +2,6 @@
 In the templating settings, you will find the settings related to the generation of collage images such as template images, shape and padding, resolution. This settings tab conveniently also features a template preview section.
 
 ## Creative settings
-{{#include ./settings/template_location.md}}
 {{#include ./settings/collage_aspect_ratio.md}}
 {{#include ./settings/collage_padding.md}}
 {{#include ./settings/image_resolution_multiplier.md}}

@@ -27,6 +27,10 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Hit Ctrl+O browse for and open a project folder."),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Text("Hit Ctrl+F or Alt+Enter to toggle fullscreen mode."),
           ),
           Padding(

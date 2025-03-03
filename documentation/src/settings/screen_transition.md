@@ -4,5 +4,5 @@ This setting determines the screen transition effect that occurs when navigating
 
 **Available Options:**  
 - None
-- Fade and Scale
+- Fade and Scale (**default**)
 - Fade and Slide
