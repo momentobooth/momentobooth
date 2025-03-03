@@ -74,7 +74,7 @@ graph LR
     - If you do not have a webcam available you can also select e.g. "Static noise" as a live view source for testing.
 1. Press `Ctrl+S` again or click outside the settings to **exit the settings screen**.
 1. Go to your project directory (using your file explorer or by using the menubar), go to the `Templates` subdirectory, and **place a background image** (in portrait orientation) called `back-template.jpg` or `back-template.png`.
-1. _You are now ready to shoot your first pictures!_
+1. *You are now ready to shoot your first pictures!*
 
 Once you have the basics up and running you can try [connecting a camera](camera_setup.md#camera), [adding a printer](printer_setup.md), or designing a beautiful [template](template_setup.md) for your next event.
 
@@ -84,16 +84,14 @@ Once you have the basics up and running you can try [connecting a camera](camera
 While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations.
 ```
 
-- Webcam support (and as such HDMI capturing) is not working on Linux and macOS currently.
+- Webcam support may not be working in some cases (depending on OS and frame format used by the webcam).
   - As of 2024 Q3 there is are some bugs in the library that is used for this functionality, these will be resolved in future versions.
-  - Due to this bug, HDMI capture also will not work. As such camera's which don't support live view over USB through gPhoto2 but do support live view using HDMI out (e.g. Nikon D3100) current will not work on Linux and macOS.
-  - **Workaround**: Use a camera which supports live view using USB, or use Windows.
-- macOS: No native builds for Apple Silicon available yet.
-  - As cross compilation with native libraries is pretty challenging and GitHub not supporting Apple Silicon runners yet as of 2024 Q3, native Apple Silicon builds for macOS cannot be provided yet.
-  - This will be fixed when Apple Silicon runners are made available by GitHub.
-  - **Workaround**: Use the Intel/x86_64 builds for now. These should work on Apple Silicon machines without any performance or hardware compatibility issues.
+  - Due to this bug, HDMI capture also might not work. As such camera's which don't support live view over USB through gPhoto2 but do support live view using HDMI out (e.g. Nikon D3100) current might not work.
+  - **Workaround**: Use a camera which supports live view using USB, or try another OS.
 - Live view through gPhoto2: Currently only Nikon D3400 and Sony α6400 have been tested.
   - As many Nikon cameras use the same commands for activating and deactivating live view, other Nikon DSLR models which support live view over USB may work.
   - Many mirrorless (non-DSLR) cameras may work fine anyway due to live view mode being activated automatically (e.g. Sony α6400).
   - The camera handling code is written with future special cases for different brands and models in mind, however we do not have any devices available for development and testing currently.
   - **Workaround**: Try the different options available in the settings screen. If these don't work, your help might needed to fix the issue if possible at all. Please let us know by [raising an issue on GitHub](https://github.com/momentobooth/momentobooth/issues/new). Be sure to first check whether your model is listed on the [gPhoto2 compatibility list](http://www.gphoto.org/proj/libgphoto2/support.php). We might be able to expand the compatibility of the application with some remote testing. No guarantees however.
+- Linux AppImage might not work due to packaging issues
+  - **Workaround**: Run the application on Linux using `flutter run --release`. This should work on both x86_64 and arm64.
