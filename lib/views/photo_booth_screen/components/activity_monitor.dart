@@ -7,7 +7,9 @@ import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
+import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 
 class ActivityMonitor extends StatefulWidget {
 
@@ -66,7 +68,12 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   }
 
   void _goHome() {
-    if (GoRouter.of(context).currentLocation == StartScreen.defaultRoute) return;
+    String currentLocation = GoRouter.of(context).currentLocation;
+    if (currentLocation == StartScreen.defaultRoute ||
+        currentLocation == SettingsScreen.defaultRoute ||
+        currentLocation == ManualCollageScreen.defaultRoute) {
+      return;
+    }
     logDebug("Returning to homescreen because Home screen timeout was reached.");
     GoRouter.of(context).go(StartScreen.defaultRoute);
   }
