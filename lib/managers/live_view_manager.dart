@@ -87,7 +87,9 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
 
   Future<void> _disposeCurrentLiveViewSourceSafe() async {
     try {
+      logError("Disconnecting ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}");
       await _currentLiveViewSource?.dispose();
+      logError("Disconnected ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}");
     } catch (e, s) {
       logError("Disposing of ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType} failed", e, s);
     }
@@ -100,7 +102,7 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
     String webcamIdSetting = getIt<SettingsManager>().settings.hardware.liveViewWebcamId;
 
     if (_currentLiveViewMethod == null || _currentLiveViewMethod != liveViewMethodSetting || _currentLiveViewWebcamId != webcamIdSetting || _currentCaptureMethod != captureMethodSetting || _currentGPhoto2CameraId != gPhoto2CameraIdSetting) {
-      // Webcam was not initialized yet or webcam ID setting changed
+      // Webcam was not initialized yet or webcam ID setting changed.
       reportSubsystemBusy(message: "Disconnecting live view source");
       await _disposeCurrentLiveViewSourceSafe();
       reportSubsystemBusy(message: "Connecting live view source");
@@ -110,9 +112,11 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
       _currentCaptureMethod = captureMethodSetting;
       _currentGPhoto2CameraId = gPhoto2CameraIdSetting;
 
-      // GPhoto2
+      // Special handling for gPhoto2 as gPhoto2 might be used for capture but not for live view.
+      // Instead one might use a HDMI capture device for live view (when de camera does not support preview streaming).
       if (_gPhoto2Camera != null) {
-        await _gPhoto2Camera!.dispose();
+        // Current live view source is already disposed, don't dispose the same camera instance twice.
+        if (_gPhoto2Camera != _currentLiveViewSource) await _gPhoto2Camera!.dispose();
         _gPhoto2Camera = null;
       }
       if ((liveViewMethodSetting == LiveViewMethod.gphoto2 || captureMethodSetting == CaptureMethod.gPhoto2) && gPhoto2CameraIdSetting.isNotEmpty) {
@@ -159,7 +163,7 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
 
       Duration? timeSinceLastFrame = liveViewState.timeSinceLastReceivedFrame;
       if (timeSinceLastFrame != null && timeSinceLastFrame > const Duration(seconds: 5)) {
-        // Stop live view source and set error state
+        // Stop live view source and set error state.
         reportSubsystemError(message: "No frames received for 5 seconds, stopping");
         await _disposeCurrentLiveViewSourceSafe();
         reportSubsystemError(message: "No frames received for 5 seconds, stopped", actions: {
@@ -167,11 +171,11 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
         });
         _currentLiveViewSource = null;
       } else if (liveViewState.timeSinceLastReceivedFrame != null && !liveViewState.lastFrameWasValid) {
-        // Camera still running but last frame could not be decoded
+        // Camera still running but last frame could not be decoded.
         _lastFrameWasInvalid = true;
         reportSubsystemWarning(message: 'Last frame was invalid, total invalid frames: ${liveViewState.errorFrameCount}');
       } else {
-        // Everything seems to be fine
+        // Everything seems to be fine.
         getIt<StatsManager>()
           ..validLiveViewFrames = liveViewState.validFrameCount
           ..invalidLiveViewFrames = liveViewState.errorFrameCount
