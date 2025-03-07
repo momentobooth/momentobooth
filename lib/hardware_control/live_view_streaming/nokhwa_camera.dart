@@ -25,13 +25,12 @@ class NokhwaCamera extends LiveViewSource {
   // //////////// //
 
   static Future<List<NokhwaCamera>> getAllCameras() async {
-    return []; // Temp fix for crash
-    // await _ensureLibraryInitialized();
-    // List<NokhwaCameraInfo> cameras = await nokhwaGetCameras();
-    // return cameras.map((camera) => NokhwaCamera(
-    //   id: camera.friendlyName,
-    //   friendlyName: camera.friendlyName,
-    // )).toList();
+    await _ensureLibraryInitialized();
+    List<NokhwaCameraInfo> cameras = await nokhwaGetCameras();
+    return cameras.map((camera) => NokhwaCamera(
+      id: camera.friendlyName,
+      friendlyName: camera.friendlyName,
+    )).toList();
   }
 
   static Future<List<ComboBoxItem<String>>> getCamerasAsComboBoxItems() async =>
