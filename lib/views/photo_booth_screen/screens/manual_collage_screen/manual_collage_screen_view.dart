@@ -21,16 +21,14 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
     return KeyboardListener(
       focusNode: viewModel.focusNode,
       onKeyEvent: (_) {
-        viewModel..isShiftPressed = HardwareKeyboard.instance.isShiftPressed
-                 ..isControlPressed = HardwareKeyboard.instance.isControlPressed;
+        viewModel
+          ..isShiftPressed = HardwareKeyboard.instance.isShiftPressed
+          ..isControlPressed = HardwareKeyboard.instance.isControlPressed;
       },
       child: Row(
         children: [
           Flexible(child: _photoGrid),
-          Flexible(
-            fit: FlexFit.tight,
-            child: _rightColumn,
-          ),
+          Flexible(fit: FlexFit.tight, child: _rightColumn),
         ],
       ),
     );
@@ -42,7 +40,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         clipBehavior: Clip.none,
         children: [
           Center(
-            child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain, cacheWidth: 256,),
+            child: ImageWithLoaderFallback.file(image.file, fit: BoxFit.contain, cacheWidth: 256),
           ),
           AnimatedOpacity(
             opacity: image.isSelected ? 1 : 0,
@@ -54,7 +52,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
               children: [
                 const ColoredBox(color: Color(0x80000000)),
                 Center(
-                  child: Text("${image.selectedIndex+1}/${viewModel.numSelected}", style: theme.subTitleStyle,),
+                  child: Text("${image.selectedIndex+1}/${viewModel.numSelected}", style: theme.subTitleStyle),
                 ),
               ],
             ),
@@ -91,7 +89,9 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
 
   static final checkboxStyle = CheckboxThemeData(
     foregroundColor: WidgetStateProperty.all(Colors.white),
-    uncheckedDecoration: WidgetStateProperty.all(BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(6))),
+    uncheckedDecoration: WidgetStateProperty.all(
+      BoxDecoration(border: Border.all(color: Colors.white), borderRadius: BorderRadius.circular(6)),
+    ),
   );
 
   Widget get _rightColumn {
@@ -101,10 +101,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(
-            flex: 10,
-            child: _collage,
-          ),
+          Expanded(flex: 10, child: _collage),
           const SizedBox(height: 30),
           Flexible(
             child: Row(
@@ -121,7 +118,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
                     ),
                   ),
                 ),
-                const SizedBox(width: 85,),
+                const SizedBox(width: 85),
                 Observer(
                   builder: (context) => Transform.scale(
                     scale: 1.5,
@@ -180,7 +177,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
           ),
           child: PhotoCollage(
             key: controller.collageKey,
-            aspectRatio: 1/viewModel.collageAspectRatio,
+            aspectRatio: 1 / viewModel.collageAspectRatio,
             padding: viewModel.collagePadding,
           ),
         ),

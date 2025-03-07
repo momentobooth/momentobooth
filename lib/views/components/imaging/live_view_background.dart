@@ -9,6 +9,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
 
 class LiveViewBackground extends StatefulWidget {
@@ -27,7 +28,11 @@ class LiveViewBackground extends StatefulWidget {
 
 class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
-  bool get _showLiveViewBackground => getIt<PhotosManager>().showLiveViewBackground && (GoRouter.of(context).currentLocation != GalleryScreen.defaultRoute && !GoRouter.of(context).currentLocation.startsWith('${PhotoDetailsScreen.defaultRoute}/'));
+  bool get _showLiveViewBackground =>
+      getIt<PhotosManager>().showLiveViewBackground &&
+      (GoRouter.of(context).currentLocation != GalleryScreen.defaultRoute &&
+        GoRouter.of(context).currentLocation != ManualCollageScreen.defaultRoute &&
+          !GoRouter.of(context).currentLocation.startsWith('${PhotoDetailsScreen.defaultRoute}/'));
 
   BackgroundBlur get _backgroundBlur => getIt<SettingsManager>().settings.ui.backgroundBlur;
 
