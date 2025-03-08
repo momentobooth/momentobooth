@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bugfix: Fix settings not being saved in some exceptional cases
+
 ## 0.14.0
 
 - New feature: Onboarding wizard showing app status, allowing to pick the project folder, etc.
