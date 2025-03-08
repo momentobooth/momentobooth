@@ -14,7 +14,6 @@ use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{se
 
 use chrono::Duration;
 use dashmap::DashMap;
-use flutter_rust_bridge::frb;
 use std::sync::LazyLock;
 
 static CONTEXT: OnceLock<Context> = OnceLock::new();
@@ -104,9 +103,9 @@ pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, fr
         sleep(tokio::time::Duration::from_millis(2000)).await;
         preview = camera.camera.capture_preview().await;
       }
-      drop(camera);
 
       let data = preview.unwrap().get_data(&context).await.expect("Could not get preview data");
+      drop(camera);
       let hash = hash_box(&data);
       if hash == last_hash.get() {
         // Frame is the same as the last one, skip
@@ -350,8 +349,9 @@ pub fn gphoto2_start_liveview(handle_id: u32, operations: Vec<ImageOperation>, t
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async {
         gphoto2::start_liveview(camera, move |raw_frame| {
-            let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
-            let camera_arc = camera_ref.clone();
+            let camera_ref = GPHOTO2_HANDLES.get(&handle_id);
+            if camera_ref.is_none() { return; }
+            let camera_arc = camera_ref.unwrap().clone();
             let mut camera = camera_arc.lock();
 
             match raw_frame {
@@ -372,8 +372,9 @@ pub fn gphoto2_start_liveview(handle_id: u32, operations: Vec<ImageOperation>, t
                 },
             }
         }, move || {
-            let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
-            let camera_arc = camera_ref.clone();
+            let camera_ref = GPHOTO2_HANDLES.get(&handle_id);
+            if camera_ref.is_none() { return; }
+            let camera_arc = camera_ref.unwrap().clone();
             let camera = camera_arc.lock();
             camera.duplicate_frame_count.fetch_add(1, Ordering::SeqCst);
         }).await

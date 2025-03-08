@@ -32,7 +32,7 @@ dependencies:
   widgetbook: 3.11.0
   widgetbook_annotation: 3.3.0
   flex_color_picker: 3.7.0
-  lucide_icons_flutter: 1.2.8
+  lucide_icons_flutter: 1.2.9
   wizard_router: 1.4.0
 
   # Printscreen/Image processing

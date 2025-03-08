@@ -23,7 +23,6 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   final String friendlyName;
 
   int? handleId;
-  bool isDisposed = false;
 
   static Future<void>? _initFuture;
 
@@ -34,7 +33,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   // //////////// //
 
   static Future<List<GPhoto2Camera>> getAllCameras() async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     List<GPhoto2CameraInfo> cameras = await gphoto2GetCameras();
     return cameras.map((camera) => GPhoto2Camera(
       id: "${camera.port}/${camera.model}",
@@ -56,17 +55,12 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     required BigInt texturePtr,
     List<ImageOperation> operations = const [],
   }) async {
-    await _ensureLibraryInitialized();
+    await ensureLibraryInitialized();
     var split = id.split("/");
     handleId = await gphoto2OpenCamera(model: split[1], port: split[0], specialHandling: getIt<SettingsManager>().settings.hardware.gPhoto2SpecialHandling.toHelperLibraryEnumValue());
-    await gphoto2StartLiveview(
-      handleId: handleId!,
-      operations: operations,
-      texturePtr: texturePtr,
-    );
-
-    // Do this in case someone disposed while we where waiting for the async camera open.
-    if (isDisposed) await dispose();
+    await Future.delayed(Duration(seconds: 1));
+    await gphoto2StartLiveview(handleId: handleId!, operations: operations, texturePtr: texturePtr);
+    await Future.delayed(Duration(seconds: 1));
 
     gphoto2SetExtraFileCallback(handleId: handleId!).listen((element) {
       storePhotoSafe(element.filename, element.data);
@@ -94,8 +88,11 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   @override
   Future<void> dispose() async {
-    if (handleId != null) await gphoto2CloseCamera(handleId: handleId!);
-    isDisposed = true;
+    if (handleId != null) {
+      int handleId = this.handleId!;
+      this.handleId = null; // Enforce that no more requests are fired to the camera to avoid panic.
+      await gphoto2CloseCamera(handleId: handleId);
+    }
   }
 
   @override
@@ -117,13 +114,11 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2);
 
   Future<void> autoFocus() async {
-    await _ensureLibraryInitialized();
     if (handleId != null) await gphoto2AutoFocus(handleId: handleId!);
   }
 
   @override
   Future<void> clearPreviousEvents() async {
-    await _ensureLibraryInitialized();
     if (handleId != null) {
       await gphoto2ClearEvents(
         handleId: handleId!,
@@ -132,7 +127,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     }
   }
 
-  static Future<void> _ensureLibraryInitialized() async {
+  static Future<void> ensureLibraryInitialized() async {
     const String iolibsDefine = String.fromEnvironment("IOLIBS");
     const String camlibsDefine = String.fromEnvironment("CAMLIBS");
     _initFuture ??= gphoto2Initialize(iolibsPath: iolibsDefine, camlibsPath: camlibsDefine);

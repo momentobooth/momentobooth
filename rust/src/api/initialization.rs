@@ -133,22 +133,3 @@ pub fn initialize_library() {
 
     info!("{}", "Helper library initialization done");
 }
-
-#[cfg(all(target_os = "windows"))]
-fn set_environment_variable(key: &str, value: &str) {
-    use libc::putenv;
-    use std::ffi::CString;
-
-    // We use this as std::env::set_var does not work on Windows in our case.
-    let putenv_str = format!("{}={}", key, value);
-    let putenv_cstr =  CString::new(putenv_str).unwrap();
-    unsafe { putenv(putenv_cstr.as_ptr()) };
-}
-
-#[cfg(not(target_os = "windows"))]
-fn set_environment_variable(key: &str, value: &str) {
-    use std::env;
-    use std::sync::Once;
-
-    env::set_var(key, value);
-}
