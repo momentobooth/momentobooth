@@ -2,18 +2,10 @@ use std::{sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, LazyLock, Mutex
 
 use chrono::Duration;
 use dashmap::DashMap;
-use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, nokhwa_initialize, CallbackCamera, pixel_format::RgbAFormat};
+use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, CallbackCamera, pixel_format::RgbAFormat};
 use log::{error, info, debug};
 
 use crate::{frb_generated::StreamSink, models::{images::RawImage, live_view::CameraState}, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg}};
-
-pub fn initialize<F>(on_complete: F) where F: Fn(bool) + std::marker::Send + std::marker::Sync + 'static {
-    if cfg!(target_os = "macos") {
-        nokhwa_initialize(on_complete);
-    } else {
-        on_complete(true);
-    }
-}
 
 pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
     let backend = native_api_backend().expect("Could not get backend");

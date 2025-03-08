@@ -87,9 +87,13 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
 
   Future<void> _disposeCurrentLiveViewSourceSafe() async {
     try {
-      logError("Disconnecting ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}");
-      await _currentLiveViewSource?.dispose();
-      logError("Disconnected ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}");
+      if (_currentLiveViewSource != null) {
+        logDebug("Disconnecting ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}");
+        await _currentLiveViewSource?.dispose();
+        logDebug("Disconnected ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}");
+      } else {
+        logDebug("No current live view source to dispose");
+      }
     } catch (e, s) {
       logError("Disposing of ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType} failed", e, s);
     }
@@ -130,6 +134,7 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
           List<NokhwaCamera> cameras = await NokhwaCamera.getAllCameras();
           _currentLiveViewSource = cameras.firstWhereOrNull((camera) => camera.friendlyName == webcamIdSetting);
         case LiveViewMethod.gphoto2:
+          await GPhoto2Camera.ensureLibraryInitialized(); // Fixes Hot Reload, as handles using (old) textures now get's closed before these old textures are being closed.
           _currentLiveViewSource = _gPhoto2Camera;
         case LiveViewMethod.debugStaticImage:
           _currentLiveViewSource = StaticImageSource();
@@ -139,9 +144,7 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
         _lastFrameWasInvalid = false;
         if (_currentLiveViewSource == null) throw Exception('Invalid camera selection');
         await _ensureTextureAvailable();
-        await _currentLiveViewSource!.openStream(
-          texturePtr: BigInt.from(_texturePointer),
-        );
+        await _currentLiveViewSource!.openStream(texturePtr: BigInt.from(_texturePointer));
         reportSubsystemOk();
         unawaited(_checkLiveViewState());
       } catch (e, s) {

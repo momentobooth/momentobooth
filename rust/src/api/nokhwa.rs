@@ -5,7 +5,7 @@ pub async fn nokhwa_initialize() -> bool {
 }
 
 pub fn nokhwa_get_cameras() -> Vec<NokhwaCameraInfo> {
-    nokhwa::get_cameras()
+    nokhwa::nokhwa_get_cameras()
 }
 
 pub fn nokhwa_open_camera(friendly_name: String, operations: Vec<ImageOperation>, texture_ptr: usize) -> u32 {
