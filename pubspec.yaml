@@ -2,7 +2,7 @@ name: momento_booth
 description: Opensource photobooth application
 
 publish_to: "none"
-version: 0.14.0+107
+version: 0.14.1+108
 
 environment:
   sdk: ^3.7.0

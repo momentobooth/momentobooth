@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## 0.14.1
+
+- Bugfix: Improve camera live view (re)connect stability (again)
+- Bugfix: Fix crash when having no webcams connected on Windows
+- Dependency update: Updated Flutter to 3.29.1
+- Dependency update: Updated several Dart and Rust packages
+
 ## 0.14.0
 
 - New feature: Onboarding wizard showing app status, allowing to pick the project folder, etc.
