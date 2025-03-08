@@ -81,7 +81,8 @@ GoRoute _captureRoute = GoRoute(
 GoRoute _multiCaptureRoute = GoRoute(
   path: MultiCaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const MultiCaptureScreen());
+    // Here we use state.uri because of the query param `n`.
+    return TransitionPage.fromSettings(key: ValueKey(state.uri), child: const MultiCaptureScreen());
   },
 );
 
