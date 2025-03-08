@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.14.2
+
 - Bugfix: Fix multi capture not continuing after first capture
 
 ## 0.14.1
