@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bugfix: Fix multi capture not continuing after first capture
+
 ## 0.14.1
 
 - Bugfix: Improve camera live view (re)connect stability (again)
