@@ -111,7 +111,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
   <summary>All platforms:</summary>
 
 * `flutter_rust_bridge_codegen`
-  * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.8.0`
+  * Install using Cargo: `cargo install flutter_rust_bridge_codegen --version 2.9.0`
 * Flutter SDK 3.29.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
