@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bugfix: Fix settings not being saved in some exceptional cases
+
 ## 0.14.2
 
 - Bugfix: Fix multi capture not continuing after first capture
