@@ -1,6 +1,6 @@
 {
   "cmake.configureOnOpen": false,
-  "dart.flutterSdkPath": ".fvm/versions/3.29.1",
+  "dart.flutterSdkPath": ".fvm/versions/3.29.2",
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
@@ -8,5 +8,9 @@
     "**/.dart_tool": true,
     ".flatpak/**": true,
     "_build/**": true
-  }
+  },
+  "flutterTools.displayGetxContextMenu": false,
+  "flutterTools.displayMobxContextMenu": true,
+  "flutterTools.displayRiverpodContextMenu": false,
+  "flutterTools.displayModularContextMenu": true
 }
