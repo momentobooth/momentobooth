@@ -32,7 +32,7 @@ dependencies:
   widgetbook: 3.11.0
   widgetbook_annotation: 3.3.0
   flex_color_picker: 3.7.0
-  lucide_icons_flutter: 1.2.9
+  lucide_icons_flutter: 2.0.0
   wizard_router: 1.4.0
 
   # Printscreen/Image processing
@@ -63,9 +63,9 @@ dependencies:
   win32: 5.12.0
 
   # Log and error handling
-  talker: 4.6.14
-  talker_flutter: 4.6.14
-  sentry_flutter: 8.13.3
+  talker: 4.7.1
+  talker_flutter: 4.7.1
+  sentry_flutter: 8.14.0
 
   # Sound output
   just_audio: 0.9.46
@@ -94,7 +94,7 @@ dependencies:
   draggable_scrollbar:
     git: https://github.com/momentobooth/flutter-draggable-scrollbar
   csslib: 1.0.2
-  args: ^2.6.0
+  args: 2.7.0
   url_launcher: 6.3.1
   super_clipboard: 0.8.24
   super_drag_and_drop: 0.8.24

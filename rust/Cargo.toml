@@ -22,7 +22,7 @@ noise = "0.9.0"
 dashmap = "6.1.0"
 turborand = "0.10.1"
 pathsep = "0.1.1"
-tokio = { version = "1.44.0", features = ["rt-multi-thread"] }
+tokio = { version = "1.44.1", features = ["rt-multi-thread"] }
 gphoto2 = "3.4.1"
 ahash = "0.8.11"
 img-parts = "0.3.3"
