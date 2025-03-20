@@ -1,16 +1,19 @@
 # README
 #
 # Run (from repo root):
+# - first time? `sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo`
+# - sudo flatpak install runtime/org.gnome.Sdk/x86_64/48
+# - sudo flatpak install runtime/org.gnome.Platform/x86_64/48
+# - sudo flatpak install org.freedesktop.Sdk.Extension.llvm20
 # - flatpak install org.freedesktop.Sdk.Extension.rust-stable
-# - flatpak install org.freedesktop.Sdk.Extension.llvm18
-# - flatpak-builder build/flatpak linux/packaging/flatpak/com.h3xsoftware.MomentoBooth.yml --force-clean
+# - sudo flatpak-builder build/flatpak linux/packaging/flatpak/com.h3xsoftware.MomentoBooth.yml --force-clean
 
 id: com.h3xsoftware.MomentoBooth
 runtime: org.gnome.Platform
-runtime-version: '46'
+runtime-version: '48'
 sdk: org.gnome.Sdk
 sdk-extensions:
-  - org.freedesktop.Sdk.Extension.llvm18
+  - org.freedesktop.Sdk.Extension.llvm20
 command: momentobooth-wrapper
 separate-locales: false
 finish-args:
@@ -25,17 +28,18 @@ finish-args:
 build-options:
   build-args:
     - --share=network
-  append-path: "/usr/lib/sdk/llvm18/bin"
+  append-path: "/usr/lib/sdk/llvm20/bin"
   env:
-    - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
-    - CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
-    - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: "clang"
-    - CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
+    CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+    CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
+    CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: "clang"
+    CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_RUSTFLAGS: "-C link-arg=-fuse-ld=/usr/lib/sdk/rust-stable/bin/mold"
 modules:
-  - name: shared-modules
-    buildsystem: simple
-    build-commands:
-      - git clone https://github.com/flathub/shared-modules.git
+  # - name: shared-modules
+  #   buildsystem: simple
+  #   build-commands:
+  #     - git clone https://github.com/flathub/shared-modules.git
+  # ^ Doesn't work, clone before manually
   - "shared-modules/libusb/libusb.json"
   - name: libgphoto2
     buildsystem: autotools
@@ -60,8 +64,8 @@ modules:
       - -DEXIV2_BUILD_SAMPLES=OFF
     sources:
       - type: archive
-        url: https://github.com/Exiv2/exiv2/releases/download/v0.27.7/exiv2-0.27.7-Source.tar.gz
-        sha256: 70629dc27e3d4dd5c3fa91afbea93166d338b1de284e6a4c44bbf9dcfe7bbc6d
+        url: https://github.com/Exiv2/exiv2/archive/refs/tags/v0.28.5.tar.gz
+        sha256: e1671f744e379a87ba0c984617406fdf8c0ad0c594e5122f525b2fb7c28d394d
     cleanup:
       - "/lib/cmake"
       - "/lib/pkgconfig"
@@ -86,7 +90,7 @@ modules:
         sh rustup-init.sh -y
 
         cargo install cargo-expand
-        cargo install flutter_rust_bridge_codegen@2.1.0
+        cargo install flutter_rust_bridge_codegen@2.9.0
 
         curl -fsSL https://raw.githubusercontent.com/leoafarias/fvm/main/scripts/install.sh | bash || true
         fvm install -s --skip-pub-get
