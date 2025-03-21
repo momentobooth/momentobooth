@@ -15,6 +15,7 @@ use log::LevelFilter;
 use parking_lot::RwLock;
 use tokio::runtime;
 use rustc_version_runtime::version;
+use libusb_sys::libusb_get_version;
 
 use super::noise::noise_close;
 use super::noise::NOISE_HANDLES;
@@ -30,6 +31,7 @@ pub fn get_version_info() -> VersionInfo {
         rust_target: RUST_TARGET.to_owned(),
         library_version: LIBRARY_VERSION.to_owned(),
         libgphoto2_version: ::gphoto2::library_version().unwrap().to_owned(),
+        libusb_version: get_libusb_version(),
         libgexiv2_version: get_gexiv2_version(),
         libexiv2_version: get_exiv2_version(),
     }
@@ -48,10 +50,17 @@ fn get_gexiv2_version() -> String {
 }
 
 fn get_exiv2_version() -> String {
-    return unsafe {
+    unsafe {
         let c_str = crate::Exiv2_version();
         CStr::from_ptr(c_str).to_string_lossy().into_owned()
-    };
+    }
+}
+
+fn get_libusb_version() -> String {
+    unsafe {
+        let libusb_version = libusb_get_version();
+        format!("{}.{}.{}", (*libusb_version).major, (*libusb_version).minor, (*libusb_version).micro)
+    }
 }
 
 // /////// //

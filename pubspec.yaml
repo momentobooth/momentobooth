@@ -5,7 +5,7 @@ publish_to: "none"
 version: 0.14.2+109
 
 environment:
-  sdk: ^3.7.0
+  sdk: ^3.7.2
 
 dependencies:
   flutter: { sdk: flutter }
@@ -32,7 +32,7 @@ dependencies:
   widgetbook: 3.11.0
   widgetbook_annotation: 3.3.0
   flex_color_picker: 3.7.0
-  lucide_icons_flutter: 2.0.0
+  lucide_icons_flutter: 2.0.1
   wizard_router: 1.4.0
 
   # Printscreen/Image processing

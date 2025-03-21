@@ -180,7 +180,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               overlayColor: WidgetStateProperty.all(Colors.red.shade900),
               side: WidgetStateProperty.all(const BorderSide(color: Color.fromARGB(255, 255, 117, 117))),
             ),
-            icon: const Icon(LucideIcons.filterX),
+            icon: const Icon(LucideIcons.funnelX),
             label: const Text("Clear filter"),
           ),
       ],
