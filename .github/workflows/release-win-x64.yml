@@ -23,6 +23,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        submodules: 'true'
 
     # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
     - name: Create Dev Drive using ReFS

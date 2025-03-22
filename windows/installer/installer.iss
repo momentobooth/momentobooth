@@ -1,4 +1,4 @@
-#include "CodeDependencies.iss"
+#include "InnoDependencyInstaller\CodeDependencies.iss"
 
 #define BuildOutputFolder "..\..\build\windows\x64\runner\Release"
 #define OutputExeName "photobooth.exe"
