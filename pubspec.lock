@@ -840,10 +840,10 @@ packages:
     dependency: "direct main"
     description:
       name: lucide_icons_flutter
-      sha256: ddd7beceba792aa02b00c629f314b7ff33be2de40898b19eea03b624dc7a3b05
+      sha256: d6f8b0cc65207d12b84150c20e6333336e2442e1467d79dc49d36dc8df991f09
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   macros:
     dependency: transitive
     description:
@@ -1762,5 +1762,5 @@ packages:
     source: hosted
     version: "3.1.3"
 sdks:
-  dart: ">=3.7.0 <4.0.0"
+  dart: ">=3.7.2 <4.0.0"
   flutter: ">=3.27.0"
