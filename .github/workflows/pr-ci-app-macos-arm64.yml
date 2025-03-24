@@ -33,7 +33,7 @@ jobs:
         submodules: 'true'
 
     - name: Run ssh-agent
-      uses: webfactory/ssh-agent@v0.9.0
+      uses: webfactory/ssh-agent@v0.9.1
       with:
         ssh-private-key: ${{ secrets.MATCH_CERTIFICATES_GIT_ACCESS_TOKEN }}
 
