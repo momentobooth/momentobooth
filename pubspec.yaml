@@ -34,6 +34,7 @@ dependencies:
   flex_color_picker: 3.7.0
   lucide_icons_flutter: 2.0.1
   wizard_router: 1.4.0
+  flutter_shaders: 0.1.3
 
   # Printscreen/Image processing
   screenshot: 3.0.0
@@ -140,3 +141,6 @@ flutter:
       fonts:
         - asset: assets/fonts/brandon_grotesque/Brandon_light.otf
           weight: 300
+
+  shaders:
+    - assets/shaders/starfield-dots.frag # Source: https://www.shadertoy.com/view/XtjcW3

@@ -3,11 +3,12 @@ part of 'app.dart';
 List<RouteBase> _rootRoutes = [
   _onboardingRoute,
   _settingsRoute,
+  _notAvailableRoute,
   _photoBoothShellRoute,
 ];
 
 GoRoute _onboardingRoute = GoRoute(
-  path: "/onboarding",
+  path: OnboardingScreen.defaultRoute,
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
@@ -17,7 +18,7 @@ GoRoute _onboardingRoute = GoRoute(
 );
 
 GoRoute _settingsRoute = GoRoute(
-  path: "/settings",
+  path: SettingsScreen.defaultRoute,
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
@@ -27,6 +28,16 @@ GoRoute _settingsRoute = GoRoute(
       ),
       barrierDismissible: true,
       enableTransitionOut: false,
+    );
+  },
+);
+
+GoRoute _notAvailableRoute = GoRoute(
+  path: NotAvailableScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return TransitionPage.fromSettings(
+      key: state.pageKey,
+      child: const NotAvailableScreen(),
     );
   },
 );
