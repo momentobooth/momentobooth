@@ -16,7 +16,7 @@ chrono = "0.4.40"
 image = { version = "0.25.5", features = ["rayon"] }
 ipp = { version = "5.2.0", features = ["client"] }
 zune-jpeg = "0.4.14"
-jpeg-encoder = "0.6.0"
+jpeg-encoder = "0.6.1"
 dlopen = "0.1.8"
 noise = "0.9.0"
 dashmap = "6.1.0"
@@ -34,7 +34,7 @@ num-derive = "0.4.2"
 rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 gexiv2-sys = "1.4.0"
 regex = "1.11.1"
-log = "0.4.26"
+log = "0.4.27"
 nokhwa = { git = "https://github.com/momentobooth/nokhwa.git", branch = "bugfix/fix-windows-pointer-error", features = ["input-native", "output-threaded"] }
 parking_lot = "0.12.3"
 susync = "0.2.0"

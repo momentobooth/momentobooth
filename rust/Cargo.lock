@@ -77,7 +77,7 @@ checksum = "c494134f746c14dc653a35a4ea5aca24ac368529da5370ecf41fe0341c35772f"
 dependencies = [
  "android_log-sys",
  "env_logger",
- "log 0.4.26",
+ "log 0.4.27",
  "once_cell",
 ]
 
@@ -154,7 +154,7 @@ checksum = "6678909d8c5d46a42abcf571271e15fdbc0a225e3646cf23762cd415046c78bf"
 dependencies = [
  "anyhow",
  "arrayvec",
- "log 0.4.26",
+ "log 0.4.27",
  "nom",
  "num-rational",
  "v_frame",
@@ -238,7 +238,7 @@ dependencies = [
  "clang-sys",
  "lazy_static",
  "lazycell",
- "log 0.4.26",
+ "log 0.4.27",
  "peeking_take_while",
  "prettyplease",
  "proc-macro2 1.0.94",
@@ -260,7 +260,7 @@ dependencies = [
  "cexpr",
  "clang-sys",
  "itertools 0.13.0",
- "log 0.4.26",
+ "log 0.4.27",
  "prettyplease",
  "proc-macro2 1.0.94",
  "quote 1.0.40",
@@ -931,7 +931,7 @@ version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4cd405aab171cb85d6735e5c8d9db038c17d3ca007a4d2c25f337935c3d90580"
 dependencies = [
- "log 0.4.26",
+ "log 0.4.27",
  "regex",
 ]
 
@@ -1060,7 +1060,7 @@ dependencies = [
  "futures 0.3.31",
  "js-sys",
  "lazy_static",
- "log 0.4.26",
+ "log 0.4.27",
  "oslog",
  "portable-atomic",
  "threadpool",
@@ -1326,7 +1326,7 @@ dependencies = [
  "crossbeam-channel",
  "libc",
  "libgphoto2_sys",
- "log 0.4.26",
+ "log 0.4.27",
 ]
 
 [[package]]
@@ -1896,7 +1896,7 @@ dependencies = [
  "futures-executor",
  "futures-util",
  "http 1.3.1",
- "log 0.4.26",
+ "log 0.4.27",
  "native-tls",
  "num-traits",
  "reqwest 0.12.15",
@@ -1946,9 +1946,9 @@ checksum = "f5d4a7da358eff58addd2877a45865158f0d78c911d43a5784ceb7bbf52833b0"
 
 [[package]]
 name = "jpeg-encoder"
-version = "0.6.0"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fefe5a4fb12fa836172dc53cc36c37af693f6197ae702f931faad8774caf926"
+checksum = "b454d911ac55068f53495488d8ccd0646eaa540c033a28ee15b07838afafb01f"
 
 [[package]]
 name = "js-sys"
@@ -2094,14 +2094,14 @@ version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e19e8d5c34a3e0e2223db8e060f9e8264aeeb5c5fc64a4ee9965c062211c024b"
 dependencies = [
- "log 0.4.26",
+ "log 0.4.27",
 ]
 
 [[package]]
 name = "log"
-version = "0.4.26"
+version = "0.4.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "30bde2b3dc3671ae49d8e2e9f044c7c005836e7a023ee57cffa25ab82764bb9e"
+checksum = "13dc2df351e3202783a1fe0d44375f7295ffb4049267b0f3018346dc122a1d94"
 
 [[package]]
 name = "loop9"
@@ -2170,7 +2170,7 @@ dependencies = [
  "cocoa",
  "core-graphics",
  "foreign-types",
- "log 0.4.26",
+ "log 0.4.27",
  "objc",
 ]
 
@@ -2227,7 +2227,7 @@ dependencies = [
  "iovec",
  "kernel32-sys",
  "libc",
- "log 0.4.26",
+ "log 0.4.27",
  "miow",
  "net2",
  "slab",
@@ -2307,7 +2307,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "87de3442987e9dbec73158d5c715e7ad9072fda936bb03d19d7fa10e00520f0e"
 dependencies = [
  "libc",
- "log 0.4.26",
+ "log 0.4.27",
  "openssl",
  "openssl-probe",
  "openssl-sys",
@@ -2615,7 +2615,7 @@ checksum = "8343ce955f18e7e68c0207dd0ea776ec453035685395ababd2ea651c569728b3"
 dependencies = [
  "cc",
  "dashmap 4.0.2",
- "log 0.4.26",
+ "log 0.4.27",
 ]
 
 [[package]]
@@ -2997,7 +2997,7 @@ dependencies = [
  "itertools 0.12.1",
  "libc",
  "libfuzzer-sys",
- "log 0.4.26",
+ "log 0.4.27",
  "maybe-rayon",
  "new_debug_unreachable",
  "noop_proc_macro",
@@ -3122,7 +3122,7 @@ dependencies = [
  "hyper-tls 0.5.0",
  "ipnet",
  "js-sys",
- "log 0.4.26",
+ "log 0.4.27",
  "mime 0.3.17",
  "native-tls",
  "once_cell",
@@ -3165,7 +3165,7 @@ dependencies = [
  "hyper-util",
  "ipnet",
  "js-sys",
- "log 0.4.26",
+ "log 0.4.27",
  "mime 0.3.17",
  "native-tls",
  "once_cell",
@@ -3260,7 +3260,7 @@ dependencies = [
  "libc",
  "libusb-sys",
  "little_exif",
- "log 0.4.26",
+ "log 0.4.27",
  "noise",
  "nokhwa",
  "num",
@@ -3358,7 +3358,7 @@ version = "0.21.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f56a14d1f48b391359b22f731fd4bd7e43c97f3c50eee276f3aa09c94784d3e"
 dependencies = [
- "log 0.4.26",
+ "log 0.4.27",
  "ring 0.17.14",
  "rustls-webpki",
  "sct",
@@ -4036,7 +4036,7 @@ checksum = "57fc868aae093479e3131e3d165c93b1c7474109d13c90ec0dda2a1bbfff0674"
 dependencies = [
  "bytes 0.4.12",
  "futures 0.1.31",
- "log 0.4.26",
+ "log 0.4.27",
 ]
 
 [[package]]
@@ -4058,7 +4058,7 @@ dependencies = [
  "crossbeam-utils 0.7.2",
  "futures 0.1.31",
  "lazy_static",
- "log 0.4.26",
+ "log 0.4.27",
  "mio 0.6.23",
  "num_cpus",
  "parking_lot 0.9.0",
@@ -4302,7 +4302,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "02d1a66277ed75f640d608235660df48c8e3c19f3b4edb6a263315626cc3c01d"
 dependencies = [
  "base64 0.22.1",
- "log 0.4.26",
+ "log 0.4.27",
  "once_cell",
  "url 2.5.4",
 ]
@@ -4452,7 +4452,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2f0a0651a5c2bc21487bde11ee802ccaf4c51935d0d3d42a6101f98161700bc6"
 dependencies = [
  "bumpalo",
- "log 0.4.26",
+ "log 0.4.27",
  "proc-macro2 1.0.94",
  "quote 1.0.40",
  "syn 2.0.100",
