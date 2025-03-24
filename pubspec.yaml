@@ -142,3 +142,6 @@ flutter:
           weight: 300
 
   generate: true
+
+  shaders:
+    - assets/shaders/starfield-dots.frag # Source: https://www.shadertoy.com/view/XtjcW3

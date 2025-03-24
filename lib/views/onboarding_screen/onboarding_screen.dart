@@ -27,6 +27,8 @@ import 'package:wizard_router/wizard_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
 
+  static const String defaultRoute = "/onboarding";
+
   const OnboardingScreen({super.key});
 
   @override

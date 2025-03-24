@@ -10,6 +10,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
+import 'package:momento_booth/views/not_available_screen/not_available_screen.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
@@ -87,7 +88,7 @@ class _MomentoBoothAppState extends State<MomentoBoothApp> with WindowListener {
             return ChangeNotifierProvider(create: (_) => ActivityMonitorController(), child: child);
           },
         );
-      }
+      },
     );
   }
 
