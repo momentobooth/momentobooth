@@ -27,19 +27,12 @@ jobs:
       with:
         submodules: 'true'
 
-    # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
-    - name: Create Dev Drive
+    - name: Setup D drive for builds and caches
       run: |
-        $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 20GB |
-                  Mount-VHD -Passthru |
-                  Initialize-Disk -Passthru |
-                  New-Partition -AssignDriveLetter -UseMaximumSize |
-                  Format-Volume -FileSystem NTFS -Confirm:$false -Force
-        Write-Output $Volume
-        Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
-        Write-Output "CARGO_HOME=$($Volume.DriveLetter):\.cargo" >> $env:GITHUB_ENV
-        Write-Output "RUSTUP_HOME=$($Volume.DriveLetter):\.rustup" >> $env:GITHUB_ENV
-        Write-Output "SCCACHE_DIR=$($Volume.DriveLetter):\.sccache-cache" >> $env:GITHUB_ENV
+        Write-Output "DEV_DRIVE=D:" >> $env:GITHUB_ENV
+        Write-Output "CARGO_HOME=D:\.cargo" >> $env:GITHUB_ENV
+        Write-Output "RUSTUP_HOME=D:\.rustup" >> $env:GITHUB_ENV
+        Write-Output "SCCACHE_DIR=D:\.sccache-cache" >> $env:GITHUB_ENV
 
     - name: Copy Git Repo to Dev Drive
       run: |

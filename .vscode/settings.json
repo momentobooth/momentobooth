@@ -8,9 +8,5 @@
     "**/.dart_tool": true,
     ".flatpak/**": true,
     "_build/**": true
-  },
-  "flutterTools.displayGetxContextMenu": false,
-  "flutterTools.displayMobxContextMenu": true,
-  "flutterTools.displayRiverpodContextMenu": false,
-  "flutterTools.displayModularContextMenu": true
+  }
 }
