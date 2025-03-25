@@ -212,6 +212,13 @@ jobs:
       run: |
         &"${Env:ProgramFiles(x86)}/Inno Setup 6/iscc.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss"
 
+    - name: Upload libgphoto2 package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MSYS2 libgphoto2 package
+        path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
+        compression-level: 0
+
     - name: Upload zip artifact
       uses: actions/upload-artifact@v4
       with:
@@ -224,3 +231,4 @@ jobs:
       with:
         name: Windows x64 (installer)
         path: ${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.exe
+        compression-level: 0
