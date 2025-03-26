@@ -79,7 +79,8 @@ jobs:
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
-          rust -> ../build/macos/Build/Intermediates.noindex/Pods.build/Release/rust_lib_momento_booth.build
+          rust -> ../build/macos/Build/Intermediates.noindex/Pods.build/Release/rust_lib_momento_booth.build/aarch64-apple-darwin
+          rust -> ../build/macos/Build/Intermediates.noindex/Pods.build/Release/rust_lib_momento_booth.build/x86_64-apple-darwin
           rust -> target
       
     - name: Setup sccache-cache
