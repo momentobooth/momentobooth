@@ -840,10 +840,10 @@ packages:
     dependency: "direct main"
     description:
       name: lucide_icons_flutter
-      sha256: d6f8b0cc65207d12b84150c20e6333336e2442e1467d79dc49d36dc8df991f09
+      sha256: bc584af4f1e6437f5a4ab17beb03afd933f44ccbe4ee97ba7636def551c9d698
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   macros:
     dependency: transitive
     description:
@@ -888,10 +888,10 @@ packages:
     dependency: "direct main"
     description:
       name: media_kit_libs_linux
-      sha256: e186891c31daa6bedab4d74dcdb4e8adfccc7d786bfed6ad81fe24a3b3010310
+      sha256: "2b473399a49ec94452c4d4ae51cfc0f6585074398d74216092bf3d54aac37ecf"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.3"
+    version: "1.2.1"
   media_kit_libs_windows_audio:
     dependency: "direct main"
     description:
@@ -1685,26 +1685,26 @@ packages:
     dependency: "direct main"
     description:
       name: widgetbook
-      sha256: "43fb5d65e5617cae47aeb5b25d6c8c51ee44bb5296b9a72df7bd60dbc6c51877"
+      sha256: "0246372811ec3fec815352d6d292ffb84b88e63ba829b76b12d7e38d2304dcd5"
       url: "https://pub.dev"
     source: hosted
-    version: "3.11.0"
+    version: "3.12.0"
   widgetbook_annotation:
     dependency: "direct main"
     description:
       name: widgetbook_annotation
-      sha256: b6f1da292c20a6238d973a640d253ce3ebddbe1f9fa8f2afd72624797a38e7cc
+      sha256: "21485481aff512177a4b12db78a3196c2eb32dee3580c7b7cb88789314856bcb"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.3.1"
   widgetbook_generator:
     dependency: "direct dev"
     description:
       name: widgetbook_generator
-      sha256: ac59f4208daf449c104fccfab77d210e53e92b8a52b74f51a81666418c9a6023
+      sha256: "00167a9f13a926c45b956931c4352488960d87ae208dd8662a1369570968a925"
       url: "https://pub.dev"
     source: hosted
-    version: "3.10.0"
+    version: "3.11.0"
   win32:
     dependency: "direct main"
     description:
