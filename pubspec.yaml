@@ -29,10 +29,10 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.1
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.11.0
-  widgetbook_annotation: 3.3.0
+  widgetbook: 3.12.0
+  widgetbook_annotation: 3.3.1
   flex_color_picker: 3.7.0
-  lucide_icons_flutter: 2.0.1
+  lucide_icons_flutter: 2.0.2
   wizard_router: 1.4.0
 
   # Printscreen/Image processing
@@ -70,7 +70,7 @@ dependencies:
   # Sound output
   just_audio: 0.9.46
   just_audio_media_kit: 2.0.6
-  media_kit_libs_linux: any
+  media_kit_libs_linux: 1.2.1
   media_kit_libs_windows_audio: 1.0.9
 
   # Storage
@@ -109,7 +109,7 @@ dependency_overrides:
 
 dev_dependencies:
   # UI
-  widgetbook_generator: 3.10.0
+  widgetbook_generator: 3.11.0
 
   # MVC
   mobx_codegen: 2.7.0
