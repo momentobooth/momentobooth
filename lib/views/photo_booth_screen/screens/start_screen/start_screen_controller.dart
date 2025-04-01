@@ -6,6 +6,7 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/no_project_open_dialog.dart';
+import 'package:momento_booth/views/photo_booth_screen/photo_booth_shell.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
@@ -32,11 +33,11 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   // User interaction methods
 
   Future<void> onPressedContinue() async {
-    router.go(ChooseCaptureModeScreen.defaultRoute);
+    router.go(const ChooseCaptureModeRoute().location);
   }
 
   void onPressedGallery() {
-    router.push(GalleryScreen.defaultRoute);
+    router.push(const GalleryRoute().location);
   }
 
 }

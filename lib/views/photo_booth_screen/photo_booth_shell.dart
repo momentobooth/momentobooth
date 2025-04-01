@@ -14,26 +14,58 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/route_observer.dart';
+import 'package:momento_booth/views/base/custom_shell_route_data.dart';
 import 'package:momento_booth/views/components/config/set_scroll_configuration.dart';
 import 'package:momento_booth/views/components/imaging/live_view_background.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/framerate_monitor.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-part 'photo_booth.hotkey_monitor.dart';
-part 'photo_booth.menu.dart';
+part 'photo_booth_shell.hotkey_monitor.dart';
+part 'photo_booth_shell.menu.dart';
 
-class PhotoBooth extends StatelessWidget {
+part 'photo_booth_shell.g.dart';
+
+@TypedShellRoute<PhotoBoothRoute>(routes: [
+  TypedGoRoute<StartRoute>(path: '/start'),
+  TypedGoRoute<ChooseCaptureModeRoute>(path: '/choose_capture_mode'),
+  TypedGoRoute<SingleCaptureRoute>(path: '/single-capture'),
+  TypedGoRoute<MultiCaptureRoute>(path: '/multi-capture'),
+  TypedGoRoute<CollageMakerRoute>(path: '/collage-maker'),
+  TypedGoRoute<ShareRoute>(path: '/share'),
+  TypedGoRoute<GalleryRoute>(path: '/gallery'),
+  TypedGoRoute<PhotoDetailsRoute>(path: '/photo-details'),
+  TypedGoRoute<ManualCollageRoute>(path: '/manual-collage'),
+])
+class PhotoBoothRoute extends CustomShellRouteData {
+
+  const PhotoBoothRoute() : super(enableTransitionOut: false);
+
+  static final List<NavigatorObserver> $observers = [GoRouterObserver()];
+
+  @override
+  Widget builder(BuildContext context, GoRouterState state, Widget navigator) => PhotoBoothShell(child: navigator);
+
+}
+
+class PhotoBoothShell extends StatelessWidget {
 
   final Widget child;
 
-  const PhotoBooth({super.key, required this.child});
+  const PhotoBoothShell({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

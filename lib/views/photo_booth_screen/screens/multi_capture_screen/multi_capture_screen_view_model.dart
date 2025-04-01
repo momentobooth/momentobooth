@@ -6,6 +6,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
+import 'package:momento_booth/views/photo_booth_screen/photo_booth_shell.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
 
@@ -43,7 +44,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   Duration get flashAnimationDuration => showFlash ? flashStartDuration : flashEndDuration;
 
   @computed
-  int get photoNumber => getIt<PhotosManager>().photos.length+1;
+  int get photoNumber => getIt<PhotosManager>().photos.length + 1;
 
   final int maxPhotos = 4;
 
@@ -72,9 +73,9 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) return;
     if (getIt<PhotosManager>().photos.length >= maxPhotos) {
-      router.go(CollageMakerScreen.defaultRoute);
+      router.go(const CollageMakerRoute().location);
     } else {
-      router.go("${MultiCaptureScreen.defaultRoute}?n=${getIt<PhotosManager>().photos.length}");
+      router.go(MultiCaptureRoute().location);
     }
   }
 

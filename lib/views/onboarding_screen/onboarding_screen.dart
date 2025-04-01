@@ -5,12 +5,26 @@ import 'package:animations/animations.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show PageTransitionsTheme, Theme, ThemeData;
+import 'package:go_router/go_router.dart';
+import 'package:momento_booth/views/base/custom_route_data.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/projects_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/settings_import_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/status_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/welcome_page.dart';
 import 'package:wizard_router/wizard_router.dart';
+
+part 'onboarding_screen.g.dart';
+
+@TypedGoRoute<OnboardingRoute>(path: '/onboarding')
+class OnboardingRoute extends CustomRouteData {
+
+  const OnboardingRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const OnboardingScreen();
+
+}
 
 class OnboardingScreen extends StatefulWidget {
 

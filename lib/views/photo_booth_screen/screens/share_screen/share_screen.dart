@@ -1,12 +1,22 @@
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
+import 'package:momento_booth/views/base/custom_route_data.dart';
 import 'package:momento_booth/views/base/screen_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view_model.dart';
 
-class ShareScreen extends ScreenBase<ShareScreenViewModel, ShareScreenController, ShareScreenView> {
+class ShareRoute extends CustomRouteData {
 
-  static const String defaultRoute = "/share";
+  const ShareRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const ShareScreen();
+
+}
+
+class ShareScreen extends ScreenBase<ShareScreenViewModel, ShareScreenController, ShareScreenView> {
 
   const ShareScreen({super.key});
 

@@ -7,6 +7,7 @@ import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
+import 'package:momento_booth/views/photo_booth_screen/photo_booth_shell.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
 
@@ -66,7 +67,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     // Fixme: there is a possibility that a collage will not get registered in the statistic
     // because a user leaves it and after timeout navigation to the homescreen occurs.
     getIt<StatsManager>().addCreatedMultiCapturePhoto();
-    router.go(ShareScreen.defaultRoute);
+    router.go(const ShareRoute().location);
   }
 
 }

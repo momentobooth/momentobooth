@@ -1,4 +1,4 @@
-part of 'photo_booth.dart';
+part of 'photo_booth_shell.dart';
 
 class _HotkeyResponder extends StatelessWidget with Logger {
 
@@ -12,7 +12,7 @@ class _HotkeyResponder extends StatelessWidget with Logger {
 
     return CallbackShortcuts(
       bindings: {
-        SingleActivator(LogicalKeyboardKey.keyH, control: control, meta: meta): () => GoRouter.of(context).go(StartScreen.defaultRoute),
+        SingleActivator(LogicalKeyboardKey.keyH, control: control, meta: meta): () => GoRouter.of(context).go(const StartRoute().location),
         SingleActivator(LogicalKeyboardKey.keyM, control: control, meta: meta): () => _toggleManualCollageScreen(context),
       },
       child: child,
@@ -21,10 +21,10 @@ class _HotkeyResponder extends StatelessWidget with Logger {
 
   void _toggleManualCollageScreen(BuildContext context) {
     GoRouter router = GoRouter.of(context);
-    if (router.currentLocation == ManualCollageScreen.defaultRoute) {
-      router.go(StartScreen.defaultRoute);
+    if (router.currentLocation == const ManualCollageRoute().location) {
+      router.go(const StartRoute().location);
     } else {
-      router.go(ManualCollageScreen.defaultRoute);
+      router.go(const ManualCollageRoute().location);
     }
   }
 

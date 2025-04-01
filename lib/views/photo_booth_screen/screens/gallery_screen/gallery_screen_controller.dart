@@ -7,6 +7,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/find_face_dialog.dart';
+import 'package:momento_booth/views/photo_booth_screen/photo_booth_shell.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
@@ -25,14 +26,14 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   void openPhoto(File file) {
     final String filename = basename(file.path);
     logDebug("Opening photo $filename");
-    router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
+    router.push(PhotoDetailsRoute(photoId: filename).location);
   }
 
   void onPressedBack() {
     if (router.canPop()) {
       router.pop();
     } else {
-      router.go(StartScreen.defaultRoute);
+      router.go(const StartRoute().location);
     }
   }
 
