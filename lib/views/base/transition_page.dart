@@ -19,8 +19,8 @@ final class TransitionPage extends CustomTransitionPage<void> {
   }
 
   factory TransitionPage.fromSettings({
-    required LocalKey key,
     required Widget child,
+    LocalKey? key,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
     bool opaque = true,
@@ -66,7 +66,7 @@ final class TransitionPage extends CustomTransitionPage<void> {
         );
 
   TransitionPage._fadeAndSlide({
-    required LocalKey super.key,
+    required super.key,
     required super.child,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,

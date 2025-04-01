@@ -109,6 +109,7 @@ dependency_overrides:
 
 dev_dependencies:
   # UI
+  go_router_builder: 2.8.2
   widgetbook_generator: 3.11.0
 
   # MVC

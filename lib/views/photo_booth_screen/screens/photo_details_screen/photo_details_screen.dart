@@ -1,12 +1,24 @@
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
+import 'package:momento_booth/views/base/custom_route_data.dart';
 import 'package:momento_booth/views/base/screen_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen_view.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen_view_model.dart';
 
-class PhotoDetailsScreen extends ScreenBase<PhotoDetailsScreenViewModel, PhotoDetailsScreenController, PhotoDetailsScreenView> {
+class PhotoDetailsRoute extends CustomRouteData {
 
-  static const String defaultRoute = "/photo_details";
+  final String photoId;
+
+  const PhotoDetailsRoute({required this.photoId}) : super(opaque: true, barrierDismissible: true);
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => PhotoDetailsScreen(photoId: photoId);
+
+}
+
+class PhotoDetailsScreen extends ScreenBase<PhotoDetailsScreenViewModel, PhotoDetailsScreenController, PhotoDetailsScreenView> {
 
   final String photoId;
 

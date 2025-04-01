@@ -20,13 +20,14 @@ import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
+import 'package:momento_booth/views/photo_booth_screen/photo_booth_shell.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
 
-part 'capture_screen_view_model.g.dart';
+part 'single_capture_screen_view_model.g.dart';
 
-class CaptureScreenViewModel = CaptureScreenViewModelBase with _$CaptureScreenViewModel;
+class SingleCaptureScreenViewModel = SingleCaptureScreenViewModelBase with _$SingleCaptureScreenViewModel;
 
-abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store {
+abstract class SingleCaptureScreenViewModelBase extends ScreenViewModelBase with Store {
 
   late final PhotoCaptureMethod capturer;
   bool flashComplete = false;
@@ -93,9 +94,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     return await getIt<PhotosManager>().writeOutput();
   }
 
-  CaptureScreenViewModelBase({
-    required super.contextAccessor,
-  }) {
+  SingleCaptureScreenViewModelBase({required super.contextAccessor}) {
     capturer = switch (getIt<SettingsManager>().settings.hardware.captureMethod) {
       CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(getIt<SettingsManager>().settings.hardware.captureLocation),
       CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
@@ -148,7 +147,7 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   void navigateAfterCapture() {
     if (!flashComplete || !captureComplete) return;
     getIt<StatsManager>().addCreatedSinglePhoto();
-    router.go(ShareScreen.defaultRoute);
+    router.go(const ShareRoute().location);
   }
 
 }

@@ -1,12 +1,22 @@
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
+import 'package:momento_booth/views/base/custom_route_data.dart';
 import 'package:momento_booth/views/base/screen_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
 
-class ChooseCaptureModeScreen extends ScreenBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController, ChooseCaptureModeScreenView> {
+class ChooseCaptureModeRoute extends CustomRouteData {
 
-  static const String defaultRoute = "/choose_capture_mode";
+  const ChooseCaptureModeRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) => const ChooseCaptureModeScreen();
+
+}
+
+class ChooseCaptureModeScreen extends ScreenBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController, ChooseCaptureModeScreenView> {
 
   const ChooseCaptureModeScreen({super.key});
 
