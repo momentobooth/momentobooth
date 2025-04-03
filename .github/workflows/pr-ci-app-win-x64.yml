@@ -27,19 +27,12 @@ jobs:
       with:
         submodules: 'true'
 
-    # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
-    - name: Create Dev Drive
+    - name: Setup D drive for builds and caches
       run: |
-        $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 20GB |
-                  Mount-VHD -Passthru |
-                  Initialize-Disk -Passthru |
-                  New-Partition -AssignDriveLetter -UseMaximumSize |
-                  Format-Volume -FileSystem NTFS -Confirm:$false -Force
-        Write-Output $Volume
-        Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
-        Write-Output "CARGO_HOME=$($Volume.DriveLetter):\.cargo" >> $env:GITHUB_ENV
-        Write-Output "RUSTUP_HOME=$($Volume.DriveLetter):\.rustup" >> $env:GITHUB_ENV
-        Write-Output "SCCACHE_DIR=$($Volume.DriveLetter):\.sccache-cache" >> $env:GITHUB_ENV
+        Write-Output "DEV_DRIVE=D:" >> $env:GITHUB_ENV
+        Write-Output "CARGO_HOME=D:\.cargo" >> $env:GITHUB_ENV
+        Write-Output "RUSTUP_HOME=D:\.rustup" >> $env:GITHUB_ENV
+        Write-Output "SCCACHE_DIR=D:\.sccache-cache" >> $env:GITHUB_ENV
 
     - name: Copy Git Repo to Dev Drive
       run: |
@@ -212,6 +205,13 @@ jobs:
       run: |
         &"${Env:ProgramFiles(x86)}/Inno Setup 6/iscc.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss"
 
+    - name: Upload libgphoto2 package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MSYS2 libgphoto2 package
+        path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
+        compression-level: 0
+
     - name: Upload zip artifact
       uses: actions/upload-artifact@v4
       with:
@@ -224,3 +224,4 @@ jobs:
       with:
         name: Windows x64 (installer)
         path: ${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.exe
+        compression-level: 0

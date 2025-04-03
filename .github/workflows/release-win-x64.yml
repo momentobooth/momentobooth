@@ -26,19 +26,12 @@ jobs:
       with:
         submodules: 'true'
 
-    # Inspired by: https://github.com/astral-sh/uv/blob/main/.github/workflows/ci.yml
-    - name: Create Dev Drive using ReFS
+    - name: Setup D drive for builds and caches
       run: |
-        $Volume = New-VHD -Path D:/mb_dev_drive.vhdx -SizeBytes 20GB |
-                  Mount-VHD -Passthru |
-                  Initialize-Disk -Passthru |
-                  New-Partition -AssignDriveLetter -UseMaximumSize |
-                  Format-Volume -FileSystem NTFS -Confirm:$false -Force
-        Write-Output $Volume
-        Write-Output "DEV_DRIVE=$($Volume.DriveLetter):" >> $env:GITHUB_ENV
-        Write-Output "CARGO_HOME=$($Volume.DriveLetter):\.cargo" >> $env:GITHUB_ENV
-        Write-Output "RUSTUP_HOME=$($Volume.DriveLetter):\.rustup" >> $env:GITHUB_ENV
-        Write-Output "SCCACHE_DIR=$($Volume.DriveLetter):\.sccache-cache" >> $env:GITHUB_ENV
+        Write-Output "DEV_DRIVE=D:" >> $env:GITHUB_ENV
+        Write-Output "CARGO_HOME=D:\.cargo" >> $env:GITHUB_ENV
+        Write-Output "RUSTUP_HOME=D:\.rustup" >> $env:GITHUB_ENV
+        Write-Output "SCCACHE_DIR=D:\.sccache-cache" >> $env:GITHUB_ENV
 
     - name: Copy Git Repo to Dev Drive
       run: |
@@ -238,3 +231,10 @@ jobs:
         artifacts: "${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip,${{ env.DEV_DRIVE }}/momentobooth/windows/installer/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64-Setup.exe"
         body: |
           For Windows users: MomentoBooth needs the [Visual C++ Redistributable runtime libraries](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170). The setup version will install these automatically. When using the zip, install them manually.
+
+    - name: Upload libgphoto2 package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MSYS2 libgphoto2 package
+        path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
+        compression-level: 0

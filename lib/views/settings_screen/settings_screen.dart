@@ -6,9 +6,11 @@ import 'package:momento_booth/views/settings_screen/settings_screen_view_model.d
 
 class SettingsScreen extends ScreenBase<SettingsScreenViewModel, SettingsScreenController, SettingsScreenView> {
 
+  final SettingsPageKey initialPage;
+
   static const String defaultRoute = "/settings";
 
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, this.initialPage = SettingsPageKey.project});
 
   @override
   SettingsScreenController createController({required SettingsScreenViewModel viewModel, required BuildContextAccessor contextAccessor}) {
@@ -17,7 +19,7 @@ class SettingsScreen extends ScreenBase<SettingsScreenViewModel, SettingsScreenC
 
   @override
   SettingsScreenView createView({required SettingsScreenController controller, required SettingsScreenViewModel viewModel, required BuildContextAccessor contextAccessor}) {
-    return SettingsScreenView(viewModel: viewModel, controller: controller, contextAccessor: contextAccessor);
+    return SettingsScreenView(viewModel: viewModel, controller: controller, contextAccessor: contextAccessor, initialPage: initialPage);
   }
 
   @override
