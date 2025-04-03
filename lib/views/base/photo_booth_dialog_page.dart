@@ -1,11 +1,11 @@
 import 'dart:ui';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 
-final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
+final class PhotoBoothDialogPage<T> extends CustomRoute<T> {
 
   static const defaultTransitionDuration = Duration(milliseconds: 800);
 
@@ -26,13 +26,14 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
   }
 
   PhotoBoothDialogPage({
-    required super.child,
-    super.key,
+    required super.page,
+    super.children,
+    super.initial,
     super.barrierDismissible = false,
   }) : super(
           opaque: false,
-          transitionDuration: defaultTransitionDuration,
-          reverseTransitionDuration: defaultTransitionDuration,
+          durationInMilliseconds: defaultTransitionDuration.inMilliseconds,
+          reverseDurationInMilliseconds: defaultTransitionDuration.inMilliseconds,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             double blur = _blurAnimation(animation).value * 5;
             return BackdropFilter(
@@ -49,15 +50,15 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
           },
         );
 
-  @override
-  Route<T> createRoute([BuildContext? _]) => RawDialogRoute<T>(
-        settings: this,
-        barrierColor: barrierColor,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: barrierLabel,
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionBuilder: transitionsBuilder,
-        transitionDuration: transitionDuration,
-      );
+  // @override
+  // Route<T> createRoute([BuildContext? _]) => RawDialogRoute<T>(
+  //       settings: this,
+  //       barrierColor: barrierColor,
+  //       barrierDismissible: barrierDismissible,
+  //       barrierLabel: barrierLabel,
+  //       pageBuilder: (context, animation, secondaryAnimation) => child,
+  //       transitionBuilder: transitionsBuilder,
+  //       transitionDuration: transitionDuration,
+  //     );
 
 }

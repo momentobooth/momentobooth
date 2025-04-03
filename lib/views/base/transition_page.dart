@@ -1,12 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
-import 'package:go_router/go_router.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/components/transitions/fade_and_scale_transition.dart';
 import 'package:momento_booth/views/components/transitions/fade_and_slide_transition.dart';
 
-final class TransitionPage extends CustomTransitionPage<void> {
+final class TransitionPage<T> extends CustomRoute<T> {
 
   static const defaultTransitionDuration = Duration(milliseconds: 500);
 
@@ -19,41 +19,44 @@ final class TransitionPage extends CustomTransitionPage<void> {
   }
 
   factory TransitionPage.fromSettings({
-    required LocalKey key,
-    required Widget child,
+    required PageInfo page,
+    bool initial = false,
+    List<AutoRoute>? children,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
     bool opaque = true,
     bool barrierDismissible = false,
   }) {
     return switch (getIt<SettingsManager>().settings.ui.screenTransitionAnimation) {
-      ScreenTransitionAnimation.none => TransitionPage._none(key: key, child: child, opaque: opaque, barrierDismissible: barrierDismissible),
-      ScreenTransitionAnimation.fadeAndScale => TransitionPage._fadeAndScale(key: key, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
-      ScreenTransitionAnimation.fadeAndSlide => TransitionPage._fadeAndSlide(key: key, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.none => TransitionPage._none(page: page, initial: initial, children: children, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.fadeAndScale => TransitionPage._fadeAndScale(page: page, initial: initial, children: children, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.fadeAndSlide => TransitionPage._fadeAndSlide(page: page, initial: initial, children: children, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
     };
   }
 
   TransitionPage._none({
-    required super.key,
-    required super.child,
-    super.opaque = true,
+    required super.page,
+    super.children,
+    super.initial,
     super.barrierDismissible = false,
+    super.opaque = true,
   }) : super(
-          transitionDuration: Duration.zero,
-          reverseTransitionDuration: Duration.zero,
+          durationInMilliseconds: 0,
+          reverseDurationInMilliseconds: 0,
           transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
         );
 
   TransitionPage._fadeAndScale({
-    required super.key,
-    required super.child,
+    required super.page,
+    super.children,
+    super.initial,
+    super.barrierDismissible = false,
+    super.opaque = true,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
-    super.opaque = true,
-    super.barrierDismissible = false,
   }) : super(
-          transitionDuration: defaultTransitionDuration,
-          reverseTransitionDuration: defaultTransitionDuration,
+          durationInMilliseconds: defaultTransitionDuration.inMilliseconds,
+          reverseDurationInMilliseconds: defaultTransitionDuration.inMilliseconds,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeAndScaleTransition(
               enableTransitionIn: enableTransitionIn,
@@ -66,15 +69,17 @@ final class TransitionPage extends CustomTransitionPage<void> {
         );
 
   TransitionPage._fadeAndSlide({
-    required LocalKey super.key,
-    required super.child,
+    required super.page,
+    super.children,
+    super.initial,
+    super.barrierDismissible = false,
+    super.opaque = true,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
-    super.opaque = true,
-    super.barrierDismissible = false,
   }) : super(
-          transitionDuration: defaultTransitionDuration,
-          reverseTransitionDuration: defaultTransitionDuration,
+          durationInMilliseconds: defaultTransitionDuration.inMilliseconds,
+          reverseDurationInMilliseconds: defaultTransitionDuration.inMilliseconds,
+          customRouteBuilder: !opaque ? _createDialogRoute : null,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             return FadeAndSlideTransition(
               enableTransitionIn: enableTransitionIn,
@@ -86,15 +91,13 @@ final class TransitionPage extends CustomTransitionPage<void> {
           },
         );
 
-  @override
-  Route<void> createRoute(BuildContext context) {
+  static Route<TReturn> _createDialogRoute<TReturn>(BuildContext context, Widget child, AutoRoutePage<TReturn> page) {
     // We assume a transparent screen to be a dialog here.
-    return opaque ? super.createRoute(context) : RawDialogRoute<void>(
-      barrierDismissible: barrierDismissible,
-      transitionDuration: transitionDuration,
-      settings: this,
+    return RawDialogRoute<TReturn>(
+      barrierDismissible: true,
+      transitionDuration: defaultTransitionDuration,
       pageBuilder: (context, _, _) => child,
-      transitionBuilder: transitionsBuilder,
+      //transitionBuilder: transitionsBuilder,
       barrierColor: null,
     );
   }

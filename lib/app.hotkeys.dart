@@ -2,7 +2,7 @@ part of 'app.dart';
 
 class _HotkeyResponder extends StatelessWidget {
 
-  final GoRouter router;
+  final AppRouter router;
   final Widget child;
 
   const _HotkeyResponder({required this.router, required this.child});
@@ -15,13 +15,13 @@ class _HotkeyResponder extends StatelessWidget {
       bindings: {
         SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): () => getIt<LiveViewManager>().restoreLiveView(),
         SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () {
-          if (router.currentLocation == "/settings") {
+          if (router.current.path == "/settings") {
             // Make sure any overlays are also closed (e.g. dropdowns)
-            while (router.currentLocation == "/settings") {
-              router.pop();
+            while (router.current.path == "/settings") {
+              router.maybePop();
             }
           } else {
-            router.push("/settings");
+            router.push(SettingsRoute());
           }
         },
         SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): () => getIt<WindowManager>().toggleFullscreen(),

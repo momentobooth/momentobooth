@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
@@ -237,24 +237,24 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     setState(() => _isDragOver = false);
     // BuildContextAbstractor is not available, so neither is showUserDialog
     if (!mounted) return;
-    await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Center(child: SettingsImportDialog(onAccept: () {
-          // Save the settings using the settings manager
-          getIt<SettingsManager>().updateAndSave(settings);
-          setState(() {
-            imported = true;
-            error = null;
-          });
-          widget.onAccept?.call();
-          GoRouter.of(context).pop();
-        }, onCancel: () {
-          GoRouter.of(context).pop();
-        }, updates: updates)),
-      ),
-      barrierDismissible: true,
-    ).createRoute());
+    // await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
+    //   child: Padding(
+    //     padding: const EdgeInsets.all(32),
+    //     child: Center(child: SettingsImportDialog(onAccept: () {
+    //       // Save the settings using the settings manager
+    //       getIt<SettingsManager>().updateAndSave(settings);
+    //       setState(() {
+    //         imported = true;
+    //         error = null;
+    //       });
+    //       widget.onAccept?.call();
+    //       context.router.maybePop();
+    //     }, onCancel: () {
+    //       context.router.maybePop();
+    //     }, updates: updates)),
+    //   ),
+    //   barrierDismissible: true,
+    // ).createRoute());
   }
 
   void _onDropLeave(DropEvent event) {

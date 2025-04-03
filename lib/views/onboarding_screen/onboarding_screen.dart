@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:animations/animations.dart';
+import 'package:auto_route/annotations.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show PageTransitionsTheme, Theme, ThemeData;
@@ -12,6 +13,7 @@ import 'package:momento_booth/views/onboarding_screen/pages/status_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/welcome_page.dart';
 import 'package:wizard_router/wizard_router.dart';
 
+@RoutePage()
 class OnboardingScreen extends StatefulWidget {
 
   const OnboardingScreen({super.key});

@@ -1,16 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:go_router/go_router.dart';
-import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/router.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
 
 class LiveViewBackground extends StatefulWidget {
 
@@ -30,9 +27,9 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   bool get _showLiveViewBackground =>
       getIt<PhotosManager>().showLiveViewBackground &&
-      (GoRouter.of(context).currentLocation != GalleryScreen.defaultRoute &&
-        GoRouter.of(context).currentLocation != ManualCollageScreen.defaultRoute &&
-          !GoRouter.of(context).currentLocation.startsWith('${PhotoDetailsScreen.defaultRoute}/'));
+      (context.router.current.name != GalleryRoute.name &&
+        context.router.current.name != ManualCollageRoute.name &&
+          context.router.current.name != PhotoDetailsRoute.name);
 
   BackgroundBlur get _backgroundBlur => getIt<SettingsManager>().settings.ui.backgroundBlur;
 
@@ -41,7 +38,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
   @override
   void initState() {
     super.initState();
-    GoRouter.of(context).routerDelegate.addListener(_routerListener);
+    context.router.addListener(_routerListener);
   }
 
   void _routerListener() => WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -135,7 +132,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   @override
   void dispose() {
-    GoRouter.of(context).routerDelegate.removeListener(_routerListener);
+    context.router.removeListener(_routerListener);
     super.dispose();
   }
 

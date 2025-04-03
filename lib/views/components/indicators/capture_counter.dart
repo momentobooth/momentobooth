@@ -1,7 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/photo_booth_shell/theme/momento_booth_theme_data.dart';
 
 class CaptureCounter extends StatefulWidget {
 

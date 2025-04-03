@@ -4,29 +4,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app_localizations.dart';
-import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/utils/route_observer.dart';
-import 'package:momento_booth/views/base/full_screen_dialog.dart';
-import 'package:momento_booth/views/base/transition_page.dart';
-import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/capture_screen/capture_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
-import 'package:momento_booth/views/settings_screen/settings_screen.dart';
+import 'package:momento_booth/router.dart';
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
-part 'app.routes.dart';
 part 'app.hotkeys.dart';
 
 class App extends StatefulWidget {
@@ -40,11 +23,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> with WindowListener {
 
-  final GoRouter _router = GoRouter(
-    routes: _rootRoutes,
-    observers: [HeroController()],
-    initialLocation: '/onboarding',
-  );
+  final AppRouter _router = AppRouter();
 
   @override
   void initState() {
@@ -65,7 +44,7 @@ class _AppState extends State<App> with WindowListener {
         builder: (context) {
           return FluentApp.router(
             scrollBehavior: ScrollConfiguration.of(context),
-            routerConfig: _router,
+            routerConfig: _router.config(navigatorObservers: () => [HeroController()]),
             localizationsDelegates: const [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,

@@ -27,7 +27,7 @@ import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/photo_container.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/photo_booth_shell/theme/momento_booth_theme_data.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
