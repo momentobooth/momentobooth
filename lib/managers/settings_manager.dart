@@ -38,7 +38,7 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
       reportSubsystemError(
         message: "Could not read existing settings. Open the details view for details and solutions.",
         exception: e.toString(),
-        actions: {'Accept default settings': unblockSavingAndSave, 'Retry': initialize},
+        actions: {'Accept current settings': unblockSavingAndSave, 'Retry': initialize},
       );
       _blockSaving = true;
     }
@@ -54,29 +54,30 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
   Future<void> unblockSavingAndSave() async {
     _blockSaving = false;
     logInfo("Unblocked saving of settings, now saving settings");
-    await updateAndSave(Settings.withDefaults());
+    await save();
     if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "Default settings accepted.");
   }
 
   @action
   Future<void> save() async {
-    if (!_blockSaving) {
-      logDebug("Saving settings");
-      try {
-        await getIt<SerialiableRepository<Settings>>().write(_settings);
-        logDebug("Saved settings");
-        reportSubsystemOk();
-      } catch (e, s) {
-        String message = 'Failed to save settings';
-        logError(message, e, s);
-        reportSubsystemError(
-          message: message,
-          exception: e.toString(),
-          actions: {'Try again': save},
-        );
-      }
-    } else {
+    if (_blockSaving) {
       logWarning("Saving blocked");
+      return;
+    }
+
+    logDebug("Saving settings");
+    try {
+      await getIt<SerialiableRepository<Settings>>().write(_settings);
+      logDebug("Saved settings");
+      reportSubsystemOk();
+    } catch (e, s) {
+      String message = 'Failed to save settings';
+      logError(message, e, s);
+      reportSubsystemError(
+        message: message,
+        exception: e.toString(),
+        actions: {'Try again': save},
+      );
     }
   }
 

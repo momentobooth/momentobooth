@@ -236,6 +236,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
 
     setState(() => _isDragOver = false);
     // BuildContextAbstractor is not available, so neither is showUserDialog
+    if (!mounted) return;
     await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
       child: Padding(
         padding: const EdgeInsets.all(32),
@@ -253,7 +254,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
         }, updates: updates)),
       ),
       barrierDismissible: true,
-    ).createRoute(context));
+    ).createRoute());
   }
 
   void _onDropLeave(DropEvent event) {
