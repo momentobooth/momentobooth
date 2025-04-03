@@ -2,7 +2,13 @@
 
 ## Unreleased
 
+## 0.14.3
+
 - Bugfix: Fix settings not being saved in some exceptional cases
+- Bugfix: Windows installer now checks version of C++ redistributable libraries (might fix crashes due to outdated libraries)
+- Change: About screen now shows libusb version
+- Dependency update: Updated Flutter to 3.29.2
+- Dependency update: Updated several Dart and Rust packages
 
 ## 0.14.2
 
