@@ -210,6 +210,8 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
 
   Future<void> _processFile(String filename, String content) async {
     final settingsRepo = TomlSerializableRepository(path.join(appDataPath, "Settings.toml"), Settings.fromJson);
+    // Ensure settings file exists
+    await getIt<SettingsManager>().save();
 
     if (!filename.toLowerCase().endsWith(".toml")) {
       logWarning("Filename $filename does not end with .toml, trying to use anyway.");

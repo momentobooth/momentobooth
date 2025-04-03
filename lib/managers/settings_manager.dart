@@ -25,7 +25,7 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
       bool hasExistingSettings = await settingsRepository.hasExistingData();
 
       if (!hasExistingSettings) {
-        await updateAndSave(Settings.withDefaults());
+        await save();
         if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "No existing settings data found, a new file is created.");
       } else {
         _settings = await settingsRepository.get();
@@ -59,11 +59,11 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
   }
 
   @action
-  Future<void> updateAndSave(Settings settings) async {
+  Future<void> save() async {
     if (!_blockSaving) {
       logDebug("Saving settings");
       try {
-        await getIt<SerialiableRepository<Settings>>().write(settings);
+        await getIt<SerialiableRepository<Settings>>().write(_settings);
         logDebug("Saved settings");
         reportSubsystemOk();
       } catch (e, s) {
@@ -72,14 +72,21 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
         reportSubsystemError(
           message: message,
           exception: e.toString(),
-          actions: {'Try again': () => updateAndSave(_settings)},
+          actions: {'Try again': save},
         );
       }
     } else {
       logWarning("Saving blocked");
     }
+  }
+
+  @action
+  Future<void> updateAndSave(Settings settings) async {
+    if (settings == _settings) return;
 
     _settings = settings;
+    await save();
+
     getIt<MqttManager>().publishSettings(settings);
   }
 
