@@ -2,6 +2,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
@@ -24,19 +25,20 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
       bool hasExistingSettings = await settingsRepository.hasExistingData();
 
       if (!hasExistingSettings) {
-        reportSubsystemOk(message: "No existing settings data found, a new file will be created.");
+        await save();
+        if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "No existing settings data found, a new file is created.");
       } else {
         _settings = await settingsRepository.get();
+        _blockSaving = false;
         reportSubsystemOk();
       }
-    } catch (e) {
+    } catch (e, s) {
+      String message = 'Could not read existing settings';
+      logError(message, e, s);
       reportSubsystemError(
         message: "Could not read existing settings. Open the details view for details and solutions.",
         exception: e.toString(),
-        actions: {
-          'Accept default settings': unblockSavingAndSave,
-          'Retry': initialize,
-        }
+        actions: {'Accept current settings': unblockSavingAndSave, 'Retry': initialize},
       );
       _blockSaving = true;
     }
@@ -52,24 +54,40 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
   Future<void> unblockSavingAndSave() async {
     _blockSaving = false;
     logInfo("Unblocked saving of settings, now saving settings");
-    await getIt<SerialiableRepository<Settings>>().write(_settings);
-    logDebug("Saved settings");
-    reportSubsystemOk(message: "Default settings accepted.");
+    await save();
+    if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "Default settings accepted.");
+  }
+
+  @action
+  Future<void> save() async {
+    if (_blockSaving) {
+      logWarning("Saving blocked");
+      return;
+    }
+
+    logDebug("Saving settings");
+    try {
+      await getIt<SerialiableRepository<Settings>>().write(_settings);
+      logDebug("Saved settings");
+      reportSubsystemOk();
+    } catch (e, s) {
+      String message = 'Failed to save settings';
+      logError(message, e, s);
+      reportSubsystemError(
+        message: message,
+        exception: e.toString(),
+        actions: {'Try again': save},
+      );
+    }
   }
 
   @action
   Future<void> updateAndSave(Settings settings) async {
     if (settings == _settings) return;
 
-    if (!_blockSaving) {
-      logDebug("Saving settings");
-      await getIt<SerialiableRepository<Settings>>().write(settings);
-      logDebug("Saved settings");
-    } else {
-      logDebug("Saving blocked");
-    }
-
     _settings = settings;
+    await save();
+
     getIt<MqttManager>().publishSettings(settings);
   }
 

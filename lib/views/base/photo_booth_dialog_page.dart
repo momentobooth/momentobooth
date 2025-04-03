@@ -50,7 +50,7 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
         );
 
   @override
-  Route<T> createRoute(BuildContext context) => RawDialogRoute<T>(
+  Route<T> createRoute([BuildContext? _]) => RawDialogRoute<T>(
         settings: this,
         barrierColor: barrierColor,
         barrierDismissible: barrierDismissible,

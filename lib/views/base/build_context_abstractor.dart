@@ -27,7 +27,7 @@ mixin BuildContextAbstractor {
         child: Center(child: dialog),
       ),
       barrierDismissible: barrierDismissible,
-    ).createRoute(_context));
+    ).createRoute());
   }
 
 }

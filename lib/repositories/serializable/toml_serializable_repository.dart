@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
 import 'package:toml/toml.dart';
 
@@ -17,12 +18,14 @@ class UpdateRecord {
 }
 
 /// File backed repository for a single TOML encodable and decodable value.
-class TomlSerializableRepository<TData extends TomlEncodableValue> implements SerialiableRepository<TData> {
+class TomlSerializableRepository<TData extends TomlEncodableValue> with Logger implements SerialiableRepository<TData> {
 
   final File file;
   final MapDeserializer<TData> deserializer;
 
-  TomlSerializableRepository(String filePath, this.deserializer) : file = File(filePath);
+  TomlSerializableRepository(String filePath, this.deserializer) : file = File(filePath) {
+    logDebug("File path: $filePath");
+  }
 
   @override
   Future<bool> hasExistingData() async => await file.exists();
@@ -75,7 +78,7 @@ class TomlSerializableRepository<TData extends TomlEncodableValue> implements Se
   ///
   /// @param base The base map to be merged into.
   /// @param overlay The overlay map, whose values take precedence.
-  /// @param allowlist (Optional) A set of key paths that determine which keys 
+  /// @param allowlist (Optional) A set of key paths that determine which keys
   ///        from the overlay are applied. Paths act as prefixes for sub-paths.
   /// @return A tuple containing the merged map and a list of updated paths with old and new values.
   (Map<String, dynamic>, List<UpdateRecord>) overlayMaps(
@@ -89,7 +92,7 @@ class TomlSerializableRepository<TData extends TomlEncodableValue> implements Se
     void merge(Map<String, dynamic> target, Map<String, dynamic> source, String currentPath) {
       source.forEach((key, value) {
         String newPath = currentPath.isEmpty ? key : '$currentPath.$key';
-        bool isAllowed = allowlist == null || allowlist.isEmpty || 
+        bool isAllowed = allowlist == null || allowlist.isEmpty ||
                         allowlist.any((allowedPath) => newPath.startsWith(allowedPath));
         if (!isAllowed) {
           return; // Skip keys not in allowlist
