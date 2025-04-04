@@ -1,11 +1,11 @@
 import 'dart:ui';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/views/base/custom_transition_page.dart';
 
-final class PhotoBoothDialogPage<T> extends CustomRoute<T> {
+final class PhotoBoothDialogPage<T> extends CustomTransitionPage<T> {
 
   static const defaultTransitionDuration = Duration(milliseconds: 800);
 
@@ -26,14 +26,13 @@ final class PhotoBoothDialogPage<T> extends CustomRoute<T> {
   }
 
   PhotoBoothDialogPage({
-    required super.page,
-    super.children,
-    super.initial,
+    required super.child,
+    super.key,
     super.barrierDismissible = false,
   }) : super(
           opaque: false,
-          durationInMilliseconds: defaultTransitionDuration.inMilliseconds,
-          reverseDurationInMilliseconds: defaultTransitionDuration.inMilliseconds,
+          transitionDuration: defaultTransitionDuration,
+          reverseTransitionDuration: defaultTransitionDuration,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             double blur = _blurAnimation(animation).value * 5;
             return BackdropFilter(
@@ -50,15 +49,15 @@ final class PhotoBoothDialogPage<T> extends CustomRoute<T> {
           },
         );
 
-  // @override
-  // Route<T> createRoute([BuildContext? _]) => RawDialogRoute<T>(
-  //       settings: this,
-  //       barrierColor: barrierColor,
-  //       barrierDismissible: barrierDismissible,
-  //       barrierLabel: barrierLabel,
-  //       pageBuilder: (context, animation, secondaryAnimation) => child,
-  //       transitionBuilder: transitionsBuilder,
-  //       transitionDuration: transitionDuration,
-  //     );
+  @override
+  Route<T> createRoute([BuildContext? _]) => RawDialogRoute<T>(
+        settings: this,
+        barrierColor: barrierColor,
+        barrierDismissible: barrierDismissible,
+        barrierLabel: barrierLabel,
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionBuilder: transitionsBuilder,
+        transitionDuration: transitionDuration,
+      );
 
 }

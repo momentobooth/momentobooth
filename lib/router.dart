@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
-import 'package:momento_booth/views/base/photo_booth_dialog_page.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
 import 'package:momento_booth/views/photo_booth_shell/photo_booth_shell.dart';

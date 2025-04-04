@@ -237,24 +237,24 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     setState(() => _isDragOver = false);
     // BuildContextAbstractor is not available, so neither is showUserDialog
     if (!mounted) return;
-    // await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
-    //   child: Padding(
-    //     padding: const EdgeInsets.all(32),
-    //     child: Center(child: SettingsImportDialog(onAccept: () {
-    //       // Save the settings using the settings manager
-    //       getIt<SettingsManager>().updateAndSave(settings);
-    //       setState(() {
-    //         imported = true;
-    //         error = null;
-    //       });
-    //       widget.onAccept?.call();
-    //       context.router.maybePop();
-    //     }, onCancel: () {
-    //       context.router.maybePop();
-    //     }, updates: updates)),
-    //   ),
-    //   barrierDismissible: true,
-    // ).createRoute());
+    await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Center(child: SettingsImportDialog(onAccept: () {
+          // Save the settings using the settings manager
+          getIt<SettingsManager>().updateAndSave(settings);
+          setState(() {
+            imported = true;
+            error = null;
+          });
+          widget.onAccept?.call();
+          context.router.maybePop();
+        }, onCancel: () {
+          context.router.maybePop();
+        }, updates: updates)),
+      ),
+      barrierDismissible: true,
+    ).createRoute());
   }
 
   void _onDropLeave(DropEvent event) {
