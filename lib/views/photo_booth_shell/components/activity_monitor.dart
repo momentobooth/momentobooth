@@ -65,9 +65,9 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   }
 
   void _goHome() {
-    if (context.router.current.name == StartRoute.name ||
-        context.router.current.name == SettingsRoute.name ||
-        context.router.current.name == ManualCollageRoute.name) {
+    if (context.router.topRoute.name == StartRoute.name ||
+        context.router.topRoute.name == SettingsRoute.name ||
+        context.router.topRoute.name == ManualCollageRoute.name) {
       return;
     }
     logDebug("Returning to homescreen because Home screen timeout was reached.");

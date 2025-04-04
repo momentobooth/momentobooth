@@ -14,14 +14,14 @@ class _HotkeyResponder extends StatelessWidget {
     return CallbackShortcuts(
       bindings: {
         SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): () => getIt<LiveViewManager>().restoreLiveView(),
-        SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () {
-          if (router.current.path == "/settings") {
+        SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () async {
+          if (router.topRoute.name == SettingsRoute.name) {
             // Make sure any overlays are also closed (e.g. dropdowns)
-            while (router.current.path == "/settings") {
-              router.maybePop();
+            while (router.topRoute.name == SettingsRoute.name) {
+              await router.maybePop();
             }
           } else {
-            router.push(SettingsRoute());
+            unawaited(router.push(SettingsRoute()));
           }
         },
         SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): () => getIt<WindowManager>().toggleFullscreen(),

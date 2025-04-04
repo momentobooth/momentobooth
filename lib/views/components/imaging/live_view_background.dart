@@ -27,9 +27,9 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   bool get _showLiveViewBackground =>
       getIt<PhotosManager>().showLiveViewBackground &&
-      (context.router.current.name != GalleryRoute.name &&
-        context.router.current.name != ManualCollageRoute.name &&
-          context.router.current.name != PhotoDetailsRoute.name);
+      (context.router.topRoute.name != GalleryRoute.name &&
+        context.router.topRoute.name != ManualCollageRoute.name &&
+          context.router.topRoute.name != PhotoDetailsRoute.name);
 
   BackgroundBlur get _backgroundBlur => getIt<SettingsManager>().settings.ui.backgroundBlur;
 

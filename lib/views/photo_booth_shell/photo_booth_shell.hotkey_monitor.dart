@@ -20,7 +20,7 @@ class _HotkeyResponder extends StatelessWidget with Logger {
   }
 
   void _toggleManualCollageScreen(BuildContext context) {
-    if (context.router.current.name == ManualCollageRoute.name) {
+    if (context.router.topRoute.name == ManualCollageRoute.name) {
       context.router.replaceAll([StartRoute()]);
     } else {
       context.router.replaceAll([ManualCollageRoute()]);

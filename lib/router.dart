@@ -25,9 +25,10 @@ class AppRouter extends RootStackRouter {
   @override
   List<AutoRoute> get routes => [
     TransitionPage.fromSettings(page: OnboardingRoute.page, initial: true),
-    TransitionPage.fromSettings(page: SettingsRoute.page),
+    TransitionPage.fromSettings(page: SettingsRoute.page, opaque: false, barrierDismissible: true, enableTransitionOut: false),
     TransitionPage.fromSettings(
       page: PhotoBoothRoute.page,
+      enableTransitionOut: false,
       children: [
         TransitionPage.fromSettings(page: StartRoute.page),
         TransitionPage.fromSettings(page: ChooseCaptureModeRoute.page),
