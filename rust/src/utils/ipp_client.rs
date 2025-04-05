@@ -5,6 +5,7 @@ use chrono::{DateTime, Utc};
 use ipp::prelude::*;
 use ipp::value::IppValue::Keyword;
 use regex::Regex;
+use futures::future::join_all;
 
 /// Send an IPP request to do `op` to the given `uri` and get the response.
 ///
@@ -20,15 +21,15 @@ use regex::Regex;
 /// ```
 /// send_ipp_request(uri, Operation::ResumePrinter).header().status_code().is_success()
 /// ```
-fn send_ipp_request(uri: String, ignore_tls_errors: bool, op: Operation) -> IppRequestResponse {
+async fn send_ipp_request(uri: String, ignore_tls_errors: bool, op: Operation) -> IppRequestResponse {
     let uri_p: Uri = uri.parse().unwrap();
     let req = IppRequestResponse::new(
         IppVersion::v1_1(),
         op,
         Some(uri_p.clone())
     );
-    let client = IppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
-    let resp = client.send(req);
+    let client = AsyncIppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
+    let resp = client.send(req).await;
     resp.unwrap()
 }
 
@@ -47,7 +48,7 @@ fn send_ipp_request(uri: String, ignore_tls_errors: bool, op: Operation) -> IppR
 /// ```
 /// send_ipp_job_request(uri, Operation::RestartJob, job_id).header().status_code().is_success()
 /// ```
-fn send_ipp_job_request(uri: String, ignore_tls_errors: bool, op: Operation, job_id: i32) -> IppRequestResponse {
+async fn send_ipp_job_request(uri: String, ignore_tls_errors: bool, op: Operation, job_id: i32) -> IppRequestResponse {
     let uri_p: Uri = uri.parse().unwrap();
     let mut req = IppRequestResponse::new(
         IppVersion::v1_1(),
@@ -59,20 +60,20 @@ fn send_ipp_job_request(uri: String, ignore_tls_errors: bool, op: Operation, job
         IppAttribute::new(IppAttribute::JOB_ID, IppValue::Integer(job_id)),
     );
 
-    let client = IppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
-    let resp = client.send(req);
+    let client = AsyncIppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
+    let resp = client.send(req).await;
     resp.unwrap()
 }
 
-pub fn resume_printer(uri: String, ignore_tls_errors: bool) -> bool {
-    send_ipp_request(uri, ignore_tls_errors, Operation::ResumePrinter).header().status_code().is_success()
+pub async fn resume_printer(uri: String, ignore_tls_errors: bool) -> bool {
+    send_ipp_request(uri, ignore_tls_errors, Operation::ResumePrinter).await.header().status_code().is_success()
 }
 
-pub fn purge_jobs(uri: String, ignore_tls_errors: bool) -> bool {
-    send_ipp_request(uri, ignore_tls_errors, Operation::PurgeJobs).header().status_code().is_success()
+pub async fn purge_jobs(uri: String, ignore_tls_errors: bool) -> bool {
+    send_ipp_request(uri, ignore_tls_errors, Operation::PurgeJobs).await.header().status_code().is_success()
 }
 
-pub fn print_job(uri: String, ignore_tls_errors: bool, job_name: String, pdf_data: Vec<u8>, media_size: String) -> bool {
+pub async fn print_job(uri: String, ignore_tls_errors: bool, job_name: String, pdf_data: Vec<u8>, media_size: String) -> bool {
     let uri_p: Uri = uri.parse().unwrap();
     let pdf_data_cursor = Cursor::new(pdf_data);
     let pdf_data_payload = IppPayload::new(pdf_data_cursor);
@@ -80,25 +81,25 @@ pub fn print_job(uri: String, ignore_tls_errors: bool, job_name: String, pdf_dat
         .job_title(job_name)
         .attribute(IppAttribute::new("media", Keyword(media_size)));
 
-    let client = IppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
-    let resp = client.send(print_job.build());
+    let client = AsyncIppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
+    let resp = client.send(print_job.build()).await;
     resp.unwrap().header().status_code().is_success()
 }
 
-pub fn restart_job(uri: String, ignore_tls_errors: bool, job_id: i32) -> bool {
-    send_ipp_job_request(uri, ignore_tls_errors, Operation::RestartJob, job_id).header().status_code().is_success()
+pub async fn restart_job(uri: String, ignore_tls_errors: bool, job_id: i32) -> bool {
+    send_ipp_job_request(uri, ignore_tls_errors, Operation::RestartJob, job_id).await.header().status_code().is_success()
 }
 
-pub fn release_job(uri: String, ignore_tls_errors: bool, job_id: i32) -> bool {
-    send_ipp_job_request(uri, ignore_tls_errors, Operation::ReleaseJob, job_id).header().status_code().is_success()
+pub async fn release_job(uri: String, ignore_tls_errors: bool, job_id: i32) -> bool {
+    send_ipp_job_request(uri, ignore_tls_errors, Operation::ReleaseJob, job_id).await.header().status_code().is_success()
 }
 
-pub fn cancel_job(uri: String, ignore_tls_errors: bool, job_id: i32) -> bool {
-    send_ipp_job_request(uri, ignore_tls_errors, Operation::CancelJob, job_id).header().status_code().is_success()
+pub async fn cancel_job(uri: String, ignore_tls_errors: bool, job_id: i32) -> bool {
+    send_ipp_job_request(uri, ignore_tls_errors, Operation::CancelJob, job_id).await.header().status_code().is_success()
 }
 
-pub fn get_printers(uri: String, ignore_tls_errors: bool) -> Vec<IppPrinterState> {
-    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPrinters);
+pub async fn get_printers(uri: String, ignore_tls_errors: bool) -> Vec<IppPrinterState> {
+    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPrinters).await;
 
     resp.attributes().groups_of(DelimiterTag::PrinterAttributes).map(|printer| {
         let group = printer.attributes().clone();
@@ -116,8 +117,8 @@ pub fn get_printers(uri: String, ignore_tls_errors: bool) -> Vec<IppPrinterState
     }).collect()
 }
 
-pub fn get_printer_state(uri: String, ignore_tls_errors: bool) -> IppPrinterState {
-    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes);
+pub async fn get_printer_state(uri: String, ignore_tls_errors: bool) -> IppPrinterState {
+    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes).await;
 
     let group = resp.attributes().groups_of(DelimiterTag::PrinterAttributes).next().unwrap();
     let attributes = group.attributes().clone();
@@ -136,17 +137,17 @@ pub fn get_printer_state(uri: String, ignore_tls_errors: bool) -> IppPrinterStat
     IppPrinterState { queue_name, description, state, job_count, state_message, state_reason }
 }
 
-pub fn get_jobs_states(uri: String, ignore_tls_errors: bool) -> Vec<PrintJobState> {
-    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetJobs);
+pub async fn get_jobs_states(uri: String, ignore_tls_errors: bool) -> Vec<PrintJobState> {
+    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetJobs).await;
 
-    resp.attributes().groups_of(DelimiterTag::JobAttributes).map(|job| {
+    join_all(resp.attributes().groups_of(DelimiterTag::JobAttributes).map(|job| {
         let job_id = job.attributes()["job-id"].value().as_integer().unwrap().clone();
         get_job_state(uri.clone(), ignore_tls_errors, job_id)
-    }).collect()
+    })).await
 }
 
-fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> PrintJobState {
-    let resp = send_ipp_job_request(uri.clone(), ignore_tls_errors, Operation::GetJobAttributes, job_id);
+async fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> PrintJobState {
+    let resp = send_ipp_job_request(uri.clone(), ignore_tls_errors, Operation::GetJobAttributes, job_id).await;
 
     let group = resp.attributes().groups_of(DelimiterTag::JobAttributes).next().unwrap();
     let attributes = group.attributes().clone();
@@ -171,14 +172,14 @@ fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> PrintJobS
     }
 }
 
-pub fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec<PrintDimension> {
-    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes);
+pub async fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec<PrintDimension> {
+    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes).await;
     let group = resp.attributes().groups_of(DelimiterTag::PrinterAttributes).next().unwrap();
     let attributes = group.attributes().clone();
     let state: Vec<String> = attributes["media-supported"].value().as_array().unwrap().iter().map(|e| {e.to_string()}).collect();
 
     let mut dimensions: Vec<PrintDimension> = Vec::new();
-    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPPD);
+    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPPD).await;
     let mut payload = resp.into_payload();
     let mut buffer = "".to_string();
     let _ = payload.read_to_string(&mut buffer);
