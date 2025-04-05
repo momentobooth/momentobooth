@@ -14,7 +14,7 @@ ffsend-api = "0.7.3"
 serde_json = "1.0.140"
 chrono = "0.4.40"
 image = { version = "0.25.6", features = ["rayon"] }
-ipp = { version = "5.2.0", features = ["client"] }
+ipp = "5.2.0"
 zune-jpeg = "0.4.14"
 jpeg-encoder = "0.6.1"
 dlopen = "0.1.8"
@@ -41,6 +41,7 @@ susync = "0.2.0"
 rustc_version_runtime = "0.3.0"
 libc = "0.2.171"
 libusb-sys = "0.2.3"
+futures = "0.3.31"
 
 [build-dependencies]
 bindgen = "0.71.1"
