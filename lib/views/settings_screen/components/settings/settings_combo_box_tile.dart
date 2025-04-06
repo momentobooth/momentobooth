@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class OptionsSetting<TValue> extends StatelessWidget {
+class SettingsComboBoxTile<TValue> extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -11,7 +11,7 @@ class OptionsSetting<TValue> extends StatelessWidget {
   final ValueGetter<TValue> value;
   final ValueChanged<TValue?> onChanged;
 
-  const OptionsSetting({
+  const SettingsComboBoxTile({
     super.key,
     required this.icon,
     required this.title,
@@ -23,7 +23,7 @@ class OptionsSetting<TValue> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Setting(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,

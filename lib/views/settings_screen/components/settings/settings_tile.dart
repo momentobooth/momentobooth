@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 
-class Setting extends StatelessWidget {
+class SettingsTile extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -8,7 +8,7 @@ class Setting extends StatelessWidget {
   final Widget setting;
   final Widget? leading;
 
-  const Setting({
+  const SettingsTile({
     super.key,
     required this.icon,
     required this.title,

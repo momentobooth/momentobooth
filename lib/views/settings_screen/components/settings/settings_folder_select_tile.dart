@@ -1,9 +1,9 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class FolderpathSetting extends StatelessWidget {
+class SettingsFolderSelectTile extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -11,7 +11,7 @@ class FolderpathSetting extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String?> onChanged;
 
-  const FolderpathSetting({
+  const SettingsFolderSelectTile({
     super.key,
     required this.icon,
     required this.title,
@@ -22,7 +22,7 @@ class FolderpathSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Setting(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,

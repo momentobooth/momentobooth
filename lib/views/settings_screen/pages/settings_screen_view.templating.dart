@@ -103,7 +103,7 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
   return SettingsSection(
     title: "Creative",
     settings: [
-      NumberSetting(
+      SettingsNumberEditTile(
         icon: LucideIcons.ratio,
         title: "Collage aspect ratio",
         subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
@@ -114,7 +114,7 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
           builder: (_) => AspectRatioPreview(aspectRatio: viewModel.collageAspectRatioSetting),
         ),
       ),
-      NumberSetting(
+      SettingsNumberEditTile(
         icon: LucideIcons.squareDashedMousePointer,
         title: "Collage padding",
         subtitle: "Controls the padding around the aspect ratio of the generated collages. Think about this together with paper print size.",
@@ -127,7 +127,7 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
           builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting / 1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height."),
         ),
       ),
-      NumberSetting(
+      SettingsNumberEditTile(
         icon: LucideIcons.proportions,
         title: "Output resolution multiplier     (same setting as output tab)",
         subtitle: 'Controls image resolution',

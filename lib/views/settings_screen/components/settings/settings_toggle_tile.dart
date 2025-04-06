@@ -1,10 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class BooleanSetting extends StatelessWidget {
+class SettingsToggleTile extends StatelessWidget {
 
-  const BooleanSetting({
+  const SettingsToggleTile({
     super.key,
     required this.icon,
     required this.title,
@@ -23,7 +23,7 @@ class BooleanSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Setting(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,

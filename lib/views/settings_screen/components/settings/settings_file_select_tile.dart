@@ -1,9 +1,9 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class FilepathSetting extends StatelessWidget {
+class SettingsFileSelectTile extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -12,7 +12,7 @@ class FilepathSetting extends StatelessWidget {
   final ValueChanged<String?> onChanged;
   final bool clearable;
 
-  const FilepathSetting({
+  const SettingsFileSelectTile({
     super.key,
     required this.icon,
     required this.title,
@@ -24,7 +24,7 @@ class FilepathSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Setting(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,

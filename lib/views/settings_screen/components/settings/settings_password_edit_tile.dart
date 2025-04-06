@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class PasswordSetting extends StatelessWidget {
+class SettingsPasswordEditTile extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -9,7 +9,7 @@ class PasswordSetting extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String?> onFinishedEditing;
 
-  const PasswordSetting({
+  const SettingsPasswordEditTile({
     super.key,
     required this.icon,
     required this.title,
@@ -20,7 +20,7 @@ class PasswordSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Setting(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,

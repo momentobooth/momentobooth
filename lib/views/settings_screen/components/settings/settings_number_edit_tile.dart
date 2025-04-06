@@ -1,8 +1,8 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class NumberSetting<T extends num> extends StatefulWidget {
+class SettingsNumberEditTile<T extends num> extends StatefulWidget {
 
   final IconData icon;
   final String title;
@@ -12,7 +12,7 @@ class NumberSetting<T extends num> extends StatefulWidget {
   final num smallChange;
   final Widget? leading;
 
-  const NumberSetting({
+  const SettingsNumberEditTile({
     super.key,
     required this.icon,
     required this.title,
@@ -24,11 +24,11 @@ class NumberSetting<T extends num> extends StatefulWidget {
   });
 
   @override
-  State<NumberSetting<T>> createState() => _NumberSettingState<T>();
+  State<SettingsNumberEditTile<T>> createState() => _SettingsNumberEditTileState<T>();
 
 }
 
-class _NumberSettingState<T extends num> extends State<NumberSetting<T>> {
+class _SettingsNumberEditTileState<T extends num> extends State<SettingsNumberEditTile<T>> {
 
   late T _currentValue;
 
@@ -40,7 +40,7 @@ class _NumberSettingState<T extends num> extends State<NumberSetting<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Setting(
+    return SettingsTile(
       icon: widget.icon,
       title: widget.title,
       subtitle: widget.subtitle,

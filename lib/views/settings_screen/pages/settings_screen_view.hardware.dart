@@ -23,7 +23,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
   return SettingsSection(
     title: "General",
     settings: [
-      OptionsSetting(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Rotate image",
         subtitle: "Whether the live view and captures will be rotated 90, 180 or 270 degrees clockwise.",
@@ -31,7 +31,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
         value: () => viewModel.liveViewAndCaptureRotateSetting,
         onChanged: controller.onLiveViewAndCaptureRotateChanged,
       ),
-      OptionsSetting(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Flip image – Live View",
         subtitle: "Whether the live view image will be flipped horizontally or vertically.",
@@ -39,7 +39,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
         value: () => viewModel.liveViewFlipSetting,
         onChanged: controller.onLiveViewFlipChanged,
       ),
-      OptionsSetting(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Flip image – Capture",
         subtitle: "Whether the captured image will be flipped horizontally or vertically.",
@@ -47,7 +47,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
         value: () => viewModel.captureFlipSetting,
         onChanged: controller.onCaptureFlipChanged,
       ),
-      NumberSetting(
+      SettingsNumberEditTile(
         icon: LucideIcons.ratio,
         title: "Aspect ratio",
         subtitle: 'The aspect ratio to which live view and captures are cropped.',
@@ -66,7 +66,7 @@ Widget _getLiveViewBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
   return SettingsSection(
     title: "Live view",
     settings: [
-      OptionsSetting(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Live view method",
         subtitle: "Method used for live previewing",
@@ -88,7 +88,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
   return SettingsSection(
     title: "Photo capture",
     settings: [
-      OptionsSetting(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Capture method",
         subtitle: "Method used for capturing final images",
@@ -98,7 +98,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       ),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return NumberSetting(
+          return SettingsNumberEditTile(
             icon: LucideIcons.timer,
             title: "Capture delay for Sony camera",
             subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
@@ -116,7 +116,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
-          return OptionsSetting(
+          return SettingsComboBoxTile(
             icon: LucideIcons.camera,
             title: "Use special handling for camera",
             subtitle: "Kind of special handling used for the camera. Pick \"Nikon DSLR\" for cameras like the D-series. The \"None\" might work for most mirrorless camera as they are always in live view mode.",
@@ -129,7 +129,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return BooleanSetting(
+          return SettingsToggleTile(
             icon: LucideIcons.camera,
             title: "Download extra files (e.g. RAW) from camera",
             subtitle: "Whether to download extra files from the camera. This is useful for cameras that can create RAW files.",
@@ -141,7 +141,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return TextSetting(
+          return SettingsTextEditTile(
             icon: LucideIcons.memoryStick,
             title: "Camera capture target",
             subtitle: "Sets the camera's 'capturetarget'. When unsure, leave empty as it could cause capture issues. Values can be found in the libgphoto2 source code.",
@@ -153,7 +153,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return NumberSetting(
+          return SettingsNumberEditTile(
             icon: LucideIcons.camera,
             title: "Auto focus before capture",
             subtitle: "Time to wait for the camera to focus before capturing the image. This could be useful to improve capture speed in some cases (e.g. bad light, camera being slow with focusing). Might require the 'Special handling' setting set for some vendors. Also it might not work on some camera models. Set to 0 to disable.",
@@ -165,7 +165,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return NumberSetting(
+          return SettingsNumberEditTile(
             icon: LucideIcons.timer,
             title: "Capture delay for gPhoto2 camera.",
             subtitle: "Delay in [ms].",
@@ -177,7 +177,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return FolderpathSetting(
+          return SettingsFolderSelectTile(
             icon: LucideIcons.folder,
             title: "Capture location",
             subtitle: "Location to look for captured images.",
@@ -189,7 +189,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop) {
-          return BooleanSetting(
+          return SettingsToggleTile(
             icon: LucideIcons.hardDriveDownload,
             title: "Save captures to disk",
             subtitle: "Whether to save captures to disk.",
@@ -207,7 +207,7 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
   return SettingsSection(
     title: "Printing",
     settings: [
-      OptionsSetting(
+      SettingsComboBoxTile(
         icon: LucideIcons.printer,
         title: "Print method",
         subtitle: "Method used for printing photos",
@@ -216,7 +216,7 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         onChanged: controller.onPrintingImplementationChanged,
       ),
       _printerMargins(viewModel, controller),
-      NumberSetting(
+      SettingsNumberEditTile(
         icon: LucideIcons.printerCheck,
         title: "Queue warning threshold",
         subtitle: "Number of photos in the OS's printer queue before a warning is shown (Windows only for now).",
@@ -231,28 +231,28 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
   return SettingsSection(
     title: "CUPS",
     settings: [
-      TextSetting(
+      SettingsTextEditTile(
         icon: LucideIcons.server,
         title: "CUPS URI",
         subtitle: "The URI of the CUPS server",
         controller: controller.cupsUriController,
         onFinishedEditing: controller.onCupsUriChanged,
       ),
-      BooleanSetting(
+      SettingsToggleTile(
         icon: LucideIcons.server,
         title: "Ignore TLS errors",
         subtitle: "Whether to ignore TLS errors when connecting to the CUPS server. This is useful for self-signed certificates which are used by default by the CUPS service.",
         value: () => viewModel.cupsIgnoreTlsErrors,
         onChanged: controller.onCupsIgnoreTlsErrorsChanged,
       ),
-      TextSetting(
+      SettingsTextEditTile(
         icon: LucideIcons.user,
         title: "CUPS username",
         subtitle: "The username for the CUPS server",
         controller: controller.cupsUsernameController,
         onFinishedEditing: controller.onCupsUsernameChanged,
       ),
-      TextSetting(
+      SettingsTextEditTile(
         icon: LucideIcons.squareAsterisk,
         title: "CUPS password",
         subtitle: "The password for the CUPS server",
@@ -291,7 +291,7 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
           ],
         ),
       ),
-      NumberSetting(
+      SettingsNumberEditTile(
         icon: LucideIcons.moveVertical,
         title: "Page height",
         subtitle: 'Page format height used for printing [mm]',
@@ -299,7 +299,7 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
         onFinishedEditing: controller.onPageHeightChanged,
         smallChange: 0.1,
       ),
-      NumberSetting(
+      SettingsNumberEditTile(
         icon: LucideIcons.moveHorizontal,
         title: "Page width",
         subtitle: 'Page format width used for printing [mm]',
@@ -307,7 +307,7 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
         onFinishedEditing: controller.onPageWidthChanged,
         smallChange: 0.1,
       ),
-      BooleanSetting(
+      SettingsToggleTile(
         icon: LucideIcons.settings,
         title: "usePrinterSettings for printing",
         subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
@@ -318,10 +318,10 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
   );
 }
 
-Setting _printerMargins(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+SettingsTile _printerMargins(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
   const double numberWidth = 100;
   const double padding = 10;
-  return Setting(
+  return SettingsTile(
     icon: LucideIcons.file,
     title: "Page margins used for printing",
     subtitle: "Some printers cut off some part of the image. Use this to compensate.\nOrder: top, right, bottom, left [mm]",
@@ -375,8 +375,8 @@ Setting _printerMargins(SettingsScreenViewModel viewModel, SettingsScreenControl
   );
 }
 
-Setting _getWebcamCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return Setting(
+SettingsTile _getWebcamCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return SettingsTile(
     icon: LucideIcons.camera,
     title: "Webcam",
     subtitle: "Pick the webcam to use for live view",
@@ -400,8 +400,8 @@ Setting _getWebcamCard(SettingsScreenViewModel viewModel, SettingsScreenControll
   );
 }
 
-Setting _gPhoto2CamerasCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return Setting(
+SettingsTile _gPhoto2CamerasCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return SettingsTile(
     icon: LucideIcons.camera,
     title: "Camera",
     subtitle: "Pick the camera to use for capturing still frames",
@@ -425,8 +425,8 @@ Setting _gPhoto2CamerasCard(SettingsScreenViewModel viewModel, SettingsScreenCon
   );
 }
 
-Setting _printerCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
-  return Setting(
+SettingsTile _printerCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
+  return SettingsTile(
     icon: LucideIcons.printerCheck,
     title: title,
     subtitle: "Which printer(s) to use for printing photos",
@@ -450,8 +450,8 @@ Setting _printerCard(SettingsScreenViewModel viewModel, SettingsScreenController
   );
 }
 
-Setting _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
-  return Setting(
+SettingsTile _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
+  return SettingsTile(
     icon: LucideIcons.printerCheck,
     title: title,
     subtitle: "Which printer(s) to use for printing photos",
@@ -475,8 +475,8 @@ Setting _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScreenControl
   );
 }
 
-Setting _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, IconData icon, PrintSize size, MediaSettings currentSettings) {
-  return Setting(
+SettingsTile _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, IconData icon, PrintSize size, MediaSettings currentSettings) {
+  return SettingsTile(
     icon: icon,
     title: title,
     subtitle: size.name,
@@ -489,10 +489,10 @@ Setting _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenContr
   );
 }
 
-Setting _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName, PrintSize size, GridSettings grid) {
+SettingsTile _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName, PrintSize size, GridSettings grid) {
   const double numberWidth = 100;
   const double padding = 10;
-  return Setting(
+  return SettingsTile(
     icon: LucideIcons.layoutGrid,
     title: "Grid for $sizeName print",
     subtitle: "Set what grid to create for creating $sizeName prints. A grid of X by Y images is generated.\nOrder: X, Y, rotate images.",

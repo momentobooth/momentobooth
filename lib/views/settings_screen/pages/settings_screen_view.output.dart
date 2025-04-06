@@ -13,7 +13,7 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
       SettingsSection(
         title: "Share using internet",
         settings: [
-          TextSetting(
+          SettingsTextEditTile(
             icon: LucideIcons.globe,
             title: "Firefox Send URL",
             subtitle: "Firefox Send Server URL",
@@ -25,7 +25,7 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
       SettingsSection(
         title: "Image settings",
         settings: [
-          OptionsSetting(
+          SettingsComboBoxTile(
             icon: LucideIcons.fileImage,
             title: "Image file type",
             subtitle: "What kind of file to generate",
@@ -33,14 +33,14 @@ Widget _getOutputSettings(SettingsScreenViewModel viewModel, SettingsScreenContr
             value: () => viewModel.exportFormat,
             onChanged: controller.onExportFormatChanged,
           ),
-          NumberSetting(
+          SettingsNumberEditTile(
             icon: LucideIcons.fileSliders,
             title: "JPG quality",
             subtitle: 'Export quality (higher is bigger files)',
             value: () => viewModel.jpgQuality,
             onFinishedEditing: controller.onJpgQualityChanged,
           ),
-          NumberSetting(
+          SettingsNumberEditTile(
             icon: LucideIcons.proportions,
             title: "Output resolution multiplier",
             subtitle: 'Controls image resolution',

@@ -1,9 +1,9 @@
 
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class ColorSetting extends StatefulWidget {
+class SettingsColorPickTile extends StatefulWidget {
 
   final IconData icon;
   final String title;
@@ -11,7 +11,7 @@ class ColorSetting extends StatefulWidget {
   final ValueGetter<Color> value;
   final ValueChanged<Color?> onChanged;
 
-  const ColorSetting({
+  const SettingsColorPickTile({
     super.key,
     required this.icon,
     required this.title,
@@ -21,11 +21,11 @@ class ColorSetting extends StatefulWidget {
   });
 
   @override
-  State<ColorSetting> createState() => _ColorSettingState();
+  State<SettingsColorPickTile> createState() => _SettingsColorPickTileState();
 
 }
 
-class _ColorSettingState extends State<ColorSetting> {
+class _SettingsColorPickTileState extends State<SettingsColorPickTile> {
 
   late Color _currentValue;
 
@@ -37,7 +37,7 @@ class _ColorSettingState extends State<ColorSetting> {
 
   @override
   Widget build(BuildContext context) {
-    return Setting(
+    return SettingsTile(
       icon: widget.icon,
       title: widget.title,
       subtitle: widget.subtitle,
