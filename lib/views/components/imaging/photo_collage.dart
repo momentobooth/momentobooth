@@ -223,9 +223,13 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   }
 
   Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
-    return widget.debug == null
-        ? CaptureViewBox.memory(photos[chosen[index]].data, fit: fit, decodeCallback: decodeCallback)
-        : CaptureViewBox.asset('assets/bitmap/placeholder.png', fit: fit, decodeCallback: decodeCallback);
+    return CaptureViewBox(
+      imageBuilder: (setImageDecoded) {
+        return widget.debug == null
+            ? ImageWithLoaderFallback.memory(photos[chosen[index]].data, fit: fit, onImageDecoded: setImageDecoded)
+            : ImageWithLoaderFallback.asset('assets/bitmap/placeholder.png', fit: fit, onImageDecoded: setImageDecoded);
+      },
+    );
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {
