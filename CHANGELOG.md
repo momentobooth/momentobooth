@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Change: Improved look of Settings screen
+
 ## 0.14.3
 
 - Bugfix: Fix settings not being saved in some exceptional cases

@@ -1,10 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 import 'package:momento_booth/views/settings_screen/components/update_secret_dialog.dart';
 
-class SecretInputCard extends StatelessWidget {
+class SettingsSecretEditTile extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -12,7 +12,7 @@ class SecretInputCard extends StatelessWidget {
   final String secretStorageKey;
   final VoidCallback? onSecretStored;
 
-  const SecretInputCard({
+  const SettingsSecretEditTile({
     super.key,
     required this.icon,
     required this.title,
@@ -23,11 +23,11 @@ class SecretInputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: Button(
+      setting: Button(
         onPressed: () => _openSecretUpdateDialog(context),
         child: const Text('Change'),
       ),

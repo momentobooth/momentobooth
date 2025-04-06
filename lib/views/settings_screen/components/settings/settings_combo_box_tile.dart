@@ -1,19 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-typedef GetValueCallback<T> = T Function();
-
-class ComboBoxCard<TValue> extends StatelessWidget {
+class SettingsComboBoxTile<TValue> extends StatelessWidget {
 
   final IconData icon;
   final String title;
   final String subtitle;
   final List<ComboBoxItem<TValue>> items;
-  final GetValueCallback<TValue> value;
+  final ValueGetter<TValue> value;
   final ValueChanged<TValue?> onChanged;
 
-  const ComboBoxCard({
+  const SettingsComboBoxTile({
     super.key,
     required this.icon,
     required this.title,
@@ -25,20 +23,20 @@ class ComboBoxCard<TValue> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 150),
-        child: Observer(builder: (_) {
-          return ComboBox<TValue>(
+      setting: Observer(builder: (_) {
+        return SizedBox(
+          height: 34,
+          child: ComboBox<TValue>(
             items: items,
             value: value(),
             onChanged: onChanged,
-          );
-        }),
-      ),
+          ),
+        );
+      }),
     );
   }
 

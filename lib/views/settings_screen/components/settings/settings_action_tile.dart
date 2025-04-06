@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-class ButtonCard extends StatelessWidget {
+class SettingsActionTile extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -9,7 +9,7 @@ class ButtonCard extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
 
-  const ButtonCard({
+  const SettingsActionTile({
     super.key,
     required this.icon,
     required this.title,
@@ -20,11 +20,11 @@ class ButtonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return SettingsTile(
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: Button(
+      setting: Button(
         onPressed: onPressed,
         child: Text(buttonText),
       ),

@@ -20,10 +20,10 @@ Widget _getHardwareSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
 }
 
 Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingsBlock(
+  return SettingsSection(
     title: "General",
     settings: [
-      ComboBoxCard(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Rotate image",
         subtitle: "Whether the live view and captures will be rotated 90, 180 or 270 degrees clockwise.",
@@ -31,7 +31,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
         value: () => viewModel.liveViewAndCaptureRotateSetting,
         onChanged: controller.onLiveViewAndCaptureRotateChanged,
       ),
-      ComboBoxCard(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Flip image – Live View",
         subtitle: "Whether the live view image will be flipped horizontally or vertically.",
@@ -39,7 +39,7 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
         value: () => viewModel.liveViewFlipSetting,
         onChanged: controller.onLiveViewFlipChanged,
       ),
-      ComboBoxCard(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Flip image – Capture",
         subtitle: "Whether the captured image will be flipped horizontally or vertically.",
@@ -47,23 +47,26 @@ Widget _getGeneralBlock(SettingsScreenViewModel viewModel, SettingsScreenControl
         value: () => viewModel.captureFlipSetting,
         onChanged: controller.onCaptureFlipChanged,
       ),
-      NumberInputCard(
+      SettingsNumberEditTile(
         icon: LucideIcons.ratio,
         title: "Aspect ratio",
         subtitle: 'The aspect ratio to which live view and captures are cropped.',
         value: () => viewModel.liveViewAndCaptureAspectRatioSetting,
         onFinishedEditing: controller.onLiveViewAndCaptureAspectRatioChanged,
         smallChange: 0.1,
+        leading: Observer(
+          builder: (_) => AspectRatioPreview(aspectRatio: viewModel.liveViewAndCaptureAspectRatioSetting),
+        ),
       ),
     ],
   );
 }
 
 Widget _getLiveViewBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingsBlock(
+  return SettingsSection(
     title: "Live view",
     settings: [
-      ComboBoxCard(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Live view method",
         subtitle: "Method used for live previewing",
@@ -82,10 +85,10 @@ Widget _getLiveViewBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
 }
 
 Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingsBlock(
+  return SettingsSection(
     title: "Photo capture",
     settings: [
-      ComboBoxCard(
+      SettingsComboBoxTile(
         icon: LucideIcons.camera,
         title: "Capture method",
         subtitle: "Method used for capturing final images",
@@ -95,7 +98,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       ),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return NumberInputCard(
+          return SettingsNumberEditTile(
             icon: LucideIcons.timer,
             title: "Capture delay for Sony camera",
             subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
@@ -113,7 +116,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
-          return ComboBoxCard(
+          return SettingsComboBoxTile(
             icon: LucideIcons.camera,
             title: "Use special handling for camera",
             subtitle: "Kind of special handling used for the camera. Pick \"Nikon DSLR\" for cameras like the D-series. The \"None\" might work for most mirrorless camera as they are always in live view mode.",
@@ -126,7 +129,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return BooleanInputCard(
+          return SettingsToggleTile(
             icon: LucideIcons.camera,
             title: "Download extra files (e.g. RAW) from camera",
             subtitle: "Whether to download extra files from the camera. This is useful for cameras that can create RAW files.",
@@ -138,7 +141,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return TextInputCard(
+          return SettingsTextEditTile(
             icon: LucideIcons.memoryStick,
             title: "Camera capture target",
             subtitle: "Sets the camera's 'capturetarget'. When unsure, leave empty as it could cause capture issues. Values can be found in the libgphoto2 source code.",
@@ -150,7 +153,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return NumberInputCard(
+          return SettingsNumberEditTile(
             icon: LucideIcons.camera,
             title: "Auto focus before capture",
             subtitle: "Time to wait for the camera to focus before capturing the image. This could be useful to improve capture speed in some cases (e.g. bad light, camera being slow with focusing). Might require the 'Special handling' setting set for some vendors. Also it might not work on some camera models. Set to 0 to disable.",
@@ -162,7 +165,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return NumberInputCard(
+          return SettingsNumberEditTile(
             icon: LucideIcons.timer,
             title: "Capture delay for gPhoto2 camera.",
             subtitle: "Delay in [ms].",
@@ -174,7 +177,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return FolderPickerCard(
+          return SettingsFolderSelectTile(
             icon: LucideIcons.folder,
             title: "Capture location",
             subtitle: "Location to look for captured images.",
@@ -186,7 +189,7 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
       }),
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop) {
-          return BooleanInputCard(
+          return SettingsToggleTile(
             icon: LucideIcons.hardDriveDownload,
             title: "Save captures to disk",
             subtitle: "Whether to save captures to disk.",
@@ -201,10 +204,10 @@ Widget _getPhotoCaptureBlock(SettingsScreenViewModel viewModel, SettingsScreenCo
 }
 
 Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingsBlock(
+  return SettingsSection(
     title: "Printing",
     settings: [
-      ComboBoxCard(
+      SettingsComboBoxTile(
         icon: LucideIcons.printer,
         title: "Print method",
         subtitle: "Method used for printing photos",
@@ -213,7 +216,7 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
         onChanged: controller.onPrintingImplementationChanged,
       ),
       _printerMargins(viewModel, controller),
-      NumberInputCard(
+      SettingsNumberEditTile(
         icon: LucideIcons.printerCheck,
         title: "Queue warning threshold",
         subtitle: "Number of photos in the OS's printer queue before a warning is shown (Windows only for now).",
@@ -225,31 +228,31 @@ Widget _getPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenContro
 }
 
 Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingsBlock(
+  return SettingsSection(
     title: "CUPS",
     settings: [
-      TextInputCard(
+      SettingsTextEditTile(
         icon: LucideIcons.server,
         title: "CUPS URI",
         subtitle: "The URI of the CUPS server",
         controller: controller.cupsUriController,
         onFinishedEditing: controller.onCupsUriChanged,
       ),
-      BooleanInputCard(
+      SettingsToggleTile(
         icon: LucideIcons.server,
         title: "Ignore TLS errors",
         subtitle: "Whether to ignore TLS errors when connecting to the CUPS server. This is useful for self-signed certificates which are used by default by the CUPS service.",
         value: () => viewModel.cupsIgnoreTlsErrors,
         onChanged: controller.onCupsIgnoreTlsErrorsChanged,
       ),
-      TextInputCard(
+      SettingsTextEditTile(
         icon: LucideIcons.user,
         title: "CUPS username",
         subtitle: "The username for the CUPS server",
         controller: controller.cupsUsernameController,
         onFinishedEditing: controller.onCupsUsernameChanged,
       ),
-      TextInputCard(
+      SettingsTextEditTile(
         icon: LucideIcons.squareAsterisk,
         title: "CUPS password",
         subtitle: "The password for the CUPS server",
@@ -276,7 +279,7 @@ Widget _getCupsBlock(SettingsScreenViewModel viewModel, SettingsScreenController
 }
 
 Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingsBlock(
+  return SettingsSection(
     title: "Flutter Printing",
     settings: [
       Observer(builder: (context) =>
@@ -288,7 +291,7 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
           ],
         ),
       ),
-      NumberInputCard(
+      SettingsNumberEditTile(
         icon: LucideIcons.moveVertical,
         title: "Page height",
         subtitle: 'Page format height used for printing [mm]',
@@ -296,7 +299,7 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
         onFinishedEditing: controller.onPageHeightChanged,
         smallChange: 0.1,
       ),
-      NumberInputCard(
+      SettingsNumberEditTile(
         icon: LucideIcons.moveHorizontal,
         title: "Page width",
         subtitle: 'Page format width used for printing [mm]',
@@ -304,7 +307,7 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
         onFinishedEditing: controller.onPageWidthChanged,
         smallChange: 0.1,
       ),
-      BooleanInputCard(
+      SettingsToggleTile(
         icon: LucideIcons.settings,
         title: "usePrinterSettings for printing",
         subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
@@ -315,14 +318,14 @@ Widget _getFlutterPrintingBlock(SettingsScreenViewModel viewModel, SettingsScree
   );
 }
 
-FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+SettingsTile _printerMargins(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
   const double numberWidth = 100;
   const double padding = 10;
-  return FluentSettingCard(
+  return SettingsTile(
     icon: LucideIcons.file,
     title: "Page margins used for printing",
     subtitle: "Some printers cut off some part of the image. Use this to compensate.\nOrder: top, right, bottom, left [mm]",
-    child: Row(
+    setting: Row(
       children: [
         SizedBox(
           width: numberWidth,
@@ -372,138 +375,128 @@ FluentSettingCard _printerMargins(SettingsScreenViewModel viewModel, SettingsScr
   );
 }
 
-FluentSettingCard _getWebcamCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingCard(
+SettingsTile _getWebcamCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return SettingsTile(
     icon: LucideIcons.camera,
     title: "Webcam",
     subtitle: "Pick the webcam to use for live view",
-    child: Row(
+    setting: Row(
       children: [
         Button(
           onPressed: viewModel.setWebcamList,
           child: const Text('Refresh'),
         ),
         const SizedBox(width: 10),
-        ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 150),
-          child: Observer(builder: (_) {
-            return ComboBox<String>(
-              items: viewModel.webcams,
-              value: viewModel.liveViewWebcamId,
-              onChanged: controller.onLiveViewWebcamIdChanged,
-            );
-          }),
-        ),
+        Observer(builder: (_) {
+          return ComboBox<String>(
+            items: viewModel.webcams,
+            value: viewModel.liveViewWebcamId,
+            onChanged: controller.onLiveViewWebcamIdChanged,
+            disabledPlaceholder: Text('<No options>'),
+          );
+        }),
       ],
     ),
   );
 }
 
-FluentSettingCard _gPhoto2CamerasCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingCard(
+SettingsTile _gPhoto2CamerasCard(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
+  return SettingsTile(
     icon: LucideIcons.camera,
     title: "Camera",
     subtitle: "Pick the camera to use for capturing still frames",
-    child: Row(
+    setting: Row(
       children: [
         Button(
           onPressed: viewModel.setCameraList,
           child: const Text('Refresh'),
         ),
         const SizedBox(width: 10),
-        ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 150),
-          child: Observer(builder: (_) {
-            return ComboBox<String>(
-              items: viewModel.gPhoto2Cameras,
-              value: viewModel.gPhoto2CameraId,
-              onChanged: controller.onGPhoto2CameraIdChanged,
-            );
-          }),
-        ),
+        Observer(builder: (_) {
+          return ComboBox<String>(
+            items: viewModel.gPhoto2Cameras,
+            value: viewModel.gPhoto2CameraId,
+            onChanged: controller.onGPhoto2CameraIdChanged,
+            disabledPlaceholder: Text('<No options>'),
+          );
+        }),
       ],
     ),
   );
 }
 
-FluentSettingCard _printerCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
-  return FluentSettingCard(
+SettingsTile _printerCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
+  return SettingsTile(
     icon: LucideIcons.printerCheck,
     title: title,
     subtitle: "Which printer(s) to use for printing photos",
-    child: Row(
+    setting: Row(
       children: [
         Button(
           onPressed: viewModel.setFlutterPrintingQueueList,
           child: const Text('Refresh'),
         ),
         const SizedBox(width: 10),
-        ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 150),
-          child: Observer(builder: (_) {
-            return ComboBox<String>(
-              items: viewModel.flutterPrintingQueues,
-              value: index < viewModel.flutterPrintingPrinterNamesSetting.length ? viewModel.flutterPrintingPrinterNamesSetting[index] : viewModel.unusedPrinterValue,
-              onChanged: (name) => controller.onFlutterPrintingPrinterChanged(name, index),
-            );
-          }),
-        ),
+        Observer(builder: (_) {
+          return ComboBox<String>(
+            items: viewModel.flutterPrintingQueues,
+            value: index < viewModel.flutterPrintingPrinterNamesSetting.length ? viewModel.flutterPrintingPrinterNamesSetting[index] : viewModel.unusedPrinterValue,
+            onChanged: (name) => controller.onFlutterPrintingPrinterChanged(name, index),
+            disabledPlaceholder: Text('<No options>'),
+          );
+        }),
       ],
     ),
   );
 }
 
-FluentSettingCard _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
-  return FluentSettingCard(
+SettingsTile _cupsQueuesCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, int index) {
+  return SettingsTile(
     icon: LucideIcons.printerCheck,
     title: title,
     subtitle: "Which printer(s) to use for printing photos",
-    child: Row(
+    setting: Row(
       children: [
         Button(
           onPressed: viewModel.setCupsQueueList,
           child: const Text('Refresh'),
         ),
         const SizedBox(width: 10),
-        ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 150),
-          child: Observer(builder: (_) {
-            return ComboBox<String>(
-              items: viewModel.cupsQueues,
-              value: index < viewModel.cupsPrinterQueuesSetting.length ? viewModel.cupsPrinterQueuesSetting[index] : viewModel.unusedPrinterValue,
-              onChanged: (name) => controller.onCupsPrinterQueuesQueueChanged(name, index),
-            );
-          }),
-        ),
+        Observer(builder: (_) {
+          return ComboBox<String>(
+            items: viewModel.cupsQueues,
+            value: index < viewModel.cupsPrinterQueuesSetting.length ? viewModel.cupsPrinterQueuesSetting[index] : viewModel.unusedPrinterValue,
+            onChanged: (name) => controller.onCupsPrinterQueuesQueueChanged(name, index),
+            disabledPlaceholder: Text('<No options>'),
+          );
+        }),
       ],
     ),
   );
 }
 
-FluentSettingCard _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, IconData icon, PrintSize size, MediaSettings currentSettings) {
-  return FluentSettingCard(
+SettingsTile _cupsPageSizeCard(SettingsScreenViewModel viewModel, SettingsScreenController controller, String title, IconData icon, PrintSize size, MediaSettings currentSettings) {
+  return SettingsTile(
     icon: icon,
     title: title,
     subtitle: size.name,
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(minWidth: 150),
-      child: ComboBox<String>(
-        items: viewModel.cupsPaperSizes,
-        value: currentSettings.mediaSizeString,
-        onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
-      ),
+    setting: ComboBox<String>(
+      items: viewModel.cupsPaperSizes,
+      value: currentSettings.mediaSizeString,
+      onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
+      disabledPlaceholder: Text('<No options>'),
     ),
   );
 }
 
-FluentSettingCard _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName, PrintSize size, GridSettings grid) {
+SettingsTile _gridPrint(SettingsScreenViewModel viewModel, SettingsScreenController controller, String sizeName, PrintSize size, GridSettings grid) {
   const double numberWidth = 100;
   const double padding = 10;
-  return FluentSettingCard(
+  return SettingsTile(
     icon: LucideIcons.layoutGrid,
     title: "Grid for $sizeName print",
     subtitle: "Set what grid to create for creating $sizeName prints. A grid of X by Y images is generated.\nOrder: X, Y, rotate images.",
-    child: Row(
+    setting: Row(
       children: [
         SizedBox(
           width: numberWidth,

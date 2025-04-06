@@ -4,21 +4,21 @@ Widget _getGeneralSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
   return SettingsPage(
     title: "General",
     blocks: [
-      NumberInputCard(
+      SettingsNumberEditTile(
         icon: LucideIcons.timer,
         title: "Capture delay",
         subtitle: 'In seconds',
         value: () => viewModel.captureDelaySecondsSetting,
         onFinishedEditing: controller.onCaptureDelaySecondsChanged,
       ),
-      BooleanInputCard(
+      SettingsToggleTile(
         icon: LucideIcons.folderDot,
         title: "Load last project on start",
         subtitle: "When enabled, MomentoBooth will load the last opened project when it starts.",
         value: () => viewModel.loadLastProjectSetting,
         onChanged: controller.onLoadLastProjectChanged,
       ),
-      const FluentSettingsBlock(
+      const SettingsSection(
         title: "Hotkeys",
         settings: [
           Padding(

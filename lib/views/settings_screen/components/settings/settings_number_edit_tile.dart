@@ -1,19 +1,18 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/settings_tile.dart';
 
-typedef GetValueCallback<T> = T Function();
-
-class NumberInputCard<T extends num> extends StatefulWidget {
+class SettingsNumberEditTile<T extends num> extends StatefulWidget {
 
   final IconData icon;
   final String title;
   final String subtitle;
-  final GetValueCallback<T> value;
+  final ValueGetter<T> value;
   final ValueChanged<T?> onFinishedEditing;
   final num smallChange;
+  final Widget? leading;
 
-  const NumberInputCard({
+  const SettingsNumberEditTile({
     super.key,
     required this.icon,
     required this.title,
@@ -21,14 +20,15 @@ class NumberInputCard<T extends num> extends StatefulWidget {
     required this.value,
     required this.onFinishedEditing,
     this.smallChange = 1,
+    this.leading,
   });
 
   @override
-  State<NumberInputCard<T>> createState() => _NumberInputCardState<T>();
+  State<SettingsNumberEditTile<T>> createState() => _SettingsNumberEditTileState<T>();
 
 }
 
-class _NumberInputCardState<T extends num> extends State<NumberInputCard<T>> {
+class _SettingsNumberEditTileState<T extends num> extends State<SettingsNumberEditTile<T>> {
 
   late T _currentValue;
 
@@ -40,11 +40,12 @@ class _NumberInputCardState<T extends num> extends State<NumberInputCard<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return SettingsTile(
       icon: widget.icon,
       title: widget.title,
       subtitle: widget.subtitle,
-      child: SizedBox(
+      leading: widget.leading,
+      setting: SizedBox(
         width: 150,
         child: Focus(
           skipTraversal: true,

@@ -5,7 +5,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
     title: "Statistics",
     blocks: [
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.mousePointerClick,
           title: "Taps",
           subtitle: "The number of taps in the app (outside settings)",
@@ -13,7 +13,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.cctv,
           title: "Live view frames",
           subtitle: "The number of live view frames processed from the start of the camera\nValue shows: Valid frames / Undecodable frames / Duplicate frames",
@@ -21,7 +21,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.printer,
           title: "Printed pictures – Normal size",
           subtitle: "The number of prints (e.g. 2 prints of the same pictures will count as 2 as well)",
@@ -29,7 +29,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.printer,
           title: "Printed pictures – Small",
           subtitle: "The number of small prints (e.g. 2 prints of the same pictures will count as 2 as well)",
@@ -37,7 +37,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.printer,
           title: "Printed pictures – Tiny",
           subtitle: "The number of tiny prints (e.g. 2 prints of the same pictures will count as 2 as well)",
@@ -45,7 +45,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.upload,
           title: "Uploaded pictures",
           subtitle: "The number of uploaded pictures",
@@ -53,7 +53,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.aperture,
           title: "Captured photos",
           subtitle: "The number of photo captures (e.g. a multi capture picture would increase this by 4)",
@@ -61,7 +61,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.image,
           title: "Created single shot pictures",
           subtitle: "The number of single capture pictures created, including retakes",
@@ -69,7 +69,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.undo,
           title: "Retakes",
           subtitle: "The number of retakes for (single) photo captures",
@@ -77,7 +77,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.images,
           title: "Created multi shot pictures",
           subtitle: "The number of multi shot pictures created, including changes",
@@ -85,7 +85,7 @@ Widget _getStatsTab(SettingsScreenViewModel viewModel, SettingsScreenController 
         ),
       ),
       Observer(
-        builder: (context) => TextDisplayCard(
+        builder: (context) => SettingsTextDisplayTile(
           icon: LucideIcons.undo,
           title: "Collage changes",
           subtitle: "The number of times a user went back to change a collage",
