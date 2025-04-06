@@ -6,7 +6,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
-import 'package:momento_booth/views/components/imaging/capture_preview_box.dart';
+import 'package:momento_booth/views/components/imaging/capture_view_box.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_view_model.dart';
@@ -108,7 +108,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                   SizedBox.expand(
                     child: AspectRatio(
                       aspectRatio: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio,
-                      child: CapturePreviewBox.memory(getIt<PhotosManager>().photos[i].data),
+                      child: CaptureViewBox.memory(getIt<PhotosManager>().photos[i].data),
                     ),
                   ),
                   AnimatedOpacity(

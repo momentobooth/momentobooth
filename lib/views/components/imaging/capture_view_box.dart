@@ -9,7 +9,7 @@ import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 
 enum _Type { memory, file, asset }
 
-class CapturePreviewBox extends StatefulWidget {
+class CaptureViewBox extends StatefulWidget {
 
   final Uint8List? bytes;
   final File? file;
@@ -19,27 +19,27 @@ class CapturePreviewBox extends StatefulWidget {
   final VoidCallback? decodeCallback;
   final _Type _type;
 
-  const CapturePreviewBox.memory(this.bytes, {super.key, this.fit, this.decodeCallback})
+  const CaptureViewBox.memory(this.bytes, {super.key, this.fit, this.decodeCallback})
       : _type = _Type.memory,
         file = null,
         assetPath = null;
 
-  const CapturePreviewBox.file(this.file, {super.key, this.fit, this.decodeCallback})
+  const CaptureViewBox.file(this.file, {super.key, this.fit, this.decodeCallback})
       : _type = _Type.file,
         bytes = null,
         assetPath = null;
 
-  const CapturePreviewBox.asset(this.assetPath, {super.key, this.fit, this.decodeCallback})
+  const CaptureViewBox.asset(this.assetPath, {super.key, this.fit, this.decodeCallback})
       : _type = _Type.asset,
         bytes = null,
         file = null;
 
   @override
-  State<CapturePreviewBox> createState() => _CapturePreviewBoxState();
+  State<CaptureViewBox> createState() => _CaptureViewBoxState();
 
 }
 
-class _CapturePreviewBoxState extends State<CapturePreviewBox> {
+class _CaptureViewBoxState extends State<CaptureViewBox> {
 
   bool _isImageDecoded = false;
 

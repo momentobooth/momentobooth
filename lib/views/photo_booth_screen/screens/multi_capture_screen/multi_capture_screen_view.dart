@@ -6,7 +6,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
-import 'package:momento_booth/views/components/imaging/capture_preview_box.dart';
+import 'package:momento_booth/views/components/imaging/capture_view_box.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen_controller.dart';
@@ -75,7 +75,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: AspectRatio(
                 aspectRatio: viewModel.aspectRatio,
-                child: CapturePreviewBox.memory(getIt<PhotosManager>().photos[i].data),
+                child: CaptureViewBox.memory(getIt<PhotosManager>().photos[i].data),
               ),
             ),
           ),
