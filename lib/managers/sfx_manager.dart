@@ -22,10 +22,13 @@ abstract class SfxManagerBase extends Subsystem with Store, Logger {
 
   @override
   Future<void> initialize() async {
-    JustAudioMediaKit.ensureInitialized();
-    AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
+    // Linux: Uses just_audio_media_kit.
+    // Windows: Uses just_audio_windows. Not init needed.
+    // macOS: Uses native implementation of just_audio. No init needed.
+    JustAudioMediaKit.ensureInitialized(windows: false);
 
-    await audioPlayer.setAsset('assets/sounds/silence.wav'); // This is a hack to make sure the audio player is initialized
+    AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
+    await audioPlayer.setAsset('assets/sounds/silence.ogg'); // This is a hack to make sure the audio player is initialized
     await audioPlayer.play();
 
     _audioPlayer = audioPlayer;
