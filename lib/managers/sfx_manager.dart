@@ -28,8 +28,7 @@ abstract class SfxManagerBase extends Subsystem with Store, Logger {
     JustAudioMediaKit.ensureInitialized(windows: false);
 
     AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
-
-    await audioPlayer.setAsset('assets/sounds/silence.wav'); // This is a hack to make sure the audio player is initialized
+    await audioPlayer.setAsset('assets/sounds/silence.ogg'); // This is a hack to make sure the audio player is initialized
     await audioPlayer.play();
 
     _audioPlayer = audioPlayer;
