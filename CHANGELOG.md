@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.14.4
+
 - Bugfix: Fix sound effects not working on Windows and macOS
 - Bugfix: Fix TLS connections to IPP print servers not working anymore
 - Bugfix: Fix progress bars being large and overflowing in the UI
