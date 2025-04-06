@@ -1,5 +1,5 @@
 use std::io::Cursor;
-use std::io::Read;
+use futures::AsyncReadExt;
 use chrono::{DateTime, Utc};
 
 use ipp::prelude::*;
@@ -182,7 +182,7 @@ pub async fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) 
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPPD).await;
     let mut payload = resp.into_payload();
     let mut buffer = "".to_string();
-    let _ = payload.read_to_string(&mut buffer);
+    let _ = payload.read_to_string(&mut buffer).await;
     let re = Regex::new(r#"/(.+):[\t ]+"(\d+\.\d+) (\d+\.\d+)""#).unwrap();
     let conversion_unit = 72.0/25.4;
 

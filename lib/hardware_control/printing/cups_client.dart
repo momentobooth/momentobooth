@@ -44,11 +44,11 @@ class CupsClient extends PrintingSystemClient {
   @override
   Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData, {PrintSize printSize = PrintSize.normal}) async {
     final printLayoutSettings = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
-    final String mediaSizeName = switch(printSize) {
+    final String mediaSizeName = switch (printSize) {
       PrintSize.normal => printLayoutSettings.mediaSizeNormal.mediaSizeString,
       PrintSize.split => printLayoutSettings.mediaSizeSplit.mediaSizeString,
       PrintSize.small => printLayoutSettings.mediaSizeSmall.mediaSizeString,
-      PrintSize.tiny => printLayoutSettings.mediaSizeSmall.mediaSizeString
+      PrintSize.tiny => printLayoutSettings.mediaSizeTiny.mediaSizeString,
     };
 
     await cupsPrintJob(
@@ -63,7 +63,7 @@ class CupsClient extends PrintingSystemClient {
   Future<List<PrintDimension>> getPrinterMediaDimensions(String queueId) async {
     return await cupsGetPrinterMediaDimensions(
       serverInfo: serverInfo,
-      queueId: queueId
+      queueId: queueId,
     );
   }
 

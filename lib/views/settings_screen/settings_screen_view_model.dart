@@ -33,15 +33,21 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   PageStorageBucket pageStorageBucket = PageStorageBucket();
 
   final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
+
   @observable
   int previewTemplate = 1;
+
   int get previewTemplateRotation => [0, 1, 4].contains(previewTemplate) ? 1 : 0;
+
   @observable
   bool previewTemplateShowFront = true;
+
   @observable
   bool previewTemplateShowMiddle = true;
+
   @observable
   bool previewTemplateShowBack = true;
+
   String get selectedBackTemplate => collageKey.currentState?.templates[TemplateKind.back]![previewTemplate]?.path ?? "-";
   String get selectedFrontTemplate => collageKey.currentState?.templates[TemplateKind.front]![previewTemplate]?.path ?? "-";
 
@@ -60,26 +66,26 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
 
   @observable
-  ObservableList<ComboBoxItem<String>> flutterPrintingQueues = ObservableList<ComboBoxItem<String>>();
+  List<ComboBoxItem<String>> flutterPrintingQueues = List<ComboBoxItem<String>>.empty();
 
   @observable
-  ObservableList<ComboBoxItem<String>> cupsQueues = ObservableList<ComboBoxItem<String>>();
+  List<ComboBoxItem<String>> cupsQueues = List<ComboBoxItem<String>>.empty();
 
   @observable
-  ObservableList<ComboBoxItem<String>> cupsPaperSizes = ObservableList<ComboBoxItem<String>>();
+  List<ComboBoxItem<String>> cupsPaperSizes = List<ComboBoxItem<String>>.empty();
 
   @observable
-  List<ComboBoxItem<String>> webcams = ObservableList<ComboBoxItem<String>>();
+  List<ComboBoxItem<String>> webcams = List<ComboBoxItem<String>>.empty();
 
   @observable
-  List<ComboBoxItem<String>> gPhoto2Cameras = ObservableList<ComboBoxItem<String>>();
+  List<ComboBoxItem<String>> gPhoto2Cameras = List<ComboBoxItem<String>>.empty();
 
   SubsystemStatus get badgeStatus {
-    if (getIt<ObservableList<Subsystem>>().firstWhereOrNull((s) => s.subsystemStatus is SubsystemStatusError) != null) {
+    if (getIt<ObservableList<Subsystem>>().any((s) => s.subsystemStatus is SubsystemStatusError)) {
       return const SubsystemStatus.error(message: '');
-    } else if (getIt<ObservableList<Subsystem>>().firstWhereOrNull((s) => s.subsystemStatus is SubsystemStatusWarning) != null) {
+    } else if (getIt<ObservableList<Subsystem>>().any((s) => s.subsystemStatus is SubsystemStatusWarning)) {
       return const SubsystemStatus.warning(message: '');
-    } else if (getIt<ObservableList<Subsystem>>().firstWhereOrNull((s) => s.subsystemStatus is SubsystemStatusBusy) != null) {
+    } else if (getIt<ObservableList<Subsystem>>().any((s) => s.subsystemStatus is SubsystemStatusBusy)) {
       return const SubsystemStatus.busy(message: '');
     } else {
       return const SubsystemStatus.ok();
@@ -112,34 +118,29 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   Future<void> setFlutterPrintingQueueList() async {
     final printers = await Printing.listPrinters();
 
-    flutterPrintingQueues
-      ..clear()
-      ..add(ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)));
+    flutterPrintingQueues = [
+      ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)),
+      ...printers.map((p) => ComboBoxItem(value: p.name, child: _printerCardText(p.name, p.isAvailable, p.isDefault))),
+    ];
 
-    for (var printer in printers) {
-      flutterPrintingQueues.add(ComboBoxItem(value: printer.name, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
-
-      // If there is no setting yet, set it to the default printer.
-      if (printer.isDefault && flutterPrintingPrinterNamesSetting.isEmpty) {
-        await updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: [printer.name]));
-      }
+    // If there is no printer selected yet, set the OS's default printer as our first printer.
+    Printer? osDefaultPrinter = printers.firstWhereOrNull((p) => p.isDefault);
+    if (osDefaultPrinter != null && flutterPrintingPrinterNamesSetting.isEmpty) {
+      await updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: [osDefaultPrinter.name]));
     }
   }
 
   Future<void> setCupsQueueList() async {
     final List<PrintQueueInfo> printers = await CupsClient().getPrintQueues();
 
-    cupsQueues
-      ..clear()
-      ..add(ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)));
+    cupsQueues = [
+      ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)),
+      ...printers.map((p) => ComboBoxItem(value: p.id, child: _printerCardText(p.name, p.isAvailable, p.isDefault))),
+    ];
 
-    for (var printer in printers) {
-      cupsQueues.add(ComboBoxItem(value: printer.id, child: _printerCardText(printer.name, printer.isAvailable, printer.isDefault)));
-
-      // If there is no setting yet, set it to the default printer.
-      if (cupsPrinterQueuesSetting.isEmpty) {
-        await updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: [printer.id]));
-      }
+    // If there is no printer selected yet, set the first found printer as our first printer.
+    if (printers.isNotEmpty && cupsPrinterQueuesSetting.isEmpty) {
+      await updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: [printers.first.id]));
     }
   }
 
@@ -150,10 +151,10 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     if (cupsPrinterQueuesSetting.isEmpty) return;
     _mediaDimensions = await CupsClient().getPrinterMediaDimensions(cupsPrinterQueuesSetting.first);
 
-    cupsPaperSizes
-      ..clear()
-      ..add(const ComboBoxItem(value: "", child: Text("- Not used -")))
-      ..addAll(_mediaDimensions.map((media) => ComboBoxItem(value: media.keyword, child: _mediaSizeCardText(media))).toList());
+    cupsPaperSizes = [
+      const ComboBoxItem(value: "", child: Text("- Not used -")),
+      ..._mediaDimensions.map((m) => ComboBoxItem(value: m.keyword, child: _mediaSizeCardText(m))),
+    ];
   }
 
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
@@ -252,6 +253,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
     required super.contextAccessor,
   }) {
     setFlutterPrintingQueueList();
+    setCupsQueueList();
     setWebcamList();
     setCameraList();
     setCupsPageSizeOptions();
