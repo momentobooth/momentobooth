@@ -1,19 +1,17 @@
 
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
 
-typedef GetValueCallback<T> = T Function();
-
-class ColorInputCard extends StatefulWidget {
+class ColorSetting extends StatefulWidget {
 
   final IconData icon;
   final String title;
   final String subtitle;
-  final GetValueCallback<Color> value;
+  final ValueGetter<Color> value;
   final ValueChanged<Color?> onChanged;
 
-  const ColorInputCard({
+  const ColorSetting({
     super.key,
     required this.icon,
     required this.title,
@@ -23,11 +21,11 @@ class ColorInputCard extends StatefulWidget {
   });
 
   @override
-  State<ColorInputCard> createState() => _ColorInputCardState();
+  State<ColorSetting> createState() => _ColorSettingState();
 
 }
 
-class _ColorInputCardState extends State<ColorInputCard> {
+class _ColorSettingState extends State<ColorSetting> {
 
   late Color _currentValue;
 
@@ -39,14 +37,16 @@ class _ColorInputCardState extends State<ColorInputCard> {
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return Setting(
       icon: widget.icon,
       title: widget.title,
       subtitle: widget.subtitle,
-      child: Focus(
+      setting: Focus(
         skipTraversal: true,
         onFocusChange: (hasFocus) => !hasFocus ? widget.onChanged(_currentValue) : null,
         child: ColorIndicator(
+          width: 32,
+          height: 32,
           color: _currentValue,
           onSelect: () async {
             Color pickedColor = await showColorPickerDialog(

@@ -1,42 +1,41 @@
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
 
-class FilePickerCard extends StatelessWidget {
+class FolderpathSetting extends StatelessWidget {
 
   final IconData icon;
   final String title;
   final String subtitle;
   final TextEditingController controller;
   final ValueChanged<String?> onChanged;
-  final bool clearable;
 
-  const FilePickerCard({
+  const FolderpathSetting({
     super.key,
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.controller,
     required this.onChanged,
-    this.clearable = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return Setting(
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: Row(
+      setting: Row(
         children: [
           IconButton(
             icon: const Icon(LucideIcons.folderOpen, size: 24.0),
             onPressed: () async {
-              XFile? selectedFile = await openFile();
-              if (selectedFile == null) return;
-              controller.text = selectedFile.path;
-              onChanged(selectedFile.path);
+              String? selectedDirectory =
+                  await getDirectoryPath(initialDirectory: controller.text);
+              if (selectedDirectory == null) return;
+              controller.text = selectedDirectory;
+              onChanged(selectedDirectory);
             },
           ),
           const SizedBox(width: 10),
@@ -48,14 +47,6 @@ class FilePickerCard extends StatelessWidget {
                 readOnly: true,
                 controller: controller,
                 onChanged: onChanged,
-                suffix: clearable ? IconButton(
-                  icon: const Icon(LucideIcons.x),
-                  onPressed: () {
-                    controller.clear();
-                    onChanged('');
-                  },
-                ) : null,
-                suffixMode: OverlayVisibilityMode.editing,
               ),
             ),
           ),

@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
 
-class TextInputCard extends StatelessWidget {
+class TextSetting extends StatelessWidget {
 
   final IconData icon;
   final String title;
@@ -9,7 +9,7 @@ class TextInputCard extends StatelessWidget {
   final TextEditingController controller;
   final ValueChanged<String?> onFinishedEditing;
 
-  const TextInputCard({
+  const TextSetting({
     super.key,
     required this.icon,
     required this.title,
@@ -20,11 +20,11 @@ class TextInputCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return Setting(
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: SizedBox(
+      setting: SizedBox(
         width: 250,
         child: Focus(
           skipTraversal: true,

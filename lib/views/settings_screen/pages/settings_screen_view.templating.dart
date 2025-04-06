@@ -1,14 +1,13 @@
 part of '../settings_screen_view.dart';
 
-
 Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  const buttonMargin = SizedBox(width: 10,);
-  const columnMargin = SizedBox(height: 10,);
+  const buttonMargin = SizedBox(width: 10);
+  const columnMargin = SizedBox(height: 10);
   return SettingsPage(
     title: "Templating",
     blocks: [
       _getTemplateSettings(viewModel, controller),
-      FluentSettingsBlock(
+      SettingsSection(
         title: "Template preview",
         settings: [
           Row(
@@ -33,7 +32,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
                   checked: viewModel.previewTemplateShowBack,
                   onChanged: (v) => viewModel.previewTemplateShowBack = v,
                   content: const Text("Show background"),
-                )
+                ),
               ),
               buttonMargin,
               Observer(builder: (context) =>
@@ -41,7 +40,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
                   checked: viewModel.previewTemplateShowMiddle,
                   onChanged: (v) => viewModel.previewTemplateShowMiddle = v,
                   content: const Text("Show middleground"),
-                )
+                ),
               ),
               buttonMargin,
               Observer(builder: (context) =>
@@ -49,7 +48,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
                   checked: viewModel.previewTemplateShowFront,
                   onChanged: (v) => viewModel.previewTemplateShowFront = v,
                   content: const Text("Show foreground"),
-                )
+                ),
               ),
             ],
           ),
@@ -59,7 +58,7 @@ Widget _getTemplatingSettings(SettingsScreenViewModel viewModel, SettingsScreenC
           Observer(builder: (context) => Text("Selected template images for n=${viewModel.previewTemplate}:\nFront template file: ${viewModel.selectedFrontTemplate}\nBack template file: ${viewModel.selectedBackTemplate}")),
           columnMargin,
           _getTemplateExampleRow(viewModel, controller),
-        ]
+        ],
       ),
     ],
   );
@@ -70,7 +69,7 @@ Widget _getTemplateButton(SettingsScreenViewModel viewModel, SettingsScreenContr
     builder: (context) => Button(
       onPressed: viewModel.previewTemplate == index ? null : () => viewModel.previewTemplate = index,
       child: Text(text),
-    )
+    ),
   );
 }
 
@@ -94,25 +93,28 @@ Widget _getTemplateExampleRow(SettingsScreenViewModel viewModel, SettingsScreenC
               showForeground: viewModel.previewTemplateShowFront,
             ),
           ),
-        )
+        ),
       ),
     ],
   );
 }
 
 Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenController controller) {
-  return FluentSettingsBlock(
+  return SettingsSection(
     title: "Creative",
     settings: [
-      NumberInputCard(
+      NumberSetting(
         icon: LucideIcons.ratio,
         title: "Collage aspect ratio",
         subtitle: "Controls the aspect ratio of the generated collages. Think about this together with paper print size.",
         smallChange: 0.1,
         value: () => viewModel.collageAspectRatioSetting,
         onFinishedEditing: controller.onCollageAspectRatioChanged,
+        leading: Observer(
+          builder: (_) => AspectRatioPreview(aspectRatio: viewModel.collageAspectRatioSetting),
+        ),
       ),
-      NumberInputCard(
+      NumberSetting(
         icon: LucideIcons.squareDashedMousePointer,
         title: "Collage padding",
         subtitle: "Controls the padding around the aspect ratio of the generated collages. Think about this together with paper print size.",
@@ -122,10 +124,10 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Observer(
-          builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting/1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height.")
+          builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting / 1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height."),
         ),
       ),
-      NumberInputCard(
+      NumberSetting(
         icon: LucideIcons.proportions,
         title: "Output resolution multiplier     (same setting as output tab)",
         subtitle: 'Controls image resolution',
@@ -137,7 +139,7 @@ Widget _getTemplateSettings(SettingsScreenViewModel viewModel, SettingsScreenCon
         padding: const EdgeInsets.all(8.0),
         child: Observer(
           builder: (context) => Text("→ Output (and template) resolution based on aspect ratio (${viewModel.collageAspectRatioSetting}) and padding (${viewModel.collagePaddingSetting}) and multiplier will be ${viewModel.outputResHeightExcl.round()}×${viewModel.outputResWidthExcl.round()} without and ${viewModel.outputResHeightIncl.round()}×${viewModel.outputResWidthIncl.round()} with padding"),
-        )
+        ),
       ),
     ],
   );

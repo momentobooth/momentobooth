@@ -4,17 +4,17 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
   return SettingsPage(
     title: "Debug",
     blocks: [
-      FluentSettingsBlock(
+      SettingsSection(
         title: "Actions",
         settings: [
-          ButtonCard(
+          ButtonSetting(
             icon: LucideIcons.play,
             title: "Play audio sample",
             subtitle: "Play a sample mp3 file, to verify whether audio file playback is working. Please note that the User interface > Sound Effects > Enable Sound Effects setting needs to be enabled.",
             buttonText: "Audio test",
             onPressed: controller.onPlayAudioSamplePressed,
           ),
-          ButtonCard(
+          ButtonSetting(
             icon: LucideIcons.mailWarning,
             title: "Report fake error",
             subtitle: "Test whether error reporting (to Sentry) works",
@@ -23,10 +23,10 @@ Widget _getDebugTab(SettingsScreenViewModel viewModel, SettingsScreenController 
           ),
         ],
       ),
-      FluentSettingsBlock(
+      SettingsSection(
         title: "Debug settings",
         settings: [
-          BooleanInputCard(
+          BooleanSetting(
             icon: LucideIcons.monitorCog,
             title: "Show FPS count",
             subtitle: "Show the FPS count in the upper right corner.",

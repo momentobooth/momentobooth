@@ -21,7 +21,7 @@ enum LiveViewMethod {
 enum CaptureMethod {
 
   liveViewSource(0, "Live view source"),
-  sonyImagingEdgeDesktop(1, "Sony Imaging Edge Desktop automation"),
+  sonyImagingEdgeDesktop(1, "Sony IED automation"),
   gPhoto2(2, "gPhoto2");
 
   final int value;

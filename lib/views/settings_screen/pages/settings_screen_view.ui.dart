@@ -4,14 +4,14 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
   return SettingsPage(
     title: "User interface",
     blocks: [
-      NumberInputCard(
+      NumberSetting(
         icon: LucideIcons.timer,
         title: "Return to home timeout",
         subtitle: "The time in seconds before the app returns to the home screen. Set to 0 to disable.",
         value: () => viewModel.returnToHomeTimeoutSeconds,
         onFinishedEditing: controller.onReturnToHomeTimeoutSecondsChanged,
       ),
-      ComboBoxCard<Language>(
+      OptionsSetting<Language>(
         icon: LucideIcons.languages,
         title: "Language",
         subtitle: "The language used in the app (except for this settings screen).",
@@ -19,14 +19,14 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
         value: () => viewModel.languageSetting,
         onChanged: controller.onLanguageChanged,
       ),
-      BooleanInputCard(
+      BooleanSetting(
         icon: LucideIcons.mouse,
         title: "Allow scroll gesture with mouse",
         subtitle: "If enabled, the touch scrolling gesture can be simulated using click and drag with a standard mouse. This might workaround Flutter touch gesture support on Linux also.",
         value: () => viewModel.allowScrollGestureWithMouse,
         onChanged: controller.onAllowScrollGestureWithMouseChanged,
       ),
-      FluentSettingsBlock(
+      SettingsSection(
         title: "Animations",
         settings: [
           // FIXME: Add functionality
@@ -37,7 +37,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           //   value: () => viewModel.disableConfettiSetting,
           //   onChanged: controller.onDisableConfettiChanged,
           // ),
-          ComboBoxCard<ScreenTransitionAnimation>(
+          OptionsSetting<ScreenTransitionAnimation>(
             icon: LucideIcons.arrowRightLeft,
             title: "Screen transition animation",
             subtitle: "The animation used when switching between screens",
@@ -47,19 +47,19 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           ),
         ],
       ),
-      FluentSettingsBlock(
+      SettingsSection(
         title: "Sound effects",
         settings: [
-          BooleanInputCard(
+          BooleanSetting(
             icon: LucideIcons.volume2,
-            title: "Enable sound effects 🔊",
+            title: "Enable sound effects",
             subtitle: "If enabled, sound effects will be enabled",
             value: () => viewModel.enableSfxSetting,
             onChanged: controller.onEnableSfxChanged,
           ),
           Observer(builder: (_) {
             if (viewModel.enableSfxSetting) {
-              return FilePickerCard(
+              return FilepathSetting(
                 icon: LucideIcons.mousePointerClick,
                 title: "Click sound effect",
                 subtitle: "The sound effect that will be played when the screen is tapped or something is clicked",
@@ -71,7 +71,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           }),
           Observer(builder: (_) {
             if (viewModel.enableSfxSetting) {
-              return FilePickerCard(
+              return FilepathSetting(
                 icon: LucideIcons.share,
                 title: "Share screen sound effect",
                 subtitle: "The sound effect that will be played when the share screen is opened",
@@ -83,10 +83,10 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
           }),
         ],
       ),
-      FluentSettingsBlock(
+      SettingsSection(
         title: "Advanced",
         settings: [
-          ComboBoxCard<BackgroundBlur>(
+          OptionsSetting<BackgroundBlur>(
             icon: LucideIcons.brickWall,
             title: "Background blur",
             subtitle: "Sets the background blur implementation. Currently there are no options for this setting except disabling it for testing.",
@@ -94,7 +94,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
             value: () => viewModel.backgroundBlur,
             onChanged: controller.onBackgroundBlurChanged,
           ),
-          ComboBoxCard<FilterQuality>(
+          OptionsSetting<FilterQuality>(
             icon: LucideIcons.arrowRightLeft,
             title: "Filter quality for screen transitions",
             subtitle: "The filter quality used for the screen transition scale animation",
@@ -102,7 +102,7 @@ Widget _getUiSettings(SettingsScreenViewModel viewModel, SettingsScreenControlle
             value: () => viewModel.screenTransitionAnimationFilterQuality,
             onChanged: controller.onScreenTransitionAnimationFilterQualityChanged,
           ),
-          ComboBoxCard<FilterQuality>(
+          OptionsSetting<FilterQuality>(
             icon: LucideIcons.cctv,
             title: "Filter quality for live view",
             subtitle: "The filter quality used for the live view",

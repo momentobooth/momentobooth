@@ -1,12 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
 
-typedef GetValueCallback<T> = T Function();
+class BooleanSetting extends StatelessWidget {
 
-class BooleanInputCard extends StatelessWidget {
-
-  const BooleanInputCard({
+  const BooleanSetting({
     super.key,
     required this.icon,
     required this.title,
@@ -19,18 +17,18 @@ class BooleanInputCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-  final GetValueCallback<bool> value;
+  final ValueGetter<bool> value;
   final ValueChanged<bool> onChanged;
   final Widget? prefixWidget;
 
   @override
   Widget build(BuildContext context) {
-    return FluentSettingCard(
+    return Setting(
       icon: icon,
       title: title,
       subtitle: subtitle,
-      prefixWidget: prefixWidget,
-      child: Observer(builder: (_) {
+      leading: prefixWidget,
+      setting: Observer(builder: (_) {
         return ToggleSwitch(
           checked: value(),
           onChanged: onChanged,

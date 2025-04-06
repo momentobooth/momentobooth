@@ -1,14 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/settings_screen/components/fluent_setting_card.dart';
+import 'package:momento_booth/views/settings_screen/components/settings/setting.dart';
 
-class TextDisplayCard extends StatelessWidget {
+class StaticTextSetting extends StatelessWidget {
 
   final IconData icon;
   final String title;
   final String subtitle;
   final String text;
 
-  const TextDisplayCard({
+  const StaticTextSetting({
     super.key,
     required this.icon,
     required this.title,
@@ -18,16 +18,15 @@ class TextDisplayCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FluentThemeData themeData = FluentTheme.of(context);
-    return FluentSettingCard(
+    return Setting(
       icon: icon,
       title: title,
       subtitle: subtitle,
-      child: Container(
+      setting: Container(
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         decoration: BoxDecoration(
-          color: themeData.accentColor,
+          color: FluentTheme.of(context).accentColor,
           borderRadius: BorderRadius.circular(999),
         ),
         child: Text(

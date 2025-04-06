@@ -16,24 +16,24 @@ Widget _getProjectSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
               child: InfoBar(title: Text("Project settings can only be viewed and modified if a project is loaded."), severity: InfoBarSeverity.warning,),
             );
           }
-          return FluentSettingsBlock(
+          return SettingsSection(
             title: "Project settings",
             settings: [
-              ColorInputCard(
+              ColorSetting(
                 icon: LucideIcons.paintbrushVertical,
                 title: "Primary color",
                 subtitle: "The primary color of the app",
                 value: () => viewModel.primaryColorSetting,
                 onChanged: controller.onPrimaryColorChanged,
               ),
-              BooleanInputCard(
+              BooleanSetting(
                 icon: LucideIcons.partyPopper,
                 title: "Display confetti 🎉",
                 subtitle: "If enabled, confetti will shower the share screen!",
                 value: () => viewModel.displayConfettiSetting,
                 onChanged: controller.onDisplayConfettiChanged,
               ),
-              BooleanInputCard(
+              BooleanSetting(
                 icon: LucideIcons.palette,
                 // FIXME why do we call it theme color here and primary color above?
                 title: "Colorize confetti to the theme color",
@@ -41,14 +41,14 @@ Widget _getProjectSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
                 value: () => viewModel.customColorConfettiSetting,
                 onChanged: controller.onCustomColorConfettiChanged,
               ),
-              TextInputCard(
+              TextSetting(
                 icon: LucideIcons.heading,
                 title: "Alternative ‘Touch to start’ title text",
                 subtitle: "The override text that will be shown on the Start screen instead of ‘Touch to start’. Leave empty to show the default text from the translations data.",
                 controller: controller.introScreenTouchToStartOverrideTextController,
                 onFinishedEditing: controller.onIntroScreenTouchToStartOverrideText,
               ),
-              BooleanInputCard(
+              BooleanSetting(
                 icon: LucideIcons.image,
                 title: "Treat single photo as collage",
                 subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
