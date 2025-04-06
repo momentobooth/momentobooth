@@ -6,8 +6,9 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
+import 'package:momento_booth/views/components/imaging/capture_view_box.dart';
+import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
-import 'package:momento_booth/views/components/imaging/photo_container.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen_view_model.dart';
@@ -75,7 +76,9 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: AspectRatio(
                 aspectRatio: viewModel.aspectRatio,
-                child: PhotoContainer.memory(getIt<PhotosManager>().photos[i].data),
+                child: CaptureViewBox(imageBuilder: (imageDecoded) {
+                  return ImageWithLoaderFallback.memory(getIt<PhotosManager>().photos[i].data, onImageDecoded: imageDecoded);
+                }),
               ),
             ),
           ),

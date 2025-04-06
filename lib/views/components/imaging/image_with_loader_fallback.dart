@@ -15,20 +15,20 @@ class ImageWithLoaderFallback extends StatefulWidget {
   final int? cacheHeight;
 
   final BoxFit? fit;
-  final VoidCallback? decodeCallback;
+  final VoidCallback? onImageDecoded;
   final _Type _type;
 
-  const ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit, this.decodeCallback, this.cacheWidth, this.cacheHeight})
+  const ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight})
       : _type = _Type.memory,
         file = null,
         assetPath = null;
 
-  const ImageWithLoaderFallback.file(this.file, {super.key, this.fit, this.decodeCallback, this.cacheWidth, this.cacheHeight})
+  const ImageWithLoaderFallback.file(this.file, {super.key, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight})
       : _type = _Type.file,
         bytes = null,
         assetPath = null;
 
-  const ImageWithLoaderFallback.asset(this.assetPath, {super.key, this.fit, this.decodeCallback, this.cacheWidth, this.cacheHeight})
+  const ImageWithLoaderFallback.asset(this.assetPath, {super.key, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight})
       : _type = _Type.asset,
         bytes = null,
         file = null;
@@ -75,7 +75,7 @@ class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
       ),
     };
 
-    _listener = ImageStreamListener((image, synchronousCall) => widget.decodeCallback?.call());
+    _listener = ImageStreamListener((image, synchronousCall) => widget.onImageDecoded?.call());
     _imageStream = _imageWidget.image.resolve(ImageConfiguration.empty);
     _imageStream.addListener(_listener);
   }
