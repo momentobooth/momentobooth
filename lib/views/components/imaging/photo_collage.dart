@@ -25,8 +25,8 @@ import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/views/components/imaging/capture_preview_box.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
-import 'package:momento_booth/views/components/imaging/photo_container.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
@@ -224,8 +224,8 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
 
   Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
     return widget.debug == null
-        ? PhotoContainer.memory(photos[chosen[index]].data, fit: fit, decodeCallback: decodeCallback)
-        : PhotoContainer.asset('assets/bitmap/placeholder.png', fit: fit, decodeCallback: decodeCallback);
+        ? CapturePreviewBox.memory(photos[chosen[index]].data, fit: fit, decodeCallback: decodeCallback)
+        : CapturePreviewBox.asset('assets/bitmap/placeholder.png', fit: fit, decodeCallback: decodeCallback);
   }
 
   Widget _getZeroLayout(AppLocalizations localizations) {
