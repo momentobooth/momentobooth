@@ -6,6 +6,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/constants.dart';
@@ -95,7 +96,13 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
     navigateAfterCapture();
   }
 
-  void onCaptureFinished() {
+  Future<void> onCaptureFinished() async {
+    if (getIt<ProjectManager>().settings.singlePhotoIsCollage) {
+      await captureCollage();
+    } else {
+      getIt<PhotosManager>().outputImage = getIt<PhotosManager>().photos.last.data;
+      await getIt<PhotosManager>().writeOutput();
+    }
     captureComplete = true;
     navigateAfterCapture();
   }
