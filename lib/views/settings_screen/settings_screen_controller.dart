@@ -626,4 +626,12 @@ class SettingsScreenController extends ScreenControllerBase<SettingsScreenViewMo
     getIt<SfxManager>().playSampleSound();
   }
 
+  void onTriggerCapturePressed() {
+    getIt<PhotosManager>().directPhotoCapture();
+  }
+
+  void onPhotosClearPressed() {
+    getIt<PhotosManager>().photos.clear();
+  }
+
 }
