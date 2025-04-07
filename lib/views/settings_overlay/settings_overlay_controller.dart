@@ -764,6 +764,14 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     getIt<SfxManager>().playSampleSound();
   }
 
+  void onTriggerCapturePressed() {
+    getIt<PhotosManager>().directPhotoCapture();
+  }
+
+  void onPhotosClearPressed() {
+    getIt<PhotosManager>().photos.clear();
+  }
+
   Future<void> onCopyCameraInfoToClipboardPressed() async {
     String json = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraInfoJson();
     await Clipboard.setData(ClipboardData(text: json));
