@@ -98,20 +98,21 @@ abstract class PhotosManagerBase with Store, Logger {
     CaptureMethod.gPhoto2 => getIt<LiveViewManager>().gPhoto2Camera!,
   };
 
-  Future<void> directPhotoCapture() async {
+  Future<PhotoCapture> directPhotoCapture() async {
     final capturer = this.capturer;
     await capturer.clearPreviousEvents();
     await captureAndGetPhoto(capturer, () => {});
+    return photos.last;
   }
 
-  int get counterStart => getIt<SettingsManager>().settings.captureDelaySeconds;
-  int get autoFocusMsBeforeCapture => getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
-  Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
-  Duration get autoFocusDelay => photoDelay - Duration(milliseconds: autoFocusMsBeforeCapture);
-
-  void initiateDelayedPhotoCapture(VoidCallback onCaptureFinished) {
+  void initiateDelayedPhotoCapture(VoidCallback onCaptureFinished, {int? captureDelayOverride}) {
     final capturer = this.capturer
     ..clearPreviousEvents();
+
+    int counterStart = captureDelayOverride ?? getIt<SettingsManager>().settings.captureDelaySeconds;
+    int autoFocusMsBeforeCapture = getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
+    Duration photoDelay = Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
+    Duration autoFocusDelay = photoDelay - Duration(milliseconds: autoFocusMsBeforeCapture);
 
     if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
       Future.delayed(autoFocusDelay).then((_) => capturer.autoFocus());

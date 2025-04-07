@@ -24,9 +24,6 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
 
   PhotosManager get photosManager => getIt<PhotosManager>();
 
-  @computed
-  Duration get photoDelay => getIt<PhotosManager>().photoDelay;
-
   @observable
   bool showCounter = true;
 

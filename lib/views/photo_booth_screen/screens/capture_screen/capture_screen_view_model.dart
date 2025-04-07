@@ -30,9 +30,6 @@ abstract class CaptureScreenViewModelBase extends ScreenViewModelBase with Store
   double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePadding => getIt<SettingsManager>().settings.collagePadding;
 
-  @computed
-  Duration get photoDelay => getIt<PhotosManager>().photoDelay;
-
   @observable
   bool showCounter = true;
 

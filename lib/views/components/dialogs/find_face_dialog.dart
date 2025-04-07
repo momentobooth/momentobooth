@@ -6,15 +6,9 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
-import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
-import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
-import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/live_view_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
@@ -50,27 +44,10 @@ class _FindFaceDialogState extends State<FindFaceDialog> with Logger {
   FaceDetectionState _faceDetectionState = FaceDetectionState.unknown;
   int _numFaces = 0;
 
-  static const flashStartDuration = Duration(milliseconds: 50);
-  final PhotoCaptureMethod capturer = switch (getIt<SettingsManager>().settings.hardware.captureMethod) {
-    CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(getIt<SettingsManager>().settings.hardware.captureLocation),
-    CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
-    CaptureMethod.gPhoto2 => getIt<LiveViewManager>().gPhoto2Camera!,
-  };
-
-  @computed
-  Duration get photoDelay => Duration(seconds: widget.countDown) - capturer.captureDelay + flashStartDuration;
-
-  Future<void> captureAndGetPhoto() async {
-    Uint8List imageData;
-    try {
-      final image = await capturer.captureAndGetPhoto();
-      imageData = image.data;
-    } catch (error) {
-      logWarning(error);
-      final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
-      imageData = data.buffer.asUint8List();
-    }
-    await uploadImage(imageData);
+  void onCaptureFinished() {
+    final image = getIt<PhotosManager>().photos.last;
+    final imageData = image.data;
+    uploadImage(imageData);
   }
 
   Future<void> uploadImage(Uint8List image) async {
@@ -97,12 +74,11 @@ class _FindFaceDialogState extends State<FindFaceDialog> with Logger {
   @override
   void initState() {
     super.initState();
-    Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
+    getIt<PhotosManager>().initiateDelayedPhotoCapture(onCaptureFinished, captureDelayOverride: widget.countDown);
   }
 
   void capture() {
     setState(() => _showCounter = false);
-    logDebug("Capture initiated with method $capturer");
   }
 
   @override
@@ -131,7 +107,8 @@ class _FindFaceDialogState extends State<FindFaceDialog> with Logger {
                     duration: const Duration(milliseconds: 50),
                     opacity: _showCounter ? 1.0 : 0.0,
                     child: CaptureCounter(
-                      onCounterFinished: capture, counterStart: widget.countDown,
+                      onCounterFinished: capture,
+                      counterStart: widget.countDown,
                     ),
                   )
                 ),
