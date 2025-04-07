@@ -4,6 +4,7 @@ import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_met
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
@@ -17,19 +18,14 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   late final PhotoCaptureMethod capturer;
   bool flashComplete = false;
   bool captureComplete = false;
-  static const flashStartDuration = Duration(milliseconds: 50);
-  static const flashEndDuration = Duration(milliseconds: 2500);
-  static const minimumContinueWait = Duration(milliseconds: 1500);
 
   int get counterStart => getIt<SettingsManager>().settings.captureDelaySeconds;
-  int get autoFocusMsBeforeCapture => getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
   double get aspectRatio => getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio;
 
-  @computed
-  Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
+  PhotosManager get photosManager => getIt<PhotosManager>();
 
   @computed
-  Duration get autoFocusDelay => photoDelay - Duration(milliseconds: autoFocusMsBeforeCapture);
+  Duration get photoDelay => getIt<PhotosManager>().photoDelay;
 
   @observable
   bool showCounter = true;

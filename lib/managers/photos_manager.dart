@@ -9,6 +9,7 @@ import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/capture_state.dart';
+import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
@@ -103,18 +104,14 @@ abstract class PhotosManagerBase with Store, Logger {
     await captureAndGetPhoto(capturer, () => {});
   }
 
+  int get counterStart => getIt<SettingsManager>().settings.captureDelaySeconds;
+  int get autoFocusMsBeforeCapture => getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
+  Duration get photoDelay => Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
+  Duration get autoFocusDelay => photoDelay - Duration(milliseconds: autoFocusMsBeforeCapture);
+
   void initiateDelayedPhotoCapture(VoidCallback onCaptureFinished) {
     final capturer = this.capturer
     ..clearPreviousEvents();
-
-    const flashStartDuration = Duration(milliseconds: 50);
-    const flashEndDuration = Duration(milliseconds: 2500);
-    const minimumContinueWait = Duration(milliseconds: 1500);
-
-    final counterStart = getIt<SettingsManager>().settings.captureDelaySeconds;
-    final autoFocusMsBeforeCapture = getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
-    final photoDelay = Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
-    final autoFocusDelay = photoDelay - Duration(milliseconds: autoFocusMsBeforeCapture);
 
     if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
       Future.delayed(autoFocusDelay).then((_) => capturer.autoFocus());
