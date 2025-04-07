@@ -1,19 +1,9 @@
 import 'package:flutter/animation.dart';
-import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
-import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
-import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/live_view_manager.dart';
-import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/models/capture_state.dart';
-import 'package:momento_booth/models/photo_capture.dart';
-import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
@@ -67,18 +57,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   MultiCaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    capturer = switch (getIt<SettingsManager>().settings.hardware.captureMethod) {
-      CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
-      CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(getIt<SettingsManager>().settings.hardware.captureLocation),
-      CaptureMethod.gPhoto2 => getIt<LiveViewManager>().gPhoto2Camera!,
-    };
-    capturer.clearPreviousEvents();
-
-    if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
-      Future.delayed(autoFocusDelay).then((_) => (capturer as GPhoto2Camera).autoFocus());
-    }
-    Future.delayed(photoDelay).then((_) => captureAndGetPhoto());
-    getIt<MqttManager>().publishCaptureState(CaptureState.countdown);
+    getIt<PhotosManager>().initiateDelayedPhotoCapture(onCaptureFinished);
   }
 
   Future<void> onCounterFinished() async {
@@ -92,25 +71,9 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
     navigateAfterCapture();
   }
 
-  Future<void> captureAndGetPhoto() async {
-    getIt<MqttManager>().publishCaptureState(CaptureState.capturing);
-
-    try {
-      final image = await capturer.captureAndGetPhoto();
-      getIt<StatsManager>().addCapturedPhoto();
-      getIt<PhotosManager>().photos.add(image);
-    } catch (error) {
-      logWarning(error);
-      final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
-      getIt<PhotosManager>().photos.add(PhotoCapture(
-        data: data.buffer.asUint8List(),
-        filename: "capture-error.png",
-      ));
-    } finally {
-      captureComplete = true;
-      navigateAfterCapture();
-      getIt<MqttManager>().publishCaptureState(CaptureState.idle);
-    }
+  void onCaptureFinished() {
+    captureComplete = true;
+    navigateAfterCapture();
   }
 
   void navigateAfterCapture() {
