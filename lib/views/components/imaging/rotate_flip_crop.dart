@@ -8,7 +8,8 @@ class RotateFlipCrop extends StatelessWidget {
   final Flip flip;
   final double aspectRatio;
 
-  const RotateFlipCrop({super.key,
+  const RotateFlipCrop({
+    super.key,
     required this.child,
     required this.rotate,
     required this.flip,
@@ -20,7 +21,7 @@ class RotateFlipCrop extends StatelessWidget {
     return SizedBox(
       width: aspectRatio,
       height: 1,
-      // Cover the aspect ratio and clip away the spills
+      // Cover the aspect ratio and clip away the spills.
       child: FittedBox(
         fit: BoxFit.cover,
         clipBehavior: Clip.hardEdge,
