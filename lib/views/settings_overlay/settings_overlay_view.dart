@@ -20,6 +20,7 @@ import 'package:momento_booth/src/rust/models/receipt_printing.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/components/indicators/connection_state_indicator.dart';

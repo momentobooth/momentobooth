@@ -5,6 +5,45 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
     title: "Debug",
     blocks: [
       SettingsSection(
+        title: "Photos and capture",
+        settings: [
+          Observer(
+            builder: (context) => SettingsTextDisplayTile(
+              icon: LucideIcons.hash,
+              title: "Photos in memory",
+              subtitle: "The number of photos stored in memory in the PhotosManager",
+              text: getIt<PhotosManager>().photos.length.toString(),
+            ),
+          ),
+          Observer(
+            builder: (context) => Row(
+              spacing: 8.0,
+              children: [
+                for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
+                  SizedBox.square(
+                    dimension: 100,
+                    child: ImageWithLoaderFallback.memory(getIt<PhotosManager>().photos[i].data, onImageDecoded: () => {})
+                  )
+              ],
+            )
+          ),
+          SettingsActionTile(
+            icon: LucideIcons.camera,
+            title: "Capture photo",
+            subtitle: "Trigger a photo capture",
+            buttonText: "Trigger capture",
+            onPressed: controller.onTriggerCapturePressed,
+          ),
+          SettingsActionTile(
+            icon: LucideIcons.trash,
+            title: "Clear photos",
+            subtitle: "Clear the photos stored in memory",
+            buttonText: "Clear photos",
+            onPressed: controller.onPhotosClearPressed,
+          ),
+        ],
+      ),
+      SettingsSection(
         title: "Actions",
         settings: [
           SettingsActionTile(
