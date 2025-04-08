@@ -29,7 +29,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
               height: double.infinity,
               child: Hero(
                 tag: viewModel.file!.path,
-                child: ImageWithLoaderFallback.file(viewModel.file, fit: BoxFit.contain),
+                child: ImageWithLoaderFallback.file(viewModel.file!, fit: BoxFit.contain),
               ),
             ),
           ),

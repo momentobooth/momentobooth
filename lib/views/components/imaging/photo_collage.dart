@@ -25,7 +25,6 @@ import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/views/components/imaging/capture_view_box.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 import 'package:path/path.dart';
@@ -178,7 +177,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
           if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
             Opacity(
               opacity: i == nChosen && widget.showBackground ? 1 : 0,
-              child: ImageWithLoaderFallback.file(templates[TemplateKind.back]?[i], fit: BoxFit.cover),
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
             ),
         ],
         if (widget.showMiddleground)
@@ -204,7 +203,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
           if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
             Opacity(
               opacity: i == nChosen && widget.showForeground ? 1 : 0,
-              child: ImageWithLoaderFallback.file(templates[TemplateKind.front]?[i], fit: BoxFit.cover),
+              child: ImageWithLoaderFallback.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
             ),
         ],
       ],
@@ -223,12 +222,11 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   }
 
   Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
-    return CaptureViewBox(
-      imageBuilder: (setImageDecoded) {
-        return widget.debug == null
-            ? ImageWithLoaderFallback.memory(photos[chosen[index]].data, fit: fit, onImageDecoded: setImageDecoded)
-            : ImageWithLoaderFallback.asset('assets/bitmap/placeholder.png', fit: fit, onImageDecoded: setImageDecoded);
-      },
+    return ImageWithLoaderFallback(
+      widget.debug == null ? MemoryImage(photos[chosen[index]].data) : AssetImage('assets/bitmap/placeholder.png'),
+      applyRotateFlipCrop: true,
+      fit: fit,
+      onImageDecoded: decodeCallback,
     );
   }
 

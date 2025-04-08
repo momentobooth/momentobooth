@@ -2,36 +2,26 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:fluent_ui/fluent_ui.dart';
-
-enum _Type { memory, file, asset }
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 
 class ImageWithLoaderFallback extends StatefulWidget {
 
-  final Uint8List? bytes;
-  final File? file;
-  final String? assetPath;
+  final ImageProvider provider;
+  final bool applyRotateFlipCrop;
 
   final int? cacheWidth;
   final int? cacheHeight;
 
   final BoxFit? fit;
   final VoidCallback? onImageDecoded;
-  final _Type _type;
 
-  const ImageWithLoaderFallback.memory(this.bytes, {super.key, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight})
-      : _type = _Type.memory,
-        file = null,
-        assetPath = null;
+  const ImageWithLoaderFallback(this.provider, {super.key, this.applyRotateFlipCrop = false, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight});
 
-  const ImageWithLoaderFallback.file(this.file, {super.key, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight})
-      : _type = _Type.file,
-        bytes = null,
-        assetPath = null;
+  ImageWithLoaderFallback.memory(Uint8List data, {super.key, this.applyRotateFlipCrop = false, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight}) : provider = MemoryImage(data);
 
-  const ImageWithLoaderFallback.asset(this.assetPath, {super.key, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight})
-      : _type = _Type.asset,
-        bytes = null,
-        file = null;
+  ImageWithLoaderFallback.file(File file, {super.key, this.applyRotateFlipCrop = false, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight}) : provider = FileImage(file);
 
   @override
   State<ImageWithLoaderFallback> createState() => _ImageWithLoaderFallbackState();
@@ -51,29 +41,15 @@ class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
   }
 
   void _initializeFromWidget() {
-    _imageWidget = switch(widget._type) {
-      _Type.memory => Image.memory(
-        widget.bytes!,
-        fit: widget.fit,
-        frameBuilder: _frameBuilder,
-        cacheWidth: widget.cacheWidth,
-        cacheHeight: widget.cacheHeight,
+    _imageWidget = Image(
+      image: ResizeImage.resizeIfNeeded(
+        widget.cacheWidth,
+        widget.cacheHeight,
+        widget.provider,
       ),
-      _Type.file => Image.file(
-        widget.file!,
-        fit: widget.fit,
-        frameBuilder: _frameBuilder,
-        cacheWidth: widget.cacheWidth,
-        cacheHeight: widget.cacheHeight,
-      ),
-      _Type.asset => Image.asset(
-        widget.assetPath!,
-        fit: widget.fit,
-        frameBuilder: _frameBuilder,
-        cacheWidth: widget.cacheWidth,
-        cacheHeight: widget.cacheHeight,
-      ),
-    };
+      fit: widget.fit,
+      frameBuilder: _frameBuilder,
+    );
 
     _listener = ImageStreamListener((image, synchronousCall) => widget.onImageDecoded?.call());
     _imageStream = _imageWidget.image.resolve(ImageConfiguration.empty);
@@ -84,14 +60,25 @@ class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
   void didUpdateWidget(covariant ImageWithLoaderFallback oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.bytes != oldWidget.bytes || widget.file != oldWidget.file) {
+    if (widget.provider != oldWidget.provider) {
       _imageStream.removeListener(_listener);
       _initializeFromWidget();
     }
   }
 
   Widget _frameBuilder(BuildContext context, Widget child, int? frame, bool wasSynchronouslyLoaded) {
-    return frame != null ? child : const Center(child: ProgressRing());
+    if (frame == null) {
+      return const Center(child: ProgressRing());
+    } else if (widget.applyRotateFlipCrop) {
+      return RotateFlipCrop(
+        rotate: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureRotate,
+        flip: getIt<SettingsManager>().settings.hardware.captureFlip,
+        aspectRatio: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio,
+        child: child,
+      );
+    } else {
+      return child;
+    }
   }
 
   @override
