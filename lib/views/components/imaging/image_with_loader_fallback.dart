@@ -60,7 +60,7 @@ class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
   void didUpdateWidget(covariant ImageWithLoaderFallback oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget != oldWidget) {
+    if (widget.provider != oldWidget.provider) {
       _imageStream.removeListener(_listener);
       _initializeFromWidget();
     }
