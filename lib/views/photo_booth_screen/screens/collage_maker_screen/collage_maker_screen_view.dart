@@ -6,6 +6,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/components/animations/rotating_collage_box.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_controller.dart';
@@ -166,21 +167,14 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
 
   Widget get _collage {
     return Observer(
-      builder: (context) => AnimatedRotation(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        turns: -0.25 * viewModel.rotation, // could also use controller.collageKey.currentState!.rotation
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            boxShadow: [theme.chooseCaptureModeButtonShadow],
-          ),
-          child: PhotoCollage(
-            key: controller.collageKey,
-            aspectRatio: 1/viewModel.collageAspectRatio,
-            padding: viewModel.collagePadding,
-          ),
+      builder: (context) => RotatingCollageBox(
+        turns: -0.25 * viewModel.rotation,
+        collage: PhotoCollage(
+          key: controller.collageKey,
+          aspectRatio: 1 / viewModel.collageAspectRatio,
+          padding: viewModel.collagePadding,
         ),
+        onRotateCompleted: controller.captureCollage,
       ),
     );
   }

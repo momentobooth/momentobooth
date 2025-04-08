@@ -23,19 +23,17 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
   GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
 
   void togglePicture(int image) {
+    viewModel.readyToContinue = false;
     if (getIt<PhotosManager>().chosen.contains(image)) {
       getIt<PhotosManager>().chosen.remove(image);
     } else {
       getIt<PhotosManager>().chosen.add(image);
     }
-    captureCollage();
   }
 
   DateTime? latestCapture;
 
   Future<void> captureCollage() async {
-    viewModel.readyToContinue = false;
-
     // It can happen that a previous capture takes longer than the latest one.
     // Therefore, keep track of which is the latest invocation.
     final thisCapture = DateTime.now();
