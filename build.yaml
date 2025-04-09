@@ -31,6 +31,6 @@ targets:
         enabled: false
       theme_tailor:
         options:
-          theme_getter: on_build_context_props
+          theme_getter: on_theme_data
           theme_class_name: FluentTheme
           theme_data_class_name: FluentThemeData
