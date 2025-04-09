@@ -34,6 +34,7 @@ dependencies:
   flex_color_picker: 3.7.0
   lucide_icons_flutter: 2.0.3
   wizard_router: 1.4.0
+  theme_tailor_annotation: 3.0.1
 
   # Printscreen/Image processing
   screenshot: 3.0.0
@@ -110,6 +111,7 @@ dependency_overrides:
 dev_dependencies:
   # UI
   widgetbook_generator: 3.11.0
+  theme_tailor: 3.0.1
 
   # MVC
   mobx_codegen: 2.7.0
