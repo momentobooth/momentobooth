@@ -12,6 +12,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
@@ -26,7 +27,6 @@ import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -93,7 +93,6 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
 
   ScreenshotController screenshotController = ScreenshotController();
 
-  MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
   static const double gap = 20.0;
 
   ObservableList<int> get chosen => getIt<PhotosManager>().chosen;
@@ -154,7 +153,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
         child: SizedBox(
           height: 1000 + 2 * widget.padding,
           width: 1000 * widget.aspectRatio + 2 * widget.padding,
-          child: Observer(builder: (context) => _getLayout(AppLocalizations.of(context)!)),
+          child: Observer(builder: (context) => _getLayout(AppLocalizations.of(context)!, context)),
         ),
       ),
     );
@@ -168,7 +167,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     );
   }
 
-  Widget _getLayout(AppLocalizations localizations) {
+  Widget _getLayout(AppLocalizations localizations, BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       fit: StackFit.expand,
@@ -183,7 +182,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
         if (widget.showMiddleground)
           Padding(
             padding: EdgeInsets.all(gap + widget.padding),
-            child: _getInnerLayout(localizations),
+            child: _getInnerLayout(localizations, context),
           ),
         if (widget.debug != null)
           DecoratedBox(
@@ -210,9 +209,9 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     );
   }
 
-  Widget _getInnerLayout(AppLocalizations localizations) {
+  Widget _getInnerLayout(AppLocalizations localizations, BuildContext context) {
     return switch (nChosen) {
-      0 => _getZeroLayout(localizations),
+      0 => _getZeroLayout(localizations, context),
       1 => _oneLayout,
       2 => _twoLayout,
       3 => _threeLayout,
@@ -230,13 +229,13 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     );
   }
 
-  Widget _getZeroLayout(AppLocalizations localizations) {
+  Widget _getZeroLayout(AppLocalizations localizations, BuildContext context) {
     return RotatedBox(
       quarterTurns: 1,
       child: Center(
         child: AutoSizeText(
           localizations.photoCollageWidgetSelectPhotos,
-          style: theme.titleStyle,
+          style: context.theme.titleTheme.style,
           textAlign: TextAlign.center,
         ),
       ),
