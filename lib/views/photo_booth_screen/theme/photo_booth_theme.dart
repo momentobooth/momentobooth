@@ -16,12 +16,16 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
   final TextTheme subtitleTheme;
   final PhotoBoothButtonTheme primaryButtonTheme;
   final PhotoBoothButtonTheme navigationButtonTheme;
+  final CaptureCounterTheme captureCounterTheme;
+  final DialogTheme dialogTheme;
 
   const PhotoBoothTheme({
     required this.titleTheme,
     required this.subtitleTheme,
     required this.primaryButtonTheme,
     required this.navigationButtonTheme,
+    required this.captureCounterTheme,
+    required this.dialogTheme,
   });
 
   factory PhotoBoothTheme.defaultBasic() => _basicTheme;
@@ -46,5 +50,24 @@ class PhotoBoothButtonTheme extends ThemeExtension<PhotoBoothButtonTheme> with _
   final WidgetBuilder? frameBuilder;
 
   const PhotoBoothButtonTheme({required this.style, this.frameBuilder});
+
+}
+
+@TailorMixinComponent()
+class CaptureCounterTheme extends ThemeExtension<CaptureCounterTheme> with _$CaptureCounterThemeTailorMixin {
+
+  final TextStyle textStyle;
+  final WidgetBuilder? frameBuilder;
+
+  const CaptureCounterTheme({required this.textStyle, this.frameBuilder});
+
+}
+
+@TailorMixinComponent()
+class DialogTheme extends ThemeExtension<DialogTheme> with _$DialogThemeTailorMixin {
+
+  final ButtonStyle buttonStyle;
+
+  const DialogTheme({required this.buttonStyle});
 
 }

@@ -52,7 +52,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
               children: [
                 const ColoredBox(color: Color(0x80000000)),
                 Center(
-                  child: Text("${image.selectedIndex+1}/${viewModel.numSelected}", style: theme.subTitleStyle),
+                  child: Text("${image.selectedIndex+1}/${viewModel.numSelected}", style: theme.subtitleTheme.style),
                 ),
               ],
             ),
@@ -79,7 +79,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
           Center(
             child: GestureDetector(
               onTap: controller.refreshImageList,
-              child: AutoSizeText(localizations.genericRefreshButton, style: theme.titleStyle),
+              child: AutoSizeText(localizations.genericRefreshButton, style: theme.titleTheme.style),
             ),
           ),
         ],
@@ -141,7 +141,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
               children: [
                 GestureDetector(
                   onTap: controller.clearSelection,
-                  child: AutoSizeText(localizations.genericClearButton, style: theme.titleStyle),
+                  child: AutoSizeText(localizations.genericClearButton, style: theme.titleTheme.style),
                 ),
                 Observer(
                   builder: (context) => AnimatedOpacity(
@@ -151,7 +151,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
                       onTap: controller.captureCollage,
                       child: AutoSizeText(
                         viewModel.isSaving ? localizations.manualCollageScreenSaving : localizations.genericSaveButton,
-                        style: theme.titleStyle,
+                        style: theme.titleTheme.style,
                       ),
                     ),
                   ),
@@ -173,7 +173,7 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 255, 255, 255),
-            boxShadow: [theme.chooseCaptureModeButtonShadow],
+            boxShadow: [legacyTheme.chooseCaptureModeButtonShadow],
           ),
           child: PhotoCollage(
             key: controller.collageKey,

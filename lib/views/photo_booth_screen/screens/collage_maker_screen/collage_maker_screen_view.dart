@@ -56,7 +56,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                       onTap: controller.onContinueTap,
                       child: AutoSizeText(
                         "${localizations.genericContinueButton} →",
-                        style: theme.subTitleStyle,
+                        style: theme.subtitleTheme.style,
                         maxLines: 1,
                       ),
                     ),
@@ -78,14 +78,14 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
         children: [
           AutoSizeText(
             localizations.collageMakerScreenPicturesShotTitle,
-            style: theme.titleStyle,
+            style: theme.titleTheme.style,
             maxLines: 1,
           ),
           _photoSelector,
           Observer(
             builder: (context) => AutoSizeText(
               localizations.collageMakerScreenPhotoCounter(viewModel.numSelected),
-              style: theme.titleStyle,
+              style: theme.titleTheme.style,
               maxLines: 1,
             ),
           ),
@@ -130,7 +130,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                         Center(
                           child: Text(
                             (getIt<PhotosManager>().chosen.indexOf(i) + 1).toString(),
-                            style: theme.subTitleStyle,
+                            style: theme.subtitleTheme.style,
                           ),
                         ),
                       ],
@@ -155,7 +155,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: AutoSizeText(localizations.collageMakerScreenCollageTitle, style: theme.titleStyle),
+              child: AutoSizeText(localizations.collageMakerScreenCollageTitle, style: theme.titleTheme.style),
             ),
           ),
           Expanded(

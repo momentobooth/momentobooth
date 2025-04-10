@@ -21,7 +21,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           child: Center(
             child: AutoSizeText(
               localizations.chooseCaptureModeScreenTitle,
-              style: theme.titleStyle,
+              style: theme.titleTheme.style,
               maxLines: 1,
             ),
           ),
@@ -54,7 +54,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           AutoSizeText(
             localizations.chooseCaptureModeScreenSinglePictureButton,
             group: viewModel.autoSizeGroup,
-            style: theme.titleStyle,
+            style: theme.titleTheme.style,
             maxLines: 1,
           ),
         ],
@@ -94,7 +94,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           AutoSizeText(
             localizations.chooseCaptureModeScreenCollageButton,
             group: viewModel.autoSizeGroup,
-            style: theme.titleStyle,
+            style: theme.titleTheme.style,
             maxLines: 1,
           ),
         ],
@@ -107,8 +107,8 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
       width: dimension,
       height: dimension,
       decoration: BoxDecoration(
-        color: theme.chooseCaptureModeButtonIconColor,
-        boxShadow: [theme.chooseCaptureModeButtonShadow],
+        color: legacyTheme.chooseCaptureModeButtonIconColor,
+        boxShadow: [legacyTheme.chooseCaptureModeButtonShadow],
       ),
     );
   }
