@@ -107,8 +107,12 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
       width: dimension,
       height: dimension,
       decoration: BoxDecoration(
-        color: legacyTheme.chooseCaptureModeButtonIconColor,
-        boxShadow: [legacyTheme.chooseCaptureModeButtonShadow],
+        color: const Color(0xE6FFFFFF),
+        boxShadow: [const BoxShadow(
+          color: Color(0x42000000),
+          offset: Offset(0, 3),
+          blurRadius: 8,
+        )],
       ),
     );
   }

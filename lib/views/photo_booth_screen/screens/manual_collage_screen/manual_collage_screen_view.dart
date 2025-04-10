@@ -173,7 +173,11 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: const Color.fromARGB(255, 255, 255, 255),
-            boxShadow: [legacyTheme.chooseCaptureModeButtonShadow],
+            boxShadow: [const BoxShadow(
+              color: Color(0x42000000),
+              offset: Offset(0, 3),
+              blurRadius: 8,
+            )],
           ),
           child: PhotoCollage(
             key: controller.collageKey,
