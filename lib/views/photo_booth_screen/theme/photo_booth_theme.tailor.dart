@@ -13,6 +13,8 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
   TextTheme get subtitleTheme;
   PhotoBoothButtonTheme get primaryButtonTheme;
   PhotoBoothButtonTheme get navigationButtonTheme;
+  CaptureCounterTheme get captureCounterTheme;
+  DialogTheme get dialogTheme;
 
   @override
   PhotoBoothTheme copyWith({
@@ -20,6 +22,8 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
     TextTheme? subtitleTheme,
     PhotoBoothButtonTheme? primaryButtonTheme,
     PhotoBoothButtonTheme? navigationButtonTheme,
+    CaptureCounterTheme? captureCounterTheme,
+    DialogTheme? dialogTheme,
   }) {
     return PhotoBoothTheme(
       titleTheme: titleTheme ?? this.titleTheme,
@@ -27,6 +31,8 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
       primaryButtonTheme: primaryButtonTheme ?? this.primaryButtonTheme,
       navigationButtonTheme:
           navigationButtonTheme ?? this.navigationButtonTheme,
+      captureCounterTheme: captureCounterTheme ?? this.captureCounterTheme,
+      dialogTheme: dialogTheme ?? this.dialogTheme,
     );
   }
 
@@ -41,6 +47,9 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
           as PhotoBoothButtonTheme,
       navigationButtonTheme: navigationButtonTheme.lerp(
           other.navigationButtonTheme, t) as PhotoBoothButtonTheme,
+      captureCounterTheme: captureCounterTheme.lerp(
+          other.captureCounterTheme, t) as CaptureCounterTheme,
+      dialogTheme: dialogTheme.lerp(other.dialogTheme, t) as DialogTheme,
     );
   }
 
@@ -56,7 +65,11 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
             const DeepCollectionEquality()
                 .equals(primaryButtonTheme, other.primaryButtonTheme) &&
             const DeepCollectionEquality()
-                .equals(navigationButtonTheme, other.navigationButtonTheme));
+                .equals(navigationButtonTheme, other.navigationButtonTheme) &&
+            const DeepCollectionEquality()
+                .equals(captureCounterTheme, other.captureCounterTheme) &&
+            const DeepCollectionEquality()
+                .equals(dialogTheme, other.dialogTheme));
   }
 
   @override
@@ -67,6 +80,8 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
       const DeepCollectionEquality().hash(subtitleTheme),
       const DeepCollectionEquality().hash(primaryButtonTheme),
       const DeepCollectionEquality().hash(navigationButtonTheme),
+      const DeepCollectionEquality().hash(captureCounterTheme),
+      const DeepCollectionEquality().hash(dialogTheme),
     );
   }
 }
@@ -161,6 +176,89 @@ mixin _$PhotoBoothButtonThemeTailorMixin
       runtimeType.hashCode,
       const DeepCollectionEquality().hash(style),
       const DeepCollectionEquality().hash(frameBuilder),
+    );
+  }
+}
+
+mixin _$CaptureCounterThemeTailorMixin on ThemeExtension<CaptureCounterTheme> {
+  TextStyle get textStyle;
+  Widget Function(BuildContext, Widget)? get frameBuilder;
+
+  @override
+  CaptureCounterTheme copyWith({
+    TextStyle? textStyle,
+    Widget Function(BuildContext, Widget)? frameBuilder,
+  }) {
+    return CaptureCounterTheme(
+      textStyle: textStyle ?? this.textStyle,
+      frameBuilder: frameBuilder ?? this.frameBuilder,
+    );
+  }
+
+  @override
+  CaptureCounterTheme lerp(
+      covariant ThemeExtension<CaptureCounterTheme>? other, double t) {
+    if (other is! CaptureCounterTheme) return this as CaptureCounterTheme;
+    return CaptureCounterTheme(
+      textStyle: TextStyle.lerp(textStyle, other.textStyle, t)!,
+      frameBuilder: t < 0.5 ? frameBuilder : other.frameBuilder,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is CaptureCounterTheme &&
+            const DeepCollectionEquality().equals(textStyle, other.textStyle) &&
+            const DeepCollectionEquality()
+                .equals(frameBuilder, other.frameBuilder));
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      runtimeType.hashCode,
+      const DeepCollectionEquality().hash(textStyle),
+      const DeepCollectionEquality().hash(frameBuilder),
+    );
+  }
+}
+
+mixin _$DialogThemeTailorMixin on ThemeExtension<DialogTheme> {
+  ButtonStyle get buttonStyle;
+
+  @override
+  DialogTheme copyWith({
+    ButtonStyle? buttonStyle,
+  }) {
+    return DialogTheme(
+      buttonStyle: buttonStyle ?? this.buttonStyle,
+    );
+  }
+
+  @override
+  DialogTheme lerp(covariant ThemeExtension<DialogTheme>? other, double t) {
+    if (other is! DialogTheme) return this as DialogTheme;
+    return DialogTheme(
+      buttonStyle: t < 0.5 ? buttonStyle : other.buttonStyle,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is DialogTheme &&
+            const DeepCollectionEquality()
+                .equals(buttonStyle, other.buttonStyle));
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      runtimeType.hashCode,
+      const DeepCollectionEquality().hash(buttonStyle),
     );
   }
 }

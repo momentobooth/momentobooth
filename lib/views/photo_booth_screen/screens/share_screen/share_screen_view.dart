@@ -28,14 +28,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             // This SizedBox is only necessary when the image used is smaller than what would be displayed.
             child: SizedBox(
               height: double.infinity,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F0F0),
-                  border: theme.captureCounterContainerBorder,
-                  boxShadow: [theme.captureCounterContainerShadow],
-                ),
-                child: ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain),
-              ),
+              child: theme.captureCounterTheme.frameBuilder!(context, ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain)),
             ),
           ),
         ),
@@ -103,7 +96,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           fit: FlexFit.tight,
           child: AutoSizeText(
             localizations.shareScreenTitle,
-            style: theme.titleStyle,
+            style: theme.titleTheme.style,
           ),
         ),
         Expanded(
@@ -118,7 +111,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
                 behavior: HitTestBehavior.translucent,
                 child: AutoSizeText(
                   " ↺ ${viewModel.backText}",
-                  style: theme.subTitleStyle,
+                  style: theme.subtitleTheme.style,
                 ),
               ),
               GestureDetector(
@@ -127,7 +120,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
                 behavior: HitTestBehavior.translucent,
                 child: AutoSizeText(
                   "→ ",
-                  style: theme.titleStyle,
+                  style: theme.titleTheme.style,
                 ),
               ),
             ],
@@ -152,7 +145,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
               behavior: HitTestBehavior.translucent,
               child: AutoSizeText(
                 localizations.photoDetailsScreenGetQrButton,
-                style: theme.titleStyle,
+                style: theme.titleTheme.style,
               ),
             ),
           ),
@@ -169,7 +162,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
                   opacity: viewModel.printEnabled ? 1 : 0.5,
                   child: AutoSizeText(
                     viewModel.printText,
-                    style: theme.titleStyle,
+                    style: theme.titleTheme.style,
                   ),
                 ),
               ),

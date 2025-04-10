@@ -36,7 +36,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
                 onTap: controller.onPressedGallery,
                 child: AutoSizeText(
                   localizations.startScreenGalleryButton,
-                  style: theme.subTitleStyle,
+                  style: theme.subtitleTheme.style,
                 ),
               ),
             ),
@@ -60,7 +60,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
               builder: (context) =>
                 AutoSizeText(
                   viewModel.touchToStartText,
-                  style: theme.titleStyle,
+                  style: theme.titleTheme.style,
                   textAlign: TextAlign.center,
                 )
             ),
@@ -68,7 +68,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
         ),
         Flexible(
           fit: FlexFit.tight,
-          child: _getLogo(theme),
+          child: _getLogo(legacyTheme),
         ),
       ],
     );
@@ -81,7 +81,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
         padding: const EdgeInsets.only(bottom: 32),
         child: SvgPicture.asset(
           "assets/svg/logo.svg",
-          colorFilter: ColorFilter.mode(themeData.defaultPageBackgroundColor, BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
           alignment: Alignment.bottomCenter,
         ),
       ),

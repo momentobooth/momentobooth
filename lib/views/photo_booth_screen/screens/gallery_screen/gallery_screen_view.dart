@@ -76,7 +76,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                             padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
                               group.title,
-                              style: theme.subTitleStyle,
+                              style: theme.subtitleTheme.style,
                             ),
                           ),
                         ),
@@ -136,7 +136,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
               onTap: controller.onPressedBack,
               child: AutoSizeText(
                 "← ${localizations.galleryScreenGoToStartButton}",
-                style: theme.subTitleStyle,
+                style: theme.subtitleTheme.style,
               ),
             ),
           ),
