@@ -6,7 +6,6 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 
 class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenController> {
 
@@ -68,13 +67,13 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
         ),
         Flexible(
           fit: FlexFit.tight,
-          child: _getLogo(legacyTheme),
+          child: _logo,
         ),
       ],
     );
   }
 
-  Widget _getLogo(MomentoBoothThemeData themeData) {
+  Widget get _logo {
     return SizedBox(
       width: 450,
       child: Padding(

@@ -4,7 +4,6 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
 import 'package:momento_booth/views/base/photo_booth_dialog_page.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 
 /// This mixin makes several objects (that normally needs to be accessed using [BuildContext]) easier accessible from screen view models and controllers.
@@ -13,7 +12,6 @@ mixin BuildContextAbstractor {
   BuildContextAccessor get contextAccessor;
   BuildContext get _context => contextAccessor.buildContext;
 
-  MomentoBoothThemeData get legacyTheme => _context.legacyTheme;
   PhotoBoothTheme get theme => _context.theme;
   GoRouter get router => _context.router;
 
