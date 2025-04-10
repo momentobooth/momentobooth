@@ -23,6 +23,7 @@ import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_sc
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -59,6 +60,7 @@ class PhotoBooth extends StatelessWidget {
                             accentColor: AccentColor.swatch(
                               {'normal': getIt<ProjectManager>().settings.primaryColor},
                             ),
+                            extensions: [PhotoBoothTheme.defaultBasic()],
                           ),
                           localizationsDelegates: const [
                             AppLocalizations.delegate,

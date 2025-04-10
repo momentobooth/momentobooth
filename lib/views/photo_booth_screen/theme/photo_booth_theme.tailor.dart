@@ -9,14 +9,24 @@ part of 'photo_booth_theme.dart';
 // **************************************************************************
 
 mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
-  PhotoBoothButtonTheme get buttonTheme;
+  TextTheme get titleTheme;
+  TextTheme get subtitleTheme;
+  PhotoBoothButtonTheme get primaryButtonTheme;
+  PhotoBoothButtonTheme get navigationButtonTheme;
 
   @override
   PhotoBoothTheme copyWith({
-    PhotoBoothButtonTheme? buttonTheme,
+    TextTheme? titleTheme,
+    TextTheme? subtitleTheme,
+    PhotoBoothButtonTheme? primaryButtonTheme,
+    PhotoBoothButtonTheme? navigationButtonTheme,
   }) {
     return PhotoBoothTheme(
-      buttonTheme: buttonTheme ?? this.buttonTheme,
+      titleTheme: titleTheme ?? this.titleTheme,
+      subtitleTheme: subtitleTheme ?? this.subtitleTheme,
+      primaryButtonTheme: primaryButtonTheme ?? this.primaryButtonTheme,
+      navigationButtonTheme:
+          navigationButtonTheme ?? this.navigationButtonTheme,
     );
   }
 
@@ -25,8 +35,12 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
       covariant ThemeExtension<PhotoBoothTheme>? other, double t) {
     if (other is! PhotoBoothTheme) return this as PhotoBoothTheme;
     return PhotoBoothTheme(
-      buttonTheme:
-          buttonTheme.lerp(other.buttonTheme, t) as PhotoBoothButtonTheme,
+      titleTheme: titleTheme.lerp(other.titleTheme, t) as TextTheme,
+      subtitleTheme: subtitleTheme.lerp(other.subtitleTheme, t) as TextTheme,
+      primaryButtonTheme: primaryButtonTheme.lerp(other.primaryButtonTheme, t)
+          as PhotoBoothButtonTheme,
+      navigationButtonTheme: navigationButtonTheme.lerp(
+          other.navigationButtonTheme, t) as PhotoBoothButtonTheme,
     );
   }
 
@@ -36,14 +50,23 @@ mixin _$PhotoBoothThemeTailorMixin on ThemeExtension<PhotoBoothTheme> {
         (other.runtimeType == runtimeType &&
             other is PhotoBoothTheme &&
             const DeepCollectionEquality()
-                .equals(buttonTheme, other.buttonTheme));
+                .equals(titleTheme, other.titleTheme) &&
+            const DeepCollectionEquality()
+                .equals(subtitleTheme, other.subtitleTheme) &&
+            const DeepCollectionEquality()
+                .equals(primaryButtonTheme, other.primaryButtonTheme) &&
+            const DeepCollectionEquality()
+                .equals(navigationButtonTheme, other.navigationButtonTheme));
   }
 
   @override
   int get hashCode {
     return Object.hash(
       runtimeType.hashCode,
-      const DeepCollectionEquality().hash(buttonTheme),
+      const DeepCollectionEquality().hash(titleTheme),
+      const DeepCollectionEquality().hash(subtitleTheme),
+      const DeepCollectionEquality().hash(primaryButtonTheme),
+      const DeepCollectionEquality().hash(navigationButtonTheme),
     );
   }
 }
@@ -52,10 +75,54 @@ extension PhotoBoothThemeThemeData on FluentThemeData {
   PhotoBoothTheme get photoBoothTheme => extension<PhotoBoothTheme>()!;
 }
 
+mixin _$TextThemeTailorMixin on ThemeExtension<TextTheme> {
+  TextStyle get style;
+  Widget Function(BuildContext, Widget)? get frameBuilder;
+
+  @override
+  TextTheme copyWith({
+    TextStyle? style,
+    Widget Function(BuildContext, Widget)? frameBuilder,
+  }) {
+    return TextTheme(
+      style: style ?? this.style,
+      frameBuilder: frameBuilder ?? this.frameBuilder,
+    );
+  }
+
+  @override
+  TextTheme lerp(covariant ThemeExtension<TextTheme>? other, double t) {
+    if (other is! TextTheme) return this as TextTheme;
+    return TextTheme(
+      style: TextStyle.lerp(style, other.style, t)!,
+      frameBuilder: t < 0.5 ? frameBuilder : other.frameBuilder,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is TextTheme &&
+            const DeepCollectionEquality().equals(style, other.style) &&
+            const DeepCollectionEquality()
+                .equals(frameBuilder, other.frameBuilder));
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      runtimeType.hashCode,
+      const DeepCollectionEquality().hash(style),
+      const DeepCollectionEquality().hash(frameBuilder),
+    );
+  }
+}
+
 mixin _$PhotoBoothButtonThemeTailorMixin
     on ThemeExtension<PhotoBoothButtonTheme> {
   ButtonStyle get style;
-  Widget Function(BuildContext, Widget) get frameBuilder;
+  Widget Function(BuildContext, Widget)? get frameBuilder;
 
   @override
   PhotoBoothButtonTheme copyWith({
