@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/widgets.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
@@ -45,17 +45,23 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           child: Align(
             alignment: Alignment.bottomRight,
             child: Observer(
-              builder: (context) => AnimatedOpacity(
-                duration: viewModel.opacityDuraction,
-                opacity: viewModel.readyToContinue ? 1 : 0.5,
-                child: GestureDetector(
-                  onTap: controller.onContinueTap,
-                  child: AutoSizeText(
-                    "${localizations.genericContinueButton} →",
-                    style: theme.subTitleStyle,
-                    maxLines: 1,
+              builder: (context) => Stack(
+                alignment: Alignment.center,
+                children: [
+                  if (!viewModel.readyToContinue && viewModel.numSelected > 0) ProgressRing(),
+                  AnimatedOpacity(
+                    duration: viewModel.opacityDuraction,
+                    opacity: viewModel.readyToContinue ? 1 : 0.2,
+                    child: GestureDetector(
+                      onTap: controller.onContinueTap,
+                      child: AutoSizeText(
+                        "${localizations.genericContinueButton} →",
+                        style: theme.subTitleStyle,
+                        maxLines: 1,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ),
