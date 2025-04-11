@@ -14,7 +14,7 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
 
   final TextTheme titleTheme;
   final TextTheme subtitleTheme;
-  final PhotoBoothButtonTheme primaryButtonTheme;
+  final PhotoBoothButtonTheme actionButtonTheme;
   final PhotoBoothButtonTheme navigationButtonTheme;
   final CaptureCounterTheme captureCounterTheme;
   final DialogTheme dialogTheme;
@@ -22,7 +22,7 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
   const PhotoBoothTheme({
     required this.titleTheme,
     required this.subtitleTheme,
-    required this.primaryButtonTheme,
+    required this.actionButtonTheme,
     required this.navigationButtonTheme,
     required this.captureCounterTheme,
     required this.dialogTheme,

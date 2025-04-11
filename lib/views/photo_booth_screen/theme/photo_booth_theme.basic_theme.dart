@@ -4,7 +4,7 @@ PhotoBoothTheme get _basicTheme => PhotoBoothTheme(
   titleTheme: TextTheme(style: _basicTitleTextStyle),
   subtitleTheme: TextTheme(style: _basicSubtitleTextStyle),
 
-  primaryButtonTheme: PhotoBoothButtonTheme(
+  actionButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
       textStyle: WidgetStateProperty.fromMap({
         WidgetState.disabled: _basicTitleTextStyle.copyWith(color: _basicTitleTextStyle.color!.withAlpha(128)),
