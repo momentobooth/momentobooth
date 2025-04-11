@@ -1,14 +1,20 @@
 import 'dart:io';
-import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/sony_remote_photo_capture.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/project_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/models/capture_state.dart';
+import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/hardware.dart';
+import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 import 'package:path_provider/path_provider.dart';
 
@@ -17,7 +23,7 @@ part 'photos_manager.g.dart';
 class PhotosManager = PhotosManagerBase with _$PhotosManager;
 
 /// Class containing global state for photos in the app
-abstract class PhotosManagerBase with Store {
+abstract class PhotosManagerBase with Store, Logger {
 
   @observable
   ObservableList<PhotoCapture> photos = ObservableList<PhotoCapture>();
@@ -85,6 +91,56 @@ abstract class PhotosManagerBase with Store {
   }
 
   Future<Uint8List> getOutputPDF(PrintSize printSize) => getImagePdfWithPageSize(outputImage!, printSize);
+
+  PhotoCaptureMethod get capturer => switch (getIt<SettingsManager>().settings.hardware.captureMethod) {
+    CaptureMethod.liveViewSource => LiveViewStreamSnapshotCapturer(),
+    CaptureMethod.sonyImagingEdgeDesktop => SonyRemotePhotoCapture(getIt<SettingsManager>().settings.hardware.captureLocation),
+    CaptureMethod.gPhoto2 => getIt<LiveViewManager>().gPhoto2Camera!,
+  };
+
+  Future<PhotoCapture> directPhotoCapture() async {
+    final capturer = this.capturer;
+    await capturer.clearPreviousEvents();
+    await captureAndGetPhoto(capturer, () => {});
+    return photos.last;
+  }
+
+  void initiateDelayedPhotoCapture(VoidCallback onCaptureFinished, {int? captureDelayOverride}) {
+    final capturer = this.capturer
+    ..clearPreviousEvents();
+
+    int counterStart = captureDelayOverride ?? getIt<SettingsManager>().settings.captureDelaySeconds;
+    int autoFocusMsBeforeCapture = getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
+    Duration photoDelay = Duration(seconds: counterStart) - capturer.captureDelay + flashStartDuration;
+    Duration autoFocusDelay = photoDelay - Duration(milliseconds: autoFocusMsBeforeCapture);
+
+    if (autoFocusMsBeforeCapture > 0 && autoFocusDelay > Duration.zero && capturer is GPhoto2Camera) {
+      Future.delayed(autoFocusDelay).then((_) => capturer.autoFocus());
+    }
+
+    Future.delayed(photoDelay).then((_) => captureAndGetPhoto(capturer, onCaptureFinished));
+    getIt<MqttManager>().publishCaptureState(CaptureState.countdown);
+  }
+
+  Future<void> captureAndGetPhoto(PhotoCaptureMethod capturer, VoidCallback onCaptureFinished) async {
+    getIt<MqttManager>().publishCaptureState(CaptureState.capturing);
+
+    try {
+      final image = await capturer.captureAndGetPhoto();
+      getIt<StatsManager>().addCapturedPhoto();
+      photos.add(image);
+    } catch (error) {
+      logWarning(error);
+      final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
+      photos.add(PhotoCapture(
+        data: data.buffer.asUint8List(),
+        filename: "capture-error.png",
+      ));
+    } finally {
+      onCaptureFinished();
+      getIt<MqttManager>().publishCaptureState(CaptureState.idle);
+    }
+  }
 
 }
 
