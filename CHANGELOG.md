@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## 0.14.5
+
+- Bugfix: Fix laggy rotate animation in collage creator screen
+- Bugfix: Fix image preview issues
+- Change: Show progress ring when collage is being generated
+
 ## 0.14.4
 
 - Bugfix: Fix sound effects not working on Windows and macOS
