@@ -6,6 +6,9 @@ PhotoBoothTheme get _basicTheme => PhotoBoothTheme(
 
   actionButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
+      foregroundColor: const WidgetStatePropertyAll(Colors.white),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+      shape: const WidgetStatePropertyAll(Border()),
       textStyle: WidgetStateProperty.fromMap({
         WidgetState.disabled: _basicTitleTextStyle.copyWith(color: _basicTitleTextStyle.color!.withAlpha(128)),
         WidgetState.any: _basicTitleTextStyle,
@@ -15,6 +18,9 @@ PhotoBoothTheme get _basicTheme => PhotoBoothTheme(
 
   navigationButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
+      foregroundColor: const WidgetStatePropertyAll(Colors.white),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+      shape: const WidgetStatePropertyAll(Border()),
       textStyle: WidgetStateProperty.fromMap({
         WidgetState.disabled: _basicSubtitleTextStyle.copyWith(color: _basicSubtitleTextStyle.color!.withAlpha(128)),
         WidgetState.any: _basicSubtitleTextStyle,

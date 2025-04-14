@@ -29,7 +29,6 @@ class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureSc
           aspectRatio: 1/viewModel.collageAspectRatio,
           padding: viewModel.collagePadding,
           decodeCallback: viewModel.collageReady,
-          isVisible: false,
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
