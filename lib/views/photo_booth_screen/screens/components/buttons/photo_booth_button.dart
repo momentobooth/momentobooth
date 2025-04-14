@@ -30,32 +30,13 @@ class PhotoBoothButton extends StatelessWidget {
       ButtonType.navigation => theme.navigationButtonTheme,
     };
 
-    Widget childWidget;
-    if (child == null) {
-      childWidget = autoSizeTitle
-              ? AutoSizeText(title!, maxLines: 1)
-              : Text(title!);
-    } else {
-      childWidget = IconTheme(
-        data: IconThemeData(
-          size: buttonTheme.style.textStyle!.resolve({WidgetState.selected})!.fontSize,
-          color: buttonTheme.style.textStyle!.resolve({WidgetState.selected})!.color,
-        ),
-        child: child!,
-      );
-    }
-
     Widget button = Button(
       style: buttonTheme.style,
       onPressed: onPressed,
-      child: childWidget,
+      child: child ?? (autoSizeTitle ? AutoSizeText(title!, maxLines: 1) : Text(title!)),
     );
 
-    if (buttonTheme.frameBuilder != null) {
-      return buttonTheme.frameBuilder!(context, button);
-    } else {
-      return button;
-    }
+    return buttonTheme.frameBuilder?.call(context, button) ?? button;
   }
 
 }
