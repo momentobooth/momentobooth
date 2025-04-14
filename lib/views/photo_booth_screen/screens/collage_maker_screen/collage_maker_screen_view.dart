@@ -50,13 +50,9 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                 alignment: Alignment.center,
                 children: [
                   if (!viewModel.readyToContinue && viewModel.numSelected > 0) ProgressRing(),
-                  AnimatedOpacity(
-                    duration: viewModel.opacityDuraction,
-                    opacity: viewModel.readyToContinue ? 1 : 0.2,
-                    child: PhotoBoothButton.navigation(
-                      onPressed: controller.onContinueTap,
-                      title: localizations.genericContinueButton,
-                    ),
+                  PhotoBoothButton.navigation(
+                    onPressed: viewModel.readyToContinue ? controller.onContinueTap : null,
+                    title: localizations.genericContinueButton,
                   ),
                 ],
               ),

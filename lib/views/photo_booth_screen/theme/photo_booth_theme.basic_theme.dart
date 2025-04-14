@@ -6,25 +6,27 @@ PhotoBoothTheme get _basicTheme => PhotoBoothTheme(
 
   actionButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
-      foregroundColor: const WidgetStatePropertyAll(Colors.white),
+      foregroundColor: WidgetStateProperty.fromMap({
+        WidgetState.disabled: _basicSubtitleTextStyle.color!.withAlpha(128),
+        WidgetState.any: _basicSubtitleTextStyle.color,
+      }),
       backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       shape: const WidgetStatePropertyAll(Border()),
-      textStyle: WidgetStateProperty.fromMap({
-        WidgetState.disabled: _basicTitleTextStyle.copyWith(color: _basicTitleTextStyle.color!.withAlpha(128)),
-        WidgetState.any: _basicTitleTextStyle,
-      }),
+      textStyle: WidgetStatePropertyAll(_basicTitleTextStyle),
+      iconSize: WidgetStatePropertyAll(_basicTitleTextStyle.fontSize),
     ),
   ),
 
   navigationButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
-      foregroundColor: const WidgetStatePropertyAll(Colors.white),
+      foregroundColor: WidgetStateProperty.fromMap({
+        WidgetState.disabled: _basicSubtitleTextStyle.color!.withAlpha(128),
+        WidgetState.any: _basicSubtitleTextStyle.color,
+      }),
       backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       shape: const WidgetStatePropertyAll(Border()),
-      textStyle: WidgetStateProperty.fromMap({
-        WidgetState.disabled: _basicSubtitleTextStyle.copyWith(color: _basicSubtitleTextStyle.color!.withAlpha(128)),
-        WidgetState.any: _basicSubtitleTextStyle,
-      }),
+      textStyle: WidgetStatePropertyAll(_basicSubtitleTextStyle),
+      iconSize: WidgetStatePropertyAll(_basicSubtitleTextStyle.fontSize),
     ),
   ),
 
