@@ -5,16 +5,18 @@ import 'dart:ui' as ui;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 import 'package:toml/toml.dart';
 
+part 'project_settings.enums.dart';
 part 'project_settings.freezed.dart';
 part 'project_settings.g.dart';
 
 const defaultThemeColor = Color(0xFF0078C8);
 
-// ///////////// //
-// Root ProjectSettings //
-// ///////////// //
+// ///////////////////// //
+// Root project settings //
+// ///////////////////// //
 
 @Freezed(fromJson: true, toJson: true)
 class ProjectSettings with _$ProjectSettings implements TomlEncodableValue {
@@ -22,6 +24,7 @@ class ProjectSettings with _$ProjectSettings implements TomlEncodableValue {
   const ProjectSettings._();
 
   const factory ProjectSettings({
+    @Default(UiTheme.simple) UiTheme uiTheme,
     @Default(defaultThemeColor) @ColorColorCodeConverter() Color primaryColor,
     @Default(true) bool displayConfetti,
     @Default(false) bool customColorConfetti,
