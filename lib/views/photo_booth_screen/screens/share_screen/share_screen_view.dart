@@ -4,8 +4,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confetti/confetti.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view_model.dart';
 
@@ -105,23 +107,18 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                // Next button
-                onTap: controller.onClickPrev,
-                behavior: HitTestBehavior.translucent,
-                child: AutoSizeText(
-                  " ↺ ${viewModel.backText}",
-                  style: theme.subtitleTheme.style,
+              PhotoBoothButton.navigation(
+                onPressed: controller.onClickPrev,
+                child: Row(
+                  children: [
+                    Icon(LucideIcons.stepBack),
+                    Text(viewModel.backText),
+                  ],
                 ),
               ),
-              GestureDetector(
-                // Next button
-                onTap: controller.onClickNext,
-                behavior: HitTestBehavior.translucent,
-                child: AutoSizeText(
-                  "→ ",
-                  style: theme.titleTheme.style,
-                ),
+              PhotoBoothButton.navigation(
+                onPressed: controller.onClickNext,
+                child: Icon(LucideIcons.stepForward),
               ),
             ],
           ),
@@ -136,36 +133,19 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
 
   Widget _getBottomRow() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Flexible(
-          child: Center(
-            child: GestureDetector(
-              // Get QR button
-              onTap: controller.onClickGetQR,
-              behavior: HitTestBehavior.translucent,
-              child: AutoSizeText(
-                localizations.photoDetailsScreenGetQrButton,
-                style: theme.titleTheme.style,
-              ),
-            ),
+          child: PhotoBoothButton.action(
+            onPressed: controller.onClickGetQR,
+            title: localizations.photoDetailsScreenGetQrButton,
           ),
         ),
         Flexible(
-          child: GestureDetector(
-            // Print button
-            onTap: controller.onClickPrint,
-            behavior: HitTestBehavior.translucent,
-            child: Center(
-              child: Observer(
-                builder: (context) => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 300),
-                  opacity: viewModel.printEnabled ? 1 : 0.5,
-                  child: AutoSizeText(
-                    viewModel.printText,
-                    style: theme.titleTheme.style,
-                  ),
-                ),
-              ),
+          child: Observer(
+            builder: (context) => PhotoBoothButton.action(
+              onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
+              title: viewModel.printText,
             ),
           ),
         ),

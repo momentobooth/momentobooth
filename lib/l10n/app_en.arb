@@ -102,6 +102,10 @@
     "printDialogNoOfPrintsSetting": "Number of prints:",
     "printDialogSummary": "{numPrints} prints → {numImages} printed images",
 
+    "printingErrorDialogTitle": "Print error",
+    "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
+    "printingErrorDialogBodyBottom": "Try again later or download your photo using the QR feature.",
+
     "projectNotOpened": "No project opened",
     "opened": "Opened",
     "projectNotOpenedInstructions": "You did not open a project folder yet. Open one to start capturing.",
