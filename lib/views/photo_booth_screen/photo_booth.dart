@@ -21,7 +21,6 @@ import 'package:momento_booth/views/photo_booth_screen/components/framerate_moni
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 

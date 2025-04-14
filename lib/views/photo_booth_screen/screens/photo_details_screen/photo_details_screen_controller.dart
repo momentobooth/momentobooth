@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
@@ -5,6 +7,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
+import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen_view_model.dart';
 import 'package:path/path.dart' as path;
@@ -43,7 +46,6 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   }
 
   int successfulPrints = 0;
-  static const _printTextDuration = Duration(seconds: 4);
 
   void resetPrint() {
     if (!contextAccessor.buildContext.mounted) return;
@@ -94,9 +96,9 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       logError("Failed to print photo: $e");
     }
 
-    viewModel.printText = success ? localizations.photoDetailsScreenPrinting : localizations.photoDetailsScreenPrintUnsuccesful;
     successfulPrints += success ? copies : 0;
-    Future.delayed(_printTextDuration, resetPrint);
+    if (!success) unawaited(showUserDialog(dialog: const PrintingErrorDialog(), barrierDismissible: true));
+    resetPrint();
   }
 
 }

@@ -32,7 +32,7 @@ class QrShareDialog extends StatelessWidget {
 
     return ModalDialog(
       title: localizations.qrDialogTitle,
-      body: AnimatedSize(
+      body: AnimatedSize( // This does not animate width changes due to ModelDialog's usage of IntrinsicWidth.
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
         child: switch (state) {

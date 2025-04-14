@@ -11,6 +11,7 @@ import 'package:momento_booth/views/components/imaging/image_with_loader_fallbac
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_view_model.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 
 class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel, CollageMakerScreenController> {
 
@@ -52,13 +53,9 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                   AnimatedOpacity(
                     duration: viewModel.opacityDuraction,
                     opacity: viewModel.readyToContinue ? 1 : 0.2,
-                    child: GestureDetector(
-                      onTap: controller.onContinueTap,
-                      child: AutoSizeText(
-                        "${localizations.genericContinueButton} →",
-                        style: theme.subtitleTheme.style,
-                        maxLines: 1,
-                      ),
+                    child: PhotoBoothButton.navigation(
+                      onPressed: controller.onContinueTap,
+                      title: localizations.genericContinueButton,
                     ),
                   ),
                 ],

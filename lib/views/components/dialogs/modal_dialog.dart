@@ -46,7 +46,7 @@ class ModalDialog extends StatelessWidget {
               PhotoBoothFilledButton(
                 title: localizations.genericContinueButton,
                 icon: LucideIcons.check,
-                onPressed: onDismiss,
+                onPressed: onDismiss ?? () => Navigator.of(context).maybePop(),
               ),
             ],
       ),

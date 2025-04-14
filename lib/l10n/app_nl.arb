@@ -102,6 +102,10 @@
     "printDialogNoOfPrintsSetting": "Aantal prints:",
     "printDialogSummary": "{numPrints} prints → {numImages} geprint foto's",
 
+    "printingErrorDialogTitle": "Printprobleem",
+    "printingErrorDialogBodyTop": "Door een onverwachts probleem kunnen we de print(s) niet starten.",
+    "printingErrorDialogBodyBottom": "Probeer het later nogmaals of download je foto met de QR-functie.",
+
     "projectNotOpened": "Geen project geopend",
     "opened": "Geopend op",
     "projectNotOpenedInstructions": "Je hebt nog geen projectmap geopend. Open er een om te beginnen met foto's schieten.",

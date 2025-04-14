@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 
 class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController> {
 
@@ -45,16 +46,14 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
   }
 
   Widget get _singlePictureButton {
-    return GestureDetector(
-      onTap: controller.onClickOnSinglePhoto,
-      behavior: HitTestBehavior.translucent,
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnSinglePhoto,
       child: Column(
         children: [
           Expanded(child: FittedBox(child: _getButton(452))),
           AutoSizeText(
             localizations.chooseCaptureModeScreenSinglePictureButton,
             group: viewModel.autoSizeGroup,
-            style: theme.titleTheme.style,
             maxLines: 1,
           ),
         ],
@@ -63,9 +62,8 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
   }
 
   Widget get _collageButton {
-    return GestureDetector(
-      onTap: controller.onClickOnPhotoCollage,
-      behavior: HitTestBehavior.translucent,
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnPhotoCollage,
       child: Column(
         children: [
           Expanded(
@@ -94,7 +92,6 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           AutoSizeText(
             localizations.chooseCaptureModeScreenCollageButton,
             group: viewModel.autoSizeGroup,
-            style: theme.titleTheme.style,
             maxLines: 1,
           ),
         ],
