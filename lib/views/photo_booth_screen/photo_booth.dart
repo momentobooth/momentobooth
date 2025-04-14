@@ -56,7 +56,7 @@ class PhotoBooth extends StatelessWidget {
                           accentColor: AccentColor.swatch(
                             {'normal': getIt<ProjectManager>().settings.primaryColor},
                           ),
-                          extensions: [PhotoBoothTheme.defaultBasic()],
+                          extensions: [getIt<ProjectManager>().settings.uiTheme.themeExtension],
                         ),
                         localizationsDelegates: const [
                           AppLocalizations.delegate,
