@@ -19,6 +19,14 @@ Widget _getProjectSettings(SettingsScreenViewModel viewModel, SettingsScreenCont
           return SettingsSection(
             title: "Project settings",
             settings: [
+              SettingsComboBoxTile(
+                icon: LucideIcons.appWindow,
+                title: "UI theme",
+                subtitle: "The UI theme of the app.",
+                items: viewModel.uiThemeOptions,
+                value: () => viewModel.uiTheme,
+                onChanged: controller.onUiThemeChanged,
+              ),
               SettingsColorPickTile(
                 icon: LucideIcons.paintbrushVertical,
                 title: "Primary color",

@@ -64,6 +64,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   List<ComboBoxItem<BackgroundBlur>> get backgroundBlurOptions => BackgroundBlur.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
   List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
+  List<ComboBoxItem<UiTheme>> get uiThemeOptions => UiTheme.asComboBoxItems();
 
   @observable
   List<ComboBoxItem<String>> flutterPrintingQueues = List<ComboBoxItem<String>>.empty();
@@ -161,6 +162,7 @@ abstract class SettingsScreenViewModelBase extends ScreenViewModelBase with Stor
   Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
 
   // Project settings current values
+  UiTheme get uiTheme => getIt<ProjectManager>().settings.uiTheme;
   String get introScreenTouchToStartOverrideTextSetting => getIt<ProjectManager>().settings.introScreenTouchToStartOverrideText;
   bool get displayConfettiSetting => getIt<ProjectManager>().settings.displayConfetti;
   bool get customColorConfettiSetting => getIt<ProjectManager>().settings.customColorConfetti;

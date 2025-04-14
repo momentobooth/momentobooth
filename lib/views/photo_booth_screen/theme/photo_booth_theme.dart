@@ -29,7 +29,7 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
   });
 
   factory PhotoBoothTheme.defaultBasic() => _basicTheme;
-  //factory PhotoBoothTheme.defaultWedding() => _weddingTheme;
+  factory PhotoBoothTheme.defaultWedding() => _weddingTheme;
 
 }
 
