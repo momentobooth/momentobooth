@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class PhotoBoothButton extends StatelessWidget {
 
@@ -13,11 +14,11 @@ class PhotoBoothButton extends StatelessWidget {
   const PhotoBoothButton._({super.key, this.type = ButtonType.action, this.onPressed, this.title, this.autoSizeTitle = false, this.child})
     : assert(
         (title == null && child != null) || (title != null && child == null),
-        "Either title or child should be given, but not both.",
+        "Either title or child should be passed, but not both.",
       );
 
-  const PhotoBoothButton.action({Key? key, VoidCallback? onPressed, String? title, Widget? child})
-    : this._(key: key, type: ButtonType.action, onPressed: onPressed, title: title, child: child);
+  const PhotoBoothButton.action({Key? key, VoidCallback? onPressed, String? title, bool autoSizeTitle = true, Widget? child})
+    : this._(key: key, type: ButtonType.action, onPressed: onPressed, title: title, autoSizeTitle: autoSizeTitle, child: child);
 
   const PhotoBoothButton.navigation({Key? key, VoidCallback? onPressed, String? title, bool autoSizeTitle = true, Widget? child})
     : this._(key: key, type: ButtonType.navigation, onPressed: onPressed, title: title, autoSizeTitle: autoSizeTitle, child: child);
@@ -46,4 +47,14 @@ enum ButtonType {
   action,
   navigation,
 
+}
+
+@UseCase(name: 'Action button', type: PhotoBoothButton)
+Widget actionButton(BuildContext context) {
+  return PhotoBoothButton.action(title: 'Action!');
+}
+
+@UseCase(name: 'Action button', type: PhotoBoothButton)
+Widget navigationButton(BuildContext context) {
+  return PhotoBoothButton.navigation(title: 'Action!');
 }
