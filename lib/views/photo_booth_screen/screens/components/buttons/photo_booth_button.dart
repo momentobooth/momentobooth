@@ -54,7 +54,7 @@ Widget actionButton(BuildContext context) {
   return PhotoBoothButton.action(title: 'Action!');
 }
 
-@UseCase(name: 'Action button', type: PhotoBoothButton)
+@UseCase(name: 'Navigation button', type: PhotoBoothButton)
 Widget navigationButton(BuildContext context) {
   return PhotoBoothButton.navigation(title: 'Action!');
 }
