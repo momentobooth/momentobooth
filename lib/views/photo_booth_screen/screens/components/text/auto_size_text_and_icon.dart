@@ -11,8 +11,10 @@ class AutoSizeTextAndIcon extends StatelessWidget {
   final IconData? rightIcon;
   final AutoSizeGroup? autoSizeGroup;
   final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
 
-  const AutoSizeTextAndIcon({super.key, this.text, this.leftIcon, this.rightIcon, this.autoSizeGroup, this.style})
+  const AutoSizeTextAndIcon({super.key, this.text, this.leftIcon, this.rightIcon, this.autoSizeGroup, this.style, this.textAlign, this.maxLines = 1})
     : assert(
         text != null || leftIcon != null || rightIcon != null,
         'At least one of text, leftIcon, or rightIcon must be provided.',
@@ -39,7 +41,7 @@ class AutoSizeTextAndIcon extends StatelessWidget {
             ),
             spacing,
           ],
-          if (text != null) TextSpan(text: text, style: defaultStyle),
+          if (text != null) TextSpan(text: text),
           if (rightIcon != null) ...[
             spacing,
             TextSpan(
@@ -54,8 +56,10 @@ class AutoSizeTextAndIcon extends StatelessWidget {
           ],
         ],
       ),
-      maxLines: 1,
+      style: defaultStyle,
+      maxLines: maxLines,
       group: autoSizeGroup,
+      textAlign: textAlign,
     );
   }
 

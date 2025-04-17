@@ -4,6 +4,7 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 
 class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController> {
 
@@ -20,11 +21,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
         Flexible(
           fit: FlexFit.tight,
           child: Center(
-            child: AutoSizeText(
-              localizations.chooseCaptureModeScreenTitle,
-              style: theme.titleTheme.style,
-              maxLines: 1,
-            ),
+            child: PhotoBoothTitle(localizations.chooseCaptureModeScreenTitle),
           ),
         ),
         Expanded(
@@ -37,10 +34,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
             ],
           ),
         ),
-        const Flexible(
-          fit: FlexFit.tight,
-          child: SizedBox(),
-        ),
+        const Flexible(fit: FlexFit.tight, child: SizedBox()),
       ],
     );
   }
