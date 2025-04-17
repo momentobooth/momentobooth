@@ -12,6 +12,7 @@ import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
 
 class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel, CollageMakerScreenController> {
 
@@ -52,7 +53,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
                   if (!viewModel.readyToContinue && viewModel.numSelected > 0) ProgressRing(),
                   PhotoBoothButton.navigation(
                     onPressed: viewModel.readyToContinue ? controller.onContinueTap : null,
-                    title: localizations.genericContinueButton,
+                    child: AutoSizeTextAndIcon(text: localizations.genericContinueButton),
                   ),
                 ],
               ),
