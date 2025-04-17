@@ -8,6 +8,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view_model.dart';
 
@@ -138,14 +139,14 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         Flexible(
           child: PhotoBoothButton.action(
             onPressed: controller.onClickGetQR,
-            title: localizations.photoDetailsScreenGetQrButton,
+            child: AutoSizeTextAndIcon(text: localizations.photoDetailsScreenGetQrButton),
           ),
         ),
         Flexible(
           child: Observer(
             builder: (context) => PhotoBoothButton.action(
               onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
-              title: viewModel.printText,
+              child: AutoSizeTextAndIcon(text: viewModel.printText),
             ),
           ),
         ),
