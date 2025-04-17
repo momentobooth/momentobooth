@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:fluent_ui/fluent_ui.dart' show FluentTheme;
@@ -11,6 +10,8 @@ import 'package:momento_booth/models/gallery_group.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_view_model.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
@@ -132,11 +133,11 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
           padding: const EdgeInsets.all(30),
           child: Align(
             alignment: Alignment.bottomLeft,
-            child: GestureDetector(
-              onTap: controller.onPressedBack,
-              child: AutoSizeText(
-                "← ${localizations.galleryScreenGoToStartButton}",
-                style: theme.subtitleTheme.style,
+            child: PhotoBoothButton.navigation(
+              onPressed: controller.onPressedBack,
+              child: AutoSizeTextAndIcon(
+                text: localizations.genericBackButton,
+                leftIcon: LucideIcons.stepBack,
               ),
             ),
           ),

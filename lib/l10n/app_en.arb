@@ -10,6 +10,7 @@
     "genericCloseButton": "Close",
     "genericRetryButton": "Retry",
     "genericCancelButton": "Cancel",
+    "genericDoneButton": "Done",
     "genericOneMomentPlease": "One moment please...",
     "genericDocumentation": "Documentation",
     "genericAbout": "About",
