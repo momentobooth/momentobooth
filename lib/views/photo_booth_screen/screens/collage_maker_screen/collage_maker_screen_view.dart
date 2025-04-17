@@ -1,7 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -13,6 +13,8 @@ import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_scr
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_subtitle.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 
 class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel, CollageMakerScreenController> {
 
@@ -32,14 +34,8 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Flexible(
-              flex: 2,
-              child: _leftColumn
-            ),
-            Flexible(
-              flex: 3,
-              child: _rightColumn,
-            ),
+            Flexible(flex: 2, child: _leftColumn),
+            Flexible(flex: 3, child: _rightColumn),
           ],
         ),
         Padding(
@@ -50,10 +46,10 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
               builder: (context) => Stack(
                 alignment: Alignment.center,
                 children: [
-                  if (!viewModel.readyToContinue && viewModel.numSelected > 0) ProgressRing(),
+                  if (viewModel.isImageGenerationNeeded && viewModel.numSelected > 0) ProgressRing(),
                   PhotoBoothButton.navigation(
-                    onPressed: viewModel.readyToContinue ? controller.onContinueTap : null,
-                    child: AutoSizeTextAndIcon(text: localizations.genericContinueButton),
+                    onPressed: !viewModel.isImageGenerationNeeded ? controller.onContinueTap : null,
+                    child: AutoSizeTextAndIcon(text: localizations.genericContinueButton, rightIcon: LucideIcons.stepForward),
                   ),
                 ],
               ),
@@ -70,17 +66,11 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AutoSizeText(
-            localizations.collageMakerScreenPicturesShotTitle,
-            style: theme.titleTheme.style,
-            maxLines: 1,
-          ),
+          PhotoBoothTitle(localizations.collageMakerScreenPicturesShotTitle),
           _photoSelector,
           Observer(
-            builder: (context) => AutoSizeText(
+            builder: (context) => PhotoBoothSubtitle(
               localizations.collageMakerScreenPhotoCounter(viewModel.numSelected),
-              style: theme.titleTheme.style,
-              maxLines: 1,
             ),
           ),
         ],
@@ -149,17 +139,11 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
             flex: 2,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: AutoSizeText(localizations.collageMakerScreenCollageTitle, style: theme.titleTheme.style),
+              child: PhotoBoothTitle(localizations.collageMakerScreenCollageTitle),
             ),
           ),
-          Expanded(
-            flex: 10,
-            child: _collage,
-          ),
-          const Flexible(
-            flex: 1,
-            child: SizedBox(),
-          ),
+          Expanded(flex: 10, child: _collage),
+          const Flexible(flex: 1, child: SizedBox()),
         ],
       ),
     );

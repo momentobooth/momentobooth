@@ -1,10 +1,13 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/components/animations/animated_delayed_fade_in.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen_view_model.dart';
 
@@ -50,30 +53,19 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
       children: [
         Flexible(
           fit: FlexFit.tight,
-          child: AutoSizeText(
-            localizations.photoDetailsScreenTitle,
-            style: theme.titleTheme.style,
-          ),
+          child: PhotoBoothTitle(localizations.photoDetailsScreenTitle),
         ),
         Expanded(
           flex: 3,
           child: Align(
             alignment: Alignment.centerLeft,
-            child: GestureDetector(
-              // Next button
-              onTap: controller.onClickPrev,
-              behavior: HitTestBehavior.translucent,
-              child: AutoSizeText(
-                " ← ${localizations.genericBackButton}",
-                style: theme.subtitleTheme.style,
-              ),
+            child: PhotoBoothButton.navigation(
+              onPressed: controller.onClickPrev,
+              child: AutoSizeTextAndIcon(text: localizations.genericBackButton, leftIcon: LucideIcons.stepBack),
             ),
           ),
         ),
-        Flexible(
-          fit: FlexFit.tight,
-          child: _getBottomRow(),
-        ),
+        Flexible(fit: FlexFit.tight, child: _getBottomRow()),
       ],
     );
   }
@@ -83,31 +75,23 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
       children: [
         Flexible(
           child: Center(
-            child: GestureDetector(
-              // Get QR button
-              onTap: controller.onClickGetQR,
-              behavior: HitTestBehavior.translucent,
-              child: AutoSizeText(
-                localizations.photoDetailsScreenGetQrButton,
-                style: theme.titleTheme.style,
+            child: PhotoBoothButton.action(
+              onPressed: controller.onClickGetQR,
+              child: AutoSizeTextAndIcon(
+                text: localizations.photoDetailsScreenGetQrButton,
+                leftIcon: LucideIcons.scanQrCode,
               ),
             ),
           ),
         ),
         Flexible(
-          child: GestureDetector(
-            // Print button
-            onTap: controller.onClickPrint,
-            behavior: HitTestBehavior.translucent,
-            child: Center(
-              child: Observer(
-                builder: (context) => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 300),
-                  opacity: viewModel.printEnabled ? 1 : 0.5,
-                  child: AutoSizeText(
-                    viewModel.printText,
-                    style: theme.titleTheme.style,
-                  ),
+          child: Center(
+            child: Observer(
+              builder: (context) => PhotoBoothButton.action(
+                onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
+                child: AutoSizeTextAndIcon(
+                  text: viewModel.printText,
+                  leftIcon: LucideIcons.printer,
                 ),
               ),
             ),

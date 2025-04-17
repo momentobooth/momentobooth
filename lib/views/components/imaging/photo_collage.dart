@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart' hide Action, RawImage;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
@@ -12,7 +11,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app_localizations.dart';
-import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
@@ -27,6 +25,7 @@ import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -233,9 +232,8 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     return RotatedBox(
       quarterTurns: 1,
       child: Center(
-        child: AutoSizeText(
+        child: PhotoBoothTitle(
           localizations.photoCollageWidgetSelectPhotos,
-          style: context.theme.titleTheme.style,
           textAlign: TextAlign.center,
         ),
       ),

@@ -1,10 +1,11 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen_view_model.dart';
 
@@ -77,9 +78,9 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
               child: _photoInst(image),
             ),
           Center(
-            child: GestureDetector(
-              onTap: controller.refreshImageList,
-              child: AutoSizeText(localizations.genericRefreshButton, style: theme.titleTheme.style),
+            child: PhotoBoothButton.action(
+              onPressed: controller.refreshImageList,
+              child: AutoSizeTextAndIcon(text: localizations.genericRefreshButton),
             ),
           ),
         ],
@@ -139,19 +140,18 @@ class ManualCollageScreenView extends ScreenViewBase<ManualCollageScreenViewMode
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                GestureDetector(
-                  onTap: controller.clearSelection,
-                  child: AutoSizeText(localizations.genericClearButton, style: theme.titleTheme.style),
+                PhotoBoothButton.action(
+                  onPressed: controller.clearSelection,
+                  child: AutoSizeTextAndIcon(text: localizations.genericClearButton),
                 ),
                 Observer(
                   builder: (context) => AnimatedOpacity(
                     duration: viewModel.opacityDuraction,
                     opacity: viewModel.isSaving ? 0.5 : 1,
-                    child: GestureDetector(
-                      onTap: controller.captureCollage,
-                      child: AutoSizeText(
-                        viewModel.isSaving ? localizations.manualCollageScreenSaving : localizations.genericSaveButton,
-                        style: theme.titleTheme.style,
+                    child: PhotoBoothButton.action(
+                      onPressed: controller.captureCollage,
+                      child: AutoSizeTextAndIcon(
+                        text: viewModel.isSaving ? localizations.manualCollageScreenSaving : localizations.genericSaveButton,
                       ),
                     ),
                   ),

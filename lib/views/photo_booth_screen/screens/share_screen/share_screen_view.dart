@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confetti/confetti.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -9,6 +8,7 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view_model.dart';
 
@@ -31,7 +31,10 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             // This SizedBox is only necessary when the image used is smaller than what would be displayed.
             child: SizedBox(
               height: double.infinity,
-              child: theme.captureCounterTheme.frameBuilder!(context, ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain)),
+              child: theme.captureCounterTheme.frameBuilder!(
+                context,
+                ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain),
+              ),
             ),
           ),
         ),
@@ -47,30 +50,12 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
 
   List<Widget> get _confettiStack {
     return [
-      Align(
-          alignment: Alignment.bottomLeft,
-          child: _confetti(-0.25*pi, 45), // top right
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: _confetti(-0.325*pi, 42), // top right
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: _confetti(-0.4*pi, 30), // top right
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: _confetti(-0.75*pi, 45), // top left
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: _confetti(-0.675*pi, 42), // top left
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: _confetti(-0.6*pi, 30), // top left
-        ),
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.25*pi, 45)), // top right
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.325*pi, 42)), // top right
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.4*pi, 30)), // top right
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.75*pi, 45)), // top left
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.675*pi, 42)), // top left
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.6*pi, 30)), // top left
     ];
   }
 
@@ -97,10 +82,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       children: [
         Flexible(
           fit: FlexFit.tight,
-          child: AutoSizeText(
-            localizations.shareScreenTitle,
-            style: theme.titleTheme.style,
-          ),
+          child: PhotoBoothTitle(localizations.shareScreenTitle),
         ),
         Expanded(
           flex: 3,
@@ -110,24 +92,22 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             children: [
               PhotoBoothButton.navigation(
                 onPressed: controller.onClickPrev,
-                child: Row(
-                  children: [
-                    Icon(LucideIcons.stepBack),
-                    Text(viewModel.backText),
-                  ],
+                child: AutoSizeTextAndIcon(
+                  text: viewModel.backText,
+                  leftIcon: LucideIcons.stepBack,
                 ),
               ),
               PhotoBoothButton.navigation(
                 onPressed: controller.onClickNext,
-                child: Icon(LucideIcons.stepForward),
+                child: AutoSizeTextAndIcon(
+                  text: localizations.genericDoneButton,
+                  rightIcon: LucideIcons.stepForward,
+                ),
               ),
             ],
           ),
         ),
-        Flexible(
-          fit: FlexFit.tight,
-          child: _getBottomRow(),
-        ),
+        Flexible(fit: FlexFit.tight, child: _getBottomRow()),
       ],
     );
   }
@@ -139,14 +119,20 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
         Flexible(
           child: PhotoBoothButton.action(
             onPressed: controller.onClickGetQR,
-            child: AutoSizeTextAndIcon(text: localizations.photoDetailsScreenGetQrButton),
+            child: AutoSizeTextAndIcon(
+              text: localizations.photoDetailsScreenGetQrButton,
+              leftIcon: LucideIcons.scanQrCode,
+            ),
           ),
         ),
         Flexible(
           child: Observer(
             builder: (context) => PhotoBoothButton.action(
               onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
-              child: AutoSizeTextAndIcon(text: viewModel.printText),
+              child: AutoSizeTextAndIcon(
+                text: viewModel.printText,
+                leftIcon: LucideIcons.printer,
+              ),
             ),
           ),
         ),
