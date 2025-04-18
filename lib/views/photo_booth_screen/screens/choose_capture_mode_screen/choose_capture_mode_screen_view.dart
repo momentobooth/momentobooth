@@ -47,7 +47,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           Expanded(child: FittedBox(child: _getButton(452))),
           AutoSizeText(
             localizations.chooseCaptureModeScreenSinglePictureButton,
-            group: viewModel.autoSizeGroup,
+            group: controller.autoSizeGroup,
             maxLines: 1,
           ),
         ],
@@ -85,7 +85,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           ),
           AutoSizeText(
             localizations.chooseCaptureModeScreenCollageButton,
-            group: viewModel.autoSizeGroup,
+            group: controller.autoSizeGroup,
             maxLines: 1,
           ),
         ],

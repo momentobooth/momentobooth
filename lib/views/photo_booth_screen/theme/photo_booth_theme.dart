@@ -1,11 +1,11 @@
 // ignore_for_file: annotate_overrides
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.basic_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.wedding_theme.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'photo_booth_theme.tailor.dart';
-part 'photo_booth_theme.basic_theme.dart';
-part 'photo_booth_theme.wedding_theme.dart';
 
 typedef WidgetBuilder = Widget Function(BuildContext context, Widget child);
 
@@ -28,8 +28,8 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
     required this.dialogTheme,
   });
 
-  factory PhotoBoothTheme.defaultBasic() => _basicTheme;
-  factory PhotoBoothTheme.defaultWedding() => _weddingTheme;
+  factory PhotoBoothTheme.defaultBasic() => basicTheme;
+  factory PhotoBoothTheme.defaultWedding() => weddingTheme;
 
 }
 
