@@ -4,7 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
-class AutoSizeTextAndIcon extends StatelessWidget {
+class AutoSizeTextAndIcon extends StatefulWidget {
 
   final String? text;
   final IconData? leftIcon;
@@ -21,45 +21,63 @@ class AutoSizeTextAndIcon extends StatelessWidget {
       );
 
   @override
-  Widget build(BuildContext context) {
-    final defaultStyle = style ?? DefaultTextStyle.of(context).style;
-    final iconSize = defaultStyle.fontSize! * 0.70;
-    const spacing = TextSpan(text: ' ');
+  State<AutoSizeTextAndIcon> createState() => _AutoSizeTextAndIconState();
 
-    return AutoSizeText.rich(
-      TextSpan(
-        children: [
-          if (leftIcon != null) ...[
-            spacing,
-            TextSpan(
-              text: String.fromCharCode(leftIcon!.codePoint),
-              style: defaultStyle.copyWith(
-                fontFamily: leftIcon!.fontFamily,
-                package: leftIcon!.fontPackage,
-                fontSize: iconSize,
-              ),
+}
+
+class _AutoSizeTextAndIconState extends State<AutoSizeTextAndIcon> {
+
+  final AutoSizeGroup _group = AutoSizeGroup();
+
+  @override
+  Widget build(BuildContext context) {
+    final style = widget.style ?? DefaultTextStyle.of(context).style;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.leftIcon != null)
+          AutoSizeText(
+            String.fromCharCode(widget.leftIcon!.codePoint),
+            style: style.copyWith(
+              fontFamily: widget.leftIcon!.fontFamily,
+              package: widget.leftIcon!.fontPackage,
+              fontSize: style.fontSize,
             ),
-            spacing,
-          ],
-          if (text != null) TextSpan(text: text),
-          if (rightIcon != null) ...[
-            spacing,
-            TextSpan(
-              text: String.fromCharCode(rightIcon!.codePoint),
-              style: defaultStyle.copyWith(
-                fontFamily: rightIcon!.fontFamily,
-                package: rightIcon!.fontPackage,
-                fontSize: iconSize,
-              ),
+            group: widget.autoSizeGroup ?? _group,
+          ),
+        if (widget.leftIcon != null && widget.text != null) // Left hand spacing
+          AutoSizeText(
+            ' ',
+            style: style,
+            group: widget.autoSizeGroup ?? _group,
+          ),
+        if (widget.text != null)
+          Flexible(
+            child: AutoSizeText(
+              widget.text!,
+              style: style,
+              maxLines: widget.maxLines,
+              group: widget.autoSizeGroup ?? _group,
             ),
-            spacing,
-          ],
-        ],
-      ),
-      style: defaultStyle,
-      maxLines: maxLines,
-      group: autoSizeGroup,
-      textAlign: textAlign,
+          ),
+        if (widget.rightIcon != null && widget.text != null) // Right hand spacing
+          AutoSizeText(
+            ' ',
+            style: style,
+            group: widget.autoSizeGroup ?? _group,
+          ),
+        if (widget.rightIcon != null)
+          AutoSizeText(
+            String.fromCharCode(widget.rightIcon!.codePoint),
+            style: style.copyWith(
+              fontFamily: widget.rightIcon!.fontFamily,
+              package: widget.rightIcon!.fontPackage,
+              fontSize: style.fontSize,
+            ),
+            group: widget.autoSizeGroup ?? _group,
+          ),
+      ],
     );
   }
 

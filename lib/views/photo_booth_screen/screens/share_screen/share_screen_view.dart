@@ -42,8 +42,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: _foregroundElements,
         ),
-        if (viewModel.displayConfetti)
-          ... _confettiStack,
+        if (viewModel.displayConfetti) ..._confettiStack,
       ],
     );
   }
@@ -88,20 +87,25 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
           flex: 3,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              PhotoBoothButton.navigation(
-                onPressed: controller.onClickPrev,
-                child: AutoSizeTextAndIcon(
-                  text: viewModel.backText,
-                  leftIcon: LucideIcons.stepBack,
+              Flexible(
+                child: PhotoBoothButton.navigation(
+                  onPressed: controller.onClickPrev,
+                  child: AutoSizeTextAndIcon(
+                    text: viewModel.backText,
+                    leftIcon: LucideIcons.stepBack,
+                    autoSizeGroup: controller.navigationButtonGroup,
+                  ),
                 ),
               ),
-              PhotoBoothButton.navigation(
-                onPressed: controller.onClickNext,
-                child: AutoSizeTextAndIcon(
-                  text: localizations.genericDoneButton,
-                  rightIcon: LucideIcons.stepForward,
+              Flexible(
+                child: PhotoBoothButton.navigation(
+                  onPressed: controller.onClickNext,
+                  child: AutoSizeTextAndIcon(
+                    text: localizations.genericDoneButton,
+                    rightIcon: LucideIcons.stepForward,
+                    autoSizeGroup: controller.navigationButtonGroup,
+                  ),
                 ),
               ),
             ],
@@ -122,6 +126,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
             child: AutoSizeTextAndIcon(
               text: localizations.photoDetailsScreenGetQrButton,
               leftIcon: LucideIcons.scanQrCode,
+              autoSizeGroup: controller.actionButtonGroup,
             ),
           ),
         ),
@@ -132,6 +137,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
               child: AutoSizeTextAndIcon(
                 text: viewModel.printText,
                 leftIcon: LucideIcons.printer,
+                autoSizeGroup: controller.actionButtonGroup,
               ),
             ),
           ),

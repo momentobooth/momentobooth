@@ -1,24 +1,33 @@
-part of 'photo_booth_theme.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 
-PhotoBoothTheme get _weddingTheme => PhotoBoothTheme(
-  titleTheme: TextTheme(style: _basicTitleTextStyle),
-  subtitleTheme: TextTheme(style: _basicSubtitleTextStyle),
+PhotoBoothTheme get weddingTheme => PhotoBoothTheme(
+  titleTheme: TextTheme(style: _titleTextStyle),
+  subtitleTheme: TextTheme(style: _subtitleTextStyle),
 
   actionButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
-      textStyle: WidgetStateProperty.fromMap({
-        WidgetState.disabled: _basicTitleTextStyle.copyWith(color: _basicTitleTextStyle.color!.withAlpha(128)),
-        WidgetState.any: _basicTitleTextStyle,
+      foregroundColor: WidgetStateProperty.fromMap({
+        WidgetState.disabled: _actionButtonTextStyle.color!.withAlpha(128),
+        WidgetState.any: _actionButtonTextStyle.color,
       }),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+      shape: const WidgetStatePropertyAll(Border()),
+      textStyle: WidgetStatePropertyAll(_actionButtonTextStyle),
+      iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize),
     ),
   ),
 
   navigationButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
-      textStyle: WidgetStateProperty.fromMap({
-        WidgetState.disabled: _basicSubtitleTextStyle.copyWith(color: _basicSubtitleTextStyle.color!.withAlpha(128)),
-        WidgetState.any: _basicSubtitleTextStyle,
+      foregroundColor: WidgetStateProperty.fromMap({
+        WidgetState.disabled: _navigationButtonTextStyle.color!.withAlpha(128),
+        WidgetState.any: _navigationButtonTextStyle.color,
       }),
+      backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
+      shape: const WidgetStatePropertyAll(Border()),
+      textStyle: WidgetStatePropertyAll(_navigationButtonTextStyle),
+      iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize),
     ),
   ),
 
@@ -51,4 +60,27 @@ PhotoBoothTheme get _weddingTheme => PhotoBoothTheme(
       ),
     ),
   ),
+);
+
+const _rootTextStyle = TextStyle(
+  fontFamily: "Brandon Grotesque",
+  fontWeight: FontWeight.w300,
+  shadows: [BoxShadow(color: Color(0x66000000), offset: Offset(0, 3), blurRadius: 4)],
+  color: Color(0xFFFFFFFF),
+);
+
+final _titleTextStyle = _rootTextStyle.copyWith(
+  fontSize: 120,
+);
+
+final _subtitleTextStyle = _rootTextStyle.copyWith(
+  fontSize: 80,
+);
+
+final _actionButtonTextStyle = _rootTextStyle.copyWith(
+  fontSize: 100,
+);
+
+final _navigationButtonTextStyle = _rootTextStyle.copyWith(
+  fontSize: 80,
 );

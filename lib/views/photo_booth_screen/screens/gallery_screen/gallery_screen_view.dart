@@ -75,8 +75,8 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                           automaticallyImplyLeading: false,
                           title: Padding(
                             padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: Text(
-                              group.title,
+                            child: AutoSizeTextAndIcon(
+                              text: group.title,
                               style: theme.subtitleTheme.style,
                             ),
                           ),
