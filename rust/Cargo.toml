@@ -1,8 +1,8 @@
 [package]
 name = "rust_lib_momento_booth"
 version = "0.2.0"
-edition = "2021"
-rust-version = "1.80"
+edition = "2024"
+rust-version = "1.85"
 
 [lib]
 crate-type = ["cdylib", "staticlib"]
@@ -35,11 +35,11 @@ rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 gexiv2-sys = "1.4.0"
 regex = "1.11.1"
 log = "0.4.27"
-nokhwa = { git = "https://github.com/momentobooth/nokhwa.git", branch = "bugfix/fix-windows-pointer-error", features = ["input-native", "output-threaded"] }
+nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", branch = "0.10", features = ["input-native", "output-threaded"] }
 parking_lot = "0.12.3"
 susync = "0.2.0"
 rustc_version_runtime = "0.3.0"
-libc = "0.2.171"
+libc = "0.2.172"
 libusb-sys = "0.2.3"
 futures = "0.3.31"
 

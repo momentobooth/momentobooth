@@ -515,5 +515,5 @@ fn set_environment_variable(key: &str, value: &str) {
 fn set_environment_variable(key: &str, value: &str) {
     use std::env;
 
-    env::set_var(key, value);
+    unsafe { env::set_var(key, value); }
 }
