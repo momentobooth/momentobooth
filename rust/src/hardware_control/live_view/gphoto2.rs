@@ -386,7 +386,6 @@ pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: Stri
   })
 }
 
-
 pub async fn set_video_recording_state(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, record: bool) -> Result<()> {
   let camera = camera_ref.lock().await;
 

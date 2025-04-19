@@ -41,6 +41,13 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             buttonText: "Clear photos",
             onPressed: controller.onPhotosClearPressed,
           ),
+          SettingsActionTile(
+            icon: LucideIcons.folder,
+            title: "Get camera files",
+            subtitle: "Retrieve a list of files on the camera",
+            buttonText: "Get filelist",
+            onPressed: controller.onGetCameraFilesPressed,
+          ),
         ],
       ),
       SettingsSection(
