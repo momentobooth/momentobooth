@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/components/animations/animated_delayed_fade_in.dart';
@@ -21,21 +22,22 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
 
   @override
   Widget get body {
+    Widget image = Hero(
+      tag: viewModel.file!.path,
+      child: ImageWithLoaderFallback.file(viewModel.file!, fit: BoxFit.contain),
+    );
+
+    Widget aspectRatioWrapper = Observer(
+      builder: (_) => viewModel.imageSize != null ? AspectRatio(aspectRatio: viewModel.imageSize!.aspectRatio, child: image) : image,
+    );
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Padding(
+        Container(
           padding: const EdgeInsets.all(30),
-          child: Center(
-            // This SizedBox is only necessary when the image used is smaller than what would be displayed.
-            child: SizedBox(
-              height: double.infinity,
-              child: Hero(
-                tag: viewModel.file!.path,
-                child: ImageWithLoaderFallback.file(viewModel.file!, fit: BoxFit.contain),
-              ),
-            ),
-          ),
+          alignment: Alignment.center,
+          child: viewModel.imageSize != null ? context.theme.fullScreenPictureTheme.frameBuilder?.call(context, aspectRatioWrapper) : aspectRatioWrapper,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
@@ -80,6 +82,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
               child: AutoSizeTextAndIcon(
                 text: localizations.photoDetailsScreenGetQrButton,
                 leftIcon: LucideIcons.scanQrCode,
+                autoSizeGroup: controller.actionButtonGroup,
               ),
             ),
           ),
@@ -92,6 +95,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
                 child: AutoSizeTextAndIcon(
                   text: viewModel.printText,
                   leftIcon: LucideIcons.printer,
+                  autoSizeGroup: controller.actionButtonGroup,
                 ),
               ),
             ),

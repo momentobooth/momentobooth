@@ -18,6 +18,8 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
   final PhotoBoothButtonTheme navigationButtonTheme;
   final CaptureCounterTheme captureCounterTheme;
   final DialogTheme dialogTheme;
+  final CollagePreviewTheme collagePreviewTheme;
+  final FullScreenPictureTheme fullScreenPictureTheme;
 
   const PhotoBoothTheme({
     required this.titleTheme,
@@ -26,6 +28,8 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
     required this.navigationButtonTheme,
     required this.captureCounterTheme,
     required this.dialogTheme,
+    required this.collagePreviewTheme,
+    required this.fullScreenPictureTheme,
   });
 
   factory PhotoBoothTheme.defaultBasic() => basicTheme;
@@ -69,5 +73,23 @@ class DialogTheme extends ThemeExtension<DialogTheme> with _$DialogThemeTailorMi
   final ButtonStyle buttonStyle;
 
   const DialogTheme({required this.buttonStyle});
+
+}
+
+@TailorMixinComponent()
+class CollagePreviewTheme extends ThemeExtension<CollagePreviewTheme> with _$CollagePreviewThemeTailorMixin {
+
+  final WidgetBuilder? frameBuilder;
+
+  const CollagePreviewTheme({required this.frameBuilder});
+
+}
+
+@TailorMixinComponent()
+class FullScreenPictureTheme extends ThemeExtension<FullScreenPictureTheme> with _$FullScreenPictureThemeTailorMixin {
+
+  final WidgetBuilder? frameBuilder;
+
+  const FullScreenPictureTheme({required this.frameBuilder});
 
 }
