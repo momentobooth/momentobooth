@@ -772,6 +772,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     getIt<PhotosManager>().photos.clear();
   }
 
+  Future<void> onGetCameraFilesPressed() async {
+    final files = await getIt<LiveViewManager>().gPhoto2Camera!.getFileList();
+    final imageFiles = files.images.toList();
+    final videoFiles = files.videos.toList();
+    final otherFiles = files.others.toList();
+    final folders = files.folders.toList();
+    logInfo("Images: $imageFiles");
+    logInfo("Videos: $videoFiles");
+    logInfo("Other files: $otherFiles");
+    logInfo("Folders: $folders");
+  }
+
   Future<void> onCopyCameraInfoToClipboardPressed() async {
     String json = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraInfoJson();
     await Clipboard.setData(ClipboardData(text: json));
