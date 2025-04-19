@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -150,14 +151,16 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
   }
 
   Widget get _collage {
+    Widget collage = PhotoCollage(
+      key: controller.collageKey,
+      aspectRatio: 1 / viewModel.collageAspectRatio,
+      padding: viewModel.collagePadding,
+    );
+
     return Observer(
       builder: (context) => RotatingCollageBox(
         turns: -0.25 * viewModel.rotation,
-        collage: PhotoCollage(
-          key: controller.collageKey,
-          aspectRatio: 1 / viewModel.collageAspectRatio,
-          padding: viewModel.collagePadding,
-        ),
+        collage: context.theme.collagePreviewTheme.frameBuilder?.call(context, collage) ?? collage,
         onRotateCompleted: controller.captureCollage,
       ),
     );
