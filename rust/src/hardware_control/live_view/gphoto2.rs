@@ -1,4 +1,4 @@
-use std::{cell::Cell, env, hash::{Hash, Hasher}, sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, OnceLock}, time::Instant};
+use std::{cell::Cell, collections::HashSet, env, hash::{Hash, Hasher}, sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, OnceLock}, time::Instant};
 
 use ahash::AHasher;
 
@@ -231,6 +231,48 @@ pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_t
   })
 }
 
+pub struct GPhoto2FileCategories {
+  pub images: HashSet<String>,
+  pub videos: HashSet<String>,
+  pub others: HashSet<String>,
+  pub folders: HashSet<String>,
+}
+
+const IMAGE_TYPES: [&str; 8] = ["jpg", "jpeg", "cr2", "cr3", "arw", "dng", "nef", "raw"];
+const VIDEO_TYPES: [&str; 7] = ["mp4", "mov", "avi", "m4v", "mpg", "mpeg", "mp2"];
+
+pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: String) -> Result<GPhoto2FileCategories> {
+  let camera = camera_ref.lock().await;
+  let file_entries = camera.camera.fs().list_files(&folder).await?;
+  let folder_entries = camera.camera.fs().list_folders(&folder).await?;
+
+  let mut images = HashSet::new();
+  let mut videos = HashSet::new();
+  let mut others = HashSet::new();
+  let mut folders = HashSet::new();
+
+  for file in file_entries {
+      let lower = file.to_ascii_lowercase();
+      if IMAGE_TYPES.iter().any(|a| lower.ends_with(a)) {
+          images.insert(file);
+      } else if VIDEO_TYPES.iter().any(|a| lower.ends_with(a)) {
+          videos.insert(file);
+      } else {
+          others.insert(file);
+      }
+  }
+  for folder in folder_entries {
+    folders.insert(folder);
+  }
+
+  Ok(GPhoto2FileCategories {
+      images,
+      videos,
+      others,
+      folders,
+  })
+}
+
 pub struct GPhoto2CameraInfo {
     pub port: String,
     pub model: String,
@@ -420,6 +462,15 @@ pub fn gphoto2_capture_photo(handle_id: u32, capture_target_value: String) -> GP
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
         gphoto2::capture_photo(camera, capture_target_value).await
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_list_files(handle_id: u32, folder: String) -> GPhoto2FileCategories {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::list_files(camera, folder).await
     }).expect("Could not get result")
 }
 

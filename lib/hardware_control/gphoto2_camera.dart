@@ -117,6 +117,15 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     );
   }
 
+  Future<GPhoto2FileCategories> getFileList() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    var fileList = await gphoto2ListFiles(handleId: handleId!, folder: "/");
+
+    unawaited(clearPreviousEvents());
+
+    return fileList;
+  }
+
   @override
   Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2);
 

@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
@@ -768,6 +769,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   void onPhotosClearPressed() {
     getIt<PhotosManager>().photos.clear();
+  }
+
+  Future<void> onGetCameraFilesPressed() async {
+    final files = await getIt<LiveViewManager>().gPhoto2Camera!.getFileList();
+    final imageFiles = files.images.toList();
+    final videoFiles = files.videos.toList();
+    final otherFiles = files.others.toList();
+    final folders = files.folders.toList();
+    logInfo("Images: $imageFiles");
+    logInfo("Videos: $videoFiles");
+    logInfo("Other files: $otherFiles");
+    logInfo("Folders: $folders");
   }
 
 }
