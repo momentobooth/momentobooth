@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 
 class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController> {
 
@@ -19,11 +21,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
         Flexible(
           fit: FlexFit.tight,
           child: Center(
-            child: AutoSizeText(
-              localizations.chooseCaptureModeScreenTitle,
-              style: theme.titleStyle,
-              maxLines: 1,
-            ),
+            child: PhotoBoothTitle(localizations.chooseCaptureModeScreenTitle),
           ),
         ),
         Expanded(
@@ -36,25 +34,20 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
             ],
           ),
         ),
-        const Flexible(
-          fit: FlexFit.tight,
-          child: SizedBox(),
-        ),
+        const Flexible(fit: FlexFit.tight, child: SizedBox()),
       ],
     );
   }
 
   Widget get _singlePictureButton {
-    return GestureDetector(
-      onTap: controller.onClickOnSinglePhoto,
-      behavior: HitTestBehavior.translucent,
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnSinglePhoto,
       child: Column(
         children: [
           Expanded(child: FittedBox(child: _getButton(452))),
           AutoSizeText(
             localizations.chooseCaptureModeScreenSinglePictureButton,
-            group: viewModel.autoSizeGroup,
-            style: theme.titleStyle,
+            group: controller.autoSizeGroup,
             maxLines: 1,
           ),
         ],
@@ -63,9 +56,8 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
   }
 
   Widget get _collageButton {
-    return GestureDetector(
-      onTap: controller.onClickOnPhotoCollage,
-      behavior: HitTestBehavior.translucent,
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnPhotoCollage,
       child: Column(
         children: [
           Expanded(
@@ -93,8 +85,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
           ),
           AutoSizeText(
             localizations.chooseCaptureModeScreenCollageButton,
-            group: viewModel.autoSizeGroup,
-            style: theme.titleStyle,
+            group: controller.autoSizeGroup,
             maxLines: 1,
           ),
         ],
@@ -107,8 +98,12 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
       width: dimension,
       height: dimension,
       decoration: BoxDecoration(
-        color: theme.chooseCaptureModeButtonIconColor,
-        boxShadow: [theme.chooseCaptureModeButtonShadow],
+        color: const Color(0xE6FFFFFF),
+        boxShadow: [const BoxShadow(
+          color: Color(0x42000000),
+          offset: Offset(0, 3),
+          blurRadius: 8,
+        )],
       ),
     );
   }
