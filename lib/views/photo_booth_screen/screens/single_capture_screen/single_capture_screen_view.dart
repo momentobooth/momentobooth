@@ -22,11 +22,11 @@ class SingleCaptureScreenView extends ScreenViewBase<SingleCaptureScreenViewMode
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        // This widget is just here for the purpose of rendering the collage to a bitmap
+        // This widget is just here for the purpose of rendering the collage to a bitmap.
         PhotoCollage(
           key: viewModel.collageKey,
           singleMode: true,
-          aspectRatio: 1/viewModel.collageAspectRatio,
+          aspectRatio: 1 / viewModel.collageAspectRatio,
           padding: viewModel.collagePadding,
           decodeCallback: viewModel.collageReady,
           isVisible: false,
@@ -56,7 +56,7 @@ class SingleCaptureScreenView extends ScreenViewBase<SingleCaptureScreenViewMode
         Observer(
           builder: (_) {
           if (viewModel.showSpinner) {
-            return Center(child: LoadingDialog(title: localizations.captureScreenLoadingPhoto));
+            return Center(child: LoadingDialog.cameraDownload(title: localizations.captureScreenLoadingPhoto));
           }
           return const SizedBox();
         }),

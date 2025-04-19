@@ -22,7 +22,7 @@ abstract class CollageMakerScreenViewModelBase extends ScreenViewModelBase with 
   int get rotation => [0, 1, 4].contains(numSelected) ? 1 : 0;
 
   @observable
-  bool readyToContinue = false;
+  bool isGeneratingImage = false;
 
   final Duration opacityDuraction = const Duration(milliseconds: 300);
 

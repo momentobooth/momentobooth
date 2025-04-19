@@ -5,9 +5,8 @@ class RotatingCollageBox extends StatefulWidget {
 
   final double turns;
   final Widget collage;
-  final VoidCallback onRotateCompleted;
 
-  const RotatingCollageBox({super.key, required this.turns, required this.collage, required this.onRotateCompleted});
+  const RotatingCollageBox({super.key, required this.turns, required this.collage});
 
   @override
   State<RotatingCollageBox> createState() => _RotatingCollageBoxState();
@@ -21,10 +20,7 @@ class _RotatingCollageBoxState extends State<RotatingCollageBox> with SingleTick
 
   @override
   void initState() {
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) widget.onRotateCompleted();
-    });
-    _rotation = Tween<double>(begin: 0.0, end: widget.turns).animate(
+    _rotation = Tween<double>(begin: widget.turns, end: widget.turns).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
     _controller.forward();
@@ -42,8 +38,6 @@ class _RotatingCollageBoxState extends State<RotatingCollageBox> with SingleTick
       _controller
         ..reset()
         ..forward();
-    } else {
-      widget.onRotateCompleted();
     }
   }
 
