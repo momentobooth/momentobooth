@@ -23,7 +23,6 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
   GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
 
   void togglePicture(int image) {
-    viewModel.readyToContinue = false;
     if (getIt<PhotosManager>().chosen.contains(image)) {
       getIt<PhotosManager>().chosen.remove(image);
     } else {
@@ -31,15 +30,9 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     }
   }
 
-  DateTime? latestCapture;
-
-  Future<void> captureCollage() async {
-    // It can happen that a previous capture takes longer than the latest one.
-    // Therefore, keep track of which is the latest invocation.
-    final thisCapture = DateTime.now();
-    latestCapture = thisCapture;
-
-    if (viewModel.numSelected < 1) return;
+  Future<void> onContinueTap() async {
+    if (viewModel.isGeneratingImage || getIt<PhotosManager>().chosen.isEmpty) return;
+    viewModel.isGeneratingImage = true;
 
     final stopwatch = Stopwatch()..start();
     final pixelRatio = getIt<SettingsManager>().settings.output.resolutionMultiplier;
@@ -53,18 +46,15 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     );
     logDebug('captureCollage took ${stopwatch.elapsed}');
 
-    if (latestCapture == thisCapture) {
-      getIt<PhotosManager>().outputImage = exportImage;
-      logDebug("Written collage image to output image memory");
-      await getIt<PhotosManager>().writeOutput();
-      viewModel.readyToContinue = true;
-    }
-  }
+    getIt<PhotosManager>().outputImage = exportImage;
+    logDebug("Written collage image to output image memory");
+    await getIt<PhotosManager>().writeOutput();
 
-  void onContinueTap() {
-    if (!viewModel.readyToContinue) return;
-    // Fixme: there is a possibility that a collage will not get registered in the statistic
+    viewModel.isGeneratingImage = false;
+
+    // FIXME: There is a possibility that a collage will not get registered in the stats
     // because a user leaves it and after timeout navigation to the homescreen occurs.
+
     getIt<StatsManager>().addCreatedMultiCapturePhoto();
     router.go(ShareScreen.defaultRoute);
   }
