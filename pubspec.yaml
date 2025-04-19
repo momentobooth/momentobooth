@@ -35,6 +35,7 @@ dependencies:
   lucide_icons_flutter: 2.0.3
   wizard_router: 1.4.0
   theme_tailor_annotation: 3.0.2
+  google_fonts: 6.2.1
 
   # Printscreen/Image processing
   screenshot: 3.0.0

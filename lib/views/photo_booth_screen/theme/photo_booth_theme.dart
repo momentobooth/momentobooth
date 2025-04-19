@@ -20,6 +20,7 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
   final DialogTheme dialogTheme;
   final CollagePreviewTheme collagePreviewTheme;
   final FullScreenPictureTheme fullScreenPictureTheme;
+  final Map<String, WidgetBuilder> screenWrappers;
 
   const PhotoBoothTheme({
     required this.titleTheme,
@@ -30,6 +31,7 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
     required this.dialogTheme,
     required this.collagePreviewTheme,
     required this.fullScreenPictureTheme,
+    this.screenWrappers = const {},
   });
 
   factory PhotoBoothTheme.defaultBasic() => basicTheme;
