@@ -4,6 +4,7 @@ import 'package:confetti/confetti.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
@@ -22,21 +23,19 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
 
   @override
   Widget get body {
+    Widget image = ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain);
+
+    Widget aspectRatioWrapper = Observer(
+      builder: (_) => viewModel.imageSize != null ? AspectRatio(aspectRatio: viewModel.imageSize!.aspectRatio, child: image) : image,
+    );
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Padding(
+        Container(
           padding: const EdgeInsets.all(30),
-          child: Center(
-            // This SizedBox is only necessary when the image used is smaller than what would be displayed.
-            child: SizedBox(
-              height: double.infinity,
-              child: theme.captureCounterTheme.frameBuilder!(
-                context,
-                ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain),
-              ),
-            ),
-          ),
+          alignment: Alignment.center,
+          child: context.theme.fullScreenPictureTheme.frameBuilder?.call(context, aspectRatioWrapper) ?? aspectRatioWrapper,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
@@ -49,12 +48,12 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
 
   List<Widget> get _confettiStack {
     return [
-      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.25*pi, 45)), // top right
-      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.325*pi, 42)), // top right
-      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.4*pi, 30)), // top right
-      Align(alignment: Alignment.bottomRight, child: _confetti(-0.75*pi, 45)), // top left
-      Align(alignment: Alignment.bottomRight, child: _confetti(-0.675*pi, 42)), // top left
-      Align(alignment: Alignment.bottomRight, child: _confetti(-0.6*pi, 30)), // top left
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.25 * pi, 45)), // top right
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.325 * pi, 42)), // top right
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.4 * pi, 30)), // top right
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.75 * pi, 45)), // top left
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.675 * pi, 42)), // top left
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.6 * pi, 30)), // top left
     ];
   }
 
@@ -66,7 +65,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       minimumSize: const Size(40, 20),
       colors: viewModel.getColors(),
       minBlastForce: force,
-      maxBlastForce: force*2,
+      maxBlastForce: force * 2,
       particleDrag: 0.01, // apply drag to the confetti
       emissionFrequency: 0.6, // how often it should emit
       numberOfParticles: 10, // number of particles to emit

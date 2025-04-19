@@ -60,6 +60,25 @@ PhotoBoothTheme get basicTheme => PhotoBoothTheme(
       ),
     ),
   ),
+
+  collagePreviewTheme: CollagePreviewTheme(
+    frameBuilder: (context, child) => DecoratedBox(
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
+        boxShadow: [_heavyShadow],
+      ),
+      child: child,
+    ),
+  ),
+
+  fullScreenPictureTheme: FullScreenPictureTheme(
+    frameBuilder: (context, child) => DecoratedBox(
+      decoration: const BoxDecoration(
+        boxShadow: [_heavyShadow],
+      ),
+      child: child,
+    ),
+  ),
 );
 
 const _rootTextStyle = TextStyle(
@@ -73,3 +92,5 @@ final _titleTextStyle = _rootTextStyle.copyWith(fontSize: 120);
 final _subtitleTextStyle = _rootTextStyle.copyWith(fontSize: 80);
 final _actionButtonTextStyle = _rootTextStyle.copyWith(fontSize: 100);
 final _navigationButtonTextStyle = _rootTextStyle.copyWith(fontSize: 80);
+
+const _heavyShadow = BoxShadow(color: Color.fromARGB(255, 0, 0, 0), offset: Offset(0, 3), blurRadius: 8);

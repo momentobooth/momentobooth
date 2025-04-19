@@ -224,7 +224,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
       widget.debug == null ? MemoryImage(photos[chosen[index]].data) : AssetImage('assets/bitmap/placeholder.png'),
       applyRotateFlipCrop: true,
       fit: fit,
-      onImageDecoded: decodeCallback,
+      onImageDecoded: (_) => decodeCallback?.call(),
     );
   }
 

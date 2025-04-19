@@ -47,6 +47,9 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   @readonly
   File? _file;
 
+  @readonly
+  Size? _imageSize;
+
   List<Color>? getColors() {
     if (!getIt<ProjectManager>().settings.customColorConfetti) return null;
     final theme = FluentTheme.of(contextAccessor.buildContext);
@@ -96,5 +99,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
       _uploadFailed = true;
     });
   }
+
+  void onImageDecoded(Size size) => _imageSize = size;
 
 }

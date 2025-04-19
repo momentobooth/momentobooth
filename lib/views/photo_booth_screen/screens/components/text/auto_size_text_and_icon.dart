@@ -9,7 +9,10 @@ class AutoSizeTextAndIcon extends StatefulWidget {
   final String? text;
   final IconData? leftIcon;
   final IconData? rightIcon;
+
+  /// Used by [AutoSizeText] to group for sizing consistency purpose. Use when having multiple buttons of the same type on one screen.
   final AutoSizeGroup? autoSizeGroup;
+
   final TextStyle? style;
   final TextAlign? textAlign;
   final int? maxLines;

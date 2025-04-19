@@ -50,17 +50,7 @@ class _RotatingCollageBoxState extends State<RotatingCollageBox> with SingleTick
   Widget build(BuildContext context) {
     return RotationTransition(
       turns: _rotation,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 255, 255),
-          boxShadow: [const BoxShadow(
-            color: Color(0x42000000),
-            offset: Offset(0, 3),
-            blurRadius: 8,
-          )],
-        ),
-        child: widget.collage,
-      ),
+      child: widget.collage,
     );
   }
 

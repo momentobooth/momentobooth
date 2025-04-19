@@ -19,11 +19,7 @@ class PhotoBoothTitle extends StatelessWidget {
       maxLines: maxLines,
     );
 
-    if (context.theme.titleTheme.frameBuilder != null) {
-      return context.theme.titleTheme.frameBuilder!(context, child);
-    } else {
-      return child;
-    }
+    return context.theme.titleTheme.frameBuilder?.call(context, child) ?? child;
   }
 
 }

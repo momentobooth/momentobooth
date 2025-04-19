@@ -41,29 +41,30 @@ class CaptureCounterState extends State<CaptureCounter> with SingleTickerProvide
 
   @override
   Widget build(BuildContext context) {
+    Widget frame = FittedBox(
+      child: DefaultTextStyle(
+        style: context.theme.captureCounterTheme.textStyle,
+        child: AnimatedTextKit(
+          pause: Duration.zero,
+          isRepeatingAnimation: false,
+          onFinished: widget.onCounterFinished,
+          animatedTexts: [
+            for (int i = widget.counterStart; i > 0; i--)
+              _getCounterAnimatedText(i.toString(), context),
+          ],
+        ),
+      ),
+    );
+
     return AspectRatio(
       aspectRatio: 1,
       child: Stack(
         clipBehavior: Clip.none,
         fit: StackFit.expand,
         children: [
-          context.theme.captureCounterTheme.frameBuilder!(context, FittedBox(
-              child: DefaultTextStyle(
-                style: context.theme.captureCounterTheme.textStyle,
-                child: AnimatedTextKit(
-                  pause: Duration.zero,
-                  isRepeatingAnimation: false,
-                  onFinished: widget.onCounterFinished,
-                  animatedTexts: [
-                    for (int i = widget.counterStart; i > 0; i--)
-                      _getCounterAnimatedText(i.toString(), context),
-                  ],
-                ),
-              ),
-            )
-          ),
+          context.theme.captureCounterTheme.frameBuilder?.call(context, frame) ?? frame,
           Padding(
-            padding: const EdgeInsets.all(0.5*borderWidth),
+            padding: const EdgeInsets.all(0.5 * borderWidth),
             child: CircularProgressIndicator(
               value: controller.value,
               color: Colors.white,

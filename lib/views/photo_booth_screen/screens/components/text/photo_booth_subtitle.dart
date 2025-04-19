@@ -17,11 +17,7 @@ class PhotoBoothSubtitle extends StatelessWidget {
       textAlign: textAlign,
     );
 
-    if (context.theme.subtitleTheme.frameBuilder != null) {
-      return context.theme.subtitleTheme.frameBuilder!(context, child);
-    } else {
-      return child;
-    }
+    return context.theme.subtitleTheme.frameBuilder?.call(context, child) ?? child;
   }
 
 }
