@@ -7,6 +7,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/rotating_collage_box.dart';
+import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_controller.dart';
@@ -45,27 +46,27 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           child: Align(
             alignment: Alignment.bottomRight,
             child: Observer(
-              builder: (context) => Stack(
-                alignment: Alignment.center,
-                children: [
-                  if (!viewModel.readyToContinue && viewModel.numSelected > 0) ProgressRing(),
-                  AnimatedOpacity(
-                    duration: viewModel.opacityDuraction,
-                    opacity: viewModel.readyToContinue ? 1 : 0.2,
-                    child: GestureDetector(
-                      onTap: controller.onContinueTap,
-                      child: AutoSizeText(
-                        "${localizations.genericContinueButton} →",
-                        style: theme.subTitleStyle,
-                        maxLines: 1,
-                      ),
-                    ),
+              builder: (_) => AnimatedOpacity(
+                opacity: (viewModel.isGeneratingImage || getIt<PhotosManager>().chosen.isEmpty) ? 0.5 : 1,
+                duration: const Duration(milliseconds: 300),
+                child: GestureDetector(
+                  onTap: controller.onContinueTap,
+                  child: AutoSizeText(
+                    "${localizations.genericContinueButton} →",
+                    style: theme.subTitleStyle,
+                    maxLines: 1,
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ),
+        Observer(builder: (_) {
+          if (viewModel.isGeneratingImage) {
+            return Center(child: LoadingDialog.generic(title: localizations.genericOneMomentPlease));
+          }
+          return const SizedBox();
+        }),
       ],
     );
   }
@@ -158,14 +159,8 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
               child: AutoSizeText(localizations.collageMakerScreenCollageTitle, style: theme.titleStyle),
             ),
           ),
-          Expanded(
-            flex: 10,
-            child: _collage,
-          ),
-          const Flexible(
-            flex: 1,
-            child: SizedBox(),
-          ),
+          Expanded(flex: 10, child: _collage),
+          const Flexible(flex: 1, child: SizedBox()),
         ],
       ),
     );
@@ -180,7 +175,6 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
           aspectRatio: 1 / viewModel.collageAspectRatio,
           padding: viewModel.collagePadding,
         ),
-        onRotateCompleted: controller.captureCollage,
       ),
     );
   }
