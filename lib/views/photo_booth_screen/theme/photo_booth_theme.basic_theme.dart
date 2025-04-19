@@ -14,7 +14,7 @@ PhotoBoothTheme get basicTheme => PhotoBoothTheme(
       backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       shape: const WidgetStatePropertyAll(Border()),
       textStyle: WidgetStatePropertyAll(_actionButtonTextStyle),
-      iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize),
+      iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize! * 0.80),
     ),
   ),
 
@@ -27,7 +27,7 @@ PhotoBoothTheme get basicTheme => PhotoBoothTheme(
       backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       shape: const WidgetStatePropertyAll(Border()),
       textStyle: WidgetStatePropertyAll(_navigationButtonTextStyle),
-      iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize),
+      iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize! * 0.80),
     ),
   ),
 
