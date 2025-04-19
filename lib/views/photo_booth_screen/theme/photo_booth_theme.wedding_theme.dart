@@ -1,4 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:momento_booth/views/components/animations/wedding_wreath.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 
 PhotoBoothTheme get weddingTheme => PhotoBoothTheme(
@@ -14,7 +17,7 @@ PhotoBoothTheme get weddingTheme => PhotoBoothTheme(
       backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       shape: const WidgetStatePropertyAll(Border()),
       textStyle: WidgetStatePropertyAll(_actionButtonTextStyle),
-      iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize),
+      iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize! * 0.80),
     ),
   ),
 
@@ -27,7 +30,7 @@ PhotoBoothTheme get weddingTheme => PhotoBoothTheme(
       backgroundColor: const WidgetStatePropertyAll(Colors.transparent),
       shape: const WidgetStatePropertyAll(Border()),
       textStyle: WidgetStatePropertyAll(_navigationButtonTextStyle),
-      iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize),
+      iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize! * 0.80),
     ),
   ),
 
@@ -79,11 +82,13 @@ PhotoBoothTheme get weddingTheme => PhotoBoothTheme(
       child: child,
     ),
   ),
+
+  screenWrappers: {
+    StartScreen.defaultRoute: (context, child) => Stack(fit: StackFit.passthrough, children: [WeddingWreath(), child]),
+  },
 );
 
-const _rootTextStyle = TextStyle(
-  fontFamily: "Brandon Grotesque",
-  fontWeight: FontWeight.w300,
+final _rootTextStyle = GoogleFonts.rougeScript(
   shadows: [BoxShadow(color: Color(0x66000000), offset: Offset(0, 3), blurRadius: 4)],
   color: Color(0xFFFFFFFF),
 );
