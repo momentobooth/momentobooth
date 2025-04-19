@@ -131,13 +131,12 @@ pub fn initialize_library() {
         debug!("{}", "Rexiv2 initialized");
     });
 
-    if !NOISE_HANDLES.is_empty() {
-        debug!("{}", "Possible Hot Reload: Closing noise handles");
-        for map_entry in NOISE_HANDLES.iter() {
-            noise_close(*map_entry.key());
-        }
-        NOISE_HANDLES.clear();
-        debug!("{}", "Possible Hot Reload: Closed noise handles");
+    while !NOISE_HANDLES.is_empty() {
+        debug!("{}", "Possible Hot Reload: Closing noise handle");
+        let id = NOISE_HANDLES.iter().next().unwrap().key().to_owned();
+        noise_close(id);
+        NOISE_HANDLES.remove(&id);
+        debug!("{}", "Possible Hot Reload: Closed noise handle");
     }
 
     info!("{}", "Helper library initialization done");
