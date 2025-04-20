@@ -108,7 +108,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
       children: [
         for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
           GestureDetector(
-            onTap: () => controller.togglePicture(i),
+            onTap: () => controller.onTogglePicture(i),
             child: Observer(builder: (context) {
               return Stack(
                 clipBehavior: Clip.none,

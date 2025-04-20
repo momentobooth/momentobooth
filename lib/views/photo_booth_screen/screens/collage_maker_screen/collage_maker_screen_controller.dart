@@ -2,27 +2,40 @@
 import 'package:flutter/widgets.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
+import 'package:momento_booth/views/photo_booth_screen/notifications/activity_timeout_callback.dart';
+import 'package:momento_booth/views/photo_booth_screen/notifications/activity_timeout_callback_cancellation.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
 
 class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScreenViewModel> {
 
-  // Initialization/Deinitialization
+  /// Installed callback request to have the collage be generated even if the activity timeout occurs on this screen.
+  late final ActivityTimeoutCallback activityTimeoutCallbackRequest;
+
+  /// Global key to create a snapshot of the [PhotoCollage] widget.
+  final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
+
+  // //// //
+  // Init //
+  // //// //
 
   CollageMakerScreenController({
     required super.viewModel,
     required super.contextAccessor,
-  });
+  }) {
+    activityTimeoutCallbackRequest = ActivityTimeoutCallback(onActivityTimeout: onTimeout);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      activityTimeoutCallbackRequest.dispatch(contextAccessor.buildContext);
+    });
+  }
 
-  /// Global key for controlling the slider widget.
-  GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
+  // //////// //
+  // Handlers //
+  // //////// //
 
-  void togglePicture(int image) {
+  void onTogglePicture(int image) {
     if (getIt<PhotosManager>().chosen.contains(image)) {
       getIt<PhotosManager>().chosen.remove(image);
     } else {
@@ -30,33 +43,27 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     }
   }
 
+  Future<void> onTimeout() async {
+    if (getIt<PhotosManager>().chosen.isNotEmpty) {
+      await viewModel.generateCollage(collageKey: collageKey);
+    }
+  }
+
   Future<void> onContinueTap() async {
-    if (viewModel.isGeneratingImage || getIt<PhotosManager>().chosen.isEmpty) return;
-    viewModel.isGeneratingImage = true;
+    if (getIt<PhotosManager>().chosen.isNotEmpty) {
+      await viewModel.generateCollage(collageKey: collageKey);
+      router.go(ShareScreen.defaultRoute);
+    }
+  }
 
-    final stopwatch = Stopwatch()..start();
-    final pixelRatio = getIt<SettingsManager>().settings.output.resolutionMultiplier;
-    final format = getIt<SettingsManager>().settings.output.exportFormat;
-    final jpgQuality = getIt<SettingsManager>().settings.output.jpgQuality;
-    final exportImage = await collageKey.currentState!.getCollageImage(
-      createdByMode: CreatedByMode.multi,
-      pixelRatio: pixelRatio,
-      format: format,
-      jpgQuality: jpgQuality,
-    );
-    logDebug('captureCollage took ${stopwatch.elapsed}');
+  // ////// //
+  // Deinit //
+  // ////// //
 
-    getIt<PhotosManager>().outputImage = exportImage;
-    logDebug("Written collage image to output image memory");
-    await getIt<PhotosManager>().writeOutput();
-
-    viewModel.isGeneratingImage = false;
-
-    // FIXME: There is a possibility that a collage will not get registered in the stats
-    // because a user leaves it and after timeout navigation to the homescreen occurs.
-
-    getIt<StatsManager>().addCreatedMultiCapturePhoto();
-    router.go(ShareScreen.defaultRoute);
+  @override
+  void dispose() {
+    ActivityTimeoutCallbackCancellation(onActivityTimeout: onTimeout).dispatch(contextAccessor.buildContext);
+    super.dispose();
   }
 
 }
