@@ -80,7 +80,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       children: [
         Flexible(
           fit: FlexFit.tight,
-          child: PhotoBoothTitle(localizations.shareScreenTitle),
+          child: Center(child: PhotoBoothTitle(localizations.shareScreenTitle)),
         ),
         Expanded(
           flex: 3,

@@ -55,7 +55,7 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
       children: [
         Flexible(
           fit: FlexFit.tight,
-          child: PhotoBoothTitle(localizations.photoDetailsScreenTitle),
+          child: Center(child: PhotoBoothTitle(localizations.photoDetailsScreenTitle)),
         ),
         Expanded(
           flex: 3,

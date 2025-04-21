@@ -138,10 +138,7 @@ class CollageMakerScreenView extends ScreenViewBase<CollageMakerScreenViewModel,
         children: [
           Flexible(
             flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: PhotoBoothTitle(localizations.collageMakerScreenCollageTitle),
-            ),
+            child: PhotoBoothTitle(localizations.collageMakerScreenCollageTitle),
           ),
           Expanded(flex: 10, child: _collage),
           const Flexible(flex: 1, child: SizedBox()),

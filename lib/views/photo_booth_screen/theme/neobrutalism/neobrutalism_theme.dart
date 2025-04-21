@@ -19,14 +19,14 @@ PhotoBoothTheme get neobrutalismTheme => PhotoBoothTheme(
         WidgetState.any: Colors.yellow,
       }),
       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-        side: BorderSide(width: 6),
-        borderRadius: BorderRadius.circular(32),
+        side: BorderSide(width: 4),
+        borderRadius: BorderRadius.circular(16),
       )),
-      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 48, vertical: 8)),
+      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 64, vertical: 16)),
       textStyle: WidgetStatePropertyAll(_actionButtonTextStyle),
-      iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize! * 0.80),
+      iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize),
     ),
-    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 32, child: child),
+    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 16, shadowOffset: 8, child: child),
   ),
 
   navigationButtonTheme: PhotoBoothButtonTheme(
@@ -40,14 +40,14 @@ PhotoBoothTheme get neobrutalismTheme => PhotoBoothTheme(
         WidgetState.any: Colors.green.lighter,
       }),
       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
-        side: BorderSide(width: 6),
-        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(width: 3),
+        borderRadius: BorderRadius.circular(12),
       )),
-      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 32, vertical: 8)),
+      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 48, vertical: 16)),
       textStyle: WidgetStatePropertyAll(_navigationButtonTextStyle),
-      iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize! * 0.80),
+      iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize),
     ),
-    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 24, child: child),
+    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 12, shadowOffset: 6, child: child),
   ),
 
   captureCounterTheme: CaptureCounterTheme(
@@ -100,13 +100,9 @@ PhotoBoothTheme get neobrutalismTheme => PhotoBoothTheme(
   ),
 );
 
-final _rootTextStyle = GoogleFonts.montserrat(
-  color: Colors.black,
-);
-
-final _titleTextStyle = _rootTextStyle.copyWith(fontSize: 100);
-final _subtitleTextStyle = _rootTextStyle.copyWith(fontSize: 60, color: Colors.white);
-final _actionButtonTextStyle = _rootTextStyle.copyWith(fontSize: 80);
-final _navigationButtonTextStyle = _rootTextStyle.copyWith(fontSize: 60);
+final _titleTextStyle = GoogleFonts.rubikMonoOne(color: Colors.black, fontSize: 80);
+final _subtitleTextStyle = GoogleFonts.archivoBlack(color: Colors.white, fontSize: 60);
+final _actionButtonTextStyle = GoogleFonts.spaceMono(color: Colors.black, fontSize: 64, fontWeight: FontWeight.w600);
+final _navigationButtonTextStyle = GoogleFonts.spaceMono(color: Colors.black, fontSize: 48, fontWeight: FontWeight.w600);
 
 const _heavyShadow = BoxShadow(color: Color.fromARGB(255, 0, 0, 0), offset: Offset(0, 3), blurRadius: 8);
