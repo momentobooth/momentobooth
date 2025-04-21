@@ -113,7 +113,7 @@ class _AutoSizeTextAndIconState extends State<AutoSizeTextAndIcon> {
     double defaultIconSize = widget.iconSize ?? IconTheme.of(context).size ?? textStyle.fontSize ?? 24;
 
     double iconToTextSizeRatio = defaultIconSize / textStyle.fontSize!;
-    iconSize = ((_textKey.currentWidget as Text?)?.style?.fontSize ?? defaultIconSize) * iconToTextSizeRatio;
+    iconSize = ((_textKey.currentWidget as Text?)?.style?.fontSize ?? textStyle.fontSize!) * iconToTextSizeRatio;
   }
 
 }
