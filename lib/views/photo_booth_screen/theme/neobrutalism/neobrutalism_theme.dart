@@ -20,13 +20,13 @@ PhotoBoothTheme get neobrutalismTheme => PhotoBoothTheme(
       }),
       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
         side: BorderSide(width: 6),
-        borderRadius: BorderRadius.circular(48),
+        borderRadius: BorderRadius.circular(32),
       )),
-      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 48, vertical: 32)),
+      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 48, vertical: 8)),
       textStyle: WidgetStatePropertyAll(_actionButtonTextStyle),
       iconSize: WidgetStatePropertyAll(_actionButtonTextStyle.fontSize! * 0.80),
     ),
-    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 48, child: child),
+    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 32, child: child),
   ),
 
   navigationButtonTheme: PhotoBoothButtonTheme(
@@ -41,13 +41,13 @@ PhotoBoothTheme get neobrutalismTheme => PhotoBoothTheme(
       }),
       shape: WidgetStatePropertyAll(RoundedRectangleBorder(
         side: BorderSide(width: 6),
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(24),
       )),
-      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 32)),
+      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 32, vertical: 8)),
       textStyle: WidgetStatePropertyAll(_navigationButtonTextStyle),
       iconSize: WidgetStatePropertyAll(_navigationButtonTextStyle.fontSize! * 0.80),
     ),
-    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 32, child: child),
+    frameBuilder: (_, child, states) => NeobrutalismButtonFrame(states: states, radius: 24, child: child),
   ),
 
   captureCounterTheme: CaptureCounterTheme(
@@ -104,9 +104,9 @@ final _rootTextStyle = GoogleFonts.montserrat(
   color: Colors.black,
 );
 
-final _titleTextStyle = _rootTextStyle.copyWith(fontSize: 120);
-final _subtitleTextStyle = _rootTextStyle.copyWith(fontSize: 80, color: Colors.white);
-final _actionButtonTextStyle = _rootTextStyle.copyWith(fontSize: 100);
-final _navigationButtonTextStyle = _rootTextStyle.copyWith(fontSize: 80);
+final _titleTextStyle = _rootTextStyle.copyWith(fontSize: 100);
+final _subtitleTextStyle = _rootTextStyle.copyWith(fontSize: 60, color: Colors.white);
+final _actionButtonTextStyle = _rootTextStyle.copyWith(fontSize: 80);
+final _navigationButtonTextStyle = _rootTextStyle.copyWith(fontSize: 60);
 
 const _heavyShadow = BoxShadow(color: Color.fromARGB(255, 0, 0, 0), offset: Offset(0, 3), blurRadius: 8);

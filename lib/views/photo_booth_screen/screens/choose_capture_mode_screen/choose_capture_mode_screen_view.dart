@@ -45,16 +45,19 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
   Widget get _singlePictureButton {
     return PhotoBoothButton.action(
       onPressed: controller.onClickOnSinglePhoto,
-      child: Column(
-        spacing: 16,
-        children: [
-          Expanded(child: FittedBox(child: _getButton(452))),
-          AutoSizeText(
-            localizations.chooseCaptureModeScreenSinglePictureButton,
-            group: controller.autoSizeGroup,
-            maxLines: 1,
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(child: FittedBox(child: _getButton(452))),
+            AutoSizeText(
+              localizations.chooseCaptureModeScreenSinglePictureButton,
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -62,32 +65,35 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
   Widget get _collageButton {
     return PhotoBoothButton.action(
       onPressed: controller.onClickOnPhotoCollage,
-      child: Column(
-        spacing: 16,
-        children: [
-          Expanded(
-            child: FittedBox(
-              child: Column(
-                spacing: 12,
-                children: [
-                  Row(
-                    spacing: 12,
-                    children: [_getButton(220), _getButton(220)],
-                  ),
-                  Row(
-                    spacing: 12,
-                    children: [_getButton(220), _getButton(220)],
-                  ),
-                ],
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(
+              child: FittedBox(
+                child: Column(
+                  spacing: 12,
+                  children: [
+                    Row(
+                      spacing: 12,
+                      children: [_getButton(220), _getButton(220)],
+                    ),
+                    Row(
+                      spacing: 12,
+                      children: [_getButton(220), _getButton(220)],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          AutoSizeText(
-            localizations.chooseCaptureModeScreenCollageButton,
-            group: controller.autoSizeGroup,
-            maxLines: 1,
-          ),
-        ],
+            AutoSizeText(
+              localizations.chooseCaptureModeScreenCollageButton,
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
       ),
     );
   }
