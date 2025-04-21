@@ -3,7 +3,8 @@ part of 'project_settings.dart';
 enum UiTheme {
 
   simple("Simple"),
-  wedding("Wedding");
+  wedding("Wedding"),
+  neobrutalism("Neobrutalism");
 
   final String name;
 
@@ -13,6 +14,7 @@ enum UiTheme {
     return switch (this) {
       UiTheme.simple => PhotoBoothTheme.defaultBasic(),
       UiTheme.wedding => PhotoBoothTheme.defaultWedding(),
+      UiTheme.neobrutalism => PhotoBoothTheme.defaultNeobrutalism(),
     };
   }
 
