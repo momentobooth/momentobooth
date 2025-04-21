@@ -1,13 +1,15 @@
 // ignore_for_file: annotate_overrides
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.basic_theme.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.wedding_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/basic/basic_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/neobrutalism/neobrutalism_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/wedding/wedding_theme.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'photo_booth_theme.tailor.dart';
 
 typedef WidgetBuilder = Widget Function(BuildContext context, Widget child);
+typedef StatesWidgetBuilder = Widget Function(BuildContext context, Widget child, Set<WidgetState> states);
 
 @TailorMixin()
 class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothThemeTailorMixin {
@@ -36,6 +38,7 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
 
   factory PhotoBoothTheme.defaultBasic() => basicTheme;
   factory PhotoBoothTheme.defaultWedding() => weddingTheme;
+  factory PhotoBoothTheme.defaultNeobrutalism() => neobrutalismTheme;
 
 }
 
@@ -53,7 +56,7 @@ class TextTheme extends ThemeExtension<TextTheme> with _$TextThemeTailorMixin {
 class PhotoBoothButtonTheme extends ThemeExtension<PhotoBoothButtonTheme> with _$PhotoBoothButtonThemeTailorMixin {
 
   final ButtonStyle style;
-  final WidgetBuilder? frameBuilder;
+  final StatesWidgetBuilder? frameBuilder;
 
   const PhotoBoothButtonTheme({required this.style, this.frameBuilder});
 

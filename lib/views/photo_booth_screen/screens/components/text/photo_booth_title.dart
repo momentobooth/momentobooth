@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class PhotoBoothTitle extends StatelessWidget {
 
@@ -22,4 +23,9 @@ class PhotoBoothTitle extends StatelessWidget {
     return context.theme.titleTheme.frameBuilder?.call(context, child) ?? child;
   }
 
+}
+
+@UseCase(name: 'Title', type: PhotoBoothTitle)
+Widget navigationButton(BuildContext context) {
+  return PhotoBoothTitle('Ba Sing Se');
 }

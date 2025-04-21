@@ -26,12 +26,15 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
         ),
         Expanded(
           flex: 2,
-          child: Row(
-            children: [
-              Expanded(child: _singlePictureButton),
-              const SizedBox(width: 32),
-              Expanded(child: _collageButton),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 64),
+            child: Row(
+              spacing: 32,
+              children: [
+                Expanded(child: _singlePictureButton),
+                Expanded(child: _collageButton),
+              ],
+            ),
           ),
         ),
         const Flexible(fit: FlexFit.tight, child: SizedBox()),
@@ -43,6 +46,7 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
     return PhotoBoothButton.action(
       onPressed: controller.onClickOnSinglePhoto,
       child: Column(
+        spacing: 16,
         children: [
           Expanded(child: FittedBox(child: _getButton(452))),
           AutoSizeText(
@@ -59,25 +63,20 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
     return PhotoBoothButton.action(
       onPressed: controller.onClickOnPhotoCollage,
       child: Column(
+        spacing: 16,
         children: [
           Expanded(
             child: FittedBox(
               child: Column(
+                spacing: 12,
                 children: [
                   Row(
-                    children: [
-                      _getButton(220),
-                      const SizedBox(width: 12),
-                      _getButton(220),
-                    ],
+                    spacing: 12,
+                    children: [_getButton(220), _getButton(220)],
                   ),
-                  const SizedBox(height: 12),
                   Row(
-                    children: [
-                      _getButton(220),
-                      const SizedBox(width: 12),
-                      _getButton(220),
-                    ],
+                    spacing: 12,
+                    children: [_getButton(220), _getButton(220)],
                   ),
                 ],
               ),

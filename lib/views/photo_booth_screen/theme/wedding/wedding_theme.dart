@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:momento_booth/views/components/animations/wedding_wreath.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/wedding/components/wedding_wreath.dart';
 
 PhotoBoothTheme get weddingTheme => PhotoBoothTheme(
   titleTheme: TextTheme(style: _titleTextStyle),
