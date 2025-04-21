@@ -13,7 +13,7 @@ class NeobrutalismTitleFrame extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(width: 8),
-        borderRadius: BorderRadius.circular(48),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [BoxShadow(offset: Offset(-12, 12))],
       ),
       child: child,

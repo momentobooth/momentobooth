@@ -10,7 +10,7 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 /// This widget works in a bit of a hacky way. It first let's the auto_size_text library find the right size for the text to make the whole widget fit.
 /// It then sizes down the icon to match the text size (calculating the size according to an icon to text size ratio).
 ///
-/// It works, for the lack of me (SH) knowing a better way to archieve this.
+/// It works, for the lack of me (SH) knowing a better way to achieve this.
 class AutoSizeTextAndIcon extends StatefulWidget {
 
   final String? text;
