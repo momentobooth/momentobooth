@@ -43,7 +43,7 @@ dependencies:
   flutter_mobx: 2.3.0
 
   # Models
-  freezed_annotation: 2.4.4
+  freezed_annotation: 3.0.0
   json_annotation: 4.9.0
 
   # Rust library/Interop
@@ -118,7 +118,7 @@ dev_dependencies:
   flutter_lints: 5.0.0
 
   # Models
-  freezed: 2.5.7
+  freezed: 3.0.0-0.0.dev
   json_serializable: 6.9.0
 
   # Code generation
