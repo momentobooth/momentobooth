@@ -85,7 +85,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        const LiveView(fit: BoxFit.contain, blur: false),
+        const LiveView(fit: BoxFit.contain),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

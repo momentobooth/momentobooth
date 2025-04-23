@@ -7,6 +7,7 @@ import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.d
 PhotoBoothTheme get neobrutalismTheme => PhotoBoothTheme(
   titleTheme: TextTheme(style: _titleTextStyle, frameBuilder: (_, child) => NeobrutalismTitleFrame(child: child)),
   subtitleTheme: TextTheme(style: _subtitleTextStyle),
+  screenLiveViewBlur: (route) => 0,
 
   actionButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(

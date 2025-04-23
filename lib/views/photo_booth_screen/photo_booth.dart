@@ -42,39 +42,37 @@ class PhotoBooth extends StatelessWidget {
         ),
         Expanded(
           child: FramerateMonitor(
-            child: LiveViewBackground(
-              child: _HotkeyResponder(
-                child: ActivityMonitor(
-                  child: SetScrollConfiguration(
-                    child: Observer(
-                      builder: (context) => FluentApp(
-                        debugShowCheckedModeBanner: false,
-                        scrollBehavior: ScrollConfiguration.of(context),
-                        color: getIt<ProjectManager>().settings.primaryColor,
-                        theme: FluentThemeData(
-                          accentColor: AccentColor.swatch(
-                            {'normal': getIt<ProjectManager>().settings.primaryColor},
-                          ),
-                          extensions: [getIt<ProjectManager>().settings.uiTheme.themeExtension],
+            child: _HotkeyResponder(
+              child: ActivityMonitor(
+                child: SetScrollConfiguration(
+                  child: Observer(
+                    builder: (context) => FluentApp(
+                      debugShowCheckedModeBanner: false,
+                      scrollBehavior: ScrollConfiguration.of(context),
+                      color: getIt<ProjectManager>().settings.primaryColor,
+                      theme: FluentThemeData(
+                        accentColor: AccentColor.swatch(
+                          {'normal': getIt<ProjectManager>().settings.primaryColor},
                         ),
-                        localizationsDelegates: const [
-                          AppLocalizations.delegate,
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                          FluentLocalizations.delegate,
-                        ],
-                        supportedLocales: const [Locale('en'), Locale('nl')],
-                        locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
-                        home: child,
+                        extensions: [getIt<ProjectManager>().settings.uiTheme.themeExtension],
                       ),
+                      localizationsDelegates: const [
+                        AppLocalizations.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                        FluentLocalizations.delegate,
+                      ],
+                      supportedLocales: const [Locale('en'), Locale('nl')],
+                      locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
+                      home: child,
+                      builder: (_, child) => LiveViewBackground(child: child!)),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

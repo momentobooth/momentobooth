@@ -11,12 +11,12 @@ import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 class LiveView extends StatelessWidget {
 
   final BoxFit fit;
-  final bool blur;
+  final double blurSigma;
 
   const LiveView({
     super.key,
     required this.fit,
-    required this.blur,
+    this.blurSigma = 0,
   });
 
   ui.FilterQuality get _filterQuality => getIt<SettingsManager>().settings.ui.liveViewFilterQuality.toUiFilterQuality();
@@ -55,10 +55,10 @@ class LiveView extends StatelessWidget {
       ),
     );
 
-    if (blur) {
+    if (blurSigma > 0) {
       return ClipRect(
         child: ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          imageFilter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
           child: box,
         ),
       );
