@@ -1,11 +1,17 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 
 PhotoBoothTheme get hollywoodTheme => PhotoBoothTheme(
   titleTheme: TextTheme(style: _titleTextStyle),
   subtitleTheme: TextTheme(style: _subtitleTextStyle),
-  screenLiveViewBlur: (route) => 0,
+  screenLiveViewBlur: (route) => switch (route) {
+    StartScreen.defaultRoute => 8,
+    ChooseCaptureModeScreen.defaultRoute => 4,
+    _ => 0,
+  },
 
   actionButtonTheme: PhotoBoothButtonTheme(
     style: ButtonStyle(
@@ -88,9 +94,9 @@ final _rootTextStyle = GoogleFonts.limelight(
   color: Color(0xFFFFFFFF),
 );
 
-final _titleTextStyle = _rootTextStyle.copyWith(fontSize: 120);
-final _subtitleTextStyle = _rootTextStyle.copyWith(fontSize: 80);
-final _actionButtonTextStyle = _rootTextStyle.copyWith(fontSize: 100);
-final _navigationButtonTextStyle = _rootTextStyle.copyWith(fontSize: 80);
+final _titleTextStyle = _rootTextStyle.copyWith(fontSize: 100);
+final _subtitleTextStyle = _rootTextStyle.copyWith(fontSize: 60);
+final _actionButtonTextStyle = _rootTextStyle.copyWith(fontSize: 80);
+final _navigationButtonTextStyle = _rootTextStyle.copyWith(fontSize: 60);
 
 const _heavyShadow = BoxShadow(color: Color.fromARGB(255, 0, 0, 0), offset: Offset(0, 3), blurRadius: 8);

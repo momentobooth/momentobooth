@@ -2,7 +2,11 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/basic/basic_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/hollywood/hollywood_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/neobrutalism/neobrutalism_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/wedding/wedding_theme.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -29,6 +33,32 @@ class WidgetbookApp extends StatelessWidget {
           initialAlignment: Alignment.center,
         ),
         InspectorAddon(enabled: true),
+        ThemeAddon<PhotoBoothTheme>(
+          themes: [
+            WidgetbookTheme(
+              name: 'Basic',
+              data: basicTheme,
+            ),
+            WidgetbookTheme(
+              name: 'Hollywood',
+              data: hollywoodTheme,
+            ),
+            WidgetbookTheme(
+              name: 'Neobrutalism',
+              data: neobrutalismTheme,
+            ),
+            WidgetbookTheme(
+              name: 'Wedding',
+              data: weddingTheme,
+            ),
+          ],
+          themeBuilder: (context, theme, child) {
+            return FluentTheme(
+              data: FluentThemeData(extensions: [theme]),
+              child: child,
+            );
+          },
+        ),
       ],
       appBuilder: (context, child) {
         return MaterialApp(
