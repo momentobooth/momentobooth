@@ -2,6 +2,7 @@
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/basic/basic_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/hollywood/hollywood_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/neobrutalism/neobrutalism_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/wedding/wedding_theme.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
@@ -41,6 +42,7 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
   factory PhotoBoothTheme.defaultBasic() => basicTheme;
   factory PhotoBoothTheme.defaultWedding() => weddingTheme;
   factory PhotoBoothTheme.defaultNeobrutalism() => neobrutalismTheme;
+  factory PhotoBoothTheme.defaultHollywood() => hollywoodTheme;
 
 }
 

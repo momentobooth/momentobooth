@@ -4,7 +4,8 @@ enum UiTheme {
 
   simple("Simple"),
   wedding("Wedding"),
-  neobrutalism("Neobrutalism");
+  neobrutalism("Neobrutalism"),
+  hollywood("Hollywood");
 
   final String name;
 
@@ -15,6 +16,7 @@ enum UiTheme {
       UiTheme.simple => PhotoBoothTheme.defaultBasic(),
       UiTheme.wedding => PhotoBoothTheme.defaultWedding(),
       UiTheme.neobrutalism => PhotoBoothTheme.defaultNeobrutalism(),
+      UiTheme.hollywood => PhotoBoothTheme.defaultHollywood(),
     };
   }
 
