@@ -11,6 +11,7 @@ GoRoute _onboardingRoute = GoRoute(
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
+      context: context,
       child: const OnboardingScreen(),
     );
   },
@@ -21,6 +22,7 @@ GoRoute _settingsRoute = GoRoute(
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
+      context: context,
       opaque: false,
       child: const FullScreenPopup(
         child: SettingsScreen(),
@@ -35,6 +37,7 @@ ShellRoute _photoBoothShellRoute = ShellRoute(
   pageBuilder: (context, state, child) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
+      context: context,
       enableTransitionOut: false,
       child: PhotoBooth(child: child),
     );
@@ -60,21 +63,21 @@ ShellRoute _photoBoothShellRoute = ShellRoute(
 GoRoute _startRoute = GoRoute(
   path: StartScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const StartScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const StartScreen());
   },
 );
 
 GoRoute _chooseCaptureModeRoute = GoRoute(
   path: ChooseCaptureModeScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const ChooseCaptureModeScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const ChooseCaptureModeScreen());
   },
 );
 
 GoRoute _captureRoute = GoRoute(
   path: CaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const CaptureScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const CaptureScreen());
   },
 );
 
@@ -82,28 +85,28 @@ GoRoute _multiCaptureRoute = GoRoute(
   path: MultiCaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
     // Here we use state.uri because of the query param `n`.
-    return TransitionPage.fromSettings(key: ValueKey(state.uri), child: const MultiCaptureScreen());
+    return TransitionPage.fromSettings(key: ValueKey(state.uri.toString()), context: context, child: const MultiCaptureScreen());
   },
 );
 
 GoRoute _collageMakerRoute = GoRoute(
   path: CollageMakerScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const CollageMakerScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const CollageMakerScreen());
   },
 );
 
 GoRoute _shareRoute = GoRoute(
   path: ShareScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const ShareScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const ShareScreen());
   },
 );
 
 GoRoute _galleryRoute = GoRoute(
   path: GalleryScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const GalleryScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const GalleryScreen());
   },
 );
 
@@ -112,6 +115,7 @@ GoRoute _photoDetailsRoute = GoRoute(
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
+      context: context,
       opaque: true,
       barrierDismissible: true,
       child: PhotoDetailsScreen(photoId: state.pathParameters['pid']!),
@@ -122,6 +126,6 @@ GoRoute _photoDetailsRoute = GoRoute(
 GoRoute _manualCollageRoute = GoRoute(
   path: ManualCollageScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const ManualCollageScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const ManualCollageScreen());
   },
 );

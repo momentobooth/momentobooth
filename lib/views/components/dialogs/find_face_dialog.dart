@@ -93,10 +93,7 @@ class _FindFaceDialogState extends State<FindFaceDialog> with Logger {
           children: [
             const SizedBox(
               width: 700,
-              child: LiveView(
-                fit: BoxFit.contain,
-                blur: false,
-              ),
+              child: LiveView(fit: BoxFit.contain),
             ),
             SizedBox(
               height: 467,

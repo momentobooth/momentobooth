@@ -49,6 +49,7 @@ app.*.map.json
 *.freezed.dart
 *.json.dart
 *.g.dart
+*.tailor.dart
 
 # l10n
 lib/l10n/generated/
