@@ -43,7 +43,9 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
                     _liveViewWithCounter,
                     Observer(builder: (_) {
                       if (viewModel.showSpinner) {
-                        return Center(child: LoadingDialog(title: localizations.captureScreenLoadingPhoto));
+                        return Center(
+                            child: LoadingDialog.cameraDownload(title: localizations.captureScreenLoadingPhoto),
+                          );
                       }
                       return const SizedBox();
                     }),
