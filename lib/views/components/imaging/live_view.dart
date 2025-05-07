@@ -10,6 +10,8 @@ import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 
 class LiveView extends StatelessWidget {
 
+  static const double _blurSigma = 8;
+
   final BoxFit fit;
   final bool blur;
 
@@ -57,9 +59,25 @@ class LiveView extends StatelessWidget {
 
     if (blur) {
       return ClipRect(
-        child: ImageFiltered(
-          imageFilter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: box,
+        // This is a (ugly?) way to fix the subtle but noticeable black border around the background blur.
+        // It does so with respect to the aspect ratio by finding the layout constraints, then calculating
+        // the size multiplier by looking at the shortest side (we add 2 times the blur Σ), then calculating
+        // the definitive size of the bleed box.
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            double sizeMultiplier = (constraints.biggest.shortestSide + _blurSigma * 2) / constraints.smallest.shortestSide;
+            Size bleedBoxSize = constraints.biggest * sizeMultiplier;
+            return OverflowBox(
+              minWidth: bleedBoxSize.width,
+              maxWidth: bleedBoxSize.width,
+              minHeight: bleedBoxSize.height,
+              maxHeight: bleedBoxSize.height,
+              child: ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: _blurSigma, sigmaY: _blurSigma),
+                child: box,
+              ),
+            );
+          }
         ),
       );
     } else {
