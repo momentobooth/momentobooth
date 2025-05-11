@@ -9,7 +9,6 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
-import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 
 class ActivityMonitor extends StatefulWidget {
 
@@ -70,7 +69,6 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   void _goHome() {
     String currentLocation = GoRouter.of(context).currentLocation;
     if (currentLocation == StartScreen.defaultRoute ||
-        currentLocation == SettingsScreen.defaultRoute ||
         currentLocation == ManualCollageScreen.defaultRoute) {
       return;
     }
