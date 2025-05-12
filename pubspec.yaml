@@ -18,7 +18,7 @@ dependencies:
   animations: 2.0.11
   auto_size_text: 3.0.0
   fluent_ui: 4.11.3
-  go_router: 15.1.0
+  go_router: 15.1.1
   flutter_svg: 2.1.0
   animated_text_kit: 4.2.3
   flutter_scroll_shadow: 1.2.6
@@ -29,10 +29,10 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.1
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.13.0
+  widgetbook: 3.13.1
   widgetbook_annotation: 3.4.0
-  flex_color_picker: 3.7.0
-  lucide_icons_flutter: 2.0.6
+  flex_color_picker: 3.7.1
+  lucide_icons_flutter: 3.0.2
   wizard_router: 1.4.0
 
   # Printscreen/Image processing
@@ -63,12 +63,12 @@ dependencies:
   win32: 5.12.0
 
   # Log and error handling
-  talker: 4.7.2
-  talker_flutter: 4.7.2
+  talker: 4.7.5
+  talker_flutter: 4.7.5
   sentry_flutter: 8.14.2
 
   # Sound output
-  just_audio: 0.10.0
+  just_audio: 0.10.2
   just_audio_windows: 0.2.2
   just_audio_media_kit: 2.1.0
   media_kit_libs_linux: 1.2.1
@@ -80,7 +80,7 @@ dependencies:
   # Networking
   http: 1.3.0
   http_parser: 4.1.2
-  mqtt5_client: 4.11.0
+  mqtt5_client: 4.12.0
 
   # Misc
   get_it: 8.0.3

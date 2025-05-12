@@ -435,10 +435,10 @@ packages:
     dependency: "direct main"
     description:
       name: flex_color_picker
-      sha256: c083b79f1c57eaeed9f464368be376951230b3cb1876323b784626152a86e480
+      sha256: "8f753a1a026a13ea5cc5eddbae3ceb886f2537569ab2e5208efb1e3bb5af72ff"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.0"
+    version: "3.7.1"
   flex_seed_scheme:
     dependency: transitive
     description:
@@ -624,10 +624,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "1df05e1ed918866580372da853fb04e0c18428ae94b4648d6d89f4492789100d"
+      sha256: "2b9ba6d4c247457c35a6622f1dee6aab6694a4e15237ff7c32320345044112b6"
       url: "https://pub.dev"
     source: hosted
-    version: "15.1.0"
+    version: "15.1.1"
   graphs:
     dependency: transitive
     description:
@@ -752,10 +752,10 @@ packages:
     dependency: "direct main"
     description:
       name: just_audio
-      sha256: "451d7995b122da6c22fadf0e430280aaf2ad629f77ea7e82c39987b99e8bc7a2"
+      sha256: "90421d34e9ee9a407c3722e9db6a45c57b90620b51fcf3a172bae4c3c3278ed5"
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.0"
+    version: "0.10.2"
   just_audio_media_kit:
     dependency: "direct main"
     description:
@@ -848,10 +848,10 @@ packages:
     dependency: "direct main"
     description:
       name: lucide_icons_flutter
-      sha256: e3d13fa20325c7d70d055b0b6a120a07ea2be320df0dbef87cd2aa43ddfbd272
+      sha256: "90d41e4fd090228734ffb5b3464e94fe35b1539c4029415df86cfff28ea6956e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.6"
+    version: "3.0.2"
   macros:
     dependency: transitive
     description:
@@ -936,10 +936,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: "9e15d1cd888035bcd5b204325c6678b32858ea3fc94bc1e41d5aa99d3a43f49f"
+      sha256: "11ef1bd8c75fd02152ace063e882797f6dacb820538842018e7845b23480a09c"
       url: "https://pub.dev"
     source: hosted
-    version: "4.11.0"
+    version: "4.12.0"
   nested:
     dependency: transitive
     description:
@@ -1428,26 +1428,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: cbea2c5a10a3d9225e58b5fef4092d6ec00f1fcda43f92a33dfbab1ea7ffca79
+      sha256: "8784bb7ed8438832dcdc8211bd9b6fed96dcdf215145ff8771d5612667bc158a"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.2"
+    version: "4.7.5"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "113b8402fcb546c4c11a099cbcd39bf835df2586573ef6655ce1f94b2f841e40"
+      sha256: "63e2454581ef26969491c59c307b36dc9d1fba936ddcc5df449bbe486b8adda8"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.2"
+    version: "4.7.5"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: "416b4d726358764c68c2de23c11bf9f146f2608ac244ec2ed9da741f89c49a6e"
+      sha256: "4f97def0c14944ea26caba225831dcdf4088017c02961c493c45a057e5e6c382"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.2"
+    version: "4.7.5"
   term_glyph:
     dependency: transitive
     description:
@@ -1685,10 +1685,10 @@ packages:
     dependency: "direct main"
     description:
       name: widgetbook
-      sha256: "16c06f8e365e6a422712d8041e87ed4c51d78dc0dfb7b2c51cd03611ec7ebc9a"
+      sha256: "8e3cd3157c0c24e28278d62835383fab65098433dcde946fe958361094aa1401"
       url: "https://pub.dev"
     source: hosted
-    version: "3.13.0"
+    version: "3.13.1"
   widgetbook_annotation:
     dependency: "direct main"
     description:
