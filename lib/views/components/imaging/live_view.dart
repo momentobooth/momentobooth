@@ -59,10 +59,10 @@ class LiveView extends StatelessWidget {
 
     if (blur) {
       return ClipRect(
-        // This is a (ugly?) way to fix the subtle but noticeable black border around the background blur.
-        // It does so with respect to the aspect ratio by finding the layout constraints, then calculating
-        // the size multiplier by looking at the shortest side (we add 2 times the blur Σ), then calculating
-        // the definitive size of the bleed box.
+        // This is a (ugly? because I'd rather have a solution without LayoutBuilder...) way to fix the subtle
+        // but noticeable black border around the background blur. It does so with respect to the aspect ratio
+        // by finding the layout constraints, then calculating the size multiplier by looking at the shortest
+        // side (we add 2 times the blur σ), then calculating the definitive size of the bleed box.
         child: LayoutBuilder(
           builder: (context, constraints) {
             double sizeMultiplier = (constraints.biggest.shortestSide + _blurSigma * 2) / constraints.smallest.shortestSide;
