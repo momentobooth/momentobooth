@@ -11,7 +11,7 @@ class SettingsOverlay extends ScreenBase<SettingsOverlayViewModel, SettingsOverl
 
   final SettingsPageKey initialPage;
 
-  const SettingsOverlay({super.key, this.initialPage = SettingsPageKey.project});
+  const SettingsOverlay({super.key, required this.initialPage});
 
   @override
   SettingsOverlayController createController({required SettingsOverlayViewModel viewModel, required BuildContextAccessor contextAccessor}) {
@@ -28,11 +28,11 @@ class SettingsOverlay extends ScreenBase<SettingsOverlayViewModel, SettingsOverl
     return SettingsOverlayViewModel(contextAccessor: contextAccessor);
   }
 
-  static Future<void> openDialog(BuildContext context) async {
+  static Future<void> openDialog(BuildContext context, {SettingsPageKey initialPage = SettingsPageKey.project}) async {
     context.read<ActivityMonitorController>().pause();
     await showDialog(
       context: context,
-      builder: (_) => SettingsOverlay(),
+      builder: (_) => SettingsOverlay(initialPage: initialPage),
       barrierDismissible: true,
     );
     if (context.mounted) context.read<ActivityMonitorController>().resume();

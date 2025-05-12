@@ -44,8 +44,7 @@ class MomentoMenuBar extends StatelessWidget {
           ]),
           MenuBarItem(title: localizations.genericHelp, items: [
             MenuFlyoutItem(text: Text(localizations.genericDocumentation), onPressed: () { launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")); }, leading: Icon(LucideIcons.book)),
-            // TODO go to about screen in settings
-            MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () { SettingsOverlay.openDialog(context); }, leading: Icon(LucideIcons.info)),
+            MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () { SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.about); }, leading: Icon(LucideIcons.info)),
           ]),
         ],
       ),
