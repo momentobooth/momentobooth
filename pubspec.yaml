@@ -17,8 +17,8 @@ dependencies:
   # UI
   animations: 2.0.11
   auto_size_text: 3.0.0
-  fluent_ui: 4.11.3
-  go_router: 15.1.1
+  fluent_ui: 4.11.4
+  go_router: 15.1.2
   flutter_svg: 2.1.0
   animated_text_kit: 4.2.3
   flutter_scroll_shadow: 1.2.6
@@ -32,7 +32,7 @@ dependencies:
   widgetbook: 3.13.1
   widgetbook_annotation: 3.4.0
   flex_color_picker: 3.7.1
-  lucide_icons_flutter: 3.0.2
+  lucide_icons_flutter: 3.0.3
   wizard_router: 1.4.0
 
   # Printscreen/Image processing
@@ -60,11 +60,11 @@ dependencies:
   path: ^1.9.0
   window_manager: 0.4.3
   file_selector: 1.0.3
-  win32: 5.12.0
+  win32: 5.13.0
 
   # Log and error handling
-  talker: 4.7.5
-  talker_flutter: 4.7.5
+  talker: 4.7.6
+  talker_flutter: 4.7.6
   sentry_flutter: 8.14.2
 
   # Sound output
@@ -78,7 +78,7 @@ dependencies:
   toml: 0.16.0
 
   # Networking
-  http: 1.3.0
+  http: 1.4.0
   http_parser: 4.1.2
   mqtt5_client: 4.12.0
 
