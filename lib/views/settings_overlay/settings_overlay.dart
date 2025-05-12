@@ -1,9 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
 import 'package:momento_booth/views/base/screen_base.dart';
+import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_controller.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view_model.dart';
+import 'package:provider/provider.dart';
 
 class SettingsOverlay extends ScreenBase<SettingsOverlayViewModel, SettingsOverlayController, SettingsOverlayView> {
 
@@ -26,12 +28,14 @@ class SettingsOverlay extends ScreenBase<SettingsOverlayViewModel, SettingsOverl
     return SettingsOverlayViewModel(contextAccessor: contextAccessor);
   }
 
-  static void openDialog(BuildContext context) {
-    showDialog(
+  static Future<void> openDialog(BuildContext context) async {
+    context.read<ActivityMonitorController>().pause();
+    await showDialog(
       context: context,
       builder: (_) => SettingsOverlay(),
       barrierDismissible: true,
     );
+    if (context.mounted) context.read<ActivityMonitorController>().resume();
   }
 
 }

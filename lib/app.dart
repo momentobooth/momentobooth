@@ -11,6 +11,7 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
@@ -22,6 +23,7 @@ import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/shar
 import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
 part 'app.hotkeys.dart';
@@ -81,6 +83,9 @@ class _AppState extends State<App> with WindowListener {
             Locale('nl'), // Dutch
           ],
           locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
+          builder: (context, child) {
+            return ChangeNotifierProvider(create: (_) => ActivityMonitorController(), child: child);
+          },
         );
       }
     );
