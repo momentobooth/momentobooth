@@ -77,7 +77,7 @@ abstract class SingleCaptureScreenViewModelBase extends ScreenViewModelBase with
     return await getIt<PhotosManager>().writeOutput();
   }
 
-  CaptureScreenViewModelBase({
+  SingleCaptureScreenViewModelBase({
     required super.contextAccessor,
   }) {
     getIt<PhotosManager>().initiateDelayedPhotoCapture(onCaptureFinished);
