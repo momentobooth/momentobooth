@@ -14,7 +14,6 @@ import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
@@ -22,12 +21,13 @@ import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_sc
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/settings_screen/settings_screen.dart';
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
-part 'app.routes.dart';
 part 'app.hotkeys.dart';
+part 'app.routes.dart';
 
 class App extends StatefulWidget {
 

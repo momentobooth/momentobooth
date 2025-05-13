@@ -11,9 +11,9 @@ import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/qr_share_dialog.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/capture_screen/capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view_model.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:path/path.dart' as path;
 
@@ -37,7 +37,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     if (getIt<PhotosManager>().captureMode == CaptureMode.single) {
       getIt<PhotosManager>().reset(advance: false);
       getIt<StatsManager>().addRetake();
-      router.go(CaptureScreen.defaultRoute);
+      router.go(SingleCaptureScreen.defaultRoute);
     } else {
       getIt<StatsManager>().addCollageChange();
       router.go(CollageMakerScreen.defaultRoute);

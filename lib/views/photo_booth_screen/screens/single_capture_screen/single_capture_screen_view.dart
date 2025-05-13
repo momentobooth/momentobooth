@@ -5,12 +5,12 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/capture_screen/capture_screen_controller.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/capture_screen/capture_screen_view_model.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen_controller.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen_view_model.dart';
 
-class CaptureScreenView extends ScreenViewBase<CaptureScreenViewModel, CaptureScreenController> {
+class SingleCaptureScreenView extends ScreenViewBase<SingleCaptureScreenViewModel, SingleCaptureScreenController> {
 
-  const CaptureScreenView({
+  const SingleCaptureScreenView({
     required super.viewModel,
     required super.controller,
     required super.contextAccessor,
