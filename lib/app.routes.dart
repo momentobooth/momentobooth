@@ -72,9 +72,9 @@ GoRoute _chooseCaptureModeRoute = GoRoute(
 );
 
 GoRoute _captureRoute = GoRoute(
-  path: CaptureScreen.defaultRoute,
+  path: SingleCaptureScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, child: const CaptureScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, child: const SingleCaptureScreen());
   },
 );
 
