@@ -73,8 +73,8 @@ class SingleCaptureScreenView extends ScreenViewBase<SingleCaptureScreenViewMode
           pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
           isRepeatingAnimation: false,
           animatedTexts: [
-            RotateAnimatedText(localizations.captureScreenGetReady, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
-            RotateAnimatedText(localizations.captureScreenLookAtCamera, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.captureScreenGetReady, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.captureScreenLookAtCamera, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
           ],
         ),
       ),
