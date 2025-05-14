@@ -25,14 +25,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static const int _gradientCount = 3;
 
-  final _random = Random();
+  late final Timer _timer;
+  final Random _random = Random();
+
   late List<Gradient> _gradients;
 
   @override
   void initState() {
     _updateGradients();
 
-    Timer.periodic(
+    _timer = Timer.periodic(
       const Duration(seconds: 10),
       (_) => _updateGradients(),
     );
@@ -43,22 +45,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _updateGradients() {
+    if (!mounted) return;
     setState(() {
       _gradients = List.generate(
-          _gradientCount,
-          (i) => RadialGradient(
-                radius: _random.nextDouble() / 3 + 0.30,
-                center: Alignment(
-                  _random.nextDouble() * (_random.nextBool() ? -1 : 1),
-                  _random.nextDouble() * (_random.nextBool() ? -1 : 1),
-                ),
-                focalRadius: 100,
-                colors: [
-                  _getRandomLightBlueTint(),
-                  const Color.fromARGB(0, 255, 255, 255),
-                ],
-              ),
-          growable: false);
+        _gradientCount,
+        (i) => RadialGradient(
+          radius: _random.nextDouble() / 3 + 0.30,
+          center: Alignment(
+            _random.nextDouble() * (_random.nextBool() ? -1 : 1),
+            _random.nextDouble() * (_random.nextBool() ? -1 : 1),
+          ),
+          focalRadius: 100,
+          colors: [_getRandomLightBlueTint(), const Color.fromARGB(0, 255, 255, 255)],
+        ),
+        growable: false,
+      );
     });
   }
 
@@ -117,6 +118,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         // ),
       ],
     );
+  }
+
+  @override void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
 }
