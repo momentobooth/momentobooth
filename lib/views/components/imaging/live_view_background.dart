@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
@@ -111,22 +112,26 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
       return _errorState(Colors.green, "Could not decode webcam data");
     }
 
+    String location = GoRouter.of(context).currentLocation;
+    double blurSigma = context.theme.screenLiveViewBlur(location);
+
     return Stack(
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
         if (_backgroundBlur == BackgroundBlur.textureBlur)
-          const LiveView(
-            fit: BoxFit.cover,
-            blur: true,
-          ),
+          const LiveView(fit: BoxFit.cover, blurSigma: 8),
         AnimatedOpacity(
           duration: const Duration(milliseconds: 300),
           opacity: _showLiveViewBackground ? 1 : 0,
           curve: Curves.ease,
-          child: const LiveView(
-            fit: BoxFit.contain,
-            blur: false,
+          child: TweenAnimationBuilder(
+            tween: Tween<double>(begin: 0.0, end: blurSigma),
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+            builder: (_, value, _) {
+              return LiveView(fit: BoxFit.contain, blurSigma: value);
+            }
           ),
         ),
       ],

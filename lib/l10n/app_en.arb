@@ -10,6 +10,7 @@
     "genericCloseButton": "Close",
     "genericRetryButton": "Retry",
     "genericCancelButton": "Cancel",
+    "genericDoneButton": "Done",
     "genericOneMomentPlease": "One moment please...",
     "genericDocumentation": "Documentation",
     "genericAbout": "About",
@@ -101,6 +102,10 @@
     "printDialogSizeSetting": "Size:",
     "printDialogNoOfPrintsSetting": "Number of prints:",
     "printDialogSummary": "{numPrints} prints → {numImages} printed images",
+
+    "printingErrorDialogTitle": "Print error",
+    "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
+    "printingErrorDialogBodyBottom": "Try again later or download your photo using the QR feature.",
 
     "projectNotOpened": "No project opened",
     "opened": "Opened",

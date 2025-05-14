@@ -10,15 +10,13 @@ import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 
 class LiveView extends StatelessWidget {
 
-  static const double _blurSigma = 8;
-
   final BoxFit fit;
-  final bool blur;
+  final double blurSigma;
 
   const LiveView({
     super.key,
     required this.fit,
-    required this.blur,
+    this.blurSigma = 0,
   });
 
   ui.FilterQuality get _filterQuality => getIt<SettingsManager>().settings.ui.liveViewFilterQuality.toUiFilterQuality();
@@ -57,7 +55,7 @@ class LiveView extends StatelessWidget {
       ),
     );
 
-    if (blur) {
+    if (blurSigma > 0) {
       return ClipRect(
         // This is a (ugly? because I'd rather have a solution without LayoutBuilder...) way to fix the subtle
         // but noticeable black border around the background blur. It does so with respect to the aspect ratio
@@ -65,7 +63,7 @@ class LiveView extends StatelessWidget {
         // side (we add 2 times the blur σ), then calculating the definitive size of the bleed box.
         child: LayoutBuilder(
           builder: (context, constraints) {
-            double sizeMultiplier = (constraints.biggest.shortestSide + _blurSigma * 2) / constraints.smallest.shortestSide;
+            double sizeMultiplier = (constraints.biggest.shortestSide + blurSigma * 2) / constraints.smallest.shortestSide;
             Size bleedBoxSize = constraints.biggest * sizeMultiplier;
             return OverflowBox(
               minWidth: bleedBoxSize.width,
@@ -73,7 +71,7 @@ class LiveView extends StatelessWidget {
               minHeight: bleedBoxSize.height,
               maxHeight: bleedBoxSize.height,
               child: ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: _blurSigma, sigmaY: _blurSigma),
+                imageFilter: ImageFilter.blur(sigmaX: blurSigma, sigmaY: blurSigma),
                 child: box,
               ),
             );
