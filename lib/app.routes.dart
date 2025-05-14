@@ -2,7 +2,6 @@ part of 'app.dart';
 
 List<RouteBase> _rootRoutes = [
   _onboardingRoute,
-  _settingsRoute,
   _photoBoothShellRoute,
 ];
 
@@ -12,21 +11,6 @@ GoRoute _onboardingRoute = GoRoute(
     return TransitionPage.fromSettings(
       key: state.pageKey,
       child: const OnboardingScreen(),
-    );
-  },
-);
-
-GoRoute _settingsRoute = GoRoute(
-  path: "/settings",
-  pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(
-      key: state.pageKey,
-      opaque: false,
-      child: const FullScreenPopup(
-        child: SettingsScreen(),
-      ),
-      barrierDismissible: true,
-      enableTransitionOut: false,
     );
   },
 );

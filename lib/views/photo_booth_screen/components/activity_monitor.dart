@@ -9,7 +9,7 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
-import 'package:momento_booth/views/settings_screen/settings_screen.dart';
+import 'package:provider/provider.dart';
 
 class ActivityMonitor extends StatefulWidget {
 
@@ -32,6 +32,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
     super.initState();
 
     GoRouter.of(context).routerDelegate.addListener(_resetTimer);
+    context.read<ActivityMonitorController>().addListener(_onControllerStateChanged);
     _resetTimerReactionDisposer = autorun((_) => _resetTimer());
   }
 
@@ -70,8 +71,8 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   void _goHome() {
     String currentLocation = GoRouter.of(context).currentLocation;
     if (currentLocation == StartScreen.defaultRoute ||
-        currentLocation == SettingsScreen.defaultRoute ||
-        currentLocation == ManualCollageScreen.defaultRoute) {
+        currentLocation == ManualCollageScreen.defaultRoute ||
+        context.read<ActivityMonitorController>().isPaused) {
       return;
     }
     logDebug("Returning to homescreen because Home screen timeout was reached.");
@@ -82,8 +83,31 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   void dispose() {
     _returnHomeTimer?.cancel();
     GoRouter.of(context).routerDelegate.removeListener(_resetTimer);
+    context.read<ActivityMonitorController>().removeListener(_onControllerStateChanged);
     _resetTimerReactionDisposer();
     super.dispose();
+  }
+
+  void _onControllerStateChanged() {
+    if (!context.read<ActivityMonitorController>().isPaused) _resetTimer();
+  }
+
+}
+
+class ActivityMonitorController extends ChangeNotifier {
+
+  bool _isPaused = false;
+
+  bool get isPaused => _isPaused;
+
+  void pause() {
+    _isPaused = true;
+    notifyListeners();
+  }
+
+  void resume() {
+    _isPaused = false;
+    notifyListeners();
   }
 
 }

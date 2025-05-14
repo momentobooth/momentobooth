@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/onboarding_screen/components/wizard_page.dart';
-import 'package:momento_booth/views/settings_screen/components/import_field.dart';
+import 'package:momento_booth/views/settings_overlay/components/import_field.dart';
 
 class SettingsImportPage extends StatelessWidget {
 

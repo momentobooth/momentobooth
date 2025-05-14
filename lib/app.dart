@@ -6,13 +6,12 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app_localizations.dart';
-import 'package:momento_booth/extensions/go_router_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/utils/route_observer.dart';
-import 'package:momento_booth/views/base/full_screen_dialog.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
@@ -23,7 +22,8 @@ import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_scr
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
-import 'package:momento_booth/views/settings_screen/settings_screen.dart';
+import 'package:momento_booth/views/settings_overlay/settings_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
 part 'app.hotkeys.dart';
@@ -41,7 +41,14 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WindowListener {
 
   final GoRouter _router = GoRouter(
-    routes: _rootRoutes,
+    routes: [
+      ShellRoute(
+        routes: _rootRoutes,
+        builder: (context, state, child) {
+          return _HotkeyResponder(child: child);
+        },
+      )
+    ],
     observers: [HeroController()],
     initialLocation: '/onboarding',
   );
@@ -59,28 +66,28 @@ class _AppState extends State<App> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    return _HotkeyResponder(
-      router: _router,
-      child: Observer(
-        builder: (context) {
-          return FluentApp.router(
-            scrollBehavior: ScrollConfiguration.of(context),
-            routerConfig: _router,
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-              FluentLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'), // English
-              Locale('nl'), // Dutch
-            ],
-            locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
-          );
-        }
-      ),
+    return Observer(
+      builder: (context) {
+        return FluentApp.router(
+          scrollBehavior: ScrollConfiguration.of(context),
+          routerConfig: _router,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            FluentLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en'), // English
+            Locale('nl'), // Dutch
+          ],
+          locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
+          builder: (context, child) {
+            return ChangeNotifierProvider(create: (_) => ActivityMonitorController(), child: child);
+          },
+        );
+      }
     );
   }
 

@@ -24,6 +24,7 @@ dependencies:
   flutter_scroll_shadow: 1.2.6
   flutter_layout_grid: 2.0.8
   pretty_qr_code: 3.4.0
+  provider: 6.1.5
   confetti: 0.8.0
   wave: 0.2.2
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
