@@ -126,6 +126,20 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     return fileList;
   }
 
+  Future<void> startVideoRecording() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    await gphoto2StartVideoRecording(handleId: handleId!);
+
+    unawaited(clearPreviousEvents());
+  }
+
+  Future<void> stopVideoRecording() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    await gphoto2StopVideoRecording(handleId: handleId!);
+
+    unawaited(clearPreviousEvents());
+  }
+
   @override
   Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2);
 

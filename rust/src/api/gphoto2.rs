@@ -44,6 +44,14 @@ pub fn gphoto2_list_files(handle_id: u32, folder: String) -> GPhoto2FileCategori
     gphoto2::gphoto2_list_files(handle_id, folder)
 }
 
+pub fn gphoto2_start_video_recording(handle_id: u32) {
+    gphoto2::gphoto2_start_video_recording(handle_id)
+}
+
+pub fn gphoto2_stop_video_recording(handle_id: u32) {
+    gphoto2::gphoto2_stop_video_recording(handle_id)
+}
+
 pub fn gphoto2_get_camera_status(handle_id: u32) -> CameraState {
     gphoto2::gphoto2_get_camera_status(handle_id)
 }
