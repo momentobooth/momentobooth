@@ -273,6 +273,28 @@ pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: Stri
   })
 }
 
+pub async fn set_video_recording_state(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, record: bool) -> Result<()> {
+  let camera = camera_ref.lock().await;
+
+  let movie_toggle = camera.camera.config_key::<ToggleWidget>("/main/actions/movie").await?;
+  movie_toggle.set_toggled(record);
+  camera.camera.set_config(&movie_toggle).await?;
+
+  Ok(())
+}
+
+pub async fn start_video_recording(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
+  let res = set_video_recording_state(camera_ref, true).await;
+  debug!("Started video recording");
+  res
+}
+
+pub async fn stop_video_recording(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
+  let res = set_video_recording_state(camera_ref, false).await;
+  debug!("Stopped video recording");
+  res
+}
+
 pub struct GPhoto2CameraInfo {
     pub port: String,
     pub model: String,
@@ -471,6 +493,24 @@ pub fn gphoto2_list_files(handle_id: u32, folder: String) -> GPhoto2FileCategori
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
         gphoto2::list_files(camera, folder).await
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_start_video_recording(handle_id: u32) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::start_video_recording(camera).await
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_stop_video_recording(handle_id: u32) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::stop_video_recording(camera).await
     }).expect("Could not get result")
 }
 
