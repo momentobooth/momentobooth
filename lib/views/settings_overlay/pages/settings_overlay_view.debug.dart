@@ -42,6 +42,20 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             onPressed: controller.onPhotosClearPressed,
           ),
           SettingsActionTile(
+            icon: LucideIcons.video,
+            title: "Start video recording",
+            subtitle: "Start a video recording using gPhoto2",
+            buttonText: "Start recording",
+            onPressed: controller.onStartVideoRecordingPressed,
+          ),
+          SettingsActionTile(
+            icon: LucideIcons.videoOff,
+            title: "Stop video recording",
+            subtitle: "Stop a video recording using gPhoto2",
+            buttonText: "Stop recording",
+            onPressed: controller.onStopVideoRecordingPressed,
+          ),
+          SettingsActionTile(
             icon: LucideIcons.folder,
             title: "Get camera files",
             subtitle: "Retrieve a list of files on the camera",

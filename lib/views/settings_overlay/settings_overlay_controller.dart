@@ -771,6 +771,22 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     getIt<PhotosManager>().photos.clear();
   }
 
+  void onStartVideoRecordingPressed() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logWarning("gPhoto2Camera not initialized");
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.startVideoRecording();
+  }
+
+  void onStopVideoRecordingPressed() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logWarning("gPhoto2Camera not initialized");
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.stopVideoRecording();
+  }
+
   Future<void> onGetCameraFilesPressed() async {
     final files = await getIt<LiveViewManager>().gPhoto2Camera!.getFileList();
     final imageFiles = files.images.toList();
