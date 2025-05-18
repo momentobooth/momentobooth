@@ -3824,6 +3824,7 @@ dependencies = [
  "serde_json",
  "snafu",
  "susync",
+ "thiserror 2.0.12",
  "tokio",
  "turborand",
  "url 2.5.8",
