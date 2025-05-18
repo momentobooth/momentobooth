@@ -44,6 +44,7 @@ futures = "0.3.31"
 kira = "0.10.7"
 snafu = "0.8.6"
 escpos = { version = "0.15.2", features = ["native_usb"] }
+thiserror = "2.0.12"
 
 [build-dependencies]
 bindgen = "0.72.0"
