@@ -18,10 +18,10 @@ packages:
     dependency: transitive
     description:
       name: accessibility_tools
-      sha256: "3a36d23e8566f0618730c89b304f4faa5bc843255e26a47ee0ff15df0c30b15d"
+      sha256: c5792b8094e1086b4587cd99ee4ca67767d0ee083b246529429634f48c889600
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.1"
+    version: "2.5.0"
   analyzer:
     dependency: transitive
     description:
@@ -58,10 +58,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: a7f37ff061d7abc2fcf213554b9dcaca713c5853afa5c065c44888bc9ccaf813
+      sha256: "2fde1607386ab523f7a36bb3e7edb43bd58e6edaf2ffb29d8a6d578b297fdbbd"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.6"
+    version: "4.0.7"
   args:
     dependency: "direct main"
     description:
@@ -82,10 +82,10 @@ packages:
     dependency: transitive
     description:
       name: audio_session
-      sha256: f100a780050adf5c552d8b59d7af32a60229fda79c623e64004caf9368ccc748
+      sha256: "8f96a7fecbb718cb093070f868b4cdcb8a9b1053dce342ff8ab2fde10eb9afb7"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.2.2"
   auto_size_text:
     dependency: "direct main"
     description:
@@ -459,10 +459,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluent_ui
-      sha256: "8fbdf3f8e4e756c6249b17ebd204ef4078f66d5df2bfbffe8ec7a1fb9dd59063"
+      sha256: "76c4ba700bb26ac9894b9c6b16cae40f36f78266b2281c995d814b01a7c75356"
       url: "https://pub.dev"
     source: hosted
-    version: "4.11.4"
+    version: "4.11.5"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -501,10 +501,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_rust_bridge
-      sha256: "5a5c7a5deeef2cc2ffe6076a33b0429f4a20ceac22a397297aed2b1eb067e611"
+      sha256: b416ff56002789e636244fb4cc449f587656eff995e5a7169457eb0593fcaddb
       url: "https://pub.dev"
     source: hosted
-    version: "2.9.0"
+    version: "2.10.0"
   flutter_scroll_shadow:
     dependency: "direct main"
     description:
@@ -648,10 +648,10 @@ packages:
     dependency: transitive
     description:
       name: html
-      sha256: "9475be233c437f0e3637af55e7702cbbe5c23a68bd56e8a5fa2d426297b7c6c8"
+      sha256: "6d1264f2dffa1b1101c25a91dff0dc2daee4c18e87cd8538729773c073dbf602"
       url: "https://pub.dev"
     source: hosted
-    version: "0.15.5+1"
+    version: "0.15.6"
   http:
     dependency: "direct main"
     description:
@@ -752,10 +752,10 @@ packages:
     dependency: "direct main"
     description:
       name: just_audio
-      sha256: "90421d34e9ee9a407c3722e9db6a45c57b90620b51fcf3a172bae4c3c3278ed5"
+      sha256: d449d6b01ace3343dd8ca7f910db871994942dc58752d2765db35694f9ffe7e2
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.2"
+    version: "0.10.3"
   just_audio_media_kit:
     dependency: "direct main"
     description:
@@ -776,10 +776,10 @@ packages:
     dependency: transitive
     description:
       name: just_audio_web
-      sha256: "8c7e779892e180cbc9ffb5a3c52f6e90e1cbbf4a63694cc450972a7edbd2bb6d"
+      sha256: "6ba8a2a7e87d57d32f0f7b42856ade3d6a9fbe0f1a11fabae0a4f00bb73f0663"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.15"
+    version: "0.4.16"
   just_audio_windows:
     dependency: "direct main"
     description:
@@ -1428,26 +1428,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: "3d8b17976b9fe89436f23ac2b24642d62e170bc45e81943f2bdc309427ff9d0b"
+      sha256: "41ac575baee91d13ba8901fbecd1409923182563abe6c530590ba131f40893df"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.6"
+    version: "4.7.7"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "7bfc1fdee3eb27233e4b753777045f51c64acab56490687b0818e25eff189d13"
+      sha256: "3bcc7ede3da301a9a65f905e6f5f0534b01ac2b3a23e342ee8eecff56c134fa7"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.6"
+    version: "4.7.7"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: a77ce73f79e7cbd01c408683f3377090c0a0f1fa7c9716c06727dcd0713cfa24
+      sha256: "015fee5bca42acf31a466524a8a18197a9f354e0e0c41d7cd9aaca5e24256353"
       url: "https://pub.dev"
     source: hosted
-    version: "4.7.6"
+    version: "4.7.7"
   term_glyph:
     dependency: transitive
     description:
@@ -1581,10 +1581,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_web
-      sha256: "3ba963161bd0fe395917ba881d320b9c4f6dd3c4a233da62ab18a5025c85f1e9"
+      sha256: "4bd2b7b4dc4d4d0b94e5babfffbca8eac1a126c7f3d6ecbc1a11013faa3abba2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.0"
+    version: "2.4.1"
   url_launcher_windows:
     dependency: transitive
     description:
@@ -1669,10 +1669,10 @@ packages:
     dependency: transitive
     description:
       name: web_socket
-      sha256: bfe6f435f6ec49cb6c01da1e275ae4228719e59a6b067048c51e72d9d63bcc4b
+      sha256: "34d64019aa8e36bf9842ac014bb5d2f5586ca73df5e4d9bf5c936975cae6982c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   web_socket_channel:
     dependency: transitive
     description:
@@ -1685,26 +1685,26 @@ packages:
     dependency: "direct main"
     description:
       name: widgetbook
-      sha256: "8e3cd3157c0c24e28278d62835383fab65098433dcde946fe958361094aa1401"
+      sha256: "6a89bf28efd62e07824fa56a4394352e04dc9a84e01a233887a9cb0f7d5aa60d"
       url: "https://pub.dev"
     source: hosted
-    version: "3.13.1"
+    version: "3.14.0"
   widgetbook_annotation:
     dependency: "direct main"
     description:
       name: widgetbook_annotation
-      sha256: "03274209fe93f32a2e548663a6fc671341804271980e2c65550e7f989c356fdf"
+      sha256: "41662c48c2a0e82cac676a83727203d863621a5f6fb2505395287b8789afdf38"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.0"
+    version: "3.5.0"
   widgetbook_generator:
     dependency: "direct dev"
     description:
       name: widgetbook_generator
-      sha256: ee9c0304a9c682ad1fe669881e117e0c263b452e3da3a95ac11c26a8cf7abab5
+      sha256: "38320c313a425e5a354bfdf6d2922efd69b5c3e9c0bf414d3ba7f947c303448a"
       url: "https://pub.dev"
     source: hosted
-    version: "3.12.0"
+    version: "3.13.0"
   win32:
     dependency: "direct main"
     description:
