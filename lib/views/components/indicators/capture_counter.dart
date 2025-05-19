@@ -1,6 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 
 class CaptureCounter extends StatefulWidget {
 
@@ -26,8 +28,6 @@ class CaptureCounterState extends State<CaptureCounter> with SingleTickerProvide
   )..addListener(() {
     setState(() {});
   })..reverse(from: 1);
-
-  static const double borderWidth = 10.0;
 
   RotateAnimatedText _getCounterAnimatedText(String text, BuildContext context) {
     TextStyle textStyle = context.theme.captureCounterTheme.textStyle;
@@ -63,13 +63,11 @@ class CaptureCounterState extends State<CaptureCounter> with SingleTickerProvide
         fit: StackFit.expand,
         children: [
           context.theme.captureCounterTheme.frameBuilder?.call(context, frame) ?? frame,
-          Padding(
-            padding: const EdgeInsets.all(0.5 * borderWidth),
-            child: CircularProgressIndicator(
-              value: controller.value,
-              color: Colors.white,
-              strokeWidth: borderWidth,
-            ),
+          ProgressRing(
+            value: controller.value * 100,
+            activeColor: context.theme.captureCounterTheme.ringColor ?? getIt<ProjectManager>().settings.primaryColor,
+            backgroundColor: Colors.transparent,
+            strokeWidth: context.theme.captureCounterTheme.ringStroke ?? 4.5,
           ),
         ],
       ),

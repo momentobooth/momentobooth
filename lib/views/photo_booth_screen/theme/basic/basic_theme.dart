@@ -40,6 +40,7 @@ PhotoBoothTheme get basicTheme => PhotoBoothTheme(
       shadows: [BoxShadow(color: Color(0x66000000), offset: Offset(0, 3), blurRadius: 4)],
       color: Color(0xFFFFFFFF),
     ),
+    ringColor: Color(0xFFFFFFFF),
     frameBuilder: (context, child) => DecoratedBox(
       decoration: BoxDecoration(
         color: const Color(0xAA000000),

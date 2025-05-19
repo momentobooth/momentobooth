@@ -70,9 +70,11 @@ class PhotoBoothButtonTheme extends ThemeExtension<PhotoBoothButtonTheme> with _
 class CaptureCounterTheme extends ThemeExtension<CaptureCounterTheme> with _$CaptureCounterThemeTailorMixin {
 
   final TextStyle textStyle;
+  final Color? ringColor;
+  final double? ringStroke;
   final WidgetBuilder? frameBuilder;
 
-  const CaptureCounterTheme({required this.textStyle, this.frameBuilder});
+  const CaptureCounterTheme({required this.textStyle, this.ringColor, this.ringStroke, this.frameBuilder});
 
 }
 
