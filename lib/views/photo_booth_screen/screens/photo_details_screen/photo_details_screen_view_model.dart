@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
@@ -48,6 +49,9 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   @readonly
   String? _qrUrl;
 
+  @readonly
+  Size? _imageSize;
+
   String get ffSendUrl => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
 
   Future<void> uploadPhotoToSend() async {
@@ -79,5 +83,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
       _uploadFailed = true;
     });
   }
+
+  void onImageDecoded(Size size) => _imageSize = size;
 
 }
