@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart' hide Action, RawImage;
 import 'package:flutter_layout_grid/flutter_layout_grid.dart';
@@ -26,7 +25,7 @@ import 'package:momento_booth/src/rust/utils/image_processing.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -93,7 +92,6 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
 
   ScreenshotController screenshotController = ScreenshotController();
 
-  MomentoBoothThemeData get theme => MomentoBoothThemeData.defaults();
   static const double gap = 20.0;
 
   ObservableList<int> get chosen => getIt<PhotosManager>().chosen;
@@ -154,7 +152,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
         child: SizedBox(
           height: 1000 + 2 * widget.padding,
           width: 1000 * widget.aspectRatio + 2 * widget.padding,
-          child: Observer(builder: (context) => _getLayout(AppLocalizations.of(context)!)),
+          child: Observer(builder: (context) => _getLayout(AppLocalizations.of(context)!, context)),
         ),
       ),
     );
@@ -168,7 +166,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     );
   }
 
-  Widget _getLayout(AppLocalizations localizations) {
+  Widget _getLayout(AppLocalizations localizations, BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       fit: StackFit.expand,
@@ -183,7 +181,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
         if (widget.showMiddleground)
           Padding(
             padding: EdgeInsets.all(gap + widget.padding),
-            child: _getInnerLayout(localizations),
+            child: _getInnerLayout(localizations, context),
           ),
         if (widget.debug != null)
           DecoratedBox(
@@ -210,9 +208,9 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     );
   }
 
-  Widget _getInnerLayout(AppLocalizations localizations) {
+  Widget _getInnerLayout(AppLocalizations localizations, BuildContext context) {
     return switch (nChosen) {
-      0 => _getZeroLayout(localizations),
+      0 => _getZeroLayout(localizations, context),
       1 => _oneLayout,
       2 => _twoLayout,
       3 => _threeLayout,
@@ -226,17 +224,16 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
       widget.debug == null ? MemoryImage(photos[chosen[index]].data) : AssetImage('assets/bitmap/placeholder.png'),
       applyRotateFlipCrop: true,
       fit: fit,
-      onImageDecoded: decodeCallback,
+      onImageDecoded: (_) => decodeCallback?.call(),
     );
   }
 
-  Widget _getZeroLayout(AppLocalizations localizations) {
+  Widget _getZeroLayout(AppLocalizations localizations, BuildContext context) {
     return RotatedBox(
       quarterTurns: 1,
       child: Center(
-        child: AutoSizeText(
+        child: PhotoBoothTitle(
           localizations.photoCollageWidgetSelectPhotos,
-          style: theme.titleStyle,
           textAlign: TextAlign.center,
         ),
       ),

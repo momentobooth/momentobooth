@@ -1,10 +1,12 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/widgets.dart' hide WidgetBuilder;
 import 'package:go_router/go_router.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/components/transitions/fade_and_scale_transition.dart';
 import 'package:momento_booth/views/components/transitions/fade_and_slide_transition.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 
 final class TransitionPage extends CustomTransitionPage<void> {
 
@@ -19,13 +21,19 @@ final class TransitionPage extends CustomTransitionPage<void> {
   }
 
   factory TransitionPage.fromSettings({
-    required LocalKey key,
+    required ValueKey<String> key,
+    required BuildContext context,
     required Widget child,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
     bool opaque = true,
     bool barrierDismissible = false,
   }) {
+    WidgetBuilder? builder = context.maybeTheme?.screenWrappers[key.value];
+    if (builder != null) {
+      child = builder(context, child);
+    }
+
     return switch (getIt<SettingsManager>().settings.ui.screenTransitionAnimation) {
       ScreenTransitionAnimation.none => TransitionPage._none(key: key, child: child, opaque: opaque, barrierDismissible: barrierDismissible),
       ScreenTransitionAnimation.fadeAndScale => TransitionPage._fadeAndScale(key: key, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
