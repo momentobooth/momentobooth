@@ -276,7 +276,7 @@ pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: Stri
 pub async fn set_video_recording_state(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, record: bool) -> Result<()> {
   let camera = camera_ref.lock().await;
 
-  let movie_toggle = camera.camera.config_key::<ToggleWidget>("/main/actions/movie").await?;
+  let movie_toggle = camera.camera.config_key::<ToggleWidget>("movie").await?;
   movie_toggle.set_toggled(record);
   camera.camera.set_config(&movie_toggle).await?;
 
