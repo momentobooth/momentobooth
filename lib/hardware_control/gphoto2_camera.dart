@@ -74,6 +74,12 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     });
   }
 
+  Future<void> stopLiveView() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+
+    await gphoto2StopLiveview(handleId: handleId!);
+  }
+
   @override
   Future<void> setOperations(List<ImageOperation> operations) {
     return gphoto2SetOperations(handleId: handleId!, operations: operations);
