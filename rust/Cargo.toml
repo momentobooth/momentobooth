@@ -46,6 +46,3 @@ futures = "0.3.31"
 [build-dependencies]
 bindgen = "0.71.1"
 pkg-config = "0.3.32"
-
-[profile.dev]
-opt-level = 3

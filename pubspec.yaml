@@ -30,7 +30,11 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.1
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.14.0
+  widgetbook:
+    git:
+      url: https://github.com/momentobooth/widgetbook
+      ref: flutter-3.32-workaround
+      path: packages/widgetbook
   widgetbook_annotation: 3.5.0
   flex_color_picker: 3.7.1
   lucide_icons_flutter: 3.0.3

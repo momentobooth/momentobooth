@@ -1,6 +1,6 @@
 {
   "cmake.configureOnOpen": false,
-  "dart.flutterSdkPath": ".fvm/versions/3.29.2",
+  "dart.flutterSdkPath": ".fvm/versions/3.32.0",
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
@@ -8,5 +8,8 @@
     "**/.dart_tool": true,
     ".flatpak/**": true,
     "_build/**": true
+  },
+  "lldb.script": {
+    "lang.rust.toolchain": "stable-x86_64-pc-windows-gnu"
   }
 }
