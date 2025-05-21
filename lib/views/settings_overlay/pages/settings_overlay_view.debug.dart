@@ -62,6 +62,13 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             buttonText: "Get filelist",
             onPressed: controller.onGetCameraFilesPressed,
           ),
+          SettingsActionTile(
+            icon: LucideIcons.settings,
+            title: "Get camera config",
+            subtitle: "Retrieve the camera's full config",
+            buttonText: "Get config",
+            onPressed: controller.onGetCameraConfigPressed,
+          ),
         ],
       ),
       SettingsSection(
