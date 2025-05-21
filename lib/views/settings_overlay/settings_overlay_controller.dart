@@ -799,4 +799,9 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     logInfo("Folders: $folders");
   }
 
+  Future<void> onGetCameraConfigPressed() async {
+    final config = await getIt<LiveViewManager>().gPhoto2Camera!.getConfig();
+    logInfo("Config: $config");
+  }
+
 }
