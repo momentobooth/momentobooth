@@ -2,7 +2,11 @@ use std::{cell::Cell, collections::HashSet, env, hash::{Hash, Hasher}, sync::{at
 
 use ahash::AHasher;
 
+<<<<<<< HEAD
 use ::gphoto2::{Camera, Context, Error, camera::CameraEvent, list::CameraDescriptor, widget::{GroupWidget, RadioWidget, RangeWidget, TextWidget, ToggleWidget, Widget}};
+=======
+use ::gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{GroupWidget, RadioWidget, TextWidget, ToggleWidget}, Camera, Context, Error};
+>>>>>>> 8c372940 (Add method to retrieve camera config.)
 use parking_lot::Mutex;
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
@@ -386,6 +390,16 @@ pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: Stri
   })
 }
 
+pub async fn list_config(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<GroupWidget> {
+  let camera = camera_ref.lock().await;
+
+  let config = camera.camera.config().await;
+  match config {
+    Ok(conf) => Ok(conf),
+    Err(err) => Err(Gphoto2Error::Gphoto2LibraryError(err)),
+  }
+}
+
 pub async fn set_video_recording_state(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, record: bool) -> Result<()> {
   let camera = camera_ref.lock().await;
 
@@ -627,13 +641,22 @@ pub fn gphoto2_stop_video_recording(handle_id: u32) {
     }).expect("Could not get result")
 }
 
+<<<<<<< HEAD
 pub fn gphoto2_get_camera_details(handle_id: u32) -> GPhoto2CameraDetails {
+=======
+pub fn gphoto2_list_config(handle_id: u32) -> GroupWidget {
+>>>>>>> 8c372940 (Add method to retrieve camera config.)
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().camera.clone();
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+<<<<<<< HEAD
         gphoto2::get_camera_details(camera).await
     }).expect("Could not get camera details")
+=======
+        gphoto2::list_config(camera).await
+    }).expect("Could not get result")
+>>>>>>> 8c372940 (Add method to retrieve camera config.)
 }
 
 pub fn gphoto2_get_camera_status(handle_id: u32) -> CameraState {

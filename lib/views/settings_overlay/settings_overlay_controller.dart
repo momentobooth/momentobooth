@@ -814,6 +814,7 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   }
 
   Future<void> onGetCameraConfigPressed() async {
+<<<<<<< HEAD
     final details = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraDetails();
     logInfo("Config: ${details.config}");
   }
@@ -881,6 +882,10 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
       debugConfigRangeKeyController.text,
       value,
     );
+=======
+    final config = await getIt<LiveViewManager>().gPhoto2Camera!.getConfig();
+    logInfo("Config: $config");
+>>>>>>> 8c372940 (Add method to retrieve camera config.)
   }
 
 }
