@@ -10,6 +10,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/src/rust/api/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
+import 'package:momento_booth/src/rust/models/gphoto2.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/models/live_view.dart';
@@ -146,7 +147,7 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     unawaited(clearPreviousEvents());
   }
 
-  Future<GroupWidget> getConfig() async {
+  Future<SimplifiedWidget> getConfig() async {
     if (handleId == null) throw GPhoto2Exception("Camera not open.");
     var config = await gphoto2ListConfig(handleId: handleId!);
     return config;

@@ -1,6 +1,4 @@
-use ::gphoto2::widget::GroupWidget;
-
-use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File, GPhoto2FileCategories}, models::{image_operations::ImageOperation, images::RawImage, live_view::CameraState}};
+use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File, GPhoto2FileCategories}, models::{gphoto2::SimplifiedWidget, image_operations::ImageOperation, images::RawImage, live_view::CameraState}};
 
 pub fn gphoto2_initialize(iolibs_path: String, camlibs_path: String) {
     gphoto2::gphoto2_initialize(iolibs_path, camlibs_path);
@@ -46,7 +44,7 @@ pub fn gphoto2_list_files(handle_id: u32, folder: String) -> GPhoto2FileCategori
     gphoto2::gphoto2_list_files(handle_id, folder)
 }
 
-pub fn gphoto2_list_config(handle_id: u32) -> GroupWidget {
+pub fn gphoto2_list_config(handle_id: u32) -> SimplifiedWidget {
     gphoto2::gphoto2_list_config(handle_id)
 }
 
