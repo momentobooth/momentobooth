@@ -8,7 +8,7 @@ use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 use log::{warn, debug, info};
 
-use crate::{models::{image_operations::ImageOperation, images::RawImage}, utils::{image_processing, jpeg}};
+use crate::{models::{gphoto2::{convert_gphoto_config, SimplifiedWidget}, image_operations::ImageOperation, images::RawImage}, utils::{image_processing, jpeg}};
 use crate::TOKIO_RUNTIME;
 use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self}, models::live_view::CameraState, utils::flutter_texture::FlutterTexture};
 
@@ -273,10 +273,10 @@ pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: Stri
   })
 }
 
-pub async fn list_config(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<GroupWidget> {
+pub async fn list_config(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<SimplifiedWidget> {
   let camera = camera_ref.lock().await;
 
-  let config = camera.camera.config().await;
+  let config = camera.camera.config().await.map(|conf| convert_gphoto_config(&conf.into()).unwrap());
   match config {
     Ok(conf) => Ok(conf),
     Err(err) => Err(Gphoto2Error::Gphoto2LibraryError(err)),
@@ -524,7 +524,7 @@ pub fn gphoto2_stop_video_recording(handle_id: u32) {
     }).expect("Could not get result")
 }
 
-pub fn gphoto2_list_config(handle_id: u32) -> GroupWidget {
+pub fn gphoto2_list_config(handle_id: u32) -> SimplifiedWidget {
     let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
     let camera = camera_ref.clone().lock().camera.clone();
 
