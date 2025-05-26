@@ -31,6 +31,7 @@ ShellRoute _photoBoothShellRoute = ShellRoute(
     _chooseCaptureModeRoute,
     _captureRoute,
     _multiCaptureRoute,
+    _recordingRoute,
     _collageMakerRoute,
     _shareRoute,
     _galleryRoute,
@@ -69,6 +70,13 @@ GoRoute _multiCaptureRoute = GoRoute(
   pageBuilder: (context, state) {
     // Here we use state.uri because of the query param `n`.
     return TransitionPage.fromSettings(key: ValueKey(state.uri.toString()), context: context, child: const MultiCaptureScreen());
+  },
+);
+
+GoRoute _recordingRoute = GoRoute(
+  path: RecordingCountdownScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return TransitionPage.fromSettings(key: state.pageKey, child: const RecordingCountdownScreen());
   },
 );
 
