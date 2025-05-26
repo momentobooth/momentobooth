@@ -126,7 +126,7 @@ jobs:
     - name: Build project (arm64)
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
 
         mkdir ci_build/arm64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/
@@ -137,7 +137,7 @@ jobs:
     - name: Build project (x86_64)
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=x86_64 PKG_CONFIG_PATH=$(realpath ci_build/ventura/lib/pkgconfig) PKG_CONFIG_SYSROOT_DIR=$(realpath ci_build/ventura) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+        FLUTTER_XCODE_ARCHS=x86_64 PKG_CONFIG_PATH=$(realpath ci_build/ventura/lib/pkgconfig) PKG_CONFIG_SYSROOT_DIR=$(realpath ci_build/ventura) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
 
         mkdir ci_build/x86_64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/x86_64_bundle/
