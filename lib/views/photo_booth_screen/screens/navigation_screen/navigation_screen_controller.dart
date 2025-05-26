@@ -1,12 +1,14 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/language_choice_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen_view_model.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/recording_countdown_screen/recording_countdown_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 
 class NavigationScreenController extends ScreenControllerBase<NavigationScreenViewModel> {
@@ -28,6 +30,11 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
 
   Future<void> onClickCollage() async {
     router.go(MultiCaptureScreen.defaultRoute);
+  }
+
+  Future<void> onClickRecord() async {
+    getIt<PhotosManager>().captureMode = CaptureMode.recording;
+    router.go(RecordingCountdownScreen.defaultRoute);
   }
 
   Future<void> onClickPhoto() async {

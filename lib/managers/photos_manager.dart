@@ -155,7 +155,8 @@ abstract class PhotosManagerBase with Store, Logger {
 enum CaptureMode {
 
   single(0, "Single"),
-  collage(1, "Collage");
+  collage(1, "Collage"),
+  recording(2, "Recording");
 
   // can add more properties or getters/methods if needed
   final int value;
