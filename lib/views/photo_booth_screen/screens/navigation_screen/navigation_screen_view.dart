@@ -41,6 +41,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
                 ] else ...[
                   Expanded(child: _photoButton),
                 ],
+                Expanded(child: _recordingButton),
                 Expanded(child: _galleryButton),
               ],
             ),
@@ -104,6 +105,26 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
             Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.layoutGrid, 450))),
             AutoSizeText(
               localizations.chooseCaptureModeScreenCollageButton,
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget get _recordingButton {
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickRecord,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.clapperboard, 450))),
+            AutoSizeText(
+              "Recording",
               group: controller.autoSizeGroup,
               maxLines: 1,
             ),
