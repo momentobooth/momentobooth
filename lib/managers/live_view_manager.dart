@@ -89,6 +89,9 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
   CaptureMethod? _currentCaptureMethod;
   String? _currentGPhoto2CameraId;
 
+  @observable
+  bool isRecordingLayout = false;
+
   Future<void> _disposeCurrentLiveViewSourceSafe() async {
     try {
       if (_currentLiveViewSource != null) {
