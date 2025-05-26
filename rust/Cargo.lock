@@ -1169,7 +1169,7 @@ checksum = "4b53e2bb7045d6021019c5e9162dc871b2f74010e807a3a09fd95308d6526f68"
 dependencies = [
  "encoding_rs",
  "futures-lite",
- "log 0.4.28",
+ "log 0.4.29",
  "nusb",
 ]
 
@@ -2937,7 +2937,7 @@ dependencies = [
  "futures-core",
  "io-kit-sys",
  "libc",
- "log 0.4.28",
+ "log 0.4.29",
  "once_cell",
  "rustix 0.38.44",
  "slab",
