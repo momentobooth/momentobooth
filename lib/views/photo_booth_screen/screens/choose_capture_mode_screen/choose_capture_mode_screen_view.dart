@@ -29,10 +29,11 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
         Expanded(
           flex: 2,
           child: Row(
+            spacing: 32,
             children: [
               Expanded(child: _singlePictureButton),
-              const SizedBox(width: 32),
               Expanded(child: _collageButton),
+              Expanded(child: _recordingButton),
             ],
           ),
         ),
@@ -102,11 +103,41 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
     );
   }
 
+  Widget get _recordingButton {
+    return GestureDetector(
+      onTap: controller.onClickOnRecording,
+      behavior: HitTestBehavior.translucent,
+      child: Column(
+        children: [
+          Expanded(child: FittedBox(child: _getRoundButton(452))),
+          AutoSizeText(
+            "Recording",
+            group: viewModel.autoSizeGroup,
+            style: theme.titleStyle,
+            maxLines: 1,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _getButton(double dimension) {
     return Container(
       width: dimension,
       height: dimension,
       decoration: BoxDecoration(
+        color: theme.chooseCaptureModeButtonIconColor,
+        boxShadow: [theme.chooseCaptureModeButtonShadow],
+      ),
+    );
+  }
+
+  Widget _getRoundButton(double dimension) {
+    return Container(
+      width: dimension,
+      height: dimension,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(dimension),
         color: theme.chooseCaptureModeButtonIconColor,
         boxShadow: [theme.chooseCaptureModeButtonShadow],
       ),
