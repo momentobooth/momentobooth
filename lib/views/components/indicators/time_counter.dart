@@ -73,23 +73,32 @@ class _TimeCounterState extends State<TimeCounter> with TickerProviderStateMixin
   }
 
   Widget buildAnimatedTimeDigit(String digit, Key key) {
+    const offset = 0.7;
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 300),
+      switchInCurve: Curves.easeOut, // New number entering
+      switchOutCurve: Curves.easeIn,  // Old number exiting
       transitionBuilder: (Widget child, Animation<double> animation) {
+        // The 'child' argument here is the current widget being animated.
+        // During a switchIn, it's the *new* digit.
+        // During a switchOut, it's the *old* digit.
+
+        final bool isEntering = child.key == key; // Compare the key to determine if it's the entering widget
+
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0, 1), // Slide from bottom
-            end: Offset.zero,
+            begin: isEntering ? const Offset(0, -offset) : const Offset(0, offset), // New comes from above, old goes down (for some reason specified as beginning)
+            end: Offset.zero, // Zero is nominal position
           ).animate(animation),
           child: FadeTransition(
             opacity: animation,
-            child: child,
+            child: child, // The actual Text widget provided by AnimatedSwitcher
           ),
         );
       },
       child: Text(
         digit,
-        key: key, // Use a unique key for each digit for animation
+        key: key, // Critical for AnimatedSwitcher to identify changes
         style: widget.textStyle,
       ),
     );
