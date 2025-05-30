@@ -5,7 +5,7 @@ publish_to: "none"
 version: 0.14.5+112
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.8.0
 
 dependencies:
   flutter: { sdk: flutter }
@@ -17,7 +17,7 @@ dependencies:
   # UI
   animations: 2.0.11
   auto_size_text: 3.0.0
-  fluent_ui: 4.11.5
+  fluent_ui: 4.12.0
   go_router: 15.1.2
   flutter_svg: 2.1.0
   animated_text_kit: 4.2.3
@@ -30,10 +30,10 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.1
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.14.0
+  widgetbook: 3.14.2
   widgetbook_annotation: 3.5.0
   flex_color_picker: 3.7.1
-  lucide_icons_flutter: 3.0.3
+  lucide_icons_flutter: 3.0.4
   wizard_router: 1.4.0
 
   # Printscreen/Image processing
@@ -44,7 +44,7 @@ dependencies:
   flutter_mobx: 2.3.0
 
   # Models
-  freezed_annotation: 2.4.4
+  freezed_annotation: 3.0.0
   json_annotation: 4.9.0
 
   # Rust library/Interop
@@ -59,13 +59,13 @@ dependencies:
   # System
   path_provider: 2.1.5
   path: ^1.9.0
-  window_manager: 0.4.3
+  window_manager: 0.5.0
   file_selector: 1.0.3
   win32: 5.13.0
 
   # Log and error handling
-  talker: 4.7.8
-  talker_flutter: 4.7.8
+  talker: 4.8.0
+  talker_flutter: 4.8.0
   sentry_flutter: 8.14.2
 
   # Sound output
@@ -81,7 +81,7 @@ dependencies:
   # Networking
   http: 1.4.0
   http_parser: 4.1.2
-  mqtt5_client: 4.12.1
+  mqtt5_client: 4.12.2
 
   # Misc
   get_it: 8.0.3
@@ -113,14 +113,14 @@ dev_dependencies:
   widgetbook_generator: 3.13.0
 
   # MVC
-  mobx_codegen: 2.7.0
+  mobx_codegen: 2.7.1
 
   # Code quality
-  flutter_lints: 5.0.0
+  flutter_lints: 6.0.0
 
   # Models
-  freezed: 2.5.7
-  json_serializable: 6.9.0
+  freezed: 3.0.6
+  json_serializable: 6.9.5
 
   # Code generation
   build_runner: 2.4.15
@@ -141,3 +141,5 @@ flutter:
       fonts:
         - asset: assets/fonts/brandon_grotesque/Brandon_light.otf
           weight: 300
+
+  generate: true

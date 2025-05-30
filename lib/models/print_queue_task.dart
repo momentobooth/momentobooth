@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'print_queue_task.freezed.dart';
 
 @freezed
-class PrintQueueTask with _$PrintQueueTask {
+sealed class PrintQueueTask with _$PrintQueueTask {
 
   const PrintQueueTask._();
 

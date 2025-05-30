@@ -94,7 +94,7 @@ jobs:
       run: flutter analyze
 
     - name: Flutter build
-      run: flutter build linux -v --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define FLUTTER_VERSION=${{ env.FLUTTER_VERSION }}
+      run: flutter build linux -v --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }}
 
     - name: Create AppDir and copy Flutter bundle
       run: mkdir -p AppDir/app && cp -r build/linux/x64/release/bundle/* AppDir/app/

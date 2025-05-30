@@ -46,7 +46,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
   @observable
   SortBy sortBy = SortBy.time;
 
-  void onSortByChanged(newSortBy) {
+  void onSortByChanged(SortBy newSortBy) {
     sortBy = newSortBy;
     findImages();
   }

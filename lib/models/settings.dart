@@ -23,7 +23,7 @@ part 'settings.g.dart';
 // ///////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class Settings with _$Settings implements TomlEncodableValue {
+sealed class Settings with _$Settings implements TomlEncodableValue {
 
   const Settings._();
 
@@ -55,7 +55,7 @@ class Settings with _$Settings implements TomlEncodableValue {
 // ///////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
+sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
   const HardwareSettings._();
 
@@ -105,7 +105,7 @@ class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 }
 
 @Freezed(fromJson: true, toJson: true)
-class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableValue {
+sealed class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableValue {
 
   const PrintLayoutSettings._();
 
@@ -129,7 +129,7 @@ class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableVal
 }
 
 @Freezed(fromJson: true, toJson: true)
-class MediaSettings with _$MediaSettings implements TomlEncodableValue {
+sealed class MediaSettings with _$MediaSettings implements TomlEncodableValue {
 
   const MediaSettings._();
 
@@ -149,7 +149,7 @@ class MediaSettings with _$MediaSettings implements TomlEncodableValue {
 }
 
 @Freezed(fromJson: true, toJson: true)
-class GridSettings with _$GridSettings implements TomlEncodableValue {
+sealed class GridSettings with _$GridSettings implements TomlEncodableValue {
 
   const GridSettings._();
 
@@ -173,7 +173,7 @@ class GridSettings with _$GridSettings implements TomlEncodableValue {
 // /////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class OutputSettings with _$OutputSettings implements TomlEncodableValue {
+sealed class OutputSettings with _$OutputSettings implements TomlEncodableValue {
 
   const OutputSettings._();
 
@@ -209,7 +209,7 @@ String _getHome() {
 // /////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class UiSettings with _$UiSettings implements TomlEncodableValue {
+sealed class UiSettings with _$UiSettings implements TomlEncodableValue {
 
   const UiSettings._();
 
@@ -237,7 +237,7 @@ class UiSettings with _$UiSettings implements TomlEncodableValue {
 }
 
 @Freezed(fromJson: true, toJson: true)
-class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEncodableValue {
+sealed class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEncodableValue {
 
   const LottieAnimationSettings._();
 
@@ -265,7 +265,7 @@ class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEnco
 // //////////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEncodableValue {
+sealed class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEncodableValue {
 
   const MqttIntegrationSettings._();
 
@@ -294,7 +294,7 @@ class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEnco
 }
 
 @Freezed(fromJson: true, toJson: true)
-class FaceRecognitionSettings with _$FaceRecognitionSettings implements TomlEncodableValue {
+sealed class FaceRecognitionSettings with _$FaceRecognitionSettings implements TomlEncodableValue {
 
   const FaceRecognitionSettings._();
 
@@ -317,7 +317,7 @@ class FaceRecognitionSettings with _$FaceRecognitionSettings implements TomlEnco
 // ////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class DebugSettings with _$DebugSettings implements TomlEncodableValue {
+sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 
   const DebugSettings._();
 

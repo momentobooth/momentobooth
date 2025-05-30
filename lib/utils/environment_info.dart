@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/app_version_info.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart' as lib_init_api;
@@ -12,7 +13,6 @@ AppVersionInfo? _appVersionInfo;
 late final PackageInfo packageInfo;
 late final String appDataPath;
 late final lib_version_info_models.VersionInfo helperLibraryVersionInfo;
-const String flutterVersion = String.fromEnvironment("FLUTTER_VERSION");
 
 String get exifSoftwareName => '${packageInfo.appName} ${packageInfo.version} build ${packageInfo.buildNumber} ($osFriendlyName)';
 
@@ -34,7 +34,7 @@ Future<void> initializeEnvironmentInfo() async {
   getIt<Talker>().info({
     "OS": osFriendlyName,
     "App version": "${packageInfo.version} (build ${packageInfo.buildNumber})",
-    "Flutter version": flutterVersion,
+    "Flutter version": FlutterVersion.version!,
     "Helper library version": helperLibraryVersionInfo.libraryVersion,
     "Helper library Rust compiler version": helperLibraryVersionInfo.rustVersion,
     "Helper library Rust target": helperLibraryVersionInfo.rustTarget,
@@ -47,7 +47,7 @@ Future<void> initializeEnvironmentInfo() async {
 AppVersionInfo get appVersionInfo => _appVersionInfo ??= AppVersionInfo(
       appVersion: packageInfo.version,
       appBuild: int.parse(packageInfo.buildNumber),
-      flutterVersion: const String.fromEnvironment("FLUTTER_VERSION", defaultValue: 'Unknown'),
+      flutterVersion: FlutterVersion.version!,
       rustVersion: helperLibraryVersionInfo.rustVersion,
       rustTarget: helperLibraryVersionInfo.rustTarget,
     );

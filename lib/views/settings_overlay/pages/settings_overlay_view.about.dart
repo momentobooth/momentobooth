@@ -14,7 +14,7 @@ Widget get _aboutTab {
             Text("Thank you for using ${packageInfo.appName}!"),
             const SizedBox(height: 16),
             Text('App version: ${packageInfo.version} (build ${packageInfo.buildNumber})'),
-            const Text('Flutter version: $flutterVersion'),
+            const Text('Flutter version: ${FlutterVersion.version}'),
             const SizedBox(height: 8),
             Text('Helper library version: ${helperLibraryVersionInfo.libraryVersion}'),
             Text('Helper library Rust version: ${helperLibraryVersionInfo.rustVersion}'),

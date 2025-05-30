@@ -9,7 +9,7 @@ part 'stats.g.dart';
 // ///////////// //
 
 @freezed
-class Stats with _$Stats implements TomlEncodableValue {
+sealed class Stats with _$Stats implements TomlEncodableValue {
 
   const Stats._();
 
