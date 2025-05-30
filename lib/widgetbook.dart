@@ -1,9 +1,10 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:momento_booth/app_localizations.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/basic/basic_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/hollywood/hollywood_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -30,9 +31,27 @@ class WidgetbookApp extends StatelessWidget {
           initialAlignment: Alignment.center,
         ),
         InspectorAddon(enabled: true),
+        ThemeAddon<PhotoBoothTheme>(
+          themes: [
+            WidgetbookTheme(
+              name: 'Basic',
+              data: basicTheme(primaryColor: material.Colors.teal),
+            ),
+            WidgetbookTheme(
+              name: 'Hollywood',
+              data: hollywoodTheme(primaryColor: material.Colors.teal),
+            ),
+          ],
+          themeBuilder: (context, theme, child) {
+            return FluentTheme(
+              data: FluentThemeData(extensions: [theme]),
+              child: child,
+            );
+          },
+        ),
       ],
       appBuilder: (context, child) {
-        return MaterialApp(
+        return material.MaterialApp(
           debugShowCheckedModeBanner: false,
           localizationsDelegates: const [
             AppLocalizations.delegate,
@@ -45,15 +64,7 @@ class WidgetbookApp extends StatelessWidget {
             Locale('en'), // English
             Locale('nl'), // Dutch
           ],
-          home: FluentTheme(
-            data: FluentThemeData.light(),
-            child: Material(
-              child: MomentoBoothTheme(
-                data: MomentoBoothThemeData.defaults(),
-                child: child,
-              ),
-            ),
-          ),
+          home: child,
         );
       }
     );

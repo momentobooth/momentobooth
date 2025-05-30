@@ -5,6 +5,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
+import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/utils/file_utils.dart';
@@ -98,6 +99,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
     File? file = await getIt<PhotosManager>().writeOutput(advance: true);
     logDebug("Wrote template debug export output to ${file?.path}");
+  }
+
+  void onUiThemeChanged(UiTheme? uiTheme) {
+    if (uiTheme != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(uiTheme: uiTheme));
+    }
   }
 
   void onCaptureDelaySecondsChanged(int? captureDelaySeconds) {

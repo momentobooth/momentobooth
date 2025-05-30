@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 
 class PhotoBoothDialog extends StatelessWidget {
 
@@ -52,7 +53,7 @@ class PhotoBoothDialog extends StatelessWidget {
                   children: [
                     Text(
                       title ?? '',
-                      style: const TextStyle(fontSize: 24),
+                      style: context.theme.dialogTheme.titleStyle,
                       textAlign: TextAlign.left,
                       strutStyle: const StrutStyle(
                         forceStrutHeight: true,
