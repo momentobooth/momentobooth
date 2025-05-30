@@ -3,6 +3,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/basic/basic_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/hollywood/hollywood_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/neobrutalism/neobrutalism_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/wedding/wedding_theme.dart';
 import 'package:theme_tailor_annotation/theme_tailor_annotation.dart';
 
 part 'photo_booth_theme.tailor.dart';
@@ -38,6 +40,8 @@ class PhotoBoothTheme extends ThemeExtension<PhotoBoothTheme> with _$PhotoBoothT
   });
 
   factory PhotoBoothTheme.defaultBasic({required Color primaryColor}) => basicTheme(primaryColor: primaryColor);
+  factory PhotoBoothTheme.defaultWedding({required Color primaryColor}) => weddingTheme(primaryColor: primaryColor);
+  factory PhotoBoothTheme.defaultNeobrutalism({required Color primaryColor}) => neobrutalismTheme(primaryColor: primaryColor);
   factory PhotoBoothTheme.defaultHollywood({required Color primaryColor}) => hollywoodTheme(primaryColor: primaryColor);
 
 }
