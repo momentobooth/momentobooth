@@ -10,7 +10,7 @@ part 'home_assistant_discovery_payload.g.dart';
 // ///////////// //
 
 @Freezed(toJson: true)
-class HomeAssistantDiscoveryPayload with _$HomeAssistantDiscoveryPayload {
+sealed class HomeAssistantDiscoveryPayload with _$HomeAssistantDiscoveryPayload {
 
   const HomeAssistantDiscoveryPayload._();
 
@@ -33,7 +33,7 @@ class HomeAssistantDiscoveryPayload with _$HomeAssistantDiscoveryPayload {
 }
 
 @Freezed(toJson: true)
-class HomeAssistantDevice with _$HomeAssistantDevice {
+sealed class HomeAssistantDevice with _$HomeAssistantDevice {
 
   const HomeAssistantDevice._();
 

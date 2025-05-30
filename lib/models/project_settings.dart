@@ -1,7 +1,5 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'dart:ui' as ui;
-
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -12,12 +10,12 @@ part 'project_settings.g.dart';
 
 const defaultThemeColor = Color(0xFF0078C8);
 
-// ///////////// //
-// Root ProjectSettings //
-// ///////////// //
+// ///////////////////// //
+// Root Project Settings //
+// ///////////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-class ProjectSettings with _$ProjectSettings implements TomlEncodableValue {
+sealed class ProjectSettings with _$ProjectSettings implements TomlEncodableValue {
 
   const ProjectSettings._();
 

@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'momento_booth_theme_data.freezed.dart';
 
 @freezed
-class MomentoBoothThemeData with _$MomentoBoothThemeData {
+sealed class MomentoBoothThemeData with _$MomentoBoothThemeData {
 
   const factory MomentoBoothThemeData({
     // App wide
