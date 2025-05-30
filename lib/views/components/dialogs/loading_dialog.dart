@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lottie/lottie.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -24,6 +25,7 @@ class LoadingDialog extends StatelessWidget {
         fit: BoxFit.contain,
         alignment: Alignment.centerLeft,
         frameRate: FrameRate.max,
+        width: 120,
       );
 
   @override
@@ -44,7 +46,7 @@ class LoadingDialog extends StatelessWidget {
           Flexible(
             child: Text(
               title,
-              style: const TextStyle(color: Colors.white, fontSize: 22),
+              style: context.theme.dialogTheme.titleStyle.copyWith(color: Colors.white),
             ),
           ),
         ],
@@ -70,6 +72,6 @@ Widget loadingDialogGeneric(BuildContext context) {
 )
 Widget loadingDialogCameraDownload(BuildContext context) {
   return LoadingDialog.cameraDownload(
-    title: context.knobs.string(label: 'Title', initialValue: 'Please wait...'),
+    title: context.knobs.string(label: 'Title', initialValue: 'Loading photo...'),
   );
 }

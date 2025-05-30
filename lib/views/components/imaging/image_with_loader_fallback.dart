@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:fluent_ui/fluent_ui.dart' hide WidgetBuilder;
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
@@ -15,7 +15,7 @@ class ImageWithLoaderFallback extends StatefulWidget {
   final int? cacheHeight;
 
   final BoxFit? fit;
-  final VoidCallback? onImageDecoded;
+  final ValueChanged<Size>? onImageDecoded;
 
   const ImageWithLoaderFallback(this.provider, {super.key, this.applyRotateFlipCrop = false, this.fit, this.onImageDecoded, this.cacheWidth, this.cacheHeight});
 
@@ -51,7 +51,9 @@ class _ImageWithLoaderFallbackState extends State<ImageWithLoaderFallback> {
       frameBuilder: _frameBuilder,
     );
 
-    _listener = ImageStreamListener((image, synchronousCall) => widget.onImageDecoded?.call());
+    _listener = ImageStreamListener((image, synchronousCall) {
+      widget.onImageDecoded?.call(Size(image.image.width.toDouble(), image.image.height.toDouble()));
+    });
     _imageStream = _imageWidget.image.resolve(ImageConfiguration.empty);
     _imageStream.addListener(_listener);
   }

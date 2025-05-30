@@ -3,6 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 
 class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreenViewModel, ChooseCaptureModeScreenController> {
 
@@ -19,85 +21,79 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
         Flexible(
           fit: FlexFit.tight,
           child: Center(
-            child: AutoSizeText(
-              localizations.chooseCaptureModeScreenTitle,
-              style: theme.titleStyle,
-              maxLines: 1,
-            ),
+            child: PhotoBoothTitle(localizations.chooseCaptureModeScreenTitle),
           ),
         ),
         Expanded(
           flex: 2,
-          child: Row(
-            children: [
-              Expanded(child: _singlePictureButton),
-              const SizedBox(width: 32),
-              Expanded(child: _collageButton),
-            ],
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 64),
+            child: Row(
+              spacing: 32,
+              children: [
+                Expanded(child: _singlePictureButton),
+                Expanded(child: _collageButton),
+              ],
+            ),
           ),
         ),
-        const Flexible(
-          fit: FlexFit.tight,
-          child: SizedBox(),
-        ),
+        const Flexible(fit: FlexFit.tight, child: SizedBox()),
       ],
     );
   }
 
   Widget get _singlePictureButton {
-    return GestureDetector(
-      onTap: controller.onClickOnSinglePhoto,
-      behavior: HitTestBehavior.translucent,
-      child: Column(
-        children: [
-          Expanded(child: FittedBox(child: _getButton(452))),
-          AutoSizeText(
-            localizations.chooseCaptureModeScreenSinglePictureButton,
-            group: viewModel.autoSizeGroup,
-            style: theme.titleStyle,
-            maxLines: 1,
-          ),
-        ],
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnSinglePhoto,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(child: FittedBox(child: _getButton(452))),
+            AutoSizeText(
+              localizations.chooseCaptureModeScreenSinglePictureButton,
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget get _collageButton {
-    return GestureDetector(
-      onTap: controller.onClickOnPhotoCollage,
-      behavior: HitTestBehavior.translucent,
-      child: Column(
-        children: [
-          Expanded(
-            child: FittedBox(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      _getButton(220),
-                      const SizedBox(width: 12),
-                      _getButton(220),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      _getButton(220),
-                      const SizedBox(width: 12),
-                      _getButton(220),
-                    ],
-                  ),
-                ],
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnPhotoCollage,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(
+              child: FittedBox(
+                child: Column(
+                  spacing: 12,
+                  children: [
+                    Row(
+                      spacing: 12,
+                      children: [_getButton(220), _getButton(220)],
+                    ),
+                    Row(
+                      spacing: 12,
+                      children: [_getButton(220), _getButton(220)],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          AutoSizeText(
-            localizations.chooseCaptureModeScreenCollageButton,
-            group: viewModel.autoSizeGroup,
-            style: theme.titleStyle,
-            maxLines: 1,
-          ),
-        ],
+            AutoSizeText(
+              localizations.chooseCaptureModeScreenCollageButton,
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -107,8 +103,12 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
       width: dimension,
       height: dimension,
       decoration: BoxDecoration(
-        color: theme.chooseCaptureModeButtonIconColor,
-        boxShadow: [theme.chooseCaptureModeButtonShadow],
+        color: const Color(0xE6FFFFFF),
+        boxShadow: [const BoxShadow(
+          color: Color(0x42000000),
+          offset: Offset(0, 3),
+          blurRadius: 8,
+        )],
       ),
     );
   }

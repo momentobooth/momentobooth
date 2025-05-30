@@ -1,11 +1,15 @@
 import 'dart:math';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:confetti/confetti.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view_model.dart';
 
@@ -19,62 +23,37 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
 
   @override
   Widget get body {
+    Widget image = ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain);
+
+    Widget aspectRatioWrapper = Observer(
+      builder: (_) => viewModel.imageSize != null ? AspectRatio(aspectRatio: viewModel.imageSize!.aspectRatio, child: image) : image,
+    );
+
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Padding(
+        Container(
           padding: const EdgeInsets.all(30),
-          child: Center(
-            // This SizedBox is only necessary when the image used is smaller than what would be displayed.
-            child: SizedBox(
-              height: double.infinity,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F0F0),
-                  border: theme.captureCounterContainerBorder,
-                  boxShadow: [theme.captureCounterContainerShadow],
-                ),
-                child: ImageWithLoaderFallback.memory(viewModel.outputImage, fit: BoxFit.contain),
-              ),
-            ),
-          ),
+          alignment: Alignment.center,
+          child: context.theme.fullScreenPictureTheme.frameBuilder?.call(context, aspectRatioWrapper) ?? aspectRatioWrapper,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 30),
           child: _foregroundElements,
         ),
-        if (viewModel.displayConfetti)
-          ... _confettiStack,
+        if (viewModel.displayConfetti) ..._confettiStack,
       ],
     );
   }
 
   List<Widget> get _confettiStack {
     return [
-      Align(
-          alignment: Alignment.bottomLeft,
-          child: _confetti(-0.25*pi, 45), // top right
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: _confetti(-0.325*pi, 42), // top right
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: _confetti(-0.4*pi, 30), // top right
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: _confetti(-0.75*pi, 45), // top left
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: _confetti(-0.675*pi, 42), // top left
-        ),
-        Align(
-          alignment: Alignment.bottomRight,
-          child: _confetti(-0.6*pi, 30), // top left
-        ),
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.25 * pi, 45)), // top right
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.325 * pi, 42)), // top right
+      Align(alignment: Alignment.bottomLeft, child: _confetti(-0.4 * pi, 30)), // top right
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.75 * pi, 45)), // top left
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.675 * pi, 42)), // top left
+      Align(alignment: Alignment.bottomRight, child: _confetti(-0.6 * pi, 30)), // top left
     ];
   }
 
@@ -86,7 +65,7 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       minimumSize: const Size(40, 20),
       colors: viewModel.getColors(),
       minBlastForce: force,
-      maxBlastForce: force*2,
+      maxBlastForce: force * 2,
       particleDrag: 0.01, // apply drag to the confetti
       emissionFrequency: 0.6, // how often it should emit
       numberOfParticles: 10, // number of particles to emit
@@ -101,77 +80,63 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
       children: [
         Flexible(
           fit: FlexFit.tight,
-          child: AutoSizeText(
-            localizations.shareScreenTitle,
-            style: theme.titleStyle,
-          ),
+          child: Center(child: PhotoBoothTitle(localizations.shareScreenTitle)),
         ),
         Expanded(
           flex: 3,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              GestureDetector(
-                // Next button
-                onTap: controller.onClickPrev,
-                behavior: HitTestBehavior.translucent,
-                child: AutoSizeText(
-                  " ↺ ${viewModel.backText}",
-                  style: theme.subTitleStyle,
+              Flexible(
+                child: PhotoBoothButton.navigation(
+                  onPressed: controller.onClickPrev,
+                  child: AutoSizeTextAndIcon(
+                    text: viewModel.backText,
+                    leftIcon: LucideIcons.stepBack,
+                    autoSizeGroup: controller.navigationButtonGroup,
+                  ),
                 ),
               ),
-              GestureDetector(
-                // Next button
-                onTap: controller.onClickNext,
-                behavior: HitTestBehavior.translucent,
-                child: AutoSizeText(
-                  "→ ",
-                  style: theme.titleStyle,
+              Flexible(
+                child: PhotoBoothButton.navigation(
+                  onPressed: controller.onClickNext,
+                  child: AutoSizeTextAndIcon(
+                    text: localizations.genericDoneButton,
+                    rightIcon: LucideIcons.stepForward,
+                    autoSizeGroup: controller.navigationButtonGroup,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        Flexible(
-          fit: FlexFit.tight,
-          child: _getBottomRow(),
-        ),
+        Flexible(fit: FlexFit.tight, child: _getBottomRow()),
       ],
     );
   }
 
   Widget _getBottomRow() {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Flexible(
-          child: Center(
-            child: GestureDetector(
-              // Get QR button
-              onTap: controller.onClickGetQR,
-              behavior: HitTestBehavior.translucent,
-              child: AutoSizeText(
-                localizations.photoDetailsScreenGetQrButton,
-                style: theme.titleStyle,
-              ),
+          child: PhotoBoothButton.action(
+            onPressed: controller.onClickGetQR,
+            child: AutoSizeTextAndIcon(
+              text: localizations.photoDetailsScreenGetQrButton,
+              leftIcon: LucideIcons.scanQrCode,
+              autoSizeGroup: controller.actionButtonGroup,
             ),
           ),
         ),
         Flexible(
-          child: GestureDetector(
-            // Print button
-            onTap: controller.onClickPrint,
-            behavior: HitTestBehavior.translucent,
-            child: Center(
-              child: Observer(
-                builder: (context) => AnimatedOpacity(
-                  duration: const Duration(milliseconds: 300),
-                  opacity: viewModel.printEnabled ? 1 : 0.5,
-                  child: AutoSizeText(
-                    viewModel.printText,
-                    style: theme.titleStyle,
-                  ),
-                ),
+          child: Observer(
+            builder: (context) => PhotoBoothButton.action(
+              onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
+              child: AutoSizeTextAndIcon(
+                text: viewModel.printText,
+                leftIcon: LucideIcons.printer,
+                autoSizeGroup: controller.actionButtonGroup,
               ),
             ),
           ),

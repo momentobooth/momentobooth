@@ -21,8 +21,6 @@ import 'package:momento_booth/views/photo_booth_screen/components/framerate_moni
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme.dart';
-import 'package:momento_booth/views/photo_booth_screen/theme/momento_booth_theme_data.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -45,41 +43,39 @@ class PhotoBooth extends StatelessWidget {
         ),
         Expanded(
           child: FramerateMonitor(
-            child: LiveViewBackground(
-              child: _HotkeyResponder(
-                child: ActivityMonitor(
-                  child: MomentoBoothTheme(
-                    data: MomentoBoothThemeData.defaults(),
-                    child: SetScrollConfiguration(
-                      child: Observer(
-                        builder: (context) => FluentApp(
-                          debugShowCheckedModeBanner: false,
-                          scrollBehavior: ScrollConfiguration.of(context),
-                          color: getIt<ProjectManager>().settings.primaryColor,
-                          theme: FluentThemeData(
-                            accentColor: AccentColor.swatch(
-                              {'normal': getIt<ProjectManager>().settings.primaryColor},
-                            ),
-                          ),
-                          localizationsDelegates: const [
-                            AppLocalizations.delegate,
-                            GlobalMaterialLocalizations.delegate,
-                            GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate,
-                            FluentLocalizations.delegate,
-                          ],
-                          supportedLocales: const [Locale('en'), Locale('nl')],
-                          locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
-                          home: child,
+            child: _HotkeyResponder(
+              child: ActivityMonitor(
+                child: SetScrollConfiguration(
+                  child: Observer(
+                    builder: (context) => FluentApp(
+                      debugShowCheckedModeBanner: false,
+                      scrollBehavior: ScrollConfiguration.of(context),
+                      color: getIt<ProjectManager>().settings.primaryColor,
+                      theme: FluentThemeData(
+                        accentColor: AccentColor.swatch(
+                          {'normal': getIt<ProjectManager>().settings.primaryColor},
                         ),
+                        extensions: [getIt<ProjectManager>().settings.uiTheme.themeExtension(
+                          primaryColor: getIt<ProjectManager>().settings.primaryColor,
+                        )],
                       ),
+                      localizationsDelegates: const [
+                        AppLocalizations.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                        FluentLocalizations.delegate,
+                      ],
+                      supportedLocales: const [Locale('en'), Locale('nl')],
+                      locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
+                      home: child,
+                      builder: (_, child) => LiveViewBackground(child: child!)),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

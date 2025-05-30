@@ -1,5 +1,4 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
@@ -9,6 +8,7 @@ import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen_view_model.dart';
 
@@ -29,10 +29,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Flexible(
-              flex: 1,
-              child: _photoColumn,
-            ),
+            Flexible(flex: 1, child: _photoColumn),
             Flexible(
               flex: 5,
               child: AspectRatio(
@@ -65,10 +62,8 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: AutoSizeText(
+          child: PhotoBoothTitle(
             localizations.multiCaptureScreenPhotoCounter(viewModel.photoNumber, viewModel.maxPhotos),
-            style: theme.titleStyle,
-            maxLines: 1,
           ),
         ),
         for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
@@ -92,7 +87,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        const LiveView(fit: BoxFit.contain, blur: false),
+        const LiveView(fit: BoxFit.contain),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -127,7 +122,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            border: theme.captureCounterContainerBorder,
+            border: Border.all(width: 10, color: const Color(0xFFFFFFFF)),
           ),
         ),
       ),
@@ -142,8 +137,8 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
           pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
           isRepeatingAnimation: false,
           animatedTexts: [
-            RotateAnimatedText(localizations.multiCaptureScreenGetReady, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
-            RotateAnimatedText(localizations.multiCaptureScreenLookAtCamera, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.multiCaptureScreenGetReady, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.multiCaptureScreenLookAtCamera, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
           ],
         ),
       ),

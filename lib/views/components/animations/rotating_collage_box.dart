@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:momento_booth/extensions/build_context_extension.dart';
 
 class RotatingCollageBox extends StatefulWidget {
 
@@ -45,13 +44,7 @@ class _RotatingCollageBoxState extends State<RotatingCollageBox> with SingleTick
   Widget build(BuildContext context) {
     return RotationTransition(
       turns: _rotation,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 255, 255),
-          boxShadow: [context.theme.chooseCaptureModeButtonShadow],
-        ),
-        child: widget.collage,
-      ),
+      child: widget.collage,
     );
   }
 

@@ -18,7 +18,7 @@ class PhotoBoothOutlinedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: onPressed,
-      style: context.theme.photoBoothDialogButtonStyle,
+      style: context.theme.dialogTheme.buttonStyle,
       child: Row(
         children: [
           if (icon != null)

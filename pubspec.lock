@@ -623,6 +623,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "15.1.2"
+  google_fonts:
+    dependency: "direct main"
+    description:
+      name: google_fonts
+      sha256: b1ac0fe2832c9cc95e5e88b57d627c5e68c223b9657f4b96e1487aa9098c7b82
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.2.1"
   graphs:
     dependency: transitive
     description:
@@ -1460,6 +1468,22 @@ packages:
       url: "https://github.com/momentobooth/flutter_texture_rgba_renderer"
     source: git
     version: "0.0.16"
+  theme_tailor:
+    dependency: "direct dev"
+    description:
+      name: theme_tailor
+      sha256: "8f2444f3833e6730ef308d5e3d97c258a780b897483e509d722a5a1a6c591932"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
+  theme_tailor_annotation:
+    dependency: "direct main"
+    description:
+      name: theme_tailor_annotation
+      sha256: "0d5ecd13a6a52add2082aa60497179f6093acf482eb69e7fa3a9f37eb990ac34"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   timing:
     dependency: transitive
     description:
@@ -1476,6 +1500,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.16.0"
+  twinkling_stars:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "feature/size-multiplication"
+      resolved-ref: e1eefc5affbdd3fd0b4a0780af6267f15c0bc6d0
+      url: "https://github.com/momentobooth/twinkling_star"
+    source: git
+    version: "1.0.2"
   typed_data:
     dependency: transitive
     description:
