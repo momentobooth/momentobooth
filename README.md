@@ -70,19 +70,6 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
   * Install using the instructions on the [MSYS2 website](https://www.msys2.org/)
   * Install the following packages: `mingw-w64-clang-x86_64-pkgconf mingw-w64-clang-x86_64-libgphoto2 mingw-w64-clang-x86_64-gexiv2 mingw-w64-clang-x86_64-curl-winssl mingw-w64-clang-x86_64-nghttp2 mingw-w64-clang-x86_64-nghttp3`
   * Make sure `{MSYS_INSTALL_PATH}\clang64\bin` is in your PATH (before other folders that also provide `pkg-config`/`pkgconf`)
-  * As of now MSVC is not able to find the `lib[name].dll.a` libraries for linking, as such we have to make copies of the `lib[name].dll.a` files and rename them to `[name].lib`:
-
-  ```powershell
-    cd $MSYS_INSTALL_PATH\clang64\lib
-    cp libgexiv2.dll.a gexiv2.lib
-    cp libexiv2.dll.a exiv2.lib
-    cp libgio-2.0.dll.a gio-2.0.lib
-    cp libglib-2.0.dll.a glib-2.0.lib
-    cp libgobject-2.0.dll.a gobject-2.0.lib
-    cp libgphoto2.dll.a gphoto2.lib
-    cp libgphoto2_port.dll.a gphoto2_port.lib
-    cp libintl.dll.a intl.lib
-  ```
 
 </details>
 

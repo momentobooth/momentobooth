@@ -93,19 +93,6 @@ jobs:
       shell: msys2 {0}
       run: pacman -U --noconfirm mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
 
-    - name: Workaround MSVC compiler looking for .lib files
-      shell: pwsh
-      run: |
-        cd $(msys2 -c 'cygpath -w /clang64/lib')
-        cp libgexiv2.dll.a gexiv2.lib
-        cp libexiv2.dll.a exiv2.lib
-        cp libgio-2.0.dll.a gio-2.0.lib
-        cp libglib-2.0.dll.a glib-2.0.lib
-        cp libgobject-2.0.dll.a gobject-2.0.lib
-        cp libgphoto2.dll.a gphoto2.lib
-        cp libgphoto2_port.dll.a gphoto2_port.lib
-        cp libintl.dll.a intl.lib
-
     - name: Fix environment for build and bundle
       run: |
         Add-Content $env:GITHUB_PATH (msys2 -c 'cygpath -w /clang64/bin')
