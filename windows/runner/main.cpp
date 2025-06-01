@@ -1,3 +1,8 @@
+#pragma warning(push)
+#pragma warning(disable: 4559)
+#include "mimalloc-new-delete.h"
+#pragma warning(pop)
+
 #include <flutter/dart_project.h>
 #include <flutter/flutter_view_controller.h>
 #include <windows.h>
