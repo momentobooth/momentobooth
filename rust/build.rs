@@ -6,6 +6,9 @@ use std::path::PathBuf;
 fn main() {
     insert_target_name();
     generate_exiv2_bindings();
+    if cfg!(target_os = "windows") {
+        link_mimalloc();
+    }
 }
 
 fn insert_target_name() {
@@ -39,4 +42,29 @@ fn generate_exiv2_bindings() {
     bindings
         .write_to_file(out_path.join("exiv2_bindings.rs"))
         .expect("Couldn't write bindings!");
+}
+
+fn link_mimalloc() {
+    // Determine if we are Debug or Release.
+    let profile = env::var("PROFILE").unwrap();
+    let config_dir = match profile.as_str() {
+        "debug" => "Debug",
+        "release" => "Release",
+        other => {
+            panic!("Unknown PROFILE: {}", other);
+        }
+    };
+
+    // Relative path to already built mimalloc.
+    let mimalloc_lib_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
+        .join("..") // van rust_lib_momento_booth
+        .join("build")
+        .join("windows")
+        .join("x64")
+        .join("mimalloc")
+        .join(config_dir);
+
+    println!("cargo:rustc-link-search=native={}", mimalloc_lib_dir.display());
+    println!("cargo:rustc-link-lib=dylib=mimalloc.dll");
+    println!("cargo:rerun-if-changed={}", mimalloc_lib_dir.display());
 }

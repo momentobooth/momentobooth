@@ -3,12 +3,17 @@ use std::sync::OnceLock;
 use parking_lot::Once;
 use pathsep::{path_separator, join_path};
 use tokio::runtime::Runtime;
+use utils::mimalloc::MiMalloc;
 
 pub mod api;
 pub mod models;
 mod frb_generated;
 mod hardware_control;
 mod utils;
+
+#[cfg(windows)]
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
 
 include!(concat!(env!("OUT_DIR"), "/exiv2_bindings.rs"));
 
