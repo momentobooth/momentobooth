@@ -52,6 +52,9 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
+# Add mimalloc, make sure it gets loaded quickly after app start.
+add_subdirectory(mimalloc EXCLUDE_FROM_ALL)
+target_link_options(${BINARY_NAME} PRIVATE /INCLUDE:mi_version)
 
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
