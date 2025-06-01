@@ -60,6 +60,8 @@ target_link_options(${BINARY_NAME} PRIVATE /INCLUDE:mi_version)
 # them to the application.
 include(flutter/generated_plugins.cmake)
 
+# Fix rust lib being build before mimalloc.
+add_dependencies(rust_lib_momento_booth_cargokit mimalloc)
 
 # === Installation ===
 # Support files are copied into place next to the executable, so that it can
