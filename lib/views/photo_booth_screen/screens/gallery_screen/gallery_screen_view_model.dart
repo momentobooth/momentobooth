@@ -88,22 +88,23 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
     if (sortBy == SortBy.time) {
       // Group images and sort within groups
       List<GalleryGroup> imageGroups = imagesWithExif
-          .groupListsBy((image) => image.createdDate != null
-              ? DateTime(
-                  image.createdDate!.year,
-                  image.createdDate!.month,
-                  image.createdDate!.day,
-                  image.createdDate!.hour,
-                )
-              : null)
+          .groupListsBy((image) {
+              var date = image.createdDate;
+              return DateTime(
+                date.year,
+                date.month,
+                date.day,
+                date.hour,
+              );
+          })
           .entries
           .map((entry) => GalleryGroup(
-              title: formatter.format(entry.key!),
+              title: formatter.format(entry.key),
               createdDayAndHour: entry.key,
               images: entry.value
-                ..sort((a, b) => (b.createdDate ?? DateTime(1970)).compareTo(a.createdDate ?? DateTime(1970)))))
+                ..sort((a, b) => b.createdDate.compareTo(a.createdDate))))
           .toList()
-        ..sort((a, b) => (b.createdDayAndHour ?? DateTime(1970)).compareTo(a.createdDayAndHour ?? DateTime(1970)));
+        ..sort((a, b) => (b.createdDayAndHour!).compareTo(a.createdDayAndHour!));
 
       _imageGroups = imageGroups;
     } else {

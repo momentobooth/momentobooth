@@ -17,9 +17,10 @@ abstract class GalleryImage with _$GalleryImage {
     required List<MomentoBoothExifTag> exifTags,
   }) = _GalleryImage;
 
-  DateTime? get createdDate => exifTags
+  /// Returns the created date of the image, based on the EXIF data, or file last modified timestamp.
+  DateTime get createdDate => exifTags
     .whereType<MomentoBoothExifTag_CreateDate>()
-    .firstOrNull?.field0;
+    .firstOrNull?.field0 ?? file.lastModifiedSync();
 
   MakerNoteData? get makerNoteData {
     String? json = exifTags
