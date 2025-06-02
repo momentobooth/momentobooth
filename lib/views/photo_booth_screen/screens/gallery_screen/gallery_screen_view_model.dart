@@ -89,7 +89,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
       // Group images and sort within groups
       List<GalleryGroup> imageGroups = imagesWithExif
           .groupListsBy((image) {
-              var date = image.createdDate ?? image.file.lastModifiedSync();
+              var date = image.createdDate;
               return DateTime(
                 date.year,
                 date.month,
@@ -102,7 +102,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
               title: formatter.format(entry.key),
               createdDayAndHour: entry.key,
               images: entry.value
-                ..sort((a, b) => (b.createdDate ?? DateTime(1970)).compareTo(a.createdDate ?? DateTime(1970)))))
+                ..sort((a, b) => b.createdDate.compareTo(a.createdDate))))
           .toList()
         ..sort((a, b) => (b.createdDayAndHour ?? DateTime(1970)).compareTo(a.createdDayAndHour ?? DateTime(1970)));
 
