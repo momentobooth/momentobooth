@@ -104,7 +104,7 @@ abstract class GalleryScreenViewModelBase extends ScreenViewModelBase with Store
               images: entry.value
                 ..sort((a, b) => b.createdDate.compareTo(a.createdDate))))
           .toList()
-        ..sort((a, b) => (b.createdDayAndHour ?? DateTime(1970)).compareTo(a.createdDayAndHour ?? DateTime(1970)));
+        ..sort((a, b) => (b.createdDayAndHour!).compareTo(a.createdDayAndHour!));
 
       _imageGroups = imageGroups;
     } else {
