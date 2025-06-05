@@ -32,9 +32,22 @@ target_compile_definitions(${BINARY_NAME} PRIVATE "NOMINMAX")
 
 # Add dependency libraries and include directories. Add any application-specific
 # dependencies here.
+target_link_libraries(${BINARY_NAME} PRIVATE mimalloc)
 target_link_libraries(${BINARY_NAME} PRIVATE flutter flutter_wrapper_app)
 target_link_libraries(${BINARY_NAME} PRIVATE "dwmapi.lib")
 target_include_directories(${BINARY_NAME} PRIVATE "${CMAKE_SOURCE_DIR}")
 
 # Run the Flutter tool portions of the build. This must not be removed.
 add_dependencies(${BINARY_NAME} flutter_assemble)
+
+# Copy mimalloc to build output directory.
+add_custom_command(
+  TARGET ${BINARY_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_BINARY_DIR}/../mimalloc/$<CONFIG>/mimalloc.dll"
+    "$<TARGET_FILE_DIR:${BINARY_NAME}>/mimalloc.dll"
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_CURRENT_BINARY_DIR}/../mimalloc/$<CONFIG>/mimalloc-redirect.dll"
+    "$<TARGET_FILE_DIR:${BINARY_NAME}>/mimalloc-redirect.dll"
+  COMMENT "Copying mimalloc DLLs"
+)

@@ -1,3 +1,6 @@
 [submodule "windows/installer/InnoDependencyInstaller"]
 	path = windows/installer/InnoDependencyInstaller
 	url = https://github.com/DomGries/InnoDependencyInstaller
+[submodule "windows/mimalloc"]
+	path = windows/mimalloc
+	url = https://github.com/microsoft/mimalloc.git
