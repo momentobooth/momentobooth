@@ -40,6 +40,13 @@ Widget _getUiSettings(SettingsOverlayViewModel viewModel, SettingsOverlayControl
         value: () => viewModel.allowScrollGestureWithMouse,
         onChanged: controller.onAllowScrollGestureWithMouseChanged,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.powerOff,
+        title: "Show screensavers when unavailable",
+        subtitle: "If enabled, when MomentoBooth is unavailable screensavers will be shown. As some of them are very resource heavy, this is currently disabled by default.",
+        value: () => viewModel.enableScreensaversWhenUnavailable,
+        onChanged: controller.onEnableScreensaversWhenUnavailableChanged,
+      ),
       SettingsSection(
         title: "Animations",
         settings: [

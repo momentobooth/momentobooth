@@ -236,6 +236,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   String get shareScreenSfxFileSetting => getIt<SettingsManager>().settings.ui.shareScreenSfxFile;
   Language get languageSetting => getIt<SettingsManager>().settings.ui.language;
   bool get allowScrollGestureWithMouse => getIt<SettingsManager>().settings.ui.allowScrollGestureWithMouse;
+  bool get enableScreensaversWhenUnavailable => getIt<SettingsManager>().settings.ui.enableScreensaversWhenUnavailable;
   ScreenTransitionAnimation get screenTransitionAnimation => getIt<SettingsManager>().settings.ui.screenTransitionAnimation;
   BackgroundBlur get backgroundBlur => getIt<SettingsManager>().settings.ui.backgroundBlur;
   FilterQuality get screenTransitionAnimationFilterQuality => getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality;

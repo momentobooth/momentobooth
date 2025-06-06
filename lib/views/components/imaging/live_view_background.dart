@@ -39,13 +39,17 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   SubsystemStatus get _liveViewState => getIt<LiveViewManager>().subsystemStatus;
 
+  late final GoRouterDelegate _routerDelegate;
+
   @override
   void initState() {
     super.initState();
-    GoRouter.of(context).routerDelegate.addListener(_routerListener);
+    _routerDelegate = GoRouter.of(context).routerDelegate..addListener(_routerListener);
   }
 
-  void _routerListener() => WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
+  void _routerListener() => WidgetsBinding.instance.addPostFrameCallback((_) {
+    if (mounted) setState(() {});
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +144,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   @override
   void dispose() {
-    GoRouter.of(context).routerDelegate.removeListener(_routerListener);
+    _routerDelegate.removeListener(_routerListener);
     super.dispose();
   }
 

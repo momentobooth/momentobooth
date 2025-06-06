@@ -23,6 +23,8 @@ GoRoute _notAvailableRoute = GoRoute(
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
+      context: context,
+      name: (NotAvailableScreen).toString(),
       child: const NotAvailableScreen(),
     );
   },

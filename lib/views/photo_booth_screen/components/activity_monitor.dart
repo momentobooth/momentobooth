@@ -32,12 +32,15 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   /// Registered callbacks that need to be called when the activity timeout occurs.
   final List<FutureOr<void> Function()> _onActivityTimeouts = [];
 
+  late final GoRouterDelegate _routerDelegate;
+  late final ActivityMonitorController _activityMonitorController;
+
   @override
   void initState() {
     super.initState();
 
-    GoRouter.of(context).routerDelegate.addListener(_resetTimer);
-    context.read<ActivityMonitorController>().addListener(_onControllerStateChanged);
+    _routerDelegate = GoRouter.of(context).routerDelegate..addListener(_resetTimer);
+    _activityMonitorController = context.read<ActivityMonitorController>()..addListener(_onControllerStateChanged);
     _resetTimerReactionDisposer = autorun((_) => _resetTimer());
   }
 
@@ -107,8 +110,8 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   @override
   void dispose() {
     _returnHomeTimer?.cancel();
-    GoRouter.of(context).routerDelegate.removeListener(_resetTimer);
-    context.read<ActivityMonitorController>().removeListener(_onControllerStateChanged);
+    _routerDelegate.removeListener(_resetTimer);
+    _activityMonitorController.removeListener(_onControllerStateChanged);
     _resetTimerReactionDisposer();
     super.dispose();
   }

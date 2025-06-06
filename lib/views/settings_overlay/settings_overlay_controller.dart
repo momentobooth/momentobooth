@@ -551,6 +551,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableScreensaversWhenUnavailableChanged(bool? enableScreensaversWhenUnavailable) {
+    if (enableScreensaversWhenUnavailable != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(enableScreensaversWhenUnavailable: enableScreensaversWhenUnavailable));
+    }
+  }
+
   void onScreenTransitionAnimationChanged(ScreenTransitionAnimation? screenTransitionAnimation) {
     if (screenTransitionAnimation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(screenTransitionAnimation: screenTransitionAnimation));

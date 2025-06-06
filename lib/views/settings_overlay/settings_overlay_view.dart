@@ -22,6 +22,7 @@ import 'package:momento_booth/views/components/indicators/subsystem_status_icon.
 import 'package:momento_booth/views/components/indicators/subsystem_status_list.dart';
 import 'package:momento_booth/views/settings_overlay/components/aspect_ratio_preview.dart';
 import 'package:momento_booth/views/settings_overlay/components/import_field.dart';
+import 'package:momento_booth/views/settings_overlay/components/photobooth_availability_button.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_action.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_toggle.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_action_tile.dart';
@@ -85,6 +86,7 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
         builder: (context) {
           return NavigationView(
             key: _navigationPaneKey,
+            appBar: NavigationAppBar(actions: PhotoboothAvailabilityButton()),
             pane: NavigationPane(
               selected: viewModel.paneIndex,
               onChanged: controller.onNavigationPaneIndexChanged,
