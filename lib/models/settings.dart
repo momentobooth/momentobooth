@@ -28,6 +28,7 @@ abstract class Settings with _$Settings implements TomlEncodableValue {
   const Settings._();
 
   const factory Settings({
+    @Default(true) bool photoboothIsAvailable,
     @Default(5) int captureDelaySeconds,
     @Default(false) bool loadLastProject,
     @Default(1.5) double collageAspectRatio,
@@ -225,6 +226,7 @@ abstract class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(BackgroundBlur.textureBlur) BackgroundBlur backgroundBlur,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
     @Default(FilterQuality.medium) FilterQuality liveViewFilterQuality,
+    @Default(false) bool enableScreensaversWhenUnavailable,
   }) = _UiSettings;
 
   factory UiSettings.withDefaults() => UiSettings.fromJson({});
