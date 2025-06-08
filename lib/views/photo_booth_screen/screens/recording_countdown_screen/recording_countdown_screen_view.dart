@@ -45,7 +45,7 @@ class RecordingCountdownScreenView extends ScreenViewBase<RecordingCountdownScre
           ],
         ),
         Center(
-          child: TimeCounter(),
+          child: TimeCounter(key: viewModel.timerKey, targetDuration: Duration(seconds: 10),),
         ),
         _flashAnimation,
       ],

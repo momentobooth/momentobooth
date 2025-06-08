@@ -2,37 +2,53 @@ import 'package:flutter/widgets.dart';
 
 class TimeCounter extends StatefulWidget {
   final TextStyle textStyle;
+  final Duration targetDuration;
+  final VoidCallback? completionCallback;
 
   const TimeCounter({
-    Key? key,
+    super.key,
     this.textStyle = const TextStyle(
       fontWeight: FontWeight.bold,
       fontSize: 50,
       color: Color.fromARGB(255, 255, 255, 255), // Default color for the text
     ),
-  }) : super(key: key);
+    this.targetDuration = const Duration(days: 365),
+    this.completionCallback,
+  });
 
   @override
-  _TimeCounterState createState() => _TimeCounterState();
+  TimeCounterState createState() => TimeCounterState();
 }
 
-class _TimeCounterState extends State<TimeCounter> with TickerProviderStateMixin {
+class TimeCounterState extends State<TimeCounter> with TickerProviderStateMixin {
   late AnimationController _controller;
   DateTime _startTime = DateTime.now();
+  Duration _currentElapsedTime = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    _startTime = DateTime.now(); // Initialize start time
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(days: 365), // A long duration, as we'll just read elapsed time
+      duration: const Duration(days: 1),
     )..addListener(() {
-        setState(() {
-          // Rebuilds the widget on every tick, updating the time
-        });
-      })
-      ..repeat(); // Start repeating to continuously trigger updates
+      // Rebuilds the widget on every tick, updating the time
+      setState(() {
+        // Calculate elapsed time based on the actual start time and now
+        final Duration realElapsedTime = DateTime.now().difference(_startTime);
+
+        // Cap the displayed time at the targetDuration
+        _currentElapsedTime = realElapsedTime < widget.targetDuration
+            ? realElapsedTime
+            : widget.targetDuration;
+
+        // If the elapsed time has reached or exceeded the target, stop the controller
+        if (_currentElapsedTime == widget.targetDuration && _controller.isAnimating) {
+          _controller.stop();
+          widget.completionCallback?.call();
+        }
+      });
+    });
   }
 
   @override
@@ -41,9 +57,14 @@ class _TimeCounterState extends State<TimeCounter> with TickerProviderStateMixin
     super.dispose();
   }
 
+  void startTimer() {
+    _startTime = DateTime.now(); // Initialize start time
+    _controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Duration elapsed = DateTime.now().difference(_startTime);
+    final Duration elapsed = _currentElapsedTime;
 
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     String threeDigits(int n) => n.toString().padLeft(3, '0');
