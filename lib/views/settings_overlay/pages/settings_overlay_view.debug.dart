@@ -10,7 +10,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
           SettingsActionTile(
             icon: LucideIcons.play,
             title: "Play audio sample",
-            subtitle: "Play a sample mp3 file, to verify whether audio file playback is working. Please note that the User interface > Sound Effects > Enable Sound Effects setting needs to be enabled.",
+            subtitle: "Play a sample mp3 file, to verify whether audio file playback is working.",
             buttonText: "Audio test",
             onPressed: controller.onPlayAudioSamplePressed,
           ),
