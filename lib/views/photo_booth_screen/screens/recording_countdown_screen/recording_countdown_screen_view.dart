@@ -60,8 +60,8 @@ class RecordingCountdownScreenView extends ScreenViewBase<RecordingCountdownScre
           pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
           isRepeatingAnimation: false,
           animatedTexts: [
-            RotateAnimatedText(localizations.captureScreenGetReady, textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
-            RotateAnimatedText("Your recording is about to start", textStyle: theme.titleStyle, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.captureScreenGetReady, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText("Your recording is about to start", textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
           ],
         ),
       ),
