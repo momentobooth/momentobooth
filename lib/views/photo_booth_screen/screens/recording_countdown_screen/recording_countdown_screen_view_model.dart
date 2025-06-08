@@ -23,6 +23,9 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   bool flashComplete = false;
   bool captureComplete = false;
 
+  @observable
+  RecState recState = RecState.pre;
+
   int get counterStart => getIt<SettingsManager>().settings.captureDelaySeconds;
 
   double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
@@ -57,11 +60,13 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   RecordingCountdownScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    getIt<PhotosManager>().initiateDelayedPhotoCapture(onCaptureFinished);
+    // getIt<PhotosManager>().initiateDelayedPhotoCapture(onCaptureFinished);
+    Future.delayed(Duration(seconds: 15), onCaptureFinished);
   }
 
   Future<void> onCounterFinished() async {
     timerKey.currentState?.startTimer();
+    recState = RecState.recording;
     showFlash = true;
     showCounter = false;
     await Future.delayed(flashAnimationDuration);
@@ -76,6 +81,7 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
     // Todo
     captureComplete = true;
     // navigateAfterCapture();
+    recState = RecState.post;
   }
 
   void navigateAfterCapture() {
@@ -85,3 +91,5 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   }
 
 }
+
+enum RecState { pre, recording, post }
