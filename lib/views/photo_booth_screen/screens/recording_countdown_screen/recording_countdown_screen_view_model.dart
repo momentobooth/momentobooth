@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:mobx/mobx.dart';
@@ -10,9 +9,8 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/constants.dart';
-import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
-import 'package:momento_booth/views/components/imaging/photo_collage.dart';
+import 'package:momento_booth/views/components/indicators/time_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
 
 part 'recording_countdown_screen_view_model.g.dart';
@@ -29,6 +27,8 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
 
   double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePadding => getIt<SettingsManager>().settings.collagePadding;
+
+  final GlobalKey<TimeCounterState> timerKey = GlobalKey<TimeCounterState>();
 
   @observable
   bool showCounter = true;
@@ -48,32 +48,10 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   @computed
   Duration get flashAnimationDuration => showFlash ? flashStartDuration : flashEndDuration;
 
-  /// Global key for controlling the slider widget.
-  final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
-
   final Completer<void> completer = Completer<void>();
 
   void collageReady() {
     completer.complete();
-  }
-
-  Future<File?> captureCollage() async {
-    getIt<PhotosManager>().chosen.clear();
-    getIt<PhotosManager>().chosen.add(0);
-    final stopwatch = Stopwatch()..start();
-    final pixelRatio = getIt<SettingsManager>().settings.output.resolutionMultiplier;
-    final format = getIt<SettingsManager>().settings.output.exportFormat;
-    final jpgQuality = getIt<SettingsManager>().settings.output.jpgQuality;
-    await completer.future;
-    getIt<PhotosManager>().outputImage = await collageKey.currentState!.getCollageImage(
-      createdByMode: CreatedByMode.single,
-      pixelRatio: pixelRatio,
-      format: format,
-      jpgQuality: jpgQuality,
-    );
-    logDebug('captureCollage took ${stopwatch.elapsed}');
-
-    return await getIt<PhotosManager>().writeOutput();
   }
 
   RecordingCountdownScreenViewModelBase({
@@ -83,6 +61,7 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   }
 
   Future<void> onCounterFinished() async {
+    timerKey.currentState?.startTimer();
     showFlash = true;
     showCounter = false;
     await Future.delayed(flashAnimationDuration);
@@ -94,14 +73,9 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   }
 
   Future<void> onCaptureFinished() async {
-    if (getIt<ProjectManager>().settings.singlePhotoIsCollage) {
-      await captureCollage();
-    } else {
-      getIt<PhotosManager>().outputImage = getIt<PhotosManager>().photos.last.data;
-      await getIt<PhotosManager>().writeOutput();
-    }
+    // Todo
     captureComplete = true;
-    navigateAfterCapture();
+    // navigateAfterCapture();
   }
 
   void navigateAfterCapture() {
