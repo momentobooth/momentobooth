@@ -118,7 +118,7 @@ class _LiveViewState extends State<LiveView> with SingleTickerProviderStateMixin
       ),
     );
 
-    if (widget.blur) {
+    if (LiveView._blurSigma > 0) {
       return ClipRect(
         // This is a (ugly? because I'd rather have a solution without LayoutBuilder...) way to fix the subtle
         // but noticeable black border around the background blur. It does so with respect to the aspect ratio
