@@ -74,12 +74,6 @@ dependencies:
   talker_flutter: 4.8.0
   sentry_flutter: 8.14.2
 
-  # Sound output
-  just_audio: 0.10.3
-  just_audio_windows: 0.2.2
-  just_audio_media_kit: 2.1.0
-  media_kit_libs_linux: 1.2.1
-
   # Storage
   flutter_secure_storage: 9.2.4
   toml: 0.16.0

@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_media_kit/just_audio_media_kit.dart';
+import 'package:flutter/services.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/src/rust/api/sfx.dart' as rust_sfx;
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/utils/subsystem.dart';
+import 'package:synchronized/synchronized.dart';
 
 part 'sfx_manager.g.dart';
 
@@ -14,7 +16,10 @@ class SfxManager = SfxManagerBase with _$SfxManager;
 
 abstract class SfxManagerBase extends Subsystem with Store, Logger {
 
-  AudioPlayer? _audioPlayer;
+  final Lock _updateMqttClientInstanceLock = Lock();
+  static const int _testSoundId = 0, _clickSoundId = 1, _shareScreenSoundId = 2;
+
+  bool get _isSfxEnabled => getIt<SettingsManager>().settings.ui.enableSfx;
 
   // ////////////// //
   // Initialization //
@@ -22,16 +27,18 @@ abstract class SfxManagerBase extends Subsystem with Store, Logger {
 
   @override
   Future<void> initialize() async {
-    // Linux: Uses just_audio_media_kit.
-    // Windows: Uses just_audio_windows. Not init needed.
-    // macOS: Uses native implementation of just_audio. No init needed.
-    JustAudioMediaKit.ensureInitialized(windows: false);
+    await rust_sfx.initialize();
+    await _loadSoundFromAsset(_testSoundId, 'assets/sounds/audio_test.mp3');
 
-    AudioPlayer audioPlayer = AudioPlayer(handleInterruptions: false);
-    await audioPlayer.setAsset('assets/sounds/silence.ogg'); // This is a hack to make sure the audio player is initialized
-    await audioPlayer.play();
+    autorun((_) {
+      String clickSoundPath = getIt<SettingsManager>().settings.ui.clickSfxFile;
+      String shareScreenSoundPath = getIt<SettingsManager>().settings.ui.shareScreenSfxFile;
 
-    _audioPlayer = audioPlayer;
+      _updateMqttClientInstanceLock.synchronized(() async {
+        await _loadSoundFromFile(_clickSoundId, clickSoundPath);
+        await _loadSoundFromFile(_shareScreenSoundId, shareScreenSoundPath);
+      });
+    });
   }
 
   // ////////////// //
@@ -39,47 +46,29 @@ abstract class SfxManagerBase extends Subsystem with Store, Logger {
   // ////////////// //
 
   Future<void> playSampleSound() async {
-    String filePath = 'assets/sounds/audio_test.mp3';
-
-    await _playSoundFromAsset(filePath);
-  }
-
-  Future<void> playShareScreenSound() async {
-    String filePath = getIt<SettingsManager>().settings.ui.shareScreenSfxFile;
-
-    await _playSound(filePath);
+    await rust_sfx.playSound(id: _testSoundId);
   }
 
   Future<void> playClickSound() async {
-    String filePath = getIt<SettingsManager>().settings.ui.clickSfxFile;
-
-    await _playSound(filePath);
+    if (_isSfxEnabled) await rust_sfx.playSound(id: _clickSoundId);
   }
 
-  // ////////////// //
-  // Helper methods //
-  // ////////////// //
-
-  Future<void> _playSoundFromAsset(String assetPath) async {
-    try {
-      if (!getIt<SettingsManager>().settings.ui.enableSfx || assetPath.isEmpty) return;
-      await _audioPlayer?.stop();
-      await _audioPlayer?.setAsset(assetPath);
-      await _audioPlayer?.play();
-    } catch (e) {
-      logError("Error playing asset sound ($assetPath): $e");
-    }
+  Future<void> playShareScreenSound() async {
+    if (_isSfxEnabled) await rust_sfx.playSound(id: _shareScreenSoundId);
   }
 
-  Future<void> _playSound(String filePath) async {
-    try {
-      if (!getIt<SettingsManager>().settings.ui.enableSfx || filePath.isEmpty) return;
-      await _audioPlayer?.stop();
-      await _audioPlayer?.setFilePath(filePath);
-      await _audioPlayer?.play();
-    } catch (e) {
-      logError("Error playing sound ($filePath): $e");
-    }
+  // ///////////// //
+  // Sound loading //
+  // ///////////// //`
+
+  Future<void> _loadSoundFromFile(int id, String filePath) async {
+    Uint8List data = await File(filePath).readAsBytes();
+    await rust_sfx.loadAudio(id: id, rawAudioData: data);
+  }
+
+  Future<void> _loadSoundFromAsset(int id, String assetPath) async {
+    ByteData data = await rootBundle.load(assetPath);
+    await rust_sfx.loadAudio(id: id, rawAudioData: data.buffer.asUint8List());
   }
 
 }
