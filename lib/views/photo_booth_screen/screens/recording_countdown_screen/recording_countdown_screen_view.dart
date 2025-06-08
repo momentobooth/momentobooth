@@ -1,6 +1,8 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
@@ -44,8 +46,17 @@ class RecordingCountdownScreenView extends ScreenViewBase<RecordingCountdownScre
             ),
           ],
         ),
+        SvgPicture.asset(
+          "assets/svg/recording_frame.svg",
+        ),
         Center(
-          child: TimeCounter(key: viewModel.timerKey, targetDuration: Duration(seconds: 10),),
+          child: FittedBox(
+            child: SizedBox(
+              height: 1080,
+              width: 1920,
+              child: RecordUI(viewModel: viewModel),
+            ),
+          ),
         ),
         _flashAnimation,
       ],
@@ -79,4 +90,71 @@ class RecordingCountdownScreenView extends ScreenViewBase<RecordingCountdownScre
     });
   }
 
+}
+
+class RecordUI extends StatelessWidget {
+  const RecordUI({
+    super.key,
+    required this.viewModel,
+  });
+
+  final RecordingCountdownScreenViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(43),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TimeCounter(key: viewModel.timerKey, targetDuration: Duration(seconds: 10),),
+                Text(" / 00:10:000",
+                 style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 50,
+                    color: Color.fromARGB(185, 255, 255, 255),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsetsGeometry.symmetric(vertical: 90, horizontal: 93,),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Observer(
+              builder: (_) {
+                const size = 45.0;
+                switch (viewModel.recState) {
+                  case RecState.pre:
+                    return Icon(
+                      LucideIcons.clockFading,
+                      color: Colors.white,
+                      size: size,
+                    );
+                  case RecState.recording:
+                    return Icon(
+                      FluentIcons.circle_fill,
+                      color: Color.fromARGB(255, 181, 23, 0),
+                      size: size,
+                    );
+                  case RecState.post:
+                    return Icon(
+                      LucideIcons.pause,
+                      color: Colors.white,
+                      size: size,
+                    );
+                }
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
