@@ -38,7 +38,7 @@ abstract class PhotosManagerBase with Store, Logger {
   CaptureMode captureMode = CaptureMode.single;
 
   @computed
-  bool get showLiveViewBackground => photos.isEmpty && captureMode != CaptureMode.collage;
+  bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single || captureMode == CaptureMode.recording;
 
   Directory get outputDir => getIt<ProjectManager>().getOutputDir();
   int photoNumber = 0;
