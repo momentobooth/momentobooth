@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -21,6 +22,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   }) {
     WidgetsBinding.instance.addPostFrameCallback((_) => noProjectOpenedDialog());
     getIt<LiveViewManager>().isRecordingLayout = false;
+    getIt<PhotosManager>().photos.clear();
   }
 
   Future<void> noProjectOpenedDialog() async {
