@@ -58,7 +58,6 @@ class RecordingCountdownScreenView extends ScreenViewBase<RecordingCountdownScre
             ),
           ),
         ),
-        _flashAnimation,
       ],
     );
   }
@@ -72,22 +71,11 @@ class RecordingCountdownScreenView extends ScreenViewBase<RecordingCountdownScre
           isRepeatingAnimation: false,
           animatedTexts: [
             RotateAnimatedText(localizations.captureScreenGetReady, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
-            RotateAnimatedText("Your recording is about to start", textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText("Recording is about to start", textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 2500)),
           ],
         ),
       ),
     );
-  }
-
-  Widget get _flashAnimation {
-    return Observer(builder: (_) {
-      return AnimatedOpacity(
-        opacity: viewModel.opacity,
-        duration: viewModel.flashAnimationDuration,
-        curve: viewModel.flashAnimationCurve,
-        child: const ColoredBox(color: Color(0xFFFFFFFF)),
-      );
-    });
   }
 
 }

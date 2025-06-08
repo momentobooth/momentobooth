@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
-import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/constants.dart';
@@ -31,25 +31,15 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePadding => getIt<SettingsManager>().settings.collagePadding;
 
+  List<double> snapshotTimes = [2.5, 5.0, 7.5, 10.0];
+
   final GlobalKey<TimeCounterState> timerKey = GlobalKey<TimeCounterState>();
 
   @observable
   bool showCounter = true;
 
   @observable
-  bool showFlash = false;
-
-  @observable
   bool showSpinner = false;
-
-  @computed
-  double get opacity => showFlash ? 1.0 : 0.0;
-
-  @computed
-  Curve get flashAnimationCurve => Curves.easeOutQuart;
-
-  @computed
-  Duration get flashAnimationDuration => showFlash ? flashStartDuration : flashEndDuration;
 
   final Completer<void> completer = Completer<void>();
 
@@ -60,21 +50,25 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   RecordingCountdownScreenViewModelBase({
     required super.contextAccessor,
   }) {
-    // getIt<PhotosManager>().initiateDelayedPhotoCapture(onCaptureFinished);
+    getIt<PhotosManager>().photos.clear();
     Future.delayed(Duration(seconds: 15), onCaptureFinished);
+  }
+
+  Future<void> takeSnapshot() async {
+    final capturer = LiveViewStreamSnapshotCapturer();
+    getIt<PhotosManager>().photos.add(await capturer.captureAndGetPhoto());
   }
 
   Future<void> onCounterFinished() async {
     timerKey.currentState?.startTimer();
     recState = RecState.recording;
-    showFlash = true;
     showCounter = false;
-    await Future.delayed(flashAnimationDuration);
-    showFlash = false;
-    showSpinner = true;
-    await Future.delayed(minimumContinueWait);
-    flashComplete = true; // Flash is now not actually complete, but after this time we do not care about it anymore.
-    navigateAfterCapture();
+
+    for (final t in snapshotTimes) {
+      int seconds = t.floor();
+      int milliseconds = ((t - seconds)*1000).round();
+      Future.delayed(Duration(seconds: seconds, milliseconds: milliseconds), takeSnapshot);
+    }
   }
 
   Future<void> onCaptureFinished() async {
@@ -82,6 +76,7 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
     captureComplete = true;
     // navigateAfterCapture();
     recState = RecState.post;
+    showSpinner = true;
   }
 
   void navigateAfterCapture() {
