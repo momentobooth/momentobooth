@@ -100,19 +100,21 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
   }
 
   Widget get _recordingButton {
-    return GestureDetector(
-      onTap: controller.onClickOnRecording,
-      behavior: HitTestBehavior.translucent,
-      child: Column(
-        children: [
-          Expanded(child: FittedBox(child: _getRoundButton(452))),
-          AutoSizeText(
-            "Recording",
-            group: viewModel.autoSizeGroup,
-            style: theme.titleStyle,
-            maxLines: 1,
-          ),
-        ],
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnRecording,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(child: FittedBox(child: _getRoundButton(452))),
+            AutoSizeText(
+              "Recording",
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -138,8 +140,12 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
       height: dimension,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(dimension),
-        color: theme.chooseCaptureModeButtonIconColor,
-        boxShadow: [theme.chooseCaptureModeButtonShadow],
+        color: const Color(0xE6FFFFFF),
+        boxShadow: [const BoxShadow(
+          color: Color(0x42000000),
+          offset: Offset(0, 3),
+          blurRadius: 8,
+        )],
       ),
     );
   }
