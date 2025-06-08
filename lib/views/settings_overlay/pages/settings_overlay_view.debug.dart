@@ -22,7 +22,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
                 for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
                   SizedBox.square(
                     dimension: 100,
-                    child: ImageWithLoaderFallback.memory(getIt<PhotosManager>().photos[i].data, onImageDecoded: () => {})
+                    child: ImageWithLoaderFallback.memory(getIt<PhotosManager>().photos[i].data, onImageDecoded: (_) => {})
                   )
               ],
             )
