@@ -205,10 +205,10 @@ packages:
     dependency: transitive
     description:
       name: checked_yaml
-      sha256: feb6bed21949061731a7a75fc5d2aa727cf160b91af9a3e464c5e3a32e28b5ff
+      sha256: "959525d3162f249993882720d52b7e0c833978df229be20702b33d48d91de70f"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.3"
+    version: "2.0.4"
   clock:
     dependency: transitive
     description:
@@ -301,10 +301,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: a7fd703482b391a87d60b6061d04dfdeab07826b96f9abd8f5ed98068acc0074
+      sha256: "0c6396126421b590089447154c5f98a5de423b70cfb15b1578fd018843ee6f53"
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.2"
+    version: "11.4.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -619,10 +619,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "0b1e06223bee260dee31a171fb1153e306907563a0b0225e8c1733211911429a"
+      sha256: b453934c36e289cef06525734d1e676c1f91da9e22e2017d9dcab6ce0f999175
       url: "https://pub.dev"
     source: hosted
-    version: "15.1.2"
+    version: "15.1.3"
   google_fonts:
     dependency: "direct main"
     description:
@@ -755,10 +755,10 @@ packages:
     dependency: "direct main"
     description:
       name: just_audio
-      sha256: d449d6b01ace3343dd8ca7f910db871994942dc58752d2765db35694f9ffe7e2
+      sha256: "679637a3ec5b6e00f36472f5a3663667df00ee4822cbf5dafca0f568c710960a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.3"
+    version: "0.10.4"
   just_audio_media_kit:
     dependency: "direct main"
     description:
@@ -851,10 +851,10 @@ packages:
     dependency: "direct main"
     description:
       name: lucide_icons_flutter
-      sha256: d2b09156cd9b66f7194fce9abd707c4ce7184c5b43c71feb4b70d15143f6e0d4
+      sha256: "2cc30b669d2e9329072bdd4e3f50d4a31d4dd6ee9e9748d639dab95cd2edd0ce"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.4"
+    version: "3.0.5"
   matcher:
     dependency: transitive
     description:
@@ -931,10 +931,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: dd93dd6a75982b3347fd9679c764a5f46d4ff71aec46cb139a9ffcae13a7d4c3
+      sha256: "4bcfaa577fa3bbfb68b788b6d5a4e23c21012b3d29d220b03a60a5fc4b01aa68"
       url: "https://pub.dev"
     source: hosted
-    version: "4.12.2"
+    version: "4.13.0"
   nested:
     dependency: transitive
     description:
@@ -1391,26 +1391,26 @@ packages:
     dependency: "direct main"
     description:
       name: super_clipboard
-      sha256: "4a6ae6dfaa282ec1f2bff750976f535517ed8ca842d5deae13985eb11c00ac1f"
+      sha256: "561d49f845c75638fde034add6a785c36f1077e912663dabd08231b22adb6570"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.24"
+    version: "0.9.0"
   super_drag_and_drop:
     dependency: "direct main"
     description:
       name: super_drag_and_drop
-      sha256: e1ea1528916a728b3d0c3007c0af1303947026011f78564279af68d8856a0205
+      sha256: "199c7c6c103a3cb5bd8118e46693713806cf6514307815ac886b8d326c066b9c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.24"
+    version: "0.9.0"
   super_native_extensions:
     dependency: transitive
     description:
       name: super_native_extensions
-      sha256: a433bba8186cd6b707560c42535bf284804665231c00bca86faf1aa4968b7637
+      sha256: "8613401d387a7ca321eb4a4535873749bd881421b7ccdcab6c44ebe0163cdd47"
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.24"
+    version: "0.9.0"
   synchronized:
     dependency: "direct main"
     description:
@@ -1423,26 +1423,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: a664f5eae5284e94aa8c535e0400ab71a78fa2480ad18a7344dec928b5c56805
+      sha256: "67db779915a9d5ca3b7d9deb39e737c357de3a8f4e31489937b02ea3d7c43e97"
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.0"
+    version: "4.8.3"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: "480c51bba7ac0dcab23be5e9545214a43179625bc5f787326248e94af8316aee"
+      sha256: "5dc0d69688a112c57f343e851db28d7f04df2fe9245d94ed7510f8fa2f1bf0ac"
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.0"
+    version: "4.8.3"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: b5d0bd04229eeccdf765cabf73e964ee28528c749104b56867c8d2eb764a45ee
+      sha256: c86dc593faba34d59c8419ac05f6cf5fe850b09bbbf4b048f85129ff59ac5070
       url: "https://pub.dev"
     source: hosted
-    version: "4.8.0"
+    version: "4.8.3"
   term_glyph:
     dependency: transitive
     description:
@@ -1503,12 +1503,11 @@ packages:
   twinkling_stars:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "feature/size-multiplication"
-      resolved-ref: e1eefc5affbdd3fd0b4a0780af6267f15c0bc6d0
-      url: "https://github.com/momentobooth/twinkling_star"
-    source: git
-    version: "1.0.2"
+      name: twinkling_stars
+      sha256: ab05aa80d4958c8f390dc980fcc79f354e2bcb2d3fca7f55fd5fd82645fa2d93
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   typed_data:
     dependency: transitive
     description:
@@ -1737,10 +1736,10 @@ packages:
     dependency: transitive
     description:
       name: win32_registry
-      sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
+      sha256: "6f1b564492d0147b330dd794fee8f512cec4977957f310f9951b5f9d83618dae"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.5"
+    version: "2.1.0"
   window_manager:
     dependency: "direct main"
     description:

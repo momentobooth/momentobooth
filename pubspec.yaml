@@ -18,7 +18,7 @@ dependencies:
   animations: 2.0.11
   auto_size_text: 3.0.0
   fluent_ui: 4.12.0
-  go_router: 15.1.2
+  go_router: 15.1.3
   flutter_svg: 2.1.0
   animated_text_kit: 4.2.3
   flutter_scroll_shadow: 1.2.6
@@ -33,14 +33,11 @@ dependencies:
   widgetbook: 3.14.2
   widgetbook_annotation: 3.5.0
   flex_color_picker: 3.7.1
-  lucide_icons_flutter: 3.0.4
+  lucide_icons_flutter: 3.0.5
   wizard_router: 1.4.0
   theme_tailor_annotation: 3.0.2
   google_fonts: 6.2.1
-  twinkling_stars:
-    git:
-      url: https://github.com/momentobooth/twinkling_star
-      ref: feature/size-multiplication
+  twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
   screenshot: 3.0.0
@@ -70,12 +67,12 @@ dependencies:
   win32: 5.13.0
 
   # Log and error handling
-  talker: 4.8.0
-  talker_flutter: 4.8.0
+  talker: 4.8.3
+  talker_flutter: 4.8.3
   sentry_flutter: 8.14.2
 
   # Sound output
-  just_audio: 0.10.3
+  just_audio: 0.10.4
   just_audio_windows: 0.2.2
   just_audio_media_kit: 2.1.0
   media_kit_libs_linux: 1.2.1
@@ -87,7 +84,7 @@ dependencies:
   # Networking
   http: 1.4.0
   http_parser: 4.1.2
-  mqtt5_client: 4.12.2
+  mqtt5_client: 4.13.0
 
   # Misc
   get_it: 8.0.3
@@ -103,8 +100,8 @@ dependencies:
   csslib: 1.0.2
   args: 2.7.0
   url_launcher: 6.3.1
-  super_clipboard: 0.8.24
-  super_drag_and_drop: 0.8.24
+  super_clipboard: 0.9.0
+  super_drag_and_drop: 0.9.0
 
 dependency_overrides:
   # Remove when fixed: https://github.com/anusii/solidpod/issues/245
