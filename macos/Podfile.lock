@@ -104,7 +104,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   audio_session: 728ae3823d914f809c485d390274861a24b0904e
-  device_info_plus: ce1b7762849d3ec103d0e0517299f2db7ad60720
+  device_info_plus: 1b14eed9bf95428983aed283a8d51cce3d8c4215
   file_selector_macos: cc3858c981fe6889f364731200d6232dac1d812d
   flutter_secure_storage_macos: c2754d3483d20bb207bb9e5a14f1b8e771abcdb9
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
