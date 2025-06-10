@@ -2,16 +2,28 @@ part of 'app.dart';
 
 List<RouteBase> _rootRoutes = [
   _onboardingRoute,
+  _notAvailableRoute,
   _photoBoothShellRoute,
 ];
 
 GoRoute _onboardingRoute = GoRoute(
-  path: "/onboarding",
+  path: OnboardingScreen.defaultRoute,
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(
       key: state.pageKey,
       context: context,
       child: const OnboardingScreen(),
+    );
+  },
+);
+
+GoRoute _notAvailableRoute = GoRoute(
+  path: NotAvailableScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return TransitionPage.fromSettings(
+      key: state.pageKey,
+      context: context,
+      child: const NotAvailableScreen(),
     );
   },
 );
