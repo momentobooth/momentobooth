@@ -7,7 +7,7 @@ import 'package:momento_booth/views/components/buttons/photo_booth_outlined_butt
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 import 'package:momento_booth/views/components/qr_code.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class QrShareDialog extends StatelessWidget {
 
@@ -166,11 +166,8 @@ enum ShareDialogState {
   error,
 }
 
-@widgetbook.UseCase(
-  name: 'QR Share Dialog',
-  type: QrShareDialog,
-)
-Widget printerIssueDialog(BuildContext context) {
+@UseCase(name: 'QR Share Dialog', type: QrShareDialog)
+Widget qrShareDialog(BuildContext context) {
   return QrShareDialog(
     state: context.knobs.list(label: 'State', initialOption: ShareDialogState.uploading, options: ShareDialogState.values),
     uploadProgress: context.knobs.double.slider(label: 'Upload Progress', initialValue: 25, max: 100, min: 0),

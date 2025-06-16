@@ -6,7 +6,7 @@ import 'package:momento_booth/views/photo_booth_screen/theme/basic/basic_theme.d
 import 'package:momento_booth/views/photo_booth_screen/theme/hollywood/hollywood_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 // ignore: always_use_package_imports
 import 'widgetbook.directories.g.dart';
@@ -15,7 +15,7 @@ void main() {
   runApp(const WidgetbookApp());
 }
 
-@widgetbook.App()
+@App()
 class WidgetbookApp extends StatelessWidget {
 
   const WidgetbookApp({super.key});

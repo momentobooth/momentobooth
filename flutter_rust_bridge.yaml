@@ -1,3 +1,7 @@
 rust_input: rust/src/api/**/*.rs
 dart_output: lib/src/rust
 web: false
+dart_format: false
+rust_format: false
+dart_fix: false
+build_runner: false

@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lottie/lottie.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class PrintingErrorDialog extends StatelessWidget {
 
@@ -36,10 +36,7 @@ class PrintingErrorDialog extends StatelessWidget {
 
 }
 
-@widgetbook.UseCase(
-  name: 'Printing error',
-  type: PrintingErrorDialog,
-)
-Widget printerIssueDialog(BuildContext context) {
+@UseCase(name: 'Printing error', type: PrintingErrorDialog)
+Widget printingErrorDialog(BuildContext context) {
   return PrintingErrorDialog();
 }

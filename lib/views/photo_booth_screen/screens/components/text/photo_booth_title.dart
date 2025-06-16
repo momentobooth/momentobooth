@@ -26,6 +26,6 @@ class PhotoBoothTitle extends StatelessWidget {
 }
 
 @UseCase(name: 'Title', type: PhotoBoothTitle)
-Widget navigationButton(BuildContext context) {
+Widget photoBoothTitle(BuildContext context) {
   return PhotoBoothTitle('Ba Sing Se');
 }

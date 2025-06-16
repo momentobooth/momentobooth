@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class UpdateSecretDialog extends StatefulWidget {
 
@@ -53,10 +53,7 @@ class _UpdateSecretDialogState extends State<UpdateSecretDialog> {
   }
 }
 
-@widgetbook.UseCase(
-  name: 'Update Secret Dialog',
-  type: UpdateSecretDialog,
-)
+@UseCase(name: 'Update Secret Dialog', type: UpdateSecretDialog)
 Widget updateSecretDialog(BuildContext context) {
   return UpdateSecretDialog(
     secretName: 'My Secret',
