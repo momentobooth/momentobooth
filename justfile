@@ -1,4 +1,4 @@
-default: install-cargo-expand install-bridge-codegen install-flutter get-deps gen-bridge gen-l10n
+default: install-cargo-expand install-bridge-codegen install-flutter get-deps gen-bridge gen-code gen-l10n
 
 set windows-shell := ["pwsh.exe", "-NoProfile", "-c"]
 

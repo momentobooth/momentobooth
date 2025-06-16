@@ -2,10 +2,10 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/utils/subsystem.dart';
 
 part 'settings_manager.g.dart';
 

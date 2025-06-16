@@ -4,14 +4,11 @@ targets:
       freezed:
         options:
           format: false
-          map: false
-          when: false
         generate_for:
           include:
             - lib/models/*.dart
             - lib/models/**/*.dart
-            - lib/src/rust/**/*.dart
-            - lib/views/photo_booth_screen/theme/*.dart
+            - lib/src/rust/models/*.dart
       json_serializable:
         options:
           explicit_to_json: true
@@ -21,12 +18,17 @@ targets:
             - lib/models/**/*.dart
       mobx_codegen:mobx_generator:
         generate_for:
-            - lib/managers/*.dart
-            - lib/utils/*.dart
-            - lib/views/**/*_view_model.dart
+          - lib/managers/*.dart
+          - lib/models/subsystem.dart
+          - lib/views/**/*_view_model.dart
       widgetbook_generator:use_case_builder:
         generate_for:
-            - lib/views/**/*.dart
+          - lib/views/**/*.dart
+      widgetbook_generator:app_builder:
+        generate_for:
+          - lib/widgetbook.dart
+      widgetbook_generator:addons_configs_builder:
+        enabled: false
       widgetbook_generator:telemetry:
         enabled: false
       theme_tailor:
@@ -34,3 +36,5 @@ targets:
           theme_getter: on_theme_data
           theme_class_name: FluentTheme
           theme_data_class_name: FluentThemeData
+        generate_for:
+          - lib/views/photo_booth_screen/theme/photo_booth_theme.dart

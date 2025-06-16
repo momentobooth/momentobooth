@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
-import 'package:momento_booth/utils/subsystem.dart';
+import 'package:momento_booth/models/subsystem.dart';
 
 extension GetItExtension on GetIt {
 

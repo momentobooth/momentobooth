@@ -1,8 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
-import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 /// Auto sizing text and icon widget, mostly written to facilitate titles and buttons with autosizing text and icons (both on the left and right size of the next).
@@ -119,25 +117,10 @@ class _AutoSizeTextAndIconState extends State<AutoSizeTextAndIcon> {
 }
 
 @UseCase(name: 'AutoSizeTextAndIcon action button', type: AutoSizeTextAndIcon)
-Widget actionButton(BuildContext context) {
-  return PhotoBoothButton.action(
-    onPressed: context.knobs.boolean(label: "Disabled") ? null: () {},
-    child: AutoSizeTextAndIcon(
-      text: 'My Text',
-      leftIcon: LucideIcons.airVent,
-      rightIcon: LucideIcons.powerOff,
-    ),
-  );
-}
-
-@UseCase(name: 'AutoSizeTextAndIcon navigation button', type: AutoSizeTextAndIcon)
-Widget navigationButton(BuildContext context) {
-  return PhotoBoothButton.navigation(
-    onPressed: context.knobs.boolean(label: "Disabled") ? null: () {},
-    child: AutoSizeTextAndIcon(
-      text: 'My Text',
-      leftIcon: LucideIcons.airVent,
-      rightIcon: LucideIcons.powerOff,
-    ),
+Widget autoSizeTextAndIcon(BuildContext context) {
+  return AutoSizeTextAndIcon(
+    text: 'My Text',
+    leftIcon: LucideIcons.airVent,
+    rightIcon: LucideIcons.powerOff,
   );
 }

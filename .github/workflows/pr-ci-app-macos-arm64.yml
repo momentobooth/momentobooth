@@ -117,6 +117,9 @@ jobs:
     - name: Generate Dart-to-Rust bridging code
       run: PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
 
+    - name: Run build_runner
+      run: dart run build_runner build
+
     - name: Flutter analyze
       run: flutter analyze
 

@@ -138,6 +138,10 @@ jobs:
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter_rust_bridge_codegen generate
 
+    - name: Run build_runner
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
+      run: dart run build_runner build
+
     - name: Flutter analyze
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter analyze

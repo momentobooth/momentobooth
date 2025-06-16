@@ -5,7 +5,7 @@ use dashmap::DashMap;
 use nokhwa::{utils::{CameraInfo, RequestedFormat, RequestedFormatType, FrameFormat}, query, native_api_backend, CallbackCamera, pixel_format::RgbAFormat};
 use log::{error, info, debug};
 
-use crate::{frb_generated::StreamSink, models::{images::RawImage, live_view::CameraState}, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg}};
+use crate::{frb_generated::StreamSink, models::{image_operations::ImageOperation, images::RawImage, live_view::CameraState}, utils::{flutter_texture::FlutterTexture, image_processing, jpeg}};
 
 pub fn get_cameras() -> Vec<NokhwaCameraInfo> {
     let backend = native_api_backend().expect("Could not get backend");

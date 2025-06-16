@@ -126,10 +126,11 @@ Please note: This method expects global [fvm](https://fvm.app/) to be available 
 
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
-1. Run `flutter gen-l10n`
+1. Run `flutter gen-l10n`.
 2. Run `flutter_rust_bridge_codegen generate`:
     * Note: Make sure to re-run this command if you changed anything in the Rust subproject
-3. Run `flutter run` or use your IDE to run the application
+3. Run `dart run build_runner build`
+4. Run `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
 </details>
@@ -138,6 +139,7 @@ Please note: Run all commands from the root folder of the repository, unless men
 
 * If you have changed any code in the Dart or Rust project that could change the generated bridging code, you should re-run the `flutter_rust_bridge_codegen generate` or `just gen-bridge` command
   * You can also run `flutter_rust_bridge_codegen generate --watch` or `just watch-bridge` to automatically regenerate the bridging code when you save a file
+  * You might need to run `dart run build_runner build --delete-conflicting-outputs` or `just gen-code`
 * If you have changed any code related to JSON or TOML serialization, or MobX, you should re-run the `dart run build_runner build --delete-conflicting-outputs` or `just gen-code` command
   * You can also run `dart run build_runner watch --delete-conflicting-outputs` or `just watch-code` to automatically regenerate the code when you save a file
 * If you have changed any code related to the localization, you should re-run the `flutter gen-l10n` of `just gen-l10n` command

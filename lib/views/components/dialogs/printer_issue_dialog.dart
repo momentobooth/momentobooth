@@ -8,7 +8,7 @@ import 'package:momento_booth/views/components/buttons/photo_booth_filled_button
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class PrinterIssueDialog extends StatelessWidget {
 
@@ -85,10 +85,7 @@ class PrinterIssueDialog extends StatelessWidget {
 }
 
 
-@widgetbook.UseCase(
-  name: 'No Ink',
-  type: PrinterIssueDialog,
-)
+@UseCase(name: 'No Ink', type: PrinterIssueDialog)
 Widget printerIssueDialog(BuildContext context) {
   return PrinterIssueDialog(
     printerName: 'MyBrand MyPrinter 5000',

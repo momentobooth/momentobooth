@@ -7,7 +7,7 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/dialogs/photo_booth_dialog.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class ModalDialog extends StatelessWidget {
 
@@ -88,10 +88,7 @@ enum ModalDialogType {
 
 }
 
-@widgetbook.UseCase(
-  name: 'Modal Dialog',
-  type: ModalDialog,
-)
+@UseCase(name: 'Modal Dialog', type: ModalDialog)
 Widget loadingDialog(BuildContext context) {
   return ModalDialog(
     title: context.knobs.string(label: 'Title', initialValue: 'Please read this'),

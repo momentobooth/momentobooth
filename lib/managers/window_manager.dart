@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/utils/subsystem.dart';
 import 'package:window_manager/window_manager.dart';
 
 part 'window_manager.g.dart';

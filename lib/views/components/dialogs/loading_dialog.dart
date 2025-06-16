@@ -2,7 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lottie/lottie.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
+import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class LoadingDialog extends StatelessWidget {
 
@@ -56,20 +56,14 @@ class LoadingDialog extends StatelessWidget {
 
 }
 
-@widgetbook.UseCase(
-  name: 'Loading dialog - Generic',
-  type: LoadingDialog,
-)
+@UseCase(name: 'Loading dialog - Generic', type: LoadingDialog)
 Widget loadingDialogGeneric(BuildContext context) {
   return LoadingDialog.generic(
     title: context.knobs.string(label: 'Title', initialValue: 'Please wait...'),
   );
 }
 
-@widgetbook.UseCase(
-  name: 'Loading dialog - Camera download',
-  type: LoadingDialog,
-)
+@UseCase(name: 'Loading dialog - Camera download', type: LoadingDialog)
 Widget loadingDialogCameraDownload(BuildContext context) {
   return LoadingDialog.cameraDownload(
     title: context.knobs.string(label: 'Title', initialValue: 'Loading photo...'),
