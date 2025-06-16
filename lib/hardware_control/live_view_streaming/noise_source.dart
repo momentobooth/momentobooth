@@ -1,8 +1,8 @@
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/src/rust/api/noise.dart';
+import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/models/live_view.dart';
-import 'package:momento_booth/src/rust/utils/image_processing.dart';
 
 class NoiseSource extends LiveViewSource {
 

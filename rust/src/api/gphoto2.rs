@@ -1,4 +1,4 @@
-use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, models::{images::RawImage, live_view::CameraState}, utils::image_processing::ImageOperation};
+use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, models::{image_operations::ImageOperation, images::RawImage, live_view::CameraState}};
 
 pub fn gphoto2_initialize(iolibs_path: String, camlibs_path: String) {
     gphoto2::gphoto2_initialize(iolibs_path, camlibs_path);

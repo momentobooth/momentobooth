@@ -1,4 +1,4 @@
-use crate::{models::images::{MomentoBoothExifTag, RawImage}, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}, jpeg}};
+use crate::{models::{image_operations::ImageOperation, images::{MomentoBoothExifTag, RawImage}}, utils::{flutter_texture::FlutterTexture, image_processing, jpeg}};
 
 pub fn jpeg_encode(raw_image: RawImage, quality: u8, exif_tags: Vec<MomentoBoothExifTag>, operations_before_encoding: Vec<ImageOperation>) -> Vec<u8> {
     let processed_image = image_processing::execute_operations(&raw_image, &operations_before_encoding);

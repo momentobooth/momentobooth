@@ -1,4 +1,4 @@
-use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, models::{images::RawImage, live_view::CameraState}, utils::image_processing::ImageOperation};
+use crate::{hardware_control::live_view::nokhwa::{self, NokhwaCameraInfo}, models::{image_operations::ImageOperation, images::RawImage, live_view::CameraState}};
 
 pub async fn nokhwa_initialize() -> bool {
     nokhwa::initialize_nokhwa().await

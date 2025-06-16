@@ -9,7 +9,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/exceptions/default_setting_restore_exception.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
-import 'package:momento_booth/src/rust/utils/image_processing.dart';
+import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/utils/random_string.dart';
 import 'package:path/path.dart';
 import 'package:toml/toml.dart';

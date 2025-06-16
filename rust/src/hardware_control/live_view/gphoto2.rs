@@ -8,9 +8,9 @@ use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 use log::{warn, debug, info};
 
-use crate::{models::images::RawImage, utils::jpeg};
+use crate::{models::{image_operations::ImageOperation, images::RawImage}, utils::{image_processing, jpeg}};
 use crate::TOKIO_RUNTIME;
-use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self}, models::live_view::CameraState, utils::{flutter_texture::FlutterTexture, image_processing::{self, ImageOperation}}};
+use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self}, models::live_view::CameraState, utils::flutter_texture::FlutterTexture};
 
 use chrono::Duration;
 use dashmap::DashMap;

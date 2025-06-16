@@ -1,31 +1,10 @@
 use image::{imageops::{self, FilterType}, RgbaImage, ImageBuffer};
 
-use crate::models::images::RawImage;
+use crate::models::{image_operations::{FlipAxis, ImageOperation, Rotation}, images::RawImage};
 
-// /////////////////////////// //
-// Structs and Main Operations //
-// /////////////////////////// //
-
-#[derive(Clone, Copy)]
-pub enum ImageOperation {
-    CropToAspectRatio(f64),
-    Rotate(Rotation),
-    Flip(FlipAxis),
-    Resize(u32, u32),
-}
-
-#[derive(Clone, Copy)]
-pub enum Rotation {
-    Rotate90,
-    Rotate180,
-    Rotate270,
-}
-
-#[derive(Clone, Copy)]
-pub enum FlipAxis {
-    Horizontally,
-    Vertically,
-}
+// /////////////// //
+// Main Operations //
+// /////////////// //
 
 pub fn execute_operations(image: &RawImage, operations: &Vec<ImageOperation>) -> RawImage {
     let mut img_buf: ImageBuffer<image::Rgba<u8>, Vec<u8>> = RgbaImage::from_vec(image.width as u32, image.height as u32, image.data.clone()).expect("Could not create ImageBuffer from raw source image");

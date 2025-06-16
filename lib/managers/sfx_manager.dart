@@ -5,8 +5,8 @@ import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/utils/subsystem.dart';
 
 part 'sfx_manager.g.dart';
 
