@@ -19,7 +19,7 @@ dependencies:
   auto_size_text: 3.0.0
   fluent_ui: 4.12.0
   go_router: 15.2.0
-  flutter_svg: 2.1.0
+  flutter_svg: 2.2.0
   animated_text_kit: 4.2.3
   flutter_scroll_shadow: 1.2.6
   flutter_layout_grid: 2.0.8
