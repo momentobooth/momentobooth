@@ -8,7 +8,6 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/indicators/time_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
@@ -26,12 +25,14 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   @observable
   RecState recState = RecState.pre;
 
+  int get recLength => getIt<SettingsManager>().settings.debug.videoDuration;
+
   int get counterStart => getIt<SettingsManager>().settings.captureDelaySeconds;
 
   double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePadding => getIt<SettingsManager>().settings.collagePadding;
 
-  List<double> snapshotTimes = [2.5, 5.0, 7.5, 10.0];
+  List<double> get snapshotTimes => [recLength*0.25, recLength*0.5, recLength*0.75, recLength*1.0];
 
   final GlobalKey<TimeCounterState> timerKey = GlobalKey<TimeCounterState>();
 
@@ -51,7 +52,7 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
     required super.contextAccessor,
   }) {
     getIt<PhotosManager>().photos.clear();
-    Future.delayed(Duration(seconds: 15), onCaptureFinished);
+    Future.delayed(Duration(seconds: counterStart + recLength), onCaptureFinished);
   }
 
   Future<void> takeSnapshot() async {
