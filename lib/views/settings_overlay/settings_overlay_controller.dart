@@ -759,6 +759,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableVideoModeChanged(bool? enableVideoMode) {
+    if (enableVideoMode != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(enableVideoMode: enableVideoMode));
+    }
+  }
+
+  void onVideoDurationChanged(int? videoDuration) {
+    if (videoDuration != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoDuration: videoDuration));
+    }
+  }
+
   void onPlayAudioSamplePressed() {
     getIt<SfxManager>().playSampleSound();
   }

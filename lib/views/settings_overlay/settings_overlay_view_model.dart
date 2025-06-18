@@ -305,6 +305,8 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   ColorVisionDeficiency get simulateCvd => getIt<SettingsManager>().settings.debug.simulateCvd;
   int get simulateCvdSeverity => getIt<SettingsManager>().settings.debug.simulateCvdSeverity;
   bool get enableExtensivePrintJobLog => getIt<SettingsManager>().settings.debug.enableExtensivePrintJobLog;
+  bool get enableVideoModeSetting => getIt<SettingsManager>().settings.debug.enableVideoMode;
+  int get videoDurationSetting => getIt<SettingsManager>().settings.debug.videoDuration;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;
