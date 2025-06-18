@@ -360,6 +360,8 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(ColorVisionDeficiency.none) ColorVisionDeficiency simulateCvd,
     @Default(9) int simulateCvdSeverity,
     @Default(false) bool enableExtensivePrintJobLog,
+    @Default(false) bool enableVideoMode,
+    @Default(10) int videoDuration,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});

@@ -55,6 +55,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 part 'pages/settings_overlay_view.about.dart';
 part 'pages/settings_overlay_view.debug.dart';
+part 'pages/settings_overlay_view.experimental.dart';
 part 'pages/settings_overlay_view.face_recognition.dart';
 part 'pages/settings_overlay_view.general.dart';
 part 'pages/settings_overlay_view.hardware.dart';
@@ -199,6 +200,12 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                   body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
                 ),
                 PaneItem(
+                  key: ValueKey(SettingsPageKey.experimental),
+                  icon: const Icon(LucideIcons.flaskConical),
+                  title: const Text("Experimental"),
+                  body: Builder(builder: (_) => _getExperimentalTab(viewModel, controller)),
+                ),
+                PaneItem(
                   key: ValueKey(SettingsPageKey.log),
                   icon: const Icon(LucideIcons.scrollText),
                   title: const Text("Log"),
@@ -255,6 +262,7 @@ enum SettingsPageKey {
   subsystemStatus,
   stats,
   debug,
+  experimental,
   log,
   about;
 

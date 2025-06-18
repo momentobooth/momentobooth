@@ -99,8 +99,8 @@ class RecordUI extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TimeCounter(key: viewModel.timerKey, targetDuration: Duration(seconds: 10),),
-                Text(" / 00:10:000",
+                TimeCounter(key: viewModel.timerKey, targetDuration: Duration(seconds: viewModel.recLength),),
+                Text(" / 00:${viewModel.recLength}:000",
                  style: const TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 50,
