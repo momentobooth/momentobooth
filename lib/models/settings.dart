@@ -323,6 +323,8 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 
   const factory DebugSettings({
     @Default(false) bool showFpsCounter,
+    @Default(false) bool enableVideoMode,
+    @Default(10) int videoDuration,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
