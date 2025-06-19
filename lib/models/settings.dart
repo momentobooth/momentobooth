@@ -362,6 +362,8 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(9) int simulateCvdSeverity,
     @Default(false) bool enableVideoMode,
     @Default(10) int videoDuration,
+    @Default(2500) int videoPreRecordDelayMs,
+    @Default(0) int videoPostRecordDelayMs,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
