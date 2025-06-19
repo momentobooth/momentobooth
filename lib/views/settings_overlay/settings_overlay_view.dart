@@ -15,6 +15,8 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
+import 'package:momento_booth/src/rust/api/printing.dart';
+import 'package:momento_booth/src/rust/models/receipt_printing.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
