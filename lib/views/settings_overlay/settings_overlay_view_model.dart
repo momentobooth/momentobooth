@@ -245,6 +245,8 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   bool get debugShowFpsCounter => getIt<SettingsManager>().settings.debug.showFpsCounter;
   bool get enableVideoModeSetting => getIt<SettingsManager>().settings.debug.enableVideoMode;
   int get videoDurationSetting => getIt<SettingsManager>().settings.debug.videoDuration;
+  int get videoPreRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPreRecordDelayMs;
+  int get videoPostRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPostRecordDelayMs;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

@@ -5,12 +5,14 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/indicators/time_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 
 part 'recording_countdown_screen_view_model.g.dart';
 
@@ -32,6 +34,9 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   double get collageAspectRatio => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePadding => getIt<SettingsManager>().settings.collagePadding;
 
+  int get preRecordDelayMs => getIt<SettingsManager>().settings.debug.videoPreRecordDelayMs; // ms to start camera capture before advertised time
+  int get postRecordDelayMs => getIt<SettingsManager>().settings.debug.videoPostRecordDelayMs; // ms to end camera capture after advertised time
+
   List<double> get snapshotTimes => [recLength*0.25, recLength*0.5, recLength*0.75, recLength*1.0];
 
   final GlobalKey<TimeCounterState> timerKey = GlobalKey<TimeCounterState>();
@@ -52,7 +57,27 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
     required super.contextAccessor,
   }) {
     getIt<PhotosManager>().photos.clear();
+    Future.delayed(Duration(seconds: counterStart, milliseconds: -preRecordDelayMs), startCameraCapture);
+    Future.delayed(Duration(seconds: counterStart + recLength, milliseconds: postRecordDelayMs), stopCameraCapture);
     Future.delayed(Duration(seconds: counterStart + recLength), onCaptureFinished);
+  }
+
+  void startCameraCapture() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logError("gPhoto2Camera not initialized");
+      router.go(StartScreen.defaultRoute);
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.startVideoRecording();
+  }
+
+  void stopCameraCapture() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logError("gPhoto2Camera not initialized");
+      router.go(StartScreen.defaultRoute);
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.stopVideoRecording();
   }
 
   Future<void> takeSnapshot() async {
