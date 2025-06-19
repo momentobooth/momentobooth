@@ -771,6 +771,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onVideoPreRecordDelayMsChanged(int? videoPreRecordDelayMs) {
+    if (videoPreRecordDelayMs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoPreRecordDelayMs: videoPreRecordDelayMs));
+    }
+  }
+
+  void onVideoPostRecordDelayMsChanged(int? videoPostRecordDelayMs) {
+    if (videoPostRecordDelayMs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoPostRecordDelayMs: videoPostRecordDelayMs));
+    }
+  }
+
   void onPlayAudioSamplePressed() {
     getIt<SfxManager>().playSampleSound();
   }
