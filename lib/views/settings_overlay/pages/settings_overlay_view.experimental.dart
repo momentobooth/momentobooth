@@ -27,6 +27,20 @@ Widget _getExperimentalBlock(SettingsOverlayViewModel viewModel, SettingsOverlay
         value: () => viewModel.videoDurationSetting,
         onFinishedEditing: controller.onVideoDurationChanged,
       ),
+      SettingsNumberEditTile(
+        icon: LucideIcons.timer,
+        title: "Video pre record delay",
+        subtitle: "How long video before the video is supposed to start to instruct the camera to start the recording in ms.",
+        value: () => viewModel.videoPreRecordDelayMsSetting,
+        onFinishedEditing: controller.onVideoPreRecordDelayMsChanged,
+      ),
+      SettingsNumberEditTile(
+        icon: LucideIcons.timer,
+        title: "Video post record delay",
+        subtitle: "How long video after the video is supposed to end to instruct the camera to stop the recording in ms.",
+        value: () => viewModel.videoPostRecordDelayMsSetting,
+        onFinishedEditing: controller.onVideoPreRecordDelayMsChanged,
+      ),
     ],
   );
 }

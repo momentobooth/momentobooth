@@ -4,6 +4,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/components/animations/pulsating_opacity.dart';
 import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
 import 'package:momento_booth/views/components/indicators/time_counter.dart';
@@ -126,10 +127,12 @@ class RecordUI extends StatelessWidget {
                       size: size,
                     );
                   case RecState.recording:
-                    return Icon(
-                      FluentIcons.circle_fill,
-                      color: Color.fromARGB(255, 181, 23, 0),
-                      size: size,
+                    return PulsatingOpacity(
+                      child: Icon(
+                        FluentIcons.circle_fill,
+                        color: Color.fromARGB(255, 181, 23, 0),
+                        size: size,
+                      ),
                     );
                   case RecState.post:
                     return Icon(
