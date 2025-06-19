@@ -34,6 +34,7 @@ ShellRoute _photoBoothShellRoute = ShellRoute(
     _captureRoute,
     _multiCaptureRoute,
     _recordingRoute,
+    _postRecordingRoute,
     _collageMakerRoute,
     _shareRoute,
     _galleryRoute,
@@ -79,6 +80,13 @@ GoRoute _recordingRoute = GoRoute(
   path: RecordingCountdownScreen.defaultRoute,
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const RecordingCountdownScreen());
+  },
+);
+
+GoRoute _postRecordingRoute = GoRoute(
+  path: PostRecordingScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const PostRecordingScreen());
   },
 );
 
