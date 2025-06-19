@@ -46,7 +46,7 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
   @readonly
   bool _blockSaving = false;
 
-  static const subDirs = ["Input", "Output", "Templates"];
+  static const subDirs = ["Input", "Output", "Templates", "Videos"];
 
   @readonly
   late ProjectsList _projectsList;
@@ -228,6 +228,10 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
 
   Directory getOutputDir() {
     return Directory(join(_path!.path, subDirs[1]));
+  }
+
+  Directory getVideoDir() {
+    return Directory(join(_path!.path, subDirs[3]));
   }
 
   @action
