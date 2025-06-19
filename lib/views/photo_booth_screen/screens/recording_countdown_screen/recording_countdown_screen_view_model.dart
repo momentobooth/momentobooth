@@ -57,8 +57,11 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
     required super.contextAccessor,
   }) {
     getIt<PhotosManager>().photos.clear();
+    getIt<PhotosManager>().startVideoProcess();
+
     Future.delayed(Duration(seconds: counterStart, milliseconds: -preRecordDelayMs), startCameraCapture);
     Future.delayed(Duration(seconds: counterStart + recLength, milliseconds: postRecordDelayMs), stopCameraCapture);
+    Future.delayed(Duration(seconds: counterStart), onCaptureStart);
     Future.delayed(Duration(seconds: counterStart + recLength), onCaptureFinished);
   }
 
@@ -78,6 +81,10 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
       return;
     }
     getIt<LiveViewManager>().gPhoto2Camera!.stopVideoRecording();
+  }
+
+  void onCaptureStart() {
+    getIt<PhotosManager>().recordAudio();
   }
 
   Future<void> takeSnapshot() async {

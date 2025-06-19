@@ -74,6 +74,9 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   TextEditingController? _faceRecognitionServerUrlController;
   TextEditingController get faceRecognitionServerUrlController => _faceRecognitionServerUrlController ??= TextEditingController(text: viewModel.faceRecognitionServerUrlSetting);
 
+  TextEditingController? _ffmpegArgumentsForRecordingController;
+  TextEditingController get ffmpegArgumentsForRecordingController => _ffmpegArgumentsForRecordingController ??= TextEditingController(text: viewModel.ffmpegArgumentsForRecordingSetting);
+
   // Initialization/Deinitialization
 
   SettingsOverlayController({
@@ -774,6 +777,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onVideoPreRecordDelayMsChanged(int? videoPreRecordDelayMs) {
     if (videoPreRecordDelayMs != null) {
       viewModel.updateSettings((settings) => settings.copyWith.debug(videoPreRecordDelayMs: videoPreRecordDelayMs));
+    }
+  }
+
+  void onFfmpegArgumentsForRecordingChanged(String? ffmpegArgumentsForRecording) {
+    if (ffmpegArgumentsForRecording != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(ffmpegArgumentsForRecording: ffmpegArgumentsForRecording));
     }
   }
 

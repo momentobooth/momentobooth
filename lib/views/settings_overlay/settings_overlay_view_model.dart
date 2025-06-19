@@ -309,6 +309,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   int get videoDurationSetting => getIt<SettingsManager>().settings.debug.videoDuration;
   int get videoPreRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPreRecordDelayMs;
   int get videoPostRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPostRecordDelayMs;
+  String get ffmpegArgumentsForRecordingSetting => getIt<SettingsManager>().settings.debug.ffmpegArgumentsForRecording;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

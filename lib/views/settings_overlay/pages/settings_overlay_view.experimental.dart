@@ -41,6 +41,20 @@ Widget _getExperimentalBlock(SettingsOverlayViewModel viewModel, SettingsOverlay
         value: () => viewModel.videoPostRecordDelayMsSetting,
         onFinishedEditing: controller.onVideoPreRecordDelayMsChanged,
       ),
+      SettingsTextEditTile(
+        icon: LucideIcons.squareCode,
+        title: "FFMPEG arguments",
+        subtitle: "The arguments, separated by | to be fed into FFMPEG when recording audio.",
+        controller: controller.ffmpegArgumentsForRecordingController,
+        onFinishedEditing: controller.onFfmpegArgumentsForRecordingChanged,
+      ),
+      SettingsSecretEditTile(
+        icon: LucideIcons.squareAsterisk,
+        title: "OpenAI API key",
+        subtitle: "API key for audio processing.",
+        secretStorageKey: openaiAPISecretKey,
+        onSecretStored: getIt<MqttManager>().notifyPasswordChanged,
+      ),
     ],
   );
 }
