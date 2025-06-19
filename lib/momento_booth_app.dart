@@ -22,6 +22,7 @@ import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_sc
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/post_recording_screen/post_recording_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/recording_countdown_screen/recording_countdown_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
