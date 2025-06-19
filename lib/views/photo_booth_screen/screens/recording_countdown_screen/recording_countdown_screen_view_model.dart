@@ -11,7 +11,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/indicators/time_counter.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/post_recording_screen/post_recording_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 
 part 'recording_countdown_screen_view_model.g.dart';
@@ -21,7 +21,6 @@ class RecordingCountdownScreenViewModel = RecordingCountdownScreenViewModelBase 
 abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase with Store {
 
   late final PhotoCaptureMethod capturer;
-  bool flashComplete = false;
   bool captureComplete = false;
 
   @observable
@@ -113,9 +112,9 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   }
 
   void navigateAfterCapture() {
-    if (!flashComplete || !captureComplete) return;
+    if (!captureComplete) return;
     getIt<StatsManager>().addCreatedSinglePhoto();
-    router.go(ShareScreen.defaultRoute);
+    router.go(PostRecordingScreen.defaultRoute);
   }
 
 }
