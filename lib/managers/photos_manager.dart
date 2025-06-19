@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/live_view_stream_snapshot_capturer.dart';
@@ -12,9 +13,11 @@ import 'package:momento_booth/models/capture_state.dart';
 import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:path/path.dart' as path;
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 import 'package:path_provider/path_provider.dart';
 
@@ -41,8 +44,12 @@ abstract class PhotosManagerBase with Store, Logger {
   bool get showLiveViewBackground => photos.isEmpty && captureMode == CaptureMode.single || captureMode == CaptureMode.recording;
 
   Directory get outputDir => getIt<ProjectManager>().getOutputDir();
+  Directory get videoDir => getIt<ProjectManager>().getVideoDir();
   int photoNumber = 0;
   bool photoNumberChecked = false;
+  Directory? currentVideoDir;
+
+  Future<String> get openaiApiKey async => await getIt<SecretsRepository>().getSecret(openaiAPISecretKey) ?? "";
 
   final String baseName = "MomentoBooth-image";
 
@@ -60,6 +67,37 @@ abstract class PhotosManagerBase with Store, Logger {
       photoNumber++;
       _lastPhotoFile = null;
     }
+  }
+
+  Future<void> startVideoProcess() async {
+    try {
+        DateFormat formatter = DateFormat('yyyyMMdd_HHmmss');
+        String currentDateTime = formatter.format(DateTime.now());
+
+        // The folder gets created when a project is opened, but the folder could be deleted in the mean time
+        currentVideoDir = Directory(path.join(videoDir.path, currentDateTime));
+        await currentVideoDir!.create(recursive: true);
+      } catch (exception, stacktrace) {
+        logError("Could not create video directory", exception, stacktrace);
+      }
+  }
+
+  Future<File> recordAudio() async {
+    final ffmpegArgString = getIt<SettingsManager>().settings.debug.ffmpegArgumentsForRecording;
+    final ffmpegArgs = ffmpegArgString.split(';');
+    final filePath = path.join(currentVideoDir!.path, "audio.m4a");
+    final result = await Process.run('ffmpeg', [... ffmpegArgs, filePath]);
+    
+
+    if (result.exitCode != 0) {
+      logWarning('Failed to record audio. FFmpeg stderr:\n${result.stderr}');
+      throw Exception('Failed to record audio');
+    }
+    return File(filePath);
+  }
+  
+  Future<void> stopVideoProcess() async {
+    currentVideoDir = null;
   }
 
   @action

@@ -364,6 +364,7 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(10) int videoDuration,
     @Default(2500) int videoPreRecordDelayMs,
     @Default(0) int videoPostRecordDelayMs,
+    @Default("") String ffmpegArgumentsForRecording,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
