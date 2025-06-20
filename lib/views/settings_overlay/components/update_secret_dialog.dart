@@ -1,7 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
-import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class UpdateSecretDialog extends StatefulWidget {
@@ -26,27 +23,32 @@ class _UpdateSecretDialogState extends State<UpdateSecretDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return ModalDialog(
-      title: "Update password/secret [${widget.secretName}]",
-      dialogType: ModalDialogType.input,
-      body: IntrinsicHeight(
-        child: PasswordBox(
-          placeholder: "Enter the new password/secret",
-          revealMode: PasswordRevealMode.peekAlways,
-          onChanged: (value) => _input = value,
-        ),
+    return ContentDialog(
+      title: Text("Change secret"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(2, 8, 0, 0),
+            child: Text('[${widget.secretName}]'),
+          ),
+          PasswordBox(
+            placeholder: "Enter the new password/secret",
+            revealMode: PasswordRevealMode.peekAlways,
+            onChanged: (value) => _input = value,
+          ),
+        ],
       ),
-      onDismiss: widget.onDismiss,
       actions: [
-        PhotoBoothFilledButton(
-          title: 'Cancel',
-          icon: LucideIcons.ban,
+        Button(
           onPressed: widget.onDismiss,
+          child: Text('Cancel'),
         ),
-        PhotoBoothFilledButton(
-          title: 'Save',
-          icon: LucideIcons.save,
+        FilledButton(
           onPressed: () => widget.onSavePressed(_input),
+          child: Text('Save'),
         ),
       ],
     );
