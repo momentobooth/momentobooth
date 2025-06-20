@@ -30,7 +30,7 @@ class MomentoMenuBar extends StatelessWidget {
               final uri = Uri.parse("file:///${getIt<ProjectManager>().path!.path}");
               launchUrl(uri);
             }, leading: Icon(LucideIcons.folderClosed)),
-            MenuFlyoutItem(text: Text(localizations.genericSettings), onPressed: () { SettingsOverlay.openDialog(context); }, leading: Icon(LucideIcons.settings), trailing: _shortcut("Ctrl+S")),
+            MenuFlyoutItem(text: Text(localizations.genericSettings), onPressed: () { SettingsOverlay.toggleDialog(context); }, leading: Icon(LucideIcons.settings), trailing: _shortcut("Ctrl+S")),
             MenuFlyoutItem(text: Text(localizations.actionRestoreLiveView), onPressed: () { getIt<LiveViewManager>().restoreLiveView(); }, leading: Icon(LucideIcons.rotateCcw), trailing: _shortcut("Ctrl+R")),
             const MenuFlyoutSeparator(),
             MenuFlyoutItem(text: Text(localizations.actionsExit), onPressed: getIt<WindowManager>().close,)
@@ -44,7 +44,7 @@ class MomentoMenuBar extends StatelessWidget {
           ]),
           MenuBarItem(title: localizations.genericHelp, items: [
             MenuFlyoutItem(text: Text(localizations.genericDocumentation), onPressed: () { launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")); }, leading: Icon(LucideIcons.book)),
-            MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () { SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.about); }, leading: Icon(LucideIcons.info)),
+            MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () { SettingsOverlay.toggleDialog(context, initialPage: SettingsPageKey.about); }, leading: Icon(LucideIcons.info)),
           ]),
         ],
       ),
