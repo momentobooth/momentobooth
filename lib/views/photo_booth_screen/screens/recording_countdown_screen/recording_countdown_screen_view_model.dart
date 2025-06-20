@@ -8,7 +8,6 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/indicators/time_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/post_recording_screen/post_recording_screen.dart';
