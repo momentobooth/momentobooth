@@ -83,7 +83,7 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   }
 
   void onCaptureStart() {
-    getIt<PhotosManager>().recordAudio();
+    getIt<PhotosManager>().recordAndProcessAudio();
   }
 
   Future<void> takeSnapshot() async {
