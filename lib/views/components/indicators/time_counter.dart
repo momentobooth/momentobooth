@@ -99,7 +99,7 @@ class TimeCounterState extends State<TimeCounter> with TickerProviderStateMixin 
       duration: const Duration(milliseconds: 300),
       switchInCurve: Curves.easeOut, // New number entering
       switchOutCurve: Curves.easeIn,  // Old number exiting
-      transitionBuilder: (Widget child, Animation<double> animation) {
+      transitionBuilder: (child, animation) {
         // The 'child' argument here is the current widget being animated.
         // During a switchIn, it's the *new* digit.
         // During a switchOut, it's the *old* digit.

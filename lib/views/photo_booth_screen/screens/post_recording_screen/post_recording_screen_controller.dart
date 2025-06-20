@@ -7,7 +7,6 @@ import 'package:momento_booth/src/rust/models/receipt_printing.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/imaging/quote_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/post_recording_screen/post_recording_screen_view_model.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 
 class PostRecordingScreenController extends ScreenControllerBase<PostRecordingScreenViewModel> {
 
@@ -25,7 +24,8 @@ class PostRecordingScreenController extends ScreenControllerBase<PostRecordingSc
   }
 
   void onClickNext() {
-    router.go(StartScreen.defaultRoute);
+    screenshotAndPrint();
+    // router.go(StartScreen.defaultRoute);
   }
 
   Future<void> screenshotAndPrint() async {
