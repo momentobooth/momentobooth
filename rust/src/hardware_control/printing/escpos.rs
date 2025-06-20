@@ -51,7 +51,7 @@ fn image_to_escpos_bitimage_bytes(image_data: &[u8], width: u16) -> Result<Vec<u
     // Round height up to a multiple of 24.
     let (width, height) = dithered.dimensions();
     let padded_height = ((height + 23) / 24) * 24;
-    let mut padded = GrayImage::new(width, padded_height);
+    let mut padded = GrayImage::from_pixel(width, padded_height, Luma([255]));
     imageops::overlay(&mut padded, &dithered, 0, 0);
 
     // Generate ESC/POS bytes.
