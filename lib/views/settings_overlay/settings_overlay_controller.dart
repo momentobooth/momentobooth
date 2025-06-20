@@ -76,6 +76,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   TextEditingController? _ffmpegArgumentsForRecordingController;
   TextEditingController get ffmpegArgumentsForRecordingController => _ffmpegArgumentsForRecordingController ??= TextEditingController(text: viewModel.ffmpegArgumentsForRecordingSetting);
+  
+  TextEditingController? _textSummaryPromptController;
+  TextEditingController get textSummaryPromptController => _textSummaryPromptController ??= TextEditingController(text: viewModel.textSummaryPromptSetting);
+  
+  TextEditingController? _llmModelController;
+  TextEditingController get llmModelController => _llmModelController ??= TextEditingController(text: viewModel.llmModelSetting);
 
   // Initialization/Deinitialization
 
@@ -783,6 +789,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onFfmpegArgumentsForRecordingChanged(String? ffmpegArgumentsForRecording) {
     if (ffmpegArgumentsForRecording != null) {
       viewModel.updateSettings((settings) => settings.copyWith.debug(ffmpegArgumentsForRecording: ffmpegArgumentsForRecording));
+    }
+  }
+
+  void onTextSummaryPromptChanged(String? textSummaryPrompt) {
+    if (textSummaryPrompt != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(textSummaryPrompt: textSummaryPrompt));
+    }
+  }
+
+  void onLlmModelChanged(String? llmModel) {
+    if (llmModel != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(llmModel: llmModel));
     }
   }
 

@@ -14,6 +14,7 @@ import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
+import 'package:momento_booth/utils/audio_processing.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/logger.dart';
@@ -49,6 +50,9 @@ abstract class PhotosManagerBase with Store, Logger {
   bool photoNumberChecked = false;
   Directory? currentVideoDir;
 
+  @observable
+  String? summaryText;
+
   Future<String> get openaiApiKey async => await getIt<SecretsRepository>().getSecret(openaiAPISecretKey) ?? "";
 
   final String baseName = "MomentoBooth-image";
@@ -73,6 +77,7 @@ abstract class PhotosManagerBase with Store, Logger {
     try {
         DateFormat formatter = DateFormat('yyyyMMdd_HHmmss');
         String currentDateTime = formatter.format(DateTime.now());
+        summaryText = null;
 
         // The folder gets created when a project is opened, but the folder could be deleted in the mean time
         currentVideoDir = Directory(path.join(videoDir.path, currentDateTime));
@@ -82,18 +87,11 @@ abstract class PhotosManagerBase with Store, Logger {
       }
   }
 
-  Future<File> recordAudio() async {
-    final ffmpegArgString = getIt<SettingsManager>().settings.debug.ffmpegArgumentsForRecording;
-    final ffmpegArgs = ffmpegArgString.split(';');
-    final filePath = path.join(currentVideoDir!.path, "audio.m4a");
-    final result = await Process.run('ffmpeg', [... ffmpegArgs, filePath]);
-    
-
-    if (result.exitCode != 0) {
-      logWarning('Failed to record audio. FFmpeg stderr:\n${result.stderr}');
-      throw Exception('Failed to record audio');
-    }
-    return File(filePath);
+  Future<String> recordAndProcessAudio() async {
+    final audioFile = File(path.join(currentVideoDir!.path, "audio.m4a"));
+    await recordAudio(audioFile);
+    summaryText = await processAudio(audioFile, currentVideoDir!, await openaiApiKey);
+    return summaryText!;
   }
   
   Future<void> stopVideoProcess() async {
