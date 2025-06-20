@@ -9,10 +9,8 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
@@ -147,15 +145,6 @@ class QuoteCollageState extends State<QuoteCollage> with Logger {
     );
   }
 
-  Widget _getImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
-    return ImageWithLoaderFallback(
-      widget.debug == null ? MemoryImage(photos[index].data) : AssetImage('assets/bitmap/placeholder.png'),
-      applyRotateFlipCrop: true,
-      fit: fit,
-      onImageDecoded: (_) => decodeCallback?.call(),
-    );
-  }
-
   Future<Uint8List?> getCollageImage() async {
     // Await frame render, should workaround the black image issue
     await waitForPostFrameCallback();
@@ -167,26 +156,6 @@ class QuoteCollageState extends State<QuoteCollage> with Logger {
     Completer completer = Completer();
     WidgetsBinding.instance.addPostFrameCallback((_) => completer.complete());
     return completer.future;
-  }
-
-}
-
-class _PhotoContainer extends StatelessWidget {
-
-  final bool rotated;
-  final Widget child;
-
-  const _PhotoContainer({required this.child, this.rotated = false});
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: getIt<SettingsManager>().settings.hardware.liveViewAndCaptureAspectRatio,
-      child: RotatedBox(
-        quarterTurns: rotated ? 1 : 0,
-        child: child,
-      ),
-    );
   }
 
 }

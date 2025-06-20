@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
-import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/imaging/quote_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';

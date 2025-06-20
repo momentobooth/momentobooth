@@ -12,7 +12,6 @@ import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 
 class LiveViewBackground extends StatefulWidget {
 

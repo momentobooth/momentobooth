@@ -5,7 +5,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/pulsating_opacity.dart';
-import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
 import 'package:momento_booth/views/components/indicators/time_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/recording_countdown_screen/recording_countdown_screen_controller.dart';
