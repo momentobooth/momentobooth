@@ -88,7 +88,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 
 * [This list](https://docs.flutter.dev/get-started/install/linux#additional-linux-requirements) of packages from the Flutter website
   * The install command provided by the Flutter website may only work on Ubuntu, please check your distro website for the corresponding package names
-* Additional packages: llvm, libssl-dev, libdigest-sha-perl, libcurl4-openssl-dev
+* Additional packages: llvm, libssl-dev, libdigest-sha-perl, libcurl4-openssl-dev libasound2-dev
 * Rust (`x86_64-unknown-linux-gnu` or `aarch64-unknown-linux-gnu` depending on your architecture)
   * Install using `rustup` is recommended, to keep all components up to date
 
