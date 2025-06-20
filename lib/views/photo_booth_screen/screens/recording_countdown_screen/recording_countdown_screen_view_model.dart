@@ -70,6 +70,7 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
       router.go(StartScreen.defaultRoute);
       return;
     }
+    getIt<PhotosManager>().recordAndProcessAudio(); // There is about 1.3 seconds of delay on my machine
     getIt<LiveViewManager>().gPhoto2Camera!.startVideoRecording();
   }
 
@@ -83,7 +84,6 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   }
 
   void onCaptureStart() {
-    getIt<PhotosManager>().recordAndProcessAudio();
   }
 
   Future<void> takeSnapshot() async {
@@ -106,14 +106,14 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   Future<void> onCaptureFinished() async {
     // Todo
     captureComplete = true;
-    // navigateAfterCapture();
     recState = RecState.post;
     showSpinner = true;
+    Future.delayed(Duration(seconds: 2), navigateAfterCapture);
   }
 
   void navigateAfterCapture() {
     if (!captureComplete) return;
-    getIt<StatsManager>().addCreatedSinglePhoto();
+    // getIt<StatsManager>().addCreatedSinglePhoto();
     router.go(PostRecordingScreen.defaultRoute);
   }
 
