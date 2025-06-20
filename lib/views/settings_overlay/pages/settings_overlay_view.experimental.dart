@@ -11,7 +11,7 @@ Widget _getExperimentalTab(SettingsOverlayViewModel viewModel, SettingsOverlayCo
 
 Widget _getExperimentalBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
   return SettingsSection(
-    title: "General",
+    title: "Video mode",
     settings: [
       SettingsToggleTile(
         icon: LucideIcons.video,
@@ -39,12 +39,12 @@ Widget _getExperimentalBlock(SettingsOverlayViewModel viewModel, SettingsOverlay
         title: "Video post record delay",
         subtitle: "How long video after the video is supposed to end to instruct the camera to stop the recording in ms.",
         value: () => viewModel.videoPostRecordDelayMsSetting,
-        onFinishedEditing: controller.onVideoPreRecordDelayMsChanged,
+        onFinishedEditing: controller.onVideoPostRecordDelayMsChanged,
       ),
       SettingsTextEditTile(
         icon: LucideIcons.squareCode,
         title: "FFMPEG arguments",
-        subtitle: "The arguments, separated by | to be fed into FFMPEG when recording audio.",
+        subtitle: "The arguments, separated by ; to be fed into FFMPEG when recording audio.",
         controller: controller.ffmpegArgumentsForRecordingController,
         onFinishedEditing: controller.onFfmpegArgumentsForRecordingChanged,
       ),
@@ -54,6 +54,20 @@ Widget _getExperimentalBlock(SettingsOverlayViewModel viewModel, SettingsOverlay
         subtitle: "API key for audio processing.",
         secretStorageKey: openaiAPISecretKey,
         onSecretStored: getIt<MqttManager>().notifyPasswordChanged,
+      ),
+      SettingsTextEditTile(
+        icon: LucideIcons.messageSquareMore,
+        title: "LLM transcript summary prompt",
+        subtitle: "The prompt that will be fed to the LLM in order to summarize the transcript of the video.",
+        controller: controller.textSummaryPromptController,
+        onFinishedEditing: controller.onTextSummaryPromptChanged,
+      ),
+      SettingsTextEditTile(
+        icon: LucideIcons.codesandbox,
+        title: "LLM model to use",
+        subtitle: "The model that will be requested for text processing.",
+        controller: controller.llmModelController,
+        onFinishedEditing: controller.onLlmModelChanged,
       ),
     ],
   );
