@@ -4,6 +4,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/recording_countdown_screen/recording_countdown_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 
 class ChooseCaptureModeScreenController extends ScreenControllerBase<ChooseCaptureModeScreenViewModel> {
@@ -27,6 +28,11 @@ class ChooseCaptureModeScreenController extends ScreenControllerBase<ChooseCaptu
   void onClickOnPhotoCollage() {
     getIt<PhotosManager>().captureMode = CaptureMode.collage;
     router.go(MultiCaptureScreen.defaultRoute);
+  }
+
+  void onClickOnRecording() {
+    getIt<PhotosManager>().captureMode = CaptureMode.recording;
+    router.go(RecordingCountdownScreen.defaultRoute);
   }
 
 }
