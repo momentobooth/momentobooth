@@ -157,13 +157,6 @@ jobs:
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define LIBGPHOTO2_GIT_REV=${{ env.LIBGPHOTO2_GIT_REV }}
 
-    - name: Workaround bundle script not working
-      shell: msys2 {0}
-      env:
-        MSYS2_PATH_TYPE: minimal
-      run: |
-        pacboy -Rc llvm --noconfirm
-
     - name: Bundle dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       shell: pwsh
