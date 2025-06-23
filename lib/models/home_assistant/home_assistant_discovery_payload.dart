@@ -33,7 +33,7 @@ sealed class HomeAssistantDiscoveryPayload with _$HomeAssistantDiscoveryPayload 
 }
 
 @Freezed(toJson: true)
-sealed class HomeAssistantDevice with _$HomeAssistantDevice {
+abstract class HomeAssistantDevice with _$HomeAssistantDevice {
 
   const HomeAssistantDevice._();
 
