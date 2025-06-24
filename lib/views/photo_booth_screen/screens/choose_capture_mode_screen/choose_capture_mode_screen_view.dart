@@ -1,5 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen_view_model.dart';
@@ -33,6 +35,8 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
               children: [
                 Expanded(child: _singlePictureButton),
                 Expanded(child: _collageButton),
+                if (getIt<SettingsManager>().settings.debug.enableVideoMode)
+                Expanded(child: _recordingButton),
               ],
             ),
           ),
@@ -98,11 +102,47 @@ class ChooseCaptureModeScreenView extends ScreenViewBase<ChooseCaptureModeScreen
     );
   }
 
+  Widget get _recordingButton {
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickOnRecording,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(child: FittedBox(child: _getRoundButton(452))),
+            AutoSizeText(
+              "Recording",
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _getButton(double dimension) {
     return Container(
       width: dimension,
       height: dimension,
       decoration: BoxDecoration(
+        color: const Color(0xE6FFFFFF),
+        boxShadow: [const BoxShadow(
+          color: Color(0x42000000),
+          offset: Offset(0, 3),
+          blurRadius: 8,
+        )],
+      ),
+    );
+  }
+
+  Widget _getRoundButton(double dimension) {
+    return Container(
+      width: dimension,
+      height: dimension,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(dimension),
         color: const Color(0xE6FFFFFF),
         boxShadow: [const BoxShadow(
           color: Color(0x42000000),
