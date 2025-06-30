@@ -13,7 +13,7 @@ ffsend-api = "0.7.3"
 serde_json = "1.0.140"
 chrono = "0.4.41"
 image = { version = "0.25.6", features = ["rayon"] }
-ipp = "5.3.0"
+ipp = "5.3.1"
 zune-jpeg = "0.4.18"
 jpeg-encoder = "0.6.1"
 dlopen = "0.1.8"
