@@ -180,18 +180,24 @@ jobs:
 
     - name: Create h3xup version (ref)
       env:
+        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: h3xup create "${{ github.event.pull_request.head.ref }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p MomentoBooth-Win-x64
 
     - name: Create h3xup version (SHA)
       env:
+        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: h3xup create "${{ github.sha }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p MomentoBooth-Win-x64
 
     - name: Create h3xup version (short SHA)
       env:
+        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: h3xup create "${{ env.SHORT_SHA }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p MomentoBooth-Win-x64
