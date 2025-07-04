@@ -114,16 +114,14 @@ jobs:
     - name: Setup sccache
       uses: mozilla-actions/sccache-action@v0.0.9
 
+    - name: Install cargo-binstall
+      uses: cargo-bins/cargo-binstall@v1.14.1
+
     - name: Install cargo-expand
-      uses: baptiste0928/cargo-install@v3
-      with:
-        crate: cargo-expand
-      
+      run: cargo binstall cargo-expand
+
     - name: Install flutter_rust_bridge_codegen
-      uses: baptiste0928/cargo-install@v3
-      with:
-        crate: flutter_rust_bridge_codegen
-        version: "2.10.0"
+      run: cargo binstall flutter_rust_bridge_codegen@2.10.0
 
     - name: Install dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
@@ -150,8 +148,12 @@ jobs:
       shell: bash
       run: |
         release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
+        friendly_version="${release_version%%-*}"
+        build_number="${release_version#*-}"
         echo "release_version=$release_version" >> $GITHUB_OUTPUT
+        echo "friendly_version=$friendly_version" >> $GITHUB_OUTPUT
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
+        echo "build_number=$build_number" >> $GITHUB_OUTPUT
 
     - name: Build project
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
@@ -186,6 +188,22 @@ jobs:
         artifacts: "${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip,${{ env.DEV_DRIVE }}/momentobooth/windows/installer/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64-Setup.exe"
         body: |
           For Windows users: MomentoBooth needs the [Visual C++ Redistributable runtime libraries](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170). The setup version will install these automatically. When using the zip, install them manually.
+
+    - name: Create h3xUpdtr version (Friendly version)
+      env:
+        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: h3xup create "${{ steps.extract_release_version.outputs.friendly_version }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
+
+    - name: Create h3xUpdtr version (Build number)
+      env:
+        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: h3xup create "${{ steps.extract_release_version.outputs.build_number }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
 
     - name: Upload libgphoto2 package artifact
       uses: actions/upload-artifact@v4

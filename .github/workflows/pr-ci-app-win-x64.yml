@@ -122,7 +122,7 @@ jobs:
       run: cargo binstall cargo-expand
 
     - name: Install flutter_rust_bridge_codegen
-      run: cargo binstall flutter_rust_bridge_codegen
+      run: cargo binstall flutter_rust_bridge_codegen@2.10.0
 
     - name: Install h3xUpdtr
       run: cargo binstall h3xup
@@ -178,29 +178,29 @@ jobs:
     - name: Get short SHA
       run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 8))" >> $env:GITHUB_ENV
 
-    - name: Create h3xup version (ref)
+    - name: Create h3xUpdtr version (ref)
       env:
         AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
         AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: h3xup create "${{ github.event.pull_request.head.ref }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p MomentoBooth-Win-x64
+      run: h3xup create "${{ github.event.pull_request.head.ref }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
 
-    - name: Create h3xup version (SHA)
+    - name: Create h3xUpdtr version (SHA)
       env:
         AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
         AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: h3xup create "${{ github.sha }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p MomentoBooth-Win-x64
+      run: h3xup create "${{ github.sha }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
 
-    - name: Create h3xup version (short SHA)
+    - name: Create h3xUpdtr version (short SHA)
       env:
         AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
         AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: h3xup create "${{ env.SHORT_SHA }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p MomentoBooth-Win-x64
+      run: h3xup create "${{ env.SHORT_SHA }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
 
     - name: Upload installer artifact
       uses: actions/upload-artifact@v4
