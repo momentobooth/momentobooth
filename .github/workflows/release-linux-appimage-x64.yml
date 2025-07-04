@@ -61,21 +61,17 @@ jobs:
     - name: Setup sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.9
 
+    - name: Install cargo-binstall
+      uses: cargo-bins/cargo-binstall@v1.14.1
+
     - name: Install cargo-expand
-      uses: baptiste0928/cargo-install@v3
-      with:
-        crate: cargo-expand
+      run: cargo binstall cargo-expand --force
 
     - name: Install flutter_rust_bridge_codegen
-      uses: baptiste0928/cargo-install@v3
-      with:
-        crate: flutter_rust_bridge_codegen
-        version: "2.10.0"
+      run: cargo binstall flutter_rust_bridge_codegen@2.10.0 --force
 
     - name: Install lddtree
-      uses: baptiste0928/cargo-install@v3
-      with:
-        crate: lddtree
+      run: cargo binstall lddtree --force
 
     - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
