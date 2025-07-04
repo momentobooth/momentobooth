@@ -195,15 +195,7 @@ jobs:
         AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: h3xup create "${{ steps.extract_release_version.outputs.friendly_version }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
-
-    - name: Create h3xUpdtr version (Build number)
-      env:
-        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
-        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: h3xup create "${{ steps.extract_release_version.outputs.build_number }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
+      run: h3xup create "release,${{ steps.extract_release_version.outputs.friendly_version }},${{ steps.extract_release_version.outputs.build_number }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
 
     - name: Upload libgphoto2 package artifact
       uses: actions/upload-artifact@v4

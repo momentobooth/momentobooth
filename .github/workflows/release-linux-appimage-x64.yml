@@ -71,9 +71,7 @@ jobs:
       run: cargo binstall flutter_rust_bridge_codegen@2.10.0
 
     - name: Install lddtree
-      uses: baptiste0928/cargo-install@v3
-      with:
-        crate: lddtree
+      run: cargo binstall lddtree
 
     - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
