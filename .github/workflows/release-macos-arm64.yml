@@ -84,10 +84,10 @@ jobs:
       uses: cargo-bins/cargo-binstall@v1.14.1
 
     - name: Install cargo-expand
-      run: cargo binstall cargo-expand
+      run: cargo binstall cargo-expand --force
 
     - name: Install flutter_rust_bridge_codegen
-      run: cargo binstall flutter_rust_bridge_codegen@2.10.0
+      run: cargo binstall flutter_rust_bridge_codegen@2.10.0 --force
 
     - name: Install dependencies
       run: flutter pub get --enforce-lockfile
