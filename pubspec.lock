@@ -21,10 +21,10 @@ packages:
     dependency: transitive
     description:
       name: analyzer
-      sha256: "01949bf52ad33f0e0f74f881fbaac4f348c556531951d92c8d16f1262aa19ff8"
+      sha256: d10f9c2bf877706e39e9cc94d89ba28c7084f6e3529b4a2a96bb474fd0323647
       url: "https://pub.dev"
     source: hosted
-    version: "7.5.4"
+    version: "7.5.5"
   animated_text_kit:
     dependency: "direct main"
     description:

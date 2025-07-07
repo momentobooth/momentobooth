@@ -121,7 +121,7 @@ jobs:
       run: cargo binstall cargo-expand --force
 
     - name: Install flutter_rust_bridge_codegen
-      run: cargo binstall flutter_rust_bridge_codegen@2.10.0 --force
+      run: cargo binstall flutter_rust_bridge_codegen@2.11.1 --force
 
     - name: Install dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
