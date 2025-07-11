@@ -1,5 +1,6 @@
 #[derive(Clone, Copy)]
 pub enum ImageOperation {
+    CropContentRegion,
     CropToAspectRatio(f64),
     Rotate(Rotation),
     Flip(FlipAxis),
