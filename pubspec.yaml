@@ -62,14 +62,14 @@ dependencies:
   # System
   path_provider: 2.1.5
   path: ^1.9.0
-  window_manager: 0.5.0
+  window_manager: 0.5.1
   file_selector: 1.0.3
   win32: 5.14.0
 
   # Log and error handling
   talker: 4.9.2
   talker_flutter: 4.9.2
-  sentry_flutter: 9.3.0
+  sentry_flutter: 9.4.1
 
   # Storage
   flutter_secure_storage: 9.2.4
@@ -93,7 +93,7 @@ dependencies:
     git: https://github.com/momentobooth/flutter-draggable-scrollbar
   csslib: 1.0.2
   args: 2.7.0
-  url_launcher: 6.3.1
+  url_launcher: 6.3.2
   super_clipboard: 0.9.1
   super_drag_and_drop: 0.9.1
 
