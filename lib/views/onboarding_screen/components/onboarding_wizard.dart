@@ -8,11 +8,15 @@ class OnboardingWizard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Acrylic(
-      elevation: 16.0,
-      luminosityAlpha: 0.9,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-      child: child,
+    return SizedBox(
+      width: 800,
+      height: 500,
+      child: Acrylic(
+        elevation: 16.0,
+        luminosityAlpha: 0.9,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        child: child,
+      ),
     );
   }
 
