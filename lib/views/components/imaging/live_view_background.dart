@@ -29,11 +29,13 @@ class LiveViewBackground extends StatefulWidget {
 
 class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
-  bool get _showLiveViewBackground =>
-      getIt<PhotosManager>().showLiveViewBackground &&
-      (GoRouter.of(context).currentLocation != GalleryScreen.defaultRoute &&
-        GoRouter.of(context).currentLocation != ManualCollageScreen.defaultRoute &&
-          !GoRouter.of(context).currentLocation.startsWith('${PhotoDetailsScreen.defaultRoute}/'));
+  bool get _showLiveViewBackground {
+    final loc = GoRouter.of(context).currentLocation;
+    return getIt<PhotosManager>().showLiveViewBackground &&
+      !(loc == GalleryScreen.defaultRoute ||
+        loc == ManualCollageScreen.defaultRoute ||
+        loc.startsWith('${PhotoDetailsScreen.defaultRoute}/'));
+  }
 
   BackgroundBlur get _backgroundBlur => getIt<SettingsManager>().settings.ui.backgroundBlur;
 
