@@ -60,38 +60,9 @@ jobs:
       with:
         msystem: clang64
         path-type: inherit
-        pacboy: pkgconf:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c libusb:c gcc:c
+        pacboy: pkgconf:c gexiv2:c curl-winssl:c nghttp2:c nghttp3:c libusb:c gcc:c libgphoto2:c
         install: git patch
         location: '${{ env.DEV_DRIVE }}/msys2'
-
-    - name: Clone MINGW-packages and libgphoto2
-      shell: msys2 {0}
-      run: |
-        cd ${{ env.DEV_DRIVE }}
-        git clone --depth=1 https://github.com/momentobooth/MINGW-packages
-        cd MINGW-packages/mingw-w64-libgphoto2
-
-        git clone --depth=1 https://github.com/gphoto/libgphoto2
-        LIBGPHOTO2_GIT_REV=$(git rev-parse HEAD)
-        echo "LIBGPHOTO2_GIT_REV=$LIBGPHOTO2_GIT_REV" >> $GITHUB_ENV
-
-    - name: Cache libgphoto2 package
-      id: cache-libgphoto2-package
-      uses: actions/cache@v4
-      with:
-        path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
-        key: libgphoto2_${{ env.LIBGPHOTO2_GIT_REV }}
-
-    - name: Build libgphoto2 from git
-      working-directory: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2
-      shell: msys2 {0}
-      if: steps.cache-libgphoto2-package.outputs.cache-hit != 'true'
-      run: makepkg -s --noconfirm
-
-    - name: Install libgphoto2 package
-      working-directory: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2
-      shell: msys2 {0}
-      run: pacman -U --noconfirm mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
 
     - name: Fix environment for build and bundle
       run: |
@@ -160,13 +131,6 @@ jobs:
       shell: pwsh
       run: |
         &"${Env:ProgramFiles(x86)}/Inno Setup 6/iscc.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss"
-
-    - name: Upload libgphoto2 package artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: MSYS2 libgphoto2 package
-        path: ${{ env.DEV_DRIVE }}/MINGW-packages/mingw-w64-libgphoto2/mingw-w64-clang-x86_64-libgphoto2-*-any.pkg.tar.zst
-        compression-level: 0
 
     - name: Upload zip artifact
       uses: actions/upload-artifact@v4
