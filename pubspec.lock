@@ -1408,10 +1408,10 @@ packages:
     dependency: "direct main"
     description:
       name: theme_tailor_annotation
-      sha256: "0d5ecd13a6a52add2082aa60497179f6093acf482eb69e7fa3a9f37eb990ac34"
+      sha256: "9b9ecc468f892f7d2e638e7a5f704deadce627e24ae2f7bacedcbd47098f892b"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   timing:
     dependency: transitive
     description:
