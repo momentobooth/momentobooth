@@ -10,6 +10,8 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
+import 'package:momento_booth/src/rust/api/printing.dart';
+import 'package:momento_booth/src/rust/models/receipt_printing.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
