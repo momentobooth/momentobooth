@@ -92,7 +92,7 @@ enum ModalDialogType {
 Widget loadingDialog(BuildContext context) {
   return ModalDialog(
     title: context.knobs.string(label: 'Title', initialValue: 'Please read this'),
-    dialogType: context.knobs.list(label: 'Dialog Type', initialOption: ModalDialogType.info, options: ModalDialogType.values),
+    dialogType: context.knobs.object.dropdown(label: 'Dialog Type', initialOption: ModalDialogType.info, options: ModalDialogType.values),
     body: Text(context.knobs.string(label: 'Body Text', initialValue: 'Something has happened and we just need to acknowledge it.')),
     onDismiss: () {},
   );

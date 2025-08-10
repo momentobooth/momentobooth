@@ -24,7 +24,7 @@ pathsep = "0.1.1"
 tokio = { version = "1.47.1", features = ["rt-multi-thread"] }
 gphoto2 = "3.4.1"
 ahash = "0.8.12"
-img-parts = "0.3.3"
+img-parts = "0.4.0"
 little_exif = "0.6.14"
 url = "2.5.4"
 num = "0.4.3"

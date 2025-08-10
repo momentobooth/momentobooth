@@ -173,10 +173,10 @@ packages:
     dependency: transitive
     description:
       name: built_value
-      sha256: "0b1b12a0a549605e5f04476031cd0bc91ead1d7c8e830773a18ee54179b3cb62"
+      sha256: ba95c961bafcd8686d1cf63be864eb59447e795e124d98d6a27d91fcd13602fb
       url: "https://pub.dev"
     source: hosted
-    version: "8.11.0"
+    version: "8.11.1"
   characters:
     dependency: transitive
     description:
@@ -358,10 +358,10 @@ packages:
     dependency: transitive
     description:
       name: file_selector_android
-      sha256: "6bba3d590ee9462758879741abc132a19133600dd31832f55627442f1ebd7b54"
+      sha256: "3015702ab73987000e7ff2df5ddc99666d2bcd65cdb243f59da35729d3be6cff"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.1+14"
+    version: "0.5.1+15"
   file_selector_ios:
     dependency: transitive
     description:
@@ -651,10 +651,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: "2c11f3f94c687ee9bad77c171151672986360b2b001d109814ee7140b2cf261b"
+      sha256: bb2ce4590bc2667c96f318d68cac1b5a7987ec819351d32b1c987239a815e007
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.5.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -875,10 +875,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: "2ff1ac3b80a7af18052589e1f7782c5dc3de8e808506389b5433999ea6cbb55d"
+      sha256: ab00c8acf6aa1440068c8c6fbd604466571f344de15e1997764c1a67477cf01b
       url: "https://pub.dev"
     source: hosted
-    version: "4.13.2"
+    version: "4.13.3"
   nested:
     dependency: transitive
     description:
@@ -1408,10 +1408,10 @@ packages:
     dependency: "direct main"
     description:
       name: theme_tailor_annotation
-      sha256: "0d5ecd13a6a52add2082aa60497179f6093acf482eb69e7fa3a9f37eb990ac34"
+      sha256: "9b9ecc468f892f7d2e638e7a5f704deadce627e24ae2f7bacedcbd47098f892b"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   timing:
     dependency: transitive
     description:
@@ -1472,10 +1472,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "8582d7f6fe14d2652b4c45c9b6c14c0b678c2af2d083a11b604caeba51930d79"
+      sha256: "0aedad096a85b49df2e4725fa32118f9fa580f3b14af7a2d2221896a02cd5656"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.16"
+    version: "6.3.17"
   url_launcher_ios:
     dependency: transitive
     description:
@@ -1616,18 +1616,18 @@ packages:
     dependency: "direct main"
     description:
       name: widgetbook
-      sha256: "2dd436b848b240a54962017513571c2253d2470e31917f225581eef4d067cb72"
+      sha256: "2d0e649fd73f092afc373272bf46d12e7637a540baa549562393fecf3a387eeb"
       url: "https://pub.dev"
     source: hosted
-    version: "3.15.0"
+    version: "3.16.0"
   widgetbook_annotation:
     dependency: "direct main"
     description:
       name: widgetbook_annotation
-      sha256: b58cf08d21c36e946da510d7a8ee0307c4ec597c270d402e7b4edf4a4840c872
+      sha256: d29eef40efac4beb51f5e9d3bb6dd800db986f7020822b06b60d27f0299dac49
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.0"
+    version: "3.7.0"
   widgetbook_generator:
     dependency: "direct dev"
     description:
