@@ -89,7 +89,7 @@ class PrinterIssueDialog extends StatelessWidget {
 Widget printerIssueDialog(BuildContext context) {
   return PrinterIssueDialog(
     printerName: 'MyBrand MyPrinter 5000',
-    issueType: context.knobs.list(label: 'Issue Type', initialOption: PrinterIssueType.noInk, options: PrinterIssueType.values),
+    issueType: context.knobs.object.dropdown(label: 'Issue Type', initialOption: PrinterIssueType.noInk, options: PrinterIssueType.values),
     stuckJobs: const [],
     errorText: context.knobs.string(label: 'Error Text', initialValue: 'The printer is out of ink. Please replace the ink cartridge.'),
     onIgnorePressed: () {},

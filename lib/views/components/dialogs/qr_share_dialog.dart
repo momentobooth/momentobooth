@@ -169,7 +169,7 @@ enum ShareDialogState {
 @UseCase(name: 'QR Share Dialog', type: QrShareDialog)
 Widget qrShareDialog(BuildContext context) {
   return QrShareDialog(
-    state: context.knobs.list(label: 'State', initialOption: ShareDialogState.uploading, options: ShareDialogState.values),
+    state: context.knobs.object.dropdown(label: 'State', initialOption: ShareDialogState.uploading, options: ShareDialogState.values),
     uploadProgress: context.knobs.double.slider(label: 'Upload Progress', initialValue: 25, max: 100, min: 0),
     qrText: context.knobs.string(label: 'QR Text', initialValue: 'https://momento.booth/123456'),
     onRedoUpload: () {},

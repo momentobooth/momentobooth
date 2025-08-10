@@ -30,12 +30,12 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.1
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.15.0
-  widgetbook_annotation: 3.6.0
+  widgetbook: 3.16.0
+  widgetbook_annotation: 3.7.0
   flex_color_picker: 3.7.1
   lucide_icons_flutter: 3.0.8
   wizard_router: 1.4.1
-  theme_tailor_annotation: 3.0.2
+  theme_tailor_annotation: 3.1.0
   google_fonts: 6.3.0
   twinkling_stars: 1.0.3
 
@@ -76,9 +76,9 @@ dependencies:
   toml: 0.16.0
 
   # Networking
-  http: 1.4.0
+  http: 1.5.0
   http_parser: 4.1.2
-  mqtt5_client: 4.13.2
+  mqtt5_client: 4.13.3
 
   # Misc
   get_it: 8.2.0
