@@ -23,6 +23,7 @@ final class TransitionPage extends CustomTransitionPage<void> {
   factory TransitionPage.fromSettings({
     required ValueKey<String> key,
     required BuildContext context,
+    required String name,
     required Widget child,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
@@ -35,14 +36,15 @@ final class TransitionPage extends CustomTransitionPage<void> {
     }
 
     return switch (getIt<SettingsManager>().settings.ui.screenTransitionAnimation) {
-      ScreenTransitionAnimation.none => TransitionPage._none(key: key, child: child, opaque: opaque, barrierDismissible: barrierDismissible),
-      ScreenTransitionAnimation.fadeAndScale => TransitionPage._fadeAndScale(key: key, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
-      ScreenTransitionAnimation.fadeAndSlide => TransitionPage._fadeAndSlide(key: key, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.none => TransitionPage._none(key: key, name: name, child: child, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.fadeAndScale => TransitionPage._fadeAndScale(key: key, name: name, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.fadeAndSlide => TransitionPage._fadeAndSlide(key: key, name: name, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
     };
   }
 
   TransitionPage._none({
     required super.key,
+    required super.name,
     required super.child,
     super.opaque = true,
     super.barrierDismissible = false,
@@ -54,6 +56,7 @@ final class TransitionPage extends CustomTransitionPage<void> {
 
   TransitionPage._fadeAndScale({
     required super.key,
+    required super.name,
     required super.child,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
@@ -74,7 +77,8 @@ final class TransitionPage extends CustomTransitionPage<void> {
         );
 
   TransitionPage._fadeAndSlide({
-    required LocalKey super.key,
+    required super.key,
+    required super.name,
     required super.child,
     bool enableTransitionIn = true,
     bool enableTransitionOut = true,
