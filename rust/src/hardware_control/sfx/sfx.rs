@@ -30,11 +30,16 @@ pub fn load_audio(id: u8, raw_audio_data: Vec<u8>) -> Result<(), SfxError> {
     Ok(())
 }
 
-pub fn play_audio(id: u8) -> Result<(), SfxError> {
+pub fn clear_audio(id: u8) {
+    CACHED_SOUNDS.remove(&id);
+}
+
+pub fn play_audio_if_loaded(id: u8) -> Result<(), SfxError> {
     let mut manager_guard = AUDIO_MANAGER_LOCK.write();
-    let sound_data = CACHED_SOUNDS.get(&id).context(AudioFragmentNotFoundSnafu { fragment_id: id })?;
-    let manager = manager_guard.as_mut().context(NotInitializedSnafu)?;
-    manager.play(sound_data.clone()).context(AudioPlaybackSnafu { fragment_id: id })?;
+    if let Some(sound_data) = CACHED_SOUNDS.get(&id) {
+        let manager = manager_guard.as_mut().context(NotInitializedSnafu)?;
+        manager.play(sound_data.clone()).context(AudioPlaybackSnafu { fragment_id: id })?;
+    }
     Ok(())
 }
 
