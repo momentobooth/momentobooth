@@ -69,13 +69,14 @@ class PhotoBooth extends StatelessWidget {
                       supportedLocales: const [Locale('en'), Locale('nl')],
                       locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
                       home: child,
-                      builder: (_, child) => LiveViewBackground(child: child!)),
+                      builder: (_, child) => LiveViewBackground(child: child!),
                     ),
                   ),
                 ),
               ),
             ),
           ),
+        ),
       ],
     );
   }

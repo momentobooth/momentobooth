@@ -46,15 +46,15 @@ abstract class SfxManagerBase extends Subsystem with Store, Logger {
   // ////////////// //
 
   Future<void> playSampleSound() async {
-    await rust_sfx.playSound(id: _testSoundId);
+    await rust_sfx.playAudioIfLoaded(id: _testSoundId);
   }
 
   Future<void> playClickSound() async {
-    if (_isSfxEnabled) await rust_sfx.playSound(id: _clickSoundId);
+    if (_isSfxEnabled) await rust_sfx.playAudioIfLoaded(id: _clickSoundId);
   }
 
   Future<void> playShareScreenSound() async {
-    if (_isSfxEnabled) await rust_sfx.playSound(id: _shareScreenSoundId);
+    if (_isSfxEnabled) await rust_sfx.playAudioIfLoaded(id: _shareScreenSoundId);
   }
 
   // ///////////// //
@@ -62,8 +62,12 @@ abstract class SfxManagerBase extends Subsystem with Store, Logger {
   // ///////////// //`
 
   Future<void> _loadSoundFromFile(int id, String filePath) async {
-    Uint8List data = await File(filePath).readAsBytes();
-    await rust_sfx.loadAudio(id: id, rawAudioData: data);
+    if (filePath.isEmpty) {
+      await rust_sfx.clearAudio(id: id);
+    } else {
+      Uint8List data = await File(filePath).readAsBytes();
+      await rust_sfx.loadAudio(id: id, rawAudioData: data);
+    }
   }
 
   Future<void> _loadSoundFromAsset(int id, String assetPath) async {
