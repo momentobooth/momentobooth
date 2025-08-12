@@ -62,7 +62,7 @@ dependencies:
   # System
   path_provider: 2.1.5
   path: ^1.9.0
-  window_manager: 0.5.1
+  window_manager: 0.4.3 # As of 0.5.1 full screen is partially broken. It looks like a maximized window sometimes. Don't update until this is fixed.
   file_selector: 1.0.3
   win32: 5.14.0
 
