@@ -1,4 +1,5 @@
 const String mqttPasswordSecretKey = 'mqtt_password';
+const String openaiAPISecretKey = 'openai_api_key';
 
 abstract class SecretsRepository {
 

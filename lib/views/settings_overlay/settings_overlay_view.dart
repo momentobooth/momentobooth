@@ -5,13 +5,14 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/mqtt_manager.dart';
-import 'package:momento_booth/managers/project_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
+import 'package:momento_booth/src/rust/api/printing.dart';
+import 'package:momento_booth/src/rust/models/receipt_printing.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/components/indicators/connection_state_indicator.dart';
 import 'package:momento_booth/views/components/indicators/subsystem_status_icon.dart';
@@ -38,6 +39,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 part 'pages/settings_overlay_view.about.dart';
 part 'pages/settings_overlay_view.debug.dart';
+part 'pages/settings_overlay_view.experimental.dart';
 part 'pages/settings_overlay_view.face_recognition.dart';
 part 'pages/settings_overlay_view.general.dart';
 part 'pages/settings_overlay_view.hardware.dart';
@@ -161,6 +163,12 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                   body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
                 ),
                 PaneItem(
+                  key: ValueKey(SettingsPageKey.experimental),
+                  icon: const Icon(LucideIcons.flaskConical),
+                  title: const Text("Experimental"),
+                  body: Builder(builder: (_) => _getExperimentalTab(viewModel, controller)),
+                ),
+                PaneItem(
                   key: ValueKey(SettingsPageKey.log),
                   icon: const Icon(LucideIcons.scrollText),
                   title: const Text("Log"),
@@ -215,6 +223,7 @@ enum SettingsPageKey {
   subsystemStatus,
   stats,
   debug,
+  experimental,
   log,
   about;
 
