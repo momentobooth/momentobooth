@@ -5,7 +5,7 @@ publish_to: "none"
 version: 0.14.5+112
 
 environment:
-  sdk: ^3.8.0
+  sdk: ^3.9.0
 
 dependencies:
   flutter: { sdk: flutter }
@@ -78,7 +78,7 @@ dependencies:
   # Networking
   http: 1.5.0
   http_parser: 4.1.2
-  mqtt5_client: 4.13.3
+  mqtt5_client: 4.14.0
 
   # Misc
   get_it: 8.2.0
@@ -86,7 +86,7 @@ dependencies:
   synchronized: 3.4.0
   collection: any
   dart_casing: 3.0.1
-  package_info_plus: 8.3.0
+  package_info_plus: 8.3.1
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.6
   draggable_scrollbar:
@@ -107,21 +107,21 @@ dependency_overrides:
 
 dev_dependencies:
   # UI
-  widgetbook_generator: 3.14.0
-  theme_tailor: 3.0.3
+  widgetbook_generator: 3.15.0
+  theme_tailor: 3.1.0
 
   # MVC
-  mobx_codegen: 2.7.1
+  mobx_codegen: 2.7.2
 
   # Code quality
   flutter_lints: 6.0.0
 
   # Models
-  freezed: 3.1.0
-  json_serializable: 6.9.5
+  freezed: 3.2.0
+  json_serializable: 6.10.0
 
   # Code generation
-  build_runner: 2.5.4
+  build_runner: 2.6.0
 
 flutter:
   uses-material-design: true
