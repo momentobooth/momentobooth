@@ -253,3 +253,8 @@ enum PrintSize {
   const PrintSize(this.name);
 
 }
+
+enum ExternalSystemCheckType {
+  ping,
+  http,
+}
