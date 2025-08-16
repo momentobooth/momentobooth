@@ -39,6 +39,7 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
     @JsonKey(defaultValue: MqttIntegrationSettings.withDefaults) required MqttIntegrationSettings mqttIntegration,
     @JsonKey(defaultValue: FaceRecognitionSettings.withDefaults) required FaceRecognitionSettings faceRecognition,
     @JsonKey(defaultValue: DebugSettings.withDefaults) required DebugSettings debug,
+    @Default([]) List<ExternalSystemCheckSetting> externalSystemChecks,
   }) = _Settings;
 
   factory Settings.withDefaults() => Settings.fromJson({});
@@ -310,6 +311,24 @@ sealed class FaceRecognitionSettings with _$FaceRecognitionSettings implements T
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
+}
+
+// ///////////////////// //
+// External System Check //
+// ///////////////////// //
+
+@Freezed(fromJson: true, toJson: true)
+sealed class ExternalSystemCheckSetting with _$ExternalSystemCheckSetting implements TomlEncodableValue {
+  
+  const ExternalSystemCheckSetting._();
+
+  const factory ExternalSystemCheckSetting({
+    required String name,
+    required String address,
+    required ExternalSystemCheckType type,
+  }) = _ExternalSystemCheckSetting;
+
+  factory ExternalSystemCheckSetting.fromJson(Map<String, Object?> json) => _$ExternalSystemCheckSettingFromJson(json);
 }
 
 // ////////////// //

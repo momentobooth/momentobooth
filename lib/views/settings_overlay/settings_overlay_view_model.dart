@@ -240,6 +240,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   bool get mqttIntegrationEnableHomeAssistantDiscoverySetting => getIt<SettingsManager>().settings.mqttIntegration.enableHomeAssistantDiscovery;
   String get mqttIntegrationHomeAssistantDiscoveryTopicPrefixSetting => getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
   String get mqttIntegrationHomeAssistantComponentIdSetting => getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
+  List<ExternalSystemCheckSetting> get externalSystemChecks => getIt<SettingsManager>().settings.externalSystemChecks;
   bool get faceRecognitionEnabled => getIt<SettingsManager>().settings.faceRecognition.enable;
   String get faceRecognitionServerUrlSetting => getIt<SettingsManager>().settings.faceRecognition.serverUrl;
   bool get debugShowFpsCounter => getIt<SettingsManager>().settings.debug.showFpsCounter;

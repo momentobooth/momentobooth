@@ -610,6 +610,10 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
       viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(homeAssistantComponentId: homeAssistantComponentId, enable: false));
     }
   }
+  
+  void onExternalSystemChecksChanged(List<ExternalSystemCheckSetting> checks) {
+    viewModel.updateSettings((settings) => settings.copyWith(externalSystemChecks: checks));
+  }
 
   void onFaceRecognitionEnableChanged(bool? enable) {
     if (enable != null) {
