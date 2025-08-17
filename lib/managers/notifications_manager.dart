@@ -6,6 +6,9 @@ import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/managers/external_system_status_manager.dart';
+import 'package:momento_booth/models/_all.dart';
+import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/hardware.dart';
 
 part 'notifications_manager.g.dart';
@@ -41,6 +44,60 @@ abstract class NotificationsManagerBase with Store {
       if (element.paperOut) {
         notifications.add(paperOutNotification);
       }
+    });
+    
+    for (var element in getIt<ObservableList<Subsystem>>()) {
+      final status = element.subsystemStatus;
+      final name = element.subsystemName;
+      switch (status) {
+        case SubsystemStatusError():
+          notifications.add(InfoBar(
+            title: Text("$name error"),
+            content: Text("Subsystem $name has an error: ${status.message}"),
+            severity: InfoBarSeverity.error,
+          ));
+        case SubsystemStatusWarning():
+          notifications.add(InfoBar(
+            title: Text("$name warning"),
+            content: Text("Subsystem $name has a warning: ${status.message}"),
+            severity: InfoBarSeverity.warning,
+          ));
+        default:
+          break;
+      }
+    }
+
+    for (var element in getIt<ExternalSystemStatusManager>().systems) {
+      final status = element.isHealthy;
+      final severity = element.check.severity;
+      final name = element.check.name;
+      switch (status) {
+        case SubsystemStatusError():
+          notifications.add(InfoBar(
+            title: Text("$name unavailable"),
+            content: Text("External service \"$name\" is unavailable: ${status.message}"),
+            severity: InfoBarSeverity.error,
+          ));
+        case SubsystemStatusWarning():
+        // We don't show info severity notifications.
+          if (severity == ExternalSystemCheckSeverity.warning) {
+            notifications.add(InfoBar(
+              title: Text("$name unavailable"),
+              content: Text("External service \"$name\" is unavailable: ${status.message}"),
+              severity: InfoBarSeverity.warning,
+            ));
+          }
+        default:
+          break;
+      }
+    }
+
+    // Sort notifications by severity, so that errors are shown first, then warnings, then info.
+    notifications.sort((a, b) {
+      if (a.severity == b.severity) {
+        return 0;
+      }
+      return a.severity.index > b.severity.index ? -1 : 1;
     });
   }
 

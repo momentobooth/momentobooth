@@ -25,6 +25,9 @@ class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 /// Class containing global state for photos in the app
 abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
 
+  @override
+  String subsystemName = "Live View Manager";
+
   @readonly
   bool _lastFrameWasInvalid = false;
 

@@ -29,6 +29,9 @@ class MqttManager = MqttManagerBase with _$MqttManager;
 /// Class containing global state for photos in the app
 abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
+  @override
+  String subsystemName = "MQTT Manager";
+
   final Lock _updateMqttClientInstanceLock = Lock();
 
   MqttIntegrationSettings? _currentSettings;

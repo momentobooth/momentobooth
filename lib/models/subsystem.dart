@@ -14,6 +14,8 @@ abstract class SubsystemBase with Store, Logger {
   @readonly
   SubsystemStatus _subsystemStatus = const SubsystemStatus.initial();
 
+  abstract String subsystemName;
+
   // ////////////// //
   // Initialization //
   // ////////////// //

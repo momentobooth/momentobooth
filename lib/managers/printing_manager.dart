@@ -17,6 +17,9 @@ class PrintingManager = PrintingManagerBase with _$PrintingManager;
 
 abstract class PrintingManagerBase extends Subsystem with Store, Logger {
 
+  @override
+  String subsystemName = "Printing Manager";
+
   // ////////////// //
   // Initialization //
   // ////////////// //
