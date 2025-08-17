@@ -18,16 +18,13 @@ Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverla
                   value: () => viewModel.externalSystemCheckIntervalSeconds,
                   onFinishedEditing: (v) => controller.onExternalSystemCheckIntervalChanged(v),
                 ),
-                for (final check in viewModel.externalSystemChecks)
+                for (final (index, check) in viewModel.externalSystemChecks.indexed)
                   _ExternalSystemCheckTile(
                     check: check,
                     onEdit: (updated) {
                       final checks = [...viewModel.externalSystemChecks];
-                      final idx = checks.indexOf(check);
-                      if (idx != -1) {
-                        checks[idx] = updated;
-                        controller.onExternalSystemChecksChanged(checks);
-                      }
+                      checks[index] = updated;
+                      controller.onExternalSystemChecksChanged(checks);
                     },
                     onDelete: () {
                       final checks = [...viewModel.externalSystemChecks]..remove(check);
@@ -78,28 +75,21 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
 
   Future<void> _refreshStatus() async {
     setState(() => _loading = true);
-    final manager = ExternalSystemStatusManager(checks: [
-      ExternalSystemCheckSetting(
-        name: widget.check.name,
-        address: widget.check.address,
-        type: widget.check.type == ExternalSystemCheckType.ping
-            ? ExternalSystemCheckType.ping
-            : ExternalSystemCheckType.http,
-      ),
-    ]);
-    final statuses = await manager.runAllChecks();
+    final status = await ExternalSystemStatusManager.runCheck(widget.check);
     setState(() {
-      _status = statuses.first;
+      _status = status;
       _loading = false;
     });
   }
 
   SubsystemStatus get _statusIconData {
-    if (_status == null) return const SubsystemStatus.initial();
-    return _status?.isHealthy == true
-      ? const SubsystemStatus.ok()
-      : SubsystemStatus.error(message: _status?.error ?? "Unknown error");
+    return _status?.isHealthy ?? const SubsystemStatus.initial();
   }
+
+  String? get _exception => switch (_status?.isHealthy) {
+        SubsystemStatusError(:final message, :final exception) => '$message\nException text: $exception',
+        _ => null,
+      };
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +105,14 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
           ],
         ),
         title: Text(widget.check.name),
-        subtitle: Text('${widget.check.type.name.toUpperCase()} - ${widget.check.address}'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('${widget.check.type.name.toUpperCase()} - ${widget.check.address}'),
+            if (_exception != null)
+              Text('Error: $_exception', style: TextStyle(color: Colors.red)),
+          ],
+        ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           spacing: 4,
