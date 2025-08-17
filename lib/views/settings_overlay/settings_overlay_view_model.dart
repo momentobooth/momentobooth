@@ -6,6 +6,7 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/external_system_status_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
@@ -82,11 +83,15 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<ComboBoxItem<String>> gPhoto2Cameras = List<ComboBoxItem<String>>.empty();
 
   SubsystemStatus get badgeStatus {
-    if (getIt<ObservableList<Subsystem>>().any((s) => s.subsystemStatus is SubsystemStatusError)) {
+    final subsystemList = getIt<ObservableList<Subsystem>>().map((s) => s.subsystemStatus).toList();
+    final externalSystemList = getIt<ExternalSystemStatusManager>().systemStatuses;
+    final checkList = subsystemList + externalSystemList;
+
+    if (checkList.any((s) => s is SubsystemStatusError)) {
       return const SubsystemStatus.error(message: '');
-    } else if (getIt<ObservableList<Subsystem>>().any((s) => s.subsystemStatus is SubsystemStatusWarning)) {
+    } else if (checkList.any((s) => s is SubsystemStatusWarning)) {
       return const SubsystemStatus.warning(message: '');
-    } else if (getIt<ObservableList<Subsystem>>().any((s) => s.subsystemStatus is SubsystemStatusBusy)) {
+    } else if (checkList.any((s) => s is SubsystemStatusBusy)) {
       return const SubsystemStatus.busy(message: '');
     } else {
       return const SubsystemStatus.ok();

@@ -18,7 +18,7 @@ Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverla
                   value: () => viewModel.externalSystemCheckIntervalSeconds,
                   onFinishedEditing: (v) => controller.onExternalSystemCheckIntervalChanged(v),
                 ),
-                for (final (index, status) in getIt<ExternalSystemStatusManager>().statuses.indexed)
+                for (final (index, status) in getIt<ExternalSystemStatusManager>().systems.indexed)
                   ExternalSystemCheckTile(
                     sysStatus: status,
                     onEdit: (updated) {

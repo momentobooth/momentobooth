@@ -17,8 +17,10 @@ class ExternalSystemStatusManager = ExternalSystemStatusManagerBase with _$Exter
 
 abstract class ExternalSystemStatusManagerBase with Store, Logger {
   @observable
-  ObservableList<ExternalSystemStatus> statuses = ObservableList<ExternalSystemStatus>();
+  ObservableList<ExternalSystemStatus> systems = ObservableList<ExternalSystemStatus>();
   Timer? _checkTimer;
+
+  ObservableList<SubsystemStatus> get systemStatuses => ObservableList<SubsystemStatus>.of(systems.map((status) => status.isHealthy));
 
   ExternalSystemStatusManagerBase();
 
@@ -35,28 +37,28 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
   }
 
   void loadChecksFromSettings() {
-    statuses = ObservableList.of(getIt<SettingsManager>().settings.externalSystemChecks.map((el) => ExternalSystemStatus(check: el, isHealthy: el.enabled ? SubsystemStatus.initial() :SubsystemStatus.disabled())).toList());
+    systems = ObservableList.of(getIt<SettingsManager>().settings.externalSystemChecks.map((el) => ExternalSystemStatus(check: el, isHealthy: el.enabled ? SubsystemStatus.initial() :SubsystemStatus.disabled())).toList());
   }
 
   /// Runs all health checks and returns their statuses
   @action
   Future<List<ExternalSystemStatus>> runAllChecks() async {
     logDebug("Running all enabled external system checks");
-    return Future.wait(statuses.where((status) => status.check.enabled).map((status) => runCheck(status.check)));
+    return Future.wait(systems.where((status) => status.check.enabled).map((status) => runCheck(status.check)));
   }
 
   @action
   Future<ExternalSystemStatus> runCheck(ExternalSystemCheckSetting check) async {
-    final index = statuses.indexWhere((el) => el.check == check);
+    final index = systems.indexWhere((el) => el.check == check);
     if (index != -1) {
-      statuses[index] = statuses[index].copyWith(inProgress: true);
+      systems[index] = systems[index].copyWith(inProgress: true);
     }
     final result = await switch (check.type) {
       ExternalSystemCheckType.ping => _pingCheck(check),
       ExternalSystemCheckType.http => _httpCheck(check)
     };
     if (index != -1) {
-      statuses[index] = result;
+      systems[index] = result;
     }
     return result;
   }
