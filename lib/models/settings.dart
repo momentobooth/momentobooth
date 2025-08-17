@@ -327,6 +327,7 @@ sealed class ExternalSystemCheckSetting with _$ExternalSystemCheckSetting implem
     required String name,
     required String address,
     required ExternalSystemCheckType type,
+    @Default(ExternalSystemCheckSeverity.warning) ExternalSystemCheckSeverity severity,
     @Default(true) bool enabled,
   }) = _ExternalSystemCheckSetting;
 

@@ -258,3 +258,9 @@ enum ExternalSystemCheckType {
   ping,
   http,
 }
+
+enum ExternalSystemCheckSeverity {
+  info,
+  warning,
+  error,
+}

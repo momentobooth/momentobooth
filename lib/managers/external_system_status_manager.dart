@@ -51,6 +51,8 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
   Future<ExternalSystemStatus> runCheck(ExternalSystemCheckSetting check) async {
     final index = systems.indexWhere((el) => el.check == check);
     if (index != -1) {
+      // Changinkg the status to busy while the check is running is fun, but it would intermittently seem that there is no issue, even if it was not resolved.
+      // systems[index] = systems[index].copyWith(inProgress: true, isHealthy: SubsystemStatus.busy(message: "Running check..."));
       systems[index] = systems[index].copyWith(inProgress: true);
     }
     final result = await switch (check.type) {
@@ -63,7 +65,17 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
     return result;
   }
 
+  static SubsystemStatus _statusProducer(ExternalSystemCheckSetting check, String message, String exception) {
+    return switch (check.severity) {
+      ExternalSystemCheckSeverity.error => SubsystemStatus.error(message: message, exception: exception),
+      ExternalSystemCheckSeverity.warning => SubsystemStatus.warning(message: message, exception: exception),
+      // For info severity, we can use warning as well, since there is no negative "info" state.
+      ExternalSystemCheckSeverity.info => SubsystemStatus.warning(message: message, exception: exception),
+    };
+  }
+
   static Future<ExternalSystemStatus> _pingCheck(ExternalSystemCheckSetting check) async {
+    const eMessage = "ping unsuccessful";
     try {
       final result = await Process.run(
         Platform.isWindows ? 'ping' : 'ping',
@@ -72,28 +84,29 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
       final success = result.exitCode == 0;
       return ExternalSystemStatus(
         check: check,
-        isHealthy: success ? const SubsystemStatus.ok() : SubsystemStatus.error(message: "ping unsuccessful", exception: result.stdout.toString()),
+        isHealthy: success ? const SubsystemStatus.ok() : _statusProducer(check, eMessage, result.stdout.toString()),
       );
     } catch (e) {
       return ExternalSystemStatus(
         check: check,
-        isHealthy: SubsystemStatus.error(message: "ping unsuccessful", exception: e.toString()),
+        isHealthy: _statusProducer(check, eMessage, e.toString()),
       );
     }
   }
 
   static Future<ExternalSystemStatus> _httpCheck(ExternalSystemCheckSetting check) async {
+    const eMessage = "http request unsuccessful";
     try {
       final response = await http.get(Uri.parse(check.address)).timeout(Duration(seconds: 5));
       final success = response.statusCode >= 200 && response.statusCode < 400;
       return ExternalSystemStatus(
         check: check,
-        isHealthy: success ? const SubsystemStatus.ok() : SubsystemStatus.error(message: "http request unsuccessful", exception: 'HTTP ${response.statusCode}'),
+        isHealthy: success ? const SubsystemStatus.ok() : _statusProducer(check, eMessage, 'HTTP ${response.statusCode}'),
       );
     } catch (e) {
       return ExternalSystemStatus(
         check: check,
-        isHealthy: SubsystemStatus.error(message:  "http request unsuccessful", exception: e.toString()),
+        isHealthy: _statusProducer(check, eMessage, e.toString()),
       );
     }
   }

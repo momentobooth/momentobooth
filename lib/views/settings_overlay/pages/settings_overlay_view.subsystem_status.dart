@@ -82,6 +82,7 @@ class ExternalSystemCheckTile extends StatelessWidget {
 
   String? get _exception => switch (_status) {
         SubsystemStatusError(:final message, :final exception) => '$message\nException text: $exception',
+        SubsystemStatusWarning(:final message, :final exception) => '$message\nException text: $exception',
         _ => null,
       };
 
@@ -173,6 +174,7 @@ class _ExternalSystemCheckEditDialogState extends State<_ExternalSystemCheckEdit
   late TextEditingController _nameController;
   late TextEditingController _addressController;
   ExternalSystemCheckType _type = ExternalSystemCheckType.ping;
+  ExternalSystemCheckSeverity _severity = ExternalSystemCheckSeverity.warning;
 
   @override
   void initState() {
@@ -180,6 +182,7 @@ class _ExternalSystemCheckEditDialogState extends State<_ExternalSystemCheckEdit
     _nameController = TextEditingController(text: widget.initial?.name ?? '');
     _addressController = TextEditingController(text: widget.initial?.address ?? '');
     _type = widget.initial?.type ?? ExternalSystemCheckType.ping;
+    _severity = widget.initial?.severity ?? ExternalSystemCheckSeverity.warning;
   }
 
   @override
@@ -234,7 +237,24 @@ class _ExternalSystemCheckEditDialogState extends State<_ExternalSystemCheckEdit
                       .map((t) => ComboBoxItem(value: t, child: Text(t.name)))
                       .toList(),
                   onChanged: (t) => setState(() => _type = t ?? ExternalSystemCheckType.ping),
-                  // header: 'Type',
+                ),
+              ),
+            ],
+          ),
+          Row(
+            spacing: 8,
+            children: [
+              Expanded(
+                child: Text('Severity', style: FluentTheme.of(context).typography.bodyStrong),
+              ),
+              Expanded(
+                flex: 2,
+                child: ComboBox<ExternalSystemCheckSeverity>(
+                  value: _severity,
+                  items: ExternalSystemCheckSeverity.values
+                      .map((t) => ComboBoxItem(value: t, child: Text(t.name)))
+                      .toList(),
+                  onChanged: (t) => setState(() => _severity = t ?? ExternalSystemCheckSeverity.warning),
                 ),
               ),
             ],
@@ -254,6 +274,7 @@ class _ExternalSystemCheckEditDialogState extends State<_ExternalSystemCheckEdit
                 name: _nameController.text,
                 address: _addressController.text,
                 type: _type,
+                severity: _severity
               ),
             );
           },

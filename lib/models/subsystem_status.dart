@@ -28,6 +28,7 @@ sealed class SubsystemStatus with _$SubsystemStatus {
   const factory SubsystemStatus.warning({
     required String message,
     @Default({}) ActionMap actions,
+    String? exception,
   }) = SubsystemStatusWarning;
 
   const factory SubsystemStatus.error({
