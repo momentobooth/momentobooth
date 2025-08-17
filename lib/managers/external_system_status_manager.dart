@@ -6,6 +6,11 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/utils/logger.dart';
+
+part 'external_system_status_manager.g.dart';
+
+class ExternalSystemStatusManager = ExternalSystemStatusManagerBase with _$ExternalSystemStatusManager;
 
 class ExternalSystemStatus {
   final ExternalSystemCheckSetting check;
@@ -17,41 +22,47 @@ class ExternalSystemStatus {
   });
 }
 
-class ExternalSystemStatusManager {
+abstract class ExternalSystemStatusManagerBase with Store, Logger {
   @observable
-  List<ExternalSystemStatus> _statuses = [];
+  ObservableList<ExternalSystemStatus> statuses = ObservableList<ExternalSystemStatus>();
   Timer? _checkTimer;
 
-  ExternalSystemStatusManager();
+  ExternalSystemStatusManagerBase();
 
   /// Initializes the manager, setting up the timer for periodic checks.
   void initialize() {
+    logDebug("Initializing ExternalSystemStatusManager");
     if (_checkTimer != null && _checkTimer!.isActive) {
       _checkTimer!.cancel();
     }
-    loadStatuses();
+    loadChecksFromSettings();
     _checkTimer = Timer.periodic(Duration(seconds: getIt<SettingsManager>().settings.externalSystemCheckIntervalSeconds), (timer) {
       runAllChecks();
     });
   }
 
-  void loadStatuses() {
-    _statuses = getIt<SettingsManager>().settings.externalSystemChecks.map((el) => ExternalSystemStatus(check: el, isHealthy: SubsystemStatus.initial())).toList();
+  void loadChecksFromSettings() {
+    statuses = ObservableList.of(getIt<SettingsManager>().settings.externalSystemChecks.map((el) => ExternalSystemStatus(check: el, isHealthy: SubsystemStatus.initial())).toList());
   }
 
   /// Runs all health checks and returns their statuses
+  @action
   Future<List<ExternalSystemStatus>> runAllChecks() async {
-    loadStatuses();  // Fixme: we reset the isHealthy state here, which might not be ideal.
-    return Future.wait(_statuses.map((status) => runCheck(status.check)));
+    logDebug("Running all external system checks");
+    return Future.wait(statuses.map((status) => runCheck(status.check)));
   }
 
-  static Future<ExternalSystemStatus> runCheck(ExternalSystemCheckSetting check) async {
-    switch (check.type) {
-      case ExternalSystemCheckType.ping:
-        return await _pingCheck(check);
-      case ExternalSystemCheckType.http:
-        return await _httpCheck(check);
+  @action
+  Future<ExternalSystemStatus> runCheck(ExternalSystemCheckSetting check) async {
+    final result = await switch (check.type) {
+      ExternalSystemCheckType.ping => _pingCheck(check),
+      ExternalSystemCheckType.http => _httpCheck(check)
+    };
+    final index = statuses.indexWhere((el) => el.check == check);
+    if (index != -1) {
+      statuses[index] = result;
     }
+    return result;
   }
 
   static Future<ExternalSystemStatus> _pingCheck(ExternalSystemCheckSetting check) async {

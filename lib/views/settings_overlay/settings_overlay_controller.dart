@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/external_system_status_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
@@ -613,11 +614,15 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   
   void onExternalSystemChecksChanged(List<ExternalSystemCheckSetting> checks) {
     viewModel.updateSettings((settings) => settings.copyWith(externalSystemChecks: checks));
+    // Reinitialize the ExternalSystemStatusManager to apply the new checks.
+    getIt<ExternalSystemStatusManager>().initialize();
   }
 
   void onExternalSystemCheckIntervalChanged(int? interval) {
     if (interval != null) {
       viewModel.updateSettings((settings) => settings.copyWith(externalSystemCheckIntervalSeconds: interval));
+      // Reinitialize the ExternalSystemStatusManager to apply the new interval.
+      getIt<ExternalSystemStatusManager>().initialize();
     }
   }
 

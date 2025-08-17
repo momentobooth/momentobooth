@@ -18,16 +18,16 @@ Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverla
                   value: () => viewModel.externalSystemCheckIntervalSeconds,
                   onFinishedEditing: (v) => controller.onExternalSystemCheckIntervalChanged(v),
                 ),
-                for (final (index, check) in viewModel.externalSystemChecks.indexed)
+                for (final (index, status) in getIt<ExternalSystemStatusManager>().statuses.indexed)
                   _ExternalSystemCheckTile(
-                    check: check,
+                    sysStatus: status,
                     onEdit: (updated) {
                       final checks = [...viewModel.externalSystemChecks];
                       checks[index] = updated;
                       controller.onExternalSystemChecksChanged(checks);
                     },
                     onDelete: () {
-                      final checks = [...viewModel.externalSystemChecks]..remove(check);
+                      final checks = [...viewModel.externalSystemChecks]..remove(status.check);
                       controller.onExternalSystemChecksChanged(checks);
                     },
                   ),
@@ -59,34 +59,35 @@ Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverla
 }
 
 class _ExternalSystemCheckTile extends StatefulWidget {
-  final ExternalSystemCheckSetting check;
+  final ExternalSystemStatus sysStatus;
   final ValueChanged<ExternalSystemCheckSetting> onEdit;
   final VoidCallback onDelete;
 
-  const _ExternalSystemCheckTile({required this.check, required this.onEdit, required this.onDelete});
+  const _ExternalSystemCheckTile({required this.sysStatus, required this.onEdit, required this.onDelete});
 
   @override
   State<_ExternalSystemCheckTile> createState() => _ExternalSystemCheckTileState();
 }
 
 class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
-  ExternalSystemStatus? _status;
+  SubsystemStatus get _status => widget.sysStatus.isHealthy;
+  ExternalSystemCheckSetting get _check => widget.sysStatus.check;
   bool _loading = false;
 
   Future<void> _refreshStatus() async {
     setState(() => _loading = true);
-    final status = await ExternalSystemStatusManager.runCheck(widget.check);
+    final status = await getIt<ExternalSystemStatusManager>().runCheck(_check);
     setState(() {
-      _status = status;
+      // _status = status;
       _loading = false;
     });
   }
 
   SubsystemStatus get _statusIconData {
-    return _status?.isHealthy ?? const SubsystemStatus.initial();
+    return _status;
   }
 
-  String? get _exception => switch (_status?.isHealthy) {
+  String? get _exception => switch (_status) {
         SubsystemStatusError(:final message, :final exception) => '$message\nException text: $exception',
         _ => null,
       };
@@ -104,7 +105,7 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
             SizedBox(width: 6), // Add some spacing between icon and text
           ],
         ),
-        title: Text(widget.check.name),
+        title: Text(_check.name),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,8 +121,8 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
             Tooltip(
               message: 'Enable/Disable',
               child: ToggleSwitch(
-                checked: widget.check.enabled,
-                onChanged: (v) => setState(() => widget.onEdit(widget.check.copyWith(enabled: v))),
+                checked: _check.enabled,
+                onChanged: (v) => setState(() => widget.onEdit(_check.copyWith(enabled: v))),
               )
             ),
             SizedBox(width: 2),
@@ -141,7 +142,7 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
                     barrierDismissible: true,
                     context: context,
                     builder: (ctx) => _ExternalSystemCheckEditDialog(
-                      initial: widget.check,
+                      initial: _check,
                       onSave: (updated) {
                         widget.onEdit(updated);
                         Navigator.of(ctx).pop();
