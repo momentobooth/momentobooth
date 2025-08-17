@@ -326,6 +326,7 @@ sealed class ExternalSystemCheckSetting with _$ExternalSystemCheckSetting implem
     required String name,
     required String address,
     required ExternalSystemCheckType type,
+    @Default(true) bool enabled,
   }) = _ExternalSystemCheckSetting;
 
   factory ExternalSystemCheckSetting.withDefaults() => ExternalSystemCheckSetting.fromJson({});
