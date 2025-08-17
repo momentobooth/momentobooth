@@ -13,7 +13,7 @@ import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:momento_booth/views/components/config/set_scroll_configuration.dart';
 import 'package:momento_booth/views/components/imaging/live_view_background.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';

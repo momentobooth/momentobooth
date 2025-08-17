@@ -5,7 +5,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 
 part 'settings_manager.g.dart';
 
@@ -32,9 +32,9 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
         _blockSaving = false;
         reportSubsystemOk();
       }
-    } catch (e, s) {
-      String message = 'Could not read existing settings';
-      logError(message, e, s);
+    } catch (e) {
+      String message = 'Could not read existing settings: $e';
+      logError(message);
       reportSubsystemError(
         message: "Could not read existing settings. Open the details view for details and solutions.",
         exception: e.toString(),
@@ -70,9 +70,9 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
       await getIt<SerialiableRepository<Settings>>().write(_settings);
       logDebug("Saved settings");
       reportSubsystemOk();
-    } catch (e, s) {
-      String message = 'Failed to save settings';
-      logError(message, e, s);
+    } catch (e) {
+      String message = 'Failed to save settings: $e';
+      logError(message);
       reportSubsystemError(
         message: message,
         exception: e.toString(),

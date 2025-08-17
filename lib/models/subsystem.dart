@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 
 part 'subsystem.g.dart';
 
@@ -25,8 +25,8 @@ abstract class SubsystemBase with Store, Logger {
     try {
       await initialize();
       if (_subsystemStatus is SubsystemStatusInitial) reportSubsystemOk();
-    } catch (e, s) {
-      logError("Init of $runtimeType failed", e, s);
+    } catch (e) {
+      logError("Init of $runtimeType failed: $e");
       if (_subsystemStatus is SubsystemStatusInitial) reportSubsystemError(message: "Initialization error: $e");
     }
   }

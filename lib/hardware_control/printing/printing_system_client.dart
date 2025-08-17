@@ -5,7 +5,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 
 /// Abstract class for printing systems. This assumes every printing system allows setting multiple printers. As such it wil automatically cycle through the printers when picking a printer for a new job.
 abstract class PrintingSystemClient with Logger {

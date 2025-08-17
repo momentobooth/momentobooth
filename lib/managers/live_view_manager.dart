@@ -14,7 +14,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/src/rust/models/live_view.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:synchronized/synchronized.dart';
 import 'package:texture_rgba_renderer/texture_rgba_renderer.dart';
 
@@ -94,8 +94,8 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
       } else {
         logDebug("No current live view source to dispose");
       }
-    } catch (e, s) {
-      logError("Disposing of ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType} failed", e, s);
+    } catch (e) {
+      logError("Disposing of ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType} failed: $e");
     }
   }
 
@@ -147,8 +147,8 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
         await _currentLiveViewSource!.openStream(texturePtr: BigInt.from(_texturePointer));
         reportSubsystemOk();
         unawaited(_checkLiveViewState());
-      } catch (e, s) {
-        logError("Failed to open ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}", e, s);
+      } catch (e) {
+        logError("Failed to open ${_currentLiveViewSource?.friendlyName} of type ${_currentLiveViewSource.runtimeType}: $e");
         reportSubsystemBusy(message: 'Failed to open live view stream, disposing resources');
         await _disposeCurrentLiveViewSourceSafe();
         _currentLiveViewSource = null;

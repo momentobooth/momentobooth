@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:args/args.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:get_it/get_it.dart';
+import 'package:grpc/grpc.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
@@ -17,6 +18,7 @@ import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/src/rust/models/logging.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/file_utils.dart';
+import 'package:opentelemetry_logging/opentelemetry_logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:talker/talker.dart';
@@ -24,6 +26,44 @@ import 'package:talker/talker.dart';
 final GetIt getIt = GetIt.instance;
 
 void main(List<String> arguments) async {
+  // Create logger
+  final logger = OpenTelemetryLogger(
+    backend: OpenTelemetryGrpcBackend(host: 'localhost', port: 5081, options: ChannelOptions(
+      credentials: ChannelCredentials.insecure(),
+    ), onSubmitError: (error) async {
+      print(error);
+    },
+    callOptions: CallOptions(metadata: {
+      'organization': 'default',
+      'stream-name': 'default',
+      'Authorization': 'Basic c2FuZGVyQGludGhvdXQubWU6ZHZYaFZCTkZKczVYNkdnTw==',
+    })),
+    batchSize: 1,
+    flushInterval: const Duration(seconds: 1),
+  );
+
+  // Use logger
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+  logger.debug('Hello!');
+
+  await Future.delayed(Duration(seconds: 5));
+
+
+
+
   SentryWidgetsFlutterBinding.ensureInitialized();
 
   var parser = ArgParser()
