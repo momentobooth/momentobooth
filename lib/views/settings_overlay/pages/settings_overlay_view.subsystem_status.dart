@@ -19,7 +19,7 @@ Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverla
                   onFinishedEditing: (v) => controller.onExternalSystemCheckIntervalChanged(v),
                 ),
                 for (final (index, status) in getIt<ExternalSystemStatusManager>().statuses.indexed)
-                  _ExternalSystemCheckTile(
+                  ExternalSystemCheckTile(
                     sysStatus: status,
                     onEdit: (updated) {
                       final checks = [...viewModel.externalSystemChecks];
@@ -58,29 +58,22 @@ Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverla
   );
 }
 
-class _ExternalSystemCheckTile extends StatefulWidget {
+class ExternalSystemCheckTile extends StatelessWidget {
+
   final ExternalSystemStatus sysStatus;
   final ValueChanged<ExternalSystemCheckSetting> onEdit;
   final VoidCallback onDelete;
 
-  const _ExternalSystemCheckTile({required this.sysStatus, required this.onEdit, required this.onDelete});
+  DateFormat get _dateFormat => DateFormat('HH:mm:ss');
 
-  @override
-  State<_ExternalSystemCheckTile> createState() => _ExternalSystemCheckTileState();
-}
+  const ExternalSystemCheckTile({super.key, required this.sysStatus, required this.onEdit, required this.onDelete});
 
-class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
-  SubsystemStatus get _status => widget.sysStatus.isHealthy;
-  ExternalSystemCheckSetting get _check => widget.sysStatus.check;
-  bool _loading = false;
+  SubsystemStatus get _status => sysStatus.isHealthy;
+  ExternalSystemCheckSetting get _check => sysStatus.check;
+  bool get _loading => sysStatus.inProgress;
 
   Future<void> _refreshStatus() async {
-    setState(() => _loading = true);
-    final status = await getIt<ExternalSystemStatusManager>().runCheck(_check);
-    setState(() {
-      // _status = status;
-      _loading = false;
-    });
+    await getIt<ExternalSystemStatusManager>().runCheck(_check);
   }
 
   SubsystemStatus get _statusIconData {
@@ -109,7 +102,7 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${widget.check.type.name.toUpperCase()} - ${widget.check.address}'),
+            Text('${_check.type.name.toUpperCase()} - ${_check.address} - ${_dateFormat.format(sysStatus.timestamp)}'),
             if (_exception != null)
               Text('Error: $_exception', style: TextStyle(color: Colors.red)),
           ],
@@ -122,7 +115,7 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
               message: 'Enable/Disable',
               child: ToggleSwitch(
                 checked: _check.enabled,
-                onChanged: (v) => setState(() => widget.onEdit(_check.copyWith(enabled: v))),
+                onChanged: (v) => onEdit(_check.copyWith(enabled: v)),
               )
             ),
             SizedBox(width: 2),
@@ -144,7 +137,7 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
                     builder: (ctx) => _ExternalSystemCheckEditDialog(
                       initial: _check,
                       onSave: (updated) {
-                        widget.onEdit(updated);
+                        onEdit(updated);
                         Navigator.of(ctx).pop();
                       },
                     ),
@@ -156,7 +149,7 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
               message: 'Delete',
               child: IconButton(
                 icon: const Icon(FluentIcons.delete),
-                onPressed: widget.onDelete,
+                onPressed: onDelete,
               ),
             ),
           ],

@@ -4,23 +4,16 @@ import 'package:http/http.dart' as http;
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/external_system_status.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/utils/logger.dart';
 
+export 'package:momento_booth/models/external_system_status.dart';
+
 part 'external_system_status_manager.g.dart';
 
 class ExternalSystemStatusManager = ExternalSystemStatusManagerBase with _$ExternalSystemStatusManager;
-
-class ExternalSystemStatus {
-  final ExternalSystemCheckSetting check;
-  final SubsystemStatus isHealthy;
-
-  ExternalSystemStatus({
-    required this.check,
-    required this.isHealthy,
-  });
-}
 
 abstract class ExternalSystemStatusManagerBase with Store, Logger {
   @observable
@@ -42,23 +35,26 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
   }
 
   void loadChecksFromSettings() {
-    statuses = ObservableList.of(getIt<SettingsManager>().settings.externalSystemChecks.map((el) => ExternalSystemStatus(check: el, isHealthy: SubsystemStatus.initial())).toList());
+    statuses = ObservableList.of(getIt<SettingsManager>().settings.externalSystemChecks.map((el) => ExternalSystemStatus(check: el, isHealthy: el.enabled ? SubsystemStatus.initial() :SubsystemStatus.disabled())).toList());
   }
 
   /// Runs all health checks and returns their statuses
   @action
   Future<List<ExternalSystemStatus>> runAllChecks() async {
-    logDebug("Running all external system checks");
-    return Future.wait(statuses.map((status) => runCheck(status.check)));
+    logDebug("Running all enabled external system checks");
+    return Future.wait(statuses.where((status) => status.check.enabled).map((status) => runCheck(status.check)));
   }
 
   @action
   Future<ExternalSystemStatus> runCheck(ExternalSystemCheckSetting check) async {
+    final index = statuses.indexWhere((el) => el.check == check);
+    if (index != -1) {
+      statuses[index] = statuses[index].copyWith(inProgress: true);
+    }
     final result = await switch (check.type) {
       ExternalSystemCheckType.ping => _pingCheck(check),
       ExternalSystemCheckType.http => _httpCheck(check)
     };
-    final index = statuses.indexWhere((el) => el.check == check);
     if (index != -1) {
       statuses[index] = result;
     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show ScaffoldMessenger;
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/external_system_status_manager.dart';
