@@ -11,6 +11,13 @@ Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverla
           Observer(builder: (_) {
             return Column(
               children: [
+                SettingsNumberEditTile(
+                  icon: FluentIcons.clock,
+                  title: "Check interval (seconds)",
+                  subtitle: "How often to run external system health checks.",
+                  value: () => viewModel.externalSystemCheckIntervalSeconds,
+                  onFinishedEditing: (v) => controller.onExternalSystemCheckIntervalChanged(v),
+                ),
                 for (final check in viewModel.externalSystemChecks)
                   _ExternalSystemCheckTile(
                     check: check,
@@ -71,8 +78,8 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
 
   Future<void> _refreshStatus() async {
     setState(() => _loading = true);
-    final manager = ExternalSystemStatusManager([
-      ExternalSystemCheck(
+    final manager = ExternalSystemStatusManager(checks: [
+      ExternalSystemCheckSetting(
         name: widget.check.name,
         address: widget.check.address,
         type: widget.check.type == ExternalSystemCheckType.ping
@@ -97,12 +104,21 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      padding: EdgeInsets.zero,
+      margin: const EdgeInsets.symmetric(vertical: 1),
       child: ListTile(
-        leading: SubsystemStatusIcon(status: _statusIconData),
+        // contentPadding: EdgeInsets.zero,
+        leading: Row(
+          children: [
+            SubsystemStatusIcon(status: _statusIconData),
+            SizedBox(width: 6), // Add some spacing between icon and text
+          ],
+        ),
         title: Text(widget.check.name),
         subtitle: Text('${widget.check.type.name.toUpperCase()} - ${widget.check.address}'),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
+          spacing: 4,
           children: [
             Tooltip(
               message: 'Enable/Disable',
@@ -111,6 +127,7 @@ class _ExternalSystemCheckTileState extends State<_ExternalSystemCheckTile> {
                 onChanged: (v) => setState(() => widget.onEdit(widget.check.copyWith(enabled: v))),
               )
             ),
+            SizedBox(width: 2),
             Tooltip(
               message: 'Refresh',
               child: IconButton(

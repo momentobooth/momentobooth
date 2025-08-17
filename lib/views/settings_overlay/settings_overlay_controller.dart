@@ -615,6 +615,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     viewModel.updateSettings((settings) => settings.copyWith(externalSystemChecks: checks));
   }
 
+  void onExternalSystemCheckIntervalChanged(int? interval) {
+    if (interval != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(externalSystemCheckIntervalSeconds: interval));
+    }
+  }
+
   void onFaceRecognitionEnableChanged(bool? enable) {
     if (enable != null) {
       viewModel.updateSettings((settings) => settings.copyWith.faceRecognition(enable: enable));

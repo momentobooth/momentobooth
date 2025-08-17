@@ -40,6 +40,7 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
     @JsonKey(defaultValue: FaceRecognitionSettings.withDefaults) required FaceRecognitionSettings faceRecognition,
     @JsonKey(defaultValue: DebugSettings.withDefaults) required DebugSettings debug,
     @Default([]) List<ExternalSystemCheckSetting> externalSystemChecks,
+    @Default(60) int externalSystemCheckIntervalSeconds,
   }) = _Settings;
 
   factory Settings.withDefaults() => Settings.fromJson({});
