@@ -107,7 +107,7 @@ dependency_overrides:
 
 dev_dependencies:
   # UI
-  widgetbook_generator: 3.15.0
+  widgetbook_generator: 3.16.0
   theme_tailor: 3.1.0
 
   # MVC
@@ -121,7 +121,7 @@ dev_dependencies:
   json_serializable: 6.10.0
 
   # Code generation
-  build_runner: 2.6.0
+  build_runner: 2.7.0
 
 flutter:
   uses-material-design: true
