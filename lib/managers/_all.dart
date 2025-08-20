@@ -1,6 +1,7 @@
 export 'live_view_manager.dart';
 export 'mqtt_manager.dart';
 export 'notifications_manager.dart';
+export 'open_telemetry_manager.dart';
 export 'photos_manager.dart';
 export 'printing_manager.dart';
 export 'project_manager.dart';
