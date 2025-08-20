@@ -37,6 +37,9 @@ class SubsystemStatusList extends StatelessWidget {
         Observer(builder: (_) {
           return SubsystemStatusDisplay(title: "Sounds", status: getIt<SfxManager>().subsystemStatus);
         }),
+        Observer(builder: (_) {
+          return SubsystemStatusDisplay(title: "OpenTelemetry", status: getIt<OpenTelemetryManager>().subsystemStatus);
+        }),
       ],
     );
   }

@@ -79,7 +79,8 @@ Future<void> _initializeApp(ArgResults args) async {
     ..registerManager(NotificationsManager())
     ..registerManager(PrintingManager())
     ..registerManager(PhotosManager())
-    ..registerManager(ExternalSystemStatusManager());
+    ..registerManager(ExternalSystemStatusManager())
+    ..registerManager(OpenTelemetryManager());
 
   await RustLib.init();
   _initializeLog();
@@ -118,6 +119,7 @@ Future<void> _initializeApp(ArgResults args) async {
   await getIt<PrintingManager>().initializeSafe();
   getIt<NotificationsManager>().initialize();
   getIt<ExternalSystemStatusManager>().initialize();
+  getIt<OpenTelemetryManager>().initialize();
 }
 
 void _initializeLog() {
