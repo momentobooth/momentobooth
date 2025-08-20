@@ -353,11 +353,32 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 
   const factory DebugSettings({
     @Default(false) bool showFpsCounter,
+    @JsonKey(defaultValue: OpenTelemetrySettings.withDefaults) required OpenTelemetrySettings openTelemetry,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
 
   factory DebugSettings.fromJson(Map<String, Object?> json) => _$DebugSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+sealed class OpenTelemetrySettings with _$OpenTelemetrySettings implements TomlEncodableValue {
+
+  const OpenTelemetrySettings._();
+
+  const factory OpenTelemetrySettings({
+    @Default(false) bool enable,
+    @Default("grpcs://localhost") String endpoint,
+    @Default({}) Map<String, String> headers,
+  }) = _OpenTelemetrySettings;
+
+  factory OpenTelemetrySettings.withDefaults() => OpenTelemetrySettings.fromJson({});
+
+  factory OpenTelemetrySettings.fromJson(Map<String, Object?> json) => _$OpenTelemetrySettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();

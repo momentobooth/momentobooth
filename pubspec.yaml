@@ -70,6 +70,7 @@ dependencies:
   talker_flutter: 5.0.1
   sentry_flutter: 9.6.0
   stack_trace: 1.12.1
+  opentelemetry_logging: 0.4.0
 
   # Storage
   flutter_secure_storage: 9.2.4
@@ -79,6 +80,7 @@ dependencies:
   http: 1.5.0
   http_parser: 4.1.2
   mqtt5_client: 4.14.0
+  grpc: 4.1.0
 
   # Misc
   get_it: 8.2.0

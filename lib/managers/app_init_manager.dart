@@ -66,7 +66,8 @@ abstract class AppInitManagerBase with Store {
         ..registerManager(PrintingManager())
         ..registerManager(PhotosManager())
         ..registerManager(ExternalSystemStatusManager())
-        ..registerManager(WakelockManager());
+        ..registerManager(WakelockManager())
+        ..registerManager(OpenTelemetryManager());
 
       // ////////////////////////// //
       // Helper lib and Environment //
@@ -112,6 +113,7 @@ abstract class AppInitManagerBase with Store {
       await _setStatusAndFireAndForget('Initializing SFX manager', getIt<SfxManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing printing manager', getIt<PrintingManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing wakelock manager', getIt<WakelockManager>().initializeSafe);
+      await _setStatusAndFireAndForget('Initializing Open Telemetry manager', getIt<OpenTelemetryManager>().initializeSafe);
       await _setStatusAndRun('Initializing notifications manager', getIt<NotificationsManager>().initialize);
       await _setStatusAndRun('Initializing external system status manager', getIt<ExternalSystemStatusManager>().initialize);
 
