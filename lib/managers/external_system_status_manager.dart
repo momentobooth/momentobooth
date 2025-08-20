@@ -57,8 +57,7 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
   Future<ExternalSystemStatus> runCheck(ExternalSystemCheckSetting check) async {
     final index = systems.indexWhere((el) => el.check == check);
     if (index != -1) {
-      // Changinkg the status to busy while the check is running is fun, but it would intermittently seem that there is no issue, even if it was not resolved.
-      // systems[index] = systems[index].copyWith(inProgress: true, isHealthy: SubsystemStatus.busy(message: "Running check..."));
+      // Changing the status to busy while the check is running is fun, but it would intermittently seem that there is no issue, even if it was not resolved.
       systems[index] = systems[index].copyWith(inProgress: true);
     }
     final result = await switch (check.type) {
@@ -83,8 +82,7 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
   static Future<ExternalSystemStatus> _pingCheck(ExternalSystemCheckSetting check) async {
     const eMessage = "ping unsuccessful";
     try {
-      final result = await Process.run(
-        Platform.isWindows ? 'ping' : 'ping',
+      final result = await Process.run('ping',
         Platform.isWindows ? ['-n', '1', check.address] : ['-c', '1', check.address],
       );
       final success = result.exitCode == 0;

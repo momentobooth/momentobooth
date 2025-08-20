@@ -28,36 +28,57 @@ abstract class NotificationsManagerBase with Store {
   }
 
   Future<void> _statusCheck() async {
+    // The printer status check must be done before clearing as it is async and we don't want the notifications to blink.
+    final printerNotifications = await _printerStatusCheck();
+    notifications
+      ..clear()
+      ..addAll(printerNotifications)
+      ..addAll(_subSystemStatusCheck())
+      ..addAll(_externalSystemsStatusCheck())
+      // Sort notifications by severity, so that errors are shown first, then warnings, then info.
+      ..sort((a, b) {
+        if (a.severity == b.severity) {
+          return 0;
+        }
+        return a.severity.index > b.severity.index ? -1 : 1;
+      });
+  }
+
+  Future<List<InfoBar>> _printerStatusCheck() async {
+    final printerNotifications = List<InfoBar>.empty(growable: true);
     final printerNames = getIt<SettingsManager>().settings.hardware.flutterPrintingPrinterNames;
     final printersStatus = await compute(checkPrintersStatus, printerNames);
-    notifications.clear();
     printersStatus.forEachIndexed((index, element) {
       final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning);
       final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."), severity: InfoBarSeverity.warning);
       final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info);
       if (element.jobs >= getIt<SettingsManager>().settings.hardware.printerQueueWarningThreshold) {
-        notifications.add(longQueueNotification);
+        printerNotifications.add(longQueueNotification);
       }
       if (element.hasError) {
-        notifications.add(hasErrorNotification);
+        printerNotifications.add(hasErrorNotification);
       }
       if (element.paperOut) {
-        notifications.add(paperOutNotification);
+        printerNotifications.add(paperOutNotification);
       }
     });
-    
+    return printerNotifications;
+  }
+
+  List<InfoBar> _subSystemStatusCheck() {
+    final systemNotifications = List<InfoBar>.empty(growable: true);
     for (var element in getIt<ObservableList<Subsystem>>()) {
       final status = element.subsystemStatus;
       final name = element.subsystemName;
       switch (status) {
         case SubsystemStatusError():
-          notifications.add(InfoBar(
+          systemNotifications.add(InfoBar(
             title: Text("$name error"),
             content: Text("Subsystem $name has an error: ${status.message}"),
             severity: InfoBarSeverity.error,
           ));
         case SubsystemStatusWarning():
-          notifications.add(InfoBar(
+          systemNotifications.add(InfoBar(
             title: Text("$name warning"),
             content: Text("Subsystem $name has a warning: ${status.message}"),
             severity: InfoBarSeverity.warning,
@@ -66,14 +87,18 @@ abstract class NotificationsManagerBase with Store {
           break;
       }
     }
+    return systemNotifications;
+  }
 
+  List<InfoBar> _externalSystemsStatusCheck() {
+    final systemNotifications = List<InfoBar>.empty(growable: true);
     for (var element in getIt<ExternalSystemStatusManager>().systems) {
       final status = element.isHealthy;
       final severity = element.check.severity;
       final name = element.check.name;
       switch (status) {
         case SubsystemStatusError():
-          notifications.add(InfoBar(
+          systemNotifications.add(InfoBar(
             title: Text("$name unavailable"),
             content: Text("External service \"$name\" is unavailable: ${status.message}"),
             severity: InfoBarSeverity.error,
@@ -81,7 +106,7 @@ abstract class NotificationsManagerBase with Store {
         case SubsystemStatusWarning():
         // We don't show info severity notifications.
           if (severity == ExternalSystemCheckSeverity.warning) {
-            notifications.add(InfoBar(
+            systemNotifications.add(InfoBar(
               title: Text("$name unavailable"),
               content: Text("External service \"$name\" is unavailable: ${status.message}"),
               severity: InfoBarSeverity.warning,
@@ -91,14 +116,7 @@ abstract class NotificationsManagerBase with Store {
           break;
       }
     }
-
-    // Sort notifications by severity, so that errors are shown first, then warnings, then info.
-    notifications.sort((a, b) {
-      if (a.severity == b.severity) {
-        return 0;
-      }
-      return a.severity.index > b.severity.index ? -1 : 1;
-    });
+    return systemNotifications;
   }
 
 }
