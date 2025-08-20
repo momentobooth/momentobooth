@@ -614,15 +614,11 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   
   void onExternalSystemChecksChanged(List<ExternalSystemCheckSetting> checks) {
     viewModel.updateSettings((settings) => settings.copyWith(externalSystemChecks: checks));
-    // Reinitialize the ExternalSystemStatusManager to apply the new checks.
-    getIt<ExternalSystemStatusManager>().initialize();
   }
 
   void onExternalSystemCheckIntervalChanged(int? interval) {
     if (interval != null) {
       viewModel.updateSettings((settings) => settings.copyWith(externalSystemCheckIntervalSeconds: interval));
-      // Reinitialize the ExternalSystemStatusManager to apply the new interval.
-      getIt<ExternalSystemStatusManager>().initialize();
     }
   }
 

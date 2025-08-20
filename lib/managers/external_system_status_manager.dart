@@ -26,18 +26,24 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
 
   /// Initializes the manager, setting up the timer for periodic checks.
   void initialize() {
-    logDebug("Initializing ExternalSystemStatusManager");
-    if (_checkTimer != null && _checkTimer!.isActive) {
-      _checkTimer!.cancel();
-    }
-    loadChecksFromSettings();
-    _checkTimer = Timer.periodic(Duration(seconds: getIt<SettingsManager>().settings.externalSystemCheckIntervalSeconds), (timer) {
-      runAllChecks();
-    });
-  }
+    // Respond to settings changes
+    autorun((_) {
+      logDebug("Initializing ExternalSystemStatusManager");
+      int newinterval = getIt<SettingsManager>().settings.externalSystemCheckIntervalSeconds;
+      if (_checkTimer != null && _checkTimer!.isActive) {
+        _checkTimer!.cancel();
+      }
+      
+      systems = ObservableList.of(
+        getIt<SettingsManager>().settings.externalSystemChecks
+          .map((el) => ExternalSystemStatus(check: el, isHealthy: el.enabled ? SubsystemStatus.initial() :SubsystemStatus.disabled()))
+          .toList()
+      );
 
-  void loadChecksFromSettings() {
-    systems = ObservableList.of(getIt<SettingsManager>().settings.externalSystemChecks.map((el) => ExternalSystemStatus(check: el, isHealthy: el.enabled ? SubsystemStatus.initial() :SubsystemStatus.disabled())).toList());
+      _checkTimer = Timer.periodic(Duration(seconds: newinterval), (timer) {
+        runAllChecks();
+      });
+    });
   }
 
   /// Runs all health checks and returns their statuses
