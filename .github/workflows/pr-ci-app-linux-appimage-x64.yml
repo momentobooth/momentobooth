@@ -63,7 +63,7 @@ jobs:
       uses: mozilla-actions/sccache-action@v0.0.9
 
     - name: Install cargo-binstall
-      uses: cargo-bins/cargo-binstall@v1.14.4
+      uses: cargo-bins/cargo-binstall@main
 
     - name: Install cargo-expand
       run: cargo binstall cargo-expand --force
