@@ -8,6 +8,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/app.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/managers/external_system_status_manager.dart';
 import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/models/subsystem.dart';
@@ -77,7 +78,8 @@ Future<void> _initializeApp(ArgResults args) async {
     ..registerManager(MqttManager())
     ..registerManager(NotificationsManager())
     ..registerManager(PrintingManager())
-    ..registerManager(PhotosManager());
+    ..registerManager(PhotosManager())
+    ..registerManager(ExternalSystemStatusManager());
 
   await RustLib.init();
   _initializeLog();
@@ -115,6 +117,7 @@ Future<void> _initializeApp(ArgResults args) async {
   await getIt<SfxManager>().initializeSafe();
   await getIt<PrintingManager>().initializeSafe();
   getIt<NotificationsManager>().initialize();
+  getIt<ExternalSystemStatusManager>().initialize();
 }
 
 void _initializeLog() {

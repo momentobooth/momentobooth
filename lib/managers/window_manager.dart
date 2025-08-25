@@ -11,6 +11,9 @@ class WindowManager = WindowManagerBase with _$WindowManager;
 
 abstract class WindowManagerBase extends Subsystem with Store, Logger {
 
+  @override
+  String subsystemName = "Window Manager";
+
   @readonly
   bool _isFullScreen = false;
 

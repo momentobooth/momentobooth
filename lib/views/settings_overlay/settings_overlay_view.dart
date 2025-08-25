@@ -3,12 +3,15 @@ import 'package:flutter/material.dart' show ScaffoldMessenger;
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/external_system_status_manager.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
@@ -145,7 +148,7 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                   key: ValueKey(SettingsPageKey.subsystemStatus),
                   icon: const Icon(LucideIcons.messageSquareWarning),
                   title: const Text("Subsystem status"),
-                  body: Builder(builder: (_) => _getSubsystemStatusTab(viewModel, controller)),
+                  body: Builder(builder: (context) => _getSubsystemStatusTab(viewModel, controller, context)),
                   infoBadge: SubsystemStatusIcon(status: viewModel.badgeStatus),
                 ),
                 PaneItem(

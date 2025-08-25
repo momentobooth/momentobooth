@@ -2,6 +2,7 @@ export 'app_version_info.dart';
 export 'capture_state.dart';
 export 'connection_state.dart';
 export 'constants.dart';
+export 'external_system_status.dart';
 export 'gallery_group.dart';
 export 'gallery_image.dart';
 export 'live_view_frame.dart';
