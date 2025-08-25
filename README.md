@@ -44,7 +44,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 ### Stack
 
 * Languages: [Dart](https://dart.dev/), [Rust](https://www.rust-lang.org/), C++ (Windows, Linux), Swift (macOS)
-  * Dart/Rust glue: [flutter_rust_bridge](https://pub.dev/packages/flutter_rust_bridge)
+  * Dart <-> Rust glue: [flutter_rust_bridge](https://pub.dev/packages/flutter_rust_bridge)
 * UI: [Flutter](https://flutter.dev/)
   * UI kit: [fluent_ui](https://pub.dev/packages/fluent_ui)
   * Routing: [go_router](https://pub.dev/packages/go_router)
@@ -60,37 +60,43 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 <details>
   <summary>On Windows:</summary>
 
-* Visual Studio 2022 Build Tools
-  * Optional: A full Visual Studio 2022 install
-  * Make sure to select "Desktop development with C++" on the Workloads tab when installing
-* Rust
-  * Install using `rustup` is recommended, to keep all components up to date
-  * Make sure to install/configure with default options (MSVC host, target and toolchain)
-* MSYS2
-  * Install using the instructions on the [MSYS2 website](https://www.msys2.org/)
-  * Install the following packages: `mingw-w64-clang-x86_64-pkgconf mingw-w64-clang-x86_64-libgphoto2 mingw-w64-clang-x86_64-gexiv2 mingw-w64-clang-x86_64-curl-winssl mingw-w64-clang-x86_64-nghttp2 mingw-w64-clang-x86_64-nghttp3`
-  * Make sure `{MSYS_INSTALL_PATH}\clang64\bin` is in your PATH (before other folders that also provide `pkg-config`/`pkgconf`)
+* **Visual Studio 2022 Build Tools**
+  * Optional: full Visual Studio 2022 installation
+  * Select *Desktop development with C++* under the *Workloads* tab
+* **Rust**
+  * Recommended installation via [`rustup`](https://rustup.rs/) to keep components up to date
+  * Use default options (MSVC host, target, and toolchain)
+* **MSYS2**
+  * Follow the instructions on the [MSYS2 website](https://www.msys2.org/)
+  * Install the following packages:
+    `mingw-w64-clang-x86_64-pkgconf mingw-w64-clang-x86_64-libgphoto2 mingw-w64-clang-x86_64-gexiv2 mingw-w64-clang-x86_64-curl-winssl mingw-w64-clang-x86_64-nghttp2 mingw-w64-clang-x86_64-nghttp3`
+  * Make sure `{MSYS_INSTALL_PATH}\clang64\bin` is in your `PATH` (before other folders that also provide `pkg-config`/`pkgconf`)
 
 </details>
 
 <details>
   <summary>On macOS:</summary>
 
-* Xcode
-  * Install using App Store is recommended, to keep it up to date
-* Rust (`aarch64-apple-darwin` and `x86_64-apple-darwin` targets)
-  * Install using `rustup` is recommended, to keep all components up to date
+* **Xcode**
+  * Installing from the App Store is recommended (automatic updates)
+* **Rust** (`aarch64-apple-darwin` or `x86_64-apple-darwin`, depending on your architecture)
+  * Recommended installation via [`rustup`](https://rustup.rs/)
+  * `rustup` is also available via [Homebrew](https://formulae.brew.sh/formula/rustup)
+* **Homebrew**
+  * Install: `pkgconf libgphoto2 gexiv2`
 
 </details>
 
 <details>
   <summary>On Linux:</summary>
 
-* [This list](https://docs.flutter.dev/get-started/install/linux#additional-linux-requirements) of packages from the Flutter website
-  * The install command provided by the Flutter website may only work on Ubuntu, please check your distro website for the corresponding package names
-* Additional packages: llvm, libssl-dev, libdigest-sha-perl, libcurl4-openssl-dev libasound2-dev
-* Rust (`x86_64-unknown-linux-gnu` or `aarch64-unknown-linux-gnu` depending on your architecture)
-  * Install using `rustup` is recommended, to keep all components up to date
+* **System packages**
+  * See the [Flutter documentation](https://docs.flutter.dev/get-started/install/linux/desktop#development-tools) for a list of required packages
+  * Note: the installation command provided by Flutter may only work on Ubuntu — check your distro’s package names
+* **Additional packages**
+  * `llvm libssl-dev libdigest-sha-perl libcurl4-openssl-dev libasound2-dev`
+* **Rust** (`x86_64-unknown-linux-gnu` or `aarch64-unknown-linux-gnu`, depending on your architecture)
+  * Recommended installation via [`rustup`](https://rustup.rs/)
 
 </details>
 
@@ -149,7 +155,7 @@ Please note: Run all commands from the root folder of the repository, unless men
 
 1. Make sure to have the [Template](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) extension installed
 2. Right click the `views` folder in VS Code Explorer
-3. Click _Template: Create New (with rename)_, pick the `view` template
+3. Click *Template: Create New (with rename)*, pick the `view` template
 4. Pick a name, enter it in `{snake_case}_screen` format (e.g. `settings_screen` or `email_photo_screen`), press Enter
 5. Your new view should be available!
 
