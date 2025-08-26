@@ -177,6 +177,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "73e8ed45f88ed32e6827a96b62d8fd4086d72defc754c5c6bd08470c1aaf648e"
 
 [[package]]
+name = "atomic-waker"
+version = "1.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1505bd5d3d116872e7271a6d4e16d81d0c8570876c8de68093a09ac269d8aac0"
+
+[[package]]
 name = "autocfg"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1115,6 +1121,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "escpos"
+version = "0.15.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4b53e2bb7045d6021019c5e9162dc871b2f74010e807a3a09fd95308d6526f68"
+dependencies = [
+ "encoding_rs",
+ "futures-lite",
+ "log 0.4.27",
+ "nusb",
+]
+
+[[package]]
 name = "exr"
 version = "1.73.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1357,6 +1375,19 @@ name = "futures-io"
 version = "0.3.31"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e5c1b78ca4aae1ac06c48a526a655760685149f0d465d21f37abfe57ce075c6"
+
+[[package]]
+name = "futures-lite"
+version = "2.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f5edaec856126859abb19ed65f39e90fea3a9574b9707f13539acf4abf7eb532"
+dependencies = [
+ "fastrand",
+ "futures-core",
+ "futures-io",
+ "parking",
+ "pin-project-lite",
+]
 
 [[package]]
 name = "futures-macro"
@@ -2029,6 +2060,16 @@ dependencies = [
  "bitflags 2.9.1",
  "cfg-if 1.0.1",
  "libc",
+]
+
+[[package]]
+name = "io-kit-sys"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "617ee6cf8e3f66f3b4ea67a4058564628cde41901316e19f559e14c7c72c5e7b"
+dependencies = [
+ "core-foundation-sys 0.8.7",
+ "mach2",
 ]
 
 [[package]]
@@ -2798,6 +2839,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "nusb"
+version = "0.1.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2f861541f15de120eae5982923d073bfc0c1a65466561988c82d6e197734c19e"
+dependencies = [
+ "atomic-waker",
+ "core-foundation 0.9.4",
+ "core-foundation-sys 0.8.7",
+ "futures-core",
+ "io-kit-sys",
+ "libc",
+ "log 0.4.27",
+ "once_cell",
+ "rustix 0.38.44",
+ "slab",
+ "windows-sys 0.48.0",
+]
+
+[[package]]
 name = "objc"
 version = "0.2.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2920,6 +2980,12 @@ dependencies = [
  "dashmap 5.5.3",
  "log 0.4.27",
 ]
+
+[[package]]
+name = "parking"
+version = "2.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f38d5652c16fde515bb1ecef450ab0f6a219d619a7274976324d5e377f7dceba"
 
 [[package]]
 name = "parking_lot"
@@ -3581,6 +3647,7 @@ dependencies = [
  "chrono",
  "dashmap 6.1.0",
  "dlopen",
+ "escpos",
  "ffsend-api",
  "flutter_rust_bridge",
  "futures 0.3.31",
