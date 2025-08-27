@@ -7,7 +7,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/src/rust/api/sfx.dart' as rust_sfx;
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:synchronized/synchronized.dart';
 
 part 'sfx_manager.g.dart';

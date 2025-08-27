@@ -23,7 +23,7 @@ import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/utils/environment_info.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:path/path.dart';

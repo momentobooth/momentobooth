@@ -13,7 +13,7 @@ import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:path/path.dart' hide context;
 
 part 'project_manager.g.dart';

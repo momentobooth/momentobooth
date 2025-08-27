@@ -6,7 +6,7 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/utils/file_utils.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:path/path.dart' as path;
 
 abstract class PhotoCaptureMethod with Logger {
@@ -30,8 +30,8 @@ abstract class PhotoCaptureMethod with Logger {
         String filePath = path.join(getIt<ProjectManager>().getInputDir().path, fileName);
         await writeBytesToFileLocked(filePath, fileData);
         logDebug("Stored incoming photo to disk: $filePath");
-      } catch (exception, stacktrace) {
-        logError("Could not save photo to disk", exception, stacktrace);
+      } catch (e) {
+        logError("Could not save photo to disk: $e");
       }
     }
   }

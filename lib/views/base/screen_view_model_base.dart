@@ -1,5 +1,5 @@
 import 'package:meta/meta.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:momento_booth/views/base/build_context_abstractor.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
 

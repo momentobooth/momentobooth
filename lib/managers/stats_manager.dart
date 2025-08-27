@@ -6,7 +6,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 
 part 'stats_manager.g.dart';
 

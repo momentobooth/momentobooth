@@ -7,7 +7,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/external_system_status.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 
 export 'package:momento_booth/models/external_system_status.dart';
 

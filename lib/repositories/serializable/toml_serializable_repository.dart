@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:toml/toml.dart';
 

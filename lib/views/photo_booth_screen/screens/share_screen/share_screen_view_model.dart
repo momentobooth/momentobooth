@@ -101,8 +101,8 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
         logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
         _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
       }
-    }).onError((x) async {
-      logError("Upload failed, file path: ${_file!.path}", x);
+    }).onError((e) async {
+      logError("Upload failed, file path: ${_file!.path}: $e");
       await Future.delayed(const Duration(seconds: 1));
       _uploadProgress = null;
       _uploadFailed = true;

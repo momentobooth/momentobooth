@@ -17,7 +17,7 @@ import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:mqtt5_client/mqtt5_client.dart';
 import 'package:mqtt5_client/mqtt5_server_client.dart';
 import 'package:synchronized/synchronized.dart';
@@ -123,10 +123,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
         reportSubsystemOk();
         _forcePublishAll();
         _createSubscriptions();
-      } catch (e, s) {
-        String errorDescription = "Failed to connect to MQTT server";
+      } catch (e) {
+        String errorDescription = "Failed to connect to MQTT server: $e";
         reportSubsystemError(message: errorDescription, exception: e.toString());
-        logError(errorDescription, e, s);
+        logError(errorDescription);
       }
     } else {
       reportSubsystemDisabled();
