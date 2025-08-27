@@ -7,7 +7,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/external_system_status.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 
 export 'package:momento_booth/models/external_system_status.dart';
 
@@ -33,7 +33,7 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
       if (_checkTimer != null && _checkTimer!.isActive) {
         _checkTimer!.cancel();
       }
-      
+
       systems = ObservableList.of(
         getIt<SettingsManager>().settings.externalSystemChecks
           .map((el) => ExternalSystemStatus(check: el, isHealthy: el.enabled ? SubsystemStatus.initial() :SubsystemStatus.disabled()))

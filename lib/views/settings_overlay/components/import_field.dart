@@ -10,7 +10,7 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:momento_booth/views/base/photo_booth_dialog_page.dart';
 import 'package:momento_booth/views/components/dialogs/settings_import_dialog.dart';
 import 'package:path/path.dart' as path;

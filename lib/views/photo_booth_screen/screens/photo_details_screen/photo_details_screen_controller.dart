@@ -95,8 +95,8 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     try {
       await getIt<PrintingManager>().printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
       success = true;
-    } catch (e, s) {
-      logError("Failed to print photo", e, s);
+    } catch (e) {
+      logError("Failed to print photo: $e");
     }
 
     successfulPrints += success ? copies : 0;

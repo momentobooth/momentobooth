@@ -14,7 +14,7 @@ import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/hardware.dart';
-import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:path/path.dart' show basename, join; // Without show mobx complains
 import 'package:path_provider/path_provider.dart';
 
@@ -129,8 +129,8 @@ abstract class PhotosManagerBase with Store, Logger {
       final image = await capturer.captureAndGetPhoto();
       getIt<StatsManager>().addCapturedPhoto();
       photos.add(image);
-    } catch (error) {
-      logWarning(error);
+    } catch (e) {
+      logWarning(e.toString());
       final ByteData data = await rootBundle.load('assets/bitmap/capture-error.png');
       photos.add(PhotoCapture(
         data: data.buffer.asUint8List(),
