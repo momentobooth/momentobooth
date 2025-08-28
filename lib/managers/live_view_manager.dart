@@ -23,7 +23,7 @@ part 'live_view_manager.g.dart';
 class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 
 /// Class containing global state for photos in the app
-abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
+abstract class LiveViewManagerBase extends Subsystem with Store {
 
   @override
   String subsystemName = "Live view";

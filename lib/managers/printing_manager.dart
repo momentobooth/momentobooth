@@ -9,13 +9,12 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
-import 'package:momento_booth/utils/logging.dart';
 
 part 'printing_manager.g.dart';
 
 class PrintingManager = PrintingManagerBase with _$PrintingManager;
 
-abstract class PrintingManagerBase extends Subsystem with Store, Logger {
+abstract class PrintingManagerBase extends Subsystem with Store {
 
   @override
   String subsystemName = "Printing system";

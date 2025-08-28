@@ -12,7 +12,7 @@ part 'stats_manager.g.dart';
 
 class StatsManager = StatsManagerBase with _$StatsManager;
 
-abstract class StatsManagerBase extends Subsystem with Store, Logger {
+abstract class StatsManagerBase extends Subsystem with Store {
 
   @override
   String subsystemName = "Statistics counter";

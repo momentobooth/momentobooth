@@ -28,7 +28,7 @@ class MyDropRegion extends StatefulWidget {
 
 }
 
-class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProviderStateMixin {
+class _MyDropRegionState extends State<MyDropRegion> with TickerProviderStateMixin {
 
   static const tomlFormat = SimpleFileFormat(
     uniformTypeIdentifiers: ['public.toml'],

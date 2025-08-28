@@ -38,7 +38,7 @@ class FindFaceDialog extends StatefulWidget {
 
 }
 
-class _FindFaceDialogState extends State<FindFaceDialog> with Logger {
+class _FindFaceDialogState extends State<FindFaceDialog> {
 
   bool _showCounter = true;
   FaceDetectionState _faceDetectionState = FaceDetectionState.unknown;

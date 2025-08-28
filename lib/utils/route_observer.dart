@@ -3,7 +3,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
 import 'package:momento_booth/utils/logging.dart';
 
-class GoRouterObserver extends NavigatorObserver with Logger {
+class GoRouterObserver extends NavigatorObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {

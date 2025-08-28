@@ -1,49 +1,65 @@
-mixin Logger {
+import 'package:momento_booth/main.dart';
+import 'package:stack_trace/stack_trace.dart';
+import 'package:talker_flutter/talker_flutter.dart' as talker;
 
-  /// Log something that (could) crash(ed) the application (e.g. helper library panic).
-  void logFatal(String message) {
-    logMessage(LogLevel.fatal, message, className: runtimeType.toString());
-  }
+/// Log something that (could) crash(ed) the application (e.g. helper library panic).
+void logFatal(String message) => logMessage(LogLevel.fatal, message);
 
-  /// Logs a critical error that prevents or severely disrupts normal application flow
-  /// (e.g., printing failed, image capture failed).
-  void logError(String message) {
-    logMessage(LogLevel.error, message, className: runtimeType.toString());
-  }
+/// Logs a critical error that prevents or severely disrupts normal application flow
+/// (e.g., printing failed, image capture failed).
+void logError(String message) => logMessage(LogLevel.error, message);
 
-  /// Logs a warning about a situation that could affect correct or expected behavior,
-  /// but does not immediately break application flow.
-  void logWarning(String message) {
-    logMessage(LogLevel.warning, message, className: runtimeType.toString());
-  }
+/// Logs a warning about a situation that could affect correct or expected behavior,
+/// but does not immediately break application flow.
+void logWarning(String message) => logMessage(LogLevel.warning, message);
 
-  /// Logs noteworthy information about application events or state that may be
-  /// useful for understanding behavior, but occurs infrequently (e.g., every few minutes).
-  void logInfo(String message) {
-    logMessage(LogLevel.info, message, className: runtimeType.toString());
-  }
+/// Logs noteworthy information about application events or state that may be
+/// useful for understanding behavior, but occurs infrequently (e.g., every few minutes).
+void logInfo(String message) => logMessage(LogLevel.info, message);
 
-  /// Logs detailed diagnostic information useful during development or debugging.
-  /// Typically disabled in production environments.
-  void logDebug(String message) {
-    logMessage(LogLevel.debug, message, className: runtimeType.toString());
-  }
+/// Logs detailed diagnostic information useful during development or debugging.
+/// Typically disabled in production environments.
+void logDebug(String message) => logMessage(LogLevel.debug, message);
 
-  /// Logs fine-grained execution details, such as function entry/exit points
-  /// or intermediate state, to help trace program flow step-by-step.
-  void logTrace(String message) {
-    logMessage(LogLevel.trace, message, className: runtimeType.toString());
-  }
-
-}
+/// Logs fine-grained execution details, such as function entry/exit points
+/// or intermediate state, to help trace program flow step-by-step.
+void logTrace(String message) => logMessage(LogLevel.trace, message);
 
 // /////// //
 // Helpers //
 // /////// //
 
 /// Translate and route the log message to upstream log systems.
-void logMessage(LogLevel level, String message, {LogSource source = LogSource.dart, String? className, String? functionName}) {
+void logMessage(LogLevel level, String message, {LogSource source = LogSource.dart}) {
+  // Try to determine caller member name and class.
+  String? className, memberName;
+  String? callingMember = Trace.current(2).frames[0].member;
+  if (callingMember != null) {
+    callingMember = callingMember.replaceAll('.<fn>', ''); // Remove callbacks.
+    List<String> memberPath = callingMember.split('.');
 
+    if (memberPath.length == 1) {
+      memberName = memberPath[0];
+    } else if (memberPath.length > 1) {
+      className = memberPath[0];
+      memberName = memberPath.skip(1).join('.');
+    }
+  }
+
+  String talkerMessage = '';
+  if (className != null) talkerMessage += '[$className] ';
+  if (memberName != null) talkerMessage += '[$memberName] ';
+  getIt<talker.Talker>().log(
+    talkerMessage + message,
+    logLevel: switch (level) {
+      LogLevel.fatal => talker.LogLevel.critical,
+      LogLevel.error => talker.LogLevel.error,
+      LogLevel.warning => talker.LogLevel.warning,
+      LogLevel.info => talker.LogLevel.info,
+      LogLevel.debug => talker.LogLevel.debug,
+      LogLevel.trace => talker.LogLevel.verbose,
+    },
+  );
 }
 
 // ////// //

@@ -20,7 +20,7 @@ part 'project_manager.g.dart';
 
 class ProjectManager = ProjectManagerBase with _$ProjectManager;
 
-abstract class ProjectManagerBase extends Subsystem with Store, Logger {
+abstract class ProjectManagerBase extends Subsystem with Store {
 
   @override
   String subsystemName = "Project settings";

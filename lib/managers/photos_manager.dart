@@ -23,7 +23,7 @@ part 'photos_manager.g.dart';
 class PhotosManager = PhotosManagerBase with _$PhotosManager;
 
 /// Class containing global state for photos in the app
-abstract class PhotosManagerBase with Store, Logger {
+abstract class PhotosManagerBase with Store {
 
   @observable
   ObservableList<PhotoCapture> photos = ObservableList<PhotoCapture>();

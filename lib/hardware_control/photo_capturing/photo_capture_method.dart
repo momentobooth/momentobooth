@@ -9,7 +9,7 @@ import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/logging.dart';
 import 'package:path/path.dart' as path;
 
-abstract class PhotoCaptureMethod with Logger {
+abstract class PhotoCaptureMethod {
 
   Duration get captureDelay;
 

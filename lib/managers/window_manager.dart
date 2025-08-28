@@ -9,7 +9,7 @@ part 'window_manager.g.dart';
 
 class WindowManager = WindowManagerBase with _$WindowManager;
 
-abstract class WindowManagerBase extends Subsystem with Store, Logger {
+abstract class WindowManagerBase extends Subsystem with Store {
 
   @override
   String subsystemName = "Window manager";

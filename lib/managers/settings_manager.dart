@@ -11,7 +11,7 @@ part 'settings_manager.g.dart';
 
 class SettingsManager = SettingsManagerBase with _$SettingsManager;
 
-abstract class SettingsManagerBase extends Subsystem with Store, Logger {
+abstract class SettingsManagerBase extends Subsystem with Store {
 
   @override
   String subsystemName = "Application settings";

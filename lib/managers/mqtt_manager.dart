@@ -27,7 +27,7 @@ part 'mqtt_manager.g.dart';
 class MqttManager = MqttManagerBase with _$MqttManager;
 
 /// Class containing global state for photos in the app
-abstract class MqttManagerBase extends Subsystem with Store, Logger {
+abstract class MqttManagerBase extends Subsystem with Store {
 
   @override
   String subsystemName = "MQTT client";

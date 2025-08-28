@@ -15,7 +15,7 @@ part 'external_system_status_manager.g.dart';
 
 class ExternalSystemStatusManager = ExternalSystemStatusManagerBase with _$ExternalSystemStatusManager;
 
-abstract class ExternalSystemStatusManagerBase with Store, Logger {
+abstract class ExternalSystemStatusManagerBase with Store {
   @observable
   ObservableList<ExternalSystemStatus> systems = ObservableList<ExternalSystemStatus>();
   Timer? _checkTimer;

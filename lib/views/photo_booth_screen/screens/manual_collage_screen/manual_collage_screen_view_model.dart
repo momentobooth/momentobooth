@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 
 part 'manual_collage_screen_view_model.g.dart';
