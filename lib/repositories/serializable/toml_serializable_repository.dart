@@ -18,7 +18,7 @@ class UpdateRecord {
 }
 
 /// File backed repository for a single TOML encodable and decodable value.
-class TomlSerializableRepository<TData extends TomlEncodableValue> with Logger implements SerialiableRepository<TData> {
+class TomlSerializableRepository<TData extends TomlEncodableValue> implements SerialiableRepository<TData> {
 
   final File file;
   final MapDeserializer<TData> deserializer;

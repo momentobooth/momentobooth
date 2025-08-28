@@ -75,7 +75,7 @@ class PhotoCollage extends StatefulWidget {
 
 }
 
-class PhotoCollageState extends State<PhotoCollage> with Logger {
+class PhotoCollageState extends State<PhotoCollage> {
 
   @override
   void initState() {

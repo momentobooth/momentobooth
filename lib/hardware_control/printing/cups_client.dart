@@ -8,6 +8,7 @@ import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/api/cups.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
+import 'package:momento_booth/utils/logging.dart';
 
 class CupsClient extends PrintingSystemClient {
 

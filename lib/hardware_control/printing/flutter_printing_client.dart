@@ -7,6 +7,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:printing/printing.dart';
 
 /// Printing implementation that uses the flutter `printing` library to print.

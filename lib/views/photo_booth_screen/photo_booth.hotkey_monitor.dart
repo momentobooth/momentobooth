@@ -1,6 +1,6 @@
 part of 'photo_booth.dart';
 
-class _HotkeyResponder extends StatelessWidget with Logger {
+class _HotkeyResponder extends StatelessWidget {
 
   final Widget child;
 

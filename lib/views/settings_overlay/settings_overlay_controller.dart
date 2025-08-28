@@ -9,6 +9,7 @@ import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/utils/file_utils.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view_model.dart';
 
@@ -610,7 +611,7 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
       viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(homeAssistantComponentId: homeAssistantComponentId, enable: false));
     }
   }
-  
+
   void onExternalSystemChecksChanged(List<ExternalSystemCheckSetting> checks) {
     viewModel.updateSettings((settings) => settings.copyWith(externalSystemChecks: checks));
   }

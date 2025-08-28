@@ -24,7 +24,7 @@ class ActivityMonitor extends StatefulWidget {
 
 }
 
-class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
+class _ActivityMonitorState extends State<ActivityMonitor> {
 
   Timer? _returnHomeTimer;
   late ReactionDisposer _resetTimerReactionDisposer;

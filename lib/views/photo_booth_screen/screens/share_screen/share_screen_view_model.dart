@@ -12,6 +12,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
+import 'package:momento_booth/utils/logging.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 
 part 'share_screen_view_model.g.dart';

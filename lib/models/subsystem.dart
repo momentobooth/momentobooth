@@ -9,7 +9,7 @@ part 'subsystem.g.dart';
 
 abstract class Subsystem = SubsystemBase with _$Subsystem;
 
-abstract class SubsystemBase with Store, Logger {
+abstract class SubsystemBase with Store {
 
   @readonly
   SubsystemStatus _subsystemStatus = const SubsystemStatus.initial();
