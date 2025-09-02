@@ -18,7 +18,7 @@ dependencies:
   animations: 2.0.11
   auto_size_text: 3.0.0
   fluent_ui: 4.12.0
-  go_router: 16.1.0
+  go_router: 16.2.1
   flutter_svg: 2.2.0
   animated_text_kit: 4.2.3
   flutter_scroll_shadow: 1.2.6
@@ -36,7 +36,7 @@ dependencies:
   lucide_icons_flutter: 3.0.9
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.0
-  google_fonts: 6.3.0
+  google_fonts: 6.3.1
   twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
@@ -67,8 +67,8 @@ dependencies:
   win32: 5.14.0
 
   # Log and error handling
-  talker: 4.9.3
-  talker_flutter: 4.9.3
+  talker: 5.0.0
+  talker_flutter: 5.0.0
   sentry_flutter: 9.6.0
 
   # Storage
@@ -118,7 +118,7 @@ dev_dependencies:
 
   # Models
   freezed: 3.2.0
-  json_serializable: 6.10.0
+  json_serializable: 6.11.0
 
   # Code generation
   build_runner: 2.7.0
