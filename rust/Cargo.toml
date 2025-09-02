@@ -11,7 +11,7 @@ flutter_rust_bridge = { version = "=2.11.1", features = ["chrono"] }
 ffsend-api = "0.7.3"
 serde_json = "1.0.143"
 chrono = "0.4.41"
-image = { version = "0.25.6", features = ["rayon"] }
+image = { version = "0.25.7", features = ["rayon"] }
 ipp = "5.3.1"
 zune-jpeg = "0.4.20"
 jpeg-encoder = "0.6.1"
@@ -41,10 +41,10 @@ libc = "0.2.175"
 libusb-sys = "0.2.3"
 futures = "0.3.31"
 kira = "0.10.8"
-snafu = "0.8.7"
+snafu = "0.8.8"
 
 [build-dependencies]
-bindgen = "0.72.0"
+bindgen = "0.72.1"
 pkg-config = "0.3.32"
 
 [profile.dev]
