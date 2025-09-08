@@ -33,7 +33,7 @@ rexiv2 = { version = "0.10.0", features = ["raw-tag-access"] }
 gexiv2-sys = "1.4.0"
 regex = "1.11.2"
 log = "0.4.27"
-nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", branch = "0.10", features = ["input-native", "output-threaded"] }
+nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", branch = "0.10", default-features = false, features = ["input-native", "output-threaded"] }
 parking_lot = "0.12.4"
 susync = "0.2.0"
 rustc_version_runtime = "0.3.0"
