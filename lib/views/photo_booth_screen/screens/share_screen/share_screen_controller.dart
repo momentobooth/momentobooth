@@ -107,7 +107,8 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
     // Get photo and print it.
     final pdfData = await getIt<PhotosManager>().getOutputPDF(size);
-    String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Picture";
+    final lastFile = getIt<PhotosManager>().lastPhotoFile;
+    String jobName = lastFile != null ? path.basenameWithoutExtension(lastFile.path) : "MomentoBooth Picture";
 
     bool success = false;
     try {
