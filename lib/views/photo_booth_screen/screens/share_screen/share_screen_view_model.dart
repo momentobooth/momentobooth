@@ -66,7 +66,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
   String get backText => captureMode == CaptureMode.single ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;
 
   Future<void> uploadPhotoToSend() async {
-    _file ??= await getIt<PhotosManager>().getOutputImageAsTempFile();
+    _file ??= getIt<PhotosManager>().lastPhotoFile ?? await getIt<PhotosManager>().getOutputImageAsTempFile();
     final ext = getIt<SettingsManager>().settings.output.exportFormat.name.toLowerCase();
 
     logDebug("Uploading ${_file!.path}");

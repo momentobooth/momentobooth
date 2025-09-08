@@ -26,9 +26,10 @@ abstract class PrintingSystemClient with Logger {
       if (++lastUsedPrinterIndex >= printers.length) lastUsedPrinterIndex = 0;
       final PrintQueueInfo printer = printers[lastUsedPrinterIndex];
 
-      logDebug("Printing copy #${i+1} with printer #${lastUsedPrinterIndex + 1} [${printer.name}]");
+      logDebug("Printing $taskName at ${printSize.name}, copy #${i+1} / $copies with printer #${lastUsedPrinterIndex + 1} [${printer.name}]");
 
-      await printPdfToQueue(printer.id, taskName, pdfData, printSize: printSize);
+      final String jobName = "$taskName | ${printSize.name} | copy ${i+1} / $copies";
+      await printPdfToQueue(printer.id, jobName, pdfData, printSize: printSize);
 
       getIt<StatsManager>().addPrintedPhoto(size: printSize);
     }

@@ -48,12 +48,18 @@ abstract class PhotosManagerBase with Store, Logger {
 
   Iterable<PhotoCapture> get chosenPhotos => chosen.map((choice) => photos[choice]);
 
+  File? _lastPhotoFile;
+  File? get lastPhotoFile => _lastPhotoFile;
+
   @action
   void reset({bool advance = true}) {
     photos.clear();
     chosen.clear();
     captureMode = CaptureMode.single;
-    if (advance) photoNumber++;
+    if (advance) {
+      photoNumber++;
+      _lastPhotoFile = null;
+    }
   }
 
   @action
@@ -66,7 +72,9 @@ abstract class PhotosManagerBase with Store, Logger {
     final fileExtension = getIt<SettingsManager>().settings.output.exportFormat.name.toLowerCase();
     final filePath = join(outputDir.path, '$baseName-${photoNumber.toString().padLeft(4, '0')}.$fileExtension');
     if (advance) photoNumber++;
-    return await writeBytesToFileLocked(filePath, outputImage!);
+    final f = await writeBytesToFileLocked(filePath, outputImage!);
+    _lastPhotoFile = f;
+    return f;
   }
 
   @action
