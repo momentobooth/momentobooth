@@ -34,6 +34,21 @@ jobs:
         Write-Output "RUSTUP_HOME=D:\.rustup" >> $env:GITHUB_ENV
         Write-Output "SCCACHE_DIR=D:\.sccache-cache" >> $env:GITHUB_ENV
 
+    - name: Configure Cargo linker for MSVC
+      shell: pwsh
+      run: |
+        $cargoHome = $env:CARGO_HOME
+        if (-not $cargoHome) {
+          $cargoHome = "$env:USERPROFILE\.cargo"
+        }
+        $configFile = Join-Path $cargoHome "config.toml"
+        if (-not (Test-Path $cargoHome)) {
+          New-Item -ItemType Directory -Path $cargoHome | Out-Null
+        }
+        # Append of create config.toml
+        Add-Content -Path $configFile -Value '[target.x86_64-pc-windows-msvc]'
+        Add-Content -Path $configFile -Value 'linker = "lld-link.exe"'
+
     - name: Copy Git Repo to Dev Drive
       run: |
         Copy-Item -Path "${{ github.workspace }}" -Destination "${{ env.DEV_DRIVE }}/momentobooth" -Recurse
@@ -130,6 +145,7 @@ jobs:
     - name: Compile Inno Setup installer
       shell: pwsh
       run: |
+        choco install innosetup -y
         &"${Env:ProgramFiles(x86)}/Inno Setup 6/iscc.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss"
 
     - name: Upload zip artifact
