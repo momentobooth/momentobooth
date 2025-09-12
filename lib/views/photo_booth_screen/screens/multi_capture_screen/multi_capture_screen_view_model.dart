@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/photo_capturing/photo_capture_method.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/constants.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
@@ -45,7 +46,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
   @computed
   int get photoNumber => getIt<PhotosManager>().photos.length+1;
 
-  final int maxPhotos = 4;
+  final int maxPhotos = getIt<ProjectManager>().settings.collageMode.captureCount;
 
   MultiCaptureScreenViewModelBase({
     required super.contextAccessor,

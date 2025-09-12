@@ -76,7 +76,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
               ),
             ),
           ),
-        for (int i = getIt<PhotosManager>().photos.length; i < 4; i++)
+        for (int i = getIt<PhotosManager>().photos.length; i < viewModel.maxPhotos; i++)
           Expanded(child: _photoPlaceholder),
       ],
     );
