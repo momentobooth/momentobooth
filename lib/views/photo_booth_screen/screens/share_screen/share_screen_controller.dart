@@ -41,9 +41,11 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   void onRetake (bool delete) {
     navigator.pop();
+    // The reset function will clear the capture mode, so we need to save it.
+    final captureMode = getIt<PhotosManager>().captureMode;
     getIt<PhotosManager>().reset(advance: !delete);
     getIt<StatsManager>().addRetake();
-    if (getIt<PhotosManager>().captureMode == CaptureMode.single) {
+    if (captureMode == CaptureMode.single) {
       router.go(SingleCaptureScreen.defaultRoute);
     } else {
       router.go(MultiCaptureScreen.defaultRoute);

@@ -101,13 +101,16 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
   List<bool> imagesDecoded = List.filled(4, false);
 
+  bool decodeCallbackCalled = false;
+
   /// Called when an image has been decoded by the Image widget.
   /// When all images are decoded, we can call the decodeCallback to signal that the collage is ready.
   void _onImageDecoded(int index) {
     if (imagesDecoded.length > index) {
       imagesDecoded[index] = true;
-      if (imagesDecoded.where((e) => e).length == nChosen) {
+      if (imagesDecoded.where((e) => e).length == nChosen && !decodeCallbackCalled) {
         widget.decodeCallback?.call();
+        decodeCallbackCalled = true;
       }
     }
   }
