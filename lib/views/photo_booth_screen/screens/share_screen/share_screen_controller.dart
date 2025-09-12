@@ -11,8 +11,6 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
-import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
-import 'package:momento_booth/views/components/dialogs/qr_share_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/retake_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';

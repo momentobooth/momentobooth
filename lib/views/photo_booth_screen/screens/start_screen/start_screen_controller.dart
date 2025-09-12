@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/widgets.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
