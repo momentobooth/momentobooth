@@ -13,10 +13,13 @@ import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/qr_share_dialog.dart';
+import 'package:momento_booth/views/components/dialogs/retake_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/share_screen/share_screen_view_model.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_screen/single_capture_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
+import 'package:momento_booth/views/with_case_builders.dart';
 import 'package:path/path.dart' as path;
 
 class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with PrinterStatusDialogMixin<ShareScreenViewModel> {
@@ -36,12 +39,21 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     router.go(StartScreen.defaultRoute);
   }
 
+  void onRetake (bool delete) {
+    navigator.pop();
+    getIt<PhotosManager>().reset(advance: !delete);
+    getIt<StatsManager>().addRetake();
+    if (getIt<PhotosManager>().captureMode == CaptureMode.single) {
+      router.go(SingleCaptureScreen.defaultRoute);
+    } else {
+      router.go(MultiCaptureScreen.defaultRoute);
+    }
+  }
+
   void onClickPrev() {
     logDebug("Clicked prev");
-    if (getIt<PhotosManager>().captureMode == CaptureMode.single) {
-      getIt<PhotosManager>().reset(advance: false);
-      getIt<StatsManager>().addRetake();
-      router.go(SingleCaptureScreen.defaultRoute);
+    if (viewModel.canRetake) {
+      showUserDialog(dialog: RetakeDialog(onDelete: () => onRetake(true), onKeep: () => onRetake(false), onCancel: () => navigator.pop() ), barrierDismissible: false);
     } else {
       getIt<StatsManager>().addCollageChange();
       router.go(CollageMakerScreen.defaultRoute);

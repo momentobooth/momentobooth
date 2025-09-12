@@ -10,6 +10,7 @@
     "genericCloseButton": "Sluiten",
     "genericRetryButton": "Probeer opnieuw",
     "genericCancelButton": "Annuleren",
+    "genericDeleteButton": "Verwijder",
     "genericDoneButton": "Klaar",
     "genericOneMomentPlease": "Een moment geduld...",
     "genericDocumentation": "Documentatie",
@@ -106,6 +107,9 @@
     "printingErrorDialogTitle": "Printprobleem",
     "printingErrorDialogBodyTop": "Door een onverwachts probleem kunnen we de print(s) niet starten.",
     "printingErrorDialogBodyBottom": "Probeer het later nogmaals of download je foto met de QR-functie.",
+
+    "retakeDialogBody": "Wil je het huidige resultaat behouden?",
+    "retakeDialogKeepButton": "Bewaar",
 
     "projectNotOpened": "Geen project geopend",
     "opened": "Geopend op",
