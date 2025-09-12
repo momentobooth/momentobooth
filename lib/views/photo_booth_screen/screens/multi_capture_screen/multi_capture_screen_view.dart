@@ -7,6 +7,7 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/dialogs/loading_dialog.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
+import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/components/indicators/capture_counter.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen_controller.dart';
@@ -26,6 +27,21 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
+        Observer(builder: (_) {
+          if (viewModel.enablePhotoCollageWidget) {
+            // This widget is just here for the purpose of rendering the collage to a bitmap.
+            return PhotoCollage(
+              key: viewModel.collageKey,
+              forceLayout: viewModel.maxPhotos,
+              aspectRatio: 1 / viewModel.collageAspectRatio,
+              padding: viewModel.collagePadding,
+              decodeCallback: viewModel.collageReady,
+              isVisible: false,
+            );
+          } else {
+            return const SizedBox();
+          }
+        }),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -66,7 +82,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
             localizations.multiCaptureScreenPhotoCounter(viewModel.photoNumber, viewModel.maxPhotos),
           ),
         ),
-        for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
+        for (int i = 0; i < viewModel.capturedPhotos; i++)
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -76,7 +92,7 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
               ),
             ),
           ),
-        for (int i = getIt<PhotosManager>().photos.length; i < viewModel.maxPhotos; i++)
+        for (int i = viewModel.capturedPhotos; i < viewModel.maxPhotos; i++)
           Expanded(child: _photoPlaceholder),
       ],
     );

@@ -25,7 +25,7 @@ class SingleCaptureScreenView extends ScreenViewBase<SingleCaptureScreenViewMode
         // This widget is just here for the purpose of rendering the collage to a bitmap.
         PhotoCollage(
           key: viewModel.collageKey,
-          singleMode: true,
+          forceLayout: 1,
           aspectRatio: 1 / viewModel.collageAspectRatio,
           padding: viewModel.collagePadding,
           decodeCallback: viewModel.collageReady,
