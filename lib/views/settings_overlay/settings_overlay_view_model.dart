@@ -54,6 +54,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
 
   // Option lists
 
+  List<ComboBoxItem<CollageMode>> get collageModeOptions => CollageMode.asComboBoxItems();
   List<ComboBoxItem<LiveViewMethod>> get liveViewMethods => LiveViewMethod.asComboBoxItems();
   List<ComboBoxItem<Rotate>> get liveViewAndCaptureRotateOptions => Rotate.asComboBoxItems();
   List<ComboBoxItem<Flip>> get flipOptions => Flip.asComboBoxItems();
@@ -171,7 +172,10 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   String get introScreenTouchToStartOverrideTextSetting => getIt<ProjectManager>().settings.introScreenTouchToStartOverrideText;
   bool get displayConfettiSetting => getIt<ProjectManager>().settings.displayConfetti;
   bool get customColorConfettiSetting => getIt<ProjectManager>().settings.customColorConfetti;
+  bool get enableSingleCaptureSetting => getIt<ProjectManager>().settings.enableSingleCapture;
   bool get singlePhotoIsCollageSetting => getIt<ProjectManager>().settings.singlePhotoIsCollage;
+  bool get enableCollageCaptureSetting => getIt<ProjectManager>().settings.enableCollageCapture;
+  CollageMode get collageModeSetting => getIt<ProjectManager>().settings.collageMode;
   Color get primaryColorSetting => getIt<ProjectManager>().settings.primaryColor;
 
   // System settings current values

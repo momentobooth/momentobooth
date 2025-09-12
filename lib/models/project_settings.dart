@@ -27,7 +27,10 @@ sealed class ProjectSettings with _$ProjectSettings implements TomlEncodableValu
     @Default(true) bool displayConfetti,
     @Default(false) bool customColorConfetti,
     @Default("") String introScreenTouchToStartOverrideText,
+    @Default(true) bool enableSingleCapture,
     @Default(true) bool singlePhotoIsCollage,
+    @Default(true) bool enableCollageCapture,
+    @Default(CollageMode.userSelection) CollageMode collageMode,
   }) = _ProjectSettings;
 
   factory ProjectSettings.withDefaults() => ProjectSettings.fromJson({});

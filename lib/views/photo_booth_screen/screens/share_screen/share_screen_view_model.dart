@@ -10,6 +10,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
@@ -63,7 +64,15 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
 
   String get ffSendUrl => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
   CaptureMode get captureMode => getIt<PhotosManager>().captureMode;
-  String get backText => captureMode == CaptureMode.single ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;
+  bool get canRetake {
+    switch (captureMode) {
+      case CaptureMode.single:
+        return true;
+      case CaptureMode.collage:
+        return getIt<ProjectManager>().settings.collageMode != CollageMode.userSelection;
+    }
+  }
+  String get backText => canRetake ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;
 
   Future<void> uploadPhotoToSend() async {
     _file ??= getIt<PhotosManager>().lastPhotoFile ?? await getIt<PhotosManager>().getOutputImageAsTempFile();

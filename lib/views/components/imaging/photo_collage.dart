@@ -51,7 +51,7 @@ class PhotoCollage extends StatefulWidget {
   final bool showBackground;
   final bool showMiddleground;
   final bool showForeground;
-  final bool singleMode;
+  final int? forceLayout;
   final int? debug;
   final VoidCallback? decodeCallback;
   final bool isVisible;
@@ -61,7 +61,7 @@ class PhotoCollage extends StatefulWidget {
     required this.aspectRatio,
     this.padding = 0,
     this.showLogo = false,
-    this.singleMode = false,
+    this.forceLayout,
     this.showBackground = true,
     this.showMiddleground = true,
     this.showForeground = true,
@@ -99,7 +99,21 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   Iterable<PhotoCapture> get chosenPhotos => getIt<PhotosManager>().chosenPhotos;
   int get nChosen => widget.debug ?? chosen.length;
   int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
-  bool firstImageDecoded = false;
+  List<bool> imagesDecoded = List.filled(4, false);
+
+  bool decodeCallbackCalled = false;
+
+  /// Called when an image has been decoded by the Image widget.
+  /// When all images are decoded, we can call the decodeCallback to signal that the collage is ready.
+  void _onImageDecoded(int index) {
+    if (imagesDecoded.length > index) {
+      imagesDecoded[index] = true;
+      if (imagesDecoded.where((e) => e).length == nChosen && !decodeCallbackCalled) {
+        widget.decodeCallback?.call();
+        decodeCallbackCalled = true;
+      }
+    }
+  }
 
   Directory get templatesFolder => getIt<ProjectManager>().getTemplateDir();
 
@@ -109,10 +123,12 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   };
 
   Future<void> findTemplates() async {
-    if (widget.singleMode) {
-      templates[TemplateKind.front]?[1] = await _templateResolver(TemplateKind.front, 1);
-      templates[TemplateKind.back]?[1] = await _templateResolver(TemplateKind.back, 1);
-      setInitialized([1]);
+    // If forceLayout is set, only load that template for speed.
+    if (widget.forceLayout != null) {
+      final n = widget.forceLayout!;
+      templates[TemplateKind.front]?[n] = await _templateResolver(TemplateKind.front, n);
+      templates[TemplateKind.back]?[n] = await _templateResolver(TemplateKind.back, n);
+      setInitialized([n]);
     } else {
       for (int i = 0; i <= 4; i++) {
         final frontTemplate = await _templateResolver(TemplateKind.front, i);
@@ -219,12 +235,12 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     };
   }
 
-  Widget _getChosenImage(int index, {BoxFit? fit, VoidCallback? decodeCallback}) {
+  Widget _getChosenImage(int index, {BoxFit? fit}) {
     return ImageWithLoaderFallback(
       widget.debug == null ? MemoryImage(photos[chosen[index]].data) : AssetImage('assets/bitmap/placeholder.png'),
       applyRotateFlipCrop: true,
       fit: fit,
-      onImageDecoded: (_) => decodeCallback?.call(),
+      onImageDecoded: (_) => _onImageDecoded(index),
     );
   }
 
@@ -255,7 +271,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
           const _CenteredLogo().inGridArea('l1header'),
        _PhotoContainer(
           rotated: true,
-          child: _getChosenImage(0, decodeCallback: widget.decodeCallback),
+          child: _getChosenImage(0),
        ).inGridArea('l1content'),
       ],
     );

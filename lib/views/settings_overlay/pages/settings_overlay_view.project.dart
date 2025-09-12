@@ -57,11 +57,33 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
                 onFinishedEditing: controller.onIntroScreenTouchToStartOverrideText,
               ),
               SettingsToggleTile(
+                icon: LucideIcons.toggleRight,
+                title: "Enable single photo capture",
+                subtitle: "If enabled, a single picture capture will be available as a capture mode.",
+                value: () => viewModel.enableSingleCaptureSetting,
+                onChanged: controller.onEnableSingleCaptureChanged,
+              ),
+              SettingsToggleTile(
                 icon: LucideIcons.image,
                 title: "Treat single photo as collage",
                 subtitle: "If enabled, a single picture will be processed as if it were a collage with 1 photo selected. Else the photo will be used unaltered.",
                 value: () => viewModel.singlePhotoIsCollageSetting,
                 onChanged: controller.onSinglePhotoIsCollageChanged,
+              ),
+              SettingsToggleTile(
+                icon: LucideIcons.toggleRight,
+                title: "Enable collage photo capture",
+                subtitle: "If enabled, a collage picture capture will be available as a capture mode.",
+                value: () => viewModel.enableCollageCaptureSetting,
+                onChanged: controller.onEnableCollageCaptureChanged,
+              ),
+              SettingsComboBoxTile(
+                icon: LucideIcons.layoutGrid,
+                title: "Collage mode",
+                subtitle: "How to execute collage captures. Either let the user choose which and how many captures to include in the collage, or always use a fixed number of captures and layout.",
+                items: viewModel.collageModeOptions,
+                value: () => viewModel.collageModeSetting,
+                onChanged: controller.onCollageModeChanged,
               ),
             ]
           );
