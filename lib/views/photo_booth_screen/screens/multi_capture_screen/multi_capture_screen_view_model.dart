@@ -61,8 +61,7 @@ abstract class MultiCaptureScreenViewModelBase extends ScreenViewModelBase with 
 
   final Completer<void> completer = Completer<void>();
 
-  @observable
-  bool enablePhotoCollageWidget = false;
+  late final bool enablePhotoCollageWidget;
 
   void collageReady() {
     completer.complete();

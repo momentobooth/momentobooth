@@ -27,21 +27,16 @@ class MultiCaptureScreenView extends ScreenViewBase<MultiCaptureScreenViewModel,
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        Observer(builder: (_) {
-          if (viewModel.enablePhotoCollageWidget) {
-            // This widget is just here for the purpose of rendering the collage to a bitmap.
-            return PhotoCollage(
-              key: viewModel.collageKey,
-              forceLayout: viewModel.maxPhotos,
-              aspectRatio: 1 / viewModel.collageAspectRatio,
-              padding: viewModel.collagePadding,
-              decodeCallback: viewModel.collageReady,
-              isVisible: false,
-            );
-          } else {
-            return const SizedBox();
-          }
-        }),
+        if (viewModel.enablePhotoCollageWidget)
+          // This widget is just here for the purpose of rendering the collage to a bitmap.
+          PhotoCollage(
+            key: viewModel.collageKey,
+            forceLayout: viewModel.maxPhotos,
+            aspectRatio: 1 / viewModel.collageAspectRatio,
+            padding: viewModel.collagePadding,
+            decodeCallback: viewModel.collageReady,
+            isVisible: false,
+          ),
         Row(
           mainAxisSize: MainAxisSize.max,
           children: [
