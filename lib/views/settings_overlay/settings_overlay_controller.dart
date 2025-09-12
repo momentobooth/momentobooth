@@ -131,9 +131,27 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableSingleCaptureChanged(bool? enableSingleCapture) {
+    if (enableSingleCapture != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(enableSingleCapture: enableSingleCapture));
+    }
+  }
+
   void onSinglePhotoIsCollageChanged(bool? singlePhotoIsCollage) {
     if (singlePhotoIsCollage != null) {
       viewModel.updateProjectSettings((settings) => settings.copyWith(singlePhotoIsCollage: singlePhotoIsCollage));
+    }
+  }
+
+  void onEnableCollageCaptureChanged(bool? enableCollageCapture) {
+    if (enableCollageCapture != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(enableCollageCapture: enableCollageCapture));
+    }
+  }
+
+  void onCollageModeChanged(CollageMode? collageMode) {
+    if (collageMode != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(collageMode: collageMode));
     }
   }
 
