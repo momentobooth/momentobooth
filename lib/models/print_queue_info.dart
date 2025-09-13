@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'print_queue_info.freezed.dart';
 
 @freezed
-sealed class PrintQueueInfo with _$PrintQueueInfo {
+abstract class PrintQueueInfo with _$PrintQueueInfo {
 
   const PrintQueueInfo._();
 
