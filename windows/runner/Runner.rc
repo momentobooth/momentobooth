@@ -93,7 +93,7 @@ BEGIN
             VALUE "FileDescription", "An open source photobooth application." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "photobooth" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 MomentoBooth team. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2025 MomentoBooth team. All rights reserved." "\0"
             VALUE "OriginalFilename", "photobooth.exe" "\0"
             VALUE "ProductName", "Photobooth" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
