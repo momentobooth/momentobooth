@@ -1,6 +1,6 @@
 
-import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_tile.dart';
 
 class SettingsColorPickTile extends StatefulWidget {
@@ -44,29 +44,48 @@ class _SettingsColorPickTileState extends State<SettingsColorPickTile> {
       setting: Focus(
         skipTraversal: true,
         onFocusChange: (hasFocus) => !hasFocus ? widget.onChanged(_currentValue) : null,
-        child: ColorIndicator(
-          width: 32,
-          height: 32,
-          color: _currentValue,
-          onSelect: () async {
-            Color pickedColor = await showColorPickerDialog(
-              context,
-              _currentValue,
-              pickersEnabled: const <ColorPickerType, bool>{
-                ColorPickerType.wheel: true,
-                ColorPickerType.primary: false,
-                ColorPickerType.accent: false,
-              },
-              backgroundColor: Colors.white,
-            );
-
-            if (pickedColor != _currentValue) {
-              setState(() => _currentValue = pickedColor);
-              widget.onChanged(_currentValue);
-            }
-          },
+        child: GestureDetector(
+          onTap: _showColorPickerDialog,
+          child: Container(
+            decoration: BoxDecoration(color: _currentValue, borderRadius: BorderRadius.circular(4)),
+            height: 32,
+            width: 64,
+          ),
         ),
       ),
+    );
+  }
+
+  void _showColorPickerDialog() {
+    Color currentColor = _currentValue;
+    showDialog(
+      context: context,
+      builder: (_) {
+        return ContentDialog(
+          constraints: BoxConstraints.loose(Size.fromWidth(650)),
+          content: IntrinsicHeight(
+            child: Center(
+              child: ColorPicker(
+                color: _currentValue,
+                onChanged: (color) => currentColor = color,
+                orientation: Axis.horizontal,
+                isAlphaEnabled: false,
+              ),
+            ),
+          ),
+          actions: [
+            Button(child: const Text('Cancel'), onPressed: () => context.pop()),
+            FilledButton(
+              child: const Text('Save'),
+              onPressed: () {
+                setState(() => _currentValue = currentColor);
+                widget.onChanged(currentColor);
+                context.pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
