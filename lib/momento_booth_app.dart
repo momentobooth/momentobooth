@@ -26,19 +26,19 @@ import 'package:momento_booth/views/settings_overlay/settings_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart' show WindowListener, windowManager;
 
-part 'app.hotkeys.dart';
-part 'app.routes.dart';
+part 'momento_booth_app.hotkeys.dart';
+part 'momento_booth_app.routes.dart';
 
-class App extends StatefulWidget {
+class MomentoBoothApp extends StatefulWidget {
 
-  const App({super.key});
+  const MomentoBoothApp({super.key});
 
   @override
-  State<App> createState() => _AppState();
+  State<MomentoBoothApp> createState() => _MomentoBoothAppState();
 
 }
 
-class _AppState extends State<App> with WindowListener {
+class _MomentoBoothAppState extends State<MomentoBoothApp> with WindowListener {
 
   final GoRouter _router = GoRouter(
     routes: [

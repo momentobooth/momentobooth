@@ -5,7 +5,14 @@ import 'package:animations/animations.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show PageTransitionsTheme, Theme, ThemeData;
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/app_init_manager.dart';
+import 'package:momento_booth/utils/environment_info.dart';
+import 'package:momento_booth/views/components/indicators/onboarding_version_info.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
+import 'package:momento_booth/views/onboarding_screen/pages/initialization_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/projects_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/settings_import_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/status_page.dart';
@@ -28,6 +35,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late final Timer _timer;
   final Random _random = Random();
 
+  final WizardController _wizardController = WizardController(routes: {
+      '/initialization-page': WizardRoute(builder: (context) => InitializationPage()),
+      '/welcome-page': WizardRoute(builder: (context) => WelcomePage()),
+      '/status-page': WizardRoute(builder: (context) => StatusPage()),
+      '/settings-import-page': WizardRoute(builder: (context) => SettingsImportPage()),
+      '/projects-page': WizardRoute(builder: (context) => ProjectsPage()),
+    },
+  );
+  late final ReactionDisposer _autorunDispose;
+
   late List<Gradient> _gradients;
 
   @override
@@ -40,6 +57,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => _updateGradients());
+
+    _autorunDispose = autorun((_) {
+      if (getIt<AppInitManager>().isSucceeded == true) {
+        _wizardController.next();
+      }
+    });
 
     super.initState();
   }
@@ -77,9 +100,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const ColoredBox(color: Colors.white),
         ..._gradients.map((g) => AnimatedContainer(
               duration: const Duration(seconds: 10),
-              decoration: BoxDecoration(
-                gradient: g,
-              ),
+              decoration: BoxDecoration(gradient: g),
             )),
         Center(
           child: SizedBox(
@@ -97,31 +118,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     },
                   ),
                 ),
-                child: Wizard(
-                  routes: {
-                    '/welcome-page': WizardRoute(builder: (context) => WelcomePage()),
-                    '/status-page': WizardRoute(builder: (context) => StatusPage()),
-                    '/settings-import-page': WizardRoute(builder: (context) => SettingsImportPage()),
-                    '/projects-page': WizardRoute(builder: (context) => ProjectsPage()),
-                  },
-                ),
+                child: Wizard(controller: _wizardController),
               ),
             ),
           ),
         ),
-        // FIXME: Crashes due to info not initialized yet
-        // Align(
-        //   alignment: Alignment.bottomCenter,
-        //   child: OnboardingVersionInfo(
-        //     appVersionInfo: _appVersionInfo,
-        //   ),
-        // ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Observer(
+            builder: (context) {
+              if (getIt<AppInitManager>().isSucceeded != true) return const SizedBox();
+              return OnboardingVersionInfo(appVersionInfo: appVersionInfo);
+            }
+          ),
+        ),
       ],
     );
   }
 
-  @override void dispose() {
+  @override
+  void dispose() {
     _timer.cancel();
+    _autorunDispose();
+    _wizardController.dispose();
     super.dispose();
   }
 

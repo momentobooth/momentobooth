@@ -1,4 +1,4 @@
-part of 'app.dart';
+part of 'momento_booth_app.dart';
 
 List<RouteBase> _rootRoutes = [
   _onboardingRoute,
