@@ -69,6 +69,7 @@ dependencies:
   talker: 5.0.0
   talker_flutter: 5.0.0
   sentry_flutter: 9.6.0
+  stack_trace: 1.12.1
 
   # Storage
   flutter_secure_storage: 9.2.4

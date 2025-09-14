@@ -12,6 +12,7 @@ import 'package:momento_booth/managers/app_init_manager.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/components/indicators/onboarding_version_info.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
+import 'package:momento_booth/views/onboarding_screen/pages/error_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/initialization_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/projects_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/settings_import_page.dart';
@@ -37,6 +38,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final WizardController _wizardController = WizardController(routes: {
       '/initialization-page': WizardRoute(builder: (context) => InitializationPage()),
+      '/error-page': WizardRoute(builder: (context) => ErrorPage()),
       '/welcome-page': WizardRoute(builder: (context) => WelcomePage()),
       '/status-page': WizardRoute(builder: (context) => StatusPage()),
       '/settings-import-page': WizardRoute(builder: (context) => SettingsImportPage()),
@@ -60,7 +62,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     _autorunDispose = autorun((_) {
       if (getIt<AppInitManager>().isSucceeded == true) {
-        _wizardController.next();
+        _wizardController.routes.remove('/error-page');
+        _wizardController.replace();
+      } else if (getIt<AppInitManager>().isSucceeded == false) {
+        _wizardController.replace();
       }
     });
 

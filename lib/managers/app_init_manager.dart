@@ -28,6 +28,7 @@ import 'package:momento_booth/src/rust/models/logging.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:path/path.dart' as path;
+import 'package:stack_trace/stack_trace.dart';
 import 'package:talker/talker.dart';
 
 part 'app_init_manager.g.dart';
@@ -46,6 +47,9 @@ abstract class AppInitManagerBase with Store {
 
   @readonly
   Object? _exception;
+
+  @readonly
+  Trace? _stackTrace;
 
   Future<void> initializeApp() async {
     try {
@@ -120,9 +124,10 @@ abstract class AppInitManagerBase with Store {
       await _setStatusAndRun('Initializing external system status manager', getIt<ExternalSystemStatusManager>().initialize);
 
       _isSucceeded = true;
-    } catch (e) {
+    } catch (e, s) {
       _exception = e;
       _isSucceeded = false;
+      _stackTrace = Trace.from(s).terse;
     }
   }
 

@@ -9,7 +9,6 @@ class WelcomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WizardPage(
-      showBackAction: false,
       child: Stack(
         fit: StackFit.expand,
         children: [

@@ -7,16 +7,15 @@ import 'package:wizard_router/wizard_router.dart';
 class WizardPage extends StatelessWidget {
 
   final Widget child;
-  final bool showBackAction;
   final bool showNextAction;
 
-  const WizardPage({super.key, this.showBackAction = true, this.showNextAction = true, required this.child});
+  const WizardPage({super.key, this.showNextAction = true, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        if (Wizard.of(context).hasPrevious && showBackAction)
+        if (Wizard.of(context).hasPrevious)
           Container(
             alignment: Alignment.topLeft,
             padding: EdgeInsets.only(left: 32, top: 24),
