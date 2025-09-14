@@ -255,12 +255,23 @@ enum PrintSize {
 }
 
 enum ExternalSystemCheckType {
+
   ping,
   http,
+
 }
 
 enum ExternalSystemCheckSeverity {
+
   info,
   warning,
   error,
+
+}
+
+enum OnboardingStep {
+
+  importSettings,
+  openProject,
+
 }

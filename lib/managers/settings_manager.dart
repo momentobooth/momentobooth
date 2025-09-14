@@ -94,4 +94,9 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
     getIt<MqttManager>().publishSettings(settings);
   }
 
+  @action
+  Future<void> mutateAndSave(Settings Function(Settings settings) settings) async {
+    await updateAndSave(settings(_settings));
+  }
+
 }
