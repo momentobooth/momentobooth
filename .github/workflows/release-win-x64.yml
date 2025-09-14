@@ -100,6 +100,9 @@ jobs:
     - name: Setup sccache
       uses: mozilla-actions/sccache-action@v0.0.9
 
+    - name: Setup sccache workaround
+      run: Add-Content -Path $env:GITHUB_ENV -Value "SCCACHE_GHA_ENABLED=true"
+
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
