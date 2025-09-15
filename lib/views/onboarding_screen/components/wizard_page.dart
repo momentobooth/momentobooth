@@ -7,8 +7,9 @@ import 'package:wizard_router/wizard_router.dart';
 class WizardPage extends StatelessWidget {
 
   final Widget child;
+  final bool showNextAction;
 
-  const WizardPage({super.key, required this.child});
+  const WizardPage({super.key, this.showNextAction = true, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,7 @@ class WizardPage extends StatelessWidget {
         Container(
           alignment: Alignment.bottomRight,
           padding: EdgeInsets.only(right: 32, bottom: 24),
-          child: FilledButton(
+          child: showNextAction ? FilledButton(
             onPressed: () {
               if (Wizard.of(context).hasNext) {
                 Wizard.of(context).next();
@@ -36,7 +37,7 @@ class WizardPage extends StatelessWidget {
               }
             },
             child: Text(Wizard.of(context).hasNext ? "Next step" : "Finish"),
-          ),
+          ) : null,
         ),
       ],
     );

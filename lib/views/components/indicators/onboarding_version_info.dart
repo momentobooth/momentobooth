@@ -9,10 +9,13 @@ class OnboardingVersionInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'MomentoBooth ${appVersionInfo.appVersion}\n'
-        'Built with Flutter ${appVersionInfo.flutterVersion}, Rust ${appVersionInfo.rustVersion} (with target ${appVersionInfo.rustTarget})',
-      textAlign: TextAlign.center,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        'MomentoBooth ${appVersionInfo.appVersion}\n'
+          'Built with Flutter ${appVersionInfo.flutterVersion}, Rust ${appVersionInfo.rustVersion}',
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

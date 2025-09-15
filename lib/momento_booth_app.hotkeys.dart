@@ -1,4 +1,4 @@
-part of 'app.dart';
+part of 'momento_booth_app.dart';
 
 class _HotkeyResponder extends StatelessWidget {
 

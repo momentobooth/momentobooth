@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:mobx/mobx.dart';
@@ -71,7 +72,10 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
       );
     }
 
-    if (getIt<SettingsManager>().settings.loadLastProject) {
+    final args = getIt<ArgResults>().option("open");
+    if (args != null) {
+      await open(args);
+    } else if (getIt<SettingsManager>().settings.loadLastProject) {
       await openLastProject();
     }
   }
