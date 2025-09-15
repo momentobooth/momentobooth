@@ -32,7 +32,6 @@ dependencies:
   smooth_scroll_multiplatform: 1.0.8
   widgetbook: 3.16.0
   widgetbook_annotation: 3.7.0
-  flex_color_picker: 3.7.1
   lucide_icons_flutter: 3.1.0
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.0
