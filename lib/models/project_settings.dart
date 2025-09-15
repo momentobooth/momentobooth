@@ -17,7 +17,7 @@ const defaultThemeColor = Color(0xFF0078C8);
 // ///////////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-sealed class ProjectSettings with _$ProjectSettings implements TomlEncodableValue {
+abstract class ProjectSettings with _$ProjectSettings implements TomlEncodableValue {
 
   const ProjectSettings._();
 
