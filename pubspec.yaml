@@ -28,9 +28,9 @@ dependencies:
   confetti: 0.8.0
   wave: 0.2.2
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
-  lottie: 3.3.1
+  lottie: 3.3.2
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.16.0
+  widgetbook: 3.17.0
   widgetbook_annotation: 3.7.0
   lucide_icons_flutter: 3.1.0
   wizard_router: 1.4.1
@@ -85,7 +85,7 @@ dependencies:
   synchronized: 3.4.0
   collection: any
   dart_casing: 3.0.1
-  package_info_plus: 8.3.1
+  package_info_plus: 9.0.0
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.6
   draggable_scrollbar:
