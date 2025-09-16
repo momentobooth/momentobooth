@@ -9,10 +9,15 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/app_init_manager.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/components/indicators/onboarding_version_info.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/error_page.dart';
+import 'package:momento_booth/views/onboarding_screen/pages/finish_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/initialization_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/projects_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/settings_import_page.dart';
@@ -36,15 +41,37 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   late final Timer _timer;
   final Random _random = Random();
 
-  final WizardController _wizardController = WizardController(routes: {
-      '/initialization-page': WizardRoute(builder: (context) => InitializationPage()),
-      '/error-page': WizardRoute(builder: (context) => ErrorPage()),
-      '/welcome-page': WizardRoute(builder: (context) => WelcomePage()),
-      '/status-page': WizardRoute(builder: (context) => StatusPage()),
-      '/settings-import-page': WizardRoute(builder: (context) => SettingsImportPage()),
-      '/projects-page': WizardRoute(builder: (context) => ProjectsPage()),
-    },
-  );
+  late final WizardController _wizardController = WizardController(routes: {
+    '/initialization-page': WizardRoute(builder: (context) => InitializationPage()),
+    '/error-page': WizardRoute(builder: (context) => ErrorPage(), onLoad: (_) {
+      return getIt<AppInitManager>().isSucceeded != true;
+    }),
+    '/welcome-page': WizardRoute(builder: (context) => WelcomePage(), onLoad: (_) {
+      bool onboardingHasNewSteps = OnboardingStep.values.any((s) => !getIt<SettingsManager>().settings.onboardingStepsDone.contains(s));
+      return onboardingHasNewSteps;
+    }),
+    '/status-page': WizardRoute(builder: (context) => StatusPage(), onLoad: (_) {
+      final allSubsystemsAreOk = getIt<ObservableList<Subsystem>>()
+            .map((s) => s.subsystemStatus)
+            .every((s) {
+              return s is SubsystemStatusOk || s is SubsystemStatusDisabled;
+            });
+      return !allSubsystemsAreOk;
+    }),
+    '/settings-import-page': WizardRoute(builder: (context) => SettingsImportPage(), onLoad: (_) {
+      return !getIt<SettingsManager>().settings.onboardingStepsDone.contains(OnboardingStep.importSettings);
+    }),
+    '/projects-page': WizardRoute(builder: (context) => ProjectsPage(), onLoad: (_) {
+      return !getIt<SettingsManager>().settings.onboardingStepsDone.contains(OnboardingStep.openProject);
+    }),
+    '/finish': WizardRoute(builder: (context) => FinishPage(), onLoad: (_) {
+      getIt<SettingsManager>().mutateAndSave((s) => s.copyWith(
+        onboardingStepsDone: { ...s.onboardingStepsDone, ...OnboardingStep.values },
+      ));
+      return true;
+    }),
+  });
+
   late final ReactionDisposer _autorunDispose;
 
   late List<Gradient> _gradients;
@@ -59,14 +86,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) => _updateGradients());
-
     _autorunDispose = autorun((_) {
-      if (getIt<AppInitManager>().isSucceeded == true) {
-        _wizardController.routes.remove('/error-page');
-        _wizardController.replace();
-      } else if (getIt<AppInitManager>().isSucceeded == false) {
-        _wizardController.replace();
-      }
+      if (getIt<AppInitManager>().isSucceeded != null) return _wizardController.replace();
     });
 
     super.initState();

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/main.dart';
@@ -18,6 +20,7 @@ import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/repositories/secrets/secure_storage_secrets_repository.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
@@ -123,12 +126,34 @@ abstract class AppInitManagerBase with Store {
       await _setStatusAndRun('Initializing notifications manager', getIt<NotificationsManager>().initialize);
       await _setStatusAndRun('Initializing external system status manager', getIt<ExternalSystemStatusManager>().initialize);
 
+      // /////////////////// //
+      // Wait for subsystems //
+      // /////////////////// //
+
+      _status = 'Waiting for subsystems to be ready';
+      Stopwatch stopwatch = Stopwatch()..start();
+      while (!_areAllSubsystemsReady && stopwatch.elapsedMilliseconds < 5000) {
+        await Future.delayed(Duration(milliseconds: 100));
+      }
+
       _isSucceeded = true;
     } catch (e, s) {
       _exception = e;
       _isSucceeded = false;
       _stackTrace = Trace.from(s).terse;
+
+      Talker? talker = getIt.maybeGet<Talker>();
+      if (talker != null) {
+        talker.error("Failed to initialize app", e, _stackTrace);
+      } else if (kDebugMode) {
+        print("Failed to initialize app: $e");
+        print("Stack: $_stackTrace");
+      }
     }
+  }
+
+  bool get _areAllSubsystemsReady {
+    return getIt<ObservableList<Subsystem>>().none((s) => s.subsystemStatus is SubsystemStatusInitial || s.subsystemStatus is SubsystemStatusBusy);
   }
 
   Future<void> _setStatusAndRun(String status, FutureOr<void> Function() func) async {

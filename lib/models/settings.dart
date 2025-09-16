@@ -28,6 +28,7 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
   const Settings._();
 
   const factory Settings({
+    @Default({}) Set<OnboardingStep> onboardingStepsDone,
     @Default(5) int captureDelaySeconds,
     @Default(false) bool loadLastProject,
     @Default(1.5) double collageAspectRatio,
@@ -320,7 +321,7 @@ sealed class FaceRecognitionSettings with _$FaceRecognitionSettings implements T
 
 @Freezed(fromJson: true, toJson: true)
 sealed class ExternalSystemCheckSetting with _$ExternalSystemCheckSetting implements TomlEncodableValue {
-  
+
   const ExternalSystemCheckSetting._();
 
   const factory ExternalSystemCheckSetting({
@@ -334,7 +335,7 @@ sealed class ExternalSystemCheckSetting with _$ExternalSystemCheckSetting implem
   factory ExternalSystemCheckSetting.withDefaults() => ExternalSystemCheckSetting.fromJson({});
 
   factory ExternalSystemCheckSetting.fromJson(Map<String, Object?> json) => _$ExternalSystemCheckSettingFromJson(json);
-  
+
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
