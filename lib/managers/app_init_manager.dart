@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/main.dart';
@@ -140,6 +141,14 @@ abstract class AppInitManagerBase with Store {
       _exception = e;
       _isSucceeded = false;
       _stackTrace = Trace.from(s).terse;
+
+      Talker? talker = getIt.maybeGet<Talker>();
+      if (talker != null) {
+        talker.error("Failed to initialize app", e, _stackTrace);
+      } else if (kDebugMode) {
+        print("Failed to initialize app: $e");
+        print("Stack: $_stackTrace");
+      }
     }
   }
 
