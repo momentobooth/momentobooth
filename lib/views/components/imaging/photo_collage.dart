@@ -92,7 +92,8 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
 
   ScreenshotController screenshotController = ScreenshotController();
 
-  static const double gap = 20.0;
+  static const double gapOutside = 48.0;
+  static const double gapInside = 20.0;
 
   ObservableList<int> get chosen => getIt<PhotosManager>().chosen;
   ObservableList<PhotoCapture> get photos => getIt<PhotosManager>().photos;
@@ -183,6 +184,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   }
 
   Widget _getLayout(AppLocalizations localizations, BuildContext context) {
+    const whiteBorderColor = ui.Color.fromARGB(127, 255, 255, 255);
     return Stack(
       clipBehavior: Clip.none,
       fit: StackFit.expand,
@@ -196,7 +198,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
         ],
         if (widget.showMiddleground)
           Padding(
-            padding: EdgeInsets.all(gap + widget.padding),
+            padding: EdgeInsets.symmetric(horizontal: gapOutside + widget.padding, vertical: gapOutside*1.4 + widget.padding),
             child: _getInnerLayout(localizations, context),
           ),
         if (widget.debug != null)
@@ -208,7 +210,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
               padding: EdgeInsets.all(widget.padding),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  border: Border.all(width: gap, color: const ui.Color.fromARGB(127, 255, 255, 255)),
+                  border: Border.symmetric(horizontal: BorderSide(width: gapOutside*1.4, color: whiteBorderColor), vertical: BorderSide(width: gapOutside, color: whiteBorderColor)),
                 ),
               ),
             ),
@@ -257,23 +259,9 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   }
 
   Widget get _oneLayout {
-    return LayoutGrid(
-      areas: '''
-          l1header
-          l1content
-        ''',
-      rowSizes: [1.fr, 8.fr],
-      columnSizes: [1.fr],
-      columnGap: gap,
-      rowGap: gap,
-      children: [
-        if (widget.showLogo)
-          const _CenteredLogo().inGridArea('l1header'),
-       _PhotoContainer(
-          rotated: true,
-          child: _getChosenImage(0),
-       ).inGridArea('l1content'),
-      ],
+    return _PhotoContainer(
+      rotated: true,
+      child: _getChosenImage(0),
     );
   }
 
@@ -286,8 +274,8 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
         ''',
       rowSizes: [75.px, auto, auto],
       columnSizes: const [auto],
-      columnGap: gap,
-      rowGap: gap,
+      columnGap: gapInside,
+      rowGap: gapInside,
       children: [
         if (widget.showLogo)
           const _CenteredLogo().inGridArea('l2header'),
@@ -310,8 +298,8 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
         ''',
       rowSizes: [1.fr, auto, auto, auto],
       columnSizes: [1.fr, 1.fr],
-      columnGap: 2*gap,
-      rowGap: gap,
+      columnGap: 2*gapOutside,
+      rowGap: gapInside,
       children: [
         if (widget.showLogo) ...[
           const _CenteredLogo().inGridArea('l3header1'),
@@ -340,8 +328,8 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
             ''',
           rowSizes: const [auto, auto],
           columnSizes: const [auto, auto],
-          columnGap: gap,
-          rowGap: gap,
+          columnGap: gapInside,
+          rowGap: gapInside,
           children: [
             for (int i = 0; i < nChosen; i++) ...[
               _PhotoContainer(
