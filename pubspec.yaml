@@ -96,6 +96,7 @@ dependencies:
   url_launcher: 6.3.2
   super_clipboard: 0.9.1
   super_drag_and_drop: 0.9.1
+  wakelock_plus: 1.4.0
 
 dependency_overrides:
   # Remove when fixed: https://github.com/anusii/solidpod/issues/245

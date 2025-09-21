@@ -5,26 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/extensions/get_it_extension.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/external_system_status_manager.dart';
-import 'package:momento_booth/managers/live_view_manager.dart';
-import 'package:momento_booth/managers/mqtt_manager.dart';
-import 'package:momento_booth/managers/notifications_manager.dart';
-import 'package:momento_booth/managers/photos_manager.dart';
-import 'package:momento_booth/managers/printing_manager.dart';
-import 'package:momento_booth/managers/project_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/managers/sfx_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
-import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
-import 'package:momento_booth/repositories/secrets/secure_storage_secrets_repository.dart';
-import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
-import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
+import 'package:momento_booth/repositories/_all.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
 import 'package:momento_booth/src/rust/models/logging.dart';
@@ -78,7 +65,8 @@ abstract class AppInitManagerBase with Store {
         ..registerManager(NotificationsManager())
         ..registerManager(PrintingManager())
         ..registerManager(PhotosManager())
-        ..registerManager(ExternalSystemStatusManager());
+        ..registerManager(ExternalSystemStatusManager())
+        ..registerManager(WakelockManager());
 
       // ////////////////////////// //
       // Helper lib and Environment //
@@ -123,6 +111,7 @@ abstract class AppInitManagerBase with Store {
       await _setStatusAndFireAndForget('Initializing MQTT manager', getIt<MqttManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing SFX manager', getIt<SfxManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing printing manager', getIt<PrintingManager>().initializeSafe);
+      await _setStatusAndFireAndForget('Initializing wakelock manager', getIt<WakelockManager>().initializeSafe);
       await _setStatusAndRun('Initializing notifications manager', getIt<NotificationsManager>().initialize);
       await _setStatusAndRun('Initializing external system status manager', getIt<ExternalSystemStatusManager>().initialize);
 

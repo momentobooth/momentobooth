@@ -18,6 +18,13 @@ Widget _getGeneralSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
         value: () => viewModel.loadLastProjectSetting,
         onChanged: controller.onLoadLastProjectChanged,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.power,
+        title: "Try to keep the computer the screen awake",
+        subtitle: "When enabled, MomentoBooth will issue a 'wakelock' which should keep your computer and display awake.",
+        value: () => viewModel.enableWakelockSetting,
+        onChanged: controller.onEnableWakelockChanged,
+      ),
       const SettingsSection(
         title: "Hotkeys",
         settings: [

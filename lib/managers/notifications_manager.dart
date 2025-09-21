@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/managers/external_system_status_manager.dart';
 import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/hardware.dart';

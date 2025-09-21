@@ -23,10 +23,11 @@ class ProjectManager = ProjectManagerBase with _$ProjectManager;
 abstract class ProjectManagerBase extends Subsystem with Store, Logger {
 
   @override
-  String subsystemName = "Project Manager";
+  String subsystemName = "Project settings";
 
   @readonly
   bool _isOpen = false;
+
   @readonly
   Directory? _path;
   List<Directory> projects = [];
