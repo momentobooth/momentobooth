@@ -2077,9 +2077,9 @@ checksum = "469fb0b9cefa57e3ef31275ee7cacb78f2fdca44e4765491884a2b119d4eb130"
 
 [[package]]
 name = "ipp"
-version = "5.3.1"
+version = "5.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d418491e865efb6f93825f171304cf81e5de3b821f0fce0b22ce91ef954405f6"
+checksum = "7ff00aa5989ec46fad3764aa77bd04b8ec357344d7eae4053a0df5f8e9660beb"
 dependencies = [
  "base64 0.22.1",
  "bytes 1.10.1",
