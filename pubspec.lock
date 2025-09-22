@@ -603,10 +603,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: eb059dfe59f08546e9787f895bd01652076f996bcbf485a8609ef990419ad227
+      sha256: b1488741c9ce37b72e026377c69a59c47378493156fc38efb5a54f6def3f92a3
       url: "https://pub.dev"
     source: hosted
-    version: "16.2.1"
+    version: "16.2.2"
   google_fonts:
     dependency: "direct main"
     description:
@@ -859,10 +859,10 @@ packages:
     dependency: "direct dev"
     description:
       name: mobx_codegen
-      sha256: "7c956996d3105e28995d9f91b24ac037657534398b5e70cdacc3f95d8f68cdae"
+      sha256: "471b02d0cf7f64d1366944e9dc64353674807d31e48faba2201918cc1601876d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.2"
+    version: "2.7.4"
   mqtt5_client:
     dependency: "direct main"
     description:
