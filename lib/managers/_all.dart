@@ -1,3 +1,5 @@
+export 'app_init_manager.dart';
+export 'external_system_status_manager.dart';
 export 'live_view_manager.dart';
 export 'mqtt_manager.dart';
 export 'notifications_manager.dart';
@@ -7,4 +9,5 @@ export 'project_manager.dart';
 export 'settings_manager.dart';
 export 'sfx_manager.dart';
 export 'stats_manager.dart';
+export 'wakelock_manager.dart';
 export 'window_manager.dart';

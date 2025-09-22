@@ -5,6 +5,7 @@
 - New feature: Add themes
 - New feature: Add systems health check to test if user provided external services are online
 - New feature: Add settings for controlling available capture type options
+- New feature: Add wakelock setting to try keeping the computer and screen awake
 - Change: Improve print job names with naming convention
 - Change: Improve application stability and observability by showing app initialization state
 - Change: Block further usage of the application when critical issues occur during initialization

@@ -17,7 +17,7 @@ class SfxManager = SfxManagerBase with _$SfxManager;
 abstract class SfxManagerBase extends Subsystem with Store, Logger {
 
   @override
-  String subsystemName = "SFX Manager";
+  String subsystemName = "Sound effects";
 
   final Lock _updateMqttClientInstanceLock = Lock();
   static const int _testSoundId = 0, _clickSoundId = 1, _shareScreenSoundId = 2;

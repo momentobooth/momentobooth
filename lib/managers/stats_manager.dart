@@ -15,7 +15,7 @@ class StatsManager = StatsManagerBase with _$StatsManager;
 abstract class StatsManagerBase extends Subsystem with Store, Logger {
 
   @override
-  String subsystemName = "Stats Manager";
+  String subsystemName = "Statistics counter";
 
   @readonly
   late Stats _stats;

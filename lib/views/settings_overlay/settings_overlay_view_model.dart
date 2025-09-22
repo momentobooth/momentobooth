@@ -184,6 +184,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   double get collageAspectRatioSetting => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePaddingSetting => getIt<SettingsManager>().settings.collagePadding;
   String get templatesFolderSetting => getIt<SettingsManager>().settings.templatesFolder;
+  bool get enableWakelockSetting => getIt<SettingsManager>().settings.enableWakelock;
   Rotate get liveViewAndCaptureRotateSetting => getIt<SettingsManager>().settings.hardware.liveViewAndCaptureRotate;
   Flip get liveViewFlipSetting => getIt<SettingsManager>().settings.hardware.liveViewFlip;
   Flip get captureFlipSetting => getIt<SettingsManager>().settings.hardware.captureFlip;

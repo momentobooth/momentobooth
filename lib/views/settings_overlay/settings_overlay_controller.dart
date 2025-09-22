@@ -162,6 +162,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableWakelockChanged(bool? enableWakelock) {
+    if (enableWakelock != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(enableWakelock: enableWakelock));
+    }
+  }
+
   void onLiveViewAndCaptureRotateChanged(Rotate? liveViewAndCaptureRotate) {
     if (liveViewAndCaptureRotate != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewAndCaptureRotate: liveViewAndCaptureRotate));
@@ -628,7 +634,7 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
       viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(homeAssistantComponentId: homeAssistantComponentId, enable: false));
     }
   }
-  
+
   void onExternalSystemChecksChanged(List<ExternalSystemCheckSetting> checks) {
     viewModel.updateSettings((settings) => settings.copyWith(externalSystemChecks: checks));
   }

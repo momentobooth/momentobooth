@@ -33,7 +33,7 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
       if (_checkTimer != null && _checkTimer!.isActive) {
         _checkTimer!.cancel();
       }
-      
+
       systems = ObservableList.of(
         getIt<SettingsManager>().settings.externalSystemChecks
           .map((el) => ExternalSystemStatus(check: el, isHealthy: el.enabled ? SubsystemStatus.initial() :SubsystemStatus.disabled()))

@@ -30,7 +30,7 @@ class MqttManager = MqttManagerBase with _$MqttManager;
 abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   @override
-  String subsystemName = "MQTT Manager";
+  String subsystemName = "MQTT client";
 
   final Lock _updateMqttClientInstanceLock = Lock();
 

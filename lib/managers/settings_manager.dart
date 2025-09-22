@@ -14,7 +14,7 @@ class SettingsManager = SettingsManagerBase with _$SettingsManager;
 abstract class SettingsManagerBase extends Subsystem with Store, Logger {
 
   @override
-  String subsystemName = "Settings Manager";
+  String subsystemName = "Application settings";
 
   // Loading the settings with default values to prevent errors from use before initialization.
   // This is fine as the initialize method overwrites the value anyway.

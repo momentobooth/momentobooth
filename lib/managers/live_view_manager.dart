@@ -26,7 +26,7 @@ class LiveViewManager = LiveViewManagerBase with _$LiveViewManager;
 abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
 
   @override
-  String subsystemName = "Live View Manager";
+  String subsystemName = "Live view";
 
   @readonly
   bool _lastFrameWasInvalid = false;

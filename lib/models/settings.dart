@@ -33,6 +33,7 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
     @Default(false) bool loadLastProject,
     @Default(1.5) double collageAspectRatio,
     @Default(0) double collagePadding,
+    @Default(true) bool enableWakelock,
     @JsonKey(defaultValue: _templatesFolderFromJson) required String templatesFolder,
     @JsonKey(defaultValue: HardwareSettings.withDefaults) required HardwareSettings hardware,
     @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
