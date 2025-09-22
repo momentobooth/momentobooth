@@ -35,20 +35,23 @@ class ModalDialog extends StatelessWidget {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return Center(
-      child: PhotoBoothDialog(
-        width: width,
-        height: height,
-        title: title,
-        body: body,
-        indicator: dialogType?.icon,
-        actions: actions ??
-            [
-              PhotoBoothFilledButton(
-                title: localizations.genericContinueButton,
-                icon: LucideIcons.check,
-                onPressed: onDismiss ?? () => Navigator.of(context).maybePop(),
-              ),
-            ],
+      child: Transform.scale(
+        scale: 1.3,
+        child: PhotoBoothDialog(
+          width: width,
+          height: height,
+          title: title,
+          body: body,
+          indicator: dialogType?.icon,
+          actions: actions ??
+              [
+                PhotoBoothFilledButton(
+                  title: localizations.genericContinueButton,
+                  icon: LucideIcons.check,
+                  onPressed: onDismiss ?? () => Navigator.of(context).maybePop(),
+                ),
+              ],
+        ),
       ),
     );
   }
