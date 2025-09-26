@@ -10,6 +10,7 @@
 - Change: Improve application stability and observability by showing app initialization state
 - Change: Block further usage of the application when critical issues occur during initialization
 - Change: Onboarding wizard now only appears when it has not been finished yet or when there are issues the user needs to know about
+- Change: Increase some UI scaling
 - Bugfix: Fix collage generation issues in multi capture
 - Bugfix: Fix (subtle but noticeable) black border around live view background
 - Bugfix: Fix Settings overlay closing spontaneously sometimes
@@ -17,7 +18,7 @@
 - Bugfix: Fix gallery empty screen when PNGs are present in output folder
 - Bugfix: Fix MQTT current route reporting
 
-- Dev change: Updated Flutter to 3.35.1
+- Dev change: Updated Flutter to 3.35.4
 - Dev change: Updated Dart and Rust dependencies
 - Dev change: Updated Rust library to Rust 2024 edition
 - Dev change: Fix hot reload not functioning
