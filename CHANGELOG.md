@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.15.1
+
+- Dev change: Fix Windows release workflow crashing due to missing h3xup binary
+
 ## 0.15.0
 
 - New feature: Add themes
