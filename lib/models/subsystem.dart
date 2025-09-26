@@ -61,10 +61,11 @@ abstract class SubsystemBase with Store, Logger {
   }
 
   @action
-  void reportSubsystemWarning({required String message, Map<String, Future Function()> actions = const {}}) {
-    _subsystemStatus = SubsystemStatus.busy(
+  void reportSubsystemWarning({required String message, String? exception, Map<String, Future Function()> actions = const {}}) {
+    _subsystemStatus = SubsystemStatus.warning(
       message: message,
       actions: actions,
+      exception: exception,
     );
   }
 
@@ -72,8 +73,8 @@ abstract class SubsystemBase with Store, Logger {
   void reportSubsystemError({required String message, String? exception, Map<String, Future Function()> actions = const {}}) {
     _subsystemStatus = SubsystemStatus.error(
       message: message,
-      exception: exception,
       actions: actions,
+      exception: exception,
     );
   }
 

@@ -46,6 +46,7 @@ class _SubsystemStatusDisplayState extends State<SubsystemStatusDisplay> {
       };
 
   String? get _exception => switch (widget.status) {
+        SubsystemStatusWarning(:final exception) => exception,
         SubsystemStatusError(:final exception) => exception,
         _ => null,
       };
@@ -62,7 +63,11 @@ class _SubsystemStatusDisplayState extends State<SubsystemStatusDisplay> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ListTile(
-            leading: SubsystemStatusIcon(status: widget.status),
+            leading: Padding(
+              padding: const EdgeInsets.only(top: 2.0),
+              child: SubsystemStatusIcon(status: widget.status),
+            ),
+            contentAlignment: CrossAxisAlignment.start,
             title: Text(widget.title),
             subtitle: Text(_message),
             trailing: _canExpand ? AnimatedRotation(
