@@ -17,6 +17,7 @@ import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/config/set_scroll_configuration.dart';
 import 'package:momento_booth/views/components/imaging/live_view_background.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
+import 'package:momento_booth/views/photo_booth_screen/components/app_scaler.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/framerate_monitor.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
@@ -69,7 +70,7 @@ class PhotoBooth extends StatelessWidget {
                       supportedLocales: const [Locale('en'), Locale('nl')],
                       locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
                       home: child,
-                      builder: (_, child) => LiveViewBackground(child: child!),
+                      builder: (_, child) => LiveViewBackground(child: AppScaler(child: child!)),
                     ),
                   ),
                 ),

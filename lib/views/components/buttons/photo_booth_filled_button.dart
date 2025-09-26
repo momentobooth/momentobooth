@@ -16,18 +16,21 @@ class PhotoBoothFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
-      onPressed: onPressed,
-      style: context.theme.dialogTheme.buttonStyle,
-      child: Row(
-        children: [
-          if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 12.0),
-              child: Icon(icon, size: 24.0),
-            ),
-          Text(title),
-        ],
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: FilledButton(
+        onPressed: onPressed,
+        style: context.theme.dialogTheme.buttonStyle,
+        child: Row(
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 12.0),
+                child: Icon(icon, size: 24.0),
+              ),
+            Text(title),
+          ],
+        ),
       ),
     );
   }
