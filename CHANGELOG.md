@@ -17,6 +17,7 @@
 - Bugfix: Fix application not fully initializing and being mostly unusable in some cases
 - Bugfix: Fix gallery empty screen when PNGs are present in output folder
 - Bugfix: Fix MQTT current route reporting
+- Bugfix: Subsystem warnings were incorrectly reported as the subsystem being busy
 
 - Dev change: Updated Flutter to 3.35.4
 - Dev change: Updated Dart and Rust dependencies
