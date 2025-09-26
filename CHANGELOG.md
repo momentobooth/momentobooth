@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.15.0
+
 - New feature: Add themes
 - New feature: Add systems health check to test if user provided external services are online
 - New feature: Add settings for controlling available capture type options

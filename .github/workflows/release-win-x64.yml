@@ -112,6 +112,9 @@ jobs:
     - name: Install flutter_rust_bridge_codegen
       run: cargo binstall flutter_rust_bridge_codegen@2.11.1 --force
 
+    - name: Install h3xUpdtr
+      run: cargo binstall h3xup --force
+
     - name: Install dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter pub get --enforce-lockfile
