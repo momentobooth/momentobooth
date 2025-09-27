@@ -4,7 +4,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/basic/basic_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/hollywood/hollywood_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/neobrutalism/neobrutalism_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/wedding/wedding_theme.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
@@ -40,6 +42,14 @@ class WidgetbookApp extends StatelessWidget {
             WidgetbookTheme(
               name: 'Hollywood',
               data: hollywoodTheme(primaryColor: material.Colors.teal),
+            ),
+            WidgetbookTheme(
+              name: 'Neobrutalism',
+              data: neobrutalismTheme(primaryColor: material.Colors.teal),
+            ),
+            WidgetbookTheme(
+              name: 'Wedding',
+              data: weddingTheme(primaryColor: material.Colors.teal),
             ),
           ],
           themeBuilder: (context, theme, child) {
