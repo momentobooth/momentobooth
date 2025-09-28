@@ -58,7 +58,13 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
     logDebug("Uploading ${file!.path}");
 
     String basename = path.basename(file!.path);
-    Stream<FfSendTransferProgress> stream = ffsendUploadFile(filePath: file!.path, hostUrl: ffSendUrl, downloadFilename: basename);
+    Stream<FfSendTransferProgress> stream = ffsendUploadFile(
+      filePath: file!.path,
+      hostUrl: ffSendUrl,
+      downloadFilename: basename,
+      controlCommandTimeout: getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout,
+      transferTimeout: getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout,
+    );
 
     _uploadProgress = 0.0;
     _uploadFailed = false;
