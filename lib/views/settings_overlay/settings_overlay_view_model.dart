@@ -225,6 +225,8 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   int get printerQueueWarningThresholdSetting => getIt<SettingsManager>().settings.hardware.printerQueueWarningThreshold;
   String get localFolderSetting => getIt<SettingsManager>().settings.output.localFolder;
   String get firefoxSendServerUrlSetting => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
+  int get firefoxSendControlCommandTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout.inSeconds;
+  int get firefoxSendTransferTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout.inSeconds;
   ExportFormat get exportFormat => getIt<SettingsManager>().settings.output.exportFormat;
   int get jpgQuality => getIt<SettingsManager>().settings.output.jpgQuality;
   double get resolutionMultiplier => getIt<SettingsManager>().settings.output.resolutionMultiplier;

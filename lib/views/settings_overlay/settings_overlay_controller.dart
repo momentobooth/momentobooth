@@ -461,6 +461,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onFirefoxSendControlCommandTimeoutChanged(int? firefoxSendControlCommandTimeout) {
+    if (firefoxSendControlCommandTimeout != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.output(firefoxSendControlCommandTimeout: Duration(seconds: firefoxSendControlCommandTimeout)));
+    }
+  }
+
+  void onFirefoxSendTransferTimeoutChanged(int? firefoxSendTransferTimeout) {
+    if (firefoxSendTransferTimeout != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.output(firefoxSendTransferTimeout: Duration(seconds: firefoxSendTransferTimeout)));
+    }
+  }
+
   void onExportFormatChanged(ExportFormat? exportFormat) {
     if (exportFormat != null) {
       viewModel.updateSettings((settings) => settings.copyWith.output(exportFormat: exportFormat));
