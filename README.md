@@ -69,7 +69,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 * **MSYS2**
   * Follow the instructions on the [MSYS2 website](https://www.msys2.org/)
   * Install the following packages:
-    `mingw-w64-clang-x86_64-pkgconf mingw-w64-clang-x86_64-libgphoto2 mingw-w64-clang-x86_64-gexiv2 mingw-w64-clang-x86_64-curl-winssl mingw-w64-clang-x86_64-nghttp2 mingw-w64-clang-x86_64-nghttp3`
+    `mingw-w64-clang-x86_64-pkgconf mingw-w64-clang-x86_64-libgphoto2 mingw-w64-clang-x86_64-curl-winssl mingw-w64-clang-x86_64-nghttp2 mingw-w64-clang-x86_64-nghttp3`
   * Make sure `{MSYS_INSTALL_PATH}\clang64\bin` is in your `PATH` (before other folders that also provide `pkg-config`/`pkgconf`)
 
 </details>
@@ -83,7 +83,7 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
   * Recommended installation via [`rustup`](https://rustup.rs/)
   * `rustup` is also available via [Homebrew](https://formulae.brew.sh/formula/rustup)
 * **Homebrew**
-  * Install: `pkgconf libgphoto2 gexiv2`
+  * Install: `pkgconf libgphoto2`
 
 </details>
 

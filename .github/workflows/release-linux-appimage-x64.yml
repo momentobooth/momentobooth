@@ -27,7 +27,7 @@ jobs:
         submodules: 'true'
 
     - name: Install apt packages
-      run: sudo apt update && sudo apt install build-essential git clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev llvm libfuse2 libgphoto2-dev libdigest-sha-perl libgexiv2-dev libsecret-1-dev libcurl4-openssl-dev libusb-1.0-0-dev libmimalloc-dev libmimalloc2.0 libasound2-dev
+      run: sudo apt update && sudo apt install build-essential git clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev llvm libfuse2 libgphoto2-dev libdigest-sha-perl libsecret-1-dev libcurl4-openssl-dev libusb-1.0-0-dev libmimalloc-dev libmimalloc2.0 libasound2-dev
 
     - name: Detect Flutter Version
       uses: kuhnroyal/flutter-fvm-config-action@v3

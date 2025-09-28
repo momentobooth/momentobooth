@@ -1,14 +1,12 @@
 use crate::frb_generated::StreamSink;
 use crate::models::logging::LogEntry;
 use crate::models::version_info::VersionInfo;
-use std::ffi::CStr;
 use std::path::Path;
 use std::time;
 use crate::INITIALIZATION;
 use crate::LIBRARY_VERSION;
 use crate::RUST_TARGET;
 use crate::TOKIO_RUNTIME;
-use gexiv2_sys::gexiv2_get_version;
 pub use ipp::model::PrinterState;
 pub use ipp::model::JobState;
 use log::LevelFilter;
@@ -32,27 +30,6 @@ pub fn get_version_info() -> VersionInfo {
         library_version: LIBRARY_VERSION.to_owned(),
         libgphoto2_version: ::gphoto2::library_version().unwrap().to_owned(),
         libusb_version: get_libusb_version(),
-        libgexiv2_version: get_gexiv2_version(),
-        libexiv2_version: get_exiv2_version(),
-    }
-}
-
-fn get_gexiv2_version() -> String {
-    let raw_version = unsafe { gexiv2_get_version() };
-    println!("{:?}", raw_version);
-
-    // Extract the major, minor, and patch versions
-    let major = raw_version / 10000;
-    let minor = (raw_version / 100) % 100;
-    let patch = raw_version % 100;
-
-    format!("{}.{}.{}", major, minor, patch)
-}
-
-fn get_exiv2_version() -> String {
-    unsafe {
-        let c_str = crate::Exiv2_version();
-        CStr::from_ptr(c_str).to_string_lossy().into_owned()
     }
 }
 
@@ -127,8 +104,6 @@ pub fn initialize_library() {
         // TODO: test what happens when we panic
         TOKIO_RUNTIME.get_or_init(|| runtime::Builder::new_multi_thread().enable_all().build().unwrap());
         debug!("{}", "Tokio runtime initialized");
-        rexiv2::initialize().expect("Unable to initialize rexiv2");
-        debug!("{}", "Rexiv2 initialized");
     });
 
     while !NOISE_HANDLES.is_empty() {
