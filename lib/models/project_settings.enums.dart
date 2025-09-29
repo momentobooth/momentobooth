@@ -3,6 +3,7 @@ part of 'project_settings.dart';
 enum UiTheme {
 
   simple("Simple"),
+  wedding("Wedding"),
   hollywood("Hollywood");
 
   final String name;
@@ -12,6 +13,7 @@ enum UiTheme {
   ThemeExtension themeExtension({required Color primaryColor}) {
     return switch (this) {
       UiTheme.simple => PhotoBoothTheme.defaultBasic(primaryColor: primaryColor),
+      UiTheme.wedding => PhotoBoothTheme.defaultWedding(primaryColor: primaryColor),
       UiTheme.hollywood => PhotoBoothTheme.defaultHollywood(primaryColor: primaryColor),
     };
   }
