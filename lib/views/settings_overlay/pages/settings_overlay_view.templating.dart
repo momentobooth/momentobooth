@@ -3,7 +3,7 @@ part of '../settings_overlay_view.dart';
 Widget _getTemplatingSettings(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
   const buttonMargin = SizedBox(width: 10);
   const columnMargin = SizedBox(height: 10);
-  return SettingsPage(
+  return SettingsListPage(
     title: "Templating",
     blocks: [
       _getTemplateSettings(viewModel, controller),

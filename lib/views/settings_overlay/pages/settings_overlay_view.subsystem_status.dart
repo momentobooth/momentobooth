@@ -1,7 +1,7 @@
 part of '../settings_overlay_view.dart';
 
 Widget _getSubsystemStatusTab(SettingsOverlayViewModel viewModel, SettingsOverlayController controller, BuildContext context) {
-  return SettingsPage(
+  return SettingsListPage(
     title: "Subsystem status",
     blocks: [
       SubsystemStatusList(),

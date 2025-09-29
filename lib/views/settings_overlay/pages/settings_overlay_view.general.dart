@@ -1,7 +1,7 @@
 part of '../settings_overlay_view.dart';
 
 Widget _getGeneralSettings(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsPage(
+  return SettingsListPage(
     title: "General",
     blocks: [
       SettingsNumberEditTile(

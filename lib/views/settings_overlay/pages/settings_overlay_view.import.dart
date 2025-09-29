@@ -1,7 +1,7 @@
 part of '../settings_overlay_view.dart';
 
 Widget _getImportSettings(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsPage(
+  return SettingsListPage(
     title: "Import",
     blocks: [
       Text("Drop a settings stub here to import it."),
