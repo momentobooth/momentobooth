@@ -143,7 +143,15 @@ jobs:
     - name: Bundle dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       shell: pwsh
-      run: .\windows\bundle_libs.ps1
+      run: |
+        .\windows\bundle_libs.ps1
+
+        $file = Join-Path $env:DEV_DRIVE 'momentobooth\build\windows\x64\runner\Release\libgphoto2-6.dll'
+        if (-not (Test-Path $file)) {
+          Write-Error "Missing file: $file"
+          exit 1
+        }
+        Write-Output "Found: $file"
 
     - name: Compile Inno Setup installer
       shell: pwsh
