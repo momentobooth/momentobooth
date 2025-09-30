@@ -54,10 +54,13 @@ Future<String?> _resolveSentryDsnOverride() async {
 
 Future<void> _waitForPreviousInstance(int pid) async {
   await using((arena) async {
+    final hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, pid);
+    if (hProcess == NULL) return;
+
     final lpExitCode = arena<Uint32>();
     bool isProcessActive = true;
     while (isProcessActive) {
-      if (GetExitCodeProcess(pid, lpExitCode) == 0) {
+      if (GetExitCodeProcess(hProcess, lpExitCode) == 0) {
         // Failure to get process exit information. We assume it's exited to not get the application stuck on waiting.
         isProcessActive = false;
       } else {
@@ -66,5 +69,7 @@ Future<void> _waitForPreviousInstance(int pid) async {
 
       if (isProcessActive) await Future.delayed(const Duration(seconds: 1));
     }
+
+    CloseHandle(hProcess);
   });
 }

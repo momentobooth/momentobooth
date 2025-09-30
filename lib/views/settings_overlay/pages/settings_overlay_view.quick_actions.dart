@@ -24,15 +24,16 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               QuickAction(
                 title: 'Restart app',
                 icon: LucideIcons.refreshCcw,
-                onPressed: () {
-                  Process.run(Platform.resolvedExecutable, ['--wait-for-pid=$pid']);
-                  SystemNavigator.pop();
+                onPressed: () async {
+                  await Process.start(Platform.resolvedExecutable, ['--wait-for-pid', '$pid'], mode: ProcessStartMode.detached);
+                  exit(0);
                 },
               ),
             QuickAction(
               title: 'Quit',
               icon: LucideIcons.power,
-              onPressed: SystemNavigator.pop,
+              //onPressed: SystemNavigator.pop, // Not working on Windows as of Flutter 3.35.4
+              onPressed: () => exit(0),
             ),
           ],
         ),

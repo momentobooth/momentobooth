@@ -46,10 +46,13 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
             ),
           ),
           Positioned(
-            bottom: 32,
-            right: 32,
+            bottom: 0,
+            right: 16,
             child: IconButton(
-              icon: Icon(LucideIcons.cog, size: 64),
+              icon: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Icon(LucideIcons.cog, size: 64, color: Colors.white.withAlpha(64)),
+              ),
               onPressed: () => SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.quickActions),
             ),
           ),
