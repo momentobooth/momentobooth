@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show ScaffoldMessenger;
 import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -7,10 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/managers/external_system_status_manager.dart';
-import 'package:momento_booth/managers/mqtt_manager.dart';
-import 'package:momento_booth/managers/project_manager.dart';
-import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
@@ -22,6 +21,8 @@ import 'package:momento_booth/views/components/indicators/subsystem_status_icon.
 import 'package:momento_booth/views/components/indicators/subsystem_status_list.dart';
 import 'package:momento_booth/views/settings_overlay/components/aspect_ratio_preview.dart';
 import 'package:momento_booth/views/settings_overlay/components/import_field.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings/quick_action.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings/quick_toggle.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_action_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_color_pick_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_combo_box_tile.dart';
@@ -50,7 +51,7 @@ part 'pages/settings_overlay_view.import.dart';
 part 'pages/settings_overlay_view.mqtt_integration.dart';
 part 'pages/settings_overlay_view.output.dart';
 part 'pages/settings_overlay_view.project.dart';
-part 'pages/settings_overlay_view.quick_settings.dart';
+part 'pages/settings_overlay_view.quick_actions.dart';
 part 'pages/settings_overlay_view.stats.dart';
 part 'pages/settings_overlay_view.subsystem_status.dart';
 part 'pages/settings_overlay_view.templating.dart';
@@ -92,7 +93,7 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                   key: ValueKey(SettingsPageKey.quickSettings),
                   icon: const Icon(LucideIcons.star),
                   title: const Text("Quick Settings"),
-                  body: Builder(builder: (_) => _getQuickSettings(viewModel, controller)),
+                  body: Builder(builder: (_) => _getQuickActions(viewModel, controller)),
                 ),
                 PaneItemHeader(header: const Text('Project')),
                 PaneItem(
