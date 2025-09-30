@@ -9,7 +9,7 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
           controller: scrollController,
           physics: scrollPhysics,
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 256,
+            maxCrossAxisExtent: 192,
             crossAxisSpacing: 20.0,
             mainAxisSpacing: 20.0,
           ),
@@ -19,6 +19,16 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               icon: LucideIcons.fullscreen,
               checked: getIt<WindowManager>().isFullScreen,
               onChanged: (_) => getIt<WindowManager>().toggleFullscreen(),
+            ),
+            QuickAction(
+              title: 'Restart live view',
+              icon: LucideIcons.refreshCcw,
+              onPressed: () => getIt<LiveViewManager>().restoreLiveView(),
+            ),
+            QuickAction(
+              title: 'Close Settings',
+              icon: LucideIcons.x,
+              onPressed: () => context.pop(),
             ),
             if (!kIsWeb && Platform.isWindows)
               QuickAction(
