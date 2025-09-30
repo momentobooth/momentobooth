@@ -90,9 +90,9 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
               items: [
                 PaneItemSeparator(color: Colors.transparent),
                 PaneItem(
-                  key: ValueKey(SettingsPageKey.quickSettings),
+                  key: ValueKey(SettingsPageKey.quickActions),
                   icon: const Icon(LucideIcons.star),
-                  title: const Text("Quick Settings"),
+                  title: const Text("Quick Actions"),
                   body: Builder(builder: (_) => _getQuickActions(viewModel, controller)),
                 ),
                 PaneItemHeader(header: const Text('Project')),
@@ -215,7 +215,7 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
 
 enum SettingsPageKey {
 
-  quickSettings,
+  quickActions,
 
   project,
   import,

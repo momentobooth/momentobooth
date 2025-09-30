@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
@@ -8,6 +9,8 @@ import 'package:momento_booth/views/photo_booth_screen/screens/components/text/a
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
+import 'package:momento_booth/views/settings_overlay/settings_overlay.dart';
+import 'package:momento_booth/views/settings_overlay/settings_overlay_view.dart';
 
 class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenController> {
 
@@ -40,6 +43,14 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
                 onPressed: controller.onPressedGallery,
                 child: AutoSizeTextAndIcon(text: localizations.startScreenGalleryButton),
               ),
+            ),
+          ),
+          Positioned(
+            bottom: 32,
+            right: 32,
+            child: IconButton(
+              icon: Icon(LucideIcons.cog, size: 64),
+              onPressed: () => SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.quickActions),
             ),
           ),
         ],
