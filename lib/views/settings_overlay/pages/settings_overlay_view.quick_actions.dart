@@ -24,6 +24,7 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               QuickAction(
                 title: 'Restart app',
                 icon: LucideIcons.refreshCcw,
+                iconColor: Colors.orange,
                 onPressed: () async {
                   await Process.start(Platform.resolvedExecutable, ['--wait-for-pid', '$pid'], mode: ProcessStartMode.detached);
                   exit(0);
@@ -32,6 +33,7 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
             QuickAction(
               title: 'Quit',
               icon: LucideIcons.power,
+              iconColor: Colors.red,
               //onPressed: SystemNavigator.pop, // Not working on Windows as of Flutter 3.35.4
               onPressed: () => exit(0),
             ),

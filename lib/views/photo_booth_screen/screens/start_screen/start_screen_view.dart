@@ -9,8 +9,6 @@ import 'package:momento_booth/views/photo_booth_screen/screens/components/text/a
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
-import 'package:momento_booth/views/settings_overlay/settings_overlay.dart';
-import 'package:momento_booth/views/settings_overlay/settings_overlay_view.dart';
 
 class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenController> {
 
@@ -53,7 +51,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
                 padding: const EdgeInsets.all(32.0),
                 child: Icon(LucideIcons.cog, size: 64, color: Colors.white.withAlpha(64)),
               ),
-              onPressed: () => SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.quickActions),
+              onPressed: controller.onPressedOpenSettings,
             ),
           ),
         ],

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 
-final class PhotoBoothDialogPage<T> extends CustomTransitionPage<void> {
+final class PhotoBoothDialogPage<T> extends CustomTransitionPage<T> {
 
   static const defaultTransitionDuration = Duration(milliseconds: 800);
   static const defaultTransitionOutDuration = Duration(milliseconds: 400);

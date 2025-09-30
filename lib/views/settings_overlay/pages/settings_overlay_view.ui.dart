@@ -19,6 +19,12 @@ Widget _getUiSettings(SettingsOverlayViewModel viewModel, SettingsOverlayControl
         value: () => viewModel.languageSetting,
         onChanged: controller.onLanguageChanged,
       ),
+      SettingsSecretEditTile(
+        icon: LucideIcons.key,
+        title: "Settings pincode",
+        subtitle: "The pincode needed to access the Settings screen from the Start screen settings button. Make sure to only use digits! Empty values means no password.",
+        secretStorageKey: settingsPincodeKey,
+      ),
       SettingsToggleTile(
         icon: LucideIcons.mouse,
         title: "Allow scroll gesture with mouse",

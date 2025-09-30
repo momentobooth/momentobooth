@@ -5,8 +5,9 @@ class QuickAction extends StatelessWidget {
   final String title;
   final IconData icon;
   final VoidCallback onPressed;
+  final Color? iconColor;
 
-  const QuickAction({super.key, required this.title, required this.icon, required this.onPressed});
+  const QuickAction({super.key, required this.title, required this.icon, required this.onPressed, this.iconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class QuickAction extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         spacing: 32,
-        children: [Icon(icon, size: 64), Text(title)],
+        children: [Icon(icon, size: 64, color: iconColor), Text(title)],
       ),
     );
   }
