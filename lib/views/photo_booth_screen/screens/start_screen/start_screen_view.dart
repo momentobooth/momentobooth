@@ -43,16 +43,21 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
               ),
             ),
           ),
-          Positioned(
-            bottom: 0,
-            right: 16,
-            child: IconButton(
-              icon: Padding(
-                padding: const EdgeInsets.all(32.0),
-                child: Icon(LucideIcons.cog, size: 64, color: Colors.white.withAlpha(64)),
-              ),
-              onPressed: controller.onPressedOpenSettings,
-            ),
+          Observer(
+            builder: (context) {
+              if (!viewModel.showSettingsButton) return const SizedBox.shrink();
+              return Positioned(
+                bottom: 0,
+                right: 16,
+                child: IconButton(
+                  icon: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Icon(LucideIcons.cog, size: 64, color: Colors.white.withAlpha(64)),
+                  ),
+                  onPressed: controller.onPressedOpenSettings,
+                ),
+              );
+            }
           ),
         ],
       ),

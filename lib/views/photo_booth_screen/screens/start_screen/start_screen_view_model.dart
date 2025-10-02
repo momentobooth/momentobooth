@@ -21,6 +21,9 @@ abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
       getIt<ProjectManager>().settings.introScreenTouchToStartOverrideText.nullIfEmpty ??
       localizations.startScreenTouchToStartButton;
 
+  @computed
+  bool get showSettingsButton => getIt<SettingsManager>().settings.ui.showSettingsButton;
+
   StartScreenViewModelBase({required super.contextAccessor}) {
     // Remove images in memory
     // Fixme: maybe somewhere else is nicer, but for now it's here.
