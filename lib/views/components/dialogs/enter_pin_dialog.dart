@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
@@ -49,29 +50,29 @@ class _EnterPinDialogState extends State<EnterPinDialog> {
             children: [
               TableRow(
                 children: [
-                  _PinButton(label: "1", onTap: () => _addDigit("1")),
-                  _PinButton(label: "2", onTap: () => _addDigit("2")),
-                  _PinButton(label: "3", onTap: () => _addDigit("3")),
+                  _PinButton(label: Text("1"), onTap: () => _addDigit("1")),
+                  _PinButton(label: Text("2"), onTap: () => _addDigit("2")),
+                  _PinButton(label: Text("3"), onTap: () => _addDigit("3")),
                 ],
               ),
               TableRow(
                 children: [
-                  _PinButton(label: "4", onTap: () => _addDigit("4")),
-                  _PinButton(label: "5", onTap: () => _addDigit("5")),
-                  _PinButton(label: "6", onTap: () => _addDigit("6")),
+                  _PinButton(label: Text("4"), onTap: () => _addDigit("4")),
+                  _PinButton(label: Text("5"), onTap: () => _addDigit("5")),
+                  _PinButton(label: Text("6"), onTap: () => _addDigit("6")),
                 ],
               ),
               TableRow(
                 children: [
-                  _PinButton(label: "7", onTap: () => _addDigit("7")),
-                  _PinButton(label: "8", onTap: () => _addDigit("8")),
-                  _PinButton(label: "9", onTap: () => _addDigit("9")),
+                  _PinButton(label: Text("7"), onTap: () => _addDigit("7")),
+                  _PinButton(label: Text("8"), onTap: () => _addDigit("8")),
+                  _PinButton(label: Text("9"), onTap: () => _addDigit("9")),
                 ],
               ),
               TableRow(
                 children: [
-                  _PinButton(label: "⌫", onTap: _removeDigit),
-                  _PinButton(label: "0", onTap: () => _addDigit("0")),
+                  _PinButton(label: Icon(LucideIcons.delete), onTap: _removeDigit),
+                  _PinButton(label: Text("0"), onTap: () => _addDigit("0")),
                   const SizedBox.shrink(),
                 ],
               ),
@@ -108,7 +109,7 @@ class _EnterPinDialogState extends State<EnterPinDialog> {
 }
 
 class _PinButton extends StatelessWidget {
-  final String label;
+  final Widget label;
   final VoidCallback onTap;
 
   const _PinButton({required this.label, required this.onTap});
@@ -121,7 +122,13 @@ class _PinButton extends StatelessWidget {
       height: 64,
       child: FilledButton(
         onPressed: onTap,
-        child: Text(label, style: const TextStyle(fontSize: 20)),
+        style: (FluentTheme.of(context).buttonTheme.filledButtonStyle ?? ButtonStyle()).copyWith(
+          shape: WidgetStatePropertyAll(ContinuousRectangleBorder(borderRadius: BorderRadius.circular(32))),
+        ),
+        child: DefaultTextStyle.merge(
+          style: TextStyle(fontSize: 20),
+          child: label,
+        ),
       ),
     );
   }
