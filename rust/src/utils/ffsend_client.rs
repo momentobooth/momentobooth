@@ -1,7 +1,7 @@
-use std::{path::PathBuf, str::FromStr, sync::{Arc, Mutex}};
+use std::{path::PathBuf, str::FromStr, sync::{Arc, Mutex}, time::Duration};
 
 use chrono::{DateTime, Utc};
-use ffsend_api::{action::{upload::Upload, params::ParamsData, delete::Delete}, url::Url, client::{Client, ClientConfig}, pipe::ProgressReporter, file::remote_file::RemoteFile};
+use ffsend_api::{action::{delete::Delete, params::ParamsData, upload::Upload}, client::{Client, ClientConfig, ClientConfigBuilder}, file::remote_file::RemoteFile, pipe::ProgressReporter, url::Url};
 
 use crate::frb_generated::StreamSink;
 
@@ -9,7 +9,7 @@ use crate::frb_generated::StreamSink;
 // Functions //
 // ///////// //
 
-pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, max_downloads: Option<u8>, expires_after_seconds: Option<u32>, update_sink: StreamSink<FfSendTransferProgress>) {
+pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, max_downloads: Option<u8>, expires_after_seconds: Option<u32>, update_sink: StreamSink<FfSendTransferProgress>, control_command_timeout: Duration, transfer_timeout: Duration) {
     // Prepare upload
     let version = ffsend_api::api::Version::V3;
     let url = Url::parse(host_url.as_str()).expect("Could not parse host URL");
@@ -19,7 +19,8 @@ pub fn upload_file(host_url: String, file_path: String, download_filename: Optio
     let params = Some(ParamsData::from(max_downloads, expires_after_seconds.map(|n| n as usize)));
 
     let action = Upload::new(version, url, file, name, password, params);
-    let client = Client::new(ClientConfig::default(), true);
+    let config = ClientConfigBuilder::default().timeout(Some(control_command_timeout)).transfer_timeout(Some(transfer_timeout)).build().unwrap();
+    let client = Client::new(config, true);
 
     // Initialize reporting and start upload
     let transfer_progress_reporter = Arc::new(Mutex::new(FfSendTransferProgressReporter::new(update_sink)));

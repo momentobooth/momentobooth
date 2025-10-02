@@ -20,6 +20,20 @@ Widget _getOutputSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCon
             controller: controller.firefoxSendServerUrlController,
             onFinishedEditing: controller.onFirefoxSendServerUrlChanged,
           ),
+          SettingsNumberEditTile(
+            icon: LucideIcons.timer,
+            title: "Firefox Send control command timeout",
+            subtitle: "The duration (in seconds) a control command is allowed to take",
+            value: () => viewModel.firefoxSendControlCommandTimeoutSetting,
+            onFinishedEditing: controller.onFirefoxSendControlCommandTimeoutChanged,
+          ),
+          SettingsNumberEditTile(
+            icon: LucideIcons.timer,
+            title: "Firefox Send transfer timeout",
+            subtitle: "The duration (in seconds) a picture upload is allowed to take",
+            value: () => viewModel.firefoxSendTransferTimeoutSetting,
+            onFinishedEditing: controller.onFirefoxSendTransferTimeoutChanged,
+          ),
         ],
       ),
       SettingsSection(

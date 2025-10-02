@@ -83,7 +83,13 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
     // HHmmss string
     DateFormat formatter = DateFormat('HHmmss');
     String filename = "MomentoBooth ${formatter.format(DateTime.now())}.$ext";
-    Stream<FfSendTransferProgress> stream = ffsendUploadFile(filePath: _file!.path, hostUrl: ffSendUrl, downloadFilename: filename);
+    Stream<FfSendTransferProgress> stream = ffsendUploadFile(
+      filePath: _file!.path,
+      hostUrl: ffSendUrl,
+      downloadFilename: filename,
+      controlCommandTimeout: getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout,
+      transferTimeout: getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout,
+    );
 
     _uploadProgress = 0.0;
     _uploadFailed = false;
