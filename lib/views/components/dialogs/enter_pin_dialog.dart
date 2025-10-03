@@ -45,7 +45,6 @@ class _EnterPinDialogState extends State<EnterPinDialog> {
           const SizedBox(height: 20),
           // Pin Pad
           Table(
-            defaultColumnWidth: const FixedColumnWidth(60),
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: [
               TableRow(
