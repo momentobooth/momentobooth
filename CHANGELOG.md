@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.15.2
+
+- New feature: Add setting to show a 'Open Settings' button on the Start screen
+- New feature: Add Wedding theme
+- New feature: Add ffsend timeout option with more sensible defaults instead of relying using the library's far too high defaults
+- Dev change: Fix Windows release pipeline not bundling library (and yank 0.15.1 and 0.15.0 from GitHub releases due to this issue)
+- Dev change: Replace EXIF reading with exiv2 and gexiv2 by the native Rust crate `little_exif`
+
 ## 0.15.1
 
 - Dev change: Fix Windows release workflow crashing due to missing h3xup binary
