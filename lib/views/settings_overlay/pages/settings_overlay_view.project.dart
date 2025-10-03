@@ -1,7 +1,7 @@
 part of '../settings_overlay_view.dart';
 
 Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsPage(
+  return SettingsListPage(
     title: "Project",
     blocks: [
       Padding(

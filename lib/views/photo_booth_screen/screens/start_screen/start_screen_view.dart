@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
@@ -41,6 +42,22 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
                 child: AutoSizeTextAndIcon(text: localizations.startScreenGalleryButton),
               ),
             ),
+          ),
+          Observer(
+            builder: (context) {
+              if (!viewModel.showSettingsButton) return const SizedBox.shrink();
+              return Positioned(
+                bottom: 0,
+                right: 16,
+                child: IconButton(
+                  icon: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Icon(LucideIcons.cog, size: 64, color: Colors.white.withAlpha(64)),
+                  ),
+                  onPressed: controller.onPressedOpenSettings,
+                ),
+              );
+            }
           ),
         ],
       ),

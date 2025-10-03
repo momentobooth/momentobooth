@@ -1,7 +1,7 @@
 part of '../settings_overlay_view.dart';
 
 Widget _getUiSettings(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsPage(
+  return SettingsListPage(
     title: "User interface",
     blocks: [
       SettingsNumberEditTile(
@@ -19,6 +19,20 @@ Widget _getUiSettings(SettingsOverlayViewModel viewModel, SettingsOverlayControl
         value: () => viewModel.languageSetting,
         onChanged: controller.onLanguageChanged,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.cog,
+        title: "Show settings button on Start screen",
+        subtitle: "If enabled, a lightly visible Settings button appears on the Start screen allowing you to open the Settings using a touch screen.",
+        value: () => viewModel.showSettingsButtonSetting,
+        onChanged: controller.onShowSettingsButtonChanged,
+      ),
+      if (viewModel.showSettingsButtonSetting)
+        SettingsSecretEditTile(
+          icon: LucideIcons.key,
+          title: "Settings pincode",
+          subtitle: "The pincode needed to access the Settings screen from the Start screen settings button. Make sure to only use digits! Empty values means no password.",
+          secretStorageKey: settingsPincodeKey,
+        ),
       SettingsToggleTile(
         icon: LucideIcons.mouse,
         title: "Allow scroll gesture with mouse",

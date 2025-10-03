@@ -231,6 +231,7 @@ sealed class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(BackgroundBlur.textureBlur) BackgroundBlur backgroundBlur,
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
     @Default(FilterQuality.medium) FilterQuality liveViewFilterQuality,
+    @Default(false) bool showSettingsButton,
   }) = _UiSettings;
 
   factory UiSettings.withDefaults() => UiSettings.fromJson({});

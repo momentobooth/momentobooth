@@ -6,12 +6,12 @@ import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 class SettingsPage extends StatelessWidget {
 
   final String title;
-  final List<Widget> blocks;
+  final Widget Function(BuildContext context, ScrollController scrollController, ScrollPhysics scrollPhysics) bodyBuilder;
 
   const SettingsPage({
     super.key,
     required this.title,
-    required this.blocks,
+    required this.bodyBuilder,
   });
 
   @override
@@ -30,15 +30,7 @@ class SettingsPage extends StatelessWidget {
             child: ScrollShadow(
               size: 16,
               color: theme.micaBackgroundColor.toAccentColor().lightest,
-              child: DynMouseScroll(
-                builder: (context, scrollController, scrollPhysics) {
-                  return ListView(
-                    controller: scrollController,
-                    physics: scrollPhysics,
-                    children: blocks,
-                  );
-                },
-              ),
+              child: DynMouseScroll(builder: bodyBuilder),
             ),
           ),
           const Padding(
