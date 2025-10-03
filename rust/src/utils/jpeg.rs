@@ -1,10 +1,10 @@
-use std::{io::Cursor, path::Path, sync::LazyLock};
+use std::{path::Path, sync::LazyLock};
 
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
 use little_exif::{exif_tag::ExifTag, filetype::FileExtension, metadata::Metadata};
 use num::FromPrimitive;
-use zune_jpeg::{JpegDecoder, zune_core::{options::DecoderOptions, colorspace::ColorSpace}};
+use zune_jpeg::{JpegDecoder, zune_core::{bytestream::ZCursor, options::DecoderOptions, colorspace::ColorSpace}};
 use chrono::{Local, NaiveDateTime};
 
 use crate::models::images::{ExifOrientation, MomentoBoothExifTag, RawImage};
@@ -32,7 +32,7 @@ pub fn encode_raw_to_jpeg(raw_image: RawImage, quality: u8, exif_tags: Vec<Momen
 static JPEG_TO_RGBA_DECODER_OPTIONS: LazyLock<DecoderOptions> = LazyLock::new(|| DecoderOptions::new_fast().jpeg_set_out_colorspace(ColorSpace::RGBA));
 
 pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
-    let mut decoder = JpegDecoder::new_with_options(Cursor::new(jpeg_data), *JPEG_TO_RGBA_DECODER_OPTIONS);
+    let mut decoder = JpegDecoder::new_with_options(ZCursor::new(jpeg_data), *JPEG_TO_RGBA_DECODER_OPTIONS);
     let pixels = decoder.decode().expect("Could not decode JPEG data");
     let image_info = decoder.info().expect("Could not extract JPEG info");
 
