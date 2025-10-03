@@ -13,7 +13,7 @@ serde_json = "1.0.145"
 chrono = "0.4.42"
 image = { version = "0.25.8", features = ["rayon"] }
 ipp = "5.3.2"
-zune-jpeg = "0.4.21"
+zune-jpeg = "0.5.0"
 jpeg-encoder = "0.6.1"
 dlopen = "0.1.8"
 noise = "0.9.0"
