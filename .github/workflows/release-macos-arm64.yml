@@ -102,7 +102,7 @@ jobs:
     - name: Download and unpack Homebrew libraries
       run: |
         mkdir ci_build && cd ci_build
-        ../macos/ci_download_deps.sh -a arm64_ventura,ventura libgphoto2 gexiv2
+        ../macos/ci_download_deps.sh -a arm64_ventura,ventura libgphoto2
         ../macos/ci_adapt_pkgconf_dirs.sh ventura/lib/pkgconfig
         ../macos/ci_adapt_pkgconf_dirs.sh arm64_ventura/lib/pkgconfig
 

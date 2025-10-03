@@ -10,8 +10,6 @@ mod frb_generated;
 mod hardware_control;
 mod utils;
 
-include!(concat!(env!("OUT_DIR"), "/exiv2_bindings.rs"));
-
 const RUST_TARGET: &str = include_str!(join_path!(env!("OUT_DIR"), "target_name.txt"));
 const LIBRARY_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 

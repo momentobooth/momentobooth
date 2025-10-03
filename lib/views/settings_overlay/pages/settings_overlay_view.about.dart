@@ -22,8 +22,6 @@ Widget get _aboutTab {
             const SizedBox(height: 8),
             Text('libusb version: ${helperLibraryVersionInfo.libusbVersion}'),
             Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}${libgphoto2GitRev.isNotEmpty ? ' (git rev ${libgphoto2GitRev.substring(0, 7)})' : ''}'),
-            Text('libexiv2 version: ${helperLibraryVersionInfo.libexiv2Version}'),
-            Text('libgexiv2 version: ${helperLibraryVersionInfo.libgexiv2Version}'),
           ],
         ),
       ],
