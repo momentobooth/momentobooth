@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/logger.dart';
@@ -45,10 +47,15 @@ abstract class WindowManagerBase extends Subsystem with Store, Logger {
   }
 
   @action
-  void setFullscreen(bool fullscreen) {
+  Future<void> setFullscreen(bool fullscreen) async {
     _isFullScreen = fullscreen;
     logDebug("Setting fullscreen to $_isFullScreen");
-    windowManager.setFullScreen(_isFullScreen);
+    if (!kIsWeb && Platform.isWindows && fullscreen && await windowManager.isMaximized()) {
+      // Workaround issue on Windows where full screen is not really full screen if the app was maximized beforehand.
+      await windowManager.unmaximize();
+      await Future.delayed(Duration(milliseconds: 100)); // 1 ms also seems to work, just to be sure set to 100 ms.
+    }
+    await windowManager.setFullScreen(_isFullScreen);
   }
 
   void close() {
