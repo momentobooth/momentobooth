@@ -78,7 +78,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
     }
 
     // ignore: use_build_context_synchronously
-    await SettingsOverlay.openDialog(contextAccessor.buildContext, initialPage: SettingsPageKey.quickActions);
+    await SettingsOverlay.toggleDialog(contextAccessor.buildContext, initialPage: SettingsPageKey.quickActions);
   }
 
 }

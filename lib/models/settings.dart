@@ -23,11 +23,12 @@ part 'settings.g.dart';
 // ///////////// //
 
 @Freezed(fromJson: true, toJson: true)
-sealed class Settings with _$Settings implements TomlEncodableValue {
+abstract class Settings with _$Settings implements TomlEncodableValue {
 
   const Settings._();
 
   const factory Settings({
+    @Default(true) bool photoboothIsAvailable,
     @Default({}) Set<OnboardingStep> onboardingStepsDone,
     @Default(5) int captureDelaySeconds,
     @Default(false) bool loadLastProject,
@@ -59,7 +60,7 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
 // ///////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
+abstract class HardwareSettings with _$HardwareSettings implements TomlEncodableValue {
 
   const HardwareSettings._();
 
@@ -109,7 +110,7 @@ sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableVa
 }
 
 @Freezed(fromJson: true, toJson: true)
-sealed class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableValue {
+abstract class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableValue {
 
   const PrintLayoutSettings._();
 
@@ -133,7 +134,7 @@ sealed class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncod
 }
 
 @Freezed(fromJson: true, toJson: true)
-sealed class MediaSettings with _$MediaSettings implements TomlEncodableValue {
+abstract class MediaSettings with _$MediaSettings implements TomlEncodableValue {
 
   const MediaSettings._();
 
@@ -153,7 +154,7 @@ sealed class MediaSettings with _$MediaSettings implements TomlEncodableValue {
 }
 
 @Freezed(fromJson: true, toJson: true)
-sealed class GridSettings with _$GridSettings implements TomlEncodableValue {
+abstract class GridSettings with _$GridSettings implements TomlEncodableValue {
 
   const GridSettings._();
 
@@ -177,7 +178,7 @@ sealed class GridSettings with _$GridSettings implements TomlEncodableValue {
 // /////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-sealed class OutputSettings with _$OutputSettings implements TomlEncodableValue {
+abstract class OutputSettings with _$OutputSettings implements TomlEncodableValue {
 
   const OutputSettings._();
 
@@ -215,7 +216,7 @@ String _getHome() {
 // /////////// //
 
 @Freezed(fromJson: true, toJson: true)
-sealed class UiSettings with _$UiSettings implements TomlEncodableValue {
+abstract class UiSettings with _$UiSettings implements TomlEncodableValue {
 
   const UiSettings._();
 
@@ -232,6 +233,7 @@ sealed class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(FilterQuality.low) FilterQuality screenTransitionAnimationFilterQuality,
     @Default(FilterQuality.medium) FilterQuality liveViewFilterQuality,
     @Default(false) bool showSettingsButton,
+    @Default(false) bool enableScreensaversWhenUnavailable,
   }) = _UiSettings;
 
   factory UiSettings.withDefaults() => UiSettings.fromJson({});
@@ -244,7 +246,7 @@ sealed class UiSettings with _$UiSettings implements TomlEncodableValue {
 }
 
 @Freezed(fromJson: true, toJson: true)
-sealed class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEncodableValue {
+abstract class LottieAnimationSettings with _$LottieAnimationSettings implements TomlEncodableValue {
 
   const LottieAnimationSettings._();
 
@@ -272,7 +274,7 @@ sealed class LottieAnimationSettings with _$LottieAnimationSettings implements T
 // //////////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-sealed class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEncodableValue {
+abstract class MqttIntegrationSettings with _$MqttIntegrationSettings implements TomlEncodableValue {
 
   const MqttIntegrationSettings._();
 
@@ -301,7 +303,7 @@ sealed class MqttIntegrationSettings with _$MqttIntegrationSettings implements T
 }
 
 @Freezed(fromJson: true, toJson: true)
-sealed class FaceRecognitionSettings with _$FaceRecognitionSettings implements TomlEncodableValue {
+abstract class FaceRecognitionSettings with _$FaceRecognitionSettings implements TomlEncodableValue {
 
   const FaceRecognitionSettings._();
 
@@ -350,7 +352,7 @@ sealed class ExternalSystemCheckSetting with _$ExternalSystemCheckSetting implem
 // ////////////// //
 
 @Freezed(fromJson: true, toJson: true)
-sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
+abstract class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 
   const DebugSettings._();
 

@@ -1,6 +1,9 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/views/not_available_screen/not_available_screen.dart';
 import 'package:momento_booth/views/onboarding_screen/components/wizard_page.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 
@@ -31,7 +34,13 @@ class _FinishPageState extends State<FinishPage> with SingleTickerProviderStateM
   }
 
   void onAnimationStatusChanged(AnimationStatus status) {
-    if (status.isCompleted) context.replace(StartScreen.defaultRoute);
+    if (status.isCompleted) {
+      if (getIt<SettingsManager>().settings.photoboothIsAvailable) {
+        context.replace(StartScreen.defaultRoute);
+      } else {
+        context.replace(NotAvailableScreen.defaultRoute);
+      }
+    }
   }
 
   @override

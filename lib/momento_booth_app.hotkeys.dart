@@ -13,7 +13,7 @@ class _HotkeyResponder extends StatelessWidget {
     return CallbackShortcuts(
       bindings: {
         SingleActivator(LogicalKeyboardKey.keyR, control: control, meta: meta): () => getIt<LiveViewManager>().restoreLiveView(),
-        SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () => SettingsOverlay.openDialog(context),
+        SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () => SettingsOverlay.toggleDialog(context),
         SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): () => getIt<WindowManager>().toggleFullscreen(),
         SingleActivator(LogicalKeyboardKey.keyO, control: control, meta: meta): () => getIt<ProjectManager>().browseOpen(),
         const SingleActivator(LogicalKeyboardKey.enter, alt: true): () => getIt<WindowManager>().toggleFullscreen(),

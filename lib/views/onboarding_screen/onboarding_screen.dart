@@ -1,6 +1,3 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:animations/animations.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +11,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/utils/environment_info.dart';
+import 'package:momento_booth/views/components/backgrounds/animated_circles_background.dart';
 import 'package:momento_booth/views/components/indicators/onboarding_version_info.dart';
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/error_page.dart';
@@ -27,6 +25,8 @@ import 'package:wizard_router/wizard_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
 
+  static const String defaultRoute = "/onboarding";
+
   const OnboardingScreen({super.key});
 
   @override
@@ -35,11 +35,6 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-
-  static const int _gradientCount = 3;
-
-  late final Timer _timer;
-  final Random _random = Random();
 
   late final WizardController _wizardController = WizardController(routes: {
     '/initialization-page': WizardRoute(builder: (context) => InitializationPage()),
@@ -74,48 +69,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   late final ReactionDisposer _autorunDispose;
 
-  late List<Gradient> _gradients;
-
   @override
   void initState() {
-    _updateGradients();
-
-    _timer = Timer.periodic(
-      const Duration(seconds: 10),
-      (_) => _updateGradients(),
-    );
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => _updateGradients());
     _autorunDispose = autorun((_) {
       if (getIt<AppInitManager>().isSucceeded != null) return _wizardController.replace();
     });
-
     super.initState();
-  }
-
-  void _updateGradients() {
-    if (!mounted) return;
-    setState(() {
-      _gradients = List.generate(
-        _gradientCount,
-        (i) => RadialGradient(
-          radius: _random.nextDouble() / 3 + 0.30,
-          center: Alignment(
-            _random.nextDouble() * (_random.nextBool() ? -1 : 1),
-            _random.nextDouble() * (_random.nextBool() ? -1 : 1),
-          ),
-          focalRadius: 100,
-          colors: [_getRandomLightBlueTint(), const Color.fromARGB(0, 255, 255, 255)],
-        ),
-        growable: false,
-      );
-    });
-  }
-
-  Color _getRandomLightBlueTint() {
-    final possibleColors = [Colors.blue.light, Colors.blue.lightest];
-    final chosenColor = possibleColors[_random.nextInt(possibleColors.length)];
-    return chosenColor.withValues(alpha: _random.nextDouble());
   }
 
   @override
@@ -124,10 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       fit: StackFit.expand,
       children: [
         const ColoredBox(color: Colors.white),
-        ..._gradients.map((g) => AnimatedContainer(
-              duration: const Duration(seconds: 10),
-              decoration: BoxDecoration(gradient: g),
-            )),
+        AnimatedCirclesBackground(),
         Center(
           child: SizedBox(
             width: 800,
@@ -164,7 +120,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   void dispose() {
-    _timer.cancel();
     _autorunDispose();
     _wizardController.dispose();
     super.dispose();

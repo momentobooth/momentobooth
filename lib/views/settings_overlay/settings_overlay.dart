@@ -31,27 +31,45 @@ class SettingsOverlay extends ScreenBase<SettingsOverlayViewModel, SettingsOverl
     return SettingsOverlayViewModel(contextAccessor: contextAccessor);
   }
 
-  static Future<void> openDialog(BuildContext context, {SettingsPageKey initialPage = SettingsPageKey.project}) async {
-    context.read<ActivityMonitorController>().pause();
-    await showDialog(
-      context: context,
-      builder: (_) {
-        // As it doesn't look feasible to externally check if the Settings overlay is opened
-        // (e.g. by inspecting `Navigator state), we make the Settings overlay able to close itself.
-        bool control = !Platform.isMacOS, meta = Platform.isMacOS;
-        return CallbackShortcuts(
-          bindings: {
-            SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () => Navigator.of(context, rootNavigator: true).pop(),
-          },
-          child: FocusScope( // Without the FocusScope, nothing happens, I'm not exactly sure why.
+  /// Toggle the Settings dialog. This is a bit of a complicated method, due to it keeping state of whether the dialog
+  /// is open currently.
+  ///
+  /// This is done this way, because there seems to be no easy way of determining this state using the [Navigator] API.
+  /// Also due to focus issues, sometimes the hotkey is processed by this dialog and sometimes by the [App] widget.
+  static bool _settingsIsOpen = false;
+  static Future<void> toggleDialog(BuildContext context, {SettingsPageKey initialPage = SettingsPageKey.project}) async {
+    if (_settingsIsOpen) {
+      Navigator.of(context).pop();
+      _settingsIsOpen = false;
+      return;
+    }
+
+    try {
+      _settingsIsOpen = true;
+      context.read<ActivityMonitorController>().pause();
+      await showDialog(
+        context: context,
+        builder: (_) {
+          // As it doesn't look feasible to externally check if the Settings overlay is opened
+          // (e.g. by inspecting `Navigator state), we make the Settings overlay able to close itself.
+          bool control = !Platform.isMacOS, meta = Platform.isMacOS;
+
+          return FocusableActionDetector(
             autofocus: true,
+            shortcuts: {
+              SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): VoidCallbackIntent(
+                () => Navigator.of(context, rootNavigator: true).pop(),
+              ),
+            },
             child: SettingsOverlay(initialPage: initialPage),
-          ),
-        );
-      },
-      barrierDismissible: true,
-    );
-    if (context.mounted) context.read<ActivityMonitorController>().resume();
+          );
+        },
+        barrierDismissible: true,
+      );
+      if (context.mounted) context.read<ActivityMonitorController>().resume();
+    } finally {
+      _settingsIsOpen = false;
+    }
   }
 
 }
