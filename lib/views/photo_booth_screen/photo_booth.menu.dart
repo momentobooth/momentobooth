@@ -36,7 +36,7 @@ class MomentoMenuBar extends StatelessWidget {
             MenuFlyoutItem(text: Text(localizations.actionsExit), onPressed: getIt<WindowManager>().close,)
           ]),
           MenuBarItem(title: localizations.genericView, items: [
-            MenuFlyoutItem(text: Text(localizations.genericFullScreen), onPressed: () { getIt<WindowManager>().toggleFullscreen(); }, leading: Icon(LucideIcons.expand), trailing: _shortcut("Ctrl+F/Alt+Enter")),
+            MenuFlyoutItem(text: Text(localizations.genericFullScreen), onPressed: () { getIt<WindowManager>().toggleFullscreenSafe(); }, leading: Icon(LucideIcons.expand), trailing: _shortcut("Ctrl+F/Alt+Enter")),
             const MenuFlyoutSeparator(),
             MenuFlyoutItem(text: Text(localizations.screensStart), onPressed: () { router.go(StartScreen.defaultRoute); }, leading: Icon(LucideIcons.play), trailing: _shortcut("Ctrl+H")),
             MenuFlyoutItem(text: Text(localizations.screensGallery), onPressed: () { router.go(GalleryScreen.defaultRoute); }, leading: Icon(LucideIcons.images)),
