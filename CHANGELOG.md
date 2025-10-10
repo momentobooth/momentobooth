@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 0.15.3
+
 - Bugfix: Fix `-f` argument not working
+- Bugfix: Workaround full screen not working properly on Windows when window was maximized
 
 - Dev change: Updated Dart and Rust dependencies
 
