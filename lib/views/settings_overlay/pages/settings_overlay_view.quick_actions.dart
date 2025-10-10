@@ -18,7 +18,7 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               title: 'Full screen',
               icon: LucideIcons.fullscreen,
               checked: getIt<WindowManager>().isFullScreen,
-              onChanged: (_) => getIt<WindowManager>().toggleFullscreen(),
+              onChanged: (_) => getIt<WindowManager>().toggleFullscreenSafe(),
             ),
             QuickAction(
               title: 'Restart live view',
