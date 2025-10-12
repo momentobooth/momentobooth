@@ -17,9 +17,7 @@ abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
   List<LottieAnimationSettings> get introScreenLottieAnimations => getIt<SettingsManager>().settings.ui.introScreenLottieAnimations;
 
   @computed
-  String get touchToStartText =>
-      getIt<ProjectManager>().settings.introScreenTouchToStartOverrideText.nullIfEmpty ??
-      localizations.startScreenTouchToStartButton;
+  String? get touchToStartOverrideText => getIt<ProjectManager>().settings.introScreenTouchToStartOverrideText.nullIfEmpty;
 
   @computed
   bool get showSettingsButton => getIt<SettingsManager>().settings.ui.showSettingsButton;
