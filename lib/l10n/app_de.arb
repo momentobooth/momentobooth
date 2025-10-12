@@ -1,4 +1,5 @@
 {
+    "@@locale": "de",
     "genericBackButton": "Zurück",
     "@genericBackButton": {},
     "genericPrintButton": "Drucken",
@@ -202,7 +203,7 @@
     "@printerErrorConnectionErrorBody2": {},
     "printerErrorUnknownIssueTitle": "Unbekannte Druckerausgabe",
     "@printerErrorUnknownIssueTitle": {},
-    "printerErrorUnknownIssueBody1": "Drucker [{name}] berichtet, dass es ein Problem hat:\n\n(X48X)",
+    "printerErrorUnknownIssueBody1": "Drucker [{name}] berichtet, dass es ein Problem hat:\n\n{error}",
     "@printerErrorUnknownIssueBody1": {
         "placeholders": {
             "name": {

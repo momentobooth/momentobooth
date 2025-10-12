@@ -68,6 +68,7 @@ class WidgetbookApp extends StatelessWidget {
           supportedLocales: const [
             Locale('en'), // English
             Locale('nl'), // Dutch
+            Locale('de'), // German
           ],
           home: child,
         );

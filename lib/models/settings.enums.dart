@@ -176,7 +176,8 @@ enum Rotate {
 enum Language {
 
   english("English", "en"),
-  dutch("Dutch", "nl");
+  dutch("Dutch", "nl"),
+  german("German", "de");
 
   final String name;
   final String code;

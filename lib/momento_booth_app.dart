@@ -81,6 +81,7 @@ class _MomentoBoothAppState extends State<MomentoBoothApp> with WindowListener {
           supportedLocales: const [
             Locale('en'), // English
             Locale('nl'), // Dutch
+            Locale('de'), // German
           ],
           locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
           builder: (context, child) {
