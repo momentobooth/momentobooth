@@ -181,7 +181,7 @@
     "@printerErrorNoInkBody2": {},
     "printerErrorNoMediaTitle": "Kein Papier",
     "@printerErrorNoMediaTitle": {},
-    "printerErrorNoMediaBody1": "Drucker [{name}]] berichtet, dass es aus Papier lief.",
+    "printerErrorNoMediaBody1": "Drucker [{name}] berichtet, dass es aus Papier lief.",
     "@printerErrorNoMediaBody1": {
         "placeholders": {
             "name": {
