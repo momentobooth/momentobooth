@@ -1,11 +1,12 @@
 {
+    "@@locale": "de",
     "genericBackButton": "Zurück",
     "@genericBackButton": {},
     "genericPrintButton": "Drucken",
     "@genericPrintButton": {},
     "genericContinueButton": "Fortsetzung",
     "@genericContinueButton": {},
-    "genericRefreshButton": "Refreshing",
+    "genericRefreshButton": "Aktualisieren",
     "@genericRefreshButton": {},
     "genericClearButton": "Klar",
     "@genericClearButton": {},
@@ -13,13 +14,13 @@
     "@genericSaveButton": {},
     "genericCloseButton": "Schließen",
     "@genericCloseButton": {},
-    "genericRetryButton": "Wiederkehr",
+    "genericRetryButton": "Wiederholen",
     "@genericRetryButton": {},
     "genericCancelButton": "Abbrechen",
     "@genericCancelButton": {},
     "genericDeleteButton": "Löschen",
     "@genericDeleteButton": {},
-    "genericDoneButton": "KAPITEL",
+    "genericDoneButton": "Fertig",
     "@genericDoneButton": {},
     "genericOneMomentPlease": "Einen Moment bitte...",
     "@genericOneMomentPlease": {},
@@ -180,7 +181,7 @@
     "@printerErrorNoInkBody2": {},
     "printerErrorNoMediaTitle": "Kein Papier",
     "@printerErrorNoMediaTitle": {},
-    "printerErrorNoMediaBody1": "Drucker [{name}]] berichtet, dass es aus Papier lief.",
+    "printerErrorNoMediaBody1": "Drucker [{name}] berichtet, dass es aus Papier lief.",
     "@printerErrorNoMediaBody1": {
         "placeholders": {
             "name": {
@@ -202,7 +203,7 @@
     "@printerErrorConnectionErrorBody2": {},
     "printerErrorUnknownIssueTitle": "Unbekannte Druckerausgabe",
     "@printerErrorUnknownIssueTitle": {},
-    "printerErrorUnknownIssueBody1": "Drucker [{name}] berichtet, dass es ein Problem hat:\n\n(X48X)",
+    "printerErrorUnknownIssueBody1": "Drucker [{name}] berichtet, dass es ein Problem hat:\n\n{error}",
     "@printerErrorUnknownIssueBody1": {
         "placeholders": {
             "name": {
