@@ -187,6 +187,8 @@ enum Language {
 
   ComboBoxItem<Language> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
+  static List<Locale> valuesAsLocale() => Language.values.map((l) => Locale(l.code)).toList();
+
   static List<ComboBoxItem<Language>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
   Locale toLocale() => Locale(code);

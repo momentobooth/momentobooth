@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
@@ -78,11 +79,7 @@ class _MomentoBoothAppState extends State<MomentoBoothApp> with WindowListener {
             GlobalCupertinoLocalizations.delegate,
             FluentLocalizations.delegate,
           ],
-          supportedLocales: const [
-            Locale('en'), // English
-            Locale('nl'), // Dutch
-            Locale('de'), // German
-          ],
+          supportedLocales: Language.valuesAsLocale(),
           locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
           builder: (context, child) {
             return ChangeNotifierProvider(create: (_) => ActivityMonitorController(), child: child);

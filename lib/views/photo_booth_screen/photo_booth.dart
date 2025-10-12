@@ -13,6 +13,7 @@ import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/config/set_scroll_configuration.dart';
 import 'package:momento_booth/views/components/imaging/live_view_background.dart';
@@ -67,7 +68,7 @@ class PhotoBooth extends StatelessWidget {
                         GlobalCupertinoLocalizations.delegate,
                         FluentLocalizations.delegate,
                       ],
-                      supportedLocales: const [Locale('en'), Locale('nl')],
+                      supportedLocales: Language.valuesAsLocale(),
                       locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
                       home: child,
                       builder: (_, child) => LiveViewBackground(child: AppScaler(child: child!)),
