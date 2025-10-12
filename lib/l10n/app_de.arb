@@ -1,0 +1,267 @@
+{
+    "genericBackButton": "Zurück",
+    "@genericBackButton": {},
+    "genericPrintButton": "Drucken",
+    "@genericPrintButton": {},
+    "genericContinueButton": "Fortsetzung",
+    "@genericContinueButton": {},
+    "genericRefreshButton": "Refreshing",
+    "@genericRefreshButton": {},
+    "genericClearButton": "Klar",
+    "@genericClearButton": {},
+    "genericSaveButton": "Speichern",
+    "@genericSaveButton": {},
+    "genericCloseButton": "Schließen",
+    "@genericCloseButton": {},
+    "genericRetryButton": "Wiederkehr",
+    "@genericRetryButton": {},
+    "genericCancelButton": "Abbrechen",
+    "@genericCancelButton": {},
+    "genericDeleteButton": "Löschen",
+    "@genericDeleteButton": {},
+    "genericDoneButton": "KAPITEL",
+    "@genericDoneButton": {},
+    "genericOneMomentPlease": "Einen Moment bitte...",
+    "@genericOneMomentPlease": {},
+    "genericDocumentation": "Dokumentation",
+    "@genericDocumentation": {},
+    "genericAbout": "Über uns",
+    "@genericAbout": {},
+    "genericHelp": "Hilfe",
+    "@genericHelp": {},
+    "genericView": "Blick",
+    "@genericView": {},
+    "genericFile": "Datei",
+    "@genericFile": {},
+    "genericFullScreen": "Vollbildschirm",
+    "@genericFullScreen": {},
+    "genericSettings": "Einstellungen",
+    "@genericSettings": {},
+    "genericCanBeChangedInSettings": "dies kann in einstellungen geändert werden",
+    "@genericCanBeChangedInSettings": {},
+    "actionRestoreLiveView": "Restore live view",
+    "@actionRestoreLiveView": {},
+    "actionsExit": "Aus",
+    "@actionsExit": {},
+    "screensStart": "Startbildschirm",
+    "@screensStart": {},
+    "screensGallery": "Galerie",
+    "@screensGallery": {},
+    "screensManualCollage": "Manuelle Collage",
+    "@screensManualCollage": {},
+    "startScreenTouchToStartButton": "Touch zum Starten",
+    "@startScreenTouchToStartButton": {},
+    "startScreenGalleryButton": "Galerie",
+    "@startScreenGalleryButton": {},
+    "galleryScreenGoToStartButton": "Start",
+    "@galleryScreenGoToStartButton": {},
+    "chooseCaptureModeScreenTitle": "Wählen Sie den Modus",
+    "@chooseCaptureModeScreenTitle": {},
+    "chooseCaptureModeScreenSinglePictureButton": "Einzelbild",
+    "@chooseCaptureModeScreenSinglePictureButton": {},
+    "chooseCaptureModeScreenCollageButton": "Collage",
+    "@chooseCaptureModeScreenCollageButton": {},
+    "captureScreenLookAtCamera": "Sehen Sie sich das an",
+    "@captureScreenLookAtCamera": {},
+    "captureScreenLoadingPhoto": "Foto laden...",
+    "@captureScreenLoadingPhoto": {},
+    "captureScreenGetReady": "Bereit",
+    "@captureScreenGetReady": {},
+    "captureScreenLoadingPhotos": "Fotos laden...",
+    "@captureScreenLoadingPhotos": {},
+    "photoDetailsScreenTitle": "Details zum Thema",
+    "@photoDetailsScreenTitle": {},
+    "photoDetailsScreenGetQrButton": "QR erhalten",
+    "@photoDetailsScreenGetQrButton": {},
+    "photoDetailsScreenQrUploading": "Hochladen",
+    "@photoDetailsScreenQrUploading": {},
+    "photoDetailsScreenShowQrButton": "QR anzeigen",
+    "@photoDetailsScreenShowQrButton": {},
+    "photoDetailsScreenRetryQrButton": "Irrtum?",
+    "@photoDetailsScreenRetryQrButton": {},
+    "photoDetailsScreenPrinting": "Drucken...",
+    "@photoDetailsScreenPrinting": {},
+    "photoDetailsScreenPrintUnsuccesful": "Drucken ohne Erfolg",
+    "@photoDetailsScreenPrintUnsuccesful": {},
+    "shareScreenTitle": "Anteil",
+    "@shareScreenTitle": {},
+    "shareScreenRetakeButton": "Wiederaufnahme",
+    "@shareScreenRetakeButton": {},
+    "shareScreenChangeButton": "Veränderung",
+    "@shareScreenChangeButton": {},
+    "shareScreenGetQrButton": "QR erhalten",
+    "@shareScreenGetQrButton": {},
+    "shareScreenQrUploading": "Hochladen",
+    "@shareScreenQrUploading": {},
+    "shareScreenShowQrButton": "QR anzeigen",
+    "@shareScreenShowQrButton": {},
+    "shareScreenRetryQrButton": "Irrtum?",
+    "@shareScreenRetryQrButton": {},
+    "shareScreenPrinting": "Drucken...",
+    "@shareScreenPrinting": {},
+    "shareScreenPrintUnsuccesful": "Drucken ohne Erfolg",
+    "@shareScreenPrintUnsuccesful": {},
+    "qrDialogTitle": "Teilen mit einem QR-Code",
+    "@qrDialogTitle": {},
+    "qrDialogUploading": "Hochladen...",
+    "@qrDialogUploading": {},
+    "qrDialogInstructions": "Sie können Ihr Foto herunterladen, indem Sie diesen QR-Code scannen.\n\nHinweis: Ein Download-Link kann einmal verwendet werden. Bitte klicken Sie auf 'Extra-Download', wenn Sie einen anderen Download benötigen.",
+    "@qrDialogInstructions": {},
+    "qrDialogExtraDownloadButton": "Extra-Download",
+    "@qrDialogExtraDownloadButton": {},
+    "qrDialogErrorMessage": "Beim Upload ist ein Fehler aufgetreten. Überprüfen Sie die Internetverbindung und klicken Sie auf 'Retry', um es erneut zu versuchen.",
+    "@qrDialogErrorMessage": {},
+    "printerErrorNoMediaBody2": "Bitte fügen Sie Papier ein, bestätigen Sie mit der Schaltfläche \"OK\" auf dem Drucker, klicken Sie dann auf \"Resume queue\".",
+    "@printerErrorNoMediaBody2": {},
+    "printerErrorMediaJamTitle": "Papierdose",
+    "@printerErrorMediaJamTitle": {},
+    "printerErrorMediaJamBody1": "Drucker [{name}] berichtet, dass es einen Papierstau hat.",
+    "@printerErrorMediaJamBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "printerErrorMediaJamBody2": "Bitte folgen Sie den Anweisungen des Druckers, falls vorhanden. Wenn das Problem behoben ist, klicken Sie auf 'Resume queue'.",
+    "@printerErrorMediaJamBody2": {},
+    "printerErrorStuckJob": "Zusätzlich gibt es einen Job in der Warteschlange. Klicken auf 'Resume queue' wird versuchen, es zu entpacken.",
+    "@printerErrorStuckJob": {},
+    "printerErrorStuckJobs": "Zusätzlich gibt es {jobCount} Jobs in der Warteschlange. Klicken auf 'Resume queue' wird versuchen, sie zu entpacken.",
+    "@printerErrorStuckJobs": {
+        "placeholders": {
+            "jobCount": {
+                "type": "int"
+            }
+        }
+    },
+    "multiCaptureScreenPhotoCounter": "Foto {current}/{total}",
+    "@multiCaptureScreenPhotoCounter": {
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "multiCaptureScreenGetReady": "Bereit",
+    "@multiCaptureScreenGetReady": {},
+    "multiCaptureScreenLookAtCamera": "Sehen Sie sich das an",
+    "@multiCaptureScreenLookAtCamera": {},
+    "collageMakerScreenPicturesShotTitle": "Bilder gedreht",
+    "@collageMakerScreenPicturesShotTitle": {},
+    "collageMakerScreenPhotoCounter": "{count} gewählt",
+    "@collageMakerScreenPhotoCounter": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "collageMakerScreenCollageTitle": "Collage",
+    "@collageMakerScreenCollageTitle": {},
+    "manualCollageScreenSaving": "Sparen...",
+    "@manualCollageScreenSaving": {},
+    "photoCollageWidgetSelectPhotos": "Einige Fotos auswählen :)",
+    "@photoCollageWidgetSelectPhotos": {},
+    "printerErrorNoInkTitle": "Keine Tinte",
+    "@printerErrorNoInkTitle": {},
+    "printerErrorNoInkBody1": "Drucker [{name}]] berichtet, dass es aus Tinte lief.",
+    "@printerErrorNoInkBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "printerErrorNoInkBody2": "Bitte ersetzen Sie die Tintenpatrone, bestätigen Sie die \"OK\" Taste auf dem Drucker, klicken Sie dann auf \"Resume queue\".",
+    "@printerErrorNoInkBody2": {},
+    "printerErrorNoMediaTitle": "Kein Papier",
+    "@printerErrorNoMediaTitle": {},
+    "printerErrorNoMediaBody1": "Drucker [{name}]] berichtet, dass es aus Papier lief.",
+    "@printerErrorNoMediaBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "printerErrorConnectionErrorTitle": "Verbindungsfehler",
+    "@printerErrorConnectionErrorTitle": {},
+    "printerErrorConnectionErrorBody1": "Das Drucksystem berichtet, dass der Drucker [{name}] nicht mehr mit dem Computer verbunden ist.",
+    "@printerErrorConnectionErrorBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "printerErrorConnectionErrorBody2": "Bitte überprüfen Sie die Verbindung zwischen dem Drucker und dem Computer, dann klicken Sie auf 'Resume queue'.",
+    "@printerErrorConnectionErrorBody2": {},
+    "printerErrorUnknownIssueTitle": "Unbekannte Druckerausgabe",
+    "@printerErrorUnknownIssueTitle": {},
+    "printerErrorUnknownIssueBody1": "Drucker [{name}] berichtet, dass es ein Problem hat:\n\n(X48X)",
+    "@printerErrorUnknownIssueBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            },
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "printerErrorUnknownIssueBody2": "Bitte beachten Sie alle Anweisungen des Druckers oder der Systemdruckeinstellungen für weitere Details. Wenn das Problem behoben ist, klicken Sie auf 'Resume queue'.",
+    "@printerErrorUnknownIssueBody2": {},
+    "printerErrorIgnoreButton": "Ignorieren für jetzt",
+    "@printerErrorIgnoreButton": {},
+    "printerErrorResumeQueueButton": "Rücknahmewarte",
+    "@printerErrorResumeQueueButton": {},
+    "printDialogTitle": "Drucken",
+    "@printDialogTitle": {},
+    "printDialogSizeSetting": "Größe:",
+    "@printDialogSizeSetting": {},
+    "printDialogNoOfPrintsSetting": "Anzahl der Drucke:",
+    "@printDialogNoOfPrintsSetting": {},
+    "printDialogSummary": "{numPrints} Drucke → {numImages} Druckbilder",
+    "@printDialogSummary": {
+        "placeholders": {
+            "numPrints": {
+                "type": "int"
+            },
+            "numImages": {
+                "type": "int"
+            }
+        }
+    },
+    "printingErrorDialogTitle": "Druckfehler",
+    "@printingErrorDialogTitle": {},
+    "printingErrorDialogBodyTop": "Aufgrund eines unerwarteten Problems können Ihre Drucke nicht gestartet werden.",
+    "@printingErrorDialogBodyTop": {},
+    "printingErrorDialogBodyBottom": "Versuchen Sie es später noch einmal oder laden Sie Ihr Foto mit der QR-Funktion herunter.",
+    "@printingErrorDialogBodyBottom": {},
+    "retakeDialogBody": "Möchten Sie das aktuelle Ergebnis behalten?",
+    "@retakeDialogBody": {},
+    "retakeDialogKeepButton": "Behalten",
+    "@retakeDialogKeepButton": {},
+    "projectNotOpened": "Kein Projekt eröffnet",
+    "@projectNotOpened": {},
+    "opened": "Geöffnet",
+    "@opened": {},
+    "projectNotOpenedInstructions": "Sie haben noch keinen Projektordner geöffnet. Öffnen Sie einen, um zu fangen.",
+    "@projectNotOpenedInstructions": {},
+    "projectNotOpenedExplanation": "Moment Booth muss wissen, wo Bilder gespeichert werden und nach Collage Vorlagen suchen.",
+    "@projectNotOpenedExplanation": {},
+    "projectsRecent": "Aktuelle Projekte",
+    "@projectsRecent": {},
+    "projectOpenButton": "Projektordner öffnen",
+    "@projectOpenButton": {},
+    "projectOpenShort": "Projekt öffnen",
+    "@projectOpenShort": {},
+    "projectViewInExplorer": "Projekt ansehen in explorer",
+    "@projectViewInExplorer": {},
+    "projectLoadLastOnStart": "Letztes Projekt starten",
+    "@projectLoadLastOnStart": {}
+}
