@@ -264,5 +264,15 @@
     "projectViewInExplorer": "Projekt ansehen in explorer",
     "@projectViewInExplorer": {},
     "projectLoadLastOnStart": "Letztes Projekt starten",
-    "@projectLoadLastOnStart": {}
+    "@projectLoadLastOnStart": {},
+    "galleryScreenFilterBarOrderByTitle": "Sortieren nach",
+    "@galleryScreenFilterBarOrderByTitle": {},
+    "galleryScreenFilterBarOrderByTime": "Zeit",
+    "@galleryScreenFilterBarOrderByTime": {},
+    "galleryScreenFilterBarOrderByGroupSize": "Gruppengröße",
+    "@galleryScreenFilterBarOrderByGroupSize": {},
+    "galleryScreenFilterBarFindMyFaceButton": "Mein Gesicht finden",
+    "@galleryScreenFilterBarFindMyFaceButton": {},
+    "galleryScreenFilterBarClearFilterButton": "Filter löschen",
+    "@galleryScreenFilterBarClearFilterButton": {}
 }
