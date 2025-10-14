@@ -1,9 +1,12 @@
 # MomentoBooth
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-linux-appimage-x64.yml?label=Linux%20build)
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-macos-x64.yml?label=macOS%20build)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-win-x64.yml?label=Windows%20build)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-macos-arm64.yml?label=macOS%20build)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-linux-appimage-x64.yml?label=Linux%20build)
 [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/momentobooth/momentobooth?include_prereleases&label=Latest%20version)](https://github.com/momentobooth/momentobooth/releases)
+<a href="https://hosted.weblate.org/engage/momentobooth-photobooth/">
+<img src="https://hosted.weblate.org/widget/momentobooth-photobooth/svg-badge.svg" alt="Translation status" />
+</a>
 
 MomentoBooth is a cross-platform open source photo booth software. Capture your events in an easy and fun way!
 
@@ -160,3 +163,7 @@ Please note: Run all commands from the root folder of the repository, unless men
 5. Your new view should be available!
 
 </details>
+
+## Translations
+
+MomentoBooth [uses the awesome Weblate](https://hosted.weblate.org/engage/momentobooth-photobooth/) to manage translations. If you would like to add a new language or improve existing translations, please use Weblate to make suggestions — Weblate will automatically create a PR for you!
