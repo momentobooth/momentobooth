@@ -119,5 +119,10 @@
     "projectOpenButton": "Open een projectmap",
     "projectOpenShort": "Open project",
     "projectViewInExplorer": "Open projectmap in verkenner",
-    "projectLoadLastOnStart": "Open het laatste project bij starten"
+    "projectLoadLastOnStart": "Open het laatste project bij starten",
+    "galleryScreenFilterBarOrderByTitle": "Sorteren op",
+    "galleryScreenFilterBarOrderByTime": "Tijd",
+    "galleryScreenFilterBarOrderByGroupSize": "Groepsgrootte",
+    "galleryScreenFilterBarFindMyFaceButton": "Vind mijn gezicht",
+    "galleryScreenFilterBarClearFilterButton": "Filter wissen"
 }

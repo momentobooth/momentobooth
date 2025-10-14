@@ -16,9 +16,18 @@ class _HotkeyResponder extends StatelessWidget {
         SingleActivator(LogicalKeyboardKey.keyS, control: control, meta: meta): () => SettingsOverlay.openDialog(context),
         SingleActivator(LogicalKeyboardKey.keyF, control: control, meta: meta): () => getIt<WindowManager>().toggleFullscreenSafe(),
         SingleActivator(LogicalKeyboardKey.keyO, control: control, meta: meta): () => getIt<ProjectManager>().browseOpen(),
+        SingleActivator(LogicalKeyboardKey.keyL, control: control, meta: meta): _switchToNextLanguage,
         const SingleActivator(LogicalKeyboardKey.enter, alt: true): () => getIt<WindowManager>().toggleFullscreenSafe(),
       },
       child: child,
+    );
+  }
+
+  void _switchToNextLanguage() {
+    int index = Language.values.indexOf(getIt<SettingsManager>().settings.ui.language);
+    Language newLanguage = Language.values[(index + 1) % Language.values.length];
+    getIt<SettingsManager>().mutateAndSave(
+      (settings) => settings.copyWith.ui(language: newLanguage),
     );
   }
 

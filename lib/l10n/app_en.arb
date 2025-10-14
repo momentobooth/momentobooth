@@ -192,5 +192,15 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "galleryScreenFilterBarOrderByTitle": "Order by",
+    "@galleryScreenFilterBarOrderByTitle": {},
+    "galleryScreenFilterBarOrderByTime": "Time",
+    "@galleryScreenFilterBarOrderByTime": {},
+    "galleryScreenFilterBarOrderByGroupSize": "Group size",
+    "@galleryScreenFilterBarOrderByGroupSize": {},
+    "galleryScreenFilterBarFindMyFaceButton": "Find my face",
+    "@galleryScreenFilterBarFindMyFaceButton": {},
+    "galleryScreenFilterBarClearFilterButton": "Clear filter",
+    "@galleryScreenFilterBarClearFilterButton": {}
 }

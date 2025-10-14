@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
@@ -73,7 +74,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
           child: Center(
             child: Observer(
               builder: (context) => PhotoBoothTitle(
-                viewModel.touchToStartText,
+                viewModel.touchToStartOverrideText ?? context.localizations.startScreenTouchToStartButton,
                 textAlign: TextAlign.center,
                 maxLines: null,
               ),

@@ -176,7 +176,8 @@ enum Rotate {
 enum Language {
 
   english("English", "en"),
-  dutch("Dutch", "nl");
+  dutch("Dutch", "nl"),
+  german("German", "de");
 
   final String name;
   final String code;
@@ -185,6 +186,8 @@ enum Language {
   const Language(this.name, this.code);
 
   ComboBoxItem<Language> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<Locale> valuesAsLocale() => Language.values.map((l) => Locale(l.code)).toList();
 
   static List<ComboBoxItem<Language>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
