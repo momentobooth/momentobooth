@@ -30,6 +30,7 @@ ShellRoute _photoBoothShellRoute = ShellRoute(
   observers: [GoRouterObserver()],
   routes: [
     _startRoute,
+    _navigationRoute,
     _chooseCaptureModeRoute,
     _captureRoute,
     _multiCaptureRoute,
@@ -49,6 +50,13 @@ GoRoute _startRoute = GoRoute(
   path: StartScreen.defaultRoute,
   pageBuilder: (context, state) {
     return TransitionPage.fromSettings(key: state.pageKey, name: (StartScreen).toString(), context: context, child: const StartScreen());
+  },
+);
+
+GoRoute _navigationRoute = GoRoute(
+  path: NavigationScreen.defaultRoute,
+  pageBuilder: (context, state) {
+    return TransitionPage.fromSettings(key: state.pageKey, name: (NavigationScreen).toString(), context: context, child: const NavigationScreen());
   },
 );
 
