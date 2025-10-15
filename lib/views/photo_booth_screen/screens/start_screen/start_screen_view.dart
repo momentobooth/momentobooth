@@ -4,8 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
@@ -31,16 +29,6 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
               onTap: controller.onPressedContinue,
               behavior: HitTestBehavior.opaque,
               child: _foregroundElements,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: PhotoBoothButton.navigation(
-                onPressed: controller.onPressedGallery,
-                child: AutoSizeTextAndIcon(text: localizations.startScreenGalleryButton),
-              ),
             ),
           ),
           Observer(
