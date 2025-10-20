@@ -186,10 +186,12 @@ enum Language {
   const Language(this.name, this.code);
 
   ComboBoxItem<Language> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+  ComboBoxItem<Language?> toOptionalComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
   static List<Locale> valuesAsLocale() => Language.values.map((l) => Locale(l.code)).toList();
 
   static List<ComboBoxItem<Language>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<Language?>> asOptionalComboBoxItems() => [ComboBoxItem<Language?>(value: null, child: Text("–"))] + values.map((value) => value.toOptionalComboBoxItem()).toList();
 
   Locale toLocale() => Locale(code);
 

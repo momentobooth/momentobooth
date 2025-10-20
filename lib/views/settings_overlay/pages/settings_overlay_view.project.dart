@@ -1,6 +1,7 @@
 part of '../settings_overlay_view.dart';
 
 Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  final isOpen = getIt<ProjectManager>().isOpen;
   return SettingsListPage(
     title: "Project",
     blocks: [
@@ -10,14 +11,18 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
       ),
       Builder(
         builder: (context) {
-          if (!getIt<ProjectManager>().isOpen) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: InfoBar(title: Text("Project settings can only be viewed and modified if a project is loaded."), severity: InfoBarSeverity.warning,),
-            );
-          }
+          if (isOpen) { return SizedBox();}
+          return Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: InfoBar(title: Text("Project settings can only be viewed and modified if a project is loaded."), severity: InfoBarSeverity.warning,),
+          );
+        }
+      ),
+      Builder(
+        builder: (context) {
+          if (!isOpen) { return SizedBox();}
           return SettingsSection(
-            title: "Project settings",
+            title: "UI settings for project",
             settings: [
               SettingsComboBoxTile(
                 icon: LucideIcons.appWindow,
@@ -56,6 +61,24 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
                 controller: controller.introScreenTouchToStartOverrideTextController,
                 onFinishedEditing: controller.onIntroScreenTouchToStartOverrideText,
               ),
+              SettingsComboBoxTile<Language?>(
+                icon: LucideIcons.languages,
+                title: "Language override",
+                subtitle: "The language used in the app (except for this settings screen). Overrides the system language if selected.",
+                items: viewModel.languagesProject,
+                value: () => viewModel.projectLanguageSetting,
+                onChanged: controller.onProjectLanguageChanged,
+              ),
+            ]
+          );
+        }
+      ),
+      Builder(
+        builder: (context) {
+          if (!isOpen) { return SizedBox();}
+          return SettingsSection(
+            title: "Capture settings for project",
+            settings: [
               SettingsToggleTile(
                 icon: LucideIcons.toggleRight,
                 title: "Enable single photo capture",
