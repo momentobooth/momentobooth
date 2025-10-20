@@ -61,13 +61,21 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
                 controller: controller.introScreenTouchToStartOverrideTextController,
                 onFinishedEditing: controller.onIntroScreenTouchToStartOverrideText,
               ),
-              SettingsComboBoxTile<Language?>(
+              SettingsComboBoxTile<Language>(
                 icon: LucideIcons.languages,
                 title: "Language override",
                 subtitle: "The language used in the app (except for this settings screen). Overrides the system language if selected.",
                 items: viewModel.languagesProject,
                 value: () => viewModel.projectLanguageSetting,
                 onChanged: controller.onProjectLanguageChanged,
+              ),
+              SettingsTreeViewTile<Language>(
+                icon: LucideIcons.languages,
+                title: "Languages available to users",
+                subtitle: "The languages that users can choose from in the app. If only one language is selected, no language selection will be shown.", // Fixme, is this not inconsistent?
+                items: viewModel.languages,
+                value: () => viewModel.projectAvailableLanguagesSetting,
+                onChanged: controller.onProjectAvailableLanguagesChanged,
               ),
             ]
           );

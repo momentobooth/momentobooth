@@ -156,7 +156,15 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   }
 
   void onProjectLanguageChanged(Language? language) {
-    viewModel.updateProjectSettings((settings) => settings.copyWith(language: language));
+    if (language != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(language: language));
+    }
+  }
+
+  void onProjectAvailableLanguagesChanged(List<Language>? languages) {
+    if (languages != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(availableLanguages: languages));
+    }
   }
 
   void onTemplatesFolderChanged(String? templatesFolder) {
