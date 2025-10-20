@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:draggable_scrollbar/draggable_scrollbar.dart';
-import 'package:fluent_ui/fluent_ui.dart' show FluentTheme;
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -12,9 +11,12 @@ import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/components/filter_bar.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_view_model.dart';
 import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
+
+enum SortBy { time, people }
 
 class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GalleryScreenController> {
 
@@ -125,9 +127,7 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(10)),
                   color: Color.fromARGB(130, 48, 48, 48),
                 ),
-                child: Observer(
-                  builder: (context) => getFilterBar(),
-                ),
+                child: FilterBar(viewModel: viewModel, controller: controller),
               ),
             ],
           ),
@@ -146,96 +146,6 @@ class GalleryScreenView extends ScreenViewBase<GalleryScreenViewModel, GallerySc
           ),
         ),
       ],
-    );
-  }
-
-  Widget getFilterBar() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Text(
-          "Order by",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-            fontSize: 18,
-            height: 1,
-          ),
-        ),
-        const SizedBox(width: 12),
-        FilterChoice(sortBy: viewModel.sortBy, onChanged: viewModel.onSortByChanged),
-        const SizedBox(width: 20),
-        if (viewModel.imageNames == null && viewModel.isFaceRecognitionEnabled)
-          OutlinedButton.icon(
-            onPressed: controller.onFindMyFace,
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all(Colors.blue.shade700),
-              foregroundColor: WidgetStateProperty.all(Colors.white),
-              overlayColor: WidgetStateProperty.all(Colors.blue.shade400),
-            ),
-            icon: const Icon(LucideIcons.scanFace),
-            label: const Text("Find my face"),
-          )
-        else if (viewModel.imageNames != null)
-          OutlinedButton.icon(
-            onPressed: controller.clearImageFilter,
-            style: ButtonStyle(
-              foregroundColor: WidgetStateProperty.all(Colors.white),
-              overlayColor: WidgetStateProperty.all(Colors.red.shade900),
-              side: WidgetStateProperty.all(const BorderSide(color: Color.fromARGB(255, 255, 117, 117))),
-            ),
-            icon: const Icon(LucideIcons.funnelX),
-            label: const Text("Clear filter"),
-          ),
-      ],
-    );
-  }
-
-}
-
-enum SortBy { time, people }
-
-class FilterChoice extends StatelessWidget {
-
-  const FilterChoice({super.key, required this.sortBy, required this.onChanged});
-  final SortBy sortBy;
-  final ValueChanged<SortBy> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return SegmentedButton(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith<Color>(
-          (states) {
-              if (states.contains(WidgetState.selected)) {
-                return FluentTheme.of(context).accentColor;
-              }
-              return Colors.transparent;
-            },
-        ),
-        iconColor: WidgetStateProperty.all(Colors.white),
-        foregroundColor: WidgetStateProperty.all(Colors.white)
-      ),
-      showSelectedIcon: false,
-      segments: const [
-        ButtonSegment(
-          value: SortBy.time,
-          label: Text('Time'),
-          icon: Icon(LucideIcons.clock),
-        ),
-        ButtonSegment(
-          value: SortBy.people,
-          label: Text('Group size'),
-          icon: Icon(LucideIcons.users),
-        ),
-      ],
-      selected: {sortBy},
-      onSelectionChanged: (newSelection) {
-        // By default there is only a single segment that can be
-        // selected at one time, so its value is always the first
-        // item in the selected set.
-        onChanged(newSelection.first);
-      },
     );
   }
 
