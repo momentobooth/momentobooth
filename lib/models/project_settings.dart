@@ -31,6 +31,8 @@ sealed class ProjectSettings with _$ProjectSettings implements TomlEncodableValu
     @Default(true) bool singlePhotoIsCollage,
     @Default(true) bool enableCollageCapture,
     @Default(CollageMode.userSelection) CollageMode collageMode,
+    @Default(null) Language? language,
+    @Default([]) List<Language> availableLanguages,
   }) = _ProjectSettings;
 
   factory ProjectSettings.withDefaults() => ProjectSettings.fromJson({});
