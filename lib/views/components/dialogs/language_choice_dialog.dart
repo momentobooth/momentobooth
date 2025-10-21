@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
@@ -16,11 +16,19 @@ class LanguageChoiceDialog extends StatelessWidget {
     required this.onChosen,
   });
 
+  String getFlagAsset(String countryCode) {
+    return 'assets/svg/flags/$countryCode.svg';
+  }
+
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
     final languages = getIt<ProjectManager>().settings.availableLanguages;
+
+    final TextStyle textStyle = FluentTheme.of(context).typography.bodyLarge!.copyWith(
+      fontSize: 30,
+    );
 
     return ModalDialog(
       title: "Choose your language",
@@ -38,19 +46,23 @@ class LanguageChoiceDialog extends StatelessWidget {
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(text: language.nameNative, style: FluentTheme.of(context).typography.bodyLarge),
-                        TextSpan(text: language.flag, style: GoogleFonts.notoColorEmoji(textStyle: FluentTheme.of(context).typography.bodyLarge)),
-                        TextSpan(text: "😊", style: FluentTheme.of(context).typography.bodyLarge),
-                      ]
-                    )
-                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(language.nameNative, style: textStyle),
+                      const SizedBox(width: 8),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4.0),
+                        child: SvgPicture.asset(
+                          getFlagAsset(language.countryCode),
+                          width: textStyle.fontSize,
+                        ),
+                      ),
+                    ]
+                  )
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
