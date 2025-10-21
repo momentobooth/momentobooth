@@ -131,6 +131,7 @@ flutter:
     - assets/animations/
     - assets/bitmap/
     - assets/svg/
+    - assets/svg/flags/
     - assets/fonts/brandon_grotesque/
     - assets/scripts/
     - assets/sounds/
