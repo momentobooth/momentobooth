@@ -23,16 +23,14 @@ class SettingsTreeViewTile<TValue> extends StatelessWidget {
     this.prefixWidget,
   });
 
-  TreeViewItem get item => TreeViewItem(
-    content: Text('Languages'),
-    children: [
-      for (final item in items)
-        TreeViewItem(
-          content: item.child,
-          value: item.value,
-          selected: value().contains(item.value),
-        ),
-    ],
+  List<TreeViewItem> get tvItems => items.map((item) =>
+      TreeViewItem(
+        content: item.child,
+        value: item.value,
+        selected: value().contains(item.value),
+        collapsable: false,
+      ),
+    ).toList(
   );
 
   @override
@@ -42,16 +40,20 @@ class SettingsTreeViewTile<TValue> extends StatelessWidget {
       title: title,
       subtitle: subtitle,
       leading: prefixWidget,
-      setting: Observer(builder: (_) {
-        return TreeView(
-          items: [item],
+      setting: SizedBox(
+        // Todo: when we add more items, change sizedbox to constraintedbox with max height and make treeview scrollable
+        width: 250,
+        child: TreeView(
+          shrinkWrap: true,
+          addRepaintBoundaries: true,
+          items: tvItems,
           selectionMode: TreeViewSelectionMode.multiple,
           onSelectionChanged: (selectedItems) async {
             final selectedValues = selectedItems.map((e) => e.value as TValue).toList();
             onChanged(selectedValues);
           },
-        );
-      }),
+        ),
+      ),
     );
   }
 
