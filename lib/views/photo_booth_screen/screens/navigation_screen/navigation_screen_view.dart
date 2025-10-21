@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_subtitle.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen_view_model.dart';
@@ -38,7 +39,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
             ),
           ),
         ),
-        const Flexible(fit: FlexFit.tight, child: SizedBox()),
+        Flexible(fit: FlexFit.tight, child: _bottomRow),
       ],
     );
   }
@@ -51,7 +52,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
         child: Column(
           spacing: 16,
           children: [
-            Expanded(child: FittedBox(child: _getButton(LucideIcons.camera))),
+            Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.camera, 450))),
             AutoSizeText(
               "Take pictures",
               group: controller.autoSizeGroup,
@@ -71,7 +72,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
         child: Column(
           spacing: 16,
           children: [
-            Expanded(child: FittedBox(child: _getButton(LucideIcons.images))),
+            Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.images, 450))),
             AutoSizeText(
               "View gallery",
               group: controller.autoSizeGroup,
@@ -83,16 +84,39 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
     );
   }
 
-  Widget _getButton(IconData icon) {
+  Widget _iconWithShadow(IconData icon, double size) {
     return Icon(
       icon,
-      size: 450,
+      size: size,
       color: const Color(0xE6FFFFFF),
       shadows: [const Shadow(
         color: Color(0x42000000),
         offset: Offset(0, 3),
         blurRadius: 8,
       )],
+    );
+  }
+
+  Widget get _bottomRow {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 32, left: 64, right: 64),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          PhotoBoothButton.action(
+            onPressed: controller.onClickLanguage,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _iconWithShadow(LucideIcons.languages, 52),
+                const SizedBox(width: 16),
+                PhotoBoothSubtitle("Change Language"),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
