@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/components/dialogs/language_choice_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_screen/multi_capture_screen.dart';
@@ -53,6 +54,15 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
 
   void onClickGallery() {
     router.go(GalleryScreen.defaultRoute);
+  }
+
+  Future<void> onClickLanguage() async {
+    await showUserDialog(
+      dialog: LanguageChoiceDialog(onChosen: (language) {
+        navigator.pop();
+        print("Chosen language: ${language.name}");
+      },), barrierDismissible: true,
+    );
   }
 
 }
