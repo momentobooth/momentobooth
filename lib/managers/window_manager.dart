@@ -5,6 +5,7 @@ import 'package:args/args.dart';
 import 'package:flutter/foundation.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:window_manager/window_manager.dart';
@@ -20,6 +21,9 @@ abstract class WindowManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   bool _isFullScreen = false;
+
+  @readonly
+  Language? _selectedLanguage = null;
 
   // ////////////// //
   // Initialization //
@@ -47,6 +51,15 @@ abstract class WindowManagerBase extends Subsystem with Store, Logger {
     } else {
       windowManager.setTitle("$title – MomentoBooth");
     }
+  }
+
+  void setLanguage(Language language) {
+    _selectedLanguage = language;
+    logInfo("Language set to ${language.name} (${language.code})");
+  }
+
+  void resetLanguage() {
+    _selectedLanguage = null;
   }
 
   void toggleFullscreenSafe() {
