@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
+import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/language_choice_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
@@ -60,7 +61,7 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
     await showUserDialog(
       dialog: LanguageChoiceDialog(onChosen: (language) {
         navigator.pop();
-        print("Chosen language: ${language.name}");
+        getIt<WindowManager>().setLanguage(language);
       },), barrierDismissible: true,
     );
   }

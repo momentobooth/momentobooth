@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
+import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -23,6 +24,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
     required super.contextAccessor,
   }) {
     WidgetsBinding.instance.addPostFrameCallback((_) => noProjectOpenedDialog());
+    getIt<WindowManager>().resetLanguage();
   }
 
   Future<void> noProjectOpenedDialog() async {

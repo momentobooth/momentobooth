@@ -36,6 +36,19 @@ class PhotoBooth extends StatelessWidget {
 
   const PhotoBooth({super.key, required this.child});
 
+  Locale get _currentLocale {
+    final selectedLanguage = getIt<WindowManager>().selectedLanguage;
+    if (selectedLanguage != null) {
+      return selectedLanguage.toLocale();
+    } else if (getIt<ProjectManager>().settings.language != Language.noLanguage) {
+      final projectLanguage = getIt<ProjectManager>().settings.language;
+      return projectLanguage.toLocale();
+    } else {
+      final settingsLanguage = getIt<SettingsManager>().settings.ui.language;
+      return settingsLanguage.toLocale();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -69,7 +82,7 @@ class PhotoBooth extends StatelessWidget {
                         FluentLocalizations.delegate,
                       ],
                       supportedLocales: Language.valuesAsLocale(),
-                      locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
+                      locale: _currentLocale,
                       home: child,
                       builder: (_, child) => LiveViewBackground(child: AppScaler(child: child!)),
                     ),
