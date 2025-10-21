@@ -175,18 +175,19 @@ enum Rotate {
 
 enum Language {
 
-  noLanguage("None", "--", "None", ""),
-  english("English", "en", "English", "🇬🇧"),
-  dutch("Dutch", "nl", "Nederlands", "🇳🇱"),
-  german("German", "de", "Deutsch", "🇩🇪"),;
+  noLanguage("None", "--", "None", "", ""),
+  english("English", "en", "English", "gb", "🇬🇧"),
+  dutch("Dutch", "nl", "Nederlands", "nl", "🇳🇱"),
+  german("German", "de", "Deutsch", "de", "🇩🇪"),;
 
   final String name;
   final String code;
   final String nameNative;
+  final String countryCode;
   final String flag;
 
   // can use named parameters if you want
-  const Language(this.name, this.code, this.nameNative, this.flag);
+  const Language(this.name, this.code, this.nameNative, this.countryCode, this.flag);
 
   ComboBoxItem<Language> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
