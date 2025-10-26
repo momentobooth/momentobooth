@@ -15,6 +15,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
+import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:printing/printing.dart';
@@ -262,6 +263,8 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   bool get faceRecognitionEnabled => getIt<SettingsManager>().settings.faceRecognition.enable;
   String get faceRecognitionServerUrlSetting => getIt<SettingsManager>().settings.faceRecognition.serverUrl;
   bool get debugShowFpsCounter => getIt<SettingsManager>().settings.debug.showFpsCounter;
+  ColorVisionDeficiency get simulateCvd => getIt<SettingsManager>().settings.debug.simulateCvd;
+  int get simulateCvdSeverity => getIt<SettingsManager>().settings.debug.simulateCvdSeverity;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

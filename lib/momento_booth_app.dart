@@ -11,6 +11,7 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/route_observer.dart';
 import 'package:momento_booth/views/base/transition_page.dart';
+import 'package:momento_booth/views/components/cvs_simulation_filter.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
@@ -69,21 +70,23 @@ class _MomentoBoothAppState extends State<MomentoBoothApp> with WindowListener {
   Widget build(BuildContext context) {
     return Observer(
       builder: (context) {
-        return FluentApp.router(
-          scrollBehavior: ScrollConfiguration.of(context),
-          routerConfig: _router,
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-            FluentLocalizations.delegate,
-          ],
-          supportedLocales: Language.valuesAsLocale(),
-          locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
-          builder: (context, child) {
-            return ChangeNotifierProvider(create: (_) => ActivityMonitorController(), child: child);
-          },
+        return CvsSimulationFilter(
+          child: FluentApp.router(
+            scrollBehavior: ScrollConfiguration.of(context),
+            routerConfig: _router,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              FluentLocalizations.delegate,
+            ],
+            supportedLocales: Language.valuesAsLocale(),
+            locale: getIt<SettingsManager>().settings.ui.language.toLocale(),
+            builder: (context, child) {
+              return ChangeNotifierProvider(create: (_) => ActivityMonitorController(), child: child);
+            },
+          ),
         );
       }
     );
