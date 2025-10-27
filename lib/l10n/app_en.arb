@@ -19,8 +19,18 @@
     "genericView": "View",
     "genericFile": "File",
     "genericFullScreen": "Full screen",
+    "genericLanguage": "Language",
+    "genericSimulateColorVisionDeficiency": "Simulate color vision deficiency",
+    "genericNone": "None",
+    "genericProtanomaly": "Protanomaly",
+    "genericDeuteranomaly": "Deuteranomaly",
+    "genericTritanomaly": "Tritanomaly",
     "genericSettings": "Settings",
     "genericCanBeChangedInSettings": "this can be changed in settings",
+
+    "languageNl": "Dutch",
+    "languageEn": "English",
+    "languageDe": "German",
 
     "actionRestoreLiveView": "Restore live view",
     "actionsExit": "Exit",

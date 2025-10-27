@@ -19,8 +19,18 @@
     "genericView": "Weergave",
     "genericFile": "Bestand",
     "genericFullScreen": "Volledig scherm",
+    "genericLanguage": "Taal",
+    "genericSimulateColorVisionDeficiency": "Simuleer kleurenzienstoornis",
+    "genericNone": "Geen",
+    "genericProtanomaly": "Protanomalie",
+    "genericDeuteranomaly": "Deuteranomalie",
+    "genericTritanomaly": "Tritanomalie",
     "genericSettings": "Instellingen",
     "genericCanBeChangedInSettings": "dit kan worden aangepast in de instellingen",
+
+    "languageNl": "Nederlands",
+    "languageEn": "Engels",
+    "languageDe": "Duits",
 
     "actionRestoreLiveView": "Reset live view",
     "actionsExit": "Sluiten",

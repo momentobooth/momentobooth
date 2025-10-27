@@ -213,4 +213,9 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
     return Directory(join(_path!.path, subDirs[1]));
   }
 
+  @action
+  Future<void> mutateAndSave(ProjectSettings Function(ProjectSettings settings) settings) async {
+    await updateAndSave(settings(_settings));
+  }
+
 }
