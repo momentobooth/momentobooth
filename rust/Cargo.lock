@@ -3609,7 +3609,7 @@ dependencies = [
  "tokio",
  "turborand",
  "url 2.5.7",
- "zune-jpeg 0.5.1",
+ "zune-jpeg 0.5.5",
 ]
 
 [[package]]
@@ -5839,9 +5839,9 @@ dependencies = [
 
 [[package]]
 name = "zune-jpeg"
-version = "0.5.1"
+version = "0.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0dfb8fc33911e9b9c790078405ed66b7a18045e57f68c382bde83470fc761889"
+checksum = "dc6fb7703e32e9a07fb3f757360338b3a567a5054f21b5f52a666752e333d58e"
 dependencies = [
  "zune-core 0.5.0",
 ]
