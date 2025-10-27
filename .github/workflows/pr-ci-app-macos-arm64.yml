@@ -178,13 +178,13 @@ jobs:
         python3 ../macos/ci_resign_everything.py MomentoBooth-Intel.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
 
     - name: Upload arm64 dmg
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: MomentoBooth-AppleSilicon.dmg
         path: ci_build/MomentoBooth-AppleSilicon.dmg
 
     - name: Upload x86_64 dmg
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: MomentoBooth-Intel.dmg
         path: ci_build/MomentoBooth-Intel.dmg
