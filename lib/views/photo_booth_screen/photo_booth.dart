@@ -14,6 +14,7 @@ import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/config/set_scroll_configuration.dart';
 import 'package:momento_booth/views/components/imaging/live_view_background.dart';
