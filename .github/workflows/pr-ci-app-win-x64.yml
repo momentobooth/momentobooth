@@ -160,7 +160,7 @@ jobs:
         &"${Env:ProgramFiles(x86)}/Inno Setup 6/iscc.exe" "${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.iss"
 
     - name: Upload zip artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: Windows x64 (zip)
         path: ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/*
@@ -178,7 +178,7 @@ jobs:
       run: h3xup create "${{ github.event.pull_request.head.ref }},${{ github.sha }},${{ env.SHORT_SHA }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
 
     - name: Upload installer artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: Windows x64 (installer)
         path: ${{ env.DEV_DRIVE }}/momentobooth/windows/installer/installer.exe
