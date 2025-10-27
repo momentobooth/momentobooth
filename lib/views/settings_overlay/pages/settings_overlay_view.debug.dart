@@ -48,7 +48,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
           SettingsComboBoxTile<ColorVisionDeficiency?>(
             icon: LucideIcons.eye,
             title: "Simulate Color Vision Deficiency",
-            subtitle: "Simulate protanomaly, protanopia or tritanomaly.",
+            subtitle: "Simulate protanomaly, deuteranomaly or tritanomaly.",
             value: () => viewModel.simulateCvd,
             onChanged: controller.onSimulateCvdChanged,
             items: ColorVisionDeficiency.asComboBoxItems(),
