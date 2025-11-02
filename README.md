@@ -1,5 +1,6 @@
 # MomentoBooth
 
+![Discord](https://img.shields.io/discord/1434316075633344643?label=Discord)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-win-x64.yml?label=Windows%20build)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-macos-arm64.yml?label=macOS%20build)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-linux-appimage-x64.yml?label=Linux%20build)
@@ -13,6 +14,8 @@ MomentoBooth is a cross-platform open source photo booth software. Capture your 
 [Download from GitHub](https://github.com/momentobooth/momentobooth/releases)
 
 Check the online documentation at [https://momentobooth.github.io/momentobooth/](https://momentobooth.github.io/momentobooth/).
+
+Join our [Discord server](https://discord.gg/mCMEv2fHSN)!
 
 ## Features
 
@@ -40,7 +43,8 @@ Check the online documentation at [https://momentobooth.github.io/momentobooth/]
 ### Planned
 
 * Linux Flatpak distribution (x86_64 and arm64)
-* Windows arm64 distribution (waiting for public GitHub Actions runners)
+* Windows arm64 distribution
+* Up to date macOS builds (with correct signing)
 
 ## Development
 
