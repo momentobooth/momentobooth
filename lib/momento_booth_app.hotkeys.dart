@@ -44,7 +44,7 @@ class _HotkeyResponder extends StatelessWidget {
     int index = ColorVisionDeficiency.values.indexOf(getIt<SettingsManager>().settings.debug.simulateCvd);
     ColorVisionDeficiency newCvd = ColorVisionDeficiency.values[(index + 1) % ColorVisionDeficiency.values.length];
     getIt<SettingsManager>().mutateAndSave(
-      (settings) => settings.copyWith.debug(simulateCvd: newCvd),
+      (settings) => settings.copyWith.debug(simulateCvd: newCvd, simulateCvdSeverity: 9),
     );
   }
 

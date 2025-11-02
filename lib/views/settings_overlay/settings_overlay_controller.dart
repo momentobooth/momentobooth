@@ -702,7 +702,7 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   void onSimulateCvdChanged(ColorVisionDeficiency? simulateCvd) {
     if (simulateCvd != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.debug(simulateCvd: simulateCvd));
+      viewModel.updateSettings((settings) => settings.copyWith.debug(simulateCvd: simulateCvd, simulateCvdSeverity: 9));
     }
   }
 
