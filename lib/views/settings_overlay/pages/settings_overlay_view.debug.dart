@@ -24,7 +24,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
         ],
       ),
       SettingsSection(
-        title: "Debug settings",
+        title: "Performance",
         settings: [
           SettingsToggleTile(
             icon: LucideIcons.monitorCog,
@@ -36,15 +36,8 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
         ],
       ),
       SettingsSection(
-        title: "Debug settings",
+        title: "UI",
         settings: [
-          SettingsToggleTile(
-            icon: LucideIcons.monitorCog,
-            title: "Show FPS count",
-            subtitle: "Show the FPS count in the upper right corner.",
-            value: () => viewModel.debugShowFpsCounter,
-            onChanged: controller.onDebugShowFpsCounterChanged,
-          ),
           SettingsComboBoxTile<ColorVisionDeficiency?>(
             icon: LucideIcons.eye,
             title: "Simulate Color Vision Deficiency",
