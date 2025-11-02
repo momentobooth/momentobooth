@@ -25,7 +25,7 @@ class MomentoMenuBar extends StatelessWidget {
                 ];
               },
             ),
-            MenuFlyoutItem(text: Text(localizations.projectOpenShort), onPressed: getIt<ProjectManager>().browseOpen, leading: Icon(LucideIcons.folderInput), trailing: _shortcut("Ctrl+O")),
+            MenuFlyoutItem(text: Text(localizations.projectOpenShort), onPressed: () => getIt<ProjectManager>().browseOpen(), leading: Icon(LucideIcons.folderInput), trailing: _shortcut("Ctrl+O")),
             MenuFlyoutItem(text: Text(localizations.projectViewInExplorer), onPressed: () {
               final uri = Uri.parse("file:///${getIt<ProjectManager>().path!.path}");
               launchUrl(uri);
@@ -33,10 +33,12 @@ class MomentoMenuBar extends StatelessWidget {
             MenuFlyoutItem(text: Text(localizations.genericSettings), onPressed: () => SettingsOverlay.openDialog(context), leading: Icon(LucideIcons.settings), trailing: _shortcut("Ctrl+S")),
             MenuFlyoutItem(text: Text(localizations.actionRestoreLiveView), onPressed: () => getIt<LiveViewManager>().restoreLiveView(), leading: Icon(LucideIcons.rotateCcw), trailing: _shortcut("Ctrl+R")),
             const MenuFlyoutSeparator(),
-            MenuFlyoutItem(text: Text(localizations.actionsExit), onPressed: getIt<WindowManager>().close, leading: Icon(LucideIcons.x)),
+            MenuFlyoutItem(text: Text(localizations.actionsExit), onPressed: () => getIt<WindowManager>().close(), leading: Icon(LucideIcons.x)),
           ]),
           MenuBarItem(title: localizations.genericView, items: [
             MenuFlyoutItem(text: Text(localizations.genericFullScreen), onPressed: () => getIt<WindowManager>().toggleFullscreenSafe(), leading: Icon(LucideIcons.expand), trailing: _shortcut("Ctrl+F/Alt+Enter")),
+            MenuFlyoutSubItem(text: Text(localizations.genericLanguage), items: (_) => _getLanguageFlyoutItems(localizations), trailing: _shortcut("Ctrl+L")),
+            MenuFlyoutSubItem(text: Text(localizations.genericSimulateColorVisionDeficiency), items: (_) => _getColorVisionDeficiencyFlyoutItems(localizations), trailing: _shortcut("Ctrl+D")),
             const MenuFlyoutSeparator(),
             MenuFlyoutItem(text: Text(localizations.screensStart), onPressed: () => router.go(StartScreen.defaultRoute), leading: Icon(LucideIcons.play), trailing: _shortcut("Ctrl+H")),
             MenuFlyoutItem(text: Text(localizations.screensGallery), onPressed: () => router.go(GalleryScreen.defaultRoute), leading: Icon(LucideIcons.images)),
@@ -67,10 +69,10 @@ class MomentoMenuBar extends StatelessWidget {
   List<MenuFlyoutItem> _getColorVisionDeficiencyFlyoutItems(AppLocalizations localizations) {
     ColorVisionDeficiency currentCvd = getIt<SettingsManager>().settings.debug.simulateCvd;
     return [
-      MenuFlyoutItem(text: Text(localizations.genericNone), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.none)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.none),
-      MenuFlyoutItem(text: Text(localizations.genericProtanomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.protanomaly)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.protanomaly),
-      MenuFlyoutItem(text: Text(localizations.genericDeuteranomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.deuteranomaly)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.deuteranomaly),
-      MenuFlyoutItem(text: Text(localizations.genericTritanomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.tritanomaly)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.tritanomaly),
+      MenuFlyoutItem(text: Text(localizations.genericNone), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.none, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.none),
+      MenuFlyoutItem(text: Text(localizations.genericProtanomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.protanomaly, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.protanomaly),
+      MenuFlyoutItem(text: Text(localizations.genericDeuteranomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.deuteranomaly, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.deuteranomaly),
+      MenuFlyoutItem(text: Text(localizations.genericTritanomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.tritanomaly, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.tritanomaly),
     ];
   }
 
