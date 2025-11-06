@@ -34,6 +34,11 @@ class SettingsComboBoxTile<TValue> extends StatelessWidget {
             items: items,
             value: value(),
             onChanged: onChanged,
+            selectedItemBuilder: (context) {
+                return items.map<Widget>((item) {
+                  return item.child;
+                }).toList();
+              },
           ),
         );
       }),
