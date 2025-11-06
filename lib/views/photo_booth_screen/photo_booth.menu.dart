@@ -20,7 +20,7 @@ class MomentoMenuBar extends StatelessWidget {
                   for (final project in getIt<ProjectManager>().listProjects())
                     MenuFlyoutItem(
                       text: Text(project.name),
-                      onPressed: () { getIt<ProjectManager>().open(project.path); },
+                      onPressed: () => getIt<ProjectManager>().open(project.path),
                     ),
                 ];
               },
@@ -30,21 +30,21 @@ class MomentoMenuBar extends StatelessWidget {
               final uri = Uri.parse("file:///${getIt<ProjectManager>().path!.path}");
               launchUrl(uri);
             }, leading: Icon(LucideIcons.folderClosed)),
-            MenuFlyoutItem(text: Text(localizations.genericSettings), onPressed: () { SettingsOverlay.openDialog(context); }, leading: Icon(LucideIcons.settings), trailing: _shortcut("Ctrl+S")),
-            MenuFlyoutItem(text: Text(localizations.actionRestoreLiveView), onPressed: () { getIt<LiveViewManager>().restoreLiveView(); }, leading: Icon(LucideIcons.rotateCcw), trailing: _shortcut("Ctrl+R")),
+            MenuFlyoutItem(text: Text(localizations.genericSettings), onPressed: () => SettingsOverlay.openDialog(context), leading: Icon(LucideIcons.settings), trailing: _shortcut("Ctrl+S")),
+            MenuFlyoutItem(text: Text(localizations.actionRestoreLiveView), onPressed: () => getIt<LiveViewManager>().restoreLiveView(), leading: Icon(LucideIcons.rotateCcw), trailing: _shortcut("Ctrl+R")),
             const MenuFlyoutSeparator(),
             MenuFlyoutItem(text: Text(localizations.actionsExit), onPressed: getIt<WindowManager>().close,)
           ]),
           MenuBarItem(title: localizations.genericView, items: [
-            MenuFlyoutItem(text: Text(localizations.genericFullScreen), onPressed: () { getIt<WindowManager>().toggleFullscreenSafe(); }, leading: Icon(LucideIcons.expand), trailing: _shortcut("Ctrl+F/Alt+Enter")),
+            MenuFlyoutItem(text: Text(localizations.genericFullScreen), onPressed: () => getIt<WindowManager>().toggleFullscreenSafe(), leading: Icon(LucideIcons.expand), trailing: _shortcut("Ctrl+F/Alt+Enter")),
             const MenuFlyoutSeparator(),
-            MenuFlyoutItem(text: Text(localizations.screensStart), onPressed: () { router.go(StartScreen.defaultRoute); }, leading: Icon(LucideIcons.play), trailing: _shortcut("Ctrl+H")),
-            MenuFlyoutItem(text: Text(localizations.screensGallery), onPressed: () { router.go(GalleryScreen.defaultRoute); }, leading: Icon(LucideIcons.images)),
-            MenuFlyoutItem(text: Text(localizations.screensManualCollage), onPressed: () { router.go(ManualCollageScreen.defaultRoute); }, leading: Icon(LucideIcons.layoutDashboard), trailing: _shortcut("Ctrl+M")),
+            MenuFlyoutItem(text: Text(localizations.screensStart), onPressed: () => router.go(StartScreen.defaultRoute), leading: Icon(LucideIcons.play), trailing: _shortcut("Ctrl+H")),
+            MenuFlyoutItem(text: Text(localizations.screensGallery), onPressed: () => router.go(GalleryScreen.defaultRoute), leading: Icon(LucideIcons.images)),
+            MenuFlyoutItem(text: Text(localizations.screensManualCollage), onPressed: () => router.go(ManualCollageScreen.defaultRoute), leading: Icon(LucideIcons.layoutDashboard), trailing: _shortcut("Ctrl+M")),
           ]),
           MenuBarItem(title: localizations.genericHelp, items: [
-            MenuFlyoutItem(text: Text(localizations.genericDocumentation), onPressed: () { launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")); }, leading: Icon(LucideIcons.book)),
-            MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () { SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.about); }, leading: Icon(LucideIcons.info)),
+            MenuFlyoutItem(text: Text(localizations.genericDocumentation), onPressed: () => launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")), leading: Icon(LucideIcons.book)),
+            MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () => SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.about), leading: Icon(LucideIcons.info)),
           ]),
         ],
       ),
