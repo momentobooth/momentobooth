@@ -2,15 +2,27 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
-    - '**/*.g.dart'
     - '**/*.freezed.dart'
+    - '**/*.g.dart'
     - '**/*.generated.dart'
     - '**/*.json.dart'
     - '**/*.tailor.dart'
-    - 'lib/src/**/*.dart'
-    - 'lib/views/custom_widgets/draggable_scrollbar_override.dart'
-    - 'rust_builder/**/*'
-    - 'lib/l10n/generated/*'
+    - '.*/'
+    - 'android/'
+    - 'assets/'
+    - 'build/'
+    - 'documentation/'
+    - 'fastlane/'
+    - 'ios/'
+    - 'lib/l10n/generated/'
+    - 'lib/src/'
+    - 'linux/'
+    - 'macos/'
+    - 'misc/'
+    - 'rust/'
+    - 'rust_builder/'
+    - 'web/'
+    - 'windows/'
 
 linter:
   # More info: https://dart.dev/tools/linter-rules
@@ -33,7 +45,6 @@ linter:
     - close_sinks
     - combinators_ordering
     - directives_ordering
-    # - discarded_futures
     - eol_at_end_of_file
     - implicit_reopen
     - invalid_case_patterns

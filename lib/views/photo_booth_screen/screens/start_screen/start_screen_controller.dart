@@ -30,7 +30,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   Future<void> noProjectOpenedDialog() async {
     if (!getIt<ProjectManager>().isOpen) {
       await showUserDialog(
-        dialog: NoProjectOpenDialog(onOpened: () { navigator.pop(); },), barrierDismissible: false,
+        dialog: NoProjectOpenDialog(onOpened: () => navigator.pop()), barrierDismissible: false,
       );
     }
   }
@@ -58,7 +58,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
           actions: [
             Button(
               child: const Text("OK"),
-              onPressed: () { navigator.pop(); },
+              onPressed: () => navigator.pop(),
             ),
           ],
         ), barrierDismissible: false,
