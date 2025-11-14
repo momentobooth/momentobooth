@@ -24,7 +24,7 @@ tokio = { version = "1.48.0", features = ["rt-multi-thread"] }
 gphoto2 = "3.4.1"
 ahash = "0.8.12"
 img-parts = "0.4.0"
-little_exif = "0.6.16"
+little_exif = "0.6.18"
 url = "2.5.7"
 num = "0.4.3"
 num-traits = "0.2.19"
