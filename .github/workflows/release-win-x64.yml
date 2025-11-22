@@ -156,13 +156,20 @@ jobs:
       shell: pwsh
       run: |
         .\windows\bundle_libs.ps1
-      
         $file = Join-Path $env:DEV_DRIVE 'momentobooth\build\windows\x64\runner\Release\libgphoto2-6.dll'
         if (-not (Test-Path $file)) {
           Write-Error "Missing file: $file"
           exit 1
         }
         Write-Output "Found: $file"
+
+    - name: Create h3xup version
+      env:
+        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: h3xup create "release,${{ steps.extract_release_version.outputs.friendly_version }},${{ steps.extract_release_version.outputs.build_number }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64
 
     - name: Compile Inno Setup installer
       shell: pwsh
@@ -189,11 +196,3 @@ jobs:
         artifacts: "${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip,${{ env.DEV_DRIVE }}/momentobooth/windows/installer/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64-Setup.exe"
         body: |
           For Windows users: MomentoBooth needs the [Visual C++ Redistributable runtime libraries](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170). The setup version will install these automatically. When using the zip, install them manually.
-
-    - name: Create h3xUpdtr version (Friendly version)
-      env:
-        AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
-        AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: h3xup create "release,${{ steps.extract_release_version.outputs.friendly_version }},${{ steps.extract_release_version.outputs.build_number }}" -i ${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release -p Photobooth-Win-x64

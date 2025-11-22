@@ -16,7 +16,7 @@ jobs:
 
     runs-on: windows-latest
     timeout-minutes: 45
-    
+
     env:
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"
@@ -145,7 +145,6 @@ jobs:
       shell: pwsh
       run: |
         .\windows\bundle_libs.ps1
-
         $file = Join-Path $env:DEV_DRIVE 'momentobooth\build\windows\x64\runner\Release\libgphoto2-6.dll'
         if (-not (Test-Path $file)) {
           Write-Error "Missing file: $file"
@@ -169,7 +168,7 @@ jobs:
     - name: Get short SHA
       run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 8))" >> $env:GITHUB_ENV
 
-    - name: Create h3xUpdtr version
+    - name: Create h3xup version
       env:
         AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
         AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}

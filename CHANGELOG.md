@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Dev change: Updated Flutter to 3.38.3
+- Dev change: Updated Dart and Rust dependencies
+
 ## 0.15.3
 
 - Bugfix: Fix `-f` argument not working
