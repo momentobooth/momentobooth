@@ -47,4 +47,4 @@ jobs:
           crate: mdbook-mermaid
 
       - name: Build static site
-        run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir ../_site
+        run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir _site

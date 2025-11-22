@@ -119,7 +119,7 @@ dev_dependencies:
 
   # Models
   freezed: 3.2.3
-  json_serializable: 6.11.1
+  json_serializable: 6.11.2
 
   # Code generation
   build_runner: 2.10.4
