@@ -71,7 +71,7 @@ test:
 ##
 
 install-mdbook:
-  cargo install mdbook mdbook-mermaid mdbook-admonish
+  cargo install mdbook mdbook-mermaid
 
 build-docs:
   mdbook build documentation

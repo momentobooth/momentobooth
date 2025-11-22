@@ -80,9 +80,8 @@ Once you have the basics up and running you can try [connecting a camera](camera
 
 ## Current limitations
 
-```admonish warning
-While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations.
-```
+> [!WARNING]
+> While the application has been used a few times already at different kinds of events, it is still considered pre-release. Please read the list of limitations.
 
 - Webcam support may not be working in some cases (depending on OS and frame format used by the webcam).
   - As of 2024 Q3 there is are some bugs in the library that is used for this functionality, these will be resolved in future versions.

@@ -1,8 +1,7 @@
 # Hardware compatibility
 
-```admonish warning
-Make sure to use good quality USB and HDMI cables and preferably connect any USB devices without extension cords. There have been reports of freezes in camera handling due to bad cables. Try different USB ports and/or hubs if any problems arise. Also make sure to power your devices properly for long time usage.
-```
+> [!WARNING]
+> Make sure to use good quality USB and HDMI cables and preferably connect any USB devices without extension cords. There have been reports of freezes in camera handling due to bad cables. Try different USB ports and/or hubs if any problems arise. Also make sure to power your devices properly for long time usage.
 
 ## Tested cameras
 
