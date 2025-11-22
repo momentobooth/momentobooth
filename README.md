@@ -116,7 +116,7 @@ Join our [Discord server](https://discord.gg/mCMEv2fHSN)!
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
 * Optional: For building the documentation mdBook and some extensions for mdBook are needed
-  * Install using Cargo: `cargo install mdbook mdbook-mermaid mdbook-admonish`
+  * Install using Cargo: `cargo install mdbook mdbook-mermaid`
 * Be sure to read the docs for troubleshooting and workarounds
 
 </details>

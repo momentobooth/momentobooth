@@ -1,7 +1,7 @@
 name: Deploy docs to GitHub Pages
 
 env:
-  MDBOOK_VERSION: "0.4.37"
+  MDBOOK_VERSION: "0.5.1"
   BOOK_LOCATION: "documentation"
 
 on:
@@ -54,11 +54,6 @@ jobs:
         uses: baptiste0928/cargo-install@v3
         with:
           crate: mdbook-mermaid
-
-      - name: Install admonish preprocessor for mdBook
-        uses: baptiste0928/cargo-install@v3
-        with:
-          crate: mdbook-admonish
 
       - name: Build static site
         run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir ../_site
