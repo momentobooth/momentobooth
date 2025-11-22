@@ -11,7 +11,7 @@ flutter_rust_bridge = { version = "=2.11.1", features = ["chrono"] }
 ffsend-api = "0.7.3"
 serde_json = "1.0.145"
 chrono = "0.4.42"
-image = { version = "0.25.8", features = ["rayon"] }
+image = { version = "0.25.9", features = ["rayon"] }
 ipp = "5.3.2"
 zune-jpeg = "0.5.5"
 jpeg-encoder = "0.6.1"
@@ -24,7 +24,7 @@ tokio = { version = "1.48.0", features = ["rt-multi-thread"] }
 gphoto2 = "3.4.1"
 ahash = "0.8.12"
 img-parts = "0.4.0"
-little_exif = "0.6.18"
+little_exif = "0.6.20"
 url = "2.5.7"
 num = "0.4.3"
 num-traits = "0.2.19"
