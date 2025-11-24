@@ -24,7 +24,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
         ],
       ),
       SettingsSection(
-        title: "Debug settings",
+        title: "Performance",
         settings: [
           SettingsToggleTile(
             icon: LucideIcons.monitorCog,
@@ -32,6 +32,27 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             subtitle: "Show the FPS count in the upper right corner.",
             value: () => viewModel.debugShowFpsCounter,
             onChanged: controller.onDebugShowFpsCounterChanged,
+          ),
+        ],
+      ),
+      SettingsSection(
+        title: "UI",
+        settings: [
+          SettingsComboBoxTile<ColorVisionDeficiency?>(
+            icon: LucideIcons.eye,
+            title: "Simulate Color Vision Deficiency",
+            subtitle: "Simulate protanomaly, deuteranomaly or tritanomaly.",
+            value: () => viewModel.simulateCvd,
+            onChanged: controller.onSimulateCvdChanged,
+            items: ColorVisionDeficiency.asComboBoxItems(),
+          ),
+          SettingsComboBoxTile<int>(
+            icon: LucideIcons.eye,
+            title: "Color Vision Deficiency simulation severity",
+            subtitle: "This option only works if the above option is set to anything other than 'none'.",
+            value: () => viewModel.simulateCvdSeverity,
+            onChanged: controller.onSimulateCvdSeverityChanged,
+            items: List.generate(10, (i) => ComboBoxItem(value: i, child: Text('${(i + 1) * 10}%'))),
           ),
         ],
       ),
