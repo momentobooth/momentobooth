@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- New feature: A project can now define a display language that, if set, overrides the system setting
+- New feature: A project can now define a set of available languages that users can choose from themselves for multi-lingual events
+- New feature: Show an optional touch indicator on the start screen
+- Change: Choose capture mode screen is changed to a more general purpose navigation screen
+
 ## 0.15.4
 
 - Dev change: Updated Flutter to 3.38.3
