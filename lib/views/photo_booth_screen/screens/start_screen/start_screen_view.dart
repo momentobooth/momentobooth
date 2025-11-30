@@ -81,6 +81,7 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
                 }).toList();
                 return AnimatedTextKit(
                   repeatForever: true,
+                  pause: viewModel.singleStartText ? const Duration(days: 9) : const Duration(seconds: 1),
                   onTap: controller.onPressedContinue,
                   animatedTexts: animatedTexts,
                 );
