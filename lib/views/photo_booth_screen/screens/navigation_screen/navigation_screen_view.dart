@@ -23,7 +23,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
         Flexible(
           fit: FlexFit.tight,
           child: Center(
-            child: PhotoBoothTitle("What would you like to do?"),
+            child: PhotoBoothTitle(localizations.navigationScreenTitle),
           ),
         ),
         Expanded(
@@ -33,7 +33,12 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
             child: Row(
               spacing: 32,
               children: [
-                Expanded(child: _photoButton),
+                if (viewModel.enableSingleCapture && viewModel.enableCollageCapture) ...[
+                  Expanded(child: _singlePhotoButton),
+                  Expanded(child: _collageButton),
+                ] else ...[
+                  Expanded(child: _photoButton),
+                ],
                 Expanded(child: _galleryButton),
               ],
             ),
@@ -54,7 +59,49 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
           children: [
             Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.camera, 450))),
             AutoSizeText(
-              "Take pictures",
+              viewModel.enableSingleCapture
+                ? localizations.chooseCaptureModeScreenSinglePictureButton
+                : localizations.chooseCaptureModeScreenCollageButton,
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget get _singlePhotoButton {
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickPhoto,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.image, 450))),
+            AutoSizeText(
+              localizations.chooseCaptureModeScreenSinglePictureButton,
+              group: controller.autoSizeGroup,
+              maxLines: 1,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget get _collageButton {
+    return PhotoBoothButton.action(
+      onPressed: controller.onClickPhoto,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
+        child: Column(
+          spacing: 16,
+          children: [
+            Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.layoutGrid, 450))),
+            AutoSizeText(
+              localizations.chooseCaptureModeScreenCollageButton,
               group: controller.autoSizeGroup,
               maxLines: 1,
             ),
@@ -74,7 +121,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
           children: [
             Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.images, 450))),
             AutoSizeText(
-              "View gallery",
+              localizations.startScreenGalleryButton,
               group: controller.autoSizeGroup,
               maxLines: 1,
             ),
@@ -111,7 +158,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
               children: [
                 _iconWithShadow(LucideIcons.languages, 52),
                 const SizedBox(width: 16),
-                PhotoBoothSubtitle("Change Language"),
+                PhotoBoothSubtitle(localizations.changeLanguage),
               ],
             ),
           ),
