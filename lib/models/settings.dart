@@ -223,6 +223,7 @@ sealed class UiSettings with _$UiSettings implements TomlEncodableValue {
     @Default(45) int returnToHomeTimeoutSeconds,
     @Default(Language.english) Language language,
     @Default([]) List<LottieAnimationSettings> introScreenLottieAnimations,
+    @Default(true) bool showTouchIndicator,
     @Default(false) bool enableSfx,
     @Default("") String clickSfxFile,
     @Default("") String shareScreenSfxFile,

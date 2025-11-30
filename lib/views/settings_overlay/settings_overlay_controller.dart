@@ -593,6 +593,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onShowTouchIndicatorChanged(bool? showTouchIndicator) {
+    if (showTouchIndicator != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(showTouchIndicator: showTouchIndicator));
+    }
+  }
+
   void onMqttIntegrationEnableChanged(bool? enable) {
     if (enable != null) {
       viewModel.updateSettings((settings) => settings.copyWith.mqttIntegration(enable: enable));

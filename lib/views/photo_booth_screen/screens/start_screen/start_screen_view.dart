@@ -6,6 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
+import 'package:momento_booth/views/components/animations/repeating_indicator.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
 
@@ -24,6 +25,11 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          RepeatingIndicator(
+            lottieAsset: 'assets/animations/Animation - 1764508028194.json',
+            cycleDuration: const Duration(seconds: 8),
+            size: 300,
+          ),
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
