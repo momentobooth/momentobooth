@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_tile.dart';
 
 class SettingsTreeViewTile<TValue> extends StatelessWidget {

@@ -23,7 +23,7 @@ abstract class WindowManagerBase extends Subsystem with Store, Logger {
   bool _isFullScreen = false;
 
   @readonly
-  Language? _selectedLanguage = null;
+  Language? _selectedLanguage;
 
   // ////////////// //
   // Initialization //
