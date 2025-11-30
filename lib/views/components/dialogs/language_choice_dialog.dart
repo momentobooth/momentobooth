@@ -31,7 +31,7 @@ class LanguageChoiceDialog extends StatelessWidget {
     );
 
     return ModalDialog(
-      title: "Choose your language",
+      title: localizations.chooseYourLanguage,
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

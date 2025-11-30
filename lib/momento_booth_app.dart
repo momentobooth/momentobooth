@@ -14,7 +14,6 @@ import 'package:momento_booth/views/base/transition_page.dart';
 import 'package:momento_booth/views/onboarding_screen/onboarding_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/components/activity_monitor.dart';
 import 'package:momento_booth/views/photo_booth_screen/photo_booth.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/collage_maker_screen/collage_maker_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
