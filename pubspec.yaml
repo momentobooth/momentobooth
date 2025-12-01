@@ -30,12 +30,12 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.2
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.20.1
+  widgetbook: 3.20.2
   widgetbook_annotation: 3.9.0
-  lucide_icons_flutter: 3.1.6
+  lucide_icons_flutter: 3.1.7
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.1
-  google_fonts: 6.3.2
+  google_fonts: 6.3.3
   twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
@@ -66,8 +66,8 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.0
-  talker_flutter: 5.1.0
+  talker: 5.1.1
+  talker_flutter: 5.1.1
   sentry_flutter: 9.8.0
   stack_trace: 1.12.1
 
@@ -81,7 +81,7 @@ dependencies:
   mqtt5_client: 4.15.2
 
   # Misc
-  get_it: 9.1.0
+  get_it: 9.1.1
   meta: any
   synchronized: 3.4.0
   collection: any
@@ -108,7 +108,7 @@ dependency_overrides:
 
 dev_dependencies:
   # UI
-  widgetbook_generator: 3.20.0
+  widgetbook_generator: 3.20.1
   theme_tailor: 3.1.1
 
   # MVC
