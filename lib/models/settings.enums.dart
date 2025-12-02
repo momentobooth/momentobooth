@@ -177,7 +177,8 @@ enum Language {
 
   english("English", "en"),
   dutch("Dutch", "nl"),
-  german("German", "de");
+  german("German", "de"),
+  french("French", "fr");
 
   final String name;
   final String code;
