@@ -1,0 +1,206 @@
+{
+    "@@locale": "fr",
+
+    "genericBackButton": "Retour",
+    "genericPrintButton": "Imprimer",
+    "genericContinueButton": "Continuer",
+    "genericRefreshButton": "Actualiser",
+    "genericClearButton": "Effacer",
+    "genericSaveButton": "Enregistrer",
+    "genericCloseButton": "Fermer",
+    "genericRetryButton": "Réessayer",
+    "genericCancelButton": "Annuler",
+    "genericDeleteButton": "Supprimer",
+    "genericDoneButton": "Terminé",
+    "genericOneMomentPlease": "Un instant s'il vous plaît...",
+    "genericDocumentation": "Documentation",
+    "genericAbout": "À propos",
+    "genericHelp": "Aide",
+    "genericView": "Afficher",
+    "genericFile": "Fichier",
+    "genericFullScreen": "Plein écran",
+    "genericSettings": "Paramètres",
+    "genericCanBeChangedInSettings": "cela peut être modifié dans les paramètres",
+
+    "actionRestoreLiveView": "Restaurer l'aperçu direct",
+    "actionsExit": "Quitter",
+
+    "screensStart": "Écran de démarrage",
+    "screensGallery": "Galerie",
+    "screensManualCollage": "Collage manuel",
+    
+    "startScreenTouchToStartButton": "Appuyez pour commencer",
+    "startScreenGalleryButton": "Galerie",
+
+    "galleryScreenGoToStartButton": "Démarrage",
+
+    "chooseCaptureModeScreenTitle": "Choisir le mode de capture",
+    "chooseCaptureModeScreenSinglePictureButton": "Photo unique",
+    "chooseCaptureModeScreenCollageButton": "Collage",
+
+    "captureScreenGetReady": "Préparez-vous",
+    "captureScreenLookAtCamera": "Regardez vers 📷",
+    "captureScreenLoadingPhoto": "Chargement de la photo...",
+    "captureScreenLoadingPhotos": "Chargement des photos...",
+
+    "photoDetailsScreenTitle": "Détails de la photo",
+    "photoDetailsScreenGetQrButton": "Obtenir QR",
+    "photoDetailsScreenQrUploading": "Téléchargement",
+    "photoDetailsScreenShowQrButton": "Afficher QR",
+    "photoDetailsScreenRetryQrButton": "Erreur, réessayer?",
+    "photoDetailsScreenPrinting": "Impression...",
+    "photoDetailsScreenPrintUnsuccesful": "Impression échouée",
+
+    "shareScreenTitle": "Partager",
+    "shareScreenRetakeButton": "Recommencer",
+    "shareScreenChangeButton": "Modifier",
+    "shareScreenGetQrButton": "Obtenir QR",
+    "shareScreenQrUploading": "Téléchargement",
+    "shareScreenShowQrButton": "Afficher QR",
+    "shareScreenRetryQrButton": "Erreur, réessayer?",
+    "shareScreenPrinting": "Impression...",
+    "shareScreenPrintUnsuccesful": "Impression échouée",
+
+    "qrDialogTitle": "Partager avec un code QR",
+    "qrDialogUploading": "Téléchargement...",
+    "qrDialogInstructions": "Vous pouvez télécharger votre photo en scannant ce code QR.\n\nNote : Un lien de téléchargement ne peut être utilisé qu'une seule fois. Veuillez cliquer sur \"Téléchargement supplémentaire\" si vous avez besoin d'un autre téléchargement.",
+    "qrDialogExtraDownloadButton": "Téléchargement supplémentaire",
+    "qrDialogErrorMessage": "Une erreur s'est produite lors du téléchargement. Vérifiez la connexion Internet et cliquez sur \"Réessayer\" pour réessayer.",
+
+    "multiCaptureScreenPhotoCounter": "Photo {current}/{total}",
+    "multiCaptureScreenGetReady": "Préparez-vous",
+    "multiCaptureScreenLookAtCamera": "Regardez vers 📷",
+
+    "collageMakerScreenPicturesShotTitle": "Photos prises",
+    "collageMakerScreenPhotoCounter": "{count} sélectionnées",
+    "collageMakerScreenCollageTitle": "Collage",
+
+    "manualCollageScreenSaving": "Enregistrement...",
+
+    "photoCollageWidgetSelectPhotos": "Sélectionnez quelques photos :)",
+
+    "printerErrorNoInkTitle": "Pas d'encre",
+    "printerErrorNoInkBody1": "L'imprimante [{name}] signale qu'elle est à court d'encre.",
+    "printerErrorNoInkBody2": "Veuillez remplacer la cartouche d'encre, confirmez avec le bouton \"OK\" de l'imprimante, puis cliquez sur \"Reprendre la file d'attente\".",
+    "printerErrorNoMediaTitle": "Pas de papier",
+    "printerErrorNoMediaBody1": "L'imprimante [{name}] signale qu'elle est à court de papier.",
+    "printerErrorNoMediaBody2": "Veuillez insérer du papier, confirmez avec le bouton \"OK\" de l'imprimante, puis cliquez sur \"Reprendre la file d'attente\".",
+    "printerErrorMediaJamTitle": "Bourrage papier",
+    "printerErrorMediaJamBody1": "L'imprimante [{name}] signale qu'elle a un bourrage papier.",
+    "printerErrorMediaJamBody2": "Veuillez suivre les instructions affichées par l'imprimante, le cas échéant. Une fois le problème résolu, cliquez sur \"Reprendre la file d'attente\".",
+    "printerErrorStuckJob": "De plus, il y a un travail bloqué dans la file d'attente. Cliquer sur \"Reprendre la file d'attente\" tentera de le débloquer.",
+    "printerErrorStuckJobs": "De plus, il y a {jobCount} travaux bloqués dans la file d'attente. Cliquer sur \"Reprendre la file d'attente\" tentera de les débloquer.",
+    "printerErrorConnectionErrorTitle": "Erreur de connexion",
+    "printerErrorConnectionErrorBody1": "Le système d'impression signale que l'imprimante [{name}] n'est plus connectée à l'ordinateur.",
+    "printerErrorConnectionErrorBody2": "Veuillez vérifier la connexion entre l'imprimante et l'ordinateur, puis cliquez sur \"Reprendre la file d'attente\".",
+    "printerErrorUnknownIssueTitle": "Problème d'imprimante inconnu",
+    "printerErrorUnknownIssueBody1": "L'imprimante [{name}] signale qu'elle a un problème :\n\n{error}",
+    "printerErrorUnknownIssueBody2": "Veuillez suivre les instructions affichées par l'imprimante ou consulter les paramètres d'impression système pour plus de détails. Une fois le problème résolu, cliquez sur \"Reprendre la file d'attente\".",
+    "printerErrorIgnoreButton": "Ignorer pour l'instant",
+    "printerErrorResumeQueueButton": "Reprendre la file d'attente",
+
+    "printDialogTitle": "Imprimer",
+    "printDialogSizeSetting": "Taille :",
+    "printDialogNoOfPrintsSetting": "Nombre de copies :",
+    "printDialogSummary": "{numPrints} copies → {numImages} images imprimées",
+
+    "printingErrorDialogTitle": "Erreur d'impression",
+    "printingErrorDialogBodyTop": "En raison d'un problème inattendu, vos impression(s) ne peut pas être démarrée.",
+    "printingErrorDialogBodyBottom": "Réessayez plus tard ou téléchargez votre photo à l'aide de la fonction QR.",
+
+    "retakeDialogBody": "Voulez-vous conserver le résultat actuel?",
+    "retakeDialogKeepButton": "Conserver",
+
+    "projectNotOpened": "Aucun projet ouvert",
+    "opened": "Ouvert",
+    "projectNotOpenedInstructions": "Vous n'avez pas encore ouvert de dossier de projet. Ouvrez-en un pour commencer à prendre des photos.",
+    "projectNotOpenedExplanation": "MomentoBooth doit savoir où stocker les images et chercher les modèles de collage.",
+    "projectsRecent": "Projets récents",
+    "projectOpenButton": "Ouvrir un dossier de projet",
+    "projectOpenShort": "Ouvrir projet",
+    "projectViewInExplorer": "Afficher le projet dans l'explorateur",
+    "projectLoadLastOnStart": "Charger le dernier projet au démarrage",
+
+    "@multiCaptureScreenPhotoCounter": {
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "@collageMakerScreenPhotoCounter": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "@printerErrorNoInkBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorNoMediaBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorMediaJamBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorConnectionErrorBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorUnknownIssueBody1": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            },
+            "error": {
+                "type": "String"
+            }
+        }
+    },
+    "@printerErrorStuckJobs": {
+        "placeholders": {
+            "jobCount": {
+                "type": "int"
+            }
+        }
+    },
+    "@printDialogSummary": {
+        "placeholders": {
+            "numPrints": {
+                "type": "int"
+            },
+            "numImages": {
+                "type": "int"
+            }
+        }
+    },
+    "galleryScreenFilterBarOrderByTitle": "Trier par",
+    "@galleryScreenFilterBarOrderByTitle": {},
+    "galleryScreenFilterBarOrderByTime": "Heure",
+    "@galleryScreenFilterBarOrderByTime": {},
+    "galleryScreenFilterBarOrderByGroupSize": "Taille du groupe",
+    "@galleryScreenFilterBarOrderByGroupSize": {},
+    "galleryScreenFilterBarFindMyFaceButton": "Trouver mon visage",
+    "@galleryScreenFilterBarFindMyFaceButton": {},
+    "galleryScreenFilterBarClearFilterButton": "Effacer le filtre",
+    "@galleryScreenFilterBarClearFilterButton": {}
+}
