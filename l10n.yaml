@@ -2,6 +2,11 @@ arb-dir: lib/l10n
 template-arb-file: app_en.arb
 output-localization-file: app_localizations.dart
 output-dir: lib/l10n/generated
+
+# Flutter Extract to ARB settings
 key-prefix: localizations.
 main-locale: en
 update-all-arb-files: true
+# Enable translation (via DeepL)
+translate: true
+auto-name-key: ask

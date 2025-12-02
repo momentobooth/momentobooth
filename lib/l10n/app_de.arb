@@ -274,5 +274,9 @@
     "galleryScreenFilterBarFindMyFaceButton": "Mein Gesicht finden",
     "@galleryScreenFilterBarFindMyFaceButton": {},
     "galleryScreenFilterBarClearFilterButton": "Filter löschen",
-    "@galleryScreenFilterBarClearFilterButton": {}
+    "@galleryScreenFilterBarClearFilterButton": {},
+
+    "changeLanguage": "Sprache ändern",
+    "navigationScreenTitle": "Was würden Sie gerne tun?",
+    "chooseYourLanguage": "Wählen Sie Ihre Sprache"
 }

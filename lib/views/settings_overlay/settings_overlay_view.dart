@@ -35,6 +35,7 @@ import 'package:momento_booth/views/settings_overlay/components/settings/setting
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_text_edit_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_toggle_tile.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings/settings_tree_view_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_list_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_section.dart';

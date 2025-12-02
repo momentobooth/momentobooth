@@ -155,6 +155,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onProjectLanguageChanged(Language? language) {
+    if (language != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(language: language));
+    }
+  }
+
+  void onProjectAvailableLanguagesChanged(List<Language>? languages) {
+    if (languages != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(availableLanguages: languages));
+    }
+  }
+
   void onTemplatesFolderChanged(String? templatesFolder) {
     if (templatesFolder != null) {
       viewModel.updateSettings((settings) => settings.copyWith(templatesFolder: templatesFolder));
@@ -578,6 +590,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onShowSettingsButtonChanged(bool? showSettingsButton) {
     if (showSettingsButton != null) {
       viewModel.updateSettings((settings) => settings.copyWith.ui(showSettingsButton: showSettingsButton));
+    }
+  }
+
+  void onShowTouchIndicatorChanged(bool? showTouchIndicator) {
+    if (showTouchIndicator != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.ui(showTouchIndicator: showTouchIndicator));
     }
   }
 

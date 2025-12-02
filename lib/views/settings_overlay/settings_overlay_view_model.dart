@@ -62,6 +62,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<ComboBoxItem<PrintingImplementation>> get printingImplementations => PrintingImplementation.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
+  List<ComboBoxItem<Language>> get languagesProject => Language.asOptionalComboBoxItems();
   List<ComboBoxItem<ScreenTransitionAnimation>> get screenTransitionAnimations => ScreenTransitionAnimation.asComboBoxItems();
   List<ComboBoxItem<BackgroundBlur>> get backgroundBlurOptions => BackgroundBlur.asComboBoxItems();
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
@@ -177,6 +178,8 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   bool get enableCollageCaptureSetting => getIt<ProjectManager>().settings.enableCollageCapture;
   CollageMode get collageModeSetting => getIt<ProjectManager>().settings.collageMode;
   Color get primaryColorSetting => getIt<ProjectManager>().settings.primaryColor;
+  Language get projectLanguageSetting => getIt<ProjectManager>().settings.language;
+  List<Language> get projectAvailableLanguagesSetting => getIt<ProjectManager>().settings.availableLanguages;
 
   // System settings current values
   int get captureDelaySecondsSetting => getIt<SettingsManager>().settings.captureDelaySeconds;
@@ -241,6 +244,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   FilterQuality get screenTransitionAnimationFilterQuality => getIt<SettingsManager>().settings.ui.screenTransitionAnimationFilterQuality;
   FilterQuality get liveViewFilterQuality => getIt<SettingsManager>().settings.ui.liveViewFilterQuality;
   bool get showSettingsButtonSetting => getIt<SettingsManager>().settings.ui.showSettingsButton;
+  bool get showTouchIndicatorSetting => getIt<SettingsManager>().settings.ui.showTouchIndicator;
   bool get mqttIntegrationEnableSetting => getIt<SettingsManager>().settings.mqttIntegration.enable;
   String get mqttIntegrationHostSetting => getIt<SettingsManager>().settings.mqttIntegration.host;
   int get mqttIntegrationPortSetting => getIt<SettingsManager>().settings.mqttIntegration.port;

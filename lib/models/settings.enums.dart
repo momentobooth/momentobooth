@@ -175,21 +175,26 @@ enum Rotate {
 
 enum Language {
 
-  english("English", "en"),
-  dutch("Dutch", "nl"),
-  german("German", "de");
+  noLanguage("None", "--", "None", "", ""),
+  english("English", "en", "English", "gb", "🇬🇧"),
+  dutch("Dutch", "nl", "Nederlands", "nl", "🇳🇱"),
+  german("German", "de", "Deutsch", "de", "🇩🇪"),;
 
   final String name;
   final String code;
+  final String nameNative;
+  final String countryCode;
+  final String flag;
 
   // can use named parameters if you want
-  const Language(this.name, this.code);
+  const Language(this.name, this.code, this.nameNative, this.countryCode, this.flag);
 
   ComboBoxItem<Language> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
 
   static List<Locale> valuesAsLocale() => Language.values.map((l) => Locale(l.code)).toList();
 
-  static List<ComboBoxItem<Language>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<Language>> asComboBoxItems() => values.where((v) => v != noLanguage).map((value) => value.toComboBoxItem()).toList();
+  static List<ComboBoxItem<Language>> asOptionalComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
   Locale toLocale() => Locale(code);
 

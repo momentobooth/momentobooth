@@ -40,6 +40,13 @@ Widget _getUiSettings(SettingsOverlayViewModel viewModel, SettingsOverlayControl
         value: () => viewModel.allowScrollGestureWithMouse,
         onChanged: controller.onAllowScrollGestureWithMouseChanged,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.hand,
+        title: "Show a touch animation on the start screen",
+        subtitle: "If enabled, a suggestive touch animation will play from time to time on the start screen to show that the screen can be touched.",
+        value: () => viewModel.showTouchIndicatorSetting,
+        onChanged: controller.onShowTouchIndicatorChanged,
+      ),
       SettingsSection(
         title: "Animations",
         settings: [
