@@ -1,0 +1,57 @@
+{
+    "genericBackButton": "Retour",
+    "@genericBackButton": {},
+    "genericPrintButton": "Imprimer",
+    "@genericPrintButton": {},
+    "genericContinueButton": "Continuer",
+    "@genericContinueButton": {},
+    "genericSaveButton": "Enregistrer",
+    "@genericSaveButton": {},
+    "genericCloseButton": "Fermer",
+    "@genericCloseButton": {},
+    "genericCancelButton": "Annuler",
+    "@genericCancelButton": {},
+    "genericDoneButton": "C'est bon.",
+    "@genericDoneButton": {},
+    "genericOneMomentPlease": "Un instant, s'il vous plaît...",
+    "@genericOneMomentPlease": {},
+    "startScreenGalleryButton": "Galerie",
+    "@startScreenGalleryButton": {},
+    "chooseCaptureModeScreenTitle": "Choisis le mode de capture",
+    "@chooseCaptureModeScreenTitle": {},
+    "chooseCaptureModeScreenSinglePictureButton": "Photo unique",
+    "@chooseCaptureModeScreenSinglePictureButton": {},
+    "chooseCaptureModeScreenCollageButton": "Collage",
+    "@chooseCaptureModeScreenCollageButton": {},
+    "captureScreenGetReady": "Préparez-vous",
+    "@captureScreenGetReady": {},
+    "captureScreenLookAtCamera": "Regarde 📷",
+    "@captureScreenLookAtCamera": {},
+    "captureScreenLoadingPhoto": "Chargement de la photo...",
+    "@captureScreenLoadingPhoto": {},
+    "photoDetailsScreenGetQrButton": "Obtenir le QR",
+    "@photoDetailsScreenGetQrButton": {},
+    "photoDetailsScreenPrinting": "Impression...",
+    "@photoDetailsScreenPrinting": {},
+    "shareScreenTitle": "Partager",
+    "@shareScreenTitle": {},
+    "shareScreenRetakeButton": "Nouvelle photo",
+    "@shareScreenRetakeButton": {},
+    "shareScreenChangeButton": "Modifier",
+    "@shareScreenChangeButton": {},
+    "multiCaptureScreenPhotoCounter": "Photo {current}/{total}",
+    "@multiCaptureScreenPhotoCounter": {
+        "placeholders": {
+            "current": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "multiCaptureScreenGetReady": "Préparez-vous",
+    "@multiCaptureScreenGetReady": {},
+    "multiCaptureScreenLookAtCamera": "Regarde 📷",
+    "@multiCaptureScreenLookAtCamera": {}
+}
