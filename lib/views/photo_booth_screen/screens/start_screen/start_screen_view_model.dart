@@ -38,6 +38,9 @@ abstract class StartScreenViewModelBase extends ScreenViewModelBase with Store {
   @computed
   bool get singleStartText => startTexts.length == 1;
 
+  @computed
+  bool get showTouchIndicator => getIt<SettingsManager>().settings.ui.showTouchIndicator;
+
   StartScreenViewModelBase({required super.contextAccessor}) {
     // Remove images in memory
     // Fixme: maybe somewhere else is nicer, but for now it's here.

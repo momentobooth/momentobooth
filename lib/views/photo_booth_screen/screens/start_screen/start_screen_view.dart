@@ -25,9 +25,10 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          if (viewModel.showTouchIndicator)
           RepeatingIndicator(
             lottieAsset: 'assets/animations/Animation - 1764508028194.json',
-            cycleDuration: const Duration(seconds: 8),
+            cycleDuration: const Duration(seconds: 5),
             size: 300,
           ),
           MouseRegion(
