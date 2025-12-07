@@ -124,5 +124,9 @@
     "galleryScreenFilterBarOrderByTime": "Tijd",
     "galleryScreenFilterBarOrderByGroupSize": "Groepsgrootte",
     "galleryScreenFilterBarFindMyFaceButton": "Vind mijn gezicht",
-    "galleryScreenFilterBarClearFilterButton": "Filter wissen"
+    "galleryScreenFilterBarClearFilterButton": "Filter wissen",
+  
+    "changeLanguage": "Verander van taal",
+    "navigationScreenTitle": "Wat zou je willen doen?",
+    "chooseYourLanguage": "Kies je taal"
 }

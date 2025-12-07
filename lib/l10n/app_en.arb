@@ -120,6 +120,10 @@
     "projectOpenShort": "Open project",
     "projectViewInExplorer": "View project in explorer",
     "projectLoadLastOnStart": "Load last project on start up",
+    
+    "changeLanguage": "Change Language",
+    "navigationScreenTitle": "What would you like to do?",
+    "chooseYourLanguage": "Choose your language",
 
     "@multiCaptureScreenPhotoCounter": {
         "placeholders": {

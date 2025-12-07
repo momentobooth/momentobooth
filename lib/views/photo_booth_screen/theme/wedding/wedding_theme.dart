@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/choose_capture_mode_screen/choose_capture_mode_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/wedding/components/wedding_wreath.dart';
@@ -10,7 +10,7 @@ PhotoBoothTheme weddingTheme({required Color primaryColor}) => PhotoBoothTheme(
   subtitleTheme: TextTheme(style: _subtitleTextStyle),
   screenLiveViewBlur: (route) => switch (route) {
     StartScreen.defaultRoute => 8,
-    ChooseCaptureModeScreen.defaultRoute => 4,
+    NavigationScreen.defaultRoute => 4,
     _ => 0,
   },
 

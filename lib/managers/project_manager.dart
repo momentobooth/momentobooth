@@ -5,6 +5,7 @@ import 'package:args/args.dart';
 import 'package:collection/collection.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:mobx/mobx.dart';
+import 'package:momento_booth/l10n/generated/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
@@ -52,6 +53,9 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
     return TomlSerializableRepository(join(_path!.path, "ProjectSettings.toml"), ProjectSettings.fromJson);
   }
 
+  @readonly
+  List<AppLocalizations> _availableLocalizations = [];
+
   @override
   Future<void> initialize() async {
     SerialiableRepository<ProjectsList> projectsListRepository = getIt<SerialiableRepository<ProjectsList>>();
@@ -95,6 +99,8 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
     }
 
     _settings = settings;
+    // Update available localizations in case selection has changed
+    await setAvailableLocalizations();
     // TODO implement MQTT project related property publishing
     // getIt<MqttManager>().publishSettings(settings);
   }
@@ -159,6 +165,17 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
         message: "Could not read existing ProjectSettings: $e\n\nThe ProjectSettings have been cleared. As such the existing ProjectSettings file will be overwritten.",
       );
     }
+
+    // Update available localizations
+    await setAvailableLocalizations();
+  }
+
+  Future<void> setAvailableLocalizations() async {
+    _availableLocalizations = await Future.wait(
+      _settings.availableLanguages
+        .map((lang) => lang.toLocale())
+        .map((locale) async => AppLocalizations.delegate.load(locale))
+    );
   }
 
   Future<bool> browseOpen() async {

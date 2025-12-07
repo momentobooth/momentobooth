@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -5,9 +6,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
 import 'package:momento_booth/views/components/animations/lottie_animation_wrapper.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/components/text/auto_size_text_and_icon.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
+import 'package:momento_booth/views/components/animations/repeating_indicator.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_controller.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
 
@@ -26,22 +25,18 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
       child: Stack(
         clipBehavior: Clip.none,
         children: [
+          if (viewModel.showTouchIndicator)
+          RepeatingIndicator(
+            lottieAsset: 'assets/animations/Animation - 1764508028194.json',
+            cycleDuration: const Duration(seconds: 5),
+            size: 300,
+          ),
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: controller.onPressedContinue,
               behavior: HitTestBehavior.opaque,
               child: _foregroundElements,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Align(
-              alignment: Alignment.bottomLeft,
-              child: PhotoBoothButton.navigation(
-                onPressed: controller.onPressedGallery,
-                child: AutoSizeTextAndIcon(text: localizations.startScreenGalleryButton),
-              ),
             ),
           ),
           Observer(
@@ -66,6 +61,16 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
   }
 
   Widget get _foregroundElements {
+    const transparentWhite = Color.fromARGB(200, 255, 255, 255);
+    final colorizeColors = [
+      transparentWhite,
+      const Color.fromARGB(255, 255, 156, 247),
+      const Color.fromARGB(255, 148, 248, 252),
+      transparentWhite,
+    ];
+
+    final colorizeTextStyle = context.theme.titleTheme.style;
+
     return Column(
       children: [
         const Flexible(fit: FlexFit.tight, child: SizedBox()),
@@ -73,11 +78,21 @@ class StartScreenView extends ScreenViewBase<StartScreenViewModel, StartScreenCo
           flex: 2,
           child: Center(
             child: Observer(
-              builder: (context) => PhotoBoothTitle(
-                viewModel.touchToStartOverrideText ?? context.localizations.startScreenTouchToStartButton,
-                textAlign: TextAlign.center,
-                maxLines: null,
-              ),
+              builder: (context) {
+                final animatedTexts = viewModel.startTexts.map((text) {
+                  return ColorizeAnimatedText(
+                    text,
+                    textStyle: colorizeTextStyle,
+                    colors: colorizeColors,
+                  );
+                }).toList();
+                return AnimatedTextKit(
+                  repeatForever: true,
+                  pause: viewModel.singleStartText ? const Duration(days: 9) : const Duration(seconds: 1),
+                  onTap: controller.onPressedContinue,
+                  animatedTexts: animatedTexts,
+                );
+              },
             ),
           ),
         ),
