@@ -196,6 +196,8 @@ enum Language {
   static List<ComboBoxItem<Language>> asComboBoxItems() => values.where((v) => v != noLanguage).map((value) => value.toComboBoxItem()).toList();
   static List<ComboBoxItem<Language>> asOptionalComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 
+  static List<Language> get definedValues => values.where((v) => v != noLanguage).toList();
+
   Locale toLocale() => Locale(code);
 
 }

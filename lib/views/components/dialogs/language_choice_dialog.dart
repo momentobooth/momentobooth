@@ -24,7 +24,10 @@ class LanguageChoiceDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    final languages = getIt<ProjectManager>().settings.availableLanguages;
+    final projectAvailableLanguages = getIt<ProjectManager>().settings.availableLanguages;
+    final languages = projectAvailableLanguages.isNotEmpty
+      ? projectAvailableLanguages
+      : Language.definedValues;
 
     final TextStyle textStyle = FluentTheme.of(context).typography.bodyLarge!.copyWith(
       fontSize: 30,

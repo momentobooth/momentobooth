@@ -72,7 +72,7 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
               SettingsTreeViewTile<Language>(
                 icon: LucideIcons.languages,
                 title: "Languages available to users",
-                subtitle: "The languages that users can choose from in the app. If only one language is selected, no language selection will be shown.", // Fixme, is this not inconsistent?
+                subtitle: "The languages that users can choose from in the app. If only one language is selected, no language selection will be shown. If none is selected, all languages are available.",
                 items: viewModel.languages,
                 value: () => viewModel.projectAvailableLanguagesSetting,
                 onChanged: controller.onProjectAvailableLanguagesChanged,

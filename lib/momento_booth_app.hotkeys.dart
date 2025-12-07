@@ -24,7 +24,7 @@ class _HotkeyResponder extends StatelessWidget {
   }
 
   void _switchToNextLanguage() {
-    final usableValues = Language.values.where((lang) => lang != Language.noLanguage).toList();
+    final usableValues = Language.definedValues;
     // If no language is selected, set to the current settings language first to start iterating from there
     if (getIt<WindowManager>().selectedLanguage == null) {
       var projectLanguage = getIt<ProjectManager>().settings.language;
