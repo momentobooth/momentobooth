@@ -79,14 +79,14 @@ GoRoute _multiCaptureRoute = GoRoute(
 GoRoute _recordingRoute = GoRoute(
   path: RecordingCountdownScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const RecordingCountdownScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, name: (RecordingCountdownScreen).toString(), context: context, child: const RecordingCountdownScreen());
   },
 );
 
 GoRoute _postRecordingRoute = GoRoute(
   path: PostRecordingScreen.defaultRoute,
   pageBuilder: (context, state) {
-    return TransitionPage.fromSettings(key: state.pageKey, context: context, child: const PostRecordingScreen());
+    return TransitionPage.fromSettings(key: state.pageKey, name: (PostRecordingScreen).toString(), context: context, child: const PostRecordingScreen());
   },
 );
 
