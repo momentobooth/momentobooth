@@ -1,10 +1,10 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/components/animations/fading_text_swticher.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/buttons/photo_booth_button.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen_controller.dart';
@@ -163,20 +163,6 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
   }
 
   Widget get _changeLanguageButton {
-    const white = Color.fromARGB(255, 255, 255, 255);
-    final colorizeColors = [
-      white,
-      const Color.fromARGB(0, 255, 255, 255),
-    ];
-    final textStyle = context.theme.subtitleTheme.style;
-    final animatedTexts = viewModel.changeLanguageTexts.map((text) =>
-      ColorizeAnimatedText(
-        text,
-        textStyle: textStyle,
-        colors: colorizeColors,
-      )
-    ).toList();
-
     return PhotoBoothButton.action(
       onPressed: controller.onClickLanguage,
       child: Row(
@@ -184,14 +170,11 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
         children: [
           _iconWithShadow(LucideIcons.languages, 52),
           const SizedBox(width: 16),
-          ConstrainedBox(
-            constraints: const BoxConstraints(minWidth: 400, minHeight: 100),
-            child: AnimatedTextKit(
-              repeatForever: true,
-              pause: viewModel.changeLanguageTexts.length == 1 ? const Duration(days: 9) : const Duration(seconds: 1),
-              onTap: controller.onClickLanguage,
-              animatedTexts: animatedTexts,
-            ),
+          FadingTextSwitcher(
+            texts: viewModel.changeLanguageTexts,
+            style: context.theme.subtitleTheme.style,
+            displayDuration: const Duration(seconds: 3),
+            fadeDuration: const Duration(milliseconds: 500),
           ),
         ],
       ),
