@@ -1,7 +1,7 @@
 part of '../settings_overlay_view.dart';
 
 Widget _getExperimentalTab(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsPage(
+  return SettingsListPage(
     title: "Experimental settings",
     blocks: [
       _getExperimentalBlock(viewModel, controller),
