@@ -97,6 +97,7 @@ dependencies:
   super_clipboard: 0.9.1
   super_drag_and_drop: 0.9.1
   wakelock_plus: 1.4.0
+  change_case: 2.2.0
 
 dependency_overrides:
   # Remove when fixed: https://github.com/anusii/solidpod/issues/245

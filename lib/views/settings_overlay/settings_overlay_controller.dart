@@ -8,6 +8,7 @@ import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
+import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view_model.dart';
@@ -696,6 +697,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onDebugShowFpsCounterChanged(bool? showFpsCounter) {
     if (showFpsCounter != null) {
       viewModel.updateSettings((settings) => settings.copyWith.debug(showFpsCounter: showFpsCounter));
+    }
+  }
+
+  void onSimulateCvdChanged(ColorVisionDeficiency? simulateCvd) {
+    if (simulateCvd != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(simulateCvd: simulateCvd, simulateCvdSeverity: 9));
+    }
+  }
+
+  void onSimulateCvdSeverityChanged(int? simulateCvdSeverity) {
+    if (simulateCvdSeverity != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(simulateCvdSeverity: simulateCvdSeverity));
     }
   }
 

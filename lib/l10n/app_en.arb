@@ -19,6 +19,9 @@
     "genericView": "View",
     "genericFile": "File",
     "genericFullScreen": "Full screen",
+    "genericLanguage": "Language",
+    "genericSimulateColorVisionDeficiency": "Simulate color vision deficiency",
+    "genericNone": "None",
     "genericSettings": "Settings",
     "genericCanBeChangedInSettings": "this can be changed in settings",
 

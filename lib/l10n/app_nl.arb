@@ -19,6 +19,9 @@
     "genericView": "Weergave",
     "genericFile": "Bestand",
     "genericFullScreen": "Volledig scherm",
+    "genericLanguage": "Taal",
+    "genericSimulateColorVisionDeficiency": "Simuleer kleurenzienstoornis",
+    "genericNone": "Geen",
     "genericSettings": "Instellingen",
     "genericCanBeChangedInSettings": "dit kan worden aangepast in de instellingen",
 

@@ -10,6 +10,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/exceptions/default_setting_restore_exception.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
+import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/random_string.dart';
 import 'package:path/path.dart';
 import 'package:toml/toml.dart';
@@ -357,6 +358,8 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 
   const factory DebugSettings({
     @Default(false) bool showFpsCounter,
+    @Default(ColorVisionDeficiency.none) ColorVisionDeficiency simulateCvd,
+    @Default(9) int simulateCvdSeverity,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
