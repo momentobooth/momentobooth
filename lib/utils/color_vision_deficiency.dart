@@ -1,3 +1,4 @@
+import 'package:change_case/change_case.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
 /// Color vision deficiencies with color matrices for simulation purpose.
@@ -171,9 +172,10 @@ enum ColorVisionDeficiency {
 
   const ColorVisionDeficiency(this.colorMatrices);
 
+  String get displayName => name.toCapitalCase();
   final List<List<double>> colorMatrices;
 
-  ComboBoxItem<ColorVisionDeficiency> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+  ComboBoxItem<ColorVisionDeficiency> toComboBoxItem() => ComboBoxItem(value: this, child: Text(displayName));
 
   static List<ComboBoxItem<ColorVisionDeficiency>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
 

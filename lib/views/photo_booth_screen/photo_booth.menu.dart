@@ -58,22 +58,29 @@ class MomentoMenuBar extends StatelessWidget {
   }
 
   List<MenuFlyoutItem> _getLanguageFlyoutItems(AppLocalizations localizations) {
-    Language currentLanguage = getIt<SettingsManager>().settings.ui.language;
-    return [
-      MenuFlyoutItem(text: Text(localizations.languageNl), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.ui(language: Language.dutch)), leading: Icon(LucideIcons.languages), selected: currentLanguage == Language.dutch),
-      MenuFlyoutItem(text: Text(localizations.languageEn), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.ui(language: Language.english)), leading: Icon(LucideIcons.languages), selected: currentLanguage == Language.english),
-      MenuFlyoutItem(text: Text(localizations.languageDe), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.ui(language: Language.german)), leading: Icon(LucideIcons.languages), selected: currentLanguage == Language.german),
-    ];
+    return Language.values.where((l) => l != Language.noLanguage).map(_getLanguageFlyoutItem).toList();
+  }
+
+  MenuFlyoutItem _getLanguageFlyoutItem(Language language) {
+    return MenuFlyoutItem(
+      text: Text(language.name),
+      onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.ui(language: language)),
+      leading: Icon(LucideIcons.languages),
+      selected: getIt<SettingsManager>().settings.ui.language == language,
+    );
   }
 
   List<MenuFlyoutItem> _getColorVisionDeficiencyFlyoutItems(AppLocalizations localizations) {
-    ColorVisionDeficiency currentCvd = getIt<SettingsManager>().settings.debug.simulateCvd;
-    return [
-      MenuFlyoutItem(text: Text(localizations.genericNone), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.none, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.none),
-      MenuFlyoutItem(text: Text(localizations.genericProtanomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.protanomaly, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.protanomaly),
-      MenuFlyoutItem(text: Text(localizations.genericDeuteranomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.deuteranomaly, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.deuteranomaly),
-      MenuFlyoutItem(text: Text(localizations.genericTritanomaly), onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: ColorVisionDeficiency.tritanomaly, simulateCvdSeverity: 9)), leading: Icon(LucideIcons.eye), selected: currentCvd == ColorVisionDeficiency.tritanomaly),
-    ];
+    return ColorVisionDeficiency.values.map((cvd) => _getColorVisionDeficiencyFlyoutItem(cvd, localizations)).toList();
+  }
+
+  MenuFlyoutItem _getColorVisionDeficiencyFlyoutItem(ColorVisionDeficiency cvd, AppLocalizations localizations) {
+    return MenuFlyoutItem(
+      text: Text(cvd == ColorVisionDeficiency.none ? localizations.genericNone : cvd.displayName),
+      onPressed: () => getIt<SettingsManager>().mutateAndSave((s) => s.copyWith.debug(simulateCvd: cvd, simulateCvdSeverity: 9)),
+      leading: Icon(LucideIcons.eye),
+      selected: getIt<SettingsManager>().settings.debug.simulateCvd == cvd,
+    );
   }
 
 }
