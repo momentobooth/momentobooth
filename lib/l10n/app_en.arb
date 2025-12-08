@@ -24,6 +24,7 @@
     "genericNone": "None",
     "genericSettings": "Settings",
     "genericCanBeChangedInSettings": "this can be changed in settings",
+    "genericThanks": "Thanks!",
 
     "actionRestoreLiveView": "Restore live view",
     "actionsExit": "Exit",
@@ -211,5 +212,7 @@
     "galleryScreenFilterBarFindMyFaceButton": "Find my face",
     "@galleryScreenFilterBarFindMyFaceButton": {},
     "galleryScreenFilterBarClearFilterButton": "Clear filter",
-    "@galleryScreenFilterBarClearFilterButton": {}
+    "@galleryScreenFilterBarClearFilterButton": {},
+    "recordingIsAboutToStart": "Recording is about to start",
+    "chooseCaptureModeScreenRecordingButton": "Recording"
 }

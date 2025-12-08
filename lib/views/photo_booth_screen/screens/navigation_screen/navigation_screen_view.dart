@@ -126,7 +126,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
           children: [
             Expanded(child: FittedBox(child: _iconWithShadow(LucideIcons.clapperboard, 450))),
             AutoSizeText(
-              "Recording",
+              localizations.chooseCaptureModeScreenRecordingButton,
               group: controller.autoSizeGroup,
               maxLines: 1,
             ),
