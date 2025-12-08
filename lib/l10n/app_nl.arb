@@ -24,6 +24,7 @@
     "genericNone": "Geen",
     "genericSettings": "Instellingen",
     "genericCanBeChangedInSettings": "dit kan worden aangepast in de instellingen",
+    "genericThanks": "Dank je wel!",
 
     "actionRestoreLiveView": "Reset live view",
     "actionsExit": "Sluiten",
@@ -131,5 +132,7 @@
   
     "changeLanguage": "Verander van taal",
     "navigationScreenTitle": "Wat zou je willen doen?",
-    "chooseYourLanguage": "Kies je taal"
+    "chooseYourLanguage": "Kies je taal",
+    "recordingIsAboutToStart": "De opname gaat beginnen",
+    "chooseCaptureModeScreenRecordingButton": "Opname"
 }

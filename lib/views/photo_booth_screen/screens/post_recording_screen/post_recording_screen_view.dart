@@ -26,7 +26,7 @@ class PostRecordingScreenView extends ScreenViewBase<PostRecordingScreenViewMode
           children: [
             Expanded(
               flex: 2,
-              child: Center(child: PhotoBoothTitle("Thanks!")),
+              child: Center(child: PhotoBoothTitle(localizations.genericThanks)),
             ),
             Center(
               child: Container(
