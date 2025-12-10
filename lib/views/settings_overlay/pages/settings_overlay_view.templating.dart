@@ -135,6 +135,13 @@ Widget _getTemplateSettings(SettingsOverlayViewModel viewModel, SettingsOverlayC
         onFinishedEditing: controller.onResolutionMultiplierChanged,
         smallChange: 0.1,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.frame,
+        title: "Use full frame layout for 1 photo",
+        subtitle: "Use the alternative layout for 1 photo instead of the default bordered layout",
+        value: () => viewModel.useFullFrame1PhotoLayout,
+        onChanged: controller.onUseFullFrame1PhotoLayoutChanged,
+      ),
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Observer(

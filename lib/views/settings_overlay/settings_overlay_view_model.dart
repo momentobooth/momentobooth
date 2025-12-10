@@ -234,6 +234,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   ExportFormat get exportFormat => getIt<SettingsManager>().settings.output.exportFormat;
   int get jpgQuality => getIt<SettingsManager>().settings.output.jpgQuality;
   double get resolutionMultiplier => getIt<SettingsManager>().settings.output.resolutionMultiplier;
+  bool get useFullFrame1PhotoLayout => getIt<SettingsManager>().settings.output.useFullFrame1PhotoLayout;
   int get returnToHomeTimeoutSeconds => getIt<SettingsManager>().settings.ui.returnToHomeTimeoutSeconds;
   bool get enableSfxSetting => getIt<SettingsManager>().settings.ui.enableSfx;
   String get clickSfxFileSetting => getIt<SettingsManager>().settings.ui.clickSfxFile;

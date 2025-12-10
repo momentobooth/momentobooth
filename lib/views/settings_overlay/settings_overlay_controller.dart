@@ -504,6 +504,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onUseFullFrame1PhotoLayoutChanged(bool? useFullFrame1PhotoLayout) {
+    if (useFullFrame1PhotoLayout != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.output(useFullFrame1PhotoLayout: useFullFrame1PhotoLayout));
+    }
+  }
+
   void onPrimaryColorChanged(Color? primaryColor) {
     if (primaryColor != null) {
       viewModel.updateProjectSettings((settings) => settings.copyWith(primaryColor: primaryColor));
