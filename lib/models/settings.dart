@@ -186,6 +186,7 @@ sealed class OutputSettings with _$OutputSettings implements TomlEncodableValue 
     @JsonKey(defaultValue: _localFolderFromJson) required String localFolder,
     @Default(80) int jpgQuality,
     @Default(4.0) double resolutionMultiplier,
+    @Default(false) bool useFullFrame1PhotoLayout,
     @Default(ExportFormat.jpgFormat) ExportFormat exportFormat,
     @Default("https://send.vis.ee/") String firefoxSendServerUrl,
     @Default(Duration(seconds: 5)) Duration firefoxSendControlCommandTimeout,

@@ -227,7 +227,8 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   Widget _getInnerLayout(AppLocalizations localizations, BuildContext context) {
     return switch (nChosen) {
       0 => _getZeroLayout(localizations, context),
-      1 => _oneLayout,
+      1 when !getIt<SettingsManager>().settings.output.useFullFrame1PhotoLayout => _oneLayout,
+      1 when getIt<SettingsManager>().settings.output.useFullFrame1PhotoLayout => _oneFullFramePhotoLayout,
       2 => _twoLayout,
       3 => _threeLayout,
       4 => _fourLayout,
@@ -274,6 +275,13 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
           child: _getChosenImage(0),
        ).inGridArea('l1content'),
       ],
+    );
+  }
+
+  Widget get _oneFullFramePhotoLayout {
+    return _PhotoContainer(
+      rotated: true,
+      child: _getChosenImage(0),
     );
   }
 
