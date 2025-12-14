@@ -5,6 +5,7 @@ Widget _getHardwareSettings(SettingsOverlayViewModel viewModel, SettingsOverlayC
     title: "Hardware",
     blocks: [
       _getGeneralBlock(viewModel, controller),
+      _getImagingBlock(viewModel, controller),
       _getLiveViewBlock(viewModel, controller),
       _getPhotoCaptureBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
@@ -58,6 +59,23 @@ Widget _getGeneralBlock(SettingsOverlayViewModel viewModel, SettingsOverlayContr
           builder: (_) => AspectRatioPreview(aspectRatio: viewModel.liveViewAndCaptureAspectRatioSetting),
         ),
       ),
+    ],
+  );
+}
+
+Widget _getImagingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  return SettingsSection(
+    title: "Live view and capture",
+    settings: [
+      SettingsComboBoxTile(
+        icon: LucideIcons.camera,
+        title: "Live view method",
+        subtitle: "Method used for live previewing",
+        items: viewModel.liveViewMethods,
+        value: () => viewModel.liveViewMethodSetting,
+        onChanged: controller.onLiveViewMethodChanged,
+      ),
+      _getImagingOptionsCard(viewModel, controller),
     ],
   );
 }
@@ -372,6 +390,55 @@ SettingsTile _printerMargins(SettingsOverlayViewModel viewModel, SettingsOverlay
         ),
       ],
     ),
+  );
+}
+
+SettingsTile _getImagingOptionsCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  return SettingsTile(
+    icon: LucideIcons.camera,
+    title: "Imaging device",
+    subtitle: "Pick the device to use for live view and capture",
+    setting: Row(
+      spacing: 10.0,
+      children: [
+        _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', viewModel.setImagingDeviceList),
+        for (final webcam in viewModel.webcams) ...[
+          _getImagingButton(
+            LucideIcons.webcam,
+            'Webcam',
+            webcam.value!,
+            () => controller.onLiveViewWebcamIdChanged(webcam.value),
+          )
+        ],
+        for (final camera in viewModel.gPhoto2Cameras) ...[
+          _getImagingButton(
+            LucideIcons.camera,
+            'Camera',
+            camera.value!,
+            () => controller.onLiveViewWebcamIdChanged(camera.value),
+          )
+        ],
+      ],
+    ),
+  );
+}
+
+Widget _getImagingButton(IconData icon, String title, String subtitle, VoidCallback onPressed) {
+  return Button(
+    onPressed: onPressed,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(height: 5),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
+    )
   );
 }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -166,6 +168,10 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
     ];
   }
 
+  Future<void> setImagingDeviceList() async {
+    unawaited(setWebcamList());
+    unawaited(setCameraList());
+  }
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
   Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
 
