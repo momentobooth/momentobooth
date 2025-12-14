@@ -98,6 +98,7 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   }
 
   void setImagingWebcam(NokhwaCameraInfo camera) {
+    viewModel.showCustomImagingSettings = false;
     viewModel.updateSettings((settings) => settings.copyWith.hardware(
       liveViewMethod: LiveViewMethod.webcam,
       captureMethod: CaptureMethod.liveViewSource,
@@ -106,6 +107,7 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   }
 
   void setImagingGPhoto2(GPhoto2CameraInfo camera) {
+    viewModel.showCustomImagingSettings = false;
     viewModel.updateSettings((settings) => settings.copyWith.hardware(
       liveViewMethod: LiveViewMethod.gphoto2,
       captureMethod: CaptureMethod.gPhoto2,
@@ -114,10 +116,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   }
 
   void setImagingStaticImage() {
+    viewModel.showCustomImagingSettings = false;
     viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugStaticImage, captureMethod: CaptureMethod.liveViewSource));
   }
 
   void setImagingStaticNoise() {
+    viewModel.showCustomImagingSettings = false;
     viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugNoise, captureMethod: CaptureMethod.liveViewSource));
   }
 

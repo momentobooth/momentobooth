@@ -185,6 +185,28 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
   Future<void> setCameraList2() async => gPhoto2Cameras2 = await GPhoto2Camera.listCameras();
 
+  @computed
+  ImagingMethod get imagingMethod {
+    if (showCustomImagingSettings) {
+      return ImagingMethod.custom;
+    }
+    if (captureMethodSetting == CaptureMethod.liveViewSource) {
+      return switch (liveViewMethodSetting) {
+        LiveViewMethod.debugNoise => ImagingMethod.debugNoise,
+        LiveViewMethod.webcam => ImagingMethod.webcam,
+        LiveViewMethod.debugStaticImage => ImagingMethod.debugStaticImage,
+        _ => ImagingMethod.custom
+      };
+    } else if (liveViewMethodSetting == LiveViewMethod.gphoto2 && captureMethodSetting == CaptureMethod.gPhoto2) {
+      return ImagingMethod.gphoto2;
+    } else {
+      return ImagingMethod.custom;
+    }
+  }
+
+  @observable
+  bool showCustomImagingSettings = false;
+
   // Project settings current values
   UiTheme get uiTheme => getIt<ProjectManager>().settings.uiTheme;
   String get introScreenTouchToStartOverrideTextSetting => getIt<ProjectManager>().settings.introScreenTouchToStartOverrideText;
