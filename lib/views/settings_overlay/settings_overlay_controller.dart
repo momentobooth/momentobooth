@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
+import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/file_utils.dart';
@@ -91,6 +95,30 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
     File? file = await getIt<PhotosManager>().writeOutput(advance: true);
     logDebug("Wrote template debug export output to ${file?.path}");
+  }
+
+  void setImagingWebcam(NokhwaCameraInfo camera) {
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(
+      liveViewMethod: LiveViewMethod.webcam,
+      captureMethod: CaptureMethod.liveViewSource,
+      liveViewWebcamId: NokhwaCamera.fromCameraInfo(camera).id
+    ));
+  }
+
+  void setImagingGPhoto2(GPhoto2CameraInfo camera) {
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(
+      liveViewMethod: LiveViewMethod.gphoto2,
+      captureMethod: CaptureMethod.gPhoto2,
+      gPhoto2CameraId: GPhoto2Camera.fromCameraInfo(camera).id
+    ));
+  }
+
+  void setImagingStaticImage() {
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugStaticImage, captureMethod: CaptureMethod.liveViewSource));
+  }
+
+  void setImagingStaticNoise() {
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugNoise, captureMethod: CaptureMethod.liveViewSource));
   }
 
   void onUiThemeChanged(UiTheme? uiTheme) {

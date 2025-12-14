@@ -67,14 +67,6 @@ Widget _getImagingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayContr
   return SettingsSection(
     title: "Live view and capture",
     settings: [
-      SettingsComboBoxTile(
-        icon: LucideIcons.camera,
-        title: "Live view method",
-        subtitle: "Method used for live previewing",
-        items: viewModel.liveViewMethods,
-        value: () => viewModel.liveViewMethodSetting,
-        onChanged: controller.onLiveViewMethodChanged,
-      ),
       _getImagingOptionsCard(viewModel, controller),
     ],
   );
@@ -402,22 +394,25 @@ SettingsTile _getImagingOptionsCard(SettingsOverlayViewModel viewModel, Settings
       spacing: 10.0,
       children: [
         _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', viewModel.setImagingDeviceList),
-        for (final webcam in viewModel.webcams) ...[
+        for (final webcam in viewModel.webcams2) ...[
           _getImagingButton(
             LucideIcons.webcam,
             'Webcam',
-            webcam.value!,
-            () => controller.onLiveViewWebcamIdChanged(webcam.value),
+            webcam.friendlyName,
+            () => controller.setImagingWebcam(webcam),
           )
         ],
-        for (final camera in viewModel.gPhoto2Cameras) ...[
+        for (final camera in viewModel.gPhoto2Cameras2) ...[
           _getImagingButton(
             LucideIcons.camera,
             'Camera',
-            camera.value!,
-            () => controller.onLiveViewWebcamIdChanged(camera.value),
+            '${camera.model}\nat ${camera.port}',
+            () => controller.setImagingGPhoto2(camera),
           )
         ],
+        _getImagingButton(LucideIcons.audioWaveform, "Static noise", "Debug option", () => controller.setImagingStaticNoise()),
+        _getImagingButton(LucideIcons.image, "Static image", "Debug option", () => controller.setImagingStaticImage()),
+        _getImagingButton(LucideIcons.wrench, "Custom", "Select options yourself", () => {}),
       ],
     ),
   );
