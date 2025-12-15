@@ -178,20 +178,20 @@ jobs:
         python3 ../macos/ci_resign_everything.py MomentoBooth-Intel.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
 
     - name: Upload arm64 dmg
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: MomentoBooth-AppleSilicon.dmg
         path: ci_build/MomentoBooth-AppleSilicon.dmg
 
     - name: Upload x86_64 dmg
-      uses: actions/upload-artifact@v5
+      uses: actions/upload-artifact@v6
       with:
         name: MomentoBooth-Intel.dmg
         path: ci_build/MomentoBooth-Intel.dmg
 
     - name: Commit changes to macOS build files and create PR
       id: cpr
-      uses: peter-evans/create-pull-request@v7
+      uses: peter-evans/create-pull-request@v8
       with:
         add-paths: macos
         commit-message: Update macOS build files
