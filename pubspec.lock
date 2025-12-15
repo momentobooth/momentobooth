@@ -587,10 +587,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: c92d18e1fe994cb06d48aa786c46b142a5633067e8297cff6b5a3ac742620104
+      sha256: eff94d2a6fc79fa8b811dde79c7549808c2346037ee107a1121b4a644c745f2a
       url: "https://pub.dev"
     source: hosted
-    version: "17.0.0"
+    version: "17.0.1"
   google_fonts:
     dependency: "direct main"
     description:
@@ -787,10 +787,10 @@ packages:
     dependency: "direct main"
     description:
       name: lucide_icons_flutter
-      sha256: dbe8edc3811d66793ad0fca16203c191b4c964536b82b2a510557bdf1c19507e
+      sha256: aaadab3b503d2cc4eb971661511c6053bfe7d52742ba46f551d508494822a0fa
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.7"
+    version: "3.1.8"
   matcher:
     dependency: transitive
     description:
@@ -1327,26 +1327,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: bdddfd356e0bd399b7b15628880fef40078d10259b119f2384305776e77763a5
+      sha256: ad4d25137b18020f1b769454fc07c83a69a7152ba7ef8a0698e64aa671236aff
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.5"
+    version: "5.1.8"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: ccfd62d66ce63e8125aed4f84868e554f61ae06d9b922992b1862e725ba9d36a
+      sha256: "5013eb6d378fc3e2c8581e6ff8ba786272eb596383e662f03e4d4b06e35275aa"
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.5"
+    version: "5.1.8"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: a19f0741102cb98634d999a13b44fe3fe5f4c0ac75602d0308a046b130b5f3b3
+      sha256: c1064573f6e472b0a7c654c17d59617cfefaf9bd3d3f3dc37e1d3046b49d4eb6
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.5"
+    version: "5.1.8"
   term_glyph:
     dependency: transitive
     description:
