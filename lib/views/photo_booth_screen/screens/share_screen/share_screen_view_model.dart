@@ -70,6 +70,8 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
         return true;
       case CaptureMode.collage:
         return getIt<ProjectManager>().settings.collageMode != CollageMode.userSelection;
+      case _:
+        return false;
     }
   }
   String get backText => canRetake ? localizations.shareScreenRetakeButton : localizations.shareScreenChangeButton;
