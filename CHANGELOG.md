@@ -2,10 +2,18 @@
 
 ## Unreleased
 
+## 0.15.5
+
 - New feature: A project can now define a display language that, if set, overrides the system setting
 - New feature: A project can now define a set of available languages that users can choose from themselves for multi-lingual events
 - New feature: Show an optional touch indicator on the start screen
+- New feature: Add option for a no border layout for single photo collages
+- New feature: Add German and French translations (quality is yet to be verified!)
 - Change: Choose capture mode screen is changed to a more general purpose navigation screen
+
+- Dev change: Updated Flutter to 3.38.4
+- Dev change: Updated Dart and Rust dependencies
+- Dev change: Add color vision deficiency simulation
 
 ## 0.15.4
 
