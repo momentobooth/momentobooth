@@ -66,9 +66,9 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.8
-  talker_flutter: 5.1.8
-  sentry_flutter: 9.8.0
+  talker: 5.1.9
+  talker_flutter: 5.1.9
+  sentry_flutter: 9.9.1
   stack_trace: 1.12.1
 
   # Storage
