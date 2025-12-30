@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.15.6
+
 - Bugfix: Fix collage flow still taking one capture
 
 ## 0.15.5
