@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Bugfix: Fix collage flow still taking one capture
+
 ## 0.15.5
 
 - New feature: A project can now define a display language that, if set, overrides the system setting
