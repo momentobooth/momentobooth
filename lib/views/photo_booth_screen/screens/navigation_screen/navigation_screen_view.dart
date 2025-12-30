@@ -17,7 +17,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
     required super.controller,
     required super.contextAccessor,
   });
-  
+
   @override
   Widget get body {
     return Column(
@@ -75,7 +75,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
 
   Widget get _singlePhotoButton {
     return PhotoBoothButton.action(
-      onPressed: controller.onClickPhoto,
+      onPressed: controller.onClickSinglePhoto,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
         child: Column(
@@ -95,7 +95,7 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
 
   Widget get _collageButton {
     return PhotoBoothButton.action(
-      onPressed: controller.onClickPhoto,
+      onPressed: controller.onClickCollage,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(0, 24, 0, 8),
         child: Column(
