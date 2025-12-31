@@ -266,6 +266,13 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   bool get debugShowFpsCounter => getIt<SettingsManager>().settings.debug.showFpsCounter;
   ColorVisionDeficiency get simulateCvd => getIt<SettingsManager>().settings.debug.simulateCvd;
   int get simulateCvdSeverity => getIt<SettingsManager>().settings.debug.simulateCvdSeverity;
+  bool get enableVideoModeSetting => getIt<SettingsManager>().settings.debug.enableVideoMode;
+  int get videoDurationSetting => getIt<SettingsManager>().settings.debug.videoDuration;
+  int get videoPreRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPreRecordDelayMs;
+  int get videoPostRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPostRecordDelayMs;
+  String get ffmpegArgumentsForRecordingSetting => getIt<SettingsManager>().settings.debug.ffmpegArgumentsForRecording;
+  String get textSummaryPromptSetting => getIt<SettingsManager>().settings.debug.textSummaryPrompt;
+  String get llmModelSetting => getIt<SettingsManager>().settings.debug.llmModel;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;
