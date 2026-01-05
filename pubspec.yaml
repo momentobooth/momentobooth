@@ -42,7 +42,7 @@ dependencies:
   screenshot: 3.0.0
 
   # MVC
-  mobx: 2.5.0
+  mobx: 2.6.0
   flutter_mobx: 2.3.0
 
   # Models
@@ -113,7 +113,7 @@ dev_dependencies:
   theme_tailor: 3.1.1
 
   # MVC
-  mobx_codegen: 2.7.4
+  mobx_codegen: 2.7.5
 
   # Code quality
   flutter_lints: 6.0.0
