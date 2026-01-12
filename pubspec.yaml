@@ -35,14 +35,14 @@ dependencies:
   lucide_icons_flutter: 3.1.9
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.1
-  google_fonts: 6.3.3
+  google_fonts: 7.0.0
   twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
   screenshot: 3.0.0
 
   # MVC
-  mobx: 2.5.0
+  mobx: 2.6.0
   flutter_mobx: 2.3.0
 
   # Models
@@ -51,7 +51,7 @@ dependencies:
 
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
-  ffi: 2.1.4
+  ffi: 2.1.5
   flutter_rust_bridge: 2.11.1
 
   # Printing
@@ -66,9 +66,9 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.9
-  talker_flutter: 5.1.9
-  sentry_flutter: 9.9.1
+  talker: 5.1.10
+  talker_flutter: 5.1.10
+  sentry_flutter: 9.9.2
   stack_trace: 1.12.1
 
   # Storage
@@ -110,17 +110,17 @@ dependency_overrides:
 dev_dependencies:
   # UI
   widgetbook_generator: 3.20.1
-  theme_tailor: 3.1.1
+  theme_tailor: 3.1.2
 
   # MVC
-  mobx_codegen: 2.7.4
+  mobx_codegen: 2.7.6
 
   # Code quality
   flutter_lints: 6.0.0
 
   # Models
-  freezed: 3.2.3
-  json_serializable: 6.11.2
+  freezed: 3.2.4
+  json_serializable: 6.11.3
 
   # Code generation
   build_runner: 2.10.4
