@@ -9,7 +9,7 @@ crate-type = ["cdylib", "staticlib"]
 [dependencies]
 flutter_rust_bridge = { version = "=2.11.1", features = ["chrono"] }
 ffsend-api = "0.7.3"
-serde_json = "1.0.148"
+serde_json = "1.0.149"
 chrono = "0.4.42"
 image = { version = "0.25.9", features = ["rayon"] }
 ipp = "5.3.2"
@@ -20,12 +20,12 @@ noise = "0.9.0"
 dashmap = "6.1.0"
 turborand = "0.10.1"
 pathsep = "0.1.1"
-tokio = { version = "1.48.0", features = ["rt-multi-thread"] }
+tokio = { version = "1.49.0", features = ["rt-multi-thread"] }
 gphoto2 = "3.4.1"
 ahash = "0.8.12"
 img-parts = "0.4.0"
-little_exif = "0.6.20"
-url = "2.5.7"
+little_exif = "0.6.21"
+url = "2.5.8"
 num = "0.4.3"
 num-traits = "0.2.19"
 num-derive = "0.4.2"
@@ -35,7 +35,7 @@ nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", branch = "0.10", fe
 parking_lot = "0.12.5"
 susync = "0.2.0"
 rustc_version_runtime = "0.3.0"
-libc = "0.2.178"
+libc = "0.2.180"
 libusb-sys = "0.2.3"
 futures = "0.3.31"
 kira = "0.11.0"
