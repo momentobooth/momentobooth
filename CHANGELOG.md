@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Dev change: Updated Flutter to 3.38.7
+- Dev change: Updated Dart and Rust dependencies
+
 ## 0.15.6
 
 - Bugfix: Fix collage flow still taking one capture
