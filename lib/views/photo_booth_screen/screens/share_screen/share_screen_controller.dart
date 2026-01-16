@@ -118,7 +118,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       ..printText = localizations.shareScreenPrinting;
 
     // Get photo and print it.
-    final pdfData = await getIt<PhotosManager>().getOutputPDF(size);
+    final pdfData = await getIt<PhotosManager>().getOutputPDF(usingSize);
     final lastFile = getIt<PhotosManager>().lastPhotoFile;
     String jobName = lastFile != null ? path.basenameWithoutExtension(lastFile.path) : "MomentoBooth Picture";
 
