@@ -4,6 +4,7 @@
 
 - Dev change: Updated Flutter to 3.38.7
 - Dev change: Updated Dart and Rust dependencies
+- Dev change: Add optional extensive print job logging
 
 ## 0.15.6
 

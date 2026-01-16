@@ -26,15 +26,6 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   TextEditingController? _captureLocationController;
   TextEditingController get captureLocationController => _captureLocationController ??= TextEditingController(text: viewModel.captureLocationSetting);
 
-  TextEditingController? _captureStorageLocationController;
-  TextEditingController get captureStorageLocationController => _captureStorageLocationController ??= TextEditingController(text: viewModel.captureStorageLocationSetting);
-
-  TextEditingController? _localFolderController;
-  TextEditingController get localFolderSettingController => _localFolderController ??= TextEditingController(text: viewModel.localFolderSetting);
-
-  TextEditingController? _templatesFolderController;
-  TextEditingController get templatesFolderSettingController => _templatesFolderController ??= TextEditingController(text: viewModel.templatesFolderSetting);
-
   TextEditingController? _firefoxSendServerUrlController;
   TextEditingController get firefoxSendServerUrlController => _firefoxSendServerUrlController ??= TextEditingController(text: viewModel.firefoxSendServerUrlSetting);
 
@@ -168,13 +159,6 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
-  void onTemplatesFolderChanged(String? templatesFolder) {
-    if (templatesFolder != null) {
-      viewModel.updateSettings((settings) => settings.copyWith(templatesFolder: templatesFolder));
-      createPathSafe(templatesFolder);
-    }
-  }
-
   void onEnableWakelockChanged(bool? enableWakelock) {
     if (enableWakelock != null) {
       viewModel.updateSettings((settings) => settings.copyWith(enableWakelock: enableWakelock));
@@ -275,13 +259,6 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onSaveCapturesToDiskChanged(bool? saveCapturesToDisk) {
     if (saveCapturesToDisk != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(saveCapturesToDisk: saveCapturesToDisk));
-    }
-  }
-
-  void onCaptureStorageLocationChanged(String? captureStorageLocation) {
-    if (captureStorageLocation != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(captureStorageLocation: captureStorageLocation));
-      createPathSafe(captureStorageLocation);
     }
   }
 
@@ -458,13 +435,6 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onPrinterQueueWarningThresholdChanged(int? warningThreshold) {
     if (warningThreshold != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(printerQueueWarningThreshold: warningThreshold));
-    }
-  }
-
-  void onLocalFolderChanged(String? localFolder) {
-    if (localFolder != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.output(localFolder: localFolder));
-      createPathSafe(localFolder);
     }
   }
 
@@ -715,6 +685,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onSimulateCvdSeverityChanged(int? simulateCvdSeverity) {
     if (simulateCvdSeverity != null) {
       viewModel.updateSettings((settings) => settings.copyWith.debug(simulateCvdSeverity: simulateCvdSeverity));
+    }
+  }
+
+  void onEnableExtensivePrintJobLogChanged(bool? enableExtensivePrintJobLog) {
+    if (enableExtensivePrintJobLog != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(enableExtensivePrintJobLog: enableExtensivePrintJobLog));
     }
   }
 

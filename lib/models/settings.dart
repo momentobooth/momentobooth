@@ -35,7 +35,6 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
     @Default(1.5) double collageAspectRatio,
     @Default(0) double collagePadding,
     @Default(true) bool enableWakelock,
-    @JsonKey(defaultValue: _templatesFolderFromJson) required String templatesFolder,
     @JsonKey(defaultValue: HardwareSettings.withDefaults) required HardwareSettings hardware,
     @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
     @JsonKey(defaultValue: UiSettings.withDefaults) required UiSettings ui,
@@ -81,7 +80,6 @@ sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableVa
     @Default(200) int captureDelaySony,
     @JsonKey(defaultValue: _captureLocationFromJson) required String captureLocation,
     @Default(true) bool saveCapturesToDisk,
-    @JsonKey(defaultValue: _captureStorageLocationFromJson) required String captureStorageLocation,
     @Default(PrintingImplementation.flutterPrinting) PrintingImplementation printingImplementation,
     @Default([]) List<String> flutterPrintingPrinterNames,
     @Default("http://localhost:631/") String cupsUri,
@@ -183,7 +181,6 @@ sealed class OutputSettings with _$OutputSettings implements TomlEncodableValue 
   const OutputSettings._();
 
   const factory OutputSettings({
-    @JsonKey(defaultValue: _localFolderFromJson) required String localFolder,
     @Default(80) int jpgQuality,
     @Default(4.0) double resolutionMultiplier,
     @Default(false) bool useFullFrame1PhotoLayout,
@@ -361,6 +358,7 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(false) bool showFpsCounter,
     @Default(ColorVisionDeficiency.none) ColorVisionDeficiency simulateCvd,
     @Default(9) int simulateCvdSeverity,
+    @Default(false) bool enableExtensivePrintJobLog,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
@@ -376,10 +374,7 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
 // Default helpers //
 // /////////////// //
 
-String _templatesFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Templates");
 String _captureLocationFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Captures");
-String _captureStorageLocationFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "From camera");
-String _localFolderFromJson() => join(_getHome(), "Pictures", "MomentoBooth", "Output");
 String _clientIdFromJson() => 'momentobooth-photobooth-${getRandomString()}';
 String _homeAssistantComponentIdFromJson() => 'momentobooth-${getRandomString()}';
 
