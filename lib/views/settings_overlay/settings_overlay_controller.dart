@@ -718,6 +718,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableExtensivePrintJobLogChanged(bool? enableExtensivePrintJobLog) {
+    if (enableExtensivePrintJobLog != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(enableExtensivePrintJobLog: enableExtensivePrintJobLog));
+    }
+  }
+
   void onPlayAudioSamplePressed() {
     getIt<SfxManager>().playSampleSound();
   }
