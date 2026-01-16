@@ -187,7 +187,6 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   bool get loadLastProjectSetting => getIt<SettingsManager>().settings.loadLastProject;
   double get collageAspectRatioSetting => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePaddingSetting => getIt<SettingsManager>().settings.collagePadding;
-  String get templatesFolderSetting => getIt<SettingsManager>().settings.templatesFolder;
   bool get enableWakelockSetting => getIt<SettingsManager>().settings.enableWakelock;
   Rotate get liveViewAndCaptureRotateSetting => getIt<SettingsManager>().settings.hardware.liveViewAndCaptureRotate;
   Flip get liveViewFlipSetting => getIt<SettingsManager>().settings.hardware.liveViewFlip;
@@ -205,7 +204,6 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   int get captureDelaySonySetting => getIt<SettingsManager>().settings.hardware.captureDelaySony;
   String get captureLocationSetting => getIt<SettingsManager>().settings.hardware.captureLocation;
   bool get saveCapturesToDiskSetting => getIt<SettingsManager>().settings.hardware.saveCapturesToDisk;
-  String get captureStorageLocationSetting => getIt<SettingsManager>().settings.hardware.captureStorageLocation;
   PrintingImplementation get printingImplementationSetting => getIt<SettingsManager>().settings.hardware.printingImplementation;
   String get cupsUriSetting => getIt<SettingsManager>().settings.hardware.cupsUri;
   bool get cupsIgnoreTlsErrors => getIt<SettingsManager>().settings.hardware.cupsIgnoreTlsErrors;
@@ -227,7 +225,6 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   double get printerMarginBottomSetting => getIt<SettingsManager>().settings.hardware.printerMarginBottom;
   double get printerMarginLeftSetting => getIt<SettingsManager>().settings.hardware.printerMarginLeft;
   int get printerQueueWarningThresholdSetting => getIt<SettingsManager>().settings.hardware.printerQueueWarningThreshold;
-  String get localFolderSetting => getIt<SettingsManager>().settings.output.localFolder;
   String get firefoxSendServerUrlSetting => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
   int get firefoxSendControlCommandTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout.inSeconds;
   int get firefoxSendTransferTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout.inSeconds;

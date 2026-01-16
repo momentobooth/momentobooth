@@ -41,12 +41,12 @@ abstract class PrintingSystemClient with Logger {
     }
 
     if (getIt<SettingsManager>().settings.debug.enableExtensivePrintJobLog) {
-      String dateStr = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
       String printJobDirPath = path.join(getIt<ProjectManager>().getOutputDir().path, 'PrintJobs');
 
       Directory printJobDirectory = Directory(printJobDirPath);
       if (!printJobDirectory.existsSync()) printJobDirectory.createSync();
 
+      String dateStr = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
       String printJobPath = path.join(printJobDirPath, dateStr);
 
       await File('$printJobPath.pdf').writeAsBytes(pdfData);
