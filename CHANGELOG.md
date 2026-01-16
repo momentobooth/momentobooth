@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.15.7
+
+- Bugfix: Fix wrong page size in print job generation causing paper layout issues
+
 - Dev change: Updated Flutter to 3.38.7
 - Dev change: Updated Dart and Rust dependencies
 - Dev change: Add optional extensive print job logging
