@@ -2,8 +2,16 @@
 cmake_minimum_required(VERSION 3.15)
 project(momento_booth LANGUAGES CXX)
 
+# Use lld-link instead of MSVC link
 message(STATUS "Using lld-link instead of MSVC linker to speedup builds")
 set(CMAKE_LINKER_TYPE "LLD")
+
+# Use sccache as cl wrapper
+find_program(SCCACHE sccache REQUIRED)
+set(CMAKE_C_COMPILER_LAUNCHER ${SCCACHE})
+set(CMAKE_CXX_COMPILER_LAUNCHER ${SCCACHE})
+set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+cmake_policy(SET CMP0141 NEW)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
