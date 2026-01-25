@@ -298,6 +298,7 @@ enum ExternalSystemCheckSeverity {
 
 enum OnboardingStep {
 
+  setupImagingDevice,
   importSettings,
   openProject,
 
