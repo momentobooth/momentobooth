@@ -11,6 +11,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
+import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/onboarding_screen/components/wizard_page.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view_model.dart' show UpdateSettingsCallback;
 
@@ -35,17 +36,17 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
   }
 
   @observable
-  List<NokhwaCameraInfo> webcams2 = List<NokhwaCameraInfo>.empty();
+  ObservableList<NokhwaCameraInfo> webcams2 = ObservableList<NokhwaCameraInfo>();
 
   @observable
-  List<GPhoto2CameraInfo> gPhoto2Cameras2 = List<GPhoto2CameraInfo>.empty();
+  ObservableList<GPhoto2CameraInfo> gPhoto2Cameras2 = ObservableList<GPhoto2CameraInfo>();
 
   Future<void> setImagingDeviceList() async {
     unawaited(setWebcamList2());
     unawaited(setCameraList2());
   }
-  Future<void> setWebcamList2() async => webcams2 = await NokhwaCamera.listCameras();
-  Future<void> setCameraList2() async => gPhoto2Cameras2 = await GPhoto2Camera.listCameras();
+  Future<void> setWebcamList2() async => webcams2 = ObservableList.of(await NokhwaCamera.listCameras());
+  Future<void> setCameraList2() async => gPhoto2Cameras2 = ObservableList.of(await GPhoto2Camera.listCameras());
 
   @computed
   ImagingMethod get imagingMethod {
@@ -100,6 +101,7 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
         padding: const EdgeInsets.fromLTRB(32, 8, 32, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16.0,
           children: [
             Center(
               child: Text(
@@ -107,17 +109,47 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
                 style: FluentTheme.of(context).typography.title,
               ),
             ),
-            SizedBox(height: 16.0),
             Text(
               "To capture images, you need to select an imaging device such as a camera or a webcam. "
               "Please ensure that your desired imaging device is connected to your computer and properly configured. See the documentation for more information on supported devices and setup instructions. "
               "If you do not have an imaging device connected, you can proceed with a debug device for testing purposes.",
               style: FluentTheme.of(context).typography.body,
             ),
-            SizedBox(height: 16.0),
-            Observer(
-              builder: (_) => _getImagingOptions()
-            ),
+            SizedBox(
+              height: 220,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                spacing: 16.0,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Observer(
+                      builder: (_) => _getImagingOptions()
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 16.0,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            "Preview of the selected imaging device:",
+                            style: FluentTheme.of(context).typography.body,
+                          ),
+                        ),
+                        Expanded(
+                          child: SizedBox.expand(
+                            child: LiveView(fit: BoxFit.fitHeight),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -125,8 +157,9 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
   }
 
   Widget _getImagingOptions() {
-    return Row(
-      spacing: 10.0,
+    return GridView.count(
+      crossAxisCount: 3,
+      crossAxisSpacing: 8,
       children: [
         _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', false, setImagingDeviceList),
         for (final webcam in webcams2) ...[
