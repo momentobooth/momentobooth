@@ -155,45 +155,59 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
       ),
     );
   }
+  
+  final ScrollController _gvScrollController = ScrollController();
 
   Widget _getImagingOptions() {
-    return GridView.count(
-      crossAxisCount: 3,
-      crossAxisSpacing: 8,
-      children: [
-        _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', false, setImagingDeviceList),
-        for (final webcam in webcams2) ...[
-          _getImagingButton(
-            LucideIcons.webcam,
-            'Webcam',
-            webcam.friendlyName,
-            imagingMethod == ImagingMethod.webcam && liveViewWebcamId == webcam.friendlyName,
-            () => setImagingWebcam(webcam),
-          )
-        ],
-        for (final camera in gPhoto2Cameras2) ...[
-          _getImagingButton(
-            LucideIcons.camera,
-            'Camera',
-            '${camera.model}\nat ${camera.port}',
-            imagingMethod == ImagingMethod.gphoto2 && gPhoto2CameraId == GPhoto2Camera.fromCameraInfo(camera).id,
-            () => setImagingGPhoto2(camera),
-          )
-        ],
-        _getImagingButton(
-          LucideIcons.audioWaveform,
-          "Static noise", "Debug option",
-          imagingMethod == ImagingMethod.debugNoise,
-          setImagingStaticNoise
+    // Using ScrollConfiguration to disable the scrollbar of the GridView,
+    // else we have two scrollbars (one from the GridView and one from the Scrollbar widget).
+    // The GridView itself does not have a property to always *show* the scrollbar, so the Scrollbar widget must be used.
+    return ScrollConfiguration(
+      behavior: ScrollBehavior().copyWith(scrollbars: false),
+      child: Scrollbar(
+        controller: _gvScrollController,
+        thumbVisibility: true,
+        child: GridView.count(
+          crossAxisCount: 3,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+          controller: _gvScrollController,
+          children: [
+            _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', false, setImagingDeviceList),
+            for (final webcam in webcams2) ...[
+              _getImagingButton(
+                LucideIcons.webcam,
+                'Webcam',
+                webcam.friendlyName,
+                imagingMethod == ImagingMethod.webcam && liveViewWebcamId == webcam.friendlyName,
+                () => setImagingWebcam(webcam),
+              )
+            ],
+            for (final camera in gPhoto2Cameras2) ...[
+              _getImagingButton(
+                LucideIcons.camera,
+                'Camera',
+                '${camera.model}\nat ${camera.port}',
+                imagingMethod == ImagingMethod.gphoto2 && gPhoto2CameraId == GPhoto2Camera.fromCameraInfo(camera).id,
+                () => setImagingGPhoto2(camera),
+              )
+            ],
+            _getImagingButton(
+              LucideIcons.audioWaveform,
+              "Static noise", "Debug option",
+              imagingMethod == ImagingMethod.debugNoise,
+              setImagingStaticNoise
+            ),
+            _getImagingButton(
+              LucideIcons.image,
+              "Static image",
+              "Debug option",
+              imagingMethod == ImagingMethod.debugStaticImage,
+              setImagingStaticImage
+            ),
+          ],
         ),
-        _getImagingButton(
-          LucideIcons.image,
-          "Static image",
-          "Debug option",
-          imagingMethod == ImagingMethod.debugStaticImage,
-          setImagingStaticImage
-        ),
-      ],
+      ),
     );
   }
 
