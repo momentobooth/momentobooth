@@ -115,34 +115,30 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
               "If you do not have an imaging device connected, you can proceed with a debug device for testing purposes.",
               style: FluentTheme.of(context).typography.body,
             ),
-            SizedBox(
-              height: 220,
+            Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 16.0,
                 children: [
-                  Flexible(
+                  Expanded(
                     flex: 1,
                     child: Observer(
                       builder: (_) => _getImagingOptions()
                     ),
                   ),
-                  Flexible(
+                  Expanded(
                     flex: 1,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 16.0,
                       children: [
-                        Flexible(
-                          child: Text(
-                            "Preview of the selected imaging device:",
-                            style: FluentTheme.of(context).typography.body,
-                          ),
+                        Text(
+                          "Preview of the selected imaging device:",
+                          style: FluentTheme.of(context).typography.body,
                         ),
                         Expanded(
-                          child: SizedBox.expand(
-                            child: LiveView(fit: BoxFit.fitHeight),
-                          ),
+                          flex: 1,
+                          child: LiveView(fit: BoxFit.contain),
                         ),
                       ],
                     ),
