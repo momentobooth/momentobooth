@@ -35,7 +35,7 @@ dependencies:
   lucide_icons_flutter: 3.1.9
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.2
-  google_fonts: 7.0.2
+  google_fonts: 8.0.0
   twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
@@ -66,8 +66,8 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.12
-  talker_flutter: 5.1.12
+  talker: 5.1.13
+  talker_flutter: 5.1.13
   sentry_flutter: 9.10.0
   stack_trace: 1.12.1
 
