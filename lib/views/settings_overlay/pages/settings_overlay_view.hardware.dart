@@ -374,15 +374,21 @@ SettingsTile _getImagingOptionsCard(SettingsOverlayViewModel viewModel, Settings
     icon: LucideIcons.camera,
     title: "Imaging device",
     subtitle: "Pick the device to use for live view and capture",
-    setting: Observer(
-      builder: (_) => _getImagingOptions(viewModel, controller)
+    // The tile uses a row internally with an Expanded around the information, so we use an Expanded here too to create a reactive layout.
+    setting: Expanded(
+      flex: 2,
+      child: Observer(
+        builder: (_) => _getImagingOptions(viewModel, controller)
+      ),
     ),
   );
 }
 
 Widget _getImagingOptions(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return Row(
-    spacing: 10.0,
+  return Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    alignment: WrapAlignment.end,
     children: [
       _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', false, viewModel.setImagingDeviceList),
       for (final webcam in viewModel.webcams2) ...[
