@@ -195,7 +195,7 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
               _getImagingButton(
                 LucideIcons.camera,
                 'Camera',
-                '${camera.model}\nat ${camera.port}',
+                camera.model,
                 imagingMethod == ImagingMethod.gphoto2 && gPhoto2CameraId == GPhoto2Camera.fromCameraInfo(camera).id,
                 () => setImagingGPhoto2(camera),
               )
@@ -225,15 +225,20 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
       onChanged: (v) => onPressed(),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 24),
-            const SizedBox(height: 5),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 2),
-            Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
-          ],
+        // Use OverflowBox to accept long subtitles without expanding the button size. Mainly to silence overflow warnings.
+        child: OverflowBox(
+          maxHeight: double.infinity,
+          alignment: Alignment.topCenter,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 24),
+              const SizedBox(height: 5),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 2),
+              Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
+            ],
+          ),
         ),
       )
     );
