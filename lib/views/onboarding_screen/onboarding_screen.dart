@@ -18,6 +18,7 @@ import 'package:momento_booth/views/components/indicators/onboarding_version_inf
 import 'package:momento_booth/views/onboarding_screen/components/onboarding_wizard.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/error_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/finish_page.dart';
+import 'package:momento_booth/views/onboarding_screen/pages/imaging_device_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/initialization_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/projects_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/settings_import_page.dart';
@@ -49,6 +50,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     '/welcome-page': WizardRoute(builder: (context) => WelcomePage(), onLoad: (_) {
       bool onboardingHasNewSteps = OnboardingStep.values.any((s) => !getIt<SettingsManager>().settings.onboardingStepsDone.contains(s));
       return onboardingHasNewSteps;
+    }),
+    '/imaging-device-page': WizardRoute(builder: (context) => ImagingDevicePage(), onLoad: (_) {
+      return !getIt<SettingsManager>().settings.onboardingStepsDone.contains(OnboardingStep.setupImagingDevice);
     }),
     '/status-page': WizardRoute(builder: (context) => StatusPage(), onLoad: (_) {
       final allSubsystemsAreOk = getIt<ObservableList<Subsystem>>()

@@ -5,8 +5,7 @@ Widget _getHardwareSettings(SettingsOverlayViewModel viewModel, SettingsOverlayC
     title: "Hardware",
     blocks: [
       _getGeneralBlock(viewModel, controller),
-      _getLiveViewBlock(viewModel, controller),
-      _getPhotoCaptureBlock(viewModel, controller),
+      _getImagingBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
       Observer(builder: (_) =>
         switch(viewModel.printingImplementationSetting) {
@@ -62,58 +61,65 @@ Widget _getGeneralBlock(SettingsOverlayViewModel viewModel, SettingsOverlayContr
   );
 }
 
-Widget _getLiveViewBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+Widget _getImagingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
   return SettingsSection(
-    title: "Live view",
+    title: "Live view and capture",
     settings: [
-      SettingsComboBoxTile(
-        icon: LucideIcons.camera,
-        title: "Live view method",
-        subtitle: "Method used for live previewing",
-        items: viewModel.liveViewMethods,
-        value: () => viewModel.liveViewMethodSetting,
-        onChanged: controller.onLiveViewMethodChanged,
-      ),
+      _getImagingOptionsCard(viewModel, controller),
       Observer(builder: (_) {
-        if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam) {
-          return _getWebcamCard(viewModel, controller);
-        }
-        return const SizedBox();
-      }),
-    ],
-  );
-}
-
-Widget _getPhotoCaptureBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsSection(
-    title: "Photo capture",
-    settings: [
-      SettingsComboBoxTile(
-        icon: LucideIcons.camera,
-        title: "Capture method",
-        subtitle: "Method used for capturing final images",
-        items: viewModel.captureMethods,
-        value: () => viewModel.captureMethodSetting,
-        onChanged: controller.onCaptureMethodChanged,
-      ),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return SettingsNumberEditTile(
-            icon: LucideIcons.timer,
-            title: "Capture delay for Sony camera",
-            subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
-            value: () => viewModel.captureDelaySonySetting,
-            onFinishedEditing: controller.onCaptureDelaySonyChanged,
+        if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop) {
+          return SettingsToggleTile(
+            icon: LucideIcons.hardDriveDownload,
+            title: "Save captures to disk",
+            subtitle: "Whether to save captures to disk.",
+            value: () => viewModel.saveCapturesToDiskSetting,
+            onChanged: controller.onSaveCapturesToDiskChanged,
           );
         }
         return const SizedBox();
       }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
-            return _gPhoto2CamerasCard(viewModel, controller);
-        }
-        return const SizedBox();
-      }),
+      if (viewModel.imagingMethod == ImagingMethod.custom) ...[
+        SettingsComboBoxTile(
+          icon: LucideIcons.camera,
+          title: "Live view method",
+          subtitle: "Method used for live previewing",
+          items: viewModel.liveViewMethods,
+          value: () => viewModel.liveViewMethodSetting,
+          onChanged: controller.onLiveViewMethodChanged,
+        ),
+        Observer(builder: (_) {
+          if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam) {
+            return _getWebcamCard(viewModel, controller);
+          }
+          return const SizedBox();
+        }),
+        SettingsComboBoxTile(
+          icon: LucideIcons.camera,
+          title: "Capture method",
+          subtitle: "Method used for capturing final images",
+          items: viewModel.captureMethods,
+          value: () => viewModel.captureMethodSetting,
+          onChanged: controller.onCaptureMethodChanged,
+        ),
+        Observer(builder: (_) {
+          if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
+            return SettingsNumberEditTile(
+              icon: LucideIcons.timer,
+              title: "Capture delay for Sony camera",
+              subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
+              value: () => viewModel.captureDelaySonySetting,
+              onFinishedEditing: controller.onCaptureDelaySonyChanged,
+            );
+          }
+          return const SizedBox();
+        }),
+        Observer(builder: (_) {
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
+              return _gPhoto2CamerasCard(viewModel, controller);
+          }
+          return const SizedBox();
+        }),
+      ],
       Observer(builder: (_) {
         if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
           return SettingsComboBoxTile(
@@ -183,18 +189,6 @@ Widget _getPhotoCaptureBlock(SettingsOverlayViewModel viewModel, SettingsOverlay
             subtitle: "Location to look for captured images.",
             controller: controller.captureLocationController,
             onChanged: controller.onCaptureLocationChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop) {
-          return SettingsToggleTile(
-            icon: LucideIcons.hardDriveDownload,
-            title: "Save captures to disk",
-            subtitle: "Whether to save captures to disk.",
-            value: () => viewModel.saveCapturesToDiskSetting,
-            onChanged: controller.onSaveCapturesToDiskChanged,
           );
         }
         return const SizedBox();
@@ -372,6 +366,90 @@ SettingsTile _printerMargins(SettingsOverlayViewModel viewModel, SettingsOverlay
         ),
       ],
     ),
+  );
+}
+
+SettingsTile _getImagingOptionsCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  return SettingsTile(
+    icon: LucideIcons.camera,
+    title: "Imaging device",
+    subtitle: "Pick the device to use for live view and capture",
+    // The tile uses a row internally with an Expanded around the information, so we use an Expanded here too to create a reactive layout.
+    setting: Expanded(
+      flex: 2,
+      child: Observer(
+        builder: (_) => _getImagingOptions(viewModel, controller)
+      ),
+    ),
+  );
+}
+
+Widget _getImagingOptions(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  return Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    alignment: WrapAlignment.end,
+    children: [
+      _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', false, viewModel.setImagingDeviceList),
+      for (final webcam in viewModel.webcams2) ...[
+        _getImagingButton(
+          LucideIcons.webcam,
+          'Webcam',
+          webcam.friendlyName,
+          viewModel.imagingMethod == ImagingMethod.webcam && viewModel.liveViewWebcamId == webcam.friendlyName,
+          () => controller.setImagingWebcam(webcam),
+        )
+      ],
+      for (final camera in viewModel.gPhoto2Cameras2) ...[
+        _getImagingButton(
+          LucideIcons.camera,
+          'Camera',
+          '${camera.model}\nat ${camera.port}',
+          viewModel.imagingMethod == ImagingMethod.gphoto2 && viewModel.gPhoto2CameraId == GPhoto2Camera.fromCameraInfo(camera).id,
+          () => controller.setImagingGPhoto2(camera),
+        )
+      ],
+      _getImagingButton(
+        LucideIcons.audioWaveform,
+        "Static noise", "Debug option",
+        viewModel.imagingMethod == ImagingMethod.debugNoise,
+        () => controller.setImagingStaticNoise()
+      ),
+      _getImagingButton(
+        LucideIcons.image,
+        "Static image",
+        "Debug option",
+        viewModel.imagingMethod == ImagingMethod.debugStaticImage,
+        () => controller.setImagingStaticImage()
+      ),
+      _getImagingButton(
+        LucideIcons.wrench,
+        "Custom",
+        "Select options yourself",
+        viewModel.imagingMethod == ImagingMethod.custom,
+        () { viewModel.showCustomImagingSettings = true; }
+      ),
+    ],
+  );
+}
+
+Widget _getImagingButton(IconData icon, String title, String subtitle, bool isSelected, VoidCallback onPressed) {
+  return ToggleButton(
+    checked: isSelected,
+    onChanged: (v) => onPressed(),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(height: 5),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
+    )
   );
 }
 
