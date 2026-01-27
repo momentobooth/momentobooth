@@ -45,8 +45,20 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
     unawaited(setWebcamList2());
     unawaited(setCameraList2());
   }
-  Future<void> setWebcamList2() async => webcams2 = ObservableList.of(await NokhwaCamera.listCameras());
-  Future<void> setCameraList2() async => gPhoto2Cameras2 = ObservableList.of(await GPhoto2Camera.listCameras());
+
+  // For reasons unknown, overriding the whole list works in the settings page, but not here.
+  // So we use clear and addAll instead.
+  Future<void> setWebcamList2() async {
+    webcams2
+      ..clear()
+      ..addAll(ObservableList.of(await NokhwaCamera.listCameras()));
+  }
+
+  Future<void> setCameraList2() async {
+    gPhoto2Cameras2
+      ..clear()
+      ..addAll(ObservableList.of(await GPhoto2Camera.listCameras()));
+  }
 
   @computed
   ImagingMethod get imagingMethod {
