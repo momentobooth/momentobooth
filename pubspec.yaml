@@ -23,7 +23,7 @@ dependencies:
   animated_text_kit: 4.3.0
   flutter_scroll_shadow: 1.2.6
   flutter_layout_grid: 2.0.8
-  pretty_qr_code: 3.5.0
+  pretty_qr_code: 3.6.0
   provider: 6.1.5+1
   confetti: 0.8.0
   wave: 0.2.2
@@ -35,7 +35,7 @@ dependencies:
   lucide_icons_flutter: 3.1.9
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.2
-  google_fonts: 7.0.2
+  google_fonts: 8.0.0
   twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
@@ -47,7 +47,7 @@ dependencies:
 
   # Models
   freezed_annotation: 3.1.0
-  json_annotation: 4.9.0
+  json_annotation: 4.10.0
 
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
@@ -66,8 +66,8 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.12
-  talker_flutter: 5.1.12
+  talker: 5.1.13
+  talker_flutter: 5.1.13
   sentry_flutter: 9.10.0
   stack_trace: 1.12.1
 
@@ -120,7 +120,7 @@ dev_dependencies:
 
   # Models
   freezed: 3.2.4
-  json_serializable: 6.11.4
+  json_serializable: 6.12.0
 
   # Code generation
   build_runner: 2.10.5
