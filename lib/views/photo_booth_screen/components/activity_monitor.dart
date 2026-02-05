@@ -94,7 +94,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "Returning home due to inactivity,\ntap anywhere to cancel",
+                              context.localizations.inactivityWarning,
                               textAlign: TextAlign.center,
                               style: context.theme.subtitleTheme.style,
                             ),

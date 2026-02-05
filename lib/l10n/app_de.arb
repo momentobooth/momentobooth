@@ -284,5 +284,6 @@
 
     "changeLanguage": "Sprache ändern",
     "navigationScreenTitle": "Was würden Sie gerne tun?",
-    "chooseYourLanguage": "Wählen Sie Ihre Sprache"
+    "chooseYourLanguage": "Wählen Sie Ihre Sprache",
+    "inactivityWarning": "Aufgrund von Inaktivität wird zum Startbildschirm zurückgekehrt,\ntippen Sie irgendwo, um abzubrechen."
 }
