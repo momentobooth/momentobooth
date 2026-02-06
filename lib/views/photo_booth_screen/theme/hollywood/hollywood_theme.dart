@@ -2,8 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen.dart';
+import 'package:momento_booth/views/photo_booth_screen/theme/hollywood/components/hollywood_stars.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
-import 'package:twinkling_stars/twinkling_stars.dart';
 
 PhotoBoothTheme hollywoodTheme({required Color primaryColor}) => PhotoBoothTheme(
   titleTheme: TextTheme(style: _titleTextStyle),
@@ -86,12 +86,16 @@ PhotoBoothTheme hollywoodTheme({required Color primaryColor}) => PhotoBoothTheme
 
   screenWrappers: {
     StartScreen.defaultRoute: (context, child) {
-      return TwinklingStarsBackground(
-        key: ValueKey(primaryColor),
-        starCount: 100,
-        starColors: [primaryColor],
-        sizeMultiplier: 3,
-        child: child,
+      return Stack(
+        children: [
+          HollywoodStars(
+            key: ValueKey(primaryColor),
+            starCount: 100,
+            starColors: [primaryColor],
+            sizeMultiplier: 3,
+          ),
+          child,
+        ],
       );
     }
   }
