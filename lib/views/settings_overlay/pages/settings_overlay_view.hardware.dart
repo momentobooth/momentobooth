@@ -68,6 +68,17 @@ Widget _getImagingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayContr
         title: "Live view and capture",
         settings: [
           _getImagingOptionsCard(viewModel, controller),
+          SettingsTile(
+            icon: LucideIcons.projector,
+            title: 'Live view preview',
+            subtitle: 'Preview of the raw image as captured from the chosen imaging device.',
+            setting: SizedBox(
+              height: 100,
+              child: getIt<LiveViewManager>().subsystemStatus is SubsystemStatusOk
+                  ? LiveView(fit: BoxFit.contain, applyPostProcessing: false)
+                  : Placeholder(fallbackWidth: 150),
+            ),
+          ),
           if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop)
             SettingsToggleTile(
               icon: LucideIcons.hardDriveDownload,
