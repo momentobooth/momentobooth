@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -14,6 +16,8 @@ import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
+import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
@@ -83,7 +87,13 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<ComboBoxItem<String>> webcams = List<ComboBoxItem<String>>.empty();
 
   @observable
+  List<NokhwaCameraInfo> webcams2 = List<NokhwaCameraInfo>.empty();
+
+  @observable
   List<ComboBoxItem<String>> gPhoto2Cameras = List<ComboBoxItem<String>>.empty();
+
+  @observable
+  List<GPhoto2CameraInfo> gPhoto2Cameras2 = List<GPhoto2CameraInfo>.empty();
 
   SubsystemStatus get badgeStatus {
     final subsystemList = getIt<ObservableList<Subsystem>>().map((s) => s.subsystemStatus).toList();
@@ -166,8 +176,36 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
     ];
   }
 
+  Future<void> setImagingDeviceList() async {
+    unawaited(setWebcamList2());
+    unawaited(setCameraList2());
+  }
   Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
+  Future<void> setWebcamList2() async => webcams2 = await NokhwaCamera.listCameras();
   Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
+  Future<void> setCameraList2() async => gPhoto2Cameras2 = await GPhoto2Camera.listCameras();
+
+  @computed
+  ImagingMethod get imagingMethod {
+    if (showCustomImagingSettings) {
+      return ImagingMethod.custom;
+    }
+    if (captureMethodSetting == CaptureMethod.liveViewSource) {
+      return switch (liveViewMethodSetting) {
+        LiveViewMethod.debugNoise => ImagingMethod.debugNoise,
+        LiveViewMethod.webcam => ImagingMethod.webcam,
+        LiveViewMethod.debugStaticImage => ImagingMethod.debugStaticImage,
+        _ => ImagingMethod.custom
+      };
+    } else if (liveViewMethodSetting == LiveViewMethod.gphoto2 && captureMethodSetting == CaptureMethod.gPhoto2) {
+      return ImagingMethod.gphoto2;
+    } else {
+      return ImagingMethod.custom;
+    }
+  }
+
+  @observable
+  bool showCustomImagingSettings = false;
 
   // Project settings current values
   UiTheme get uiTheme => getIt<ProjectManager>().settings.uiTheme;
@@ -278,7 +316,9 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
     setFlutterPrintingQueueList();
     setCupsQueueList();
     setWebcamList();
+    setWebcamList2();
     setCameraList();
+    setCameraList2();
     setCupsPageSizeOptions();
   }
 

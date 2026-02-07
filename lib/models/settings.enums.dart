@@ -1,5 +1,21 @@
 part of 'settings.dart';
 
+enum ImagingMethod {
+
+  debugNoise(),
+  webcam(),
+  gphoto2(),
+  debugStaticImage(),
+  custom();
+
+  const ImagingMethod();
+
+  ComboBoxItem<ImagingMethod> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<ImagingMethod>> asComboBoxItems() => ImagingMethod.values.map((value) => value.toComboBoxItem()).toList();
+
+}
+
 enum LiveViewMethod {
 
   debugNoise(0, "Debug - Static noise"),
@@ -282,6 +298,7 @@ enum ExternalSystemCheckSeverity {
 
 enum OnboardingStep {
 
+  setupImagingDevice,
   importSettings,
   openProject,
 
