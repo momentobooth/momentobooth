@@ -8,8 +8,7 @@ import 'package:flutter/material.dart' show PageTransitionsTheme, Theme, ThemeDa
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/app_init_manager.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
@@ -52,14 +51,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       return onboardingHasNewSteps;
     }),
     '/imaging-device-page': WizardRoute(builder: (context) => ImagingDevicePage(), onLoad: (_) {
-      return !getIt<SettingsManager>().settings.onboardingStepsDone.contains(OnboardingStep.setupImagingDevice);
+      return getIt<LiveViewManager>().subsystemStatus is! SubsystemStatusOk ||
+          !getIt<SettingsManager>().settings.onboardingStepsDone.contains(OnboardingStep.setupImagingDevice);
     }),
     '/status-page': WizardRoute(builder: (context) => StatusPage(), onLoad: (_) {
       final allSubsystemsAreOk = getIt<ObservableList<Subsystem>>()
-            .map((s) => s.subsystemStatus)
-            .every((s) {
-              return s is SubsystemStatusOk || s is SubsystemStatusDisabled;
-            });
+              .map((s) => s.subsystemStatus)
+              .every((s) => s is SubsystemStatusOk || s is SubsystemStatusDisabled);
       return !allSubsystemsAreOk;
     }),
     '/settings-import-page': WizardRoute(builder: (context) => SettingsImportPage(), onLoad: (_) {

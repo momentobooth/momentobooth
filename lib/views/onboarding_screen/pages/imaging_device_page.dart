@@ -7,8 +7,9 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
@@ -141,7 +142,9 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
                         ),
                         Expanded(
                           flex: 1,
-                          child: LiveView(fit: BoxFit.contain),
+                          child: getIt<LiveViewManager>().subsystemStatus is SubsystemStatusOk
+                              ? LiveView(fit: BoxFit.contain, applyPostProcessing: false)
+                              : Placeholder(),
                         ),
                       ],
                     ),
