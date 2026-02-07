@@ -87,7 +87,7 @@ class PhotoBooth extends StatelessWidget {
                     builder: (_, child) => ActivityMonitor(
                       child: LiveViewBackground(
                         child: AppScaler(child: child!)
-                      )
+                      ),
                     ),
                   ),
                 ),

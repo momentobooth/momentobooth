@@ -28,9 +28,12 @@ class ActivityMonitor extends StatefulWidget {
 
 class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
 
+  late GoRouterDelegate _routerDelegate;
+  late ActivityMonitorController _activityMonitorController;
+
   Timer? _showReturnHomeWarningTimer;
   late ReactionDisposer _resetTimerReactionDisposer;
-  
+
   // State to control the warning overlay
   bool _showTimeoutWarning = false;
   static const int _defaultWarningDuration = 10;
@@ -42,9 +45,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
   @override
   void initState() {
     super.initState();
-
-    GoRouter.of(context).routerDelegate.addListener(_resetTimer);
-    context.read<ActivityMonitorController>().addListener(_onControllerStateChanged);
+    _routerDelegate = GoRouter.of(context).routerDelegate..addListener(_resetTimer);
     _resetTimerReactionDisposer = autorun((_) => _resetTimer());
   }
 
@@ -136,7 +137,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
 
   void _resetTimer() {
     _showReturnHomeWarningTimer?.cancel();
-    
+
     // Hide warning if it was active
     if (_showTimeoutWarning && mounted) {
       setState(() {
@@ -187,19 +188,25 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
       _onActivityTimeouts.remove(onActivityTimeout);
     }
     if (!mounted) return;
-    
+
     // Ensure warning is hidden before navigating
     setState(() => _showTimeoutWarning = false);
-    
+
     GoRouter.of(context).go(StartScreen.defaultRoute);
     logDebug("Return to Home screen due to activity timeout.");
   }
 
   @override
+  void didChangeDependencies() {
+    _activityMonitorController = context.read<ActivityMonitorController>()..addListener(_onControllerStateChanged);
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
     _showReturnHomeWarningTimer?.cancel();
-    GoRouter.of(context).routerDelegate.removeListener(_resetTimer);
-    context.read<ActivityMonitorController>().removeListener(_onControllerStateChanged);
+    _routerDelegate.removeListener(_resetTimer);
+    _activityMonitorController.removeListener(_onControllerStateChanged);
     _resetTimerReactionDisposer();
     super.dispose();
   }
