@@ -125,6 +125,10 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugNoise, captureMethod: CaptureMethod.liveViewSource));
   }
 
+  void onCustomImagingOptionsSelected() {
+    viewModel.showCustomImagingSettings = true;
+  }
+
   void onUiThemeChanged(UiTheme? uiTheme) {
     if (uiTheme != null) {
       viewModel.updateProjectSettings((settings) => settings.copyWith(uiTheme: uiTheme));
