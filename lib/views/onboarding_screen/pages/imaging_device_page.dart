@@ -141,9 +141,14 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
                         if (prevConfigError) ...[
                           InfoBar(
                             title: const Text('Problem with imaging device'),
-                            content: const Text(
-                                'The previously selected imaging device is not available or not properly configured.'),
+                            content: const Text('The previously selected imaging device is not available or not properly configured.'),
                             severity: InfoBarSeverity.warning,
+                            action: Button(
+                              child: const Text('Retry'),
+                              onPressed: () => getIt<LiveViewManager>().restoreLiveView(),
+                            ),
+                            isLong: true,
+                            onClose: () => setState(() => prevConfigError = false),
                           ),
                           const SizedBox(height: 16),
                         ],
