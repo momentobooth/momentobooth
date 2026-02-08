@@ -11,6 +11,8 @@ Widget _getUiSettings(SettingsOverlayViewModel viewModel, SettingsOverlayControl
         subtitle: "The time in seconds before the app returns to the home screen. Set to 0 to disable or set to at least 15.",
         value: () => viewModel.returnToHomeTimeoutSeconds,
         onFinishedEditing: controller.onReturnToHomeTimeoutSecondsChanged,
+        min: 0,
+        smallChange: 5,
       )),
       SettingsComboBoxTile<Language>(
         icon: LucideIcons.languages,
