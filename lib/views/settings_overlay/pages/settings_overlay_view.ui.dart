@@ -4,13 +4,14 @@ Widget _getUiSettings(SettingsOverlayViewModel viewModel, SettingsOverlayControl
   return SettingsListPage(
     title: "User interface",
     blocks: [
-      SettingsNumberEditTile(
+      Observer(builder: (context) => SettingsNumberEditTile(
+        key: ValueKey(viewModel.returnToHomeTimeoutSecondsKey),
         icon: LucideIcons.timer,
         title: "Return to home timeout",
-        subtitle: "The time in seconds before the app returns to the home screen. Set to 0 to disable.",
+        subtitle: "The time in seconds before the app returns to the home screen. Set to 0 to disable or set to at least 15.",
         value: () => viewModel.returnToHomeTimeoutSeconds,
         onFinishedEditing: controller.onReturnToHomeTimeoutSecondsChanged,
-      ),
+      )),
       SettingsComboBoxTile<Language>(
         icon: LucideIcons.languages,
         title: "Language",
