@@ -31,11 +31,14 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
   CaptureMethod get captureMethodSetting => getIt<SettingsManager>().settings.hardware.captureMethod;
   String get liveViewWebcamId => getIt<SettingsManager>().settings.hardware.liveViewWebcamId;
   String get gPhoto2CameraId => getIt<SettingsManager>().settings.hardware.gPhoto2CameraId;
+  bool prevConfigError = false;
 
   @override
   void initState() {
     super.initState();
     setImagingDeviceList();
+    var isFirstConfig = liveViewWebcamId.isEmpty && gPhoto2CameraId.isEmpty || !getIt<SettingsManager>().settings.onboardingStepsDone.contains(OnboardingStep.setupImagingDevice);
+    prevConfigError = getIt<LiveViewManager>().subsystemStatus is! SubsystemStatusOk && !isFirstConfig;
   }
 
   bool updatingCameraList = true;
@@ -78,6 +81,7 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
   }
 
   void setImagingWebcam(NokhwaCameraInfo camera) {
+    setState(() { prevConfigError = false; });
     updateSettings((settings) => settings.copyWith.hardware(
       liveViewMethod: LiveViewMethod.webcam,
       captureMethod: CaptureMethod.liveViewSource,
@@ -86,6 +90,7 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
   }
 
   void setImagingGPhoto2(GPhoto2CameraInfo camera) {
+    setState(() { prevConfigError = false; });
     updateSettings((settings) => settings.copyWith.hardware(
       liveViewMethod: LiveViewMethod.gphoto2,
       captureMethod: CaptureMethod.gPhoto2,
@@ -94,10 +99,12 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
   }
 
   void setImagingStaticImage() {
+    setState(() { prevConfigError = false; });
     updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugStaticImage, captureMethod: CaptureMethod.liveViewSource));
   }
 
   void setImagingStaticNoise() {
+    setState(() { prevConfigError = false; });
     updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugNoise, captureMethod: CaptureMethod.liveViewSource));
   }
 
@@ -129,7 +136,20 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
                 children: [
                   Expanded(
                     flex: 1,
-                    child: Observer(builder: (_) => _getImagingOptions()),
+                    child: Observer(builder: (_) => Column(
+                      children: [
+                        if (prevConfigError) ...[
+                          InfoBar(
+                            title: const Text('Problem with imaging device'),
+                            content: const Text(
+                                'The previously selected imaging device is not available or not properly configured.'),
+                            severity: InfoBarSeverity.warning,
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                        Expanded(child: _getImagingOptions())
+                      ]
+                    )),
                   ),
                   Expanded(
                     flex: 1,
