@@ -84,16 +84,16 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<ComboBoxItem<String>> cupsPaperSizes = List<ComboBoxItem<String>>.empty();
 
   @observable
-  List<ComboBoxItem<String>> webcams = List<ComboBoxItem<String>>.empty();
+  List<ComboBoxItem<String>> webcamComboBoxItems = List<ComboBoxItem<String>>.empty();
 
   @observable
-  List<NokhwaCameraInfo> webcams2 = List<NokhwaCameraInfo>.empty();
+  List<NokhwaCameraInfo> webcamList = List<NokhwaCameraInfo>.empty();
 
   @observable
-  List<ComboBoxItem<String>> gPhoto2Cameras = List<ComboBoxItem<String>>.empty();
+  List<ComboBoxItem<String>> gPhoto2CameraComboBoxItems = List<ComboBoxItem<String>>.empty();
 
   @observable
-  List<GPhoto2CameraInfo> gPhoto2Cameras2 = List<GPhoto2CameraInfo>.empty();
+  List<GPhoto2CameraInfo> gPhoto2CameraList = List<GPhoto2CameraInfo>.empty();
 
   SubsystemStatus get badgeStatus {
     final subsystemList = getIt<ObservableList<Subsystem>>().map((s) => s.subsystemStatus).toList();
@@ -180,10 +180,10 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
     unawaited(setWebcamList2());
     unawaited(setCameraList2());
   }
-  Future<void> setWebcamList() async => webcams = await NokhwaCamera.getCamerasAsComboBoxItems();
-  Future<void> setWebcamList2() async => webcams2 = await NokhwaCamera.listCameras();
-  Future<void> setCameraList() async => gPhoto2Cameras = await GPhoto2Camera.getCamerasAsComboBoxItems();
-  Future<void> setCameraList2() async => gPhoto2Cameras2 = await GPhoto2Camera.listCameras();
+  Future<void> setWebcamList() async => webcamComboBoxItems = await NokhwaCamera.getCamerasAsComboBoxItems();
+  Future<void> setWebcamList2() async => webcamList = await NokhwaCamera.listCameras();
+  Future<void> setCameraList() async => gPhoto2CameraComboBoxItems = await GPhoto2Camera.getCamerasAsComboBoxItems();
+  Future<void> setCameraList2() async => gPhoto2CameraList = await GPhoto2Camera.listCameras();
 
   @computed
   ImagingMethod get imagingMethod {

@@ -366,7 +366,7 @@ Widget _getImagingOptions(SettingsOverlayViewModel viewModel, SettingsOverlayCon
     alignment: WrapAlignment.end,
     children: [
       _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', false, viewModel.setImagingDeviceList),
-      for (final webcam in viewModel.webcams2) ...[
+      for (final webcam in viewModel.webcamList) ...[
         _getImagingButton(
           LucideIcons.webcam,
           'Webcam',
@@ -375,7 +375,7 @@ Widget _getImagingOptions(SettingsOverlayViewModel viewModel, SettingsOverlayCon
           () => controller.setImagingWebcam(webcam),
         )
       ],
-      for (final camera in viewModel.gPhoto2Cameras2) ...[
+      for (final camera in viewModel.gPhoto2CameraList) ...[
         _getImagingButton(
           LucideIcons.camera,
           'Camera',
@@ -442,7 +442,7 @@ SettingsTile _getWebcamCard(SettingsOverlayViewModel viewModel, SettingsOverlayC
         const SizedBox(width: 10),
         Observer(builder: (_) {
           return ComboBox<String>(
-            items: viewModel.webcams,
+            items: viewModel.webcamComboBoxItems,
             value: viewModel.liveViewWebcamId,
             onChanged: controller.onLiveViewWebcamIdChanged,
             disabledPlaceholder: Text('<No options>'),
@@ -467,7 +467,7 @@ SettingsTile _gPhoto2CamerasCard(SettingsOverlayViewModel viewModel, SettingsOve
         const SizedBox(width: 10),
         Observer(builder: (_) {
           return ComboBox<String>(
-            items: viewModel.gPhoto2Cameras,
+            items: viewModel.gPhoto2CameraComboBoxItems,
             value: viewModel.gPhoto2CameraId,
             onChanged: controller.onGPhoto2CameraIdChanged,
             disabledPlaceholder: Text('<No options>'),
