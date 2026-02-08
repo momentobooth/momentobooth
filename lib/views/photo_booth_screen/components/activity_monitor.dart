@@ -77,44 +77,40 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
             ),
           ),
         ),
-        Positioned.fill(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            child: _showTimeoutWarning
-                ? GestureDetector(
-                    key: const ValueKey('WarningOverlay'),
-                    // Absorb taps to prevent interaction with underlying app, but register activity to reset timer
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () => _onActivity(isTap: true),
-                    child: Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: Colors.black.withValues(alpha: 0.6),
-                      child: Center(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              context.localizations.inactivityWarning,
-                              textAlign: TextAlign.center,
-                              style: context.theme.subtitleTheme.style,
-                            ),
-                            const SizedBox(height: 30),
-                            SizedBox(
-                              width: 350,
-                              height: 350,
-                              child: CaptureCounter(
-                                counterStart: _currentWarningDuration,
-                                onCounterFinished: _goHome,
-                              ),
-                            ),
-                          ],
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: _showTimeoutWarning
+              ? GestureDetector(
+                  key: const ValueKey('WarningOverlay'),
+                  // Absorb taps to prevent interaction with underlying app, but register activity to reset timer
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () => _onActivity(isTap: true),
+                  child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.black.withValues(alpha: 0.9),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          context.localizations.inactivityWarning,
+                          textAlign: TextAlign.center,
+                          style: context.theme.subtitleTheme.style,
                         ),
-                      ),
+                        const SizedBox(height: 30),
+                        SizedBox(
+                          width: 350,
+                          height: 350,
+                          child: CaptureCounter(
+                            counterStart: _currentWarningDuration,
+                            onCounterFinished: _goHome,
+                          ),
+                        ),
+                      ],
                     ),
-                  )
-                : const SizedBox.shrink(),
-          ),
+                  ),
+                )
+              : const SizedBox.shrink(),
         ),
       ],
     );
