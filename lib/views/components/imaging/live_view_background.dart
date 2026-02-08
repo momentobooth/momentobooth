@@ -29,6 +29,8 @@ class LiveViewBackground extends StatefulWidget {
 
 class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
+  late GoRouterDelegate _routerDelegate;
+
   bool get _showLiveViewBackground =>
       getIt<PhotosManager>().showLiveViewBackground &&
       (GoRouter.of(context).currentLocation != GalleryScreen.defaultRoute &&
@@ -42,7 +44,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
   @override
   void initState() {
     super.initState();
-    GoRouter.of(context).routerDelegate.addListener(_routerListener);
+    _routerDelegate = GoRouter.of(context).routerDelegate..addListener(_routerListener);
   }
 
   void _routerListener() => WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
@@ -140,7 +142,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
 
   @override
   void dispose() {
-    GoRouter.of(context).routerDelegate.removeListener(_routerListener);
+    _routerDelegate.removeListener(_routerListener);
     super.dispose();
   }
 

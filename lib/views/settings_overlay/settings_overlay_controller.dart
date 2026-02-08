@@ -488,7 +488,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   void onReturnToHomeTimeoutSecondsChanged(int? returnToHomeTimeoutSeconds) {
     if (returnToHomeTimeoutSeconds != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.ui(returnToHomeTimeoutSeconds: returnToHomeTimeoutSeconds));
+      var correctedReturnToHomeTimeoutSeconds = returnToHomeTimeoutSeconds;
+      if (correctedReturnToHomeTimeoutSeconds > 0 && correctedReturnToHomeTimeoutSeconds < 15) {
+        correctedReturnToHomeTimeoutSeconds = 15;
+        viewModel.returnToHomeTimeoutSecondsKey = UniqueKey(); // Make sure UI shows the actual set value.
+      }
+      viewModel.updateSettings((settings) => settings.copyWith.ui(returnToHomeTimeoutSeconds: correctedReturnToHomeTimeoutSeconds));
     }
   }
 

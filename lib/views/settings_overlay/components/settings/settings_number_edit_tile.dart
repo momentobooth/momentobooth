@@ -10,7 +10,11 @@ class SettingsNumberEditTile<T extends num> extends StatefulWidget {
   final ValueGetter<T> value;
   final ValueChanged<T?> onFinishedEditing;
   final num smallChange;
+  final num largeChange;
   final Widget? leading;
+  final T? min;
+  final T? max;
+  final int? precision;
 
   const SettingsNumberEditTile({
     super.key,
@@ -20,7 +24,11 @@ class SettingsNumberEditTile<T extends num> extends StatefulWidget {
     required this.value,
     required this.onFinishedEditing,
     this.smallChange = 1,
+    this.largeChange = 10,
     this.leading,
+    this.min,
+    this.max,
+    this.precision,
   });
 
   @override
@@ -54,6 +62,10 @@ class _SettingsNumberEditTileState<T extends num> extends State<SettingsNumberEd
             value: _currentValue,
             onChanged: (value) => setState(() => _currentValue = value ?? _currentValue),
             smallChange: widget.smallChange,
+            largeChange: widget.largeChange,
+            precision: widget.precision,
+            min: widget.min,
+            max: widget.max,
           ),
         ),
       ),
