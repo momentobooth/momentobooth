@@ -121,6 +121,8 @@
     "projectViewInExplorer": "Afficher le projet dans l'explorateur",
     "projectLoadLastOnStart": "Charger le dernier projet au démarrage",
 
+    "inactivityWarning": "Retour à l'écran d'accueil suite à une période d'inactivité,\nappuyez pour annuler",
+
     "@multiCaptureScreenPhotoCounter": {
         "placeholders": {
             "current": {

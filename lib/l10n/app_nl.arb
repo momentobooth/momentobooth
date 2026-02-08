@@ -131,5 +131,7 @@
   
     "changeLanguage": "Verander van taal",
     "navigationScreenTitle": "Wat zou je willen doen?",
-    "chooseYourLanguage": "Kies je taal"
+    "chooseYourLanguage": "Kies je taal",
+
+    "inactivityWarning": "Je keert terug naar het startscherm vanwege inactiviteit,\nraak aan om te annuleren."
 }

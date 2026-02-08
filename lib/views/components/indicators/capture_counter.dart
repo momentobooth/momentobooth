@@ -74,4 +74,10 @@ class CaptureCounterState extends State<CaptureCounter> with SingleTickerProvide
     );
   }
 
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
 }
