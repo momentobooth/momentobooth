@@ -11,11 +11,13 @@ import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 class LiveView extends StatelessWidget {
 
   final BoxFit fit;
+  final bool applyPostProcessing;
   final double blurSigma;
 
   const LiveView({
     super.key,
     required this.fit,
+    this.applyPostProcessing = true,
     this.blurSigma = 0,
   });
 
@@ -34,23 +36,24 @@ class LiveView extends StatelessWidget {
         builder: (_) {
           if (_textureId == null) return const SizedBox.shrink();
 
-          return RotateFlipCrop(
-            rotate: _rotate,
-            flip: _flip,
-            aspectRatio: _aspectRatio,
-            child: SizedBox(
-              width: getIt<LiveViewManager>().textureWidth?.toDouble(),
-              height: getIt<LiveViewManager>().textureHeight?.toDouble(),
-              child: LayoutBuilder(
-                builder: (context, boxConstraints) {
-                  // For some reason, we get unconstrained width and height when the application has just started.
-                  // This is a workaround to prevent errors.
-                  if (boxConstraints == const BoxConstraints()) return const SizedBox.shrink();
-                  return Texture(textureId: _textureId!, filterQuality: _filterQuality);
-                }
-              ),
+          Widget box = SizedBox(
+            width: getIt<LiveViewManager>().textureWidth?.toDouble(),
+            height: getIt<LiveViewManager>().textureHeight?.toDouble(),
+            child: LayoutBuilder(
+              builder: (context, boxConstraints) {
+                // For some reason, we get unconstrained width and height when the application has just started.
+                // This is a workaround to prevent errors.
+                if (boxConstraints == const BoxConstraints()) return const SizedBox.shrink();
+                return Texture(textureId: _textureId!, filterQuality: _filterQuality);
+              }
             ),
           );
+
+          if (applyPostProcessing) {
+            return RotateFlipCrop(rotate: _rotate, flip: _flip, aspectRatio: _aspectRatio, child: box);
+          } else {
+            return box;
+          }
         },
       ),
     );

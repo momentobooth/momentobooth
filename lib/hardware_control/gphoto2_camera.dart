@@ -28,17 +28,24 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   GPhoto2Camera({required this.id, required this.friendlyName});
 
+  static GPhoto2Camera fromCameraInfo(GPhoto2CameraInfo info) {
+    return GPhoto2Camera(
+      id: "${info.port}/${info.model}",
+      friendlyName: "${info.model} (at ${info.port})",
+    );
+  }
+
   // //////////// //
   // List cameras //
   // //////////// //
 
-  static Future<List<GPhoto2Camera>> getAllCameras() async {
+  static Future<List<GPhoto2CameraInfo>> listCameras() async {
     await ensureLibraryInitialized();
-    List<GPhoto2CameraInfo> cameras = await gphoto2GetCameras();
-    return cameras.map((camera) => GPhoto2Camera(
-      id: "${camera.port}/${camera.model}",
-      friendlyName: "${camera.model} (at ${camera.port})",
-    )).toList();
+    return await gphoto2GetCameras();
+  }
+
+  static Future<List<GPhoto2Camera>> getAllCameras() async {
+    return (await listCameras()).map(GPhoto2Camera.fromCameraInfo).toList();
   }
 
   static Future<List<ComboBoxItem<String>>> getCamerasAsComboBoxItems() async =>

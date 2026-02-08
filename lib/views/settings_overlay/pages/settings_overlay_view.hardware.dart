@@ -5,8 +5,7 @@ Widget _getHardwareSettings(SettingsOverlayViewModel viewModel, SettingsOverlayC
     title: "Hardware",
     blocks: [
       _getGeneralBlock(viewModel, controller),
-      _getLiveViewBlock(viewModel, controller),
-      _getPhotoCaptureBlock(viewModel, controller),
+      _getImagingBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
       Observer(builder: (_) =>
         switch(viewModel.printingImplementationSetting) {
@@ -62,144 +61,114 @@ Widget _getGeneralBlock(SettingsOverlayViewModel viewModel, SettingsOverlayContr
   );
 }
 
-Widget _getLiveViewBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsSection(
-    title: "Live view",
-    settings: [
-      SettingsComboBoxTile(
-        icon: LucideIcons.camera,
-        title: "Live view method",
-        subtitle: "Method used for live previewing",
-        items: viewModel.liveViewMethods,
-        value: () => viewModel.liveViewMethodSetting,
-        onChanged: controller.onLiveViewMethodChanged,
-      ),
-      Observer(builder: (_) {
-        if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam) {
-          return _getWebcamCard(viewModel, controller);
-        }
-        return const SizedBox();
-      }),
-    ],
-  );
-}
-
-Widget _getPhotoCaptureBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsSection(
-    title: "Photo capture",
-    settings: [
-      SettingsComboBoxTile(
-        icon: LucideIcons.camera,
-        title: "Capture method",
-        subtitle: "Method used for capturing final images",
-        items: viewModel.captureMethods,
-        value: () => viewModel.captureMethodSetting,
-        onChanged: controller.onCaptureMethodChanged,
-      ),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return SettingsNumberEditTile(
-            icon: LucideIcons.timer,
-            title: "Capture delay for Sony camera",
-            subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
-            value: () => viewModel.captureDelaySonySetting,
-            onFinishedEditing: controller.onCaptureDelaySonyChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
-            return _gPhoto2CamerasCard(viewModel, controller);
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2) {
-          return SettingsComboBoxTile(
-            icon: LucideIcons.camera,
-            title: "Use special handling for camera",
-            subtitle: "Kind of special handling used for the camera. Pick \"Nikon DSLR\" for cameras like the D-series. The \"None\" might work for most mirrorless camera as they are always in live view mode.",
-            items: viewModel.gPhoto2SpecialHandlingOptions,
-            value: () => viewModel.gPhoto2SpecialHandling,
-            onChanged: controller.onGPhoto2SpecialHandlingChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return SettingsToggleTile(
-            icon: LucideIcons.camera,
-            title: "Download extra files (e.g. RAW) from camera",
-            subtitle: "Whether to download extra files from the camera. This is useful for cameras that can create RAW files.",
-            value: () => viewModel.gPhoto2DownloadExtraFilesSetting,
-            onChanged: controller.onGPhoto2DownloadExtraFilesChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return SettingsTextEditTile(
-            icon: LucideIcons.memoryStick,
-            title: "Camera capture target",
-            subtitle: "Sets the camera's 'capturetarget'. When unsure, leave empty as it could cause capture issues. Values can be found in the libgphoto2 source code.",
-            controller: controller.gPhoto2CaptureTargetController,
-            onFinishedEditing: controller.onGPhoto2CaptureTargetChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return SettingsNumberEditTile(
-            icon: LucideIcons.camera,
-            title: "Auto focus before capture",
-            subtitle: "Time to wait for the camera to focus before capturing the image. This could be useful to improve capture speed in some cases (e.g. bad light, camera being slow with focusing). Might require the 'Special handling' setting set for some vendors. Also it might not work on some camera models. Set to 0 to disable.",
-            value: () => viewModel.gPhoto2AutoFocusMsBeforeCaptureSetting,
-            onFinishedEditing: controller.onGPhoto2AutoFocusMsBeforeCaptureChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2) {
-          return SettingsNumberEditTile(
-            icon: LucideIcons.timer,
-            title: "Capture delay for gPhoto2 camera.",
-            subtitle: "Delay in [ms].",
-            value: () => viewModel.captureDelayGPhoto2Setting,
-            onFinishedEditing: controller.onCaptureDelayGPhoto2Changed,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop) {
-          return SettingsFolderSelectTile(
-            icon: LucideIcons.folder,
-            title: "Capture location",
-            subtitle: "Location to look for captured images.",
-            controller: controller.captureLocationController,
-            onChanged: controller.onCaptureLocationChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-      Observer(builder: (_) {
-        if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop) {
-          return SettingsToggleTile(
-            icon: LucideIcons.hardDriveDownload,
-            title: "Save captures to disk",
-            subtitle: "Whether to save captures to disk.",
-            value: () => viewModel.saveCapturesToDiskSetting,
-            onChanged: controller.onSaveCapturesToDiskChanged,
-          );
-        }
-        return const SizedBox();
-      }),
-    ],
+Widget _getImagingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  return Observer(
+    builder: (context) {
+      return SettingsSection(
+        title: "Live view and capture",
+        settings: [
+          _getImagingOptionsCard(viewModel, controller),
+          SettingsTile(
+            icon: LucideIcons.projector,
+            title: 'Live view preview',
+            subtitle: 'Preview of the raw image as captured from the chosen imaging device.',
+            setting: SizedBox(
+              height: 100,
+              child: getIt<LiveViewManager>().subsystemStatus is SubsystemStatusOk
+                  ? LiveView(fit: BoxFit.contain, applyPostProcessing: false)
+                  : Placeholder(fallbackWidth: 150),
+            ),
+          ),
+          if (viewModel.captureMethodSetting != CaptureMethod.sonyImagingEdgeDesktop)
+            SettingsToggleTile(
+              icon: LucideIcons.hardDriveDownload,
+              title: "Save captures to disk",
+              subtitle: "Whether to save captures to disk.",
+              value: () => viewModel.saveCapturesToDiskSetting,
+              onChanged: controller.onSaveCapturesToDiskChanged,
+            ),
+          if (viewModel.imagingMethod == ImagingMethod.custom) ...[
+            SettingsComboBoxTile(
+              icon: LucideIcons.camera,
+              title: "Live view method",
+              subtitle: "Method used for live previewing",
+              items: viewModel.liveViewMethods,
+              value: () => viewModel.liveViewMethodSetting,
+              onChanged: controller.onLiveViewMethodChanged,
+            ),
+            if (viewModel.liveViewMethodSetting == LiveViewMethod.webcam)
+              _getWebcamCard(viewModel, controller),
+            SettingsComboBoxTile(
+              icon: LucideIcons.camera,
+              title: "Capture method",
+              subtitle: "Method used for capturing final images",
+              items: viewModel.captureMethods,
+              value: () => viewModel.captureMethodSetting,
+              onChanged: controller.onCaptureMethodChanged,
+            ),
+            if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop)
+              SettingsNumberEditTile(
+                icon: LucideIcons.timer,
+                title: "Capture delay for Sony camera",
+                subtitle: "Delay in [ms]. Sensible values are between 165 (manual focus) and 500 ms.",
+                value: () => viewModel.captureDelaySonySetting,
+                onFinishedEditing: controller.onCaptureDelaySonyChanged,
+              ),
+            if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2)
+              _gPhoto2CamerasCard(viewModel, controller),
+          ],
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 || viewModel.liveViewMethodSetting == LiveViewMethod.gphoto2)
+            SettingsComboBoxTile(
+              icon: LucideIcons.camera,
+              title: "Use special handling for camera",
+              subtitle: "Kind of special handling used for the camera. Pick \"Nikon DSLR\" for cameras like the D-series. The \"None\" might work for most mirrorless camera as they are always in live view mode.",
+              items: viewModel.gPhoto2SpecialHandlingOptions,
+              value: () => viewModel.gPhoto2SpecialHandling,
+              onChanged: controller.onGPhoto2SpecialHandlingChanged,
+            ),
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2)
+            SettingsToggleTile(
+              icon: LucideIcons.camera,
+              title: "Download extra files (e.g. RAW) from camera",
+              subtitle: "Whether to download extra files from the camera. This is useful for cameras that can create RAW files.",
+              value: () => viewModel.gPhoto2DownloadExtraFilesSetting,
+              onChanged: controller.onGPhoto2DownloadExtraFilesChanged,
+            ),
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2)
+            SettingsTextEditTile(
+              icon: LucideIcons.memoryStick,
+              title: "Camera capture target",
+              subtitle: "Sets the camera's 'capturetarget'. When unsure, leave empty as it could cause capture issues. Values can be found in the libgphoto2 source code.",
+              controller: controller.gPhoto2CaptureTargetController,
+              onFinishedEditing: controller.onGPhoto2CaptureTargetChanged,
+            ),
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2)
+            SettingsNumberEditTile(
+              icon: LucideIcons.camera,
+              title: "Auto focus before capture",
+              subtitle: "Time to wait for the camera to focus before capturing the image. This could be useful to improve capture speed in some cases (e.g. bad light, camera being slow with focusing). Might require the 'Special handling' setting set for some vendors. Also it might not work on some camera models. Set to 0 to disable.",
+              value: () => viewModel.gPhoto2AutoFocusMsBeforeCaptureSetting,
+              onFinishedEditing: controller.onGPhoto2AutoFocusMsBeforeCaptureChanged,
+            ),
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2)
+            SettingsNumberEditTile(
+              icon: LucideIcons.timer,
+              title: "Capture delay for gPhoto2 camera.",
+              subtitle: "Delay in [ms].",
+              value: () => viewModel.captureDelayGPhoto2Setting,
+              onFinishedEditing: controller.onCaptureDelayGPhoto2Changed,
+            ),
+          if (viewModel.captureMethodSetting == CaptureMethod.sonyImagingEdgeDesktop)
+            SettingsFolderSelectTile(
+              icon: LucideIcons.folder,
+              title: "Capture location",
+              subtitle: "Location to look for captured images.",
+              controller: controller.captureLocationController,
+              onChanged: controller.onCaptureLocationChanged,
+            ),
+        ],
+      );
+    }
   );
 }
 
@@ -375,6 +344,90 @@ SettingsTile _printerMargins(SettingsOverlayViewModel viewModel, SettingsOverlay
   );
 }
 
+SettingsTile _getImagingOptionsCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  return SettingsTile(
+    icon: LucideIcons.camera,
+    title: "Imaging device",
+    subtitle: "Pick the device to use for live view and capture",
+    // The tile uses a row internally with an Expanded around the information, so we use an Expanded here too to create a reactive layout.
+    setting: Expanded(
+      flex: 2,
+      child: Observer(
+        builder: (_) => _getImagingOptions(viewModel, controller)
+      ),
+    ),
+  );
+}
+
+Widget _getImagingOptions(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
+  return Wrap(
+    spacing: 8,
+    runSpacing: 8,
+    alignment: WrapAlignment.end,
+    children: [
+      _getImagingButton(LucideIcons.rotateCcw, 'Refresh', 'Refresh all devices', false, viewModel.setImagingDeviceList),
+      for (final webcam in viewModel.webcamList) ...[
+        _getImagingButton(
+          LucideIcons.webcam,
+          'Webcam',
+          webcam.friendlyName,
+          viewModel.imagingMethod == ImagingMethod.webcam && viewModel.liveViewWebcamId == webcam.friendlyName,
+          () => controller.setImagingWebcam(webcam),
+        )
+      ],
+      for (final camera in viewModel.gPhoto2CameraList) ...[
+        _getImagingButton(
+          LucideIcons.camera,
+          'Camera',
+          '${camera.model}\nat ${camera.port}',
+          viewModel.imagingMethod == ImagingMethod.gphoto2 && viewModel.gPhoto2CameraId == GPhoto2Camera.fromCameraInfo(camera).id,
+          () => controller.setImagingGPhoto2(camera),
+        )
+      ],
+      _getImagingButton(
+        LucideIcons.audioWaveform,
+        "Static noise", "Debug option",
+        viewModel.imagingMethod == ImagingMethod.debugNoise,
+        () => controller.setImagingStaticNoise()
+      ),
+      _getImagingButton(
+        LucideIcons.image,
+        "Static image",
+        "Debug option",
+        viewModel.imagingMethod == ImagingMethod.debugStaticImage,
+        () => controller.setImagingStaticImage()
+      ),
+      _getImagingButton(
+        LucideIcons.wrench,
+        "Custom",
+        "Select options yourself",
+        viewModel.imagingMethod == ImagingMethod.custom,
+        () => controller.onCustomImagingOptionsSelected(),
+      ),
+    ],
+  );
+}
+
+Widget _getImagingButton(IconData icon, String title, String subtitle, bool isSelected, VoidCallback onPressed) {
+  return ToggleButton(
+    checked: isSelected,
+    onChanged: (v) => onPressed(),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(height: 5),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 2),
+          Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12)),
+        ],
+      ),
+    )
+  );
+}
+
 SettingsTile _getWebcamCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
   return SettingsTile(
     icon: LucideIcons.camera,
@@ -389,7 +442,7 @@ SettingsTile _getWebcamCard(SettingsOverlayViewModel viewModel, SettingsOverlayC
         const SizedBox(width: 10),
         Observer(builder: (_) {
           return ComboBox<String>(
-            items: viewModel.webcams,
+            items: viewModel.webcamComboBoxItems,
             value: viewModel.liveViewWebcamId,
             onChanged: controller.onLiveViewWebcamIdChanged,
             disabledPlaceholder: Text('<No options>'),
@@ -414,7 +467,7 @@ SettingsTile _gPhoto2CamerasCard(SettingsOverlayViewModel viewModel, SettingsOve
         const SizedBox(width: 10),
         Observer(builder: (_) {
           return ComboBox<String>(
-            items: viewModel.gPhoto2Cameras,
+            items: viewModel.gPhoto2CameraComboBoxItems,
             value: viewModel.gPhoto2CameraId,
             onChanged: controller.onGPhoto2CameraIdChanged,
             disabledPlaceholder: Text('<No options>'),
