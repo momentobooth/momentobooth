@@ -29,7 +29,7 @@ url = "2.5.8"
 num = "0.4.3"
 num-traits = "0.2.19"
 num-derive = "0.4.2"
-regex = "1.12.2"
+regex = "1.12.3"
 log = "0.4.29"
 nokhwa = { git = "https://github.com/l1npengtul/nokhwa.git", branch = "0.10", features = ["input-native", "output-threaded"] }
 parking_lot = "0.12.5"
