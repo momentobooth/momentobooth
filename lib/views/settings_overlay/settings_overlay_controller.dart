@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
@@ -29,6 +30,9 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   TextEditingController? _captureLocationController;
   TextEditingController get captureLocationController => _captureLocationController ??= TextEditingController(text: viewModel.captureLocationSetting);
+
+  TextEditingController? _serveFromDirectoryController;
+  TextEditingController get serveFromDirectoryController => _serveFromDirectoryController ??= TextEditingController(text: viewModel.serveFromDirectoryPathSetting);
 
   TextEditingController? _firefoxSendServerUrlController;
   TextEditingController get firefoxSendServerUrlController => _firefoxSendServerUrlController ??= TextEditingController(text: viewModel.firefoxSendServerUrlSetting);
@@ -118,6 +122,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void setImagingStaticImage() {
     viewModel.showCustomImagingSettings = false;
     viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugStaticImage, captureMethod: CaptureMethod.liveViewSource));
+  }
+
+  Future<void> setImagingServeFromDirectory() async {
+    viewModel.showCustomImagingSettings = false;
+
+    // Open directory picker after setting the live view method, so that the selected directory gets immediately used for the live view source.
+    String? selectedDirectory = await getDirectoryPath(initialDirectory: serveFromDirectoryController.text);
+    if (selectedDirectory != null) {
+      onServeFromDirectoryPathChanged(selectedDirectory);
+      serveFromDirectoryController.text = selectedDirectory;
+    }
+    await viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.serveFromDirectory, captureMethod: CaptureMethod.liveViewSource));
   }
 
   void setImagingStaticNoise() {
@@ -289,6 +305,13 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     if (captureLocation != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(captureLocation: captureLocation));
       createPathSafe(captureLocation);
+    }
+  }
+
+  void onServeFromDirectoryPathChanged(String? serveFromDirectoryPath) {
+    if (serveFromDirectoryPath != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(serveFromDirectoryPath: serveFromDirectoryPath));
+      createPathSafe(serveFromDirectoryPath);
     }
   }
 

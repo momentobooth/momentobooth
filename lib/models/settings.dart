@@ -79,6 +79,7 @@ sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableVa
     @Default(100) int captureDelayGPhoto2,
     @Default(200) int captureDelaySony,
     @JsonKey(defaultValue: _captureLocationFromJson) required String captureLocation,
+    @JsonKey(defaultValue: _captureLocationFromJson) required String serveFromDirectoryPath,
     @Default(true) bool saveCapturesToDisk,
     @Default(PrintingImplementation.flutterPrinting) PrintingImplementation printingImplementation,
     @Default([]) List<String> flutterPrintingPrinterNames,

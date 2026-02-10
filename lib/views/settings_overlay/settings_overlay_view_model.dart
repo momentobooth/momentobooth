@@ -241,6 +241,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   int get captureDelayGPhoto2Setting => getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2;
   int get captureDelaySonySetting => getIt<SettingsManager>().settings.hardware.captureDelaySony;
   String get captureLocationSetting => getIt<SettingsManager>().settings.hardware.captureLocation;
+  String get serveFromDirectoryPathSetting => getIt<SettingsManager>().settings.hardware.serveFromDirectoryPath;
   bool get saveCapturesToDiskSetting => getIt<SettingsManager>().settings.hardware.saveCapturesToDisk;
   PrintingImplementation get printingImplementationSetting => getIt<SettingsManager>().settings.hardware.printingImplementation;
   String get cupsUriSetting => getIt<SettingsManager>().settings.hardware.cupsUri;
