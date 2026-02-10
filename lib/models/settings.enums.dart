@@ -6,6 +6,7 @@ enum ImagingMethod {
   webcam(),
   gphoto2(),
   debugStaticImage(),
+  debugServeFromDirectory(),
   custom();
 
   const ImagingMethod();
@@ -21,7 +22,8 @@ enum LiveViewMethod {
   debugNoise(0, "Debug - Static noise"),
   webcam(1, "Webcam"),
   gphoto2(2, "gPhoto2"),
-  debugStaticImage(3, "Debug - Static image");
+  debugStaticImage(3, "Debug - Static image"),
+  serveFromDirectory(4, "Serve from directory");
 
   final int value;
   final String name;

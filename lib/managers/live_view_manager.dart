@@ -6,6 +6,7 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/live_view_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/noise_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
+import 'package:momento_booth/hardware_control/live_view_streaming/serve_from_dir_source.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/static_image_source.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -141,6 +142,8 @@ abstract class LiveViewManagerBase extends Subsystem with Store, Logger {
           _currentLiveViewSource = _gPhoto2Camera;
         case LiveViewMethod.debugStaticImage:
           _currentLiveViewSource = StaticImageSource();
+        case LiveViewMethod.serveFromDirectory:
+          _currentLiveViewSource = ServeFromDirSource();
       }
 
       try {

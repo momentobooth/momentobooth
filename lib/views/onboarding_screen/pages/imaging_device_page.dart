@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -12,6 +13,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
+import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/onboarding_screen/components/wizard_page.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view_model.dart' show UpdateSettingsCallback;
@@ -65,6 +67,7 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
         LiveViewMethod.debugNoise => ImagingMethod.debugNoise,
         LiveViewMethod.webcam => ImagingMethod.webcam,
         LiveViewMethod.debugStaticImage => ImagingMethod.debugStaticImage,
+        LiveViewMethod.serveFromDirectory => ImagingMethod.debugServeFromDirectory,
         _ => ImagingMethod.custom,
       };
     } else if (liveViewMethodSetting == LiveViewMethod.gphoto2 && captureMethodSetting == CaptureMethod.gPhoto2) {
@@ -106,6 +109,19 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
   void setImagingStaticNoise() {
     setState(() { prevConfigError = false; });
     updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.debugNoise, captureMethod: CaptureMethod.liveViewSource));
+  }
+
+  Future<void> setImagingServeFromDirectory() async {
+    setState(() { prevConfigError = false; });
+    // Open directory picker after setting the live view method, so that the selected directory gets immediately used for the live view source.
+
+    final serveFromDirectoryPathSetting = getIt<SettingsManager>().settings.hardware.serveFromDirectoryPath;
+    String? selectedDirectory = await getDirectoryPath(initialDirectory: serveFromDirectoryPathSetting);
+    if (selectedDirectory != null) {
+      await updateSettings((settings) => settings.copyWith.hardware(serveFromDirectoryPath: selectedDirectory));
+      createPathSafe(selectedDirectory);
+    }
+    await updateSettings((settings) => settings.copyWith.hardware(liveViewMethod: LiveViewMethod.serveFromDirectory, captureMethod: CaptureMethod.liveViewSource));
   }
 
   @override
@@ -222,17 +238,24 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
               )
             ],
             _getImagingButton(
+              LucideIcons.imagePlay,
+              "Images from directory",
+              "Advance every capture",
+              imagingMethod == ImagingMethod.debugServeFromDirectory,
+              setImagingServeFromDirectory,
+            ),
+            _getImagingButton(
               LucideIcons.audioWaveform,
               "Static noise", "Debug option",
               imagingMethod == ImagingMethod.debugNoise,
-              setImagingStaticNoise
+              setImagingStaticNoise,
             ),
             _getImagingButton(
               LucideIcons.image,
               "Static image",
               "Debug option",
               imagingMethod == ImagingMethod.debugStaticImage,
-              setImagingStaticImage
+              setImagingStaticImage,
             ),
           ],
         ),

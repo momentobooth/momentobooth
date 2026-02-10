@@ -166,6 +166,14 @@ Widget _getImagingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               controller: controller.captureLocationController,
               onChanged: controller.onCaptureLocationChanged,
             ),
+          if (viewModel.liveViewMethodSetting == LiveViewMethod.serveFromDirectory)
+            SettingsFolderSelectTile(
+              icon: LucideIcons.folder,
+              title: "Serve from directory",
+              subtitle: "Location to serve images from.",
+              controller: controller.serveFromDirectoryController,
+              onChanged: controller.onServeFromDirectoryPathChanged,
+            ),
         ],
       );
     }
@@ -385,17 +393,24 @@ Widget _getImagingOptions(SettingsOverlayViewModel viewModel, SettingsOverlayCon
         )
       ],
       _getImagingButton(
+        LucideIcons.imagePlay,
+        "Images from directory",
+        "Advance every capture",
+        viewModel.imagingMethod == ImagingMethod.debugServeFromDirectory,
+        () => controller.setImagingServeFromDirectory(),
+      ),
+      _getImagingButton(
         LucideIcons.audioWaveform,
         "Static noise", "Debug option",
         viewModel.imagingMethod == ImagingMethod.debugNoise,
-        () => controller.setImagingStaticNoise()
+        () => controller.setImagingStaticNoise(),
       ),
       _getImagingButton(
         LucideIcons.image,
         "Static image",
         "Debug option",
         viewModel.imagingMethod == ImagingMethod.debugStaticImage,
-        () => controller.setImagingStaticImage()
+        () => controller.setImagingStaticImage(),
       ),
       _getImagingButton(
         LucideIcons.wrench,
