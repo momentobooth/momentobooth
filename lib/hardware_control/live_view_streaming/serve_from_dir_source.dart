@@ -24,6 +24,9 @@ class ServeFromDirSource extends StaticImageSource {
 
   late int _imageWidth, _imageHeight;
 
+  File? currentlyDisplayedFile;
+  RawImage? currentlyDisplayedImage;
+
   ServeFromDirSource();
 
   @override
@@ -52,6 +55,8 @@ class ServeFromDirSource extends StaticImageSource {
 
   Future<RawImage> _getImage() async {
     if (!directory.existsSync()) throw Exception("Directory $serveFromDirectoryPath does not exist");
+
+    // Get list of image files
     final fileListBefore = await directory.list().toList();
     const validExtensions = ['.jpg', '.jpeg', '.png', '.bmp'];
     final matchingFiles = fileListBefore.whereType<File>().where((file) => validExtensions.contains(extension(file.path).toLowerCase())).toList();
@@ -65,6 +70,7 @@ class ServeFromDirSource extends StaticImageSource {
       photoNumber = 0;
     }
     var imgFile = File(join(directory.path, matchingFiles[photoNumber].path));
+    currentlyDisplayedFile = imgFile;
     // Using modulo would be an option, but is less reliable when the number of files changes.
     photoNumber = (photoNumber + 1 == matchingFiles.length) ? 0 : photoNumber + 1;
     photosShown++;
@@ -72,7 +78,6 @@ class ServeFromDirSource extends StaticImageSource {
     final Uint8List data = await imgFile.readAsBytes();
     final Image image = await decodeImageFromList(data);
 
-    print("Loaded image $photoNumber of ${matchingFiles.length} from directory with size ${image.width}x${image.height}");
     _imageWidth = image.width;
     _imageHeight = image.height;
 
@@ -83,11 +88,19 @@ class ServeFromDirSource extends StaticImageSource {
       height: image.height,
       data: imgData,
     );
-    await staticImageWriteToTexture(
-      texturePtr: texturePtr,
-      rawImage: rawImage,
-    );
-    return rawImage;
+    // If this is the first image, return it immediately. Otherwise, return the previously displayed image for capture.
+    currentlyDisplayedImage ??= rawImage;
+    var returnValue = currentlyDisplayedImage;
+    currentlyDisplayedImage = rawImage;
+
+    Future.delayed(const Duration(milliseconds: 1000), () async {
+      // Show new image on live view texture.
+      await staticImageWriteToTexture(
+        texturePtr: texturePtr,
+        rawImage: rawImage,
+      );
+    });
+    return returnValue!;
   }
 
 }
