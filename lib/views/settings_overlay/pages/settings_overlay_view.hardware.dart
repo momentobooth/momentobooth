@@ -393,24 +393,24 @@ Widget _getImagingOptions(SettingsOverlayViewModel viewModel, SettingsOverlayCon
         )
       ],
       _getImagingButton(
+        LucideIcons.imagePlay,
+        "Images from directory",
+        "Advance every capture",
+        viewModel.imagingMethod == ImagingMethod.debugServeFromDirectory,
+        () => controller.setImagingServeFromDirectory(),
+      ),
+      _getImagingButton(
         LucideIcons.audioWaveform,
         "Static noise", "Debug option",
         viewModel.imagingMethod == ImagingMethod.debugNoise,
-        () => controller.setImagingStaticNoise()
+        () => controller.setImagingStaticNoise(),
       ),
       _getImagingButton(
         LucideIcons.image,
         "Static image",
         "Debug option",
         viewModel.imagingMethod == ImagingMethod.debugStaticImage,
-        () => controller.setImagingStaticImage()
-      ),
-      _getImagingButton(
-        LucideIcons.imagePlay,
-        "Static images from directory",
-        "Debug option",
-        viewModel.imagingMethod == ImagingMethod.debugServeFromDirectory,
-        () => controller.setImagingServeFromDirectory()
+        () => controller.setImagingStaticImage(),
       ),
       _getImagingButton(
         LucideIcons.wrench,

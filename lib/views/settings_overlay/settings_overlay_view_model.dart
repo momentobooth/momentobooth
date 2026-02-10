@@ -195,6 +195,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
         LiveViewMethod.debugNoise => ImagingMethod.debugNoise,
         LiveViewMethod.webcam => ImagingMethod.webcam,
         LiveViewMethod.debugStaticImage => ImagingMethod.debugStaticImage,
+        LiveViewMethod.serveFromDirectory => ImagingMethod.debugServeFromDirectory,
         _ => ImagingMethod.custom
       };
     } else if (liveViewMethodSetting == LiveViewMethod.gphoto2 && captureMethodSetting == CaptureMethod.gPhoto2) {
