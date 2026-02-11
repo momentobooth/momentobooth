@@ -31,5 +31,8 @@
   - [Statistics & debug settings](./settings_debug.md)
   - [Log panel](./settings_log.md)
 
+# Developer
+- [Setup](./dev_setup.md)
+
 # Misc
 - [Command Line Arguments](./cli.md)
