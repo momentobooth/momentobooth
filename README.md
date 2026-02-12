@@ -1,8 +1,8 @@
 <p align="center"> 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/svg/MomentoBooth-combined-logo-dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="assets/svg/MomentoBooth-combined-logo-light.svg">
-  <img  style="max-width: 800px" alt="MomentoBooth combined logo" src="assets/svg/MomentoBooth-combined-logo-light.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="documentation/src/imgs/MomentoBooth-combined-logo-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="documentation/src/imgs/MomentoBooth-combined-logo-light.svg">
+  <img  style="max-width: 800px" alt="MomentoBooth combined logo" src="documentation/src/imgs/MomentoBooth-combined-logo-light.svg">
 </picture>
 </p>
 
