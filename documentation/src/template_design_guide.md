@@ -4,10 +4,11 @@ This guide will help you create and test templates for your event that features 
 
 First, get the application to run [as described in the getting started guide](getting_started.html#running-the-application). If you haven't done so, read the [general concept](concept.md) behind the capture modes and collages.
 
+> [!TIP]
 > You don't need a webcam or webcam for developing templates, but it is fun to test your creations. If you don't have one, you can select one of the debug options for the live view method.
 
 ## Setting up your print layout
-If the photobooth setup at your event will feature a printer, you must set up the correct printing layout to ensure your design will fit the paper. If not, skip to [design your templates](#design-your-templates)
+If the photobooth setup at your event will feature a printer, you must set up the correct printing layout to ensure your design will fit the paper. If not, skip to [design your templates](#design-your-templates).
 
 ### Use existing settings
 If you are using an existing setup with known settings, you can import the settings preset file.

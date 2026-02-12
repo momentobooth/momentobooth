@@ -1,4 +1,8 @@
 # Settings panel
+
+> [!WARNING]
+> The overview of the settings is not entirely up to date anymore. Most of the settings' purpose and options will be clear from the application's UI, however.
+
 The settings panel can be opened using the menubar or by pressing `Ctrl+S`. When opened you will be greeted by a screen with a few tabs. These tabs are:
  * [Project](settings_project.md)
  * [Import](settings_import.md)
