@@ -1,11 +1,11 @@
 # Summary
 
 [Introduction](./introduction.md)
-[Installation](./installation.md)
 [The concept](./concept.md)
 
 # Set up
 
+- [Installation](./installation.md)
 - [Getting started](./getting_started.md)
 - [Peripherals](./peripherals-setup.md)
   - [Hardware compatibility](./hardware_compatibility.md)

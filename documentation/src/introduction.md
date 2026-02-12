@@ -82,7 +82,7 @@
 
 ## Development
 
-For development setup instructions, see the [dev documentation](https://momentobooth.github.io/momentobooth/dev_setup.html).
+For development setup instructions, see the [dev documentation](https://momentobooth.github.io/momentobooth/dev_setup.md).
 
 ## Translations
 

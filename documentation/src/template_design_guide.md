@@ -2,7 +2,7 @@
 
 This guide will help you create and test templates for your event that features a MomentoBooth photobooth.
 
-First, get the application to run [as described in the getting started guide](getting_started.html#running-the-application). If you haven't done so, read the [general concept](concept.md) behind the capture modes and collages.
+First, get the application to run [as described in the getting started guide](getting_started.md#running-the-application). If you haven't done so, read the [general concept](concept.md) behind the capture modes and collages.
 
 > [!TIP]
 > You don't need a webcam or webcam for developing templates, but it is fun to test your creations. If you don't have one, you can select one of the debug options for the live view method.
@@ -21,7 +21,7 @@ If pre-exported template guide images are available, you can use those. If not, 
 
 ### Create new settings
 1. Open the settings with the menubar or `Ctrl+S` and go to the templating tab.
-1. Set the right [aspect ratio](/settings_templating.html#collage-aspect-ratio) and [padding](/settings_templating.html#collage-padding) according to the printer that you will use (see e.g. [recommended settings for printers](printer_setup.html)). When not using a printer, you can leave these as-is. Set the [output resolution multiplier](/settings_output.html#output-resolution-multiplier) to a sufficient value, e.g. `4`.
+1. Set the right [aspect ratio](settings_templating.md#collage-aspect-ratio) and [padding](settings_templating.md#collage-padding) according to the printer that you will use (see e.g. [recommended settings for printers](printer_setup.md)). When not using a printer, you can leave these as-is. Set the [output resolution multiplier](settings_output.md#output-resolution-multiplier) to a sufficient value, e.g. `4`.
 1. Go to the output tab and set the output format to `png`.
 1. Get template guide image files
    1. Go back to the templating tab, scroll down to the template preview, and turn off the back- and foreground. You can choose if you want to include the middle ground with placeholder images.
@@ -37,5 +37,5 @@ The guide images have the following structure:
 - The **white border** shows the *gap size* to clearly distinguish the border regions. This part *is* printed.
 
 To use your templates:
-1. Place your files in the templates subdirectory of your project folder. See the [templates page](/template_setup.html) on how to name your files.
+1. Place your files in the templates subdirectory of your project folder. See the [templates page](template_setup.md) on how to name your files.
 1. You can check the result using the template preview in the templates tab, by shooting a collage, or using the manual collage screen (see menubar, or use `Ctrl+M`). If you made changes to your templates, go to a different settings tab and back to the templates tab to reload the images.
