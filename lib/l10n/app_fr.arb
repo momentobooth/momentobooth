@@ -21,6 +21,7 @@
     "genericFullScreen": "Plein écran",
     "genericSettings": "Paramètres",
     "genericCanBeChangedInSettings": "cela peut être modifié dans les paramètres",
+    "genericThanks": "Merci!",
 
     "actionRestoreLiveView": "Restaurer l'aperçu direct",
     "actionsExit": "Quitter",
@@ -204,5 +205,7 @@
     "galleryScreenFilterBarFindMyFaceButton": "Trouver mon visage",
     "@galleryScreenFilterBarFindMyFaceButton": {},
     "galleryScreenFilterBarClearFilterButton": "Effacer le filtre",
-    "@galleryScreenFilterBarClearFilterButton": {}
+    "@galleryScreenFilterBarClearFilterButton": {},
+    "recordingIsAboutToStart": "L'enregistrement va commencer",
+    "chooseCaptureModeScreenRecordingButton": "Enregistrement"
 }

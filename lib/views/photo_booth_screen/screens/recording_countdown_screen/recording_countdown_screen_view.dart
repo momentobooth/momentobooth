@@ -1,0 +1,150 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:momento_booth/views/base/screen_view_base.dart';
+import 'package:momento_booth/views/components/animations/pulsating_opacity.dart';
+import 'package:momento_booth/views/components/indicators/capture_counter.dart';
+import 'package:momento_booth/views/components/indicators/time_counter.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/recording_countdown_screen/recording_countdown_screen_controller.dart';
+import 'package:momento_booth/views/photo_booth_screen/screens/recording_countdown_screen/recording_countdown_screen_view_model.dart';
+
+class RecordingCountdownScreenView extends ScreenViewBase<RecordingCountdownScreenViewModel, RecordingCountdownScreenController> {
+
+  const RecordingCountdownScreenView({
+    required super.viewModel,
+    required super.controller,
+    required super.contextAccessor,
+  });
+
+  @override
+  Widget get body {
+    return Stack(
+      clipBehavior: Clip.none,
+      fit: StackFit.expand,
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _getReadyText,
+            Flexible(
+              child: Container(
+                padding: const EdgeInsets.all(40.0),
+                constraints: const BoxConstraints(maxWidth: 600, maxHeight: 600),
+                child: Observer(builder: (_) {
+                  return AnimatedOpacity(
+                    duration: const Duration(milliseconds: 50),
+                    opacity: viewModel.showCounter ? 1.0 : 0.0,
+                    child: CaptureCounter(
+                      onCounterFinished: viewModel.onCounterFinished,
+                      counterStart: viewModel.counterStart,
+                    ),
+                  );
+                })
+              ),
+            ),
+          ],
+        ),
+        SvgPicture.asset(
+          "assets/svg/recording_frame.svg",
+        ),
+        Center(
+          child: FittedBox(
+            child: SizedBox(
+              height: 1080,
+              width: 1920,
+              child: RecordUI(viewModel: viewModel),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget get _getReadyText {
+    return Center(
+      child: SizedBox(
+        height: 300,
+        child: AnimatedTextKit(
+          pause: Duration(milliseconds: viewModel.counterStart >= 3 ? 1000 : 0),
+          isRepeatingAnimation: false,
+          animatedTexts: [
+            RotateAnimatedText(localizations.captureScreenGetReady, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 1000)),
+            RotateAnimatedText(localizations.recordingIsAboutToStart, textStyle: theme.titleTheme.style, duration: const Duration(milliseconds: 2500)),
+          ],
+        ),
+      ),
+    );
+  }
+
+}
+
+class RecordUI extends StatelessWidget {
+  const RecordUI({
+    super.key,
+    required this.viewModel,
+  });
+
+  final RecordingCountdownScreenViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(43),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TimeCounter(key: viewModel.timerKey, targetDuration: Duration(seconds: viewModel.recLength),),
+                Text(" / 00:${viewModel.recLength}:000",
+                 style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 50,
+                    color: Color.fromARGB(185, 255, 255, 255),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsetsGeometry.symmetric(vertical: 90, horizontal: 93,),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Observer(
+              builder: (_) {
+                const size = 45.0;
+                switch (viewModel.recState) {
+                  case RecState.pre:
+                    return Icon(
+                      LucideIcons.clockFading,
+                      color: Colors.white,
+                      size: size,
+                    );
+                  case RecState.recording:
+                    return PulsatingOpacity(
+                      child: Icon(
+                        FluentIcons.circle_fill,
+                        color: Color.fromARGB(255, 181, 23, 0),
+                        size: size,
+                      ),
+                    );
+                  case RecState.post:
+                    return Icon(
+                      LucideIcons.pause,
+                      color: Colors.white,
+                      size: size,
+                    );
+                }
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

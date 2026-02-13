@@ -5,6 +5,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
@@ -72,6 +73,15 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   TextEditingController? _faceRecognitionServerUrlController;
   TextEditingController get faceRecognitionServerUrlController => _faceRecognitionServerUrlController ??= TextEditingController(text: viewModel.faceRecognitionServerUrlSetting);
+
+  TextEditingController? _ffmpegArgumentsForRecordingController;
+  TextEditingController get ffmpegArgumentsForRecordingController => _ffmpegArgumentsForRecordingController ??= TextEditingController(text: viewModel.ffmpegArgumentsForRecordingSetting);
+  
+  TextEditingController? _textSummaryPromptController;
+  TextEditingController get textSummaryPromptController => _textSummaryPromptController ??= TextEditingController(text: viewModel.textSummaryPromptSetting);
+  
+  TextEditingController? _llmModelController;
+  TextEditingController get llmModelController => _llmModelController ??= TextEditingController(text: viewModel.llmModelSetting);
 
   // Initialization/Deinitialization
 
@@ -758,8 +768,91 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableVideoModeChanged(bool? enableVideoMode) {
+    if (enableVideoMode != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(enableVideoMode: enableVideoMode));
+    }
+  }
+
+  void onVideoDurationChanged(int? videoDuration) {
+    if (videoDuration != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoDuration: videoDuration));
+    }
+  }
+
+  void onVideoPreRecordDelayMsChanged(int? videoPreRecordDelayMs) {
+    if (videoPreRecordDelayMs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoPreRecordDelayMs: videoPreRecordDelayMs));
+    }
+  }
+
+  void onFfmpegArgumentsForRecordingChanged(String? ffmpegArgumentsForRecording) {
+    if (ffmpegArgumentsForRecording != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(ffmpegArgumentsForRecording: ffmpegArgumentsForRecording));
+    }
+  }
+
+  void onTextSummaryPromptChanged(String? textSummaryPrompt) {
+    if (textSummaryPrompt != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(textSummaryPrompt: textSummaryPrompt));
+    }
+  }
+
+  void onLlmModelChanged(String? llmModel) {
+    if (llmModel != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(llmModel: llmModel));
+    }
+  }
+
+  void onVideoPostRecordDelayMsChanged(int? videoPostRecordDelayMs) {
+    if (videoPostRecordDelayMs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoPostRecordDelayMs: videoPostRecordDelayMs));
+    }
+  }
+
   void onPlayAudioSamplePressed() {
     getIt<SfxManager>().playSampleSound();
+  }
+
+  void onTriggerCapturePressed() {
+    getIt<PhotosManager>().directPhotoCapture();
+  }
+
+  void onPhotosClearPressed() {
+    getIt<PhotosManager>().photos.clear();
+  }
+
+  void onStartVideoRecordingPressed() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logWarning("gPhoto2Camera not initialized");
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.startVideoRecording();
+  }
+
+  void onStopVideoRecordingPressed() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logWarning("gPhoto2Camera not initialized");
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.stopVideoRecording();
+  }
+
+  Future<void> onGetCameraFilesPressed() async {
+    final files = await getIt<LiveViewManager>().gPhoto2Camera!.getFileList();
+    final imageFiles = files.images.toList();
+    final videoFiles = files.videos.toList();
+    final otherFiles = files.others.toList();
+    final folders = files.folders.toList();
+    logInfo("Images: $imageFiles");
+    logInfo("Videos: $videoFiles");
+    logInfo("Other files: $otherFiles");
+    logInfo("Folders: $folders");
+  }
+
+  Future<void> onGetCameraConfigPressed() async {
+    final config = await getIt<LiveViewManager>().gPhoto2Camera!.getConfig();
+    logInfo("Config: $config");
   }
 
 }

@@ -10,6 +10,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/src/rust/api/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
+import 'package:momento_booth/src/rust/models/gphoto2.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/models/live_view.dart';
@@ -74,6 +75,12 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     });
   }
 
+  Future<void> stopLiveView() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+
+    await gphoto2StopLiveview(handleId: handleId!);
+  }
+
   @override
   Future<void> setOperations(List<ImageOperation> operations) {
     return gphoto2SetOperations(handleId: handleId!, operations: operations);
@@ -115,6 +122,35 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
       data: capture.data,
       filename: capture.filename,
     );
+  }
+
+  Future<GPhoto2FileCategories> getFileList() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    var fileList = await gphoto2ListFiles(handleId: handleId!, folder: "/");
+
+    unawaited(clearPreviousEvents());
+
+    return fileList;
+  }
+
+  Future<void> startVideoRecording() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    await gphoto2StartVideoRecording(handleId: handleId!);
+
+    unawaited(clearPreviousEvents());
+  }
+
+  Future<void> stopVideoRecording() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    await gphoto2StopVideoRecording(handleId: handleId!);
+
+    unawaited(clearPreviousEvents());
+  }
+
+  Future<SimplifiedWidget> getConfig() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    var config = await gphoto2ListConfig(handleId: handleId!);
+    return config;
   }
 
   @override
