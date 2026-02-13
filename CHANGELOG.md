@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Dev change: Updated Flutter to 3.41.0
+- Dev change: Updated Dart and Rust dependencies
+
 ## 0.15.7
 
 - Bugfix: Fix wrong page size in print job generation causing paper layout issues

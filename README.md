@@ -1,4 +1,4 @@
-<p align="center"> 
+<p align="center">
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="documentation/src/imgs/MomentoBooth-combined-logo-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="documentation/src/imgs/MomentoBooth-combined-logo-light.svg">

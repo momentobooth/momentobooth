@@ -22,17 +22,21 @@ For all languages, frameworks and tools, we support the latest versions.
 
 * `flutter_rust_bridge_codegen`
   * Install using Cargo:
+
     ```sh
     cargo install flutter_rust_bridge_codegen --version 2.11.1
     ```
-* Flutter SDK 3.38.0+
+
+* Flutter SDK 3.41.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it.\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
 * Optional: For building the documentation mdBook and some extensions for mdBook are needed
   * Install using Cargo:
+
     ```sh
     cargo install mdbook mdbook-mermaid
     ```
+
 * Be sure to read the docs for troubleshooting and workarounds
 
 ### On Windows
@@ -47,9 +51,11 @@ For all languages, frameworks and tools, we support the latest versions.
 * **MSYS2**
   * Follow the instructions on the [MSYS2 website](https://www.msys2.org/)
   * Install the following packages:
+
     ```
     mingw-w64-clang-x86_64-pkgconf mingw-w64-clang-x86_64-libgphoto2 mingw-w64-clang-x86_64-curl-winssl mingw-w64-clang-x86_64-nghttp2 mingw-w64-clang-x86_64-nghttp3
     ```
+
   * Make sure `{MSYS_INSTALL_PATH}\clang64\bin` is in your `PATH` (before other folders that also provide `pkg-config`/`pkgconf`)
 
 ### On macOS
@@ -61,6 +67,7 @@ For all languages, frameworks and tools, we support the latest versions.
   * `rustup` is also available via [Homebrew](https://formulae.brew.sh/formula/rustup)
 * **Homebrew**
   * Install with
+
     ```sh
     pkgconf libgphoto2
     ```
@@ -71,9 +78,11 @@ For all languages, frameworks and tools, we support the latest versions.
   * See the [Flutter documentation](https://docs.flutter.dev/get-started/install/linux/desktop#development-tools) for a list of required packages
   * Note: the installation command provided by Flutter may only work on Ubuntu — check your distro’s package names
 * **Additional packages**
+
   ```
   llvm libssl-dev libdigest-sha-perl libcurl4-openssl-dev libasound2-dev
   ```
+
 * **Rust** (`x86_64-unknown-linux-gnu` or `aarch64-unknown-linux-gnu`, depending on your architecture)
   * Recommended installation via [`rustup`](https://rustup.rs/)
 
@@ -91,18 +100,24 @@ Please note: This method expects global [fvm](https://fvm.app/) to be available 
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
 1. Generate translation files.
+
    ```sh
    flutter gen-l10n
    ```
+
 2. Generate Rust <-> Dart code
+
    ```
    flutter_rust_bridge_codegen generate
    ```
+
     * Note: Make sure to **re-run this command** if you changed anything in the Rust subproject.
 3. Generate Dart helper code
+
    ```
    dart run build_runner build
    ```
+
 4. Build and run the app with `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
