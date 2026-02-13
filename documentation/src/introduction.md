@@ -7,6 +7,9 @@
 </p>
 
 <h3 align="center">Cross-platform open source photo booth software. Capture your events in an easy and fun way!</h3>
+<br>
+
+![MomentoBooth overview image](imgs/readme-overview-image-horizontal.webp)
 
 *[Jump directly to installation steps](installation.md)*\
 *[Jump directly to getting started guide](getting_started.md)*

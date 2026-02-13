@@ -22,6 +22,9 @@
   <img src="https://hosted.weblate.org/widget/momentobooth-photobooth/svg-badge.svg" alt="Translation status" />
 </a>
 </p>
+<br>
+
+![MomentoBooth overview image](documentation/src/imgs/readme-overview-image-horizontal.webp)
 
 ## Links
 - [Download the latest release from GitHub](https://github.com/momentobooth/momentobooth/releases)
