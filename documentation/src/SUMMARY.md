@@ -5,10 +5,12 @@
 
 # Set up
 
+- [Installation](./installation.md)
 - [Getting started](./getting_started.md)
-- [Hardware compatibility](./hardware_compatibility.md)
-- [Camera](./camera_setup.md)
-- [Printer](./printer_setup.md)
+- [Peripherals](./peripherals-setup.md)
+  - [Hardware compatibility](./hardware_compatibility.md)
+  - [Camera](./camera_setup.md)
+  - [Printer](./printer_setup.md)
 - [Templates](./template_setup.md)
 
 # Guides
@@ -30,6 +32,9 @@
   - [Subsystem status](./settings_subsystem.md)
   - [Statistics & debug settings](./settings_debug.md)
   - [Log panel](./settings_log.md)
+
+# Developer
+- [Setup](./dev_setup.md)
 
 # Misc
 - [Command Line Arguments](./cli.md)

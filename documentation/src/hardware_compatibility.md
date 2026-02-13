@@ -14,9 +14,9 @@ These are the ones that we have tested ourselves or have received a report about
 Nikon | D3400[^NikonDSLRHandling] | ✅ | ✅ | Live view stops after 30 minutes, still needs an automatic workaround (manual workaround: press Ctrl/Cmd+R) |
 Sony | Alpha 6400[^NoSpecialHandling] | ✅ | ✅ | Also known as ILCE-6400 |
 
-[^NikonDSLRHandling]: Set [Use Special Handling](settings_hardware.html) to 'Nikon DSLR'
+[^NikonDSLRHandling]: Set [Use Special Handling](settings_hardware.md) to 'Nikon DSLR'
 
-[^NoSpecialHandling]: Set [Use Special Handling](settings_hardware.html) to 'None'
+[^NoSpecialHandling]: Set [Use Special Handling](settings_hardware.md) to 'None'
 
 ## Tested printers
 
