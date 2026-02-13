@@ -18,24 +18,24 @@ dependencies:
   animations: 2.1.1
   auto_size_text: 3.0.0
   fluent_ui: 4.13.0
-  go_router: 17.0.1
+  go_router: 17.1.0
   flutter_svg: 2.2.3
   animated_text_kit: 4.3.0
   flutter_scroll_shadow: 1.2.6
   flutter_layout_grid: 2.0.8
-  pretty_qr_code: 3.5.0
+  pretty_qr_code: 3.6.0
   provider: 6.1.5+1
   confetti: 0.8.0
   wave: 0.2.2
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.2
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.20.2
-  widgetbook_annotation: 3.9.0
+  widgetbook: 3.21.0
+  widgetbook_annotation: 3.10.0
   lucide_icons_flutter: 3.1.9
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.2
-  google_fonts: 7.0.2
+  google_fonts: 8.0.1
   twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
@@ -47,11 +47,11 @@ dependencies:
 
   # Models
   freezed_annotation: 3.1.0
-  json_annotation: 4.9.0
+  json_annotation: 4.10.0
 
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
-  ffi: 2.1.5
+  ffi: 2.2.0
   flutter_rust_bridge: 2.11.1
 
   # Printing
@@ -66,13 +66,13 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.12
-  talker_flutter: 5.1.12
-  sentry_flutter: 9.10.0
+  talker: 5.1.13
+  talker_flutter: 5.1.13
+  sentry_flutter: 9.13.0
   stack_trace: 1.12.1
 
   # Storage
-  flutter_secure_storage: 9.2.4
+  flutter_secure_storage: 10.0.0
   toml: 0.16.0
 
   # Networking
@@ -99,17 +99,9 @@ dependencies:
   wakelock_plus: 1.4.0
   change_case: 2.2.0
 
-dependency_overrides:
-  # Remove when fixed: https://github.com/anusii/solidpod/issues/245
-  flutter_secure_storage_linux:
-    git:
-      url: https://github.com/juliansteenbakker/flutter_secure_storage.git
-      ref: v9.2.4
-      path: flutter_secure_storage_linux
-
 dev_dependencies:
   # UI
-  widgetbook_generator: 3.20.1
+  widgetbook_generator: 3.21.0
   theme_tailor: 3.1.2
 
   # MVC
@@ -119,11 +111,11 @@ dev_dependencies:
   flutter_lints: 6.0.0
 
   # Models
-  freezed: 3.2.4
-  json_serializable: 6.11.4
+  freezed: 3.2.5
+  json_serializable: 6.12.0
 
   # Code generation
-  build_runner: 2.10.5
+  build_runner: 2.11.1
 
 flutter:
   uses-material-design: true
