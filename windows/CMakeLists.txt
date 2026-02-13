@@ -2,6 +2,10 @@
 cmake_minimum_required(VERSION 3.15)
 project(momento_booth LANGUAGES CXX)
 
+# Use lld-link instead of MSVC link
+message(STATUS "Using lld-link instead of MSVC linker to speedup builds")
+set(CMAKE_LINKER_TYPE "LLD")
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "photobooth")
