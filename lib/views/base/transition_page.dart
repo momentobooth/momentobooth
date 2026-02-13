@@ -30,15 +30,16 @@ final class TransitionPage extends CustomTransitionPage<void> {
     bool opaque = true,
     bool barrierDismissible = false,
   }) {
+    Widget pageChild = child;
     WidgetBuilder? builder = context.maybeTheme?.screenWrappers[key.value];
     if (builder != null) {
-      child = builder(context, child);
+      pageChild = builder(context, pageChild);
     }
 
     return switch (getIt<SettingsManager>().settings.ui.screenTransitionAnimation) {
-      ScreenTransitionAnimation.none => TransitionPage._none(key: key, name: name, child: child, opaque: opaque, barrierDismissible: barrierDismissible),
-      ScreenTransitionAnimation.fadeAndScale => TransitionPage._fadeAndScale(key: key, name: name, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
-      ScreenTransitionAnimation.fadeAndSlide => TransitionPage._fadeAndSlide(key: key, name: name, child: child, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.none => TransitionPage._none(key: key, name: name, child: pageChild, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.fadeAndScale => TransitionPage._fadeAndScale(key: key, name: name, child: pageChild, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
+      ScreenTransitionAnimation.fadeAndSlide => TransitionPage._fadeAndSlide(key: key, name: name, child: pageChild, enableTransitionIn: enableTransitionIn, enableTransitionOut: enableTransitionOut, opaque: opaque, barrierDismissible: barrierDismissible),
     };
   }
 

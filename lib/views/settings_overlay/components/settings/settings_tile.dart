@@ -37,7 +37,7 @@ class SettingsTile extends StatelessWidget {
               ],
             ),
           ),
-          if (leading != null) leading!,
+          ?leading,
           setting,
         ],
       ),

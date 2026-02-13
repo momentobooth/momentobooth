@@ -1,6 +1,6 @@
 {
   "cmake.configureOnOpen": false,
-  "dart.flutterSdkPath": ".fvm/versions/3.38.7",
+  "dart.flutterSdkPath": ".fvm/versions/3.41.0",
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,

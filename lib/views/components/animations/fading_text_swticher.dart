@@ -59,10 +59,7 @@ class _FadingTextSwitcherState extends State<FadingTextSwitcher> with TickerProv
           // It's important to use a Stack here to prevent layout jumps when the text size changes
           return Stack(
             alignment: Alignment.center,
-            children: [
-              ...previousChildren,
-              if (currentChild != null) currentChild,
-            ],
+            children: [...previousChildren, ?currentChild],
           );
         },
         child: Text(
