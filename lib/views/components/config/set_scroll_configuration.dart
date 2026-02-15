@@ -16,14 +16,12 @@ class SetScrollConfiguration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Observer(builder: (_) {
-      if (!_allowScrollGestureWithMouse) return child;
-
       ScrollBehavior oldBehavior = ScrollConfiguration.of(context);
       return ScrollConfiguration(
         behavior: oldBehavior.copyWith(
           dragDevices: {
             ...oldBehavior.dragDevices,
-            PointerDeviceKind.mouse,
+            if (_allowScrollGestureWithMouse) PointerDeviceKind.mouse,
           },
         ),
         child: child,
