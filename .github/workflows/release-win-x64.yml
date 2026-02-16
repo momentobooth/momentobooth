@@ -13,7 +13,7 @@ jobs:
   build:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
 
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     timeout-minutes: 45
 
     env:

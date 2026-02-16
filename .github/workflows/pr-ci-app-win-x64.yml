@@ -14,7 +14,7 @@ jobs:
   build:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     timeout-minutes: 45
 
     env:
@@ -129,7 +129,7 @@ jobs:
 
     - name: Generate Dart/Rust bridging code
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: flutter_rust_bridge_codegen generate
+      run: flutter_rust_bridge_codegen -v generate
 
     - name: Run build_runner
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
