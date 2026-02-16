@@ -43,11 +43,10 @@ jobs:
         cache: true
         cache-sdk: true
 
-    - name: Disable Flutter analytics and CLI animations
-      run: flutter config --no-analytics --no-cli-animations
-
-    - name: Flutter SDK precache
-      run: flutter precache --linux
+    - name: Prepare Flutter SDK
+      run: |
+        flutter config --no-analytics --no-cli-animations
+        flutter precache --linux
 
     - name: Install minimal Rust
       uses: dtolnay/rust-toolchain@master
@@ -67,32 +66,19 @@ jobs:
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
-    - name: Install cargo-expand
-      run: cargo binstall cargo-expand --force
-
-    - name: Install flutter_rust_bridge_codegen
-      run: cargo binstall flutter_rust_bridge_codegen@2.11.1 --force
-
-    - name: Install lddtree
-      run: cargo binstall lddtree --force
+    - name: Install cargo-expand, frbc, lddtree
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.11.1 lddtree --force -y
 
     - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
 
-    - name: Install dependencies
-      run: flutter pub get --enforce-lockfile
-
-    - name: Generation l10n
-      run: flutter gen-l10n
-
-    - name: Generate Dart-to-Rust bridging code
-      run: flutter_rust_bridge_codegen generate
-
-    - name: Run build_runner
-      run: dart run build_runner build
-
-    - name: Flutter analyze
-      run: flutter analyze
+    - name: Prepare sources
+      run: |
+        flutter pub get --enforce-lockfile
+        flutter gen-l10n
+        flutter_rust_bridge_codegen generate
+        dart run build_runner build
+        flutter analyze --no-pub
 
     # Extract version from branch name
     - name: Extract release version
