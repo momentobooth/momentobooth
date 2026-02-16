@@ -18,6 +18,8 @@ jobs:
 
     env:
       CARGO_INCREMENTAL: 0
+      CARGO_PROFILE_RELEASE_LTO: true
+      CARGO_PROFILE_RELEASE_CODEGEN_UNITS: 1
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"
 
@@ -102,7 +104,7 @@ jobs:
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
 
     - name: Flutter build
-      run: flutter build linux -v --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define=SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
+      run: flutter build linux -v --no-pub --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define=SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }}
 
     - name: Create AppDir and copy Flutter bundle
       run: mkdir -p AppDir/app && cp -r build/linux/x64/release/bundle/* AppDir/app/

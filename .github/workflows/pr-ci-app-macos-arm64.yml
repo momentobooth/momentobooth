@@ -23,6 +23,8 @@ jobs:
 
     env:
       CARGO_INCREMENTAL: 0
+      CARGO_PROFILE_RELEASE_LTO: true
+      CARGO_PROFILE_RELEASE_CODEGEN_UNITS: 1
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"
 
@@ -125,7 +127,7 @@ jobs:
     - name: Build project (arm64)
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
+        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --no-pub --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
 
         mkdir ci_build/arm64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/
