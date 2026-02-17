@@ -14,7 +14,14 @@ jobs:
   build:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
-    runs-on: windows-2025-vs2026
+    strategy:
+      matrix:
+        platform:
+          - x64
+          - arm64
+
+    name: ${{ fromJSON('["Win Server 2025 x64 VS2025", "Win 11 arm64 VS2022"]')[matrix.platform == 'arm64'] }}
+    runs-on: ${{ fromJSON('["windows-2025-vs2026", "windows-11-arm"]')[matrix.platform == 'arm64'] }}
     timeout-minutes: 45
 
     env:
@@ -71,7 +78,8 @@ jobs:
         flutter config --no-analytics --no-cli-animations
         flutter precache --windows
 
-    - name: Setup MSYS2
+    - if: ${{ matrix.platform == 'x64' }}
+      name: Setup MSYS2 (x64)
       uses: msys2/setup-msys2@v2
       with:
         msystem: clang64
@@ -80,23 +88,42 @@ jobs:
         install: git patch
         location: '${{ env.DEV_DRIVE }}/msys2'
 
-    - name: Fix environment for build and bundle
+    - if: ${{ matrix.platform == 'arm64' }}
+      name: Setup MSYS2 (arm64)
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: clangarm64
+        path-type: inherit
+        pacboy: pkgconf:a curl-winssl:a nghttp2:a nghttp3:a libusb:a gcc:a libgphoto2:a
+        install: git patch
+        location: '${{ env.DEV_DRIVE }}/msys2'
+
+    - if: ${{ matrix.platform == 'x64' }}
+      name: Fix environment for build and bundle
       run: |
         Add-Content $env:GITHUB_PATH (msys2 -c 'cygpath -w /clang64/bin')
         echo "MINGW_BUNDLEDLLS_SEARCH_PATH=$(msys2 -c 'cygpath -w /clang64/bin')" >> $env:GITHUB_ENV
         echo "CLANG64_LIB_PATH=$(msys2 -c 'cygpath -w /clang64/lib')" >> $env:GITHUB_ENV
 
+    - if: ${{ matrix.platform == 'arm64' }}
+      name: Fix environment for build and bundle
+      run: |
+        Add-Content $env:GITHUB_PATH (msys2 -c 'cygpath -w /clangarm64/bin')
+        echo "MINGW_BUNDLEDLLS_SEARCH_PATH=$(msys2 -c 'cygpath -w /clangarm64/bin')" >> $env:GITHUB_ENV
+        echo "CLANG64_LIB_PATH=$(msys2 -c 'cygpath -w /clangarm64/lib')" >> $env:GITHUB_ENV
+
     - name: Install minimal Rust
       uses: dtolnay/rust-toolchain@stable
       with:
         toolchain: stable
-        target: x86_64-pc-windows-msvc
+        target: ${{ fromJSON('["x86_64-pc-windows-msvc", "aarch64-pc-windows-msvc"]')[matrix.platform == 'arm64'] }}
 
     - name: Setup Rust compiled code cache
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
           ${{ env.DEV_DRIVE }}/momentobooth/rust -> ../build/windows/x64/plugins/rust_lib_momento_booth/cargokit_build
+          ${{ env.DEV_DRIVE }}/momentobooth/rust -> ../build/windows/arm64/plugins/rust_lib_momento_booth/cargokit_build
           ${{ env.DEV_DRIVE }}/momentobooth/rust -> target
 
     - name: Setup sccache
