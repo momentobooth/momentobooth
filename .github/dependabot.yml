@@ -4,7 +4,7 @@ updates:
   - package-ecosystem: "pub"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       flutter-dependencies:
         patterns:
@@ -12,7 +12,7 @@ updates:
   - package-ecosystem: "cargo"
     directory: "/rust"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       rust-dependencies:
         patterns:
@@ -20,7 +20,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "monthly"
     groups:
       ghactions-dependencies:
         patterns:

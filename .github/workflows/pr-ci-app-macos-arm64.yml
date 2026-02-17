@@ -22,7 +22,8 @@ jobs:
     timeout-minutes: 45
 
     env:
-      CARGO_INCREMENTAL: 0
+      CARGO_PROFILE_RELEASE_LTO: true
+      CARGO_PROFILE_RELEASE_CODEGEN_UNITS: 1
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"
 
@@ -64,11 +65,10 @@ jobs:
         cache: true
         cache-sdk: true
 
-    - name: Disable Flutter analytics and CLI animations
-      run: flutter config --no-analytics --no-cli-animations
-
-    - name: Flutter SDK precache
-      run: flutter precache --macos
+    - name: Prepare Flutter SDK
+      run: |
+        flutter config --no-analytics --no-cli-animations
+        flutter precache --macos
 
     - name: Install minimal Rust
       uses: dtolnay/rust-toolchain@master
@@ -90,17 +90,8 @@ jobs:
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
-    - name: Install cargo-expand
-      run: cargo binstall cargo-expand --force
-
-    - name: Install flutter_rust_bridge_codegen
-      run: cargo binstall flutter_rust_bridge_codegen@2.11.1 --force
-
-    - name: Install dependencies
-      run: flutter pub get --enforce-lockfile
-
-    - name: Generation l10n
-      run: flutter gen-l10n
+    - name: Install cargo-expand, frbc
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.11.1 --force -y
 
     - name: Install build dependencies
       run: |
@@ -113,19 +104,18 @@ jobs:
         ../macos/ci_adapt_pkgconf_dirs.sh ventura/lib/pkgconfig
         ../macos/ci_adapt_pkgconf_dirs.sh arm64_ventura/lib/pkgconfig
 
-    - name: Generate Dart-to-Rust bridging code
-      run: PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
-
-    - name: Run build_runner
-      run: dart run build_runner build
-
-    - name: Flutter analyze
-      run: flutter analyze
+    - name: Prepare sources
+      run: |
+        flutter pub get --enforce-lockfile
+        flutter gen-l10n
+        PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
+        dart run build_runner build
+        flutter analyze --no-pub
 
     - name: Build project (arm64)
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
+        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --no-pub --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
 
         mkdir ci_build/arm64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/

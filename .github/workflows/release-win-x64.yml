@@ -13,11 +13,12 @@ jobs:
   build:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
 
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     timeout-minutes: 45
 
     env:
-      CARGO_INCREMENTAL: 0
+      CARGO_PROFILE_RELEASE_LTO: true
+      CARGO_PROFILE_RELEASE_CODEGEN_UNITS: 1
       SCCACHE_GHA_ENABLED: "true"
       RUSTC_WRAPPER: "sccache"
 
@@ -64,11 +65,10 @@ jobs:
         cache: true
         cache-sdk: true
 
-    - name: Disable Flutter analytics and CLI animations
-      run: flutter config --no-analytics --no-cli-animations
-
-    - name: Flutter SDK precache
-      run: flutter precache --windows
+    - name: Prepare Flutter SDK
+      run: |
+        flutter config --no-analytics --no-cli-animations
+        flutter precache --windows
 
     - name: Setup MSYS2
       uses: msys2/setup-msys2@v2
@@ -101,40 +101,20 @@ jobs:
     - name: Setup sccache
       uses: mozilla-actions/sccache-action@v0.0.9
 
-    - name: Setup sccache workaround
-      run: Add-Content -Path $env:GITHUB_ENV -Value "SCCACHE_GHA_ENABLED=true"
-
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
-    - name: Install cargo-expand
-      run: cargo binstall cargo-expand --force
+    - name: Install cargo-expand, frbc, h3xup
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.11.1 h3xup --force -y
 
-    - name: Install flutter_rust_bridge_codegen
-      run: cargo binstall flutter_rust_bridge_codegen@2.11.1 --force
-
-    - name: Install h3xUpdtr
-      run: cargo binstall h3xup --force
-
-    - name: Install dependencies
+    - name: Prepare sources
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: flutter pub get --enforce-lockfile
-
-    - name: Generate localizations
-      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: flutter gen-l10n
-
-    - name: Generate Dart/Rust bridging code
-      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: flutter_rust_bridge_codegen generate
-
-    - name: Run build_runner
-      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: dart run build_runner build
-
-    - name: Flutter analyze
-      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: flutter analyze
+      run: |
+        flutter pub get --enforce-lockfile
+        flutter gen-l10n
+        flutter_rust_bridge_codegen generate
+        dart run build_runner build
+        flutter analyze --no-pub
 
     - name: Extract release version
       id: extract_release_version
@@ -150,7 +130,7 @@ jobs:
 
     - name: Build project
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
-      run: flutter build windows -v --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define LIBGPHOTO2_GIT_REV=${{ env.LIBGPHOTO2_GIT_REV }}
+      run: flutter build windows -v --no-pub --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define LIBGPHOTO2_GIT_REV=${{ env.LIBGPHOTO2_GIT_REV }}
 
     - name: Bundle dependencies
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
