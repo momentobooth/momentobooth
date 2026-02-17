@@ -36,6 +36,11 @@ jobs:
       with:
         submodules: 'true'
 
+    - if: ${{ matrix.platform == 'arm64' }}
+      uses: samypr100/setup-dev-drive@v3
+      with:
+        drive-size: 10GB
+
     - name: Setup D drive for builds and caches
       run: |
         Write-Output "DEV_DRIVE=D:" >> $env:GITHUB_ENV
@@ -56,6 +61,8 @@ jobs:
         }
         # Append of create config.toml
         Add-Content -Path $configFile -Value '[target.x86_64-pc-windows-msvc]'
+        Add-Content -Path $configFile -Value 'linker = "lld-link.exe"'
+        Add-Content -Path $configFile -Value '[target.aarch64-pc-windows-msvc]'
         Add-Content -Path $configFile -Value 'linker = "lld-link.exe"'
 
     - name: Copy Git Repo to Dev Drive
