@@ -40,6 +40,8 @@ libusb-sys = "0.2.3"
 futures = "0.3.31"
 kira = "0.11.0"
 snafu = "0.8.9"
+escpos = { version = "0.15.2", features = ["native_usb"] }
+thiserror = "2.0.12"
 
 [build-dependencies]
 bindgen = "0.72.1"

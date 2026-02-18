@@ -24,6 +24,7 @@
     "genericNone": "Geen",
     "genericSettings": "Instellingen",
     "genericCanBeChangedInSettings": "dit kan worden aangepast in de instellingen",
+    "genericThanks": "Dank je wel!",
 
     "actionRestoreLiveView": "Reset live view",
     "actionsExit": "Sluiten",
@@ -132,6 +133,7 @@
     "changeLanguage": "Verander van taal",
     "navigationScreenTitle": "Wat zou je willen doen?",
     "chooseYourLanguage": "Kies je taal",
-
-    "inactivityWarning": "Je keert terug naar het startscherm vanwege inactiviteit,\nraak aan om te annuleren."
+    "inactivityWarning": "Je keert terug naar het startscherm vanwege inactiviteit,\nraak aan om te annuleren.",
+    "recordingIsAboutToStart": "De opname gaat beginnen",
+    "chooseCaptureModeScreenRecordingButton": "Opname"
 }

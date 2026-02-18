@@ -1,2 +1,3 @@
-pub(crate) mod live_view;
-pub(crate) mod sfx;
+pub mod live_view;
+pub mod sfx;
+pub mod printing;

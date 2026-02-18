@@ -1,14 +1,14 @@
-use std::{cell::Cell, env, hash::{Hash, Hasher}, sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, OnceLock}, time::Instant};
+use std::{cell::Cell, collections::HashSet, env, hash::{Hash, Hasher}, sync::{atomic::{AtomicBool, AtomicU32, Ordering}, Arc, OnceLock}, time::Instant};
 
 use ahash::AHasher;
 
-use ::gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidget, TextWidget, ToggleWidget}, Camera, Context, Error};
+use ::gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{GroupWidget, RadioWidget, TextWidget, ToggleWidget}, Camera, Context, Error};
 use parking_lot::Mutex;
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
 use log::{warn, debug, info};
 
-use crate::{models::{image_operations::ImageOperation, images::RawImage}, utils::{image_processing, jpeg}};
+use crate::{models::{gphoto2::{convert_gphoto_config, SimplifiedWidget}, image_operations::ImageOperation, images::RawImage}, utils::{image_processing, jpeg}};
 use crate::TOKIO_RUNTIME;
 use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self}, models::live_view::CameraState, utils::flutter_texture::FlutterTexture};
 
@@ -231,6 +231,80 @@ pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_t
   })
 }
 
+pub struct GPhoto2FileCategories {
+  pub images: HashSet<String>,
+  pub videos: HashSet<String>,
+  pub others: HashSet<String>,
+  pub folders: HashSet<String>,
+}
+
+const IMAGE_TYPES: [&str; 8] = ["jpg", "jpeg", "cr2", "cr3", "arw", "dng", "nef", "raw"];
+const VIDEO_TYPES: [&str; 7] = ["mp4", "mov", "avi", "m4v", "mpg", "mpeg", "mp2"];
+
+pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: String) -> Result<GPhoto2FileCategories> {
+  let camera = camera_ref.lock().await;
+  let file_entries = camera.camera.fs().list_files(&folder).await?;
+  let folder_entries = camera.camera.fs().list_folders(&folder).await?;
+
+  let mut images = HashSet::new();
+  let mut videos = HashSet::new();
+  let mut others = HashSet::new();
+  let mut folders = HashSet::new();
+
+  for file in file_entries {
+      let lower = file.to_ascii_lowercase();
+      if IMAGE_TYPES.iter().any(|a| lower.ends_with(a)) {
+          images.insert(file);
+      } else if VIDEO_TYPES.iter().any(|a| lower.ends_with(a)) {
+          videos.insert(file);
+      } else {
+          others.insert(file);
+      }
+  }
+  for folder in folder_entries {
+    folders.insert(folder);
+  }
+
+  Ok(GPhoto2FileCategories {
+      images,
+      videos,
+      others,
+      folders,
+  })
+}
+
+pub async fn list_config(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<SimplifiedWidget> {
+  let camera = camera_ref.lock().await;
+
+  let config = camera.camera.config().await.map(|conf| convert_gphoto_config(&conf.into()).unwrap());
+  match config {
+    Ok(conf) => Ok(conf),
+    Err(err) => Err(Gphoto2Error::Gphoto2LibraryError(err)),
+  }
+}
+
+pub async fn set_video_recording_state(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, record: bool) -> Result<()> {
+  let camera = camera_ref.lock().await;
+
+  let movie_toggle = camera.camera.config_key::<ToggleWidget>("movie").await?;
+  movie_toggle.set_toggled(record);
+  camera.camera.set_config(&movie_toggle).await?;
+
+  Ok(())
+}
+
+pub async fn start_video_recording(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
+  let res = set_video_recording_state(camera_ref, true).await;
+  debug!("Started video recording");
+  res
+}
+
+pub async fn stop_video_recording(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
+  let res = set_video_recording_state(camera_ref, false).await;
+  debug!("Stopped video recording");
+  res
+}
+
 pub struct GPhoto2CameraInfo {
     pub port: String,
     pub model: String,
@@ -420,6 +494,42 @@ pub fn gphoto2_capture_photo(handle_id: u32, capture_target_value: String) -> GP
 
     TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
         gphoto2::capture_photo(camera, capture_target_value).await
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_list_files(handle_id: u32, folder: String) -> GPhoto2FileCategories {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::list_files(camera, folder).await
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_start_video_recording(handle_id: u32) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::start_video_recording(camera).await
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_stop_video_recording(handle_id: u32) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::stop_video_recording(camera).await
+    }).expect("Could not get result")
+}
+
+pub fn gphoto2_list_config(handle_id: u32) -> SimplifiedWidget {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::list_config(camera).await
     }).expect("Could not get result")
 }
 
