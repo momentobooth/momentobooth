@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -9,9 +10,11 @@ import 'package:momento_booth/l10n/generated/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/models/fs_watcher_event_type.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
+import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
@@ -55,6 +58,8 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   List<AppLocalizations> _availableLocalizations = [];
+
+  StreamSubscription<FileSystemEvent>? _templateDirWatcher;
 
   @override
   Future<void> initialize() async {
@@ -106,11 +111,23 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
   }
 
   void _ensureSubDirs() {
-    if (_path != null) {
-      for (final subDir in subDirs){
-        Directory(join(_path!.path, subDir)).createSync();
-      }
+    if (_path == null) return;
+    for (final subDir in subDirs){
+      Directory(join(_path!.path, subDir)).createSync();
     }
+
+    // Initialize template directory watcher, cancelling existing one if necessary.
+    if (_templateDirWatcher != null) {
+      _templateDirWatcher!.cancel();
+    }
+    _templateDirWatcher = getTemplateDir().watch(recursive: false).listen((event) {
+      FsWatcherEventType? eventType = FsWatcherEventType.values.firstWhereOrNull((e) => e.value == event.type);
+      logDebug("Template directory change detected: ${event.path}, type: ${eventType ?? "unknown"}");
+      // Trigger findTemplates regardless of the event type (create, modify, delete)
+      findTemplates();
+    });
+    // Initial template loading
+    findTemplates();
   }
 
   Future<void> openLastProject() async {
@@ -216,6 +233,46 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
   @action
   Future<void> mutateAndSave(ProjectSettings Function(ProjectSettings settings) settings) async {
     await updateAndSave(settings(_settings));
+  }
+
+  @readonly
+  Map<TemplateKind, Map<int, File?>> _templates = {
+    TemplateKind.front: <int, File?>{},
+    TemplateKind.back: <int, File?>{},
+    TemplateKind.liveViewOverlay: <int, File?>{},
+  };
+
+  Future<void> findTemplates() async {
+    // There is only one live view overlay template
+    final liveViewOverlayTemplate = await _templateResolver(["live-view-overlay"]);
+    _templates[TemplateKind.liveViewOverlay]?[0] = liveViewOverlayTemplate;
+  
+    // It might feel like it doens't make sense to start from 0, but this one is used when no photos have been selected by the user yet.
+    // 1 through 4 are the templates for 1 to 4 photos.
+    for (int i = 0; i <= 4; i++) {
+      final frontTemplate = await _templateResolver(["${TemplateKind.front.name}-template-$i", "${TemplateKind.front.name}-template"]);
+      final backTemplate = await _templateResolver(["${TemplateKind.back.name}-template-$i", "${TemplateKind.back.name}-template"]);
+      _templates[TemplateKind.front]?[i] = frontTemplate;
+      _templates[TemplateKind.back]?[i] = backTemplate;
+      // await Future.delayed(const Duration(milliseconds: 100));
+    }
+  }
+
+  /// Checks if a given template file exists and returns it if it does.
+  Future<File?> _templateTest(String fileName) async {
+    var template = File(join(getTemplateDir().path, fileName));
+    if (template.existsSync()) return template;
+    return null;
+  }
+
+  static const imageExtensions = ["webp", "png", "jpg", "jpeg"];
+
+  /// Resolve the template for a given kind (backtground, foreground) and number of photos.
+  Future<File?> _templateResolver(List<String> basenames) async {
+    var fileNamesToCheck = basenames.map((basename) => imageExtensions.map((ext) => "$basename.$ext")).flattened;
+    final filesToCheck = fileNamesToCheck.map(_templateTest);
+    final checkedFiles = await Future.wait(filesToCheck);
+    return checkedFiles.firstWhere((element) => element != null, orElse: () => null);
   }
 
 }

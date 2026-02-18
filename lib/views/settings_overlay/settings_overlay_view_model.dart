@@ -16,6 +16,7 @@ import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
@@ -54,8 +55,8 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   @observable
   bool previewTemplateShowBack = true;
 
-  String get selectedBackTemplate => collageKey.currentState?.templates[TemplateKind.back]![previewTemplate]?.path ?? "-";
-  String get selectedFrontTemplate => collageKey.currentState?.templates[TemplateKind.front]![previewTemplate]?.path ?? "-";
+  String get selectedBackTemplate => getIt<ProjectManager>().templates[TemplateKind.back]![previewTemplate]?.path ?? "-";
+  String get selectedFrontTemplate => getIt<ProjectManager>().templates[TemplateKind.front]![previewTemplate]?.path ?? "-";
 
   // Option lists
 

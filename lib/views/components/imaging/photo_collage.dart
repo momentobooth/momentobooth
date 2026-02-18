@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -19,6 +18,7 @@ import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/source_photo.dart';
+import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
@@ -26,22 +26,7 @@ import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/components/text/photo_booth_title.dart';
-import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
-
-enum TemplateKind {
-
-  front(0, "front"),
-  back(1, "back");
-
-  // can add more properties or getters/methods if needed
-  final int value;
-  final String name;
-
-  // can use named parameters if you want
-  const TemplateKind(this.value, this.name);
-
-}
 
 class PhotoCollage extends StatefulWidget {
 
@@ -77,19 +62,6 @@ class PhotoCollage extends StatefulWidget {
 
 class PhotoCollageState extends State<PhotoCollage> with Logger {
 
-  @override
-  void initState() {
-    super.initState();
-    setInitialized = Action(_setInitialized);
-    findTemplates();
-  }
-
-  void _setInitialized(int value) => _initialized.value = value;
-
-  final Observable<int> _initialized = Observable(0);
-  int get initialized => _initialized.value;
-  late Action setInitialized;
-
   ScreenshotController screenshotController = ScreenshotController();
 
   static const double gap = 20.0;
@@ -115,51 +87,6 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
     }
   }
 
-  Directory get templatesFolder => getIt<ProjectManager>().getTemplateDir();
-
-  var templates = {
-    TemplateKind.front: <int, File?>{},
-    TemplateKind.back: <int, File?>{},
-  };
-
-  Future<void> findTemplates() async {
-    // If forceLayout is set, only load that template for speed.
-    if (widget.forceLayout != null) {
-      final n = widget.forceLayout!;
-      templates[TemplateKind.front]?[n] = await _templateResolver(TemplateKind.front, n);
-      templates[TemplateKind.back]?[n] = await _templateResolver(TemplateKind.back, n);
-      setInitialized([n]);
-    } else {
-      for (int i = 0; i <= 4; i++) {
-        final frontTemplate = await _templateResolver(TemplateKind.front, i);
-        final backTemplate = await _templateResolver(TemplateKind.back, i);
-        templates[TemplateKind.front]?[i] = frontTemplate;
-        templates[TemplateKind.back]?[i] = backTemplate;
-        setInitialized([i+1]);
-        await Future.delayed(const Duration(milliseconds: 100));
-      }
-    }
-  }
-
-  /// Checks if a given template file exists and returns it if it does.
-  Future<File?> _templateTest(String fileName) async {
-    var template = File(join(templatesFolder.path, fileName));
-    if (template.existsSync()) return template;
-    return null;
-  }
-
-  /// Resolve the template for a given kind (backtground, foreground) and number of photos.
-  Future<File?> _templateResolver(TemplateKind kind, int numPhotos) async {
-    final filesToCheck = [
-      _templateTest("${kind.name}-template-$numPhotos.png"),
-      _templateTest("${kind.name}-template-$numPhotos.jpg"),
-      _templateTest("${kind.name}-template.png"),
-      _templateTest("${kind.name}-template.jpg"),
-    ];
-    final checkedFiles = await Future.wait(filesToCheck);
-    return checkedFiles.firstWhere((element) => element != null, orElse: () => null);
-  }
-
   @override
   Widget build(BuildContext context) {
     Widget collageBox = FittedBox(
@@ -183,12 +110,13 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   }
 
   Widget _getLayout(AppLocalizations localizations, BuildContext context) {
+    var templates = getIt<ProjectManager>().templates;
     return Stack(
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
         for (int i = 0; i <= 4; i++) ...[
-          if (initialized > 0 && templates[TemplateKind.back]?[i] != null)
+          if (templates[TemplateKind.back]?[i] != null)
             Opacity(
               opacity: i == nChosen && widget.showBackground ? 1 : 0,
               child: ImageWithLoaderFallback.file(templates[TemplateKind.back]![i]!, fit: BoxFit.cover),
@@ -214,7 +142,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
             ),
           ),
         for (int i = 0; i <= 4; i++) ...[
-          if (initialized > 0 && templates[TemplateKind.front]?[i] != null)
+          if (templates[TemplateKind.front]?[i] != null)
             Opacity(
               opacity: i == nChosen && widget.showForeground ? 1 : 0,
               child: ImageWithLoaderFallback.file(templates[TemplateKind.front]![i]!, fit: BoxFit.cover),
