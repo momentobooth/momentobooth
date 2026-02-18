@@ -48,24 +48,23 @@ class LiveView extends StatelessWidget {
               builder: (context, boxConstraints) {
                 // For some reason, we get unconstrained width and height when the application has just started.
                 // This is a workaround to prevent errors.
-                if (boxConstraints == const BoxConstraints()) return const SizedBox.shrink();var texture = Texture(textureId: _textureId!, filterQuality: _filterQuality);
-                if (showOverlay && overlayImage != null) {
-                  return Stack(
-                    children: [
-                      Positioned.fill(child: texture),
-                      Positioned.fill(child: Image.file(overlayImage, fit: BoxFit.cover)),
-                    ],
-                  );
-                }
-                return texture;
+                if (boxConstraints == const BoxConstraints()) return const SizedBox.shrink();
+                return Texture(textureId: _textureId!, filterQuality: _filterQuality);
               }
             ),
           );
 
-          if (applyPostProcessing) {
-            return RotateFlipCrop(rotate: _rotate, flip: _flip, aspectRatio: _aspectRatio, child: box);
+          Widget lvImage = applyPostProcessing ? RotateFlipCrop(rotate: _rotate, flip: _flip, aspectRatio: _aspectRatio, child: box) : box;
+          if (overlayImage != null && showOverlay) {
+            return Stack(
+              fit: StackFit.passthrough,
+              children: [
+                lvImage,
+                Positioned.fill(child: Image.file(overlayImage, fit: BoxFit.cover)),
+              ],
+            );
           } else {
-            return box;
+            return lvImage;
           }
         },
       ),
