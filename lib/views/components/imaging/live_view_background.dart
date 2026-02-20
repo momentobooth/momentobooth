@@ -132,7 +132,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
             duration: const Duration(milliseconds: 300),
             curve: Curves.ease,
             builder: (_, value, _) {
-              return LiveView(fit: BoxFit.contain, blurSigma: value);
+              return LiveView(fit: BoxFit.contain, blurSigma: value, showOverlay: true);
             }
           ),
         ),

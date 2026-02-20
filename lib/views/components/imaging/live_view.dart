@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui' as ui;
 import 'dart:ui';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -6,18 +7,21 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 
 class LiveView extends StatelessWidget {
 
   final BoxFit fit;
   final bool applyPostProcessing;
+  final bool showOverlay;
   final double blurSigma;
 
   const LiveView({
     super.key,
     required this.fit,
     this.applyPostProcessing = true,
+    this.showOverlay = false,
     this.blurSigma = 0,
   });
 
@@ -30,6 +34,7 @@ class LiveView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    File? overlayImage = getIt<ProjectManager>().templates[TemplateKind.liveViewOverlay]?[0];
     Widget box = FittedBox(
       fit: fit,
       child: Observer(
@@ -49,10 +54,17 @@ class LiveView extends StatelessWidget {
             ),
           );
 
-          if (applyPostProcessing) {
-            return RotateFlipCrop(rotate: _rotate, flip: _flip, aspectRatio: _aspectRatio, child: box);
+          Widget lvImage = applyPostProcessing ? RotateFlipCrop(rotate: _rotate, flip: _flip, aspectRatio: _aspectRatio, child: box) : box;
+          if (overlayImage != null && showOverlay) {
+            return Stack(
+              fit: StackFit.passthrough,
+              children: [
+                lvImage,
+                Positioned.fill(child: Image.file(overlayImage, fit: BoxFit.cover)),
+              ],
+            );
           } else {
-            return box;
+            return lvImage;
           }
         },
       ),
