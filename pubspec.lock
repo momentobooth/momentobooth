@@ -866,10 +866,10 @@ packages:
     dependency: "direct main"
     description:
       name: mqtt5_client
-      sha256: "3cbb546019d455330494357c922b5c7758c622f0e6f3955146dd2712fa8f7f7a"
+      sha256: ab74cfd8e7cebc1ed89206f995d47b5e4e1a3c2675718798fb2bc6b41623a848
       url: "https://pub.dev"
     source: hosted
-    version: "4.15.2"
+    version: "4.15.3"
   native_toolchain_c:
     dependency: transitive
     description:
@@ -1390,10 +1390,10 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "19a78f63e83d3a61f00826d09bc2f60e191bf3504183c001262be6ac75589fb8"
+      sha256: "93167629bfc610f71560ab9312acdda4959de4df6fac7492c89ff0d3886f6636"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.8"
+    version: "0.7.9"
   texture_rgba_renderer:
     dependency: "direct main"
     description:
