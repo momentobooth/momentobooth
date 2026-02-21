@@ -2,8 +2,18 @@
 
 ## Unreleased
 
+## 0.16.0
+
+- New feature: Add support for a live view overlay image
+- New feature: Introduced .webp as a supported template format
+- New feature: Add return to home warning overlay
+- Change: Reworked imaging device selection with one-click device buttons (including onboarding integration) for simpler setup
+- Bugfix: Fix cases where toggling a setting then trying to close the Settings screen could cause an overlay of a new Settings screen instance
+- Bugfix: Fix position/size of Hollywood theme stars
+
 - Dev change: Updated Flutter to 3.41.0
 - Dev change: Updated Dart and Rust dependencies
+- Dev change: Switch linker on Windows to `lld-link` to speedup build
 
 ## 0.15.7
 
