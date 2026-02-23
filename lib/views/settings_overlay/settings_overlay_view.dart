@@ -91,7 +91,21 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
         builder: (context) {
           return NavigationView(
             key: _navigationPaneKey,
+            titleBar: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const PaneBackButton(backIcon: Icon(LucideIcons.arrowLeft)),
+                  IconButton(
+                    icon: Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0), child: Icon(LucideIcons.x)),
+                    onPressed: () => context.pop(),
+                  ),
+                ],
+              ),
+            ),
             pane: NavigationPane(
+              header: const SizedBox(),
               selected: viewModel.paneIndex,
               onChanged: controller.onNavigationPaneIndexChanged,
               items: [
