@@ -155,10 +155,9 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
                     child: Observer(builder: (_) => Column(
                       children: [
                         if (prevConfigError) ...[
-                          InfoBar(
+                          InfoBar.warning(
                             title: const Text('Problem with imaging device'),
                             content: const Text('The previously selected imaging device is not available or not properly configured.'),
-                            severity: InfoBarSeverity.warning,
                             action: Button(
                               child: const Text('Retry'),
                               onPressed: () => getIt<LiveViewManager>().restoreLiveView(),

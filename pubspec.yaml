@@ -17,7 +17,7 @@ dependencies:
   # UI
   animations: 2.1.1
   auto_size_text: 3.0.0
-  fluent_ui: 4.13.0
+  fluent_ui: 4.14.0
   go_router: 17.1.0
   flutter_svg: 2.2.3
   animated_text_kit: 4.3.0
@@ -30,12 +30,12 @@ dependencies:
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
   lottie: 3.3.2
   smooth_scroll_multiplatform: 1.0.8
-  widgetbook: 3.21.0
-  widgetbook_annotation: 3.10.0
+  widgetbook: 3.22.0
+  widgetbook_annotation: 3.11.0
   lucide_icons_flutter: 3.1.9
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.2
-  google_fonts: 8.0.1
+  google_fonts: 8.0.2
   twinkling_stars: 1.0.3
 
   # Printscreen/Image processing
@@ -47,7 +47,7 @@ dependencies:
 
   # Models
   freezed_annotation: 3.1.0
-  json_annotation: 4.10.0
+  json_annotation: 4.11.0
 
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
@@ -66,22 +66,22 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.13
-  talker_flutter: 5.1.13
-  sentry_flutter: 9.13.0
+  talker: 5.1.14
+  talker_flutter: 5.1.14
+  sentry_flutter: 9.14.0
   stack_trace: 1.12.1
 
   # Storage
   flutter_secure_storage: 10.0.0
-  toml: 0.16.0
+  toml: 0.18.0
 
   # Networking
   http: 1.6.0
   http_parser: 4.1.2
-  mqtt5_client: 4.15.2
+  mqtt5_client: 4.15.3
 
   # Misc
-  get_it: 9.2.0
+  get_it: 9.2.1
   meta: any
   synchronized: 3.4.0
   collection: any
@@ -101,7 +101,7 @@ dependencies:
 
 dev_dependencies:
   # UI
-  widgetbook_generator: 3.21.0
+  widgetbook_generator: 3.22.0
   theme_tailor: 3.1.2
 
   # MVC
@@ -112,7 +112,7 @@ dev_dependencies:
 
   # Models
   freezed: 3.2.5
-  json_serializable: 6.12.0
+  json_serializable: 6.13.0
 
   # Code generation
   build_runner: 2.11.1
