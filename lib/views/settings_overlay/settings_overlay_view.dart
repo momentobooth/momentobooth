@@ -24,6 +24,8 @@ import 'package:momento_booth/views/components/indicators/connection_state_indic
 import 'package:momento_booth/views/components/indicators/subsystem_status_icon.dart';
 import 'package:momento_booth/views/components/indicators/subsystem_status_list.dart';
 import 'package:momento_booth/views/settings_overlay/components/aspect_ratio_preview.dart';
+import 'package:momento_booth/views/settings_overlay/components/external_system_check_edit_dialog.dart';
+import 'package:momento_booth/views/settings_overlay/components/external_system_check_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/import_field.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_action.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_toggle.dart';
@@ -89,7 +91,21 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
         builder: (context) {
           return NavigationView(
             key: _navigationPaneKey,
+            titleBar: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const PaneBackButton(backIcon: Icon(LucideIcons.arrowLeft)),
+                  IconButton(
+                    icon: Padding(padding: const EdgeInsets.symmetric(horizontal: 8.0), child: Icon(LucideIcons.x)),
+                    onPressed: () => context.pop(),
+                  ),
+                ],
+              ),
+            ),
             pane: NavigationPane(
+              header: const SizedBox(),
               selected: viewModel.paneIndex,
               onChanged: controller.onNavigationPaneIndexChanged,
               items: [

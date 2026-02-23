@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Change: Details can now be shown for successful external health checks runs
+
+- Dev change: Updated Dart and Rust dependencies
+
 ## 0.16.0
 
 - New feature: Add support for a live view overlay image

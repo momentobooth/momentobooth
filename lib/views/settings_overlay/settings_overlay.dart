@@ -31,7 +31,7 @@ class SettingsOverlay extends ScreenBase<SettingsOverlayViewModel, SettingsOverl
     return SettingsOverlayViewModel(contextAccessor: contextAccessor);
   }
 
-  static Future<void> openDialog(BuildContext context, {SettingsPageKey initialPage = SettingsPageKey.project}) async {
+  static Future<void> openDialog(BuildContext context, {SettingsPageKey initialPage = SettingsPageKey.quickActions}) async {
     context.read<ActivityMonitorController>().pause();
     await showDialog(
       context: context,

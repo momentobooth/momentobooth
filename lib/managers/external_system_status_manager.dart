@@ -80,7 +80,7 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
   }
 
   static Future<ExternalSystemStatus> _pingCheck(ExternalSystemCheckSetting check) async {
-    const eMessage = "ping unsuccessful";
+    const eMessage = "Ping unsuccessful";
     try {
       final result = await Process.run('ping',
         Platform.isWindows ? ['-n', '1', check.address] : ['-c', '1', check.address],
@@ -88,7 +88,7 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
       final success = result.exitCode == 0;
       return ExternalSystemStatus(
         check: check,
-        isHealthy: success ? const SubsystemStatus.ok() : _statusProducer(check, eMessage, result.stdout.toString()),
+        isHealthy: success ? SubsystemStatus.ok(message: result.stdout.toString()) : _statusProducer(check, eMessage, result.stdout.toString()),
       );
     } catch (e) {
       return ExternalSystemStatus(
@@ -99,13 +99,13 @@ abstract class ExternalSystemStatusManagerBase with Store, Logger {
   }
 
   static Future<ExternalSystemStatus> _httpCheck(ExternalSystemCheckSetting check) async {
-    const eMessage = "http request unsuccessful";
+    const eMessage = "HTTP request unsuccessful";
     try {
       final response = await http.get(Uri.parse(check.address)).timeout(Duration(seconds: 5));
       final success = response.statusCode >= 200 && response.statusCode < 400;
       return ExternalSystemStatus(
         check: check,
-        isHealthy: success ? const SubsystemStatus.ok() : _statusProducer(check, eMessage, 'HTTP ${response.statusCode}'),
+        isHealthy: success ? SubsystemStatus.ok(message: 'Received ${response.statusCode} ${response.reasonPhrase} (Length: ${response.contentLength ?? 'Unknown'})') : _statusProducer(check, eMessage, 'HTTP ${response.statusCode}'),
       );
     } catch (e) {
       return ExternalSystemStatus(

@@ -14,7 +14,7 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
           if (isOpen) { return SizedBox();}
           return Padding(
             padding: const EdgeInsets.only(top: 16.0),
-            child: InfoBar(title: Text("Project settings can only be viewed and modified if a project is loaded."), severity: InfoBarSeverity.warning,),
+            child: InfoBar.warning(title: Text("Project settings can only be viewed and modified if a project is loaded.")),
           );
         }
       ),

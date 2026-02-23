@@ -48,9 +48,9 @@ abstract class NotificationsManagerBase with Store {
     final printerNames = getIt<SettingsManager>().settings.hardware.flutterPrintingPrinterNames;
     final printersStatus = await compute(checkPrintersStatus, printerNames);
     printersStatus.forEachIndexed((index, element) {
-      final hasErrorNotification = InfoBar(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."), severity: InfoBarSeverity.warning);
-      final paperOutNotification = InfoBar(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."), severity: InfoBarSeverity.warning);
-      final longQueueNotification = InfoBar(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."), severity: InfoBarSeverity.info);
+      final hasErrorNotification = InfoBar.warning(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."));
+      final paperOutNotification = InfoBar.warning(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."));
+      final longQueueNotification = InfoBar.info(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."));
       if (element.jobs >= getIt<SettingsManager>().settings.hardware.printerQueueWarningThreshold) {
         printerNotifications.add(longQueueNotification);
       }
@@ -71,16 +71,14 @@ abstract class NotificationsManagerBase with Store {
       final name = element.subsystemName;
       switch (status) {
         case SubsystemStatusError():
-          systemNotifications.add(InfoBar(
+          systemNotifications.add(InfoBar.error(
             title: Text("$name error"),
             content: Text("Subsystem $name has an error: ${status.message}"),
-            severity: InfoBarSeverity.error,
           ));
         case SubsystemStatusWarning():
-          systemNotifications.add(InfoBar(
+          systemNotifications.add(InfoBar.warning(
             title: Text("$name warning"),
             content: Text("Subsystem $name has a warning: ${status.message}"),
-            severity: InfoBarSeverity.warning,
           ));
         default:
           break;
@@ -97,18 +95,16 @@ abstract class NotificationsManagerBase with Store {
       final name = element.check.name;
       switch (status) {
         case SubsystemStatusError():
-          systemNotifications.add(InfoBar(
+          systemNotifications.add(InfoBar.error(
             title: Text("$name unavailable"),
             content: Text("External service \"$name\" is unavailable: ${status.message}"),
-            severity: InfoBarSeverity.error,
           ));
         case SubsystemStatusWarning():
         // We don't show info severity notifications.
           if (severity == ExternalSystemCheckSeverity.warning) {
-            systemNotifications.add(InfoBar(
+            systemNotifications.add(InfoBar.warning(
               title: Text("$name unavailable"),
               content: Text("External service \"$name\" is unavailable: ${status.message}"),
-              severity: InfoBarSeverity.warning,
             ));
           }
         default:
