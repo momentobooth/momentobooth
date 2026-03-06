@@ -17,7 +17,7 @@ dependencies:
   # UI
   animations: 2.1.1
   auto_size_text: 3.0.0
-  fluent_ui: 4.14.0
+  fluent_ui: 4.15.0
   go_router: 17.1.0
   flutter_svg: 2.2.3
   animated_text_kit: 4.3.0
@@ -32,9 +32,9 @@ dependencies:
   smooth_scroll_multiplatform: 1.0.8
   widgetbook: 3.22.0
   widgetbook_annotation: 3.11.0
-  lucide_icons_flutter: 3.1.9
+  lucide_icons_flutter: 3.1.10
   wizard_router: 1.4.1
-  theme_tailor_annotation: 3.1.2
+  theme_tailor_annotation: 3.1.3
   google_fonts: 8.0.2
   twinkling_stars: 1.0.3
 
@@ -66,8 +66,8 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.14
-  talker_flutter: 5.1.14
+  talker: 5.1.15
+  talker_flutter: 5.1.15
   sentry_flutter: 9.14.0
   stack_trace: 1.12.1
 
@@ -78,7 +78,7 @@ dependencies:
   # Networking
   http: 1.6.0
   http_parser: 4.1.2
-  mqtt5_client: 4.15.3
+  mqtt5_client: 4.17.0
 
   # Misc
   get_it: 9.2.1
@@ -102,7 +102,7 @@ dependencies:
 dev_dependencies:
   # UI
   widgetbook_generator: 3.22.0
-  theme_tailor: 3.1.2
+  theme_tailor: 3.1.3
 
   # MVC
   mobx_codegen: 2.7.6
@@ -115,7 +115,7 @@ dev_dependencies:
   json_serializable: 6.13.0
 
   # Code generation
-  build_runner: 2.11.1
+  build_runner: 2.12.2
 
 flutter:
   uses-material-design: true
