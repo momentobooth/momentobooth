@@ -37,7 +37,7 @@ class SettingsPage extends StatelessWidget {
             padding: EdgeInsets.only(top: 16.0),
             child: SizedBox(
               width: double.maxFinite,
-              child: InfoBar(title: Text('Changes will be saved automatically')),
+              child: InfoBar.info(title: Text('Changes will be saved automatically')),
             ),
           ),
         ],
