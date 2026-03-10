@@ -69,15 +69,13 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     if (!viewModel.printEnabled) return;
     showUserDialog(
       barrierDismissible: false,
-      dialog: Observer(builder: (_) {
-        return PrintDialog(
-          onPrintPressed: (size, copies) {
-            navigator.pop();
-            onConfirmPrint(size, copies);
-          },
-          onCancel: () => navigator.pop(),
-        );
-      }),
+      dialog: PrintDialog(
+        onPrintPressed: (size, copies) {
+          navigator.pop();
+          onConfirmPrint(size, copies);
+        },
+        onCancel: () => navigator.pop(),
+      ),
     );
   }
 

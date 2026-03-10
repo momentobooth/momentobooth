@@ -4,10 +4,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
-class LanguageChoiceDialog extends StatelessWidget {
+class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
 
   final Function(Language) onChosen;
 
@@ -74,4 +76,18 @@ class LanguageChoiceDialog extends StatelessWidget {
     );
   }
 
+  @override
+  List<AppAction> get actions => [
+    AppAction(name: "set_language", callback: setLanguageAPI),
+    // Todo: is there a way to pop the route from here?
+    // AppAction(name: "dismiss", callback: (_) {  }),
+  ];
+
+  void setLanguageAPI(Map<String, dynamic> args) {
+    final String languageCode = args["language_code"] ?? "--";
+    final Language language = Language.definedValues.firstWhere((lang) => lang.code == languageCode, orElse: () => Language.noLanguage);
+    if (language != Language.noLanguage){
+      onChosen(language);
+    }
+  }
 }
