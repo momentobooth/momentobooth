@@ -2,6 +2,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/notifications/activity_timeout_callback.dart';
@@ -16,6 +17,18 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   /// Global key to create a snapshot of the [PhotoCollage] widget.
   final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(name: "select_pictures", callback: selectPicturesAPI),
+    AppAction(name: "continue", callback: (_) { onContinueTap(); }),
+    AppAction(name: "select_all_pictures_and_continue", callback: (_) {
+      getIt<PhotosManager>().chosen
+        ..clear()
+        ..addAll([0, 1, 2, 3]);
+      onContinueTap();
+    }),
+  ];
 
   // //// //
   // Init //
@@ -54,6 +67,15 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
       await viewModel.generateCollage(collageKey: collageKey);
       router.go(ShareScreen.defaultRoute);
     }
+  }
+
+  /// This is called from the native side when the select_pictures action is called from the actions API.
+  /// The selected picture indices are passed in the `selected` field of the params.
+  void selectPicturesAPI(Map<String, dynamic> params) {
+    List<int> selected = List<int>.from(params["selected"] ?? []);
+    getIt<PhotosManager>().chosen
+      ..clear()
+      ..addAll(selected);
   }
 
   // ////// //
