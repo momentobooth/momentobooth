@@ -2,14 +2,16 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lottie/lottie.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
+import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 import 'package:momento_booth/views/components/qr_code.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
-class QrShareDialog extends StatelessWidget {
+class QrShareDialog extends StatelessWidget with DialogActionsMixin {
 
   final ShareDialogState state;
   final double? uploadProgress;
@@ -157,6 +159,20 @@ class QrShareDialog extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  List<AppAction> get actions => switch (state) {
+    // These are actually the same actions, but with different names
+    ShareDialogState.uploaded => [
+        AppAction(name: "redo_upload", callback: (_) { onRedoUpload(); }),
+        AppAction(name: "close", callback: (_) { onDismiss(); }),
+      ],
+    ShareDialogState.error => [
+        AppAction(name: "cancel", callback: (_) { onDismiss(); }),
+        AppAction(name: "retry_upload", callback: (_) { onRedoUpload(); }),
+      ],
+    _ => [],
+  };
 
 }
 

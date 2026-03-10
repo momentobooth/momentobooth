@@ -4,12 +4,14 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
+import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
-class PrintDialog extends StatefulWidget {
+class PrintDialog extends StatefulWidget with DialogActionsMixin {
 
   final VoidCallback onCancel;
   final void Function(PrintSize size, int copies) onPrintPressed;
@@ -24,6 +26,13 @@ class PrintDialog extends StatefulWidget {
 
   @override
   State<PrintDialog> createState() => _PrintDialogState();
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(name: "cancel", callback: (_) { onCancel(); }),
+    // Todo add arguments
+    AppAction(name: "print", callback: (_) { onPrintPressed(PrintSize.normal, 1); }),
+  ];
 
 }
 

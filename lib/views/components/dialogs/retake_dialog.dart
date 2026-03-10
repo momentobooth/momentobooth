@@ -1,11 +1,13 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
+import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
-class RetakeDialog extends StatelessWidget {
+class RetakeDialog extends StatelessWidget with DialogActionsMixin {
 
   final VoidCallback onDelete;
   final VoidCallback onKeep;
@@ -44,5 +46,12 @@ class RetakeDialog extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(name: "cancel", callback: (_) { onCancel(); }),
+    AppAction(name: "keep", callback: (_) { onKeep(); }),
+    AppAction(name: "delete", callback: (_) { onDelete(); }),
+  ];
 
 }
