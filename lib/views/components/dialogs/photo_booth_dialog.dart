@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/views/components/buttons/stateless_photo_booth_button.dart';
 
 class PhotoBoothDialog extends StatelessWidget {
 
@@ -10,6 +12,13 @@ class PhotoBoothDialog extends StatelessWidget {
   final Widget body;
   final EdgeInsets bodyPadding;
   final List<Widget> actions;
+  final List<AppAction>? appActionsOverride;
+
+  List<AppAction> get appActions {
+    if (appActionsOverride != null) return appActionsOverride!;
+    var buttons = actions.whereType<StatelessPhotoBoothButton>();
+    return buttons.map((button) => AppAction(name: button.title.toLowerCase().replaceAll(" ", "_"), callback: (_) { button.onPressed?.call(); })).toList();
+  }
 
   const PhotoBoothDialog({
     super.key,
@@ -20,6 +29,7 @@ class PhotoBoothDialog extends StatelessWidget {
     this.indicator,
     this.bodyPadding = const EdgeInsets.symmetric(horizontal: 4.0, vertical: 16.0),
     this.actions = const [],
+    this.appActionsOverride,
   });
 
   @override

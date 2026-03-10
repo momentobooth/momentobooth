@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/dialogs/photo_booth_dialog.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -17,6 +18,7 @@ class ModalDialog extends StatelessWidget {
   final ModalDialogType? dialogType;
   final Widget body;
   final List<Widget>? actions;
+  final List<AppAction>? appActionsOverride;
   final VoidCallback? onDismiss;
 
   const ModalDialog({
@@ -27,6 +29,7 @@ class ModalDialog extends StatelessWidget {
     this.dialogType = ModalDialogType.info,
     required this.body,
     this.actions,
+    this.appActionsOverride,
     this.onDismiss,
   });
 
@@ -51,6 +54,7 @@ class ModalDialog extends StatelessWidget {
                   onPressed: onDismiss ?? () => Navigator.of(context).maybePop(),
                 ),
               ],
+          appActionsOverride: appActionsOverride,
         ),
       ),
     );
