@@ -62,6 +62,7 @@ abstract class AppInitManagerBase with Store {
         ..registerManager(WindowManager())
         ..registerManager(LiveViewManager())
         ..registerManager(MqttManager())
+        ..registerManager(ActionManager())
         ..registerManager(NotificationsManager())
         ..registerManager(PrintingManager())
         ..registerManager(PhotosManager())
@@ -109,6 +110,7 @@ abstract class AppInitManagerBase with Store {
       await _setStatusAndFireAndForget('Initializing window manager', getIt<WindowManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing live view manager', getIt<LiveViewManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing MQTT manager', getIt<MqttManager>().initializeSafe);
+      await _setStatusAndFireAndForget('Initializing action manager', getIt<ActionManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing SFX manager', getIt<SfxManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing printing manager', getIt<PrintingManager>().initializeSafe);
       await _setStatusAndFireAndForget('Initializing wakelock manager', getIt<WakelockManager>().initializeSafe);

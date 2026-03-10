@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:http/http.dart' as http;
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/find_face_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_view_model.dart';
@@ -14,6 +15,12 @@ import 'package:path/path.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewModel> {
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(name: "open_last_picture", callback: (_) { openLastPhoto(); }),
+    AppAction(name: "back", callback: (_) { onPressedBack(); }),
+  ];
 
   // Initialization/Deinitialization
 
@@ -26,6 +33,18 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
     final String filename = basename(file.path);
     logDebug("Opening photo $filename");
     router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
+  }
+
+  void openLastPhoto() {
+    final lastGroup = viewModel.imageGroups?.lastOrNull;
+    if (lastGroup != null) {
+      final lastPhoto = lastGroup.images.lastOrNull;
+      if (lastPhoto != null) {
+        openPhoto(lastPhoto.file);
+      } else {
+        logDebug("No photos found in the last group");
+      }
+    }
   }
 
   void onPressedBack() {

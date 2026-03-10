@@ -7,6 +7,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -23,6 +24,14 @@ import 'package:path/path.dart' as path;
 class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> with PrinterStatusDialogMixin<ShareScreenViewModel> {
 
   AutoSizeGroup actionButtonGroup = AutoSizeGroup(), navigationButtonGroup = AutoSizeGroup();
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(name: "retake", callback: (_) { onClickPrev(); }),
+    AppAction(name: "get_qr", callback: (_) { onClickGetQR(); }),
+    AppAction(name: "print", callback: (_) { onClickPrint(); }),
+    AppAction(name: "continue", callback: (_) { onClickNext(); }),
+  ];
 
   // Initialization/Deinitialization
 

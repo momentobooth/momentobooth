@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/language_choice_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
@@ -12,6 +13,16 @@ import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_sc
 class NavigationScreenController extends ScreenControllerBase<NavigationScreenViewModel> {
 
   AutoSizeGroup autoSizeGroup = AutoSizeGroup();
+
+  @override
+  List<AppAction> get actions => [
+    if (viewModel.enableSingleCapture)
+    AppAction(name: "single_photo", callback: (_) { onClickSinglePhoto(); }),
+    if (viewModel.enableCollageCapture)
+    AppAction(name: "collage", callback: (_) { onClickCollage(); }),
+    AppAction(name: "galery", callback: (_) { onClickGallery(); }),
+    AppAction(name: "language", callback: (_) { onClickLanguage(); }),
+  ];
 
   // Initialization/Deinitialization
 
