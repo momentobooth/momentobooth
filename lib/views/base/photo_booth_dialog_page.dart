@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/views/base/has_actions_mixin.dart';
+import 'package:momento_booth/views/components/dialogs/photo_booth_dialog.dart';
 
-final class PhotoBoothDialogPage<T> extends CustomTransitionPage<T> {
+final class PhotoBoothDialogPage<T> extends CustomTransitionPage<T> with HasActionsMixin {
 
   static const defaultTransitionDuration = Duration(milliseconds: 800);
   static const defaultTransitionOutDuration = Duration(milliseconds: 400);
@@ -25,6 +28,13 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<T> {
       reverseCurve: Curves.easeInExpo,
     );
   }
+
+  /// Extract the app actions from the dialog if the child is a [PhotoBoothDialog].
+  @override
+  List<AppAction> get actions => switch (super.child) {
+    PhotoBoothDialog dialog => dialog.appActions,
+    _ => [],
+  };
 
   PhotoBoothDialogPage({
     required super.child,
@@ -48,7 +58,9 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<T> {
               ),
             );
           },
-        );
+        ) {
+    pushActions();
+  }
 
   @override
   Route<T> createRoute([BuildContext? _]) => PhotoBoothDialogRoute<T>(
@@ -61,6 +73,10 @@ final class PhotoBoothDialogPage<T> extends CustomTransitionPage<T> {
         transitionDuration: transitionDuration,
         reverseTransitionDuration: reverseTransitionDuration,
       );
+
+  void dispose() {
+    popActions();
+  }
 
 }
 
