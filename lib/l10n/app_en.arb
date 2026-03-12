@@ -1,6 +1,5 @@
 {
     "@@locale": "en",
-
     "genericBackButton": "Back",
     "genericPrintButton": "Print",
     "genericContinueButton": "Continue",
@@ -24,28 +23,21 @@
     "genericNone": "None",
     "genericSettings": "Settings",
     "genericCanBeChangedInSettings": "this can be changed in settings",
-
     "actionRestoreLiveView": "Restore live view",
     "actionsExit": "Exit",
-
     "screensStart": "Start screen",
     "screensGallery": "Gallery",
     "screensManualCollage": "Manual collage",
-    
     "startScreenTouchToStartButton": "Touch to start",
     "startScreenGalleryButton": "Gallery",
-
     "galleryScreenGoToStartButton": "Start",
-
     "chooseCaptureModeScreenTitle": "Choose Capture Mode",
     "chooseCaptureModeScreenSinglePictureButton": "Single Picture",
     "chooseCaptureModeScreenCollageButton": "Collage",
-
     "captureScreenGetReady": "Get Ready",
     "captureScreenLookAtCamera": "Look at 📷",
     "captureScreenLoadingPhoto": "Loading photo...",
     "captureScreenLoadingPhotos": "Loading photos...",
-
     "photoDetailsScreenTitle": "Photo Details",
     "photoDetailsScreenGetQrButton": "Get QR",
     "photoDetailsScreenQrUploading": "Uploading",
@@ -53,7 +45,6 @@
     "photoDetailsScreenRetryQrButton": "Error, retry?",
     "photoDetailsScreenPrinting": "Printing...",
     "photoDetailsScreenPrintUnsuccesful": "Print unsuccessful",
-
     "shareScreenTitle": "Share",
     "shareScreenRetakeButton": "Retake",
     "shareScreenChangeButton": "Change",
@@ -63,71 +54,12 @@
     "shareScreenRetryQrButton": "Error, retry?",
     "shareScreenPrinting": "Printing...",
     "shareScreenPrintUnsuccesful": "Print unsuccessful",
-
     "qrDialogTitle": "Share using a QR code",
     "qrDialogUploading": "Uploading...",
     "qrDialogInstructions": "You can download your photo by scanning this QR code.\n\nNote: A download link can be used once. Please click 'Extra download' if you need another download.",
     "qrDialogExtraDownloadButton": "Extra download",
     "qrDialogErrorMessage": "An error has occured while uploading. Check the internet connection and click 'Retry' to try again.",
-
     "multiCaptureScreenPhotoCounter": "Photo {current}/{total}",
-    "multiCaptureScreenGetReady": "Get Ready",
-    "multiCaptureScreenLookAtCamera": "Look at 📷",
-
-    "collageMakerScreenPicturesShotTitle": "Pictures shot",
-    "collageMakerScreenPhotoCounter": "{count} chosen",
-    "collageMakerScreenCollageTitle": "Collage",
-
-    "manualCollageScreenSaving": "Saving...",
-
-    "photoCollageWidgetSelectPhotos": "Select some photos :)",
-
-    "printerErrorNoInkTitle": "No ink",
-    "printerErrorNoInkBody1": "Printer [{name}] reports that it ran out of ink.",
-    "printerErrorNoInkBody2": "Please replace the ink cartridge, confirm with the 'OK' button on the printer, then click 'Resume queue'.",
-    "printerErrorNoMediaTitle": "No paper",
-    "printerErrorNoMediaBody1": "Printer [{name}] reports that it ran out of paper.",
-    "printerErrorNoMediaBody2": "Please insert paper, confirm with the 'OK' button on the printer, then click 'Resume queue'.",
-    "printerErrorMediaJamTitle": "Paper jam",
-    "printerErrorMediaJamBody1": "Printer [{name}] reports that it has a paper jam.",
-    "printerErrorMediaJamBody2": "Please follow any instructions displayed by the printer, if any. When the issue is resolved, click 'Resume queue'.",
-    "printerErrorStuckJob": "Additionally there is a job stuck in the queue. Clicking 'Resume queue' will attempt to unstuck it.",
-    "printerErrorStuckJobs": "Additionally there are {jobCount} jobs stuck in the queue. Clicking 'Resume queue' will attempt to unstuck them.",
-    "printerErrorConnectionErrorTitle": "Connection error",
-    "printerErrorConnectionErrorBody1": "The printing system report that printer [{name}] is no longer connected to the computer.",
-    "printerErrorConnectionErrorBody2": "Please check the connection between the printer and the computer, then click 'Resume queue'.",
-    "printerErrorUnknownIssueTitle": "Unknown printer issue",
-    "printerErrorUnknownIssueBody1": "Printer [{name}] reports that it has an issue:\n\n{error}",
-    "printerErrorUnknownIssueBody2": "Please follow any instructions displayed by the printer or check system printing settings for more details. When the issue is resolved, click 'Resume queue'.",
-    "printerErrorIgnoreButton": "Ignore for now",
-    "printerErrorResumeQueueButton": "Resume queue",
-
-    "printDialogTitle": "Print",
-    "printDialogSizeSetting": "Size:",
-    "printDialogNoOfPrintsSetting": "Number of prints:",
-    "printDialogSummary": "{numPrints} prints → {numImages} printed images",
-
-    "printingErrorDialogTitle": "Print error",
-    "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
-    "printingErrorDialogBodyBottom": "Try again later or download your photo using the QR feature.",
-
-    "retakeDialogBody": "Do you want to keep the current result?",
-    "retakeDialogKeepButton": "Keep",
-
-    "projectNotOpened": "No project opened",
-    "opened": "Opened",
-    "projectNotOpenedInstructions": "You did not open a project folder yet. Open one to start capturing.",
-    "projectNotOpenedExplanation": "MomentoBooth needs to know where to store images and look for collage templates.",
-    "projectsRecent": "Recent projects",
-    "projectOpenButton": "Open a project folder",
-    "projectOpenShort": "Open project",
-    "projectViewInExplorer": "View project in explorer",
-    "projectLoadLastOnStart": "Load last project on start up",
-    
-    "changeLanguage": "Change Language",
-    "navigationScreenTitle": "What would you like to do?",
-    "chooseYourLanguage": "Choose your language",
-
     "@multiCaptureScreenPhotoCounter": {
         "placeholders": {
             "current": {
@@ -138,6 +70,10 @@
             }
         }
     },
+    "multiCaptureScreenGetReady": "Get Ready",
+    "multiCaptureScreenLookAtCamera": "Look at 📷",
+    "collageMakerScreenPicturesShotTitle": "Pictures shot",
+    "collageMakerScreenPhotoCounter": "{count} chosen",
     "@collageMakerScreenPhotoCounter": {
         "placeholders": {
             "count": {
@@ -145,6 +81,11 @@
             }
         }
     },
+    "collageMakerScreenCollageTitle": "Collage",
+    "manualCollageScreenSaving": "Saving...",
+    "photoCollageWidgetSelectPhotos": "Select some photos :)",
+    "printerErrorNoInkTitle": "No ink",
+    "printerErrorNoInkBody1": "Printer [{name}] reports that it ran out of ink.",
     "@printerErrorNoInkBody1": {
         "placeholders": {
             "name": {
@@ -152,6 +93,9 @@
             }
         }
     },
+    "printerErrorNoInkBody2": "Please replace the ink cartridge, confirm with the 'OK' button on the printer, then click 'Resume queue'.",
+    "printerErrorNoMediaTitle": "No paper",
+    "printerErrorNoMediaBody1": "Printer [{name}] reports that it ran out of paper.",
     "@printerErrorNoMediaBody1": {
         "placeholders": {
             "name": {
@@ -159,6 +103,9 @@
             }
         }
     },
+    "printerErrorNoMediaBody2": "Please insert paper, confirm with the 'OK' button on the printer, then click 'Resume queue'.",
+    "printerErrorMediaJamTitle": "Paper jam",
+    "printerErrorMediaJamBody1": "Printer [{name}] reports that it has a paper jam.",
     "@printerErrorMediaJamBody1": {
         "placeholders": {
             "name": {
@@ -166,6 +113,18 @@
             }
         }
     },
+    "printerErrorMediaJamBody2": "Please follow any instructions displayed by the printer, if any. When the issue is resolved, click 'Resume queue'.",
+    "printerErrorStuckJob": "Additionally there is a job stuck in the queue. Clicking 'Resume queue' will attempt to unstuck it.",
+    "printerErrorStuckJobs": "Additionally there are {jobCount} jobs stuck in the queue. Clicking 'Resume queue' will attempt to unstuck them.",
+    "@printerErrorStuckJobs": {
+        "placeholders": {
+            "jobCount": {
+                "type": "int"
+            }
+        }
+    },
+    "printerErrorConnectionErrorTitle": "Connection error",
+    "printerErrorConnectionErrorBody1": "The printing system report that printer [{name}] is no longer connected to the computer.",
     "@printerErrorConnectionErrorBody1": {
         "placeholders": {
             "name": {
@@ -173,6 +132,9 @@
             }
         }
     },
+    "printerErrorConnectionErrorBody2": "Please check the connection between the printer and the computer, then click 'Resume queue'.",
+    "printerErrorUnknownIssueTitle": "Unknown printer issue",
+    "printerErrorUnknownIssueBody1": "Printer [{name}] reports that it has an issue:\n\n{error}",
     "@printerErrorUnknownIssueBody1": {
         "placeholders": {
             "name": {
@@ -183,13 +145,13 @@
             }
         }
     },
-    "@printerErrorStuckJobs": {
-        "placeholders": {
-            "jobCount": {
-                "type": "int"
-            }
-        }
-    },
+    "printerErrorUnknownIssueBody2": "Please follow any instructions displayed by the printer or check system printing settings for more details. When the issue is resolved, click 'Resume queue'.",
+    "printerErrorIgnoreButton": "Ignore for now",
+    "printerErrorResumeQueueButton": "Resume queue",
+    "printDialogTitle": "Print",
+    "printDialogSizeSetting": "Size:",
+    "printDialogNoOfPrintsSetting": "Number of prints:",
+    "printDialogSummary": "{numPrints} prints → {numImages} printed images",
     "@printDialogSummary": {
         "placeholders": {
             "numPrints": {
@@ -200,14 +162,26 @@
             }
         }
     },
+    "printingErrorDialogTitle": "Print error",
+    "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
+    "printingErrorDialogBodyBottom": "Try again later or download your photo using the QR feature.",
+    "retakeDialogBody": "Do you want to keep the current result?",
+    "retakeDialogKeepButton": "Keep",
+    "projectNotOpened": "No project opened",
+    "opened": "Opened",
+    "projectNotOpenedInstructions": "You did not open a project folder yet. Open one to start capturing.",
+    "projectNotOpenedExplanation": "MomentoBooth needs to know where to store images and look for collage templates.",
+    "projectsRecent": "Recent projects",
+    "projectOpenButton": "Open a project folder",
+    "projectOpenShort": "Open project",
+    "projectViewInExplorer": "View project in explorer",
+    "projectLoadLastOnStart": "Load last project on start up",
+    "changeLanguage": "Change Language",
+    "navigationScreenTitle": "What would you like to do?",
+    "chooseYourLanguage": "Choose your language",
     "galleryScreenFilterBarOrderByTitle": "Order by",
-    "@galleryScreenFilterBarOrderByTitle": {},
     "galleryScreenFilterBarOrderByTime": "Time",
-    "@galleryScreenFilterBarOrderByTime": {},
     "galleryScreenFilterBarOrderByGroupSize": "Group size",
-    "@galleryScreenFilterBarOrderByGroupSize": {},
     "galleryScreenFilterBarFindMyFaceButton": "Find my face",
-    "@galleryScreenFilterBarFindMyFaceButton": {},
-    "galleryScreenFilterBarClearFilterButton": "Clear filter",
-    "@galleryScreenFilterBarClearFilterButton": {}
+    "galleryScreenFilterBarClearFilterButton": "Clear filter"
 }
