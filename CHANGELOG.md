@@ -4,7 +4,7 @@
 
 - Change: Details can now be shown for successful external health checks runs
 
-- Dev change: Updated Flutter to 3.41.4
+- Dev change: Updated Flutter to 3.41.5
 - Dev change: Updated Dart and Rust dependencies
 
 ## 0.16.0
