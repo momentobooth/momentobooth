@@ -11,6 +11,7 @@ import 'package:momento_booth/managers/action_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/models/capture_state.dart';
 import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
@@ -208,6 +209,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     _publish(
       "current_actions",
       jsonEncode(actions.map((a) => a.toJson()).toList()),
+      retain: true,
     );
     publishHomeAssistantSelectDiscoveryTopic(integrationName: "actions", options: actions.map((a) => a.name).toList(), stateTopic: "None", commandTopic: "$rootTopic/do_action");
   }
@@ -276,7 +278,16 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   void _onHomeAssistantActionMessage(String message) {
     logInfo("Received action command from Home Assistant by MQTT: $message");
-    getIt<ActionManager>().callAction(message);
+    try {
+      final dynamic decoded = jsonDecode(message);
+
+      if (decoded is Map<String, dynamic>) {
+        final call = AppActionCall.fromJson(decoded);
+        getIt<ActionManager>().callAction(call.tool, parameters: call.arguments);
+      }
+    } catch (e) {
+      getIt<ActionManager>().callAction(message);
+    }
   }
 
   // ////////////////////////// //
