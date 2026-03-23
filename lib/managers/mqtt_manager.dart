@@ -7,8 +7,10 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/action_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/capture_state.dart';
 import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
@@ -63,6 +65,12 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     autorun((_) {
       Stats stats = getIt<StatsManager>().stats;
       if (_client != null) _publishStats(stats);
+    });
+
+    // Publish actions
+    autorun((_) {
+        List<AppAction> actions = getIt<ActionManager>().current;
+      if (_client != null) _publishActions(actions);
     });
   }
 
@@ -153,6 +161,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   void _forcePublishAll() {
     _publishStats(getIt<StatsManager>().stats, true);
+    _publishActions(getIt<ActionManager>().current);
     publishScreen();
     publishCaptureState();
     publishSettings();
@@ -192,6 +201,13 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   void _publishAppVersion() {
     _publish("app_version", packageInfo.version);
     _publish("app_build", packageInfo.buildNumber);
+  }
+
+  void _publishActions(List<AppAction> actions) {
+    _publish(
+      "current_actions",
+      jsonEncode(actions.map((a) => a.toJson()).toList()),
+    );
   }
 
   void _clearTopic(String topic) {

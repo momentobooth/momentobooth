@@ -1,16 +1,16 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_action.freezed.dart';
+part 'app_action.g.dart';
 
-@freezed
-class AppAction with _$AppAction {
-  @override
-  final String name;
-  @override
-  final Function(Map<String, dynamic>) callback;
+@Freezed(toJson: true)
+abstract class AppAction with _$AppAction {
 
-  AppAction({
-    required this.name,
-    required this.callback,
-  });
+  const AppAction._();
+
+  const factory AppAction({
+    required String name,
+    @JsonKey(includeToJson: false, includeFromJson: false)
+    required Function(Map<String, dynamic>) callback,
+  }) = _AppAction;
 }
