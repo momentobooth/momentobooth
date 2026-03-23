@@ -164,12 +164,32 @@ class QrShareDialog extends StatelessWidget with DialogActionsMixin {
   List<AppAction> get actions => switch (state) {
     // These are actually the same actions, but with different names
     ShareDialogState.uploaded => [
-        AppAction(name: "redo_upload", callback: (_) { onRedoUpload(); }),
-        AppAction(name: "close", callback: (_) { onDismiss(); }),
+        AppAction(
+          name: "redo_upload",
+          callback: (_) { onRedoUpload(); },
+          title: "Redo Upload",
+          description: "Start the upload process again to get a new QR code",
+        ),
+        AppAction(
+          name: "close",
+          callback: (_) { onDismiss(); },
+          title: "Close",
+          description: "Close the QR sharing dialog.",
+        ),
       ],
     ShareDialogState.error => [
-        AppAction(name: "cancel", callback: (_) { onDismiss(); }),
-        AppAction(name: "retry_upload", callback: (_) { onRedoUpload(); }),
+        AppAction(
+          name: "cancel",
+          callback: (_) { onDismiss(); },
+          title: "Cancel",
+          description: "Cancel the upload process.",
+        ),
+        AppAction(
+          name: "retry_upload",
+          callback: (_) { onRedoUpload(); },
+          title: "Retry Upload",
+          description: "After an error has occurred, this will try uploading the photo again.",
+        ),
       ],
     _ => [],
   };

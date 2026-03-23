@@ -18,8 +18,18 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
 
   @override
   List<AppAction> get actions => [
-    AppAction(name: "open_last_picture", callback: (_) { openLastPhoto(); }),
-    AppAction(name: "back", callback: (_) { onPressedBack(); }),
+    AppAction(
+      name: "open_latest_picture",
+      callback: (_) { openLatestPhoto(); },
+      title: "Open Latest Picture",
+      description: "View the most recently captured picture."
+    ),
+    AppAction(
+      name: "back",
+      callback: (_) { onPressedBack(); },
+      title: "Back",
+      description: "Return to the previous screen."
+    ),
   ];
 
   // Initialization/Deinitialization
@@ -35,12 +45,12 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
     router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
   }
 
-  void openLastPhoto() {
-    final lastGroup = viewModel.imageGroups?.lastOrNull;
-    if (lastGroup != null) {
-      final lastPhoto = lastGroup.images.lastOrNull;
-      if (lastPhoto != null) {
-        openPhoto(lastPhoto.file);
+  void openLatestPhoto() {
+    final latestGroup = viewModel.imageGroups?.firstOrNull;
+    if (latestGroup != null) {
+      final latestPhoto = latestGroup.images.firstOrNull;
+      if (latestPhoto != null) {
+        openPhoto(latestPhoto.file);
       } else {
         logDebug("No photos found in the last group");
       }

@@ -10,6 +10,9 @@ abstract class AppAction with _$AppAction {
 
   const factory AppAction({
     required String name,
+    required String title,
+    required String description,
+    @Default('{ "type": "object", "additionalProperties": false }') String inputSchema,
     @JsonKey(includeToJson: false, includeFromJson: false)
     required Function(Map<String, dynamic>) callback,
   }) = _AppAction;

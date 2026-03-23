@@ -18,7 +18,14 @@ import 'package:momento_booth/views/settings_overlay/settings_overlay_view.dart'
 class StartScreenController extends ScreenControllerBase<StartScreenViewModel> with PrinterStatusDialogMixin<StartScreenViewModel> {
 
   @override
-  List<AppAction> get actions => [AppAction(name: "start", callback: (_) { onPressedContinue(); })];
+  List<AppAction> get actions => [
+    AppAction(
+      name: "start",
+      callback: (_) { onPressedContinue(); },
+      title: "Start",
+      description: "Begin the photo booth experience."
+    )
+  ];
 
   // Initialization/Deinitialization
 

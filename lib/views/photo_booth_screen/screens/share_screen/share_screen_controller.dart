@@ -27,10 +27,30 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   @override
   List<AppAction> get actions => [
-    AppAction(name: "retake", callback: (_) { onClickPrev(); }),
-    AppAction(name: "get_qr", callback: (_) { onClickGetQR(); }),
-    AppAction(name: "print", callback: (_) { onClickPrint(); }),
-    AppAction(name: "continue", callback: (_) { onClickNext(); }),
+    AppAction(
+      name: "retake",
+      callback: (_) { onClickPrev(); },
+      title: "Retake Photo",
+      description: "Retake the current photo."
+    ),
+    AppAction(
+      name: "get_qr",
+      callback: (_) { onClickGetQR(); },
+      title: "Get QR Code",
+      description: "Generate a QR code for sharing the photo."
+    ),
+    AppAction(
+      name: "print",
+      callback: (_) { onClickPrint(); },
+      title: "Print Photo",
+      description: "Open the print dialog."
+    ),
+    AppAction(
+      name: "continue",
+      callback: (_) { onClickNext(); },
+      title: "Continue",
+      description: "Proceed to the next screen."
+    ),
   ];
 
   // Initialization/Deinitialization
