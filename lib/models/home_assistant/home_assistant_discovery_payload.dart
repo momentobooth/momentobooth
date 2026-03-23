@@ -30,6 +30,16 @@ sealed class HomeAssistantDiscoveryPayload with _$HomeAssistantDiscoveryPayload 
     @JsonKey(name: 'device') required HomeAssistantDevice device,
   }) = HomeAssistantDeviceTriggerDiscoveryPayload;
 
+  const factory HomeAssistantDiscoveryPayload.select({
+    @JsonKey(name: 'name') required String name,
+    @JsonKey(name: 'options') required List<String> options,
+    @JsonKey(name: 'state_topic') required String stateTopic,
+    @JsonKey(name: 'command_topic') required String commandTopic,
+    @JsonKey(name: 'unique_id') required String uniqueId,
+    @JsonKey(name: 'device') required HomeAssistantDevice device,
+  }) = HomeAssistantSelectDiscoveryPayload;
+
+
 }
 
 @Freezed(toJson: true)
