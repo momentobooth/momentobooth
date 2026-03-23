@@ -1,5 +1,6 @@
 // import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/mqtt_manager.dart';
@@ -54,6 +55,16 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   void publish() {
     // Todo: Publish current action stack to MQTT
     logInfo("Stack of length ${_stack.length} contains ${current.length} actions: ${current.map((a) => a.name).join(", ")}");
+  }
+
+  void callAction(String actionName, {Map<String, dynamic> parameters = const {}}) {
+    AppAction? action = current.firstWhereOrNull((a) => a.name == actionName);
+    if (action != null) {
+      logInfo("Calling action $actionName ${parameters.isNotEmpty ? "with parameters $parameters" : "without parameters"}");
+      action.callback(parameters);
+    } else {
+      logWarning("Tried to call action $actionName, but it was not found in the current action stack");
+    }
   }
 
 }

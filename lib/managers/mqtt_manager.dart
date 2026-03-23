@@ -44,6 +44,8 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   CaptureState _lastPublishedCaptureState = CaptureState.idle;
   Settings get _settings => getIt<SettingsManager>().settings;
 
+  String get rootTopic => getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
+
   @readonly
   ConnectionState _connectionState = ConnectionState.disconnected;
 
@@ -150,7 +152,6 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   void _publish(String topic, String message, {bool retain = false}) {
     if (_client == null) return;
 
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.publishMessage(
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
@@ -208,12 +209,12 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       "current_actions",
       jsonEncode(actions.map((a) => a.toJson()).toList()),
     );
+    publishHomeAssistantSelectDiscoveryTopic(integrationName: "actions", options: actions.map((a) => a.name).toList(), stateTopic: "None", commandTopic: "$rootTopic/do_action");
   }
 
   void _clearTopic(String topic) {
     if (_client == null) return;
 
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.publishMessage(
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
@@ -227,7 +228,6 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   // ///////////// //
 
   void _createSubscriptions() {
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.updates.listen((messageList) {
       MqttPublishMessage? message;
       try {
@@ -239,6 +239,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
             if (payload.length == 0) return;
             _clearTopic("update_settings");
             _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
+          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/do_action":
+            if (payload.length == 0) return;
+            _clearTopic("do_action");
+            _onHomeAssistantActionMessage(const Utf8Decoder().convert(payload.message!));
           default:
             logWarning("Received unknown published MQTT message: $message");
         }
@@ -248,6 +252,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     });
 
     _subscribeToTopic('update_settings');
+    _subscribeToTopic('do_action');
   }
 
   void _subscribeToTopic(String relativeTopic) {
@@ -269,9 +274,18 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     logInfo("Loaded settings data from MQTT");
   }
 
+  void _onHomeAssistantActionMessage(String message) {
+    logInfo("Received action command from Home Assistant by MQTT: $message");
+    getIt<ActionManager>().callAction(message);
+  }
+
   // ////////////////////////// //
   // Home Assistant integration //
   // ////////////////////////// //
+
+  bool get canDoHomeAssistantDiscovery => _client != null && getIt<SettingsManager>().settings.mqttIntegration.enableHomeAssistantDiscovery;
+  String get discoveryTopicPrefix => getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
+  String get componentId => getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
 
   HomeAssistantDevice get homeAssistantDevice => HomeAssistantDevice(
       identifiers: [getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId],
@@ -282,9 +296,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     );
 
   void publishHomeAssistantDiscoveryTopics() {
-    if (_client == null || !getIt<SettingsManager>().settings.mqttIntegration.enableHomeAssistantDiscovery) return;
-
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
+    if (!canDoHomeAssistantDiscovery) return;
 
     // Stats
     for (MapEntry<String, dynamic> statsEntry in _lastPublishedStats.entries) {
@@ -323,8 +335,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   }
 
   void publishHomeAssistantSensorDiscoveryTopic({required String integrationName, required String stateTopic}) {
-    final String discoveryTopicPrefix = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
-    final String componentId = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
+    if (!canDoHomeAssistantDiscovery) return;
 
     _client!.publishMessage(
       '$discoveryTopicPrefix/sensor/$componentId/${Casing.snakeCase(integrationName)}/config',
@@ -340,8 +351,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   }
 
   void publishHomeAssistantDeviceTriggerDiscoveryTopic({required String integrationName, required String payload, required String stateTopic}) {
-    final String discoveryTopicPrefix = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
-    final String componentId = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
+    if (!canDoHomeAssistantDiscovery) return;
 
     final String triggerType = Casing.snakeCase(integrationName);
     final String triggerSubType = Casing.snakeCase(payload);
@@ -356,6 +366,26 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
               type: triggerType,
               subtype: triggerSubType,
               device: homeAssistantDevice,
+            ).toJson())))
+          .payload!,
+      retain: true,
+    );
+  }
+
+  void publishHomeAssistantSelectDiscoveryTopic({required String integrationName, required List<String> options, required String stateTopic, required String commandTopic}) {
+    if (!canDoHomeAssistantDiscovery) return;
+
+    _client!.publishMessage(
+      '$discoveryTopicPrefix/select/$componentId/${Casing.snakeCase(integrationName)}/config',
+      MqttQos.atLeastOnce,
+      (MqttPayloadBuilder()
+            ..addString(jsonEncode(HomeAssistantDiscoveryPayload.select(
+              name: integrationName,
+              options: options,
+              stateTopic: stateTopic,
+              commandTopic: commandTopic,
+              device: homeAssistantDevice,
+              uniqueId: '${Casing.snakeCase(integrationName)}_$componentId',
             ).toJson())))
           .payload!,
       retain: true,
