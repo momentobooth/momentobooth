@@ -20,14 +20,30 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   @override
   List<AppAction> get actions => [
-    AppAction(name: "select_pictures", callback: selectPicturesAPI),
-    AppAction(name: "continue", callback: (_) { onContinueTap(); }),
-    AppAction(name: "select_all_pictures_and_continue", callback: (_) {
-      getIt<PhotosManager>().chosen
-        ..clear()
-        ..addAll([0, 1, 2, 3]);
-      onContinueTap();
-    }),
+    AppAction(
+      name: "select_pictures",
+      callback: selectPicturesAPI,
+      title: "Select Pictures",
+      description: "Choose pictures to include in the collage.",
+      inputSchema: '{ "type": "object", "properties": { "selected": { "type": "array", "items": { "type": "integer", "minimum": 0, "maximum": 3 } }, "minItems": 0, "maxItems": 4 }, "description": "The indices of the selected pictures, 0-indexed" }, "required": ["selected"], "additionalProperties": false }'
+    ),
+    AppAction(
+      name: "continue",
+      callback: (_) { onContinueTap(); },
+      title: "Continue",
+      description: "Proceed to the share screen."
+    ),
+    AppAction(
+      name: "select_all_pictures_and_continue",
+      callback: (_) {
+        getIt<PhotosManager>().chosen
+          ..clear()
+          ..addAll([0, 1, 2, 3]);
+        onContinueTap();
+      },
+      title: "Select All Pictures and Continue",
+      description: "Select all captured pictures, create the collage, and proceed to the share screen."
+    ),
   ];
 
   // //// //

@@ -29,9 +29,19 @@ class PrintDialog extends StatefulWidget with DialogActionsMixin {
 
   @override
   List<AppAction> get actions => [
-    AppAction(name: "cancel", callback: (_) { onCancel(); }),
+    AppAction(
+      name: "cancel",
+      callback: (_) { onCancel(); },
+      title: 'Cancel',
+      description: 'Presses the cancel button in the print dialog.'
+    ),
     // Todo add arguments
-    AppAction(name: "print", callback: (_) { onPrintPressed(PrintSize.normal, 1); }),
+    AppAction(
+      name: "print",
+      callback: (_) { onPrintPressed(PrintSize.normal, 1); },
+      title: 'Print',
+      description: 'Presses the print button in the print dialog.'
+    ),
   ];
 
 }

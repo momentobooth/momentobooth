@@ -17,11 +17,31 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
   @override
   List<AppAction> get actions => [
     if (viewModel.enableSingleCapture)
-    AppAction(name: "single_photo", callback: (_) { onClickSinglePhoto(); }),
+    AppAction(
+      name: "single_photo",
+      callback: (_) { onClickSinglePhoto(); },
+      title: "Single Photo",
+      description: "Take a single photo."
+    ),
     if (viewModel.enableCollageCapture)
-    AppAction(name: "collage", callback: (_) { onClickCollage(); }),
-    AppAction(name: "galery", callback: (_) { onClickGallery(); }),
-    AppAction(name: "language", callback: (_) { onClickLanguage(); }),
+    AppAction(
+      name: "collage",
+      callback: (_) { onClickCollage(); },
+      title: "Collage",
+      description: "Shoot multiple photos and create a collage from them."
+    ),
+    AppAction(
+      name: "gallery",
+      callback: (_) { onClickGallery(); },
+      title: "Gallery",
+      description: "View the previously captured photos."
+    ),
+    AppAction(
+      name: "language",
+      callback: (_) { onClickLanguage(); },
+      title: "Language",
+      description: "Open the language selection dialog."
+    ),
   ];
 
   // Initialization/Deinitialization

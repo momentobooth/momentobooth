@@ -49,9 +49,24 @@ class RetakeDialog extends StatelessWidget with DialogActionsMixin {
 
   @override
   List<AppAction> get actions => [
-    AppAction(name: "cancel", callback: (_) { onCancel(); }),
-    AppAction(name: "keep", callback: (_) { onKeep(); }),
-    AppAction(name: "delete", callback: (_) { onDelete(); }),
+    AppAction(
+      name: "cancel",
+      callback: (_) { onCancel(); },
+      title: 'Cancel',
+      description: 'Close the dialog and keep the current photo.',
+    ),
+    AppAction(
+      name: "keep",
+      callback: (_) { onKeep(); },
+      title: 'Keep',
+      description: 'Keep the current photo and start a new capture.',
+    ),
+    AppAction(
+      name: "delete",
+      callback: (_) { onDelete(); },
+      title: 'Delete',
+      description: 'Delete the current photo and start a new capture.',
+    ),
   ];
 
 }

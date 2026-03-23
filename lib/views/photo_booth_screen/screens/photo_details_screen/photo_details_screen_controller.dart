@@ -20,9 +20,24 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
   @override
   List<AppAction> get actions => [
-    AppAction(name: "back", callback: (_) { onClickPrev(); }),
-    AppAction(name: "get_qr", callback: (_) { onClickGetQR(); }),
-    AppAction(name: "print", callback: (_) { onClickPrint(); }),
+    AppAction(
+      name: "back",
+      callback: (_) { onClickPrev(); },
+      title: "Back",
+      description: "Return to the gallery screen."
+    ),
+    AppAction(
+      name: "get_qr",
+      callback: (_) { onClickGetQR(); },
+      title: "Get QR Code",
+      description: "Generate a QR code for sharing the photo."
+    ),
+    AppAction(
+      name: "print",
+      callback: (_) { onClickPrint(); },
+      title: "Print",
+      description: "Open the print dialog."
+    ),
   ];
 
   // Initialization/Deinitialization

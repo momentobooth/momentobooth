@@ -78,7 +78,13 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
 
   @override
   List<AppAction> get actions => [
-    AppAction(name: "set_language", callback: setLanguageAPI),
+    AppAction(
+      name: "set_language",
+      callback: setLanguageAPI,
+      title: 'Set Language',
+      description: 'Change the application language to the chosen one for this session.',
+      inputSchema: '{ "type": "object", "properties": { "language_code": { "type": "string", "description": "The ISO 639-1 code for the language to set" } }, "required": ["language_code"], "additionalProperties": false }'
+    ),
     // Todo: is there a way to pop the route from here?
     // AppAction(name: "dismiss", callback: (_) {  }),
   ];
