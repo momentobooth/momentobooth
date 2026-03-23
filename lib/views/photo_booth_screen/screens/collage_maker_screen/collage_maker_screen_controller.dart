@@ -25,7 +25,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
       callback: selectPicturesAPI,
       title: "Select Pictures",
       description: "Choose pictures to include in the collage.",
-      inputSchema: '{ "type": "object", "properties": { "selected": { "type": "array", "items": { "type": "integer", "minimum": 0, "maximum": 3 } }, "minItems": 0, "maxItems": 4 }, "description": "The indices of the selected pictures, 0-indexed" }, "required": ["selected"], "additionalProperties": false }'
+      inputSchema: '{ "type": "object", "properties": { "selected": { "type": "array", "items": { "type": "integer", "minimum": 0, "maximum": 3 }, "minItems": 0, "maxItems": 4 }}, "description": "The indices of the selected pictures, 0-indexed", "required": ["selected"], "additionalProperties": false }'
     ),
     AppAction(
       name: "continue",
