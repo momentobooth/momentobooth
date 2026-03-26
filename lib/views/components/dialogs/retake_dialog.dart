@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
@@ -54,18 +55,21 @@ class RetakeDialog extends StatelessWidget with DialogActionsMixin {
       callback: (_) { onCancel(); },
       title: 'Cancel',
       description: 'Close the dialog and keep the current photo.',
+      examples: cancelPhrases,
     ),
     AppAction(
       name: "keep",
       callback: (_) { onKeep(); },
       title: 'Keep',
       description: 'Keep the current photo and start a new capture.',
+      examples: const ["keep", "save", "keep photo", "keep picture", "don't delete", "don't delete photo", "don't delete picture"],
     ),
     AppAction(
       name: "delete",
       callback: (_) { onDelete(); },
       title: 'Delete',
       description: 'Delete the current photo and start a new capture.',
+      examples: const ["delete", "trash", "delete photo", "delete picture", "retake", "take again", "take new photo"],
     ),
   ];
 

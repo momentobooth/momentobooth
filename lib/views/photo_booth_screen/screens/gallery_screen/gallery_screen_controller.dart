@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/find_face_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_view_model.dart';
@@ -22,13 +23,15 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
       name: "open_latest_picture",
       callback: (_) { openLatestPhoto(); },
       title: "Open Latest Picture",
-      description: "View the most recently captured picture."
+      description: "View the most recently captured picture.",
+      examples: const ["latest", "most recent", "last photo", "last picture", "open latest"],
     ),
     AppAction(
       name: "back",
       callback: (_) { onPressedBack(); },
       title: "Back",
-      description: "Return to the previous screen."
+      description: "Return to the previous screen.",
+      examples: backPhrases,
     ),
   ];
 
