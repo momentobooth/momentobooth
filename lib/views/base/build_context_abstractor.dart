@@ -8,7 +8,6 @@ import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/views/base/build_context_accessor.dart';
 import 'package:momento_booth/views/base/photo_booth_dialog_page.dart';
 import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
-import 'package:momento_booth/views/components/dialogs/photo_booth_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/theme/photo_booth_theme.dart';
 
 /// This mixin makes several objects (that normally needs to be accessed using [BuildContext]) easier accessible from screen view models and controllers.

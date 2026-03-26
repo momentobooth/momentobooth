@@ -6,6 +6,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
@@ -33,14 +34,16 @@ class PrintDialog extends StatefulWidget with DialogActionsMixin {
       name: "cancel",
       callback: (_) { onCancel(); },
       title: 'Cancel',
-      description: 'Presses the cancel button in the print dialog.'
+      description: 'Presses the cancel button in the print dialog.',
+      examples: cancelPhrases
     ),
     // Todo add arguments
     AppAction(
       name: "print",
       callback: (_) { onPrintPressed(PrintSize.normal, 1); },
       title: 'Print',
-      description: 'Presses the print button in the print dialog.'
+      description: 'Presses the print button in the print dialog.',
+      examples: printPhrases
     ),
   ];
 

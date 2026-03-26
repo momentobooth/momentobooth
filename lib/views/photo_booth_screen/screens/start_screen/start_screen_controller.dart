@@ -23,7 +23,8 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
       name: "start",
       callback: (_) { onPressedContinue(); },
       title: "Start",
-      description: "Begin the photo booth experience."
+      description: "Begin the photo booth experience.",
+      examples: const ["start", "begin", "let's go", "proceed", "continue"],
     )
   ];
 

@@ -9,6 +9,7 @@ import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
@@ -31,25 +32,29 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       name: "retake",
       callback: (_) { onClickPrev(); },
       title: "Retake Photo",
-      description: "Retake the current photo."
+      description: "Retake the current photo.",
+      examples: const ["retake", "take again", "try again", "do it again"],
     ),
     AppAction(
       name: "get_qr",
       callback: (_) { onClickGetQR(); },
       title: "Get QR Code",
-      description: "Generate a QR code for sharing the photo."
+      description: "Generate a QR code for sharing the photo.",
+      examples: getQRPhrases,
     ),
     AppAction(
       name: "print",
       callback: (_) { onClickPrint(); },
       title: "Print Photo",
-      description: "Open the print dialog."
+      description: "Open the print dialog.",
+      examples: printPhrases,
     ),
     AppAction(
       name: "continue",
       callback: (_) { onClickNext(); },
       title: "Continue",
-      description: "Proceed to the next screen."
+      description: "Proceed to the next screen.",
+      examples: continuePhrases,
     ),
   ];
 
@@ -122,15 +127,13 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     if (!viewModel.printEnabled) return;
     showUserDialog(
       barrierDismissible: false,
-      dialog: Observer(builder: (_) {
-        return PrintDialog(
-          onPrintPressed: (size, copies) {
-            navigator.pop();
-            onConfirmPrint(size, copies);
-          },
-          onCancel: () => navigator.pop(),
-        );
-      }),
+      dialog: PrintDialog(
+        onPrintPressed: (size, copies) {
+          navigator.pop();
+          onConfirmPrint(size, copies);
+        },
+        onCancel: () => navigator.pop(),
+      ),
     );
   }
 

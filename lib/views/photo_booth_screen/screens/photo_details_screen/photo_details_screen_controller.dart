@@ -7,6 +7,7 @@ import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
@@ -24,19 +25,22 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       name: "back",
       callback: (_) { onClickPrev(); },
       title: "Back",
-      description: "Return to the gallery screen."
+      description: "Return to the gallery screen.",
+      examples: backPhrases
     ),
     AppAction(
       name: "get_qr",
       callback: (_) { onClickGetQR(); },
       title: "Get QR Code",
-      description: "Generate a QR code for sharing the photo."
+      description: "Generate a QR code for sharing the photo.",
+      examples: getQRPhrases
     ),
     AppAction(
       name: "print",
       callback: (_) { onClickPrint(); },
       title: "Print",
-      description: "Open the print dialog."
+      description: "Open the print dialog.",
+      examples: printPhrases
     ),
   ];
 

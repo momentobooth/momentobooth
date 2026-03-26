@@ -21,26 +21,30 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
       name: "single_photo",
       callback: (_) { onClickSinglePhoto(); },
       title: "Single Photo",
-      description: "Take a single photo."
+      description: "Take a single photo.",
+      examples: const ["single", "single capture", "single photo", "single picture", "take a photo"],
     ),
     if (viewModel.enableCollageCapture)
     AppAction(
       name: "collage",
       callback: (_) { onClickCollage(); },
       title: "Collage",
-      description: "Shoot multiple photos and create a collage from them."
+      description: "Shoot multiple photos and create a collage from them.",
+      examples: const ["collage", "collage capture", "collage photo", "collage picture", "take a collage"],
     ),
     AppAction(
       name: "gallery",
       callback: (_) { onClickGallery(); },
       title: "Gallery",
-      description: "View the previously captured photos."
+      description: "View the previously captured photos.",
+      examples: const ["gallery", "view gallery", "see photos", "browse images"],
     ),
     AppAction(
       name: "language",
       callback: (_) { onClickLanguage(); },
       title: "Language",
-      description: "Open the language selection dialog."
+      description: "Open the language selection dialog.",
+      examples: const ["language", "change language", "select language", "set language", "open language settings"],
     ),
   ];
 
