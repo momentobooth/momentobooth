@@ -5,9 +5,10 @@ import 'package:momento_booth/models/app_action.dart';
 mixin HasActionsMixin {
   final Object _actionStackToken = Object();
   List<AppAction> get actions => [];
+  String get scopeName => "Unknown";
 
   void pushActions() {
-    getIt<ActionManager>().push(actions, _actionStackToken);
+    getIt<ActionManager>().pushActions(actions, scopeName, _actionStackToken);
   }
 
   void popActions() {

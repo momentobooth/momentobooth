@@ -44,6 +44,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   String _lastPublishedRoute = "";
   CaptureState _lastPublishedCaptureState = CaptureState.idle;
   Settings get _settings => getIt<SettingsManager>().settings;
+  bool get allowControl => _settings.control.enable;
 
   String get rootTopic => getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
 
@@ -72,8 +73,9 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
     // Publish actions
     autorun((_) {
-        List<AppAction> actions = getIt<ActionManager>().current;
-      if (_client != null) _publishActions(actions);
+      List<AppAction> actions = getIt<ActionManager>().current;
+      List<String> scopes = getIt<ActionManager>().currentScopes;
+      if (_client != null) _publishActions(actions, scopes);
     });
   }
 
@@ -163,7 +165,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   void _forcePublishAll() {
     _publishStats(getIt<StatsManager>().stats, true);
-    _publishActions(getIt<ActionManager>().current);
+    _publishActions(getIt<ActionManager>().current, getIt<ActionManager>().currentScopes);
     publishScreen();
     publishCaptureState();
     publishSettings();
@@ -205,13 +207,28 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     _publish("app_build", packageInfo.buildNumber);
   }
 
-  void _publishActions(List<AppAction> actions) {
+  void _publishActions(List<AppAction> actions, List<String> scopes) {
+    if (!allowControl) return;
     _publish(
-      "current_actions",
+      "actions/list",
       jsonEncode(actions.map((a) => a.toJson()).toList()),
       retain: true,
     );
-    publishHomeAssistantSelectDiscoveryTopic(integrationName: "actions", options: actions.map((a) => a.name).toList(), stateTopic: "None", commandTopic: "$rootTopic/do_action");
+    publishHomeAssistantSelectDiscoveryTopic(integrationName: "actions", options: actions.map((a) => a.name).toList(), stateTopic: "None", commandTopic: "$rootTopic/actions/execute");
+    _publish(
+      "actions/scopes",
+      jsonEncode(scopes),
+      retain: true,
+    );
+  }
+
+  void _publishActionCallHistory(List<AppActionCall> actionCalls) {
+    if (!allowControl) return;
+    _publish(
+      "actions/call_history",
+      jsonEncode(actionCalls.map((a) => a.toJson()).toList()),
+      retain: true,
+    );
   }
 
   void _clearTopic(String topic) {
@@ -241,9 +258,9 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
             if (payload.length == 0) return;
             _clearTopic("update_settings");
             _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
-          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/do_action":
+          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/actions/execute":
             if (payload.length == 0) return;
-            _clearTopic("do_action");
+            _clearTopic("actions/execute");
             _onHomeAssistantActionMessage(const Utf8Decoder().convert(payload.message!));
           default:
             logWarning("Received unknown published MQTT message: $message");
@@ -254,7 +271,9 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     });
 
     _subscribeToTopic('update_settings');
-    _subscribeToTopic('do_action');
+    if (allowControl) {
+      _subscribeToTopic('actions/execute');
+    }
   }
 
   void _subscribeToTopic(String relativeTopic) {

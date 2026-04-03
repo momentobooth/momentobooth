@@ -18,6 +18,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewModel> {
 
   @override
+  String get scopeName => "Gallery Screen";
+
+  @override
   List<AppAction> get actions => [
     AppAction(
       name: "open_latest_picture",

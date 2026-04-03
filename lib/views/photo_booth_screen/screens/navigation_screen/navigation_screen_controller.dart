@@ -15,6 +15,9 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
   AutoSizeGroup autoSizeGroup = AutoSizeGroup();
 
   @override
+  String get scopeName => "Navigation Screen";
+
+  @override
   List<AppAction> get actions => [
     if (viewModel.enableSingleCapture)
     AppAction(

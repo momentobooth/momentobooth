@@ -20,6 +20,9 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   AutoSizeGroup actionButtonGroup = AutoSizeGroup();
 
   @override
+  String get scopeName => "Photo Details Screen";
+
+  @override
   List<AppAction> get actions => [
     AppAction(
       name: "back",

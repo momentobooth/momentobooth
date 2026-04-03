@@ -18,6 +18,9 @@ import 'package:momento_booth/views/settings_overlay/settings_overlay_view.dart'
 class StartScreenController extends ScreenControllerBase<StartScreenViewModel> with PrinterStatusDialogMixin<StartScreenViewModel> {
 
   @override
+  String get scopeName => "Start Screen";
+
+  @override
   List<AppAction> get actions => [
     AppAction(
       name: "start",

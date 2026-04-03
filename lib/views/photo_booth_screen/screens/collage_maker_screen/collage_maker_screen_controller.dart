@@ -20,6 +20,9 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
   final GlobalKey<PhotoCollageState> collageKey = GlobalKey<PhotoCollageState>();
 
   @override
+  String get scopeName => "Collage Maker Screen";
+
+  @override
   List<AppAction> get actions => [
     AppAction(
       name: "select_pictures",
@@ -106,7 +109,10 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
   /// This is called from the native side when the select_pictures action is called from the actions API.
   /// The selected picture indices are passed in the `selected` field of the params.
   void selectPicturesAPI(Map<String, dynamic> params) {
-    List<int> selected = List<int>.from(params["selected"] ?? []).map((index) => index - 1).where((index) => index >= 0 && index < 4).toList();
+    List<int> selected = List<int>.from(params["selected"] ?? [])
+      .map((index) => index - 1)                    // Convert from 1-indexed to 0-indexed
+      .where((index) => index >= 0 && index < 4)    // Ensure indices are within bounds
+      .toSet().toList();                            // Remove duplicates
     getIt<PhotosManager>().chosen
       ..clear()
       ..addAll(selected);
