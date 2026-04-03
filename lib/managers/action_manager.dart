@@ -3,8 +3,10 @@
 import 'package:collection/collection.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/mqtt_manager.dart';
+import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/logger.dart';
 // import 'package:action_manager/action_manager.dart';
@@ -22,8 +24,9 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   ObservableList<_Entry> _stack = ObservableList();
 
   List<AppAction> get current => _stack.isEmpty ? const [] : _stack.last.actions;
+  List<String> get currentScopes => _stack.isEmpty ? const [] : _stack.map((e) => e.scopeName).toList();
 
-  MqttManager get mqtt => getIt<MqttManager>();
+  bool get allowControl => getIt<SettingsManager>().settings.control.enable;
 
   // ////////////// //
   // Initialization //
@@ -38,8 +41,8 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   // Methods //
   // /////// //
 
-  void push(List<AppAction> actions, Object token) {
-    _stack.add(_Entry(token, actions));
+  void pushActions(List<AppAction> actions, String scopeName, Object token) {
+    _stack.add(_Entry(token, scopeName, actions));
     publish();
   }
 
@@ -58,6 +61,10 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   }
 
   void callAction(String actionName, {Map<String, dynamic> parameters = const {}}) {
+    if (!allowControl) {
+      logWarning("Received request to call action $actionName, but control is disabled in settings");
+      return;
+    }
     AppAction? action = current.firstWhereOrNull((a) => a.name == actionName);
     if (action != null) {
       logInfo("Calling action $actionName ${parameters.isNotEmpty ? "with parameters $parameters" : "without parameters"}");
@@ -71,7 +78,8 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
 
 class _Entry {
   final Object token;
+  final String scopeName;
   final List<AppAction> actions;
 
-  _Entry(this.token, this.actions);
+  _Entry(this.token, this.scopeName, this.actions);
 }

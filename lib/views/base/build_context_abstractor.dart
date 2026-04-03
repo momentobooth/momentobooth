@@ -31,7 +31,7 @@ mixin BuildContextAbstractor {
       DialogActionsMixin photoBoothDialog => photoBoothDialog.actions,
       _ => [],
     };
-    getIt<ActionManager>().push(dialogActions, actionStackToken);
+    getIt<ActionManager>().pushActions(dialogActions, "User Dialog", actionStackToken);
     // We then show the dialog and wait for it to be dismissed, saving the `pop` result
     final result = await navigator.push<T>(PhotoBoothDialogPage<T>(
       child: Padding(

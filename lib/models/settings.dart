@@ -38,6 +38,7 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
     @JsonKey(defaultValue: HardwareSettings.withDefaults) required HardwareSettings hardware,
     @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
     @JsonKey(defaultValue: UiSettings.withDefaults) required UiSettings ui,
+    @JsonKey(defaultValue: ControlSettings.withDefaults) required ControlSettings control,
     @JsonKey(defaultValue: MqttIntegrationSettings.withDefaults) required MqttIntegrationSettings mqttIntegration,
     @JsonKey(defaultValue: FaceRecognitionSettings.withDefaults) required FaceRecognitionSettings faceRecognition,
     @JsonKey(defaultValue: DebugSettings.withDefaults) required DebugSettings debug,
@@ -314,6 +315,25 @@ sealed class FaceRecognitionSettings with _$FaceRecognitionSettings implements T
   factory FaceRecognitionSettings.withDefaults() => FaceRecognitionSettings.fromJson({});
 
   factory FaceRecognitionSettings.fromJson(Map<String, Object?> json) => _$FaceRecognitionSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+sealed class ControlSettings with _$ControlSettings implements TomlEncodableValue {
+
+  const ControlSettings._();
+
+  const factory ControlSettings({
+    @Default(false) bool enable,
+    @Default(2000) int controlDisableDurationMsAfterTouch,
+  }) = _ControlSettings;
+
+  factory ControlSettings.withDefaults() => ControlSettings.fromJson({});
+
+  factory ControlSettings.fromJson(Map<String, Object?> json) => _$ControlSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();

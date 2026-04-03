@@ -5,6 +5,9 @@ import 'package:momento_booth/views/photo_booth_screen/screens/multi_capture_scr
 
 class MultiCaptureScreenController extends ScreenControllerBase<MultiCaptureScreenViewModel> {
 
+  @override
+  String get scopeName => "Multi Capture Screen";
+
   // Initialization/Deinitialization
 
   MultiCaptureScreenController({

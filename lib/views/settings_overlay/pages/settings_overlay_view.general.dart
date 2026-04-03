@@ -25,6 +25,30 @@ Widget _getGeneralSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
         value: () => viewModel.enableWakelockSetting,
         onChanged: controller.onEnableWakelockChanged,
       ),
+      SettingsSection(
+        title: "Control",
+        settings: [
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("When control is enabled, MomentoBooth can receive commands and send updates to external applications, such as Home Assistant. "
+            "This allows you to integrate MomentoBooth into your smart home setup and automate it based on various triggers. Currently this is done through MQTT, configure this in the MQTT settings."),
+          ),
+          SettingsToggleTile(
+            icon: LucideIcons.sendToBack,
+            title: "Enable control features",
+            subtitle: "When enabled, MomentoBooth will publish updates about its state and listen for incoming commands to control it. If you don't use this, it's best to keep it disabled for security and performance reasons.",
+            value: () => viewModel.allowControlSetting,
+            onChanged: controller.onAllowControlChanged,
+          ),
+          SettingsNumberEditTile(
+            icon: LucideIcons.shieldEllipsis,
+            title: "Control disable duration after touch",
+            subtitle: 'In milliseconds. After a user interacts with the photobooth (e.g. by touching the screen), control features will be automatically disabled for this duration to prevent unwanted remote interactions while people are using the booth.',
+            value: () => viewModel.controlDisableDurationMsAfterTouchSetting,
+            onFinishedEditing: controller.onControlDisableDurationAfterTouchChanged,
+          ),
+        ]
+      ),
       const SettingsSection(
         title: "Hotkeys",
         settings: [

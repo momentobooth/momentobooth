@@ -5,6 +5,9 @@ import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_sc
 
 class SingleCaptureScreenController extends ScreenControllerBase<SingleCaptureScreenViewModel> {
 
+  @override
+  String get scopeName => "Single Capture Screen";
+
   // Initialization/Deinitialization
 
   SingleCaptureScreenController({

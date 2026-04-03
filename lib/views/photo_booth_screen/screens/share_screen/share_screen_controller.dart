@@ -27,6 +27,9 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   AutoSizeGroup actionButtonGroup = AutoSizeGroup(), navigationButtonGroup = AutoSizeGroup();
 
   @override
+  String get scopeName => "Share Screen";
+
+  @override
   List<AppAction> get actions => [
     AppAction(
       name: "retake",

@@ -16,6 +16,9 @@ import 'package:path/path.dart' as path;
 
 class ManualCollageScreenController extends ScreenControllerBase<ManualCollageScreenViewModel> {
 
+  @override
+  String get scopeName => "Manual Collage Screen";
+
   // Initialization/Deinitialization
 
   ManualCollageScreenController({
