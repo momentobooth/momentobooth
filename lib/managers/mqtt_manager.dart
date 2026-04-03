@@ -77,6 +77,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       List<String> scopes = getIt<ActionManager>().currentScopes;
       if (_client != null) _publishActions(actions, scopes);
     });
+    autorun((_) {
+      List<AppActionCall> actionCalls = getIt<ActionManager>().actionHistory.values.toList();
+      if (_client != null) _publishActionCallHistory(actionCalls);
+    });
   }
 
   void notifyPasswordChanged() {

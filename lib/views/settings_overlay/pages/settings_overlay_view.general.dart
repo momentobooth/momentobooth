@@ -47,6 +47,13 @@ Widget _getGeneralSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
             value: () => viewModel.controlDisableDurationMsAfterTouchSetting,
             onFinishedEditing: controller.onControlDisableDurationAfterTouchChanged,
           ),
+          SettingsNumberEditTile(
+            icon: LucideIcons.history,
+            title: "Control history retention duration",
+            subtitle: 'In seconds. MomentoBooth keeps a history of received control commands for this duration. This can be used to provide context to new commands.',
+            value: () => viewModel.controlHistoryDurationSecondsSetting,
+            onFinishedEditing: controller.onControlHistoryDurationSecondsChanged,
+          ),
         ]
       ),
       const SettingsSection(

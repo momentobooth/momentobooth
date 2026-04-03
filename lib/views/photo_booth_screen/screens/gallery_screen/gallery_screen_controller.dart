@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/find_face_dialog.dart';
@@ -48,6 +49,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   void openPhoto(File file) {
     final String filename = basename(file.path);
     logDebug("Opening photo $filename");
+    registerActionCall(AppActionCall(tool: "open_photo", arguments: {"filename": filename}));
     router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
   }
 
@@ -64,6 +66,7 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   }
 
   void onPressedBack() {
+    registerActionCall(const AppActionCall(tool: "back"));
     if (router.canPop()) {
       router.pop();
     } else {

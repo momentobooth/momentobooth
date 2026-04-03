@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
@@ -91,6 +92,9 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     } else {
       getIt<PhotosManager>().chosen.add(image);
     }
+    // Log the action call with the selected pictures as arguments, converting from 0-indexed to 1-indexed.
+    // Overwrite any previous select_pictures action to avoid cluttering the action history with multiple select_pictures calls when the user is toggling pictures multiple times.
+    registerActionCall(AppActionCall(tool: "select_pictures", arguments: {"selected": getIt<PhotosManager>().chosen.map((index) => index + 1).toList()}), overwriteSameName: true);
   }
 
   Future<void> onTimeout() async {
@@ -101,6 +105,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   Future<void> onContinueTap() async {
     if (getIt<PhotosManager>().chosen.isNotEmpty) {
+      registerActionCall(const AppActionCall(tool: "continue"));
       await viewModel.generateCollage(collageKey: collageKey);
       router.go(ShareScreen.defaultRoute);
     }
@@ -116,6 +121,8 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     getIt<PhotosManager>().chosen
       ..clear()
       ..addAll(selected);
+    // Log the action call with the selected pictures as arguments
+    registerActionCall(AppActionCall(tool: "select_pictures", arguments: {"selected": selected.map((index) => index + 1).toList()}));
   }
 
   // ////// //

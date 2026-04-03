@@ -6,7 +6,6 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/app_action_call.dart';
-import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/logger.dart';
 // import 'package:action_manager/action_manager.dart';
@@ -22,6 +21,7 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
 
   @readonly
   ObservableList<_Entry> _stack = ObservableList();
+  ObservableMap<DateTime, AppActionCall> actionHistory = ObservableMap();
 
   List<AppAction> get current => _stack.isEmpty ? const [] : _stack.last.actions;
   List<String> get currentScopes => _stack.isEmpty ? const [] : _stack.map((e) => e.scopeName).toList();
@@ -40,6 +40,18 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   // /////// //
   // Methods //
   // /////// //
+
+  void registerActionCall(AppActionCall call, {bool overwriteSameName = false}) {
+    final lastEntry = actionHistory.entries.last;
+    if (lastEntry.value.tool == call.tool && overwriteSameName) {
+      logInfo("Overwriting previous action call for tool ${call.tool} with arguments ${lastEntry.value.arguments} by ${call.arguments}");
+      actionHistory.remove(lastEntry.key);
+    }
+    actionHistory[DateTime.now()] = call;
+    final retentionLength = getIt<SettingsManager>().settings.control.controlHistoryDurationSeconds;
+    actionHistory.removeWhere((key, value) => key.isBefore(DateTime.now().subtract(Duration(seconds: retentionLength))));
+    logInfo("Registered action call for tool ${call.tool} with arguments ${call.arguments}. Action history now contains ${actionHistory.length} entries.");
+  }
 
   void pushActions(List<AppAction> actions, String scopeName, Object token) {
     _stack.add(_Entry(token, scopeName, actions));

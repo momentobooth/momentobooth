@@ -227,6 +227,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   bool get loadLastProjectSetting => getIt<SettingsManager>().settings.loadLastProject;
   bool get allowControlSetting => getIt<SettingsManager>().settings.control.enable;
   int get controlDisableDurationMsAfterTouchSetting => getIt<SettingsManager>().settings.control.controlDisableDurationMsAfterTouch;
+  int get controlHistoryDurationSecondsSetting => getIt<SettingsManager>().settings.control.controlHistoryDurationSeconds;
   double get collageAspectRatioSetting => getIt<SettingsManager>().settings.collageAspectRatio;
   double get collagePaddingSetting => getIt<SettingsManager>().settings.collagePadding;
   bool get enableWakelockSetting => getIt<SettingsManager>().settings.enableWakelock;
