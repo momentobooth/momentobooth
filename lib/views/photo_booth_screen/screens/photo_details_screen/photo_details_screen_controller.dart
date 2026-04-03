@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
@@ -39,7 +40,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       examples: getQRPhrases
     ),
     AppAction(
-      name: "print",
+      name: "open_print_dialog",
       callback: (_) { onClickPrint(); },
       title: "Print",
       description: "Open the print dialog.",
@@ -55,10 +56,12 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   });
 
   void onClickPrev() {
+    registerActionCall(const AppActionCall(tool: "back"));
     router.pop();
   }
 
   void onClickGetQR() {
+    registerActionCall(const AppActionCall(tool: "get_qr"));
     viewModel.uploadPhotoToSend();
     showUserDialog(
       barrierDismissible: false,
@@ -89,6 +92,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
   void onClickPrint() {
     if (!viewModel.printEnabled) return;
+    registerActionCall(const AppActionCall(tool: "open_print_dialog"));
     showUserDialog(
       barrierDismissible: false,
       dialog: PrintDialog(

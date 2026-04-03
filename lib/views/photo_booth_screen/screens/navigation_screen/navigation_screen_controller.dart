@@ -3,6 +3,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/language_choice_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
@@ -43,7 +44,7 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
       examples: const ["gallery", "view gallery", "see photos", "browse images"],
     ),
     AppAction(
-      name: "language",
+      name: "open_language_dialog",
       callback: (_) { onClickLanguage(); },
       title: "Language",
       description: "Open the language selection dialog.",
@@ -72,9 +73,11 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
     final singleCapture = viewModel.enableSingleCapture;
     final collageCapture = viewModel.enableCollageCapture;
     if (singleCapture) {
+      registerActionCall(const AppActionCall(tool: "single_photo"));
       router.go(SingleCaptureScreen.defaultRoute);
       return;
     } else if (collageCapture) {
+      registerActionCall(const AppActionCall(tool: "collage"));
       router.go(MultiCaptureScreen.defaultRoute);
       return;
     } else {
@@ -95,10 +98,12 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
   }
 
   void onClickGallery() {
+    registerActionCall(const AppActionCall(tool: "gallery"));
     router.push(GalleryScreen.defaultRoute);
   }
 
   Future<void> onClickLanguage() async {
+    registerActionCall(const AppActionCall(tool: "open_language_dialog"));
     await showUserDialog(
       dialog: LanguageChoiceDialog(onChosen: (language) {
         navigator.pop();

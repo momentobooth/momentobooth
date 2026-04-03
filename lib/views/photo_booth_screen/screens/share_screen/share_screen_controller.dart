@@ -8,6 +8,7 @@ import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
@@ -76,6 +77,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   void onRetake (bool delete) {
     navigator.pop();
+    registerActionCall(AppActionCall(tool: "retake", arguments: {"delete": delete}));
     // The reset function will clear the capture mode, so we need to save it.
     final captureMode = getIt<PhotosManager>().captureMode;
     getIt<PhotosManager>().reset(advance: !delete);
@@ -92,12 +94,14 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     if (viewModel.canRetake) {
       showUserDialog(dialog: RetakeDialog(onDelete: () => onRetake(true), onKeep: () => onRetake(false), onCancel: () => navigator.pop() ), barrierDismissible: false);
     } else {
+      registerActionCall(const AppActionCall(tool: "back"));
       getIt<StatsManager>().addCollageChange();
       router.go(CollageMakerScreen.defaultRoute);
     }
   }
 
   void onClickGetQR() {
+    registerActionCall(const AppActionCall(tool: "get_qr"));
     viewModel.uploadPhotoToSend();
     showUserDialog(
       barrierDismissible: false,
@@ -128,6 +132,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   void onClickPrint() {
     if (!viewModel.printEnabled) return;
+    registerActionCall(const AppActionCall(tool: "open_print_dialog"));
     showUserDialog(
       barrierDismissible: false,
       dialog: PrintDialog(

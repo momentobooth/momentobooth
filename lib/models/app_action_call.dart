@@ -10,7 +10,7 @@ abstract class AppActionCall with _$AppActionCall {
 
   const factory AppActionCall({
     required String tool,
-    required Map<String, dynamic> arguments,
+    @Default({}) Map<String, dynamic> arguments,
   }) = _AppActionCall;
 
   factory AppActionCall.fromJson(Map<String, dynamic> json) => _$AppActionCallFromJson(json);

@@ -329,6 +329,7 @@ sealed class ControlSettings with _$ControlSettings implements TomlEncodableValu
   const factory ControlSettings({
     @Default(false) bool enable,
     @Default(2000) int controlDisableDurationMsAfterTouch,
+    @Default(30) int controlHistoryDurationSeconds,
   }) = _ControlSettings;
 
   factory ControlSettings.withDefaults() => ControlSettings.fromJson({});

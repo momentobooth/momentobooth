@@ -5,6 +5,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -52,6 +53,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   // User interaction methods
 
   void onPressedContinue() {
+    registerActionCall(const AppActionCall(tool: "start"));
     router.go(NavigationScreen.defaultRoute);
   }
 
