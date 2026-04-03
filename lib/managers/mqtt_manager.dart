@@ -10,6 +10,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/action_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/models/capture_state.dart';
@@ -274,6 +275,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
             if (payload.length == 0) return;
             _clearTopic("actions/execute");
             _onHomeAssistantActionMessage(const Utf8Decoder().convert(payload.message!));
+          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/notify":
+            if (payload.length == 0) return;
+            _clearTopic("notify");
+            _onNotifyMessage(const Utf8Decoder().convert(payload.message!));
           default:
             logWarning("Received unknown published MQTT message: $message");
         }
@@ -283,6 +288,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     });
 
     _subscribeToTopic('update_settings');
+    _subscribeToTopic('notify');
     if (allowControl) {
       _subscribeToTopic('actions/execute');
     }
@@ -319,6 +325,21 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     } catch (e) {
       getIt<ActionManager>().callAction(message);
     }
+  }
+
+  void _onNotifyMessage(String message) {
+    logInfo("Received notify message from MQTT: $message");
+    late final NotificationRequest notification;
+    try {
+      final dynamic decoded = jsonDecode(message);
+
+      if (decoded is Map<String, dynamic>) {
+        notification = NotificationRequest.fromJson(decoded);
+      }
+    } catch (e) {
+      notification = NotificationRequest(message: message);
+    }
+    logInfo("Received notification request: $notification");
   }
 
   // ////////////////////////// //
@@ -374,6 +395,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       payload: CaptureState.capturing.mqttValue,
       stateTopic: "$rootTopic/capture_state",
     );
+    publishHomeAssistantNotifyDiscoveryTopic(
+      integrationName: "Show notification",
+      commandTopic: "$rootTopic/notify",
+    );
   }
 
   void publishHomeAssistantSensorDiscoveryTopic({required String integrationName, required String stateTopic}) {
@@ -425,6 +450,24 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
               name: integrationName,
               options: options,
               stateTopic: stateTopic,
+              commandTopic: commandTopic,
+              device: homeAssistantDevice,
+              uniqueId: '${Casing.snakeCase(integrationName)}_$componentId',
+            ).toJson())))
+          .payload!,
+      retain: true,
+    );
+  }
+
+  void publishHomeAssistantNotifyDiscoveryTopic({required String integrationName, required String commandTopic}) {
+    if (!canDoHomeAssistantDiscovery) return;
+
+    _client!.publishMessage(
+      '$discoveryTopicPrefix/notify/$componentId/${Casing.snakeCase(integrationName)}/config',
+      MqttQos.atLeastOnce,
+      (MqttPayloadBuilder()
+            ..addString(jsonEncode(HomeAssistantDiscoveryPayload.notify(
+              name: integrationName,
               commandTopic: commandTopic,
               device: homeAssistantDevice,
               uniqueId: '${Casing.snakeCase(integrationName)}_$componentId',

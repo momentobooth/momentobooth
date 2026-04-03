@@ -39,6 +39,13 @@ sealed class HomeAssistantDiscoveryPayload with _$HomeAssistantDiscoveryPayload 
     @JsonKey(name: 'device') required HomeAssistantDevice device,
   }) = HomeAssistantSelectDiscoveryPayload;
 
+  const factory HomeAssistantDiscoveryPayload.notify({
+    @JsonKey(name: 'name') required String name,
+    @JsonKey(name: 'command_topic') required String commandTopic,
+    @JsonKey(name: 'unique_id') required String uniqueId,
+    @JsonKey(name: 'device') required HomeAssistantDevice device,
+  }) = HomeAssistantNotifyDiscoveryPayload;
+
 
 }
 
