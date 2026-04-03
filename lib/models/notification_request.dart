@@ -10,7 +10,7 @@ abstract class NotificationRequest with _$NotificationRequest {
 
   const factory NotificationRequest({
     required String message,
-    @Default(500) int duration,
+    @Default(1000) int duration,
   }) = _NotificationRequest;
 
   factory NotificationRequest.fromJson(Map<String, dynamic> json) => _$NotificationRequestFromJson(json);

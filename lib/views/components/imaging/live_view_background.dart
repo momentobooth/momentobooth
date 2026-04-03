@@ -9,6 +9,7 @@ import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
+import 'package:momento_booth/views/components/indicators/pill_container.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/photo_details_screen/photo_details_screen.dart';
@@ -58,6 +59,7 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
         _viewState,
         widget.child,
         _statusOverlay,
+        _notificationOverlay,
       ],
     );
   }
@@ -70,13 +72,28 @@ class _LiveViewBackgroundState extends State<LiveViewBackground> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (InfoBar notification in getIt<NotificationsManager>().notifications) ...[
+            for (InfoBar notification in getIt<NotificationsManager>().statusNotifications) ...[
               notification,
               const SizedBox(height: 8),
             ],
           ],
         ),
       ),
+    );
+  }
+
+  Widget get _notificationOverlay {
+    return Padding(
+      padding: const EdgeInsets.all(30),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Observer(
+          builder: (context) => PillContainer(
+              text: getIt<NotificationsManager>().notification,
+              visible: getIt<NotificationsManager>().notification.isNotEmpty,
+            ),
+          ),
+        ),
     );
   }
 
