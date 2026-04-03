@@ -121,6 +121,7 @@ class _ActivityMonitorState extends State<ActivityMonitor> with Logger {
       getIt<StatsManager>().addTap();
       getIt<SfxManager>().playClickSound();
     }
+    getIt<ActionManager>().registerPhysicalAction();
     _resetTimer();
   }
 
