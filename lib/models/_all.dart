@@ -9,6 +9,7 @@ export 'gallery_group.dart';
 export 'gallery_image.dart';
 export 'live_view_frame.dart';
 export 'maker_note_data.dart';
+export 'notification_request.dart';
 export 'photo_capture.dart';
 export 'print_queue_info.dart';
 export 'print_queue_task.dart';
