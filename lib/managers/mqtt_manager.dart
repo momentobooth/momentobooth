@@ -8,6 +8,7 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/action_manager.dart';
+import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/_all.dart';
@@ -340,6 +341,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       notification = NotificationRequest(message: message);
     }
     logInfo("Received notification request: $notification");
+    getIt<NotificationsManager>().addNotificationRequest(notification);
   }
 
   // ////////////////////////// //
