@@ -81,6 +81,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       List<AppActionCall> actionCalls = getIt<ActionManager>().actionHistory.values.toList();
       if (_client != null) _publishActionCallHistory(actionCalls);
     });
+    autorun((_) {
+      bool isListening = getIt<ActionManager>().listeningForActions;
+      if (_client != null) _publishListeningState(isListening);
+    });
   }
 
   void notifyPasswordChanged() {
@@ -233,6 +237,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       jsonEncode(actionCalls.map((a) => a.toJson()).toList()),
       retain: true,
     );
+  }
+
+  void _publishListeningState(bool isListening) {
+    _publish("actions/listening", isListening ? "true" : "false", retain: true);
   }
 
   void _clearTopic(String topic) {
