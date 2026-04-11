@@ -25,14 +25,14 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   List<AppAction> get actions => [
     AppAction(
       name: "open_latest_picture",
-      callback: (_) { openLatestPhoto(); },
+      callback: (_, response) { openLatestPhoto(); response(true, "Opened latest picture for viewing"); },
       title: "Open Latest Picture",
       description: "View the most recently captured picture.",
       examples: const ["latest", "most recent", "last photo", "last picture", "open latest"],
     ),
     AppAction(
       name: "back",
-      callback: (_) { onPressedBack(); },
+      callback: (_, response) { onPressedBack(); response(true, "Back button pressed"); },
       title: "Back",
       description: "Return to the previous screen.",
       examples: backPhrases,

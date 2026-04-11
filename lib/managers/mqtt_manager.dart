@@ -12,13 +12,7 @@ import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/_all.dart';
-import 'package:momento_booth/models/app_action.dart';
-import 'package:momento_booth/models/app_action_call.dart';
-import 'package:momento_booth/models/capture_state.dart';
-import 'package:momento_booth/models/connection_state.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
-import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
@@ -86,6 +80,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     autorun((_) {
       bool isListening = getIt<ActionManager>().listeningForActions;
       if (_client != null) _publishListeningState(isListening);
+    });
+    autorun((_) {
+      AppActionResponse? lastResponse = getIt<ActionManager>().lastResponse;
+      if (_client != null) _publishLastResponse(lastResponse);
     });
   }
 
@@ -243,6 +241,11 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   void _publishListeningState(bool isListening) {
     _publish("actions/listening", isListening ? "true" : "false", retain: true);
+  }
+
+  void _publishLastResponse(AppActionResponse? response) {
+    if (response == null) return;
+    _publish("actions/execute/result", jsonEncode(response.toJson()), retain: false);
   }
 
   void _clearTopic(String topic) {

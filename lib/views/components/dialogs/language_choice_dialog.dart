@@ -89,11 +89,14 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
     // AppAction(name: "dismiss", callback: (_) {  }),
   ];
 
-  void setLanguageAPI(Map<String, dynamic> args) {
+  void setLanguageAPI(Map<String, dynamic> args, Function(bool, String) response) {
     final String languageCode = args["language_code"] ?? "--";
     final Language language = Language.definedValues.firstWhere((lang) => lang.code == languageCode, orElse: () => Language.noLanguage);
     if (language != Language.noLanguage){
       onChosen(language);
+      response(true, "Language set to ${language.nameNative} (${language.code})");
+    } else {
+      response(false, "Invalid language code: $languageCode");
     }
   }
 }

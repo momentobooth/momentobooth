@@ -32,7 +32,7 @@ class PrintDialog extends StatefulWidget with DialogActionsMixin {
   List<AppAction> get actions => [
     AppAction(
       name: "cancel",
-      callback: (_) { onCancel(); },
+      callback: (_, response) { onCancel(); response(true, "Cancel button pressed"); },
       title: 'Cancel',
       description: 'Presses the cancel button in the print dialog.',
       examples: cancelPhrases
@@ -40,7 +40,7 @@ class PrintDialog extends StatefulWidget with DialogActionsMixin {
     // Todo add arguments
     AppAction(
       name: "print",
-      callback: (_) { onPrintPressed(PrintSize.normal, 1); },
+      callback: (_, response) { onPrintPressed(PrintSize.normal, 1); response(true, "Print button pressed"); },
       title: 'Print',
       description: 'Presses the print button in the print dialog.',
       examples: printPhrases

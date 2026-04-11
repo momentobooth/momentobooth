@@ -34,30 +34,30 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   List<AppAction> get actions => [
     AppAction(
       name: "retake",
-      callback: (_) { onClickPrev(); },
+      callback: (_, response) { onClickPrev(); response(true, "Retaking photo"); },
       title: "Retake Photo",
       description: "Retake the current photo.",
       examples: const ["retake", "take again", "try again", "do it again"],
     ),
     AppAction(
       name: "get_qr",
-      callback: (_) { onClickGetQR(); },
+      callback: (_, response) { onClickGetQR(); response(true, "Uploading the picture to get a QR code"); },
       title: "Get QR Code",
       description: "Generate a QR code for sharing the photo.",
       examples: getQRPhrases,
     ),
     AppAction(
       name: "print",
-      callback: (_) { onClickPrint(); },
+      callback: (_, response) { onClickPrint(); response(true, "Opening the print dialog"); },
       title: "Print Photo",
       description: "Open the print dialog.",
       examples: printPhrases,
     ),
     AppAction(
       name: "continue",
-      callback: (_) { onClickNext(); },
+      callback: (_, response) { onClickNext(); response(true, "Continuing to the start screen"); },
       title: "Continue",
-      description: "Proceed to the next screen.",
+      description: "Proceed to the start screen.",
       examples: continuePhrases,
     ),
   ];

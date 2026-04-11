@@ -23,7 +23,7 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
     if (viewModel.enableSingleCapture)
     AppAction(
       name: "single_photo",
-      callback: (_) { onClickSinglePhoto(); },
+      callback: (_, response) { onClickSinglePhoto(); response(true, "Commencing to take a single photo"); },
       title: "Single Photo",
       description: "Take a single photo.",
       examples: const ["single", "single capture", "single photo", "single picture", "take a photo"],
@@ -31,21 +31,21 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
     if (viewModel.enableCollageCapture)
     AppAction(
       name: "collage",
-      callback: (_) { onClickCollage(); },
+      callback: (_, response) { onClickCollage(); response(true, "Commencing to create a collage"); },
       title: "Collage",
       description: "Shoot multiple photos and create a collage from them.",
       examples: const ["collage", "collage capture", "collage photo", "collage picture", "take a collage"],
     ),
     AppAction(
       name: "gallery",
-      callback: (_) { onClickGallery(); },
+      callback: (_, response) { onClickGallery(); response(true, "Opening gallery"); },
       title: "Gallery",
       description: "View the previously captured photos.",
       examples: const ["gallery", "view gallery", "see photos", "browse images"],
     ),
     AppAction(
       name: "open_language_dialog",
-      callback: (_) { onClickLanguage(); },
+      callback: (_, response) { onClickLanguage(); response(true, "Opening language dialog"); },
       title: "Language",
       description: "Open the language selection dialog.",
       examples: const ["language", "change language", "select language", "set language", "open language settings"],

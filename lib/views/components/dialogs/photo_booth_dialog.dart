@@ -19,7 +19,7 @@ class PhotoBoothDialog extends StatelessWidget {
     var buttons = actions.whereType<StatelessPhotoBoothButton>();
     return buttons.map((button) => AppAction(
       name: button.title.toLowerCase().replaceAll(" ", "_"),
-      callback: (_) { button.onPressed?.call(); },
+      callback: (_, response) { button.onPressed?.call(); response(true, "Pressed ${button.title} button"); },
       title: button.title,
       description: 'Presses the "${button.title}" button in the ${title ?? "photo booth"} dialog.',
     )).toList();

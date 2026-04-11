@@ -42,17 +42,18 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
     ),
     AppAction(
       name: "continue",
-      callback: (_) { onContinueTap(); },
+      callback: (_, response) { onContinueTap(); response(true, "Continue button pressed"); },
       title: "Continue",
       description: "Proceed to the share screen.",
       examples: continuePhrases,
     ),
     AppAction(
       name: "select_all_pictures",
-      callback: (_) {
+      callback: (_, response) {
         getIt<PhotosManager>().chosen
           ..clear()
           ..addAll([0, 1, 2, 3]);
+        response(true, "All pictures selected");
       },
       title: "Select All Pictures",
       description: "Select all captured pictures",
@@ -113,7 +114,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
 
   /// This is called from the native side when the select_pictures action is called from the actions API.
   /// The selected picture indices are passed in the `selected` field of the params.
-  void selectPicturesAPI(Map<String, dynamic> params) {
+  void selectPicturesAPI(Map<String, dynamic> params, Function(bool, String) response) {
     List<int> selected = List<int>.from(params["selected"] ?? [])
       .map((index) => index - 1)                    // Convert from 1-indexed to 0-indexed
       .where((index) => index >= 0 && index < 4)    // Ensure indices are within bounds
@@ -123,6 +124,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
       ..addAll(selected);
     // Log the action call with the selected pictures as arguments
     registerActionCall(AppActionCall(tool: "select_pictures", arguments: {"selected": selected.map((index) => index + 1).toList()}));
+    response(true, "Pictures ${selected.map((index) => index + 1).toList()} selected");
   }
 
   // ////// //

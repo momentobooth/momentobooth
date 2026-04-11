@@ -11,7 +11,9 @@ const List<String> continuePhrases = [
   "next",
   "go on",
   "proceed",
-  "keep going"
+  "keep going",
+  "done",
+  "finished"
 ];
 
 const List<String> backPhrases = [

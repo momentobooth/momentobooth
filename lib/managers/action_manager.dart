@@ -8,6 +8,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_response.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/utils/logger.dart';
 // import 'package:action_manager/action_manager.dart';
@@ -27,6 +28,8 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   ObservableMap<DateTime, AppActionCall> _actionHistory = ObservableMap();
   @readonly
   bool _blockWithPhysicalInteraction = false;
+  @readonly
+  AppActionResponse? _lastResponse;
   
   /// Whether the system should currently be listening for actions based on whether there are any actions available and whether there has been recent physical interaction.
   bool get listeningForActions => allowControl && !_blockWithPhysicalInteraction && current.isNotEmpty;
@@ -89,8 +92,14 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   }
 
   void publish() {
-    // Todo: Publish current action stack to MQTT
+    // Publishing handled automatically by the MQTT manager.
     logInfo("Stack of length ${_stack.length} contains ${current.length} actions: ${current.map((a) => a.name).join(", ")}");
+  }
+
+  void setResponseForAction(bool success, String message) {
+    // Publishing handled automatically by the MQTT manager.
+    _lastResponse = AppActionResponse(success: success, message: message);
+    logInfo("Setting response for most recent action call to $_lastResponse");
   }
 
   void callAction(String actionName, {Map<String, dynamic> parameters = const {}}) {
@@ -105,7 +114,7 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
     AppAction? action = current.firstWhereOrNull((a) => a.name == actionName);
     if (action != null) {
       logInfo("Calling action $actionName ${parameters.isNotEmpty ? "with parameters $parameters" : "without parameters"}");
-      action.callback(parameters);
+      action.callback(parameters, setResponseForAction);
     } else {
       logWarning("Tried to call action $actionName, but it was not found in the current action stack");
     }

@@ -25,7 +25,7 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   List<AppAction> get actions => [
     AppAction(
       name: "start",
-      callback: (_) { onPressedContinue(); },
+      callback: (_, response) { onPressedContinue(); response(true, "Navigating to the central navigation screen"); },
       title: "Start",
       description: "Begin the photo booth experience.",
       examples: const ["start", "begin", "let's go", "proceed", "continue"],

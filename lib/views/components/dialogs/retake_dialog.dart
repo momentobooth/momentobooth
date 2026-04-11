@@ -52,21 +52,21 @@ class RetakeDialog extends StatelessWidget with DialogActionsMixin {
   List<AppAction> get actions => [
     AppAction(
       name: "cancel",
-      callback: (_) { onCancel(); },
+      callback: (_, response) { onCancel(); response(true, "Cancel button pressed"); },
       title: 'Cancel',
       description: 'Close the dialog and keep the current photo.',
       examples: cancelPhrases,
     ),
     AppAction(
       name: "keep",
-      callback: (_) { onKeep(); },
+      callback: (_, response) { onKeep(); response(true, "Keep button pressed"); },
       title: 'Keep',
       description: 'Keep the current photo and start a new capture.',
       examples: const ["keep", "save", "keep photo", "keep picture", "don't delete", "don't delete photo", "don't delete picture"],
     ),
     AppAction(
       name: "delete",
-      callback: (_) { onDelete(); },
+      callback: (_, response) { onDelete(); response(true, "Delete button pressed"); },
       title: 'Delete',
       description: 'Delete the current photo and start a new capture.',
       examples: const ["delete", "trash", "delete photo", "delete picture", "retake", "take again", "take new photo"],

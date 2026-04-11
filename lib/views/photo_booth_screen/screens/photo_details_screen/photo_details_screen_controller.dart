@@ -27,21 +27,21 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   List<AppAction> get actions => [
     AppAction(
       name: "back",
-      callback: (_) { onClickPrev(); },
+      callback: (_, response) { onClickPrev(); response(true, "Back button pressed"); },
       title: "Back",
       description: "Return to the gallery screen.",
       examples: backPhrases
     ),
     AppAction(
       name: "get_qr",
-      callback: (_) { onClickGetQR(); },
+      callback: (_, response) { onClickGetQR(); response(true, "Uploading the picture to get a QR code"); },
       title: "Get QR Code",
       description: "Generate a QR code for sharing the photo.",
       examples: getQRPhrases
     ),
     AppAction(
       name: "open_print_dialog",
-      callback: (_) { onClickPrint(); },
+      callback: (_, response) { onClickPrint(); response(true, "Opening the print dialog"); },
       title: "Print",
       description: "Open the print dialog.",
       examples: printPhrases

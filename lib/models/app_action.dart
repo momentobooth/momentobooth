@@ -15,6 +15,6 @@ abstract class AppAction with _$AppAction {
     @Default([]) List<String> examples,
     @Default('{ "type": "object", "additionalProperties": false }') String inputSchema,
     @JsonKey(includeToJson: false, includeFromJson: false)
-    required Function(Map<String, dynamic>) callback,
+    required Function(Map<String, dynamic>, Function(bool, String)) callback,
   }) = _AppAction;
 }
