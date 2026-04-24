@@ -85,7 +85,7 @@ jobs:
       uses: cargo-bins/cargo-binstall@main
 
     - name: Install cargo-expand, frbc
-      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.11.1 --force -y
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.12.0 --force -y
 
     - name: Install build dependencies
       run: |

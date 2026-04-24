@@ -66,7 +66,7 @@ jobs:
       uses: cargo-bins/cargo-binstall@main
 
     - name: Install cargo-expand, frbc, lddtree
-      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.11.1 lddtree --force -y
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.12.0 lddtree --force -y
 
     - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
