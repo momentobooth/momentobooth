@@ -24,7 +24,7 @@ For all languages, frameworks and tools, we support the latest versions.
   * Install using Cargo:
 
     ```sh
-    cargo install flutter_rust_bridge_codegen --version 2.11.1
+    cargo install flutter_rust_bridge_codegen --version 2.12.0
     ```
 
 * Flutter SDK 3.41.0+

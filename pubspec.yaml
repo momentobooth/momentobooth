@@ -15,10 +15,10 @@ dependencies:
   intl: any
 
   # UI
-  animations: 2.1.1
+  animations: 2.2.0
   auto_size_text: 3.0.0
-  fluent_ui: 4.15.0
-  go_router: 17.1.0
+  fluent_ui: 4.15.1
+  go_router: 17.2.2
   flutter_svg: 2.2.4
   animated_text_kit: 4.3.0
   flutter_scroll_shadow: 1.2.6
@@ -28,11 +28,11 @@ dependencies:
   confetti: 0.8.0
   wave: 0.2.2
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
-  lottie: 3.3.2
+  lottie: 3.3.3
   smooth_scroll_multiplatform: 1.0.8
   widgetbook: 3.22.0
   widgetbook_annotation: 3.11.0
-  lucide_icons_flutter: 3.1.10
+  lucide_icons_flutter: 3.1.13
   wizard_router: 1.4.1
   theme_tailor_annotation: 3.1.3
   google_fonts: 8.0.2
@@ -52,7 +52,7 @@ dependencies:
   # Rust library/Interop
   rust_lib_momento_booth: { path: rust_builder }
   ffi: 2.2.0
-  flutter_rust_bridge: 2.11.1
+  flutter_rust_bridge: 2.12.0
 
   # Printing
   printing: 5.14.3
@@ -66,9 +66,9 @@ dependencies:
   win32: 5.15.0
 
   # Log and error handling
-  talker: 5.1.15
-  talker_flutter: 5.1.15
-  sentry_flutter: 9.15.0
+  talker: 5.1.16
+  talker_flutter: 5.1.16
+  sentry_flutter: 9.19.0
   stack_trace: 1.12.1
 
   # Storage
@@ -83,10 +83,10 @@ dependencies:
   # Misc
   get_it: 9.2.1
   meta: any
-  synchronized: 3.4.0
+  synchronized: 3.4.0+1
   collection: any
   dart_casing: 3.0.1
-  package_info_plus: 9.0.0
+  package_info_plus: 9.0.1
   lemberfpsmonitor: 0.0.3+6
   crypto: 3.0.7
   draggable_scrollbar:
@@ -96,7 +96,7 @@ dependencies:
   url_launcher: 6.3.2
   super_clipboard: 0.9.1
   super_drag_and_drop: 0.9.1
-  wakelock_plus: 1.5.1
+  wakelock_plus: 1.5.2
   change_case: 2.2.0
 
 dev_dependencies:
@@ -105,17 +105,17 @@ dev_dependencies:
   theme_tailor: 3.1.3
 
   # MVC
-  mobx_codegen: 2.7.6
+  mobx_codegen: 2.7.7
 
   # Code quality
   flutter_lints: 6.0.0
 
   # Models
   freezed: 3.2.5
-  json_serializable: 6.13.0
+  json_serializable: 6.13.1
 
   # Code generation
-  build_runner: 2.13.0
+  build_runner: 2.14.0
 
 flutter:
   uses-material-design: true
