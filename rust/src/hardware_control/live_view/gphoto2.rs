@@ -401,28 +401,6 @@ pub async fn set_extra_file_callback<F>(camera_ref: Arc<AsyncMutex<GPhoto2Camera
   camera.extra_file_callback = Some(Box::new(file_data_callback));
 }
 
-pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_target_value: String) -> Result<GPhoto2File> {
-  let camera = camera_ref.lock().await;
-
-  if !capture_target_value.is_empty() {
-    let opcode = camera.camera.config_key::<RadioWidget>("capturetarget").await?;
-    opcode.set_choice(&capture_target_value)?;
-    camera.camera.set_config(&opcode).await?;
-  }
-
-  let capture = camera.camera.capture_image().await?;
-  debug!("Downloading file from camera: {}/{}", capture.folder(), capture.name());
-
-  let file = camera.camera.fs().download(&capture.folder(), &capture.name()).await?;
-  let data = file.get_data(get_context()?).await?;
-
-  Ok(GPhoto2File {
-    source_folder: capture.folder().to_string(),
-    filename: capture.name().to_string(),
-    data: data.to_vec(),
-  })
-}
-
 pub struct GPhoto2FileCategories {
   pub images: HashSet<String>,
   pub videos: HashSet<String>,

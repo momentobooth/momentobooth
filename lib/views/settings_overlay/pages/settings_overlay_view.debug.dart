@@ -22,7 +22,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
                 for (int i = 0; i < getIt<PhotosManager>().photos.length; i++)
                   SizedBox.square(
                     dimension: 100,
-                    child: ImageWithLoaderFallback.memory(getIt<PhotosManager>().photos[i].data, onImageDecoded: () => {})
+                    child: ImageWithLoaderFallback.memory(getIt<PhotosManager>().photos[i].data, onImageDecoded: (_) => {})
                   )
               ],
             )
@@ -40,27 +40,6 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             subtitle: "Clear the photos stored in memory",
             buttonText: "Clear photos",
             onPressed: controller.onPhotosClearPressed,
-          ),
-          SettingsActionTile(
-            icon: LucideIcons.video,
-            title: "Start video recording",
-            subtitle: "Start a video recording using gPhoto2",
-            buttonText: "Start recording",
-            onPressed: controller.onStartVideoRecordingPressed,
-          ),
-          SettingsActionTile(
-            icon: LucideIcons.videoOff,
-            title: "Stop video recording",
-            subtitle: "Stop a video recording using gPhoto2",
-            buttonText: "Stop recording",
-            onPressed: controller.onStopVideoRecordingPressed,
-          ),
-          SettingsActionTile(
-            icon: LucideIcons.folder,
-            title: "Get camera files",
-            subtitle: "Retrieve a list of files on the camera",
-            buttonText: "Get filelist",
-            onPressed: controller.onGetCameraFilesPressed,
           ),
         ],
       ),
@@ -86,6 +65,27 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
       SettingsSection(
         title: "Actions - gPhoto2",
         settings: [
+          SettingsActionTile(
+            icon: LucideIcons.video,
+            title: "Start video recording",
+            subtitle: "Start a video recording using gPhoto2",
+            buttonText: "Start recording",
+            onPressed: controller.onStartVideoRecordingPressed,
+          ),
+          SettingsActionTile(
+            icon: LucideIcons.videoOff,
+            title: "Stop video recording",
+            subtitle: "Stop a video recording using gPhoto2",
+            buttonText: "Stop recording",
+            onPressed: controller.onStopVideoRecordingPressed,
+          ),
+          SettingsActionTile(
+            icon: LucideIcons.folder,
+            title: "Get camera files",
+            subtitle: "Retrieve a list of files on the camera and display it in the console.",
+            buttonText: "Get filelist",
+            onPressed: controller.onGetCameraFilesPressed,
+          ),
           SettingsActionTile(
             icon: LucideIcons.camera,
             title: "Copy camera info to clipboard",
