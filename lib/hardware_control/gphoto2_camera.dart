@@ -134,6 +134,26 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     }
   }
 
+  Future<String> getCameraInfoJson() async {
+    return await gphoto2GetCameraSettingsJson(handleId: handleId!);
+  }
+
+  Future<void> setConfigText(String keyName, String text) async {
+    await gphoto2SetConfigText(handleId: handleId!, keyName: keyName, text: text);
+  }
+
+  Future<void> setConfigToggle(String keyName, bool value) async {
+    await gphoto2SetConfigToggle(handleId: handleId!, keyName: keyName, value: value);
+  }
+
+  Future<void> setConfigRadio(String keyName, String value) async {
+    await gphoto2SetConfigRadio(handleId: handleId!, keyName: keyName, value: value);
+  }
+
+  Future<void> setConfigRange(String keyName, double value) async {
+    await gphoto2SetConfigRange(handleId: handleId!, keyName: keyName, value: value);
+  }
+
   static Future<void> ensureLibraryInitialized() async {
     const String iolibsDefine = String.fromEnvironment("IOLIBS");
     const String camlibsDefine = String.fromEnvironment("CAMLIBS");

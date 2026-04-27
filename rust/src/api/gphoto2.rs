@@ -51,3 +51,23 @@ pub fn gphoto2_get_last_frame(handle_id: u32) -> Option<RawImage> {
 pub fn gphoto2_set_extra_file_callback(handle_id: u32, image_sink: StreamSink<GPhoto2File>) {
     gphoto2::gphoto2_set_extra_file_callback(handle_id, image_sink)
 }
+
+pub fn gphoto2_get_camera_settings_json(handle_id: u32) -> String {
+    gphoto2::gphoto2_get_camera_settings_json(handle_id)
+}
+
+pub fn gphoto2_set_config_text(handle_id: u32, key_name: String, text: String) {
+    gphoto2::gphoto2_set_config_text(handle_id, key_name, text)
+}
+
+pub fn gphoto2_set_config_toggle(handle_id: u32, key_name: String, value: bool) {
+    gphoto2::gphoto2_set_config_toggle(handle_id, key_name, value)
+}
+
+pub fn gphoto2_set_config_radio(handle_id: u32, key_name: String, value: String) {
+    gphoto2::gphoto2_set_config_radio(handle_id, key_name, value)
+}
+
+pub fn gphoto2_set_config_range(handle_id: u32, key_name: String, value: f32) {
+    gphoto2::gphoto2_set_config_range(handle_id, key_name, value)
+}

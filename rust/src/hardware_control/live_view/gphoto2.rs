@@ -2,7 +2,7 @@ use std::{cell::Cell, env, hash::{Hash, Hasher}, sync::{atomic::{AtomicBool, Ato
 
 use ahash::AHasher;
 
-use ::gphoto2::{camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidget, TextWidget, ToggleWidget}, Camera, Context, Error};
+use ::gphoto2::{Camera, Context, Error, camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidget, RangeWidget, TextWidget, ToggleWidget, Widget}};
 use parking_lot::Mutex;
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
@@ -75,6 +75,10 @@ pub async fn open_camera(model: String, _: String, special_handling: GPhoto2Came
   })
 }
 
+// ///////// //
+// Live view //
+// ///////// //
+
 pub async fn start_liveview<F, D>(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, frame_callback: F, duplicate_frame_callback: D) -> Result<()> where F: Fn(Result<RawImage>) + Send + Sync + 'static, D: Fn() + Send + Sync + 'static {
   let mut camera = camera_ref.lock().await;
 
@@ -146,6 +150,194 @@ pub async fn stop_liveview(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result
   }
 }
 
+// /////// //
+// Capture //
+// /////// //
+
+pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_target_value: String) -> Result<GPhoto2File> {
+  let camera = camera_ref.lock().await;
+
+  if !capture_target_value.is_empty() {
+    let opcode = camera.camera.config_key::<RadioWidget>("capturetarget").await?;
+    opcode.set_choice(&capture_target_value)?;
+    camera.camera.set_config(&opcode).await?;
+  }
+
+  let capture = camera.camera.capture_image().await?;
+  debug!("Downloading file from camera: {}/{}", capture.folder(), capture.name());
+
+  let file = camera.camera.fs().download(&capture.folder(), &capture.name()).await?;
+  let data = file.get_data(get_context()?).await?;
+
+  Ok(GPhoto2File {
+    source_folder: capture.folder().to_string(),
+    filename: capture.name().to_string(),
+    data: data.to_vec(),
+  })
+}
+
+// ////// //
+// Config //
+// ////// //
+
+pub async fn set_config_text(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, key_name: &str, text: &str) -> Result<()> {
+  let camera = camera_ref.lock().await;
+  let opcode = camera.camera.config_key::<TextWidget>(key_name).await?;
+  opcode.set_value(text)?;
+  camera.camera.set_config(&opcode).await?;
+  Ok(())
+}
+
+pub async fn set_config_toggle(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, key_name: &str, value: bool) -> Result<()> {
+  let camera = camera_ref.lock().await;
+  let opcode = camera.camera.config_key::<ToggleWidget>(key_name).await?;
+  opcode.set_toggled(value);
+  camera.camera.set_config(&opcode).await?;
+  Ok(())
+}
+
+pub async fn set_config_radio(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, key_name: &str, value: &str) -> Result<()> {
+  let camera = camera_ref.lock().await;
+  let opcode = camera.camera.config_key::<RadioWidget>(key_name).await?;
+  opcode.set_choice(value)?;
+  camera.camera.set_config(&opcode).await?;
+  Ok(())
+}
+
+pub async fn set_config_range(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, key_name: &str, value: f32) -> Result<()> {
+  let camera = camera_ref.lock().await;
+  let opcode = camera.camera.config_key::<RangeWidget>(key_name).await?;
+  opcode.set_value(value);
+  camera.camera.set_config(&opcode).await?;
+  Ok(())
+}
+
+fn widget_to_json(widget: &Widget) -> serde_json::Value {
+  let mut obj = serde_json::Map::new();
+  obj.insert("name".to_string(), widget.name().into());
+  obj.insert("label".to_string(), widget.label().into());
+  obj.insert("readonly".to_string(), widget.readonly().into());
+
+  match widget {
+    Widget::Group(group) => {
+      obj.insert("type".to_string(), "group".into());
+      let children: Vec<serde_json::Value> = group.children_iter().map(|c| widget_to_json(&c)).collect();
+      obj.insert("children".to_string(), children.into());
+    }
+    Widget::Text(w) => {
+      obj.insert("type".to_string(), "text".into());
+      obj.insert("value".to_string(), w.value().into());
+    }
+    Widget::Range(w) => {
+      let (range, step) = w.range_and_step();
+      obj.insert("type".to_string(), "range".into());
+      obj.insert("value".to_string(), w.value().into());
+      obj.insert("min".to_string(), (*range.start()).into());
+      obj.insert("max".to_string(), (*range.end()).into());
+      obj.insert("step".to_string(), step.into());
+    }
+    Widget::Toggle(w) => {
+      obj.insert("type".to_string(), "toggle".into());
+      let toggled = w.toggled().map(serde_json::Value::Bool).unwrap_or(serde_json::Value::Null);
+      obj.insert("value".to_string(), toggled);
+    }
+    Widget::Radio(w) => {
+      obj.insert("type".to_string(), "radio".into());
+      obj.insert("value".to_string(), w.choice().into());
+      let choices: Vec<serde_json::Value> = w.choices_iter().map(|c| c.into()).collect();
+      obj.insert("choices".to_string(), choices.into());
+    }
+    Widget::Button(_) => {
+      obj.insert("type".to_string(), "button".into());
+    }
+    Widget::Date(w) => {
+      obj.insert("type".to_string(), "date".into());
+      obj.insert("value".to_string(), w.timestamp().into());
+    }
+  }
+
+  serde_json::Value::Object(obj)
+}
+
+pub async fn get_camera_settings_json(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<String> {
+  let camera = camera_ref.lock().await;
+
+  let config = camera.camera.config().await?;
+  let children: Vec<serde_json::Value> = config.children_iter().map(|c| widget_to_json(&c)).collect();
+  let mut config_root = serde_json::Map::new();
+  config_root.insert("name".to_string(), config.name().into());
+  config_root.insert("label".to_string(), config.label().into());
+  config_root.insert("readonly".to_string(), config.readonly().into());
+  config_root.insert("type".to_string(), "group".into());
+  config_root.insert("children".to_string(), children.into());
+
+  let about = camera.camera.about().ok();
+
+  let abilities = camera.camera.abilities();
+  let usb = abilities.usb_info();
+  let cam_ops = abilities.camera_operations();
+  let file_ops = abilities.file_operations();
+  let folder_ops = abilities.folder_operations();
+  let abilities_obj = serde_json::json!({
+    "id": abilities.id().as_ref(),
+    "model": abilities.model().as_ref(),
+    "driver_status": format!("{:?}", abilities.driver_status()),
+    "device_type": format!("{:?}", abilities.device_type()),
+    "usb_info": {
+      "vendor": usb.vendor,
+      "product": usb.product,
+      "class": usb.class,
+      "subclass": usb.subclass,
+      "protocol": usb.protocol,
+    },
+    "camera_operations": {
+      "capture_image": cam_ops.capture_image(),
+      "capture_video": cam_ops.capture_video(),
+      "capture_audio": cam_ops.capture_audio(),
+      "capture_preview": cam_ops.capture_preview(),
+      "configure": cam_ops.configure(),
+      "trigger_capture": cam_ops.trigger_capture(),
+    },
+    "file_operations": {
+      "delete": file_ops.delete(),
+      "preview": file_ops.preview(),
+      "raw": file_ops.raw(),
+      "audio": file_ops.audio(),
+      "exif": file_ops.exif(),
+    },
+    "folder_operations": {
+      "delete_all": folder_ops.delete_all(),
+      "put_file": folder_ops.put_file(),
+      "make_dir": folder_ops.make_dir(),
+      "remove_dir": folder_ops.remove_dir(),
+    },
+  });
+
+  let storages_raw = camera.camera.storages().await?;
+  let storages: Vec<serde_json::Value> = storages_raw.iter().map(|s| {
+    let mut obj = serde_json::Map::new();
+    if let Some(v) = s.label() { obj.insert("label".to_string(), v.as_ref().into()); }
+    if let Some(v) = s.base_directory() { obj.insert("base_directory".to_string(), v.as_ref().into()); }
+    if let Some(v) = s.description() { obj.insert("description".to_string(), v.as_ref().into()); }
+    if let Some(v) = s.capacity_kb() { obj.insert("capacity_kb".to_string(), v.into()); }
+    if let Some(v) = s.free_kb() { obj.insert("free_kb".to_string(), v.into()); }
+    if let Some(v) = s.free_images() { obj.insert("free_images".to_string(), v.into()); }
+    serde_json::Value::Object(obj)
+  }).collect();
+
+  let mut root = serde_json::Map::new();
+  if let Some(s) = about { root.insert("about".to_string(), s.into()); }
+  root.insert("abilities".to_string(), abilities_obj);
+  root.insert("storages".to_string(), storages.into());
+  root.insert("config".to_string(), serde_json::Value::Object(config_root));
+
+  Ok(serde_json::to_string(&serde_json::Value::Object(root)).unwrap())
+}
+
+// //// //
+// Misc //
+// //// //
+
 pub async fn auto_focus(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>) -> Result<()> {
   let camera = camera_ref.lock().await;
 
@@ -207,28 +399,6 @@ pub async fn set_extra_file_callback<F>(camera_ref: Arc<AsyncMutex<GPhoto2Camera
   let mut camera = camera_ref.lock().await;
 
   camera.extra_file_callback = Some(Box::new(file_data_callback));
-}
-
-pub async fn capture_photo(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_target_value: String) -> Result<GPhoto2File> {
-  let camera = camera_ref.lock().await;
-
-  if !capture_target_value.is_empty() {
-    let opcode = camera.camera.config_key::<RadioWidget>("capturetarget").await?;
-    opcode.set_choice(&capture_target_value)?;
-    camera.camera.set_config(&opcode).await?;
-  }
-
-  let capture = camera.camera.capture_image().await?;
-  debug!("Downloading file from camera: {}/{}", capture.folder(), capture.name());
-
-  let file = camera.camera.fs().download(&capture.folder(), &capture.name()).await?;
-  let data = file.get_data(get_context()?).await?;
-
-  Ok(GPhoto2File {
-    source_folder: capture.folder().to_string(),
-    filename: capture.name().to_string(),
-    data: data.to_vec(),
-  })
 }
 
 pub struct GPhoto2CameraInfo {
@@ -456,6 +626,51 @@ pub fn gphoto2_set_extra_file_callback(handle_id: u32, image_sink: StreamSink<GP
             image_sink.add(data);
         }).await;
     })
+}
+
+pub fn gphoto2_get_camera_settings_json(handle_id: u32) -> String {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::get_camera_settings_json(camera).await
+    }).expect("Could not get camera info")
+}
+
+pub fn gphoto2_set_config_text(handle_id: u32, key_name: String, text: String) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_text(camera, &key_name, &text).await
+    }).expect("Could not set config text")
+}
+
+pub fn gphoto2_set_config_toggle(handle_id: u32, key_name: String, value: bool) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_toggle(camera, &key_name, value).await
+    }).expect("Could not set config toggle")
+}
+
+pub fn gphoto2_set_config_radio(handle_id: u32, key_name: String, value: String) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_radio(camera, &key_name, &value).await
+    }).expect("Could not set config radio")
+}
+
+pub fn gphoto2_set_config_range(handle_id: u32, key_name: String, value: f32) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_range(camera, &key_name, value).await
+    }).expect("Could not set config range")
 }
 
 // /////// //
