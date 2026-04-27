@@ -769,4 +769,64 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     await Clipboard.setData(ClipboardData(text: json));
   }
 
+  // Debug camera config controllers
+
+  TextEditingController? _debugConfigTextKeyController;
+  TextEditingController get debugConfigTextKeyController => _debugConfigTextKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigTextValueController;
+  TextEditingController get debugConfigTextValueController => _debugConfigTextValueController ??= TextEditingController();
+
+  TextEditingController? _debugConfigToggleKeyController;
+  TextEditingController get debugConfigToggleKeyController => _debugConfigToggleKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRadioKeyController;
+  TextEditingController get debugConfigRadioKeyController => _debugConfigRadioKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRadioValueController;
+  TextEditingController get debugConfigRadioValueController => _debugConfigRadioValueController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRangeKeyController;
+  TextEditingController get debugConfigRangeKeyController => _debugConfigRangeKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRangeValueController;
+  TextEditingController get debugConfigRangeValueController => _debugConfigRangeValueController ??= TextEditingController();
+
+  Future<void> onSetConfigTextPressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigText(
+      debugConfigTextKeyController.text,
+      debugConfigTextValueController.text,
+    );
+  }
+
+  Future<void> onEnableConfigTogglePressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigToggle(
+      debugConfigToggleKeyController.text,
+      true,
+    );
+  }
+
+  Future<void> onDisableConfigTogglePressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigToggle(
+      debugConfigToggleKeyController.text,
+      false,
+    );
+  }
+
+  Future<void> onSetConfigRadioPressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigRadio(
+      debugConfigRadioKeyController.text,
+      debugConfigRadioValueController.text,
+    );
+  }
+
+  Future<void> onSetConfigRangePressed() async {
+    final value = double.tryParse(debugConfigRangeValueController.text);
+    if (value == null) return;
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigRange(
+      debugConfigRangeKeyController.text,
+      value,
+    );
+  }
+
 }

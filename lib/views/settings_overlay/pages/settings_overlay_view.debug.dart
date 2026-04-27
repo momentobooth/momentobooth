@@ -33,6 +33,58 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             buttonText: "Copy to clipboard",
             onPressed: controller.onCopyCameraInfoToClipboardPressed,
           ),
+          SettingsTile(
+            icon: LucideIcons.textCursorInput,
+            title: "Set text config",
+            subtitle: "Set a text-type camera setting by key name.",
+            setting: Row(
+              spacing: 8,
+              children: [
+                SizedBox(width: 160, child: TextBox(placeholder: "Key", controller: controller.debugConfigTextKeyController)),
+                SizedBox(width: 160, child: TextBox(placeholder: "Value", controller: controller.debugConfigTextValueController)),
+                Button(onPressed: controller.onSetConfigTextPressed, child: const Text("Set")),
+              ],
+            ),
+          ),
+          SettingsTile(
+            icon: LucideIcons.toggleRight,
+            title: "Set toggle config",
+            subtitle: "Set a toggle-type camera setting by key name.",
+            setting: Row(
+              spacing: 8,
+              children: [
+                SizedBox(width: 160, child: TextBox(placeholder: "Key", controller: controller.debugConfigToggleKeyController)),
+                Button(onPressed: controller.onEnableConfigTogglePressed, child: const Text("Enable")),
+                Button(onPressed: controller.onDisableConfigTogglePressed, child: const Text("Disable")),
+              ],
+            ),
+          ),
+          SettingsTile(
+            icon: LucideIcons.listChecks,
+            title: "Set radio config",
+            subtitle: "Set a radio/choice-type camera setting by key name.",
+            setting: Row(
+              spacing: 8,
+              children: [
+                SizedBox(width: 160, child: TextBox(placeholder: "Key", controller: controller.debugConfigRadioKeyController)),
+                SizedBox(width: 160, child: TextBox(placeholder: "Value", controller: controller.debugConfigRadioValueController)),
+                Button(onPressed: controller.onSetConfigRadioPressed, child: const Text("Set")),
+              ],
+            ),
+          ),
+          SettingsTile(
+            icon: LucideIcons.slidersHorizontal,
+            title: "Set range config",
+            subtitle: "Set a range-type camera setting by key name.",
+            setting: Row(
+              spacing: 8,
+              children: [
+                SizedBox(width: 160, child: TextBox(placeholder: "Key", controller: controller.debugConfigRangeKeyController)),
+                SizedBox(width: 120, child: TextBox(placeholder: "Value", controller: controller.debugConfigRangeValueController)),
+                Button(onPressed: controller.onSetConfigRangePressed, child: const Text("Set")),
+              ],
+            ),
+          ),
         ],
       ),
       SettingsSection(

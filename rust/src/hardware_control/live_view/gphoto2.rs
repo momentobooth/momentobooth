@@ -637,6 +637,42 @@ pub fn gphoto2_get_camera_settings_json(handle_id: u32) -> String {
     }).expect("Could not get camera info")
 }
 
+pub fn gphoto2_set_config_text(handle_id: u32, key_name: String, text: String) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_text(camera, &key_name, &text).await
+    }).expect("Could not set config text")
+}
+
+pub fn gphoto2_set_config_toggle(handle_id: u32, key_name: String, value: bool) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_toggle(camera, &key_name, value).await
+    }).expect("Could not set config toggle")
+}
+
+pub fn gphoto2_set_config_radio(handle_id: u32, key_name: String, value: String) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_radio(camera, &key_name, &value).await
+    }).expect("Could not set config radio")
+}
+
+pub fn gphoto2_set_config_range(handle_id: u32, key_name: String, value: f32) {
+    let camera_ref = GPHOTO2_HANDLES.get(&handle_id).expect("Invalid gPhoto2 handle ID");
+    let camera = camera_ref.clone().lock().camera.clone();
+
+    TOKIO_RUNTIME.get().expect("Could not get tokio runtime").block_on(async{
+        gphoto2::set_config_range(camera, &key_name, value).await
+    }).expect("Could not set config range")
+}
+
 // /////// //
 // Structs //
 // /////// //
