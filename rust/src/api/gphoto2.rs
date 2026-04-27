@@ -51,3 +51,7 @@ pub fn gphoto2_get_last_frame(handle_id: u32) -> Option<RawImage> {
 pub fn gphoto2_set_extra_file_callback(handle_id: u32, image_sink: StreamSink<GPhoto2File>) {
     gphoto2::gphoto2_set_extra_file_callback(handle_id, image_sink)
 }
+
+pub fn gphoto2_get_camera_settings_json(handle_id: u32) -> String {
+    gphoto2::gphoto2_get_camera_settings_json(handle_id)
+}

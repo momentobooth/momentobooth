@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
@@ -760,6 +762,11 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   void onPlayAudioSamplePressed() {
     getIt<SfxManager>().playSampleSound();
+  }
+
+  Future<void> onCopyCameraInfoToClipboardPressed() async {
+    String json = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraInfoJson();
+    await Clipboard.setData(ClipboardData(text: json));
   }
 
 }

@@ -5,7 +5,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
     title: "Debug",
     blocks: [
       SettingsSection(
-        title: "Actions",
+        title: "Actions - General",
         settings: [
           SettingsActionTile(
             icon: LucideIcons.play,
@@ -20,6 +20,18 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             subtitle: "Test whether error reporting (to Sentry) works",
             buttonText: "Report Fake Error",
             onPressed: () => throw Exception("This is a fake error to test error reporting"),
+          ),
+        ],
+      ),
+      SettingsSection(
+        title: "Actions - gPhoto2",
+        settings: [
+          SettingsActionTile(
+            icon: LucideIcons.camera,
+            title: "Copy camera info to clipboard",
+            subtitle: "Copy camera info (e.g. capabilities, connection info, config info) in JSON format to the clipboard",
+            buttonText: "Copy to clipboard",
+            onPressed: controller.onCopyCameraInfoToClipboardPressed,
           ),
         ],
       ),
