@@ -12,7 +12,7 @@ ffsend-api = "0.7.3"
 serde_json = "1.0.149"
 chrono = "0.4.44"
 image = { version = "0.25.10", features = ["rayon"] }
-ipp = { version = "5.4.0", default-features = false, features = ["async-client-tls"] }
+ipp = { version = "6.0.0", default-features = false, features = ["async-client-tls"] }
 zune-jpeg = "0.5.15"
 jpeg-encoder = "0.7.0"
 dlopen = "0.1.8"

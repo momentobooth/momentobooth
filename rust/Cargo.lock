@@ -1098,9 +1098,9 @@ dependencies = [
 
 [[package]]
 name = "enum-as-inner"
-version = "0.6.1"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1e6a265c649f3f5979b601d26f1d05ada116434c87741c9493cb56218f76cbc"
+checksum = "0359ee92f81184d7985519e474bda2a5738476334edd3746c9b1265c067afe70"
 dependencies = [
  "heck",
  "proc-macro2 1.0.106",
@@ -2125,9 +2125,9 @@ checksum = "d98f6fed1fde3f8c21bc40a1abb88dd75e67924f9cffc3ef95607bad8017f8e2"
 
 [[package]]
 name = "ipp"
-version = "5.4.0"
+version = "6.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "04c123c0ee550cedc10474ccb5ed10da580eaf015ef48a63b72991653a3fec69"
+checksum = "14adae92172c365c1569963fdd444402a01a29c9dd61f0d745545303d2dc49a6"
 dependencies = [
  "base64 0.22.1",
  "bytes 1.11.1",
