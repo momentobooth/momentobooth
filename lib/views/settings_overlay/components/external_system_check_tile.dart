@@ -58,15 +58,18 @@ class _ExternalSystemCheckTileState extends State<ExternalSystemCheckTile> {
           ],
         ),
         title: Text(_check.name),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('${_check.type.name.toUpperCase()} to ${_check.address} · Last update: ${_dateFormat.format(widget.sysStatus.timestamp)}'),
-            if (_exception != null)
-              Text('$_exception', style: TextStyle(color: Colors.red))
-            else if (_successMessage != null)
-              Text('$_successMessage', style: TextStyle(color: Colors.green)),
-          ],
+        subtitle: AnimatedSize(
+          duration: Duration(milliseconds: 300),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('${_check.type.name.toUpperCase()} to ${_check.address} · Last update: ${_dateFormat.format(widget.sysStatus.timestamp)}'),
+              if (_exception != null)
+                Text('$_exception', style: TextStyle(color: Colors.red))
+              else if (_successMessage != null)
+                Text('$_successMessage', style: TextStyle(color: Colors.green)),
+            ],
+          ),
         ),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

@@ -1,4 +1,4 @@
-use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File}, models::{image_operations::ImageOperation, images::RawImage, live_view::CameraState}};
+use crate::{frb_generated::StreamSink, hardware_control::live_view::gphoto2::{self, GPhoto2CameraInfo, GPhoto2CameraSpecialHandling, GPhoto2File, GPhoto2FileCategories}, models::{gphoto2::SimplifiedWidget, image_operations::ImageOperation, images::RawImage, live_view::CameraState}};
 
 pub fn gphoto2_initialize(iolibs_path: String, camlibs_path: String) {
     gphoto2::gphoto2_initialize(iolibs_path, camlibs_path);
@@ -40,6 +40,22 @@ pub fn gphoto2_capture_photo(handle_id: u32, capture_target_value: String) -> GP
     gphoto2::gphoto2_capture_photo(handle_id, capture_target_value)
 }
 
+pub fn gphoto2_list_files(handle_id: u32, folder: String) -> GPhoto2FileCategories {
+    gphoto2::gphoto2_list_files(handle_id, folder)
+}
+
+pub fn gphoto2_list_config(handle_id: u32) -> SimplifiedWidget {
+    gphoto2::gphoto2_list_config(handle_id)
+}
+
+pub fn gphoto2_start_video_recording(handle_id: u32) {
+    gphoto2::gphoto2_start_video_recording(handle_id)
+}
+
+pub fn gphoto2_stop_video_recording(handle_id: u32) {
+    gphoto2::gphoto2_stop_video_recording(handle_id)
+}
+
 pub fn gphoto2_get_camera_status(handle_id: u32) -> CameraState {
     gphoto2::gphoto2_get_camera_status(handle_id)
 }
@@ -50,4 +66,24 @@ pub fn gphoto2_get_last_frame(handle_id: u32) -> Option<RawImage> {
 
 pub fn gphoto2_set_extra_file_callback(handle_id: u32, image_sink: StreamSink<GPhoto2File>) {
     gphoto2::gphoto2_set_extra_file_callback(handle_id, image_sink)
+}
+
+pub fn gphoto2_get_camera_settings_json(handle_id: u32) -> String {
+    gphoto2::gphoto2_get_camera_settings_json(handle_id)
+}
+
+pub fn gphoto2_set_config_text(handle_id: u32, key_name: String, text: String) {
+    gphoto2::gphoto2_set_config_text(handle_id, key_name, text)
+}
+
+pub fn gphoto2_set_config_toggle(handle_id: u32, key_name: String, value: bool) {
+    gphoto2::gphoto2_set_config_toggle(handle_id, key_name, value)
+}
+
+pub fn gphoto2_set_config_radio(handle_id: u32, key_name: String, value: String) {
+    gphoto2::gphoto2_set_config_radio(handle_id, key_name, value)
+}
+
+pub fn gphoto2_set_config_range(handle_id: u32, key_name: String, value: f32) {
+    gphoto2::gphoto2_set_config_range(handle_id, key_name, value)
 }

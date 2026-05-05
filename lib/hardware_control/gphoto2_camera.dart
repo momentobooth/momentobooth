@@ -10,6 +10,7 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/photo_capture.dart';
 import 'package:momento_booth/src/rust/api/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
+import 'package:momento_booth/src/rust/models/gphoto2.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
 import 'package:momento_booth/src/rust/models/live_view.dart';
@@ -117,6 +118,35 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     );
   }
 
+  Future<GPhoto2FileCategories> getFileList() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    var fileList = await gphoto2ListFiles(handleId: handleId!, folder: "/");
+
+    unawaited(clearPreviousEvents());
+
+    return fileList;
+  }
+
+  Future<void> startVideoRecording() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    await gphoto2StartVideoRecording(handleId: handleId!);
+
+    unawaited(clearPreviousEvents());
+  }
+
+  Future<void> stopVideoRecording() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    await gphoto2StopVideoRecording(handleId: handleId!);
+
+    unawaited(clearPreviousEvents());
+  }
+
+  Future<SimplifiedWidget> getConfig() async {
+    if (handleId == null) throw GPhoto2Exception("Camera not open.");
+    var config = await gphoto2ListConfig(handleId: handleId!);
+    return config;
+  }
+
   @override
   Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2);
 
@@ -132,6 +162,26 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
         downloadExtraFiles: getIt<SettingsManager>().settings.hardware.gPhoto2DownloadExtraFiles,
       );
     }
+  }
+
+  Future<String> getCameraInfoJson() async {
+    return await gphoto2GetCameraSettingsJson(handleId: handleId!);
+  }
+
+  Future<void> setConfigText(String keyName, String text) async {
+    await gphoto2SetConfigText(handleId: handleId!, keyName: keyName, text: text);
+  }
+
+  Future<void> setConfigToggle(String keyName, bool value) async {
+    await gphoto2SetConfigToggle(handleId: handleId!, keyName: keyName, value: value);
+  }
+
+  Future<void> setConfigRadio(String keyName, String value) async {
+    await gphoto2SetConfigRadio(handleId: handleId!, keyName: keyName, value: value);
+  }
+
+  Future<void> setConfigRange(String keyName, double value) async {
+    await gphoto2SetConfigRange(handleId: handleId!, keyName: keyName, value: value);
   }
 
   static Future<void> ensureLibraryInitialized() async {

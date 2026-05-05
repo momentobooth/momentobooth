@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/services.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
@@ -760,6 +762,112 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   void onPlayAudioSamplePressed() {
     getIt<SfxManager>().playSampleSound();
+  }
+
+  void onTriggerCapturePressed() {
+    getIt<PhotosManager>().directPhotoCapture();
+  }
+
+  void onPhotosClearPressed() {
+    getIt<PhotosManager>().photos.clear();
+  }
+
+  void onStartVideoRecordingPressed() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logWarning("gPhoto2Camera not initialized");
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.startVideoRecording();
+  }
+
+  void onStopVideoRecordingPressed() {
+    if (getIt<LiveViewManager>().gPhoto2Camera == null) {
+      logWarning("gPhoto2Camera not initialized");
+      return;
+    }
+    getIt<LiveViewManager>().gPhoto2Camera!.stopVideoRecording();
+  }
+
+  Future<void> onGetCameraFilesPressed() async {
+    final files = await getIt<LiveViewManager>().gPhoto2Camera!.getFileList();
+    final imageFiles = files.images.toList();
+    final videoFiles = files.videos.toList();
+    final otherFiles = files.others.toList();
+    final folders = files.folders.toList();
+    logInfo("Images: $imageFiles");
+    logInfo("Videos: $videoFiles");
+    logInfo("Other files: $otherFiles");
+    logInfo("Folders: $folders");
+  }
+
+  Future<void> onGetCameraConfigPressed() async {
+    final config = await getIt<LiveViewManager>().gPhoto2Camera!.getConfig();
+    logInfo("Config: $config");
+  }
+
+  Future<void> onCopyCameraInfoToClipboardPressed() async {
+    String json = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraInfoJson();
+    await Clipboard.setData(ClipboardData(text: json));
+  }
+
+  // Debug camera config controllers
+
+  TextEditingController? _debugConfigTextKeyController;
+  TextEditingController get debugConfigTextKeyController => _debugConfigTextKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigTextValueController;
+  TextEditingController get debugConfigTextValueController => _debugConfigTextValueController ??= TextEditingController();
+
+  TextEditingController? _debugConfigToggleKeyController;
+  TextEditingController get debugConfigToggleKeyController => _debugConfigToggleKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRadioKeyController;
+  TextEditingController get debugConfigRadioKeyController => _debugConfigRadioKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRadioValueController;
+  TextEditingController get debugConfigRadioValueController => _debugConfigRadioValueController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRangeKeyController;
+  TextEditingController get debugConfigRangeKeyController => _debugConfigRangeKeyController ??= TextEditingController();
+
+  TextEditingController? _debugConfigRangeValueController;
+  TextEditingController get debugConfigRangeValueController => _debugConfigRangeValueController ??= TextEditingController();
+
+  Future<void> onSetConfigTextPressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigText(
+      debugConfigTextKeyController.text,
+      debugConfigTextValueController.text,
+    );
+  }
+
+  Future<void> onEnableConfigTogglePressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigToggle(
+      debugConfigToggleKeyController.text,
+      true,
+    );
+  }
+
+  Future<void> onDisableConfigTogglePressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigToggle(
+      debugConfigToggleKeyController.text,
+      false,
+    );
+  }
+
+  Future<void> onSetConfigRadioPressed() async {
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigRadio(
+      debugConfigRadioKeyController.text,
+      debugConfigRadioValueController.text,
+    );
+  }
+
+  Future<void> onSetConfigRangePressed() async {
+    final value = double.tryParse(debugConfigRangeValueController.text);
+    if (value == null) return;
+    await getIt<LiveViewManager>().gPhoto2Camera!.setConfigRange(
+      debugConfigRangeKeyController.text,
+      value,
+    );
   }
 
 }
