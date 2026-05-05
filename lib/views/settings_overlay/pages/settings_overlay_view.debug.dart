@@ -87,6 +87,13 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             onPressed: controller.onGetCameraFilesPressed,
           ),
           SettingsActionTile(
+            icon: LucideIcons.settings,
+            title: "Get camera config",
+            subtitle: "Retrieve the camera's full config as a Dart object and display it in the console.",
+            buttonText: "Get config",
+            onPressed: controller.onGetCameraConfigPressed,
+          ),
+          SettingsActionTile(
             icon: LucideIcons.camera,
             title: "Copy camera info to clipboard",
             subtitle: "Copy camera info (e.g. capabilities, connection info, config info) in JSON format to the clipboard",
