@@ -73,4 +73,7 @@ class RetakeDialog extends StatelessWidget with DialogActionsMixin {
     ),
   ];
 
+  @override
+  String get scopeName => "Retake Dialog";
+
 }

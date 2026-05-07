@@ -47,6 +47,9 @@ class PrintDialog extends StatefulWidget with DialogActionsMixin {
     ),
   ];
 
+  @override
+  String get scopeName => "Print Dialog";
+
 }
 
 class _PrintDialogState extends State<PrintDialog> {

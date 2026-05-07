@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
@@ -102,22 +101,20 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   void onClickGetQR() {
     registerActionCall(const AppActionCall(tool: "get_qr"));
-    viewModel.uploadPhotoToSend();
+    viewModel.ensureFile();
+    if (viewModel.file == null) {
+      logError("File is null when trying to get QR code");
+      return;
+    }
+    final actionsToken = Object();
     showUserDialog(
       barrierDismissible: false,
-      dialog: Observer(builder: (_) {
-        return QrShareDialog(
-          state: viewModel.uploadFailed
-              ? ShareDialogState.error
-              : viewModel.uploadProgress != null || viewModel.qrUrl == null
-                  ? ShareDialogState.uploading
-                  : ShareDialogState.uploaded,
-          uploadProgress: (viewModel.uploadProgress ?? 0) * 100,
-          qrText: viewModel.qrUrl,
-          onDismiss: () => navigator.pop(),
-          onRedoUpload: viewModel.uploadPhotoToSend,
-        );
-      }),
+      dialog: QrShareDialog(
+        file: viewModel.file!,
+        onDismiss: () => navigator.pop(),
+        actionsToken: actionsToken,
+      ),
+      actionStackToken: actionsToken,
     );
   }
 

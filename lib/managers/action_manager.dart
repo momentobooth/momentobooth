@@ -78,7 +78,9 @@ abstract class ActionManagerBase extends Subsystem with Store, Logger {
   }
 
   void pushActions(List<AppAction> actions, String scopeName, Object token) {
-    _stack.add(_Entry(token, scopeName, actions));
+    _stack
+      ..removeWhere((entry) => entry.token == token)
+      ..add(_Entry(token, scopeName, actions));
     publish();
   }
 

@@ -89,6 +89,9 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
     // AppAction(name: "dismiss", callback: (_) {  }),
   ];
 
+  @override
+  String get scopeName => "Language Choice Dialog";
+
   void setLanguageAPI(Map<String, dynamic> args, Function(bool, String) response) {
     final String languageCode = args["language_code"] ?? "--";
     final Language language = Language.definedValues.firstWhere((lang) => lang.code == languageCode, orElse: () => Language.noLanguage);

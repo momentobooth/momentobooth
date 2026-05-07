@@ -24,14 +24,18 @@ mixin BuildContextAbstractor {
 
   AppLocalizations get localizations => AppLocalizations.of(_context)!;
 
-  Future<T?> showUserDialog<T extends Object?>({required Widget dialog, required bool barrierDismissible}) async {
+  Future<T?> showUserDialog<T extends Object?>({required Widget dialog, required bool barrierDismissible, Object? actionStackToken}) async {
     // We acquire the actions from the dialog and push them to the ActionManager
-    final actionStackToken = Object();
+    final usedActionStackToken = actionStackToken ?? Object();
     final List<AppAction> dialogActions = switch (dialog) {
       DialogActionsMixin photoBoothDialog => photoBoothDialog.actions,
       _ => [],
     };
-    getIt<ActionManager>().pushActions(dialogActions, "User Dialog", actionStackToken);
+    final String dialogScopeName = switch (dialog) {
+      DialogActionsMixin photoBoothDialog => photoBoothDialog.scopeName,
+      _ => "User Dialog",
+    };
+    getIt<ActionManager>().pushActions(dialogActions, dialogScopeName, usedActionStackToken);
     // We then show the dialog and wait for it to be dismissed, saving the `pop` result
     final result = await navigator.push<T>(PhotoBoothDialogPage<T>(
       child: Padding(
@@ -41,7 +45,7 @@ mixin BuildContextAbstractor {
       barrierDismissible: barrierDismissible,
     ).createRoute());
     // When the dialog is dismissed, we pop the actions from the ActionManager
-    getIt<ActionManager>().pop(actionStackToken);
+    getIt<ActionManager>().pop(usedActionStackToken);
     return result;
   }
 
