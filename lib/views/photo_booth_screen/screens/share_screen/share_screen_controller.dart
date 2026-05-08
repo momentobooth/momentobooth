@@ -114,7 +114,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
         onDismiss: () => navigator.pop(),
         actionsToken: actionsToken,
       ),
-      actionStackToken: actionsToken,
+      publishActions: false,
     );
   }
 
@@ -139,6 +139,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
         },
         onCancel: () => navigator.pop(),
       ),
+      publishActions: false,
     );
   }
 

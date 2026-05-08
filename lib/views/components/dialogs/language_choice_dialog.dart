@@ -6,16 +6,19 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
 class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
 
   final Function(Language) onChosen;
+  final VoidCallback onCancel;
 
   const LanguageChoiceDialog({
     super.key,
     required this.onChosen,
+    required this.onCancel,
   });
 
   String getFlagAsset(String countryCode) {
@@ -86,7 +89,12 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
       inputSchema: '{ "type": "object", "properties": { "language_code": { "type": "string", "description": "The ISO 639-1 code for the language to set" } }, "required": ["language_code"], "additionalProperties": false }'
     ),
     // Todo: is there a way to pop the route from here?
-    // AppAction(name: "dismiss", callback: (_) {  }),
+    AppAction(
+      name: "dismiss",
+      callback: (_, response) { onCancel(); response(true, "Dialog dismissed"); },
+      title: "Dismiss", description: "Close the language selection dialog without changing the language.",
+      examples: cancelPhrases
+    ),
   ];
 
   @override

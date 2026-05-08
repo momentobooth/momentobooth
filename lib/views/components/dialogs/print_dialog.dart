@@ -7,12 +7,12 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
+import 'package:momento_booth/views/base/has_actions_mixin.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
-import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
-class PrintDialog extends StatefulWidget with DialogActionsMixin {
+class PrintDialog extends StatefulWidget {
 
   final VoidCallback onCancel;
   final void Function(PrintSize size, int copies) onPrintPressed;
@@ -28,34 +28,91 @@ class PrintDialog extends StatefulWidget with DialogActionsMixin {
   @override
   State<PrintDialog> createState() => _PrintDialogState();
 
+}
+
+class _PrintDialogState extends State<PrintDialog> with HasActionsMixin {
+
+  int numPrints = 1;
+  PrintSize printSize = PrintSize.normal;
+
+  String get sizeEnumOptions => PrintSize.values.where((e) => e != PrintSize.split).map((e) => '"${e.name}"').join(", ");
+
   @override
   List<AppAction> get actions => [
     AppAction(
       name: "cancel",
-      callback: (_, response) { onCancel(); response(true, "Cancel button pressed"); },
+      callback: (_, response) { widget.onCancel(); response(true, "Cancel button pressed"); },
       title: 'Cancel',
       description: 'Presses the cancel button in the print dialog.',
       examples: cancelPhrases
     ),
-    // Todo add arguments
+    AppAction(
+      name: "set_copies",
+      callback: setCopiesAPI,
+      title: 'Set Copies',
+      description: 'Sets the number of copies to print.',
+      inputSchema: '{ "type": "object", "properties": { "copies": { "type": "integer", "description": "The number of copies to print", "minimum": 1, "maximum": ${widget.maxPrints} } }, "required": ["copies"], "additionalProperties": false }'
+    ),
+    AppAction(
+      name: "set_size",
+      callback: setSizeAPI,
+      title: 'Set Size',
+      description: 'Sets the print size.',
+      inputSchema: '{ "type": "object", "properties": { "size": { "enum": [$sizeEnumOptions], "description": "The print size to set" } }, "required": ["size"], "additionalProperties": false }'
+    ),
     AppAction(
       name: "print",
-      callback: (_, response) { onPrintPressed(PrintSize.normal, 1); response(true, "Print button pressed"); },
+      callback: (_, response) { widget.onPrintPressed(printSize, numPrints); response(true, "Print button pressed, printing $numPrints copies of $printSize size"); },
       title: 'Print',
       description: 'Presses the print button in the print dialog.',
       examples: printPhrases
     ),
   ];
 
+  void setSizeAPI(Map<String, dynamic> params, Function(bool, String) response) {
+    final sizeStr = params["size"];
+    if (sizeStr == null) {
+      response(false, "Missing 'size' parameter");
+      return;
+    }
+    if (sizeStr is! String) {
+      response(false, "Invalid 'size' parameter: must be a string");
+      return;
+    }
+    final size = PrintSize.values.firstWhere((e) => e.name == sizeStr, orElse: () => PrintSize.normal);
+    setState(() => printSize = size);
+    response(true, "Print size set to $sizeStr");
+  }
+
+  void setCopiesAPI(Map<String, dynamic> params, Function(bool, String) response) {
+    final copiesParam = params["copies"];
+    if (copiesParam == null) {
+      response(false, "Missing 'copies' parameter");
+      return;
+    }
+    if (copiesParam is! int) {
+      response(false, "Invalid 'copies' parameter: must be an integer");
+      return;
+    }
+    final copies = copiesParam.clamp(1, widget.maxPrints);
+    setState(() => numPrints = copies);
+    response(true, "Number of copies set to $copies");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    pushActions();
+  }
+
+  @override
+  void dispose() {
+    popActions();
+    super.dispose();
+  }
+
   @override
   String get scopeName => "Print Dialog";
-
-}
-
-class _PrintDialogState extends State<PrintDialog> {
-
-  int numPrints = 1;
-  PrintSize printSize = PrintSize.normal;
 
   int get gridX => switch (printSize) {
     PrintSize.small => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridSmall.x,

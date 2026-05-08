@@ -73,7 +73,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
         onDismiss: () => navigator.pop(),
         actionsToken: actionsToken,
       ),
-      actionStackToken: actionsToken,
+      publishActions: false,
     );
   }
 
@@ -98,6 +98,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
         },
         onCancel: () => navigator.pop(),
       ),
+      publishActions: false,
     );
   }
 

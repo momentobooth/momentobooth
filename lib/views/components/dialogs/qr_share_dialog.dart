@@ -5,23 +5,22 @@ import 'package:lottie/lottie.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/action_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/views/base/has_actions_mixin.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
-import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 import 'package:momento_booth/views/components/qr_code.dart';
 import 'package:path/path.dart' as path;
 // import 'package:widgetbook/widgetbook.dart';
 // import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
-class QrShareDialog extends StatefulWidget with DialogActionsMixin {
+class QrShareDialog extends StatefulWidget {
 
   final File file;
   final VoidCallback onDismiss;
@@ -36,16 +35,9 @@ class QrShareDialog extends StatefulWidget with DialogActionsMixin {
 
   @override
   State<QrShareDialog> createState() => _QrShareDialogState();
-  
-  @override
-  // This list is empty because the state manages the actions itself, based on the current state of the upload process
-  List<AppAction> get actions => [];
-
-  @override
-  String get scopeName => "QR Share Dialog";
 }
 
-class _QrShareDialogState extends State<QrShareDialog> with Logger {
+class _QrShareDialogState extends State<QrShareDialog> with Logger, HasActionsMixin {
   ShareDialogState _state = ShareDialogState.uploading;
   double? uploadProgress;
   String? qrText;
@@ -56,6 +48,9 @@ class _QrShareDialogState extends State<QrShareDialog> with Logger {
   }
 
   ShareDialogState get state => _state;
+
+  @override
+  String get scopeName => "QR Share Dialog";
 
   @override
   void initState() {
@@ -236,10 +231,7 @@ class _QrShareDialogState extends State<QrShareDialog> with Logger {
     });
   }
 
-  void pushActions() {
-    getIt<ActionManager>().pushActions(actions, "QRShareDialog", widget.actionsToken);
-  }
-
+  @override
   List<AppAction> get actions => switch (state) {
     // These are actually the same actions, but with different names
     ShareDialogState.uploaded => [

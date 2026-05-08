@@ -108,7 +108,9 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
       dialog: LanguageChoiceDialog(onChosen: (language) {
         navigator.pop();
         getIt<WindowManager>().setLanguage(language);
-      },), barrierDismissible: true,
+      }, onCancel: () {
+        navigator.pop();
+      }), barrierDismissible: true,
     );
   }
 

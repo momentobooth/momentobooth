@@ -3,7 +3,10 @@ const List<String> cancelPhrases = [
   "stop",
   "abort",
   "never mind",
-  "forget it"
+  "forget it",
+  "close",
+  "dismiss",
+  "exit",
 ];
 
 const List<String> continuePhrases = [

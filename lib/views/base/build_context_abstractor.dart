@@ -24,9 +24,12 @@ mixin BuildContextAbstractor {
 
   AppLocalizations get localizations => AppLocalizations.of(_context)!;
 
-  Future<T?> showUserDialog<T extends Object?>({required Widget dialog, required bool barrierDismissible, Object? actionStackToken}) async {
+  /// Launches the given dialog widget as a dialog, and returns the result by the route `pop`.
+  /// For stateless widgets implementing [DialogActionsMixin], use [publishActions] `true`, the dialog's actions will be published to the ActionManager for the duration of the dialog being open.
+  /// For stateful widgets where the state implements [HasActionsMixin], the dialog will manage pushing and popping its own actions, so [publishActions] should be `false` to avoid extra scopes in the ActionManager.
+  Future<T?> showUserDialog<T extends Object?>({required Widget dialog, required bool barrierDismissible, bool publishActions = true}) async {
     // We acquire the actions from the dialog and push them to the ActionManager
-    final usedActionStackToken = actionStackToken ?? Object();
+    final usedActionStackToken = Object();
     final List<AppAction> dialogActions = switch (dialog) {
       DialogActionsMixin photoBoothDialog => photoBoothDialog.actions,
       _ => [],
@@ -35,7 +38,9 @@ mixin BuildContextAbstractor {
       DialogActionsMixin photoBoothDialog => photoBoothDialog.scopeName,
       _ => "User Dialog",
     };
-    getIt<ActionManager>().pushActions(dialogActions, dialogScopeName, usedActionStackToken);
+    if (publishActions) {
+      getIt<ActionManager>().pushActions(dialogActions, dialogScopeName, usedActionStackToken);
+    }
     // We then show the dialog and wait for it to be dismissed, saving the `pop` result
     final result = await navigator.push<T>(PhotoBoothDialogPage<T>(
       child: Padding(
@@ -45,7 +50,9 @@ mixin BuildContextAbstractor {
       barrierDismissible: barrierDismissible,
     ).createRoute());
     // When the dialog is dismissed, we pop the actions from the ActionManager
-    getIt<ActionManager>().pop(usedActionStackToken);
+    if (publishActions) {
+      getIt<ActionManager>().pop(usedActionStackToken);
+    }
     return result;
   }
 
