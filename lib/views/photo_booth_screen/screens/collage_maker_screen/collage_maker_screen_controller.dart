@@ -31,6 +31,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
       title: "Select Pictures",
       description: "Choose pictures to include in the collage.",
       inputSchema: '{ "type": "object", "properties": { "selected": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 }, "minItems": 0, "maxItems": 4 }}, "description": "The indices of the selected pictures, 1-indexed", "required": ["selected"], "additionalProperties": false }',
+      inputSchemaExample: '{ "selected": array of 1-indexed integers between 1 and 4, e.g., [1, 2, 4] }',
       examples: const [
         "select picture {selected}, {selected} and {selected}",
         "select picture {selected} and {second}",

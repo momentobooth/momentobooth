@@ -51,14 +51,28 @@ class _PrintDialogState extends State<PrintDialog> with HasActionsMixin {
       callback: setCopiesAPI,
       title: 'Set Copies',
       description: 'Sets the number of copies to print.',
-      inputSchema: '{ "type": "object", "properties": { "copies": { "type": "integer", "description": "The number of copies to print", "minimum": 1, "maximum": ${widget.maxPrints} } }, "required": ["copies"], "additionalProperties": false }'
+      inputSchema: '{ "type": "object", "properties": { "copies": { "type": "integer", "description": "The number of copies to print", "minimum": 1, "maximum": ${widget.maxPrints} } }, "required": ["copies"], "additionalProperties": false }',
+      inputSchemaExample: '{ "copies": integer between 1 and ${widget.maxPrints} }',
+      examples: [
+        "set copies to {copies}",
+        "make {copies} copies",
+        "change copies to {copies}",
+        "set number of copies to {copies}",
+      ],
     ),
     AppAction(
       name: "set_size",
       callback: setSizeAPI,
       title: 'Set Size',
       description: 'Sets the print size.',
-      inputSchema: '{ "type": "object", "properties": { "size": { "enum": [$sizeEnumOptions], "description": "The print size to set" } }, "required": ["size"], "additionalProperties": false }'
+      inputSchema: '{ "type": "object", "properties": { "size": { "enum": [$sizeEnumOptions], "description": "The print size to set" } }, "required": ["size"], "additionalProperties": false }',
+      inputSchemaExample: '{ "size": one of [$sizeEnumOptions] }',
+      examples: [
+        "set print size to {size}",
+        "change print size to {size}",
+        "set size to {size}",
+        "change size to {size}",
+      ],
     ),
     AppAction(
       name: "print",

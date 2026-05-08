@@ -25,14 +25,13 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
     return 'assets/svg/flags/$countryCode.svg';
   }
 
+  List<Language> get projectAvailableLanguages => getIt<ProjectManager>().settings.availableLanguages;
+  List<Language> get languages => projectAvailableLanguages.isNotEmpty? projectAvailableLanguages : Language.definedValues;
+  List<String> get languageCodes => languages.map((lang) => '"${lang.code}"').toList();
+
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
-
-    final projectAvailableLanguages = getIt<ProjectManager>().settings.availableLanguages;
-    final languages = projectAvailableLanguages.isNotEmpty
-      ? projectAvailableLanguages
-      : Language.definedValues;
 
     final TextStyle textStyle = FluentTheme.of(context).typography.bodyLarge!.copyWith(
       fontSize: 30,
@@ -86,7 +85,8 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
       callback: setLanguageAPI,
       title: 'Set Language',
       description: 'Change the application language to the chosen one for this session.',
-      inputSchema: '{ "type": "object", "properties": { "language_code": { "type": "string", "description": "The ISO 639-1 code for the language to set" } }, "required": ["language_code"], "additionalProperties": false }'
+      inputSchema: '{ "type": "object", "properties": { "language_code": { "enum": [${languageCodes.join(", ")}], "description": "The ISO 639-1 code for the language to set" } }, "required": ["language_code"], "additionalProperties": false }',
+      inputSchemaExample: '{ "language_code": one of ${languageCodes.join(", ")} }',
     ),
     // Todo: is there a way to pop the route from here?
     AppAction(

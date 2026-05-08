@@ -11,6 +11,7 @@ import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
 import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/has_actions_mixin.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
@@ -240,12 +241,19 @@ class _QrShareDialogState extends State<QrShareDialog> with Logger, HasActionsMi
           callback: (_, response) { uploadPhotoToSend(); response(true, "Redo upload button pressed"); },
           title: "Redo Upload",
           description: "Start the upload process again to get a new QR code",
+          examples: [
+            "redo upload",
+            "upload again",
+            "upload another one",
+            "get me a new QR code",
+          ],
         ),
         AppAction(
           name: "close",
           callback: (_, response) { widget.onDismiss(); response(true, "Close button pressed"); },
           title: "Close",
           description: "Close the QR sharing dialog.",
+          examples: cancelPhrases
         ),
       ],
     ShareDialogState.error => [
@@ -254,12 +262,18 @@ class _QrShareDialogState extends State<QrShareDialog> with Logger, HasActionsMi
           callback: (_, response) { widget.onDismiss(); response(true, "Cancel button pressed"); },
           title: "Cancel",
           description: "Cancel the upload process.",
+          examples: cancelPhrases
         ),
         AppAction(
           name: "retry_upload",
           callback: (_, response) { uploadPhotoToSend(); response(true, "Retry upload button pressed"); },
           title: "Retry Upload",
           description: "After an error has occurred, this will try uploading the photo again.",
+          examples: [
+            "try again",
+            "retry upload",
+            "try uploading again",
+          ],
         ),
       ],
     _ => [],
