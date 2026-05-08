@@ -7,6 +7,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/find_face_dialog.dart';
@@ -28,14 +29,14 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
       callback: (_, response) { openLatestPhoto(); response(true, "Opened latest picture for viewing"); },
       title: "Open Latest Picture",
       description: "View the most recently captured picture.",
-      examples: const ["latest", "most recent", "last photo", "last picture", "open latest"],
+      examples: const ["latest", "most recent", "last photo", "last picture", "open latest"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
     AppAction(
       name: "back",
       callback: (_, response) { onPressedBack(); response(true, "Back button pressed"); },
       title: "Back",
       description: "Return to the previous screen.",
-      examples: backPhrases,
+      examples: backPhrasesExamples,
     ),
   ];
 

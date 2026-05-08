@@ -4,6 +4,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
@@ -30,15 +31,15 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
       callback: selectPicturesAPI,
       title: "Select Pictures",
       description: "Choose pictures to include in the collage.",
-      inputSchema: '{ "type": "object", "properties": { "selected": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 }, "minItems": 0, "maxItems": 4 }}, "description": "The indices of the selected pictures, 1-indexed", "required": ["selected"], "additionalProperties": false }',
+      inputSchema: { "type": "object", "properties": { "selected": { "type": "array", "items": { "type": "integer", "minimum": 1, "maximum": 4 }, "minItems": 0, "maxItems": 4 }}, "description": "The indices of the selected pictures, 1-indexed", "required": ["selected"], "additionalProperties": false },
       inputSchemaExample: '{ "selected": array of 1-indexed integers between 1 and 4, e.g., [1, 2, 4] }',
       examples: const [
-        "select picture {selected}, {selected} and {selected}",
-        "select picture {selected} and {second}",
-        "select picture {selected}",
-        "select the {selected} picture",
-        "select the {selected} and {selected} picture",
-        "select the {selected}, {selected}, and {selected} picture",
+        AppActionExample(phrase: "select picture {selected:1}, {selected:2} and {selected:4}", arguments: { "selected": [1, 2, 4] }),
+        AppActionExample(phrase: "select picture {selected:one} and {second:two}", arguments: { "selected": [1, 2] }),
+        AppActionExample(phrase: "select picture {selected:one}", arguments: { "selected": [1] }),
+        AppActionExample(phrase: "select the {selected:first} picture", arguments: { "selected": [1] }),
+        AppActionExample(phrase: "select the {selected:second} and {selected:third} picture", arguments: { "selected": [2, 3] }),
+        AppActionExample(phrase: "select the {selected:third}, {selected:second}, and {selected:first} picture", arguments: { "selected": [3, 2, 1] }),
       ],
     ),
     AppAction(
@@ -46,7 +47,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
       callback: (_, response) { onContinueTap(); response(true, "Continue button pressed"); },
       title: "Continue",
       description: "Proceed to the share screen.",
-      examples: continuePhrases,
+      examples: continuePhrasesExamples,
     ),
     AppAction(
       name: "select_all_pictures",
@@ -66,7 +67,7 @@ class CollageMakerScreenController extends ScreenControllerBase<CollageMakerScre
         "all of them",
         "all pictures",
         "use all pictures",
-      ],
+      ].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
   ];
 

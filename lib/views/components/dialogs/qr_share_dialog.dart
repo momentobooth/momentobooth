@@ -8,6 +8,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
 import 'package:momento_booth/utils/logger.dart';
@@ -246,14 +247,14 @@ class _QrShareDialogState extends State<QrShareDialog> with Logger, HasActionsMi
             "upload again",
             "upload another one",
             "get me a new QR code",
-          ],
+          ].map((phrase) => AppActionExample(phrase: phrase)).toList(),
         ),
         AppAction(
           name: "close",
           callback: (_, response) { widget.onDismiss(); response(true, "Close button pressed"); },
           title: "Close",
           description: "Close the QR sharing dialog.",
-          examples: cancelPhrases
+          examples: cancelPhrasesExamples
         ),
       ],
     ShareDialogState.error => [
@@ -262,7 +263,7 @@ class _QrShareDialogState extends State<QrShareDialog> with Logger, HasActionsMi
           callback: (_, response) { widget.onDismiss(); response(true, "Cancel button pressed"); },
           title: "Cancel",
           description: "Cancel the upload process.",
-          examples: cancelPhrases
+          examples: cancelPhrasesExamples
         ),
         AppAction(
           name: "retry_upload",
@@ -273,7 +274,7 @@ class _QrShareDialogState extends State<QrShareDialog> with Logger, HasActionsMi
             "try again",
             "retry upload",
             "try uploading again",
-          ],
+          ].map((phrase) => AppActionExample(phrase: phrase)).toList(),
         ),
       ],
     _ => [],

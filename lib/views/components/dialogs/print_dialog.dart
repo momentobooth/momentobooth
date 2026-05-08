@@ -5,6 +5,7 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/has_actions_mixin.dart';
@@ -35,7 +36,7 @@ class _PrintDialogState extends State<PrintDialog> with HasActionsMixin {
   int numPrints = 1;
   PrintSize printSize = PrintSize.normal;
 
-  String get sizeEnumOptions => PrintSize.values.where((e) => e != PrintSize.split).map((e) => '"${e.name}"').join(", ");
+  List<String> get sizeEnumOptions => PrintSize.values.where((e) => e != PrintSize.split).map((e) => e.name).toList();
 
   @override
   List<AppAction> get actions => [
@@ -44,20 +45,20 @@ class _PrintDialogState extends State<PrintDialog> with HasActionsMixin {
       callback: (_, response) { widget.onCancel(); response(true, "Cancel button pressed"); },
       title: 'Cancel',
       description: 'Presses the cancel button in the print dialog.',
-      examples: cancelPhrases
+      examples: cancelPhrasesExamples
     ),
     AppAction(
       name: "set_copies",
       callback: setCopiesAPI,
       title: 'Set Copies',
       description: 'Sets the number of copies to print.',
-      inputSchema: '{ "type": "object", "properties": { "copies": { "type": "integer", "description": "The number of copies to print", "minimum": 1, "maximum": ${widget.maxPrints} } }, "required": ["copies"], "additionalProperties": false }',
+      inputSchema: { "type": "object", "properties": { "copies": { "type": "integer", "description": "The number of copies to print", "minimum": 1, "maximum": widget.maxPrints } }, "required": ["copies"], "additionalProperties": false },
       inputSchemaExample: '{ "copies": integer between 1 and ${widget.maxPrints} }',
       examples: [
-        "set copies to {copies}",
-        "make {copies} copies",
-        "change copies to {copies}",
-        "set number of copies to {copies}",
+        AppActionExample(phrase: "set copies to {copies:1}", arguments: { "copies": 1 }),
+        AppActionExample(phrase: "make {copies:three} copies", arguments: { "copies": 3 }),
+        AppActionExample(phrase: "change copies to {copies:four}", arguments: { "copies": 4 }),
+        AppActionExample(phrase: "set number of copies to {copies:2}", arguments: { "copies": 2 }),
       ],
     ),
     AppAction(
@@ -65,13 +66,13 @@ class _PrintDialogState extends State<PrintDialog> with HasActionsMixin {
       callback: setSizeAPI,
       title: 'Set Size',
       description: 'Sets the print size.',
-      inputSchema: '{ "type": "object", "properties": { "size": { "enum": [$sizeEnumOptions], "description": "The print size to set" } }, "required": ["size"], "additionalProperties": false }',
-      inputSchemaExample: '{ "size": one of [$sizeEnumOptions] }',
+      inputSchema: { "type": "object", "properties": { "size": { "enum": sizeEnumOptions, "description": "The print size to set" } }, "required": ["size"], "additionalProperties": false },
+      inputSchemaExample: '{ "size": one of ${sizeEnumOptions.map((e) => '"$e"').join(", ")} }',
       examples: [
-        "set print size to {size}",
-        "change print size to {size}",
-        "set size to {size}",
-        "change size to {size}",
+        AppActionExample(phrase: "set print size to {size:${PrintSize.normal.name}}", arguments: { "size": PrintSize.normal.name }),
+        AppActionExample(phrase: "change print size to {size:${PrintSize.small.name}}", arguments: { "size": PrintSize.small.name }),
+        AppActionExample(phrase: "set size to {size:${PrintSize.normal.name}}", arguments: { "size": PrintSize.normal.name }),
+        AppActionExample(phrase: "change size to {size:${PrintSize.tiny.name}}", arguments: { "size": PrintSize.tiny.name }),
       ],
     ),
     AppAction(
@@ -79,7 +80,7 @@ class _PrintDialogState extends State<PrintDialog> with HasActionsMixin {
       callback: (_, response) { widget.onPrintPressed(printSize, numPrints); response(true, "Print button pressed, printing $numPrints copies of $printSize size"); },
       title: 'Print',
       description: 'Presses the print button in the print dialog.',
-      examples: printPhrases
+      examples: printPhrasesExamples
     ),
   ];
 

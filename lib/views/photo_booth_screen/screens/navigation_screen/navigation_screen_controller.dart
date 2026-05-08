@@ -4,6 +4,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/language_choice_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
@@ -26,7 +27,7 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
       callback: (_, response) { onClickSinglePhoto(); response(true, "Commencing to take a single photo"); },
       title: "Single Photo",
       description: "Take a single photo.",
-      examples: const ["single", "single capture", "single photo", "single picture", "take a photo"],
+      examples: const ["single", "single capture", "single photo", "single picture", "take a photo"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
     if (viewModel.enableCollageCapture)
     AppAction(
@@ -34,21 +35,21 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
       callback: (_, response) { onClickCollage(); response(true, "Commencing to create a collage"); },
       title: "Collage",
       description: "Shoot multiple photos and create a collage from them.",
-      examples: const ["collage", "collage capture", "collage photo", "collage picture", "take a collage"],
+      examples: const ["collage", "collage capture", "collage photo", "collage picture", "take a collage"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
     AppAction(
       name: "gallery",
       callback: (_, response) { onClickGallery(); response(true, "Opening gallery"); },
       title: "Gallery",
       description: "View the previously captured photos.",
-      examples: const ["gallery", "view gallery", "see photos", "browse images"],
+      examples: const ["gallery", "view gallery", "see photos", "browse images"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
     AppAction(
       name: "open_language_dialog",
       callback: (_, response) { onClickLanguage(); response(true, "Opening language dialog"); },
       title: "Language",
       description: "Open the language selection dialog.",
-      examples: const ["language", "change language", "select language", "set language", "open language settings"],
+      examples: const ["language", "change language", "select language", "set language", "open language settings"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
   ];
 

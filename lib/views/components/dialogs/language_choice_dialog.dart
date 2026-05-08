@@ -5,6 +5,7 @@ import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
@@ -27,7 +28,6 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
 
   List<Language> get projectAvailableLanguages => getIt<ProjectManager>().settings.availableLanguages;
   List<Language> get languages => projectAvailableLanguages.isNotEmpty? projectAvailableLanguages : Language.definedValues;
-  List<String> get languageCodes => languages.map((lang) => '"${lang.code}"').toList();
 
   @override
   Widget build(BuildContext context) {
@@ -85,15 +85,23 @@ class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
       callback: setLanguageAPI,
       title: 'Set Language',
       description: 'Change the application language to the chosen one for this session.',
-      inputSchema: '{ "type": "object", "properties": { "language_code": { "enum": [${languageCodes.join(", ")}], "description": "The ISO 639-1 code for the language to set" } }, "required": ["language_code"], "additionalProperties": false }',
-      inputSchemaExample: '{ "language_code": one of ${languageCodes.join(", ")} }',
+      inputSchema: { "type": "object", "properties": { "language_code": { "enum": languages.map((lang) => lang.code).toList(), "description": "The ISO 639-1 code for the language to set" } }, "required": ["language_code"], "additionalProperties": false },
+      inputSchemaExample: '{ "language_code": one of ${languages.map((lang) => '"${lang.code}"').join(", ")} }',
+      examples: languages.expand((lang) => [
+        AppActionExample(phrase: "select ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "use ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "set language to ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "change language to ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "switch language to ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "i want to use ${lang.nameNative}", arguments: { "language_code": lang.code }),
+      ]).toList(),
     ),
     // Todo: is there a way to pop the route from here?
     AppAction(
       name: "dismiss",
       callback: (_, response) { onCancel(); response(true, "Dialog dismissed"); },
       title: "Dismiss", description: "Close the language selection dialog without changing the language.",
-      examples: cancelPhrases
+      examples: cancelPhrasesExamples
     ),
   ];
 

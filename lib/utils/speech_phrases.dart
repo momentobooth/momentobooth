@@ -1,3 +1,5 @@
+import 'package:momento_booth/models/app_action_example.dart';
+
 const List<String> cancelPhrases = [
   "cancel",
   "stop",
@@ -9,6 +11,8 @@ const List<String> cancelPhrases = [
   "exit",
 ];
 
+List<AppActionExample> get cancelPhrasesExamples => cancelPhrases.map((phrase) => AppActionExample(phrase: phrase)).toList();
+
 const List<String> continuePhrases = [
   "continue",
   "next",
@@ -19,6 +23,8 @@ const List<String> continuePhrases = [
   "finished"
 ];
 
+List<AppActionExample> get continuePhrasesExamples => continuePhrases.map((phrase) => AppActionExample(phrase: phrase)).toList();
+
 const List<String> backPhrases = [
   "back",
   "previous",
@@ -26,6 +32,8 @@ const List<String> backPhrases = [
   "return",
   "previous screen"
 ];
+
+List<AppActionExample> get backPhrasesExamples => backPhrases.map((phrase) => AppActionExample(phrase: phrase)).toList();
 
 const List<String> confirmPhrases = [
   "yes",
@@ -36,12 +44,16 @@ const List<String> confirmPhrases = [
   "do it",
 ];
 
+List<AppActionExample> get confirmPhrasesExamples => confirmPhrases.map((phrase) => AppActionExample(phrase: phrase)).toList();
+
 const List<String> getQRPhrases = [
   "get qr code",
   "show qr code",
   "generate qr code",
   "share photo"
 ];
+
+List<AppActionExample> get getQRPhrasesExamples => getQRPhrases.map((phrase) => AppActionExample(phrase: phrase)).toList();
 
 const List<String> printPhrases = [
   "print",
@@ -52,3 +64,5 @@ const List<String> printPhrases = [
   "i want to print",
   "let's print"
 ];
+
+List<AppActionExample> get printPhrasesExamples => printPhrases.map((phrase) => AppActionExample(phrase: phrase)).toList();

@@ -8,6 +8,7 @@ import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/app_action.dart';
 import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
@@ -36,28 +37,28 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       callback: (_, response) { onClickPrev(); response(true, "Retaking photo"); },
       title: "Retake Photo",
       description: "Retake the current photo.",
-      examples: const ["retake", "take again", "try again", "do it again"],
+      examples: const ["retake", "take again", "try again", "do it again"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
     AppAction(
       name: "get_qr",
       callback: (_, response) { onClickGetQR(); response(true, "Uploading the picture to get a QR code"); },
       title: "Get QR Code",
       description: "Generate a QR code for sharing the photo.",
-      examples: getQRPhrases,
+      examples: getQRPhrasesExamples,
     ),
     AppAction(
       name: "print",
       callback: (_, response) { onClickPrint(); response(true, "Opening the print dialog"); },
       title: "Print Photo",
       description: "Open the print dialog.",
-      examples: printPhrases,
+      examples: printPhrasesExamples,
     ),
     AppAction(
       name: "continue",
       callback: (_, response) { onClickNext(); response(true, "Continuing to the start screen"); },
       title: "Continue",
       description: "Proceed to the start screen.",
-      examples: continuePhrases,
+      examples: continuePhrasesExamples,
     ),
   ];
 

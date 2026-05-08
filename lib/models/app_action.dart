@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 
 part 'app_action.freezed.dart';
 part 'app_action.g.dart';
@@ -12,8 +13,8 @@ abstract class AppAction with _$AppAction {
     required String name,
     required String title,
     required String description,
-    @Default([]) List<String> examples,
-    @Default('{ "type": "object", "additionalProperties": false }') String inputSchema,
+    @Default([]) List<AppActionExample> examples,
+    @Default({ "type": "object", "additionalProperties": false }) Map<String, dynamic> inputSchema,
     @Default('{}') String inputSchemaExample,
     @JsonKey(includeToJson: false, includeFromJson: false)
     required Function(Map<String, dynamic>, Function(bool, String)) callback,
