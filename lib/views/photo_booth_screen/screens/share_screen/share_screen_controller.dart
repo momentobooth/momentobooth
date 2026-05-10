@@ -36,21 +36,21 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       name: "retake",
       callback: (_, response) { onClickPrev(); response(true, "Retaking photo"); },
       title: "Retake Photo",
-      description: "Retake the current photo.",
+      description: "Open the retake dialog, where a user can choose to delete or keep the current photo.",
       examples: const ["retake", "take again", "try again", "do it again"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
     ),
     AppAction(
-      name: "get_qr",
+      name: "share_with_qr_code_dialog",
       callback: (_, response) { onClickGetQR(); response(true, "Uploading the picture to get a QR code"); },
-      title: "Get QR Code",
-      description: "Generate a QR code for sharing the photo.",
+      title: "Share with QR Code",
+      description: "Upload the photo, generate a QR code and display it in a dialog to share the photo.",
       examples: getQRPhrasesExamples,
     ),
     AppAction(
-      name: "print",
+      name: "open_print_dialog",
       callback: (_, response) { onClickPrint(); response(true, "Opening the print dialog"); },
-      title: "Print Photo",
-      description: "Open the print dialog.",
+      title: "Open Print Dialog",
+      description: "Open the print dialog where options can be selected and a print job can be submitted.",
       examples: printPhrasesExamples,
     ),
     AppAction(
@@ -107,13 +107,11 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       logError("File is null when trying to get QR code");
       return;
     }
-    final actionsToken = Object();
     showUserDialog(
       barrierDismissible: false,
       dialog: QrShareDialog(
         file: viewModel.file!,
         onDismiss: () => navigator.pop(),
-        actionsToken: actionsToken,
       ),
       publishActions: false,
     );

@@ -74,7 +74,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       if (_client != null) _publishActions(actions, scopes);
     });
     autorun((_) {
-      List<AppActionCall> actionCalls = getIt<ActionManager>().actionHistory.values.toList();
+      Map<DateTime, AppActionCall> actionCalls = getIt<ActionManager>().actionHistory;
       if (_client != null) _publishActionCallHistory(actionCalls);
     });
     autorun((_) {
@@ -230,11 +230,13 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     );
   }
 
-  void _publishActionCallHistory(List<AppActionCall> actionCalls) {
+  void _publishActionCallHistory(Map<DateTime, AppActionCall> actionCalls) {
     if (!allowControl) return;
+    var actionCallsMap = actionCalls.map((k, v) => MapEntry(k.toIso8601String(), v.toJson()));
+    var actionCallsJson = jsonEncode(actionCallsMap);
     _publish(
       "actions/call_history",
-      jsonEncode(actionCalls.map((a) => a.toJson()).toList()),
+      actionCallsJson,
       retain: true,
     );
   }

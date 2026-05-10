@@ -41,19 +41,21 @@ mixin BuildContextAbstractor {
     if (publishActions) {
       getIt<ActionManager>().pushActions(dialogActions, dialogScopeName, usedActionStackToken);
     }
-    // We then show the dialog and wait for it to be dismissed, saving the `pop` result
-    final result = await navigator.push<T>(PhotoBoothDialogPage<T>(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Center(child: dialog),
-      ),
-      barrierDismissible: barrierDismissible,
-    ).createRoute());
-    // When the dialog is dismissed, we pop the actions from the ActionManager
-    if (publishActions) {
-      getIt<ActionManager>().pop(usedActionStackToken);
+    try {
+      // We then show the dialog and wait for it to be dismissed, saving the `pop` result
+      return await navigator.push<T>(PhotoBoothDialogPage<T>(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Center(child: dialog),
+        ),
+        barrierDismissible: barrierDismissible,
+      ).createRoute());
+    } finally {
+      // When the dialog is dismissed, we pop the actions from the ActionManager
+      if (publishActions) {
+        getIt<ActionManager>().pop(usedActionStackToken);
+      }
     }
-    return result;
   }
 
 }

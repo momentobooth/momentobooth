@@ -26,13 +26,11 @@ class QrShareDialog extends StatefulWidget {
 
   final File file;
   final VoidCallback onDismiss;
-  final Object actionsToken;
 
   const QrShareDialog({
     super.key,
     required this.file,
     required this.onDismiss,
-    required this.actionsToken,
   });
 
   @override

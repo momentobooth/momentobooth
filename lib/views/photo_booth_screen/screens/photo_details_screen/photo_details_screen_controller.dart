@@ -32,18 +32,18 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       examples: backPhrasesExamples
     ),
     AppAction(
-      name: "get_qr",
+      name: "share_with_qr_code_dialog",
       callback: (_, response) { onClickGetQR(); response(true, "Uploading the picture to get a QR code"); },
-      title: "Get QR Code",
-      description: "Generate a QR code for sharing the photo.",
-      examples: getQRPhrasesExamples
+      title: "Share with QR Code",
+      description: "Upload the photo, generate a QR code and display it in a dialog to share the photo.",
+      examples: getQRPhrasesExamples,
     ),
     AppAction(
       name: "open_print_dialog",
       callback: (_, response) { onClickPrint(); response(true, "Opening the print dialog"); },
-      title: "Print",
-      description: "Open the print dialog.",
-      examples: printPhrasesExamples
+      title: "Open Print Dialog",
+      description: "Open the print dialog where options can be selected and a print job can be submitted.",
+      examples: printPhrasesExamples,
     ),
   ];
 
@@ -65,13 +65,11 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       logError("File is null when trying to get QR code");
       return;
     }
-    final actionsToken = Object();
     showUserDialog(
       barrierDismissible: false,
       dialog: QrShareDialog(
         file: viewModel.file!,
         onDismiss: () => navigator.pop(),
-        actionsToken: actionsToken,
       ),
       publishActions: false,
     );
