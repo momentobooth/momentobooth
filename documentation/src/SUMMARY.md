@@ -38,3 +38,6 @@
 
 # Misc
 - [Command Line Arguments](./cli.md)
+- [UX flow](./ux_flow.md)
+- [Home Assistant integration](./home_assistant.md)
+- [Control API](./control_API.md)
