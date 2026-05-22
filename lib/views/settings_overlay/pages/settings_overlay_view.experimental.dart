@@ -63,7 +63,7 @@ Widget _getExperimentalBlock(SettingsOverlayViewModel viewModel, SettingsOverlay
         onFinishedEditing: controller.onTextSummaryPromptChanged,
       ),
       SettingsTextEditTile(
-        icon: LucideIcons.codesandbox,
+        icon: LucideIcons.database,
         title: "LLM model to use",
         subtitle: "The model that will be requested for text processing.",
         controller: controller.llmModelController,
