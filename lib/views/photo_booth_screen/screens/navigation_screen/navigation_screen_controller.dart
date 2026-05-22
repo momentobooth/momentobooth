@@ -2,6 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/language_choice_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
@@ -12,6 +15,43 @@ import 'package:momento_booth/views/photo_booth_screen/screens/single_capture_sc
 class NavigationScreenController extends ScreenControllerBase<NavigationScreenViewModel> {
 
   AutoSizeGroup autoSizeGroup = AutoSizeGroup();
+
+  @override
+  String get scopeName => "Navigation Screen";
+
+  @override
+  List<AppAction> get actions => [
+    if (viewModel.enableSingleCapture)
+    AppAction(
+      name: "single_photo",
+      callback: (_, response) { onClickSinglePhoto(); response(true, "Commencing to take a single photo"); },
+      title: "Single Photo",
+      description: "Take a single photo.",
+      examples: const ["single", "single capture", "single photo", "single picture", "take a photo"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+    if (viewModel.enableCollageCapture)
+    AppAction(
+      name: "collage",
+      callback: (_, response) { onClickCollage(); response(true, "Commencing to create a collage"); },
+      title: "Collage",
+      description: "Shoot multiple photos and create a collage from them.",
+      examples: const ["collage", "collage capture", "collage photo", "collage picture", "take a collage"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+    AppAction(
+      name: "gallery",
+      callback: (_, response) { onClickGallery(); response(true, "Opening gallery"); },
+      title: "Gallery",
+      description: "View the previously captured photos.",
+      examples: const ["gallery", "view gallery", "see photos", "browse images"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+    AppAction(
+      name: "open_language_dialog",
+      callback: (_, response) { onClickLanguage(); response(true, "Opening language dialog"); },
+      title: "Language",
+      description: "Open the language selection dialog.",
+      examples: const ["language", "change language", "select language", "set language", "open language settings"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+  ];
 
   // Initialization/Deinitialization
 
@@ -34,9 +74,11 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
     final singleCapture = viewModel.enableSingleCapture;
     final collageCapture = viewModel.enableCollageCapture;
     if (singleCapture) {
+      registerActionCall(const AppActionCall(tool: "single_photo"));
       router.go(SingleCaptureScreen.defaultRoute);
       return;
     } else if (collageCapture) {
+      registerActionCall(const AppActionCall(tool: "collage"));
       router.go(MultiCaptureScreen.defaultRoute);
       return;
     } else {
@@ -57,15 +99,19 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
   }
 
   void onClickGallery() {
+    registerActionCall(const AppActionCall(tool: "gallery"));
     router.push(GalleryScreen.defaultRoute);
   }
 
   Future<void> onClickLanguage() async {
+    registerActionCall(const AppActionCall(tool: "open_language_dialog"));
     await showUserDialog(
       dialog: LanguageChoiceDialog(onChosen: (language) {
         navigator.pop();
         getIt<WindowManager>().setLanguage(language);
-      },), barrierDismissible: true,
+      }, onCancel: () {
+        navigator.pop();
+      }), barrierDismissible: true,
     );
   }
 

@@ -220,6 +220,24 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onAllowControlChanged(bool? enable) {
+    if (enable != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.control(enable: enable));
+    }
+  }
+
+  void onControlDisableDurationAfterTouchChanged(int? duration) {
+    if (duration != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.control(controlDisableDurationMsAfterTouch: duration));
+    }
+  }
+
+  void onControlHistoryDurationSecondsChanged(int? duration) {
+    if (duration != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.control(controlHistoryDurationSeconds: duration));
+    }
+  }
+
   void onLiveViewAndCaptureRotateChanged(Rotate? liveViewAndCaptureRotate) {
     if (liveViewAndCaptureRotate != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(liveViewAndCaptureRotate: liveViewAndCaptureRotate));

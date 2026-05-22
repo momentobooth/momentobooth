@@ -5,6 +5,10 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:http/http.dart' as http;
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/find_face_dialog.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen_view_model.dart';
@@ -14,6 +18,27 @@ import 'package:path/path.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewModel> {
+
+  @override
+  String get scopeName => "Gallery Screen";
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(
+      name: "open_latest_picture",
+      callback: (_, response) { openLatestPhoto(); response(true, "Opened latest picture for viewing"); },
+      title: "Open Latest Picture",
+      description: "View the most recently captured picture.",
+      examples: const ["latest", "most recent", "last photo", "last picture", "open latest"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+    AppAction(
+      name: "back",
+      callback: (_, response) { onPressedBack(); response(true, "Back button pressed"); },
+      title: "Back",
+      description: "Return to the previous screen.",
+      examples: backPhrasesExamples,
+    ),
+  ];
 
   // Initialization/Deinitialization
 
@@ -25,10 +50,24 @@ class GalleryScreenController extends ScreenControllerBase<GalleryScreenViewMode
   void openPhoto(File file) {
     final String filename = basename(file.path);
     logDebug("Opening photo $filename");
+    registerActionCall(AppActionCall(tool: "open_photo", arguments: {"filename": filename}));
     router.push("${PhotoDetailsScreen.defaultRoute}/$filename");
   }
 
+  void openLatestPhoto() {
+    final latestGroup = viewModel.imageGroups?.firstOrNull;
+    if (latestGroup != null) {
+      final latestPhoto = latestGroup.images.firstOrNull;
+      if (latestPhoto != null) {
+        openPhoto(latestPhoto.file);
+      } else {
+        logDebug("No photos found in the last group");
+      }
+    }
+  }
+
   void onPressedBack() {
+    registerActionCall(const AppActionCall(tool: "back"));
     if (router.canPop()) {
       router.pop();
     } else {

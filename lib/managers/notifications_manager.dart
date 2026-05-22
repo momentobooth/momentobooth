@@ -20,16 +20,35 @@ abstract class NotificationsManagerBase with Store {
   static const _printerStatusCheckPeriod = Duration(seconds: 5);
 
   @observable
-  ObservableList<InfoBar> notifications = ObservableList<InfoBar>();
+  ObservableList<InfoBar> statusNotifications = ObservableList();
+
+  @observable
+  String notification = "";
+
+  List<NotificationRequest> notificationRequests = [];
+  Timer? _notificationClearTimer;
 
   void initialize() {
     Timer.periodic(_printerStatusCheckPeriod, (_) => _statusCheck());
   }
 
+  void addNotificationRequest(NotificationRequest request) {
+    notificationRequests.add(request);
+
+    _notificationClearTimer?.cancel();
+    // Add 400 ms to the duration to account for the fade in animation.
+    _notificationClearTimer = Timer(Duration(milliseconds: request.duration + 400), () {
+      notificationRequests.remove(request);
+      notification = "";
+    });
+
+    notification = request.message;
+  }
+
   Future<void> _statusCheck() async {
     // The printer status check must be done before clearing as it is async and we don't want the notifications to blink.
     final printerNotifications = await _printerStatusCheck();
-    notifications
+    statusNotifications
       ..clear()
       ..addAll(printerNotifications)
       ..addAll(_subSystemStatusCheck())

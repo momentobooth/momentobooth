@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
@@ -24,6 +27,41 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   AutoSizeGroup actionButtonGroup = AutoSizeGroup(), navigationButtonGroup = AutoSizeGroup();
 
+  @override
+  String get scopeName => "Share Screen";
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(
+      name: "retake",
+      callback: (_, response) { onClickPrev(); response(true, "Retaking photo"); },
+      title: "Retake Photo",
+      description: "Open the retake dialog, where a user can choose to delete or keep the current photo.",
+      examples: const ["retake", "take again", "try again", "do it again"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+    AppAction(
+      name: "share_with_qr_code_dialog",
+      callback: (_, response) { onClickGetQR(); response(true, "Uploading the picture to get a QR code"); },
+      title: "Share with QR Code",
+      description: "Upload the photo, generate a QR code and display it in a dialog to share the photo.",
+      examples: getQRPhrasesExamples,
+    ),
+    AppAction(
+      name: "open_print_dialog",
+      callback: (_, response) { onClickPrint(); response(true, "Opening the print dialog"); },
+      title: "Open Print Dialog",
+      description: "Open the print dialog where options can be selected and a print job can be submitted.",
+      examples: printPhrasesExamples,
+    ),
+    AppAction(
+      name: "continue",
+      callback: (_, response) { onClickNext(); response(true, "Continuing to the start screen"); },
+      title: "Continue",
+      description: "Proceed to the start screen.",
+      examples: continuePhrasesExamples,
+    ),
+  ];
+
   // Initialization/Deinitialization
 
   ShareScreenController({
@@ -39,6 +77,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   void onRetake (bool delete) {
     navigator.pop();
+    registerActionCall(AppActionCall(tool: "retake", arguments: {"delete": delete}));
     // The reset function will clear the capture mode, so we need to save it.
     final captureMode = getIt<PhotosManager>().captureMode;
     getIt<PhotosManager>().reset(advance: !delete);
@@ -55,28 +94,26 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     if (viewModel.canRetake) {
       showUserDialog(dialog: RetakeDialog(onDelete: () => onRetake(true), onKeep: () => onRetake(false), onCancel: () => navigator.pop() ), barrierDismissible: false);
     } else {
+      registerActionCall(const AppActionCall(tool: "back"));
       getIt<StatsManager>().addCollageChange();
       router.go(CollageMakerScreen.defaultRoute);
     }
   }
 
   void onClickGetQR() {
-    viewModel.uploadPhotoToSend();
+    registerActionCall(const AppActionCall(tool: "get_qr"));
+    viewModel.ensureFile();
+    if (viewModel.file == null) {
+      logError("File is null when trying to get QR code");
+      return;
+    }
     showUserDialog(
       barrierDismissible: false,
-      dialog: Observer(builder: (_) {
-        return QrShareDialog(
-          state: viewModel.uploadFailed
-              ? ShareDialogState.error
-              : viewModel.uploadProgress != null || viewModel.qrUrl == null
-                  ? ShareDialogState.uploading
-                  : ShareDialogState.uploaded,
-          uploadProgress: (viewModel.uploadProgress ?? 0) * 100,
-          qrText: viewModel.qrUrl,
-          onDismiss: () => navigator.pop(),
-          onRedoUpload: viewModel.uploadPhotoToSend,
-        );
-      }),
+      dialog: QrShareDialog(
+        file: viewModel.file!,
+        onDismiss: () => navigator.pop(),
+      ),
+      publishActions: false,
     );
   }
 
@@ -91,17 +128,17 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
   void onClickPrint() {
     if (!viewModel.printEnabled) return;
+    registerActionCall(const AppActionCall(tool: "open_print_dialog"));
     showUserDialog(
       barrierDismissible: false,
-      dialog: Observer(builder: (_) {
-        return PrintDialog(
-          onPrintPressed: (size, copies) {
-            navigator.pop();
-            onConfirmPrint(size, copies);
-          },
-          onCancel: () => navigator.pop(),
-        );
-      }),
+      dialog: PrintDialog(
+        onPrintPressed: (size, copies) {
+          navigator.pop();
+          onConfirmPrint(size, copies);
+        },
+        onCancel: () => navigator.pop(),
+      ),
+      publishActions: false,
     );
   }
 

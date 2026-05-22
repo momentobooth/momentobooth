@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
@@ -17,6 +19,34 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
   AutoSizeGroup actionButtonGroup = AutoSizeGroup();
 
+  @override
+  String get scopeName => "Photo Details Screen";
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(
+      name: "back",
+      callback: (_, response) { onClickPrev(); response(true, "Back button pressed"); },
+      title: "Back",
+      description: "Return to the gallery screen.",
+      examples: backPhrasesExamples
+    ),
+    AppAction(
+      name: "share_with_qr_code_dialog",
+      callback: (_, response) { onClickGetQR(); response(true, "Uploading the picture to get a QR code"); },
+      title: "Share with QR Code",
+      description: "Upload the photo, generate a QR code and display it in a dialog to share the photo.",
+      examples: getQRPhrasesExamples,
+    ),
+    AppAction(
+      name: "open_print_dialog",
+      callback: (_, response) { onClickPrint(); response(true, "Opening the print dialog"); },
+      title: "Open Print Dialog",
+      description: "Open the print dialog where options can be selected and a print job can be submitted.",
+      examples: printPhrasesExamples,
+    ),
+  ];
+
   // Initialization/Deinitialization
 
   PhotoDetailsScreenController({
@@ -25,26 +55,23 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   });
 
   void onClickPrev() {
+    registerActionCall(const AppActionCall(tool: "back"));
     router.pop();
   }
 
   void onClickGetQR() {
-    viewModel.uploadPhotoToSend();
+    registerActionCall(const AppActionCall(tool: "get_qr"));
+    if (viewModel.file == null) {
+      logError("File is null when trying to get QR code");
+      return;
+    }
     showUserDialog(
       barrierDismissible: false,
-      dialog: Observer(builder: (_) {
-        return QrShareDialog(
-          state: viewModel.uploadFailed
-              ? ShareDialogState.error
-              : viewModel.uploadProgress != null || viewModel.qrUrl == null
-                  ? ShareDialogState.uploading
-                  : ShareDialogState.uploaded,
-          uploadProgress: (viewModel.uploadProgress ?? 0) * 100,
-          qrText: viewModel.qrUrl,
-          onDismiss: () => navigator.pop(),
-          onRedoUpload: viewModel.uploadPhotoToSend,
-        );
-      }),
+      dialog: QrShareDialog(
+        file: viewModel.file!,
+        onDismiss: () => navigator.pop(),
+      ),
+      publishActions: false,
     );
   }
 
@@ -59,17 +86,17 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
   void onClickPrint() {
     if (!viewModel.printEnabled) return;
+    registerActionCall(const AppActionCall(tool: "open_print_dialog"));
     showUserDialog(
       barrierDismissible: false,
-      dialog: Observer(builder: (_) {
-        return PrintDialog(
-          onPrintPressed: (size, copies) {
-            navigator.pop();
-            onConfirmPrint(size, copies);
-          },
-          onCancel: () => navigator.pop(),
-        );
-      }),
+      dialog: PrintDialog(
+        onPrintPressed: (size, copies) {
+          navigator.pop();
+          onConfirmPrint(size, copies);
+        },
+        onCancel: () => navigator.pop(),
+      ),
+      publishActions: false,
     );
   }
 

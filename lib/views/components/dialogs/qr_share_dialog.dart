@@ -1,30 +1,62 @@
+import 'dart:io';
+
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lottie/lottie.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_example.dart';
+import 'package:momento_booth/src/rust/api/ffsend.dart';
+import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
+import 'package:momento_booth/utils/logger.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
+import 'package:momento_booth/views/base/has_actions_mixin.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 import 'package:momento_booth/views/components/qr_code.dart';
-import 'package:widgetbook/widgetbook.dart';
-import 'package:widgetbook_annotation/widgetbook_annotation.dart';
+import 'package:path/path.dart' as path;
+// import 'package:widgetbook/widgetbook.dart';
+// import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
-class QrShareDialog extends StatelessWidget {
+class QrShareDialog extends StatefulWidget {
 
-  final ShareDialogState state;
-  final double? uploadProgress;
-  final String? qrText;
-  final VoidCallback onRedoUpload;
+  final File file;
   final VoidCallback onDismiss;
 
   const QrShareDialog({
     super.key,
-    required this.state,
-    this.uploadProgress,
-    this.qrText,
-    required this.onRedoUpload,
+    required this.file,
     required this.onDismiss,
   });
+
+  @override
+  State<QrShareDialog> createState() => _QrShareDialogState();
+}
+
+class _QrShareDialogState extends State<QrShareDialog> with Logger, HasActionsMixin {
+  ShareDialogState _state = ShareDialogState.uploading;
+  double? uploadProgress;
+  String? qrText;
+
+  set state(ShareDialogState newState) {
+    _state = newState;
+    pushActions();
+  }
+
+  ShareDialogState get state => _state;
+
+  @override
+  String get scopeName => "QR Share Dialog";
+
+  @override
+  void initState() {
+    super.initState();
+    uploadPhotoToSend();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,23 +80,23 @@ class QrShareDialog extends StatelessWidget {
             PhotoBoothOutlinedButton(
               title: localizations.qrDialogExtraDownloadButton,
               icon: LucideIcons.repeat,
-              onPressed: onRedoUpload,
+              onPressed: uploadPhotoToSend,
             ),
             PhotoBoothFilledButton(
               title: localizations.genericCloseButton,
               icon: LucideIcons.check,
-              onPressed: onDismiss,
+              onPressed: widget.onDismiss,
             ),
           ],
         ShareDialogState.error => [
             PhotoBoothOutlinedButton(
               title: localizations.genericCancelButton,
-              onPressed: onDismiss,
+              onPressed: widget.onDismiss,
             ),
             PhotoBoothFilledButton(
               title: localizations.genericRetryButton,
               icon: LucideIcons.check,
-              onPressed: onRedoUpload,
+              onPressed: uploadPhotoToSend,
             ),
           ],
         _ => const [],
@@ -158,6 +190,93 @@ class QrShareDialog extends StatelessWidget {
     );
   }
 
+  Future<void> uploadPhotoToSend() async {
+    logDebug("Uploading ${widget.file.path}");
+    setState(() {
+      state = ShareDialogState.uploading;
+      uploadProgress = 0.0;
+    });
+    String ffSendUrl = getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
+
+    String basename = path.basename(widget.file.path);
+    Stream<FfSendTransferProgress> stream = ffsendUploadFile(
+      filePath: widget.file.path,
+      hostUrl: ffSendUrl,
+      downloadFilename: basename,
+      controlCommandTimeout: getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout,
+      transferTimeout: getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout,
+    );
+
+    uploadProgress = 0.0;
+
+    stream.listen((event) async {
+      if (event.isFinished) {
+        logDebug("Upload complete: ${event.downloadUrl}");
+
+        await Future.delayed(const Duration(milliseconds: 500));
+        qrText = event.downloadUrl;
+        uploadProgress = null;
+
+        getIt<StatsManager>().addUploadedPhoto();
+        setState(() => state = ShareDialogState.uploaded);
+      } else {
+        logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
+        setState(() => uploadProgress = event.transferredBytes / (event.totalBytes ?? 0));
+      }
+    }).onError((x) async {
+      logError("Upload failed, file path: ${widget.file.path}", x);
+      await Future.delayed(const Duration(seconds: 1));
+      setState(() => uploadProgress = null);
+      setState(() => state = ShareDialogState.error);
+    });
+  }
+
+  @override
+  List<AppAction> get actions => switch (state) {
+    // These are actually the same actions, but with different names
+    ShareDialogState.uploaded => [
+        AppAction(
+          name: "redo_upload",
+          callback: (_, response) { uploadPhotoToSend(); response(true, "Redo upload button pressed"); },
+          title: "Redo Upload",
+          description: "Start the upload process again to get a new QR code",
+          examples: [
+            "redo upload",
+            "upload again",
+            "upload another one",
+            "get me a new QR code",
+          ].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+        ),
+        AppAction(
+          name: "close",
+          callback: (_, response) { widget.onDismiss(); response(true, "Close button pressed"); },
+          title: "Close",
+          description: "Close the QR sharing dialog.",
+          examples: cancelPhrasesExamples
+        ),
+      ],
+    ShareDialogState.error => [
+        AppAction(
+          name: "cancel",
+          callback: (_, response) { widget.onDismiss(); response(true, "Cancel button pressed"); },
+          title: "Cancel",
+          description: "Cancel the upload process.",
+          examples: cancelPhrasesExamples
+        ),
+        AppAction(
+          name: "retry_upload",
+          callback: (_, response) { uploadPhotoToSend(); response(true, "Retry upload button pressed"); },
+          title: "Retry Upload",
+          description: "After an error has occurred, this will try uploading the photo again.",
+          examples: [
+            "try again",
+            "retry upload",
+            "try uploading again",
+          ].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+        ),
+      ],
+    _ => [],
+  };
 }
 
 enum ShareDialogState {
@@ -166,7 +285,8 @@ enum ShareDialogState {
   error,
 }
 
-@UseCase(name: 'QR Share Dialog', type: QrShareDialog)
+// Todo: figure out how to re-enable this now that the widget is stateful.
+/*@UseCase(name: 'QR Share Dialog', type: QrShareDialog)
 Widget qrShareDialog(BuildContext context) {
   return QrShareDialog(
     state: context.knobs.object.dropdown(label: 'State', initialOption: ShareDialogState.uploading, options: ShareDialogState.values),
@@ -175,4 +295,4 @@ Widget qrShareDialog(BuildContext context) {
     onRedoUpload: () {},
     onDismiss: () {},
   );
-}
+}*/

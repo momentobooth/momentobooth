@@ -1,17 +1,14 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/extensions/build_context_extension.dart';
+import 'package:momento_booth/views/components/buttons/stateless_photo_booth_button.dart';
 
-class PhotoBoothFilledButton extends StatelessWidget {
-
-  final String title;
-  final IconData? icon;
-  final VoidCallback? onPressed;
+class PhotoBoothFilledButton extends StatelessPhotoBoothButton {
 
   const PhotoBoothFilledButton({
-    super.key,
-    required this.title,
-    this.icon,
-    this.onPressed,
+    super.key, 
+    required super.title,
+    super.icon,
+    super.onPressed
   });
 
   @override

@@ -4,18 +4,34 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_call.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/enter_pin_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/no_project_open_dialog.dart';
-import 'package:momento_booth/views/photo_booth_screen/screens/gallery_screen/gallery_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/navigation_screen/navigation_screen.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/start_screen/start_screen_view_model.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view.dart';
 
 class StartScreenController extends ScreenControllerBase<StartScreenViewModel> with PrinterStatusDialogMixin<StartScreenViewModel> {
+
+  @override
+  String get scopeName => "Start Screen";
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(
+      name: "start",
+      callback: (_, response) { onPressedContinue(); response(true, "Navigating to the central navigation screen"); },
+      title: "Start",
+      description: "Begin the photo booth experience.",
+      examples: const ["start", "begin", "let's go", "proceed", "continue"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    )
+  ];
 
   // Initialization/Deinitialization
 
@@ -38,11 +54,8 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   // User interaction methods
 
   void onPressedContinue() {
+    registerActionCall(const AppActionCall(tool: "start"));
     router.go(NavigationScreen.defaultRoute);
-  }
-
-  void onPressedGallery() {
-    router.push(GalleryScreen.defaultRoute);
   }
 
   Future<void> onPressedOpenSettings() async {

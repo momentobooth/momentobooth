@@ -4,30 +4,34 @@ import 'package:flutter_svg/svg.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_example.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
+import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
-class LanguageChoiceDialog extends StatelessWidget {
+class LanguageChoiceDialog extends StatelessWidget with DialogActionsMixin {
 
   final Function(Language) onChosen;
+  final VoidCallback onCancel;
 
   const LanguageChoiceDialog({
     super.key,
     required this.onChosen,
+    required this.onCancel,
   });
 
   String getFlagAsset(String countryCode) {
     return 'assets/svg/flags/$countryCode.svg';
   }
 
+  List<Language> get projectAvailableLanguages => getIt<ProjectManager>().settings.availableLanguages;
+  List<Language> get languages => projectAvailableLanguages.isNotEmpty? projectAvailableLanguages : Language.definedValues;
+
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
-
-    final projectAvailableLanguages = getIt<ProjectManager>().settings.availableLanguages;
-    final languages = projectAvailableLanguages.isNotEmpty
-      ? projectAvailableLanguages
-      : Language.definedValues;
 
     final TextStyle textStyle = FluentTheme.of(context).typography.bodyLarge!.copyWith(
       fontSize: 30,
@@ -74,4 +78,44 @@ class LanguageChoiceDialog extends StatelessWidget {
     );
   }
 
+  @override
+  List<AppAction> get actions => [
+    AppAction(
+      name: "set_language",
+      callback: setLanguageAPI,
+      title: 'Set Language',
+      description: 'Change the application language to the chosen one for this session.',
+      inputSchema: { "type": "object", "properties": { "language_code": { "enum": languages.map((lang) => lang.code).toList(), "description": "The ISO 639-1 code for the language to set" } }, "required": ["language_code"], "additionalProperties": false },
+      inputSchemaExample: '{ "language_code": one of ${languages.map((lang) => '"${lang.code}"').join(", ")} }',
+      examples: languages.expand((lang) => [
+        AppActionExample(phrase: "select ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "use ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "set language to ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "change language to ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "switch language to ${lang.nameNative}", arguments: { "language_code": lang.code }),
+        AppActionExample(phrase: "i want to use ${lang.nameNative}", arguments: { "language_code": lang.code }),
+      ]).toList(),
+    ),
+    // Todo: is there a way to pop the route from here?
+    AppAction(
+      name: "dismiss",
+      callback: (_, response) { onCancel(); response(true, "Dialog dismissed"); },
+      title: "Dismiss", description: "Close the language selection dialog without changing the language.",
+      examples: cancelPhrasesExamples
+    ),
+  ];
+
+  @override
+  String get scopeName => "Language Choice Dialog";
+
+  void setLanguageAPI(Map<String, dynamic> args, Function(bool, String) response) {
+    final String languageCode = args["language_code"] ?? "--";
+    final Language language = Language.definedValues.firstWhere((lang) => lang.code == languageCode, orElse: () => Language.noLanguage);
+    if (language != Language.noLanguage){
+      onChosen(language);
+      response(true, "Language set to ${language.nameNative} (${language.code})");
+    } else {
+      response(false, "Invalid language code: $languageCode");
+    }
+  }
 }

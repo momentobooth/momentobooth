@@ -1,11 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/models/app_action.dart';
+import 'package:momento_booth/models/app_action_example.dart';
+import 'package:momento_booth/utils/speech_phrases.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
+import 'package:momento_booth/views/components/dialogs/dialog_actions_mixin.dart';
 import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
-class RetakeDialog extends StatelessWidget {
+class RetakeDialog extends StatelessWidget with DialogActionsMixin {
 
   final VoidCallback onDelete;
   final VoidCallback onKeep;
@@ -44,5 +48,33 @@ class RetakeDialog extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  List<AppAction> get actions => [
+    AppAction(
+      name: "cancel",
+      callback: (_, response) { onCancel(); response(true, "Cancel button pressed"); },
+      title: 'Cancel',
+      description: 'Close the dialog and keep the current photo.',
+      examples: cancelPhrasesExamples,
+    ),
+    AppAction(
+      name: "keep",
+      callback: (_, response) { onKeep(); response(true, "Keep button pressed"); },
+      title: 'Keep',
+      description: 'Keep the current photo and start a new capture.',
+      examples: const ["keep", "save", "keep photo", "keep picture", "don't delete", "don't delete photo", "don't delete picture"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+    AppAction(
+      name: "delete",
+      callback: (_, response) { onDelete(); response(true, "Delete button pressed"); },
+      title: 'Delete',
+      description: 'Delete the current photo and start a new capture.',
+      examples: const ["delete", "trash", "delete photo", "delete picture", "retake", "take again", "take new photo"].map((phrase) => AppActionExample(phrase: phrase)).toList(),
+    ),
+  ];
+
+  @override
+  String get scopeName => "Retake Dialog";
 
 }

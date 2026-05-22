@@ -7,13 +7,12 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/mqtt_exception.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/action_manager.dart';
+import 'package:momento_booth/managers/notifications_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
-import 'package:momento_booth/models/capture_state.dart';
-import 'package:momento_booth/models/connection_state.dart';
+import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/models/home_assistant/home_assistant_discovery_payload.dart';
-import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
@@ -41,6 +40,9 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   String _lastPublishedRoute = "";
   CaptureState _lastPublishedCaptureState = CaptureState.idle;
   Settings get _settings => getIt<SettingsManager>().settings;
+  bool get allowControl => _settings.control.enable;
+
+  String get rootTopic => getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
 
   @readonly
   ConnectionState _connectionState = ConnectionState.disconnected;
@@ -63,6 +65,25 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     autorun((_) {
       Stats stats = getIt<StatsManager>().stats;
       if (_client != null) _publishStats(stats);
+    });
+
+    // Publish actions
+    autorun((_) {
+      List<AppAction> actions = getIt<ActionManager>().current;
+      List<String> scopes = getIt<ActionManager>().currentScopes;
+      if (_client != null) _publishActions(actions, scopes);
+    });
+    autorun((_) {
+      Map<DateTime, AppActionCall> actionCalls = getIt<ActionManager>().actionHistory;
+      if (_client != null) _publishActionCallHistory(actionCalls);
+    });
+    autorun((_) {
+      bool isListening = getIt<ActionManager>().listeningForActions;
+      if (_client != null) _publishListeningState(isListening);
+    });
+    autorun((_) {
+      AppActionResponse? lastResponse = getIt<ActionManager>().lastResponse;
+      if (_client != null) _publishLastResponse(lastResponse);
     });
   }
 
@@ -142,7 +163,6 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   void _publish(String topic, String message, {bool retain = false}) {
     if (_client == null) return;
 
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.publishMessage(
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
@@ -153,6 +173,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   void _forcePublishAll() {
     _publishStats(getIt<StatsManager>().stats, true);
+    _publishActions(getIt<ActionManager>().current, getIt<ActionManager>().currentScopes);
     publishScreen();
     publishCaptureState();
     publishSettings();
@@ -194,10 +215,44 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     _publish("app_build", packageInfo.buildNumber);
   }
 
+  void _publishActions(List<AppAction> actions, List<String> scopes) {
+    if (!allowControl) return;
+    _publish(
+      "actions/list",
+      jsonEncode(actions.map((a) => a.toJson()).toList()),
+      retain: true,
+    );
+    publishHomeAssistantSelectDiscoveryTopic(integrationName: "actions", options: actions.map((a) => a.name).toList(), stateTopic: "None", commandTopic: "$rootTopic/actions/execute");
+    _publish(
+      "actions/scopes",
+      jsonEncode(scopes),
+      retain: true,
+    );
+  }
+
+  void _publishActionCallHistory(Map<DateTime, AppActionCall> actionCalls) {
+    if (!allowControl) return;
+    var actionCallsMap = actionCalls.map((k, v) => MapEntry(k.toIso8601String(), v.toJson()));
+    var actionCallsJson = jsonEncode(actionCallsMap);
+    _publish(
+      "actions/call_history",
+      actionCallsJson,
+      retain: true,
+    );
+  }
+
+  void _publishListeningState(bool isListening) {
+    _publish("actions/listening", isListening ? "true" : "false", retain: true);
+  }
+
+  void _publishLastResponse(AppActionResponse? response) {
+    if (response == null) return;
+    _publish("actions/execute/result", jsonEncode(response.toJson()), retain: false);
+  }
+
   void _clearTopic(String topic) {
     if (_client == null) return;
 
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.publishMessage(
       '$rootTopic/$topic',
       MqttQos.atMostOnce,
@@ -211,7 +266,6 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   // ///////////// //
 
   void _createSubscriptions() {
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
     _client!.updates.listen((messageList) {
       MqttPublishMessage? message;
       try {
@@ -223,6 +277,14 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
             if (payload.length == 0) return;
             _clearTopic("update_settings");
             _onSettingsMessage(const Utf8Decoder().convert(payload.message!));
+          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/actions/execute":
+            if (payload.length == 0) return;
+            _clearTopic("actions/execute");
+            _onHomeAssistantActionMessage(const Utf8Decoder().convert(payload.message!));
+          case MqttPublishMessage(:final variableHeader, :final payload) when variableHeader!.topicName == "$rootTopic/notify":
+            if (payload.length == 0) return;
+            _clearTopic("notify");
+            _onNotifyMessage(const Utf8Decoder().convert(payload.message!));
           default:
             logWarning("Received unknown published MQTT message: $message");
         }
@@ -232,6 +294,10 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     });
 
     _subscribeToTopic('update_settings');
+    _subscribeToTopic('notify');
+    if (allowControl) {
+      _subscribeToTopic('actions/execute');
+    }
   }
 
   void _subscribeToTopic(String relativeTopic) {
@@ -253,9 +319,43 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     logInfo("Loaded settings data from MQTT");
   }
 
+  void _onHomeAssistantActionMessage(String message) {
+    logInfo("Received action command from Home Assistant by MQTT: $message");
+    try {
+      final dynamic decoded = jsonDecode(message);
+
+      if (decoded is Map<String, dynamic>) {
+        final call = AppActionCall.fromJson(decoded);
+        getIt<ActionManager>().callAction(call.tool, parameters: call.arguments);
+      }
+    } catch (e) {
+      getIt<ActionManager>().callAction(message);
+    }
+  }
+
+  void _onNotifyMessage(String message) {
+    logInfo("Received notify message from MQTT: $message");
+    late final NotificationRequest notification;
+    try {
+      final dynamic decoded = jsonDecode(message);
+
+      if (decoded is Map<String, dynamic>) {
+        notification = NotificationRequest.fromJson(decoded);
+      }
+    } catch (e) {
+      notification = NotificationRequest(message: message);
+    }
+    logInfo("Received notification request: $notification");
+    getIt<NotificationsManager>().addNotificationRequest(notification);
+  }
+
   // ////////////////////////// //
   // Home Assistant integration //
   // ////////////////////////// //
+
+  bool get canDoHomeAssistantDiscovery => _client != null && getIt<SettingsManager>().settings.mqttIntegration.enableHomeAssistantDiscovery;
+  String get discoveryTopicPrefix => getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
+  String get componentId => getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
 
   HomeAssistantDevice get homeAssistantDevice => HomeAssistantDevice(
       identifiers: [getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId],
@@ -266,9 +366,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
     );
 
   void publishHomeAssistantDiscoveryTopics() {
-    if (_client == null || !getIt<SettingsManager>().settings.mqttIntegration.enableHomeAssistantDiscovery) return;
-
-    String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
+    if (!canDoHomeAssistantDiscovery) return;
 
     // Stats
     for (MapEntry<String, dynamic> statsEntry in _lastPublishedStats.entries) {
@@ -304,11 +402,14 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
       payload: CaptureState.capturing.mqttValue,
       stateTopic: "$rootTopic/capture_state",
     );
+    publishHomeAssistantNotifyDiscoveryTopic(
+      integrationName: "Show notification",
+      commandTopic: "$rootTopic/notify",
+    );
   }
 
   void publishHomeAssistantSensorDiscoveryTopic({required String integrationName, required String stateTopic}) {
-    final String discoveryTopicPrefix = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
-    final String componentId = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
+    if (!canDoHomeAssistantDiscovery) return;
 
     _client!.publishMessage(
       '$discoveryTopicPrefix/sensor/$componentId/${Casing.snakeCase(integrationName)}/config',
@@ -324,8 +425,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
   }
 
   void publishHomeAssistantDeviceTriggerDiscoveryTopic({required String integrationName, required String payload, required String stateTopic}) {
-    final String discoveryTopicPrefix = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantDiscoveryTopicPrefix;
-    final String componentId = getIt<SettingsManager>().settings.mqttIntegration.homeAssistantComponentId;
+    if (!canDoHomeAssistantDiscovery) return;
 
     final String triggerType = Casing.snakeCase(integrationName);
     final String triggerSubType = Casing.snakeCase(payload);
@@ -340,6 +440,44 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
               type: triggerType,
               subtype: triggerSubType,
               device: homeAssistantDevice,
+            ).toJson())))
+          .payload!,
+      retain: true,
+    );
+  }
+
+  void publishHomeAssistantSelectDiscoveryTopic({required String integrationName, required List<String> options, required String stateTopic, required String commandTopic}) {
+    if (!canDoHomeAssistantDiscovery) return;
+
+    _client!.publishMessage(
+      '$discoveryTopicPrefix/select/$componentId/${Casing.snakeCase(integrationName)}/config',
+      MqttQos.atLeastOnce,
+      (MqttPayloadBuilder()
+            ..addString(jsonEncode(HomeAssistantDiscoveryPayload.select(
+              name: integrationName,
+              options: options,
+              stateTopic: stateTopic,
+              commandTopic: commandTopic,
+              device: homeAssistantDevice,
+              uniqueId: '${Casing.snakeCase(integrationName)}_$componentId',
+            ).toJson())))
+          .payload!,
+      retain: true,
+    );
+  }
+
+  void publishHomeAssistantNotifyDiscoveryTopic({required String integrationName, required String commandTopic}) {
+    if (!canDoHomeAssistantDiscovery) return;
+
+    _client!.publishMessage(
+      '$discoveryTopicPrefix/notify/$componentId/${Casing.snakeCase(integrationName)}/config',
+      MqttQos.atLeastOnce,
+      (MqttPayloadBuilder()
+            ..addString(jsonEncode(HomeAssistantDiscoveryPayload.notify(
+              name: integrationName,
+              commandTopic: commandTopic,
+              device: homeAssistantDevice,
+              uniqueId: '${Casing.snakeCase(integrationName)}_$componentId',
             ).toJson())))
           .payload!,
       retain: true,
