@@ -1,4 +1,6 @@
+use flutter_rust_bridge::frb;
 use gphoto2::widget::Widget;
+use serde::{Deserialize, Serialize};
 
 // Widget types that exist in the gphoto2 rust lib
 // GroupWidget
@@ -10,7 +12,8 @@ use gphoto2::widget::Widget;
 // DateWidget
 
 /// Enum to represent different types of simplified widgets.
-#[derive(Debug, Clone)]
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SimplifiedWidgetType {
     /// A container for other widgets (maps to gphoto2 GroupWidget).
     Group,
@@ -31,7 +34,8 @@ pub enum SimplifiedWidgetType {
 }
 
 /// Represents a single simplified widget in your API's data structure.
-#[derive(Debug, Clone)]
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SimplifiedWidget {
     pub name: String,
     pub label: String,
@@ -44,7 +48,8 @@ pub struct SimplifiedWidget {
 }
 
 /// Enum to represent different types of widget values.
-#[derive(Debug, Clone, PartialEq)]
+#[frb(json_serializable)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum SimplifiedValue {
     String(String),
     Integer(i64),
@@ -65,6 +70,79 @@ pub enum SimplifiedValue {
 /// the widget type is not directly convertible at the top level (e.g., internal nodes
 /// that are not `SectionWidget` or `WindowWidget` if you only want those at the root).
 /// This function is designed to be called recursively, building up the tree.
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GPhoto2UsbInfo {
+    pub vendor: u16,
+    pub product: u16,
+    pub class: u8,
+    pub subclass: u8,
+    pub protocol: u8,
+}
+
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GPhoto2CameraOperations {
+    pub capture_image: bool,
+    pub capture_video: bool,
+    pub capture_audio: bool,
+    pub capture_preview: bool,
+    pub configure: bool,
+    pub trigger_capture: bool,
+}
+
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GPhoto2FileOperations {
+    pub delete: bool,
+    pub preview: bool,
+    pub raw: bool,
+    pub audio: bool,
+    pub exif: bool,
+}
+
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GPhoto2FolderOperations {
+    pub delete_all: bool,
+    pub put_file: bool,
+    pub make_dir: bool,
+    pub remove_dir: bool,
+}
+
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GPhoto2Abilities {
+    pub id: Option<String>,
+    pub model: String,
+    pub driver_status: String,
+    pub device_type: String,
+    pub usb_info: GPhoto2UsbInfo,
+    pub camera_operations: GPhoto2CameraOperations,
+    pub file_operations: GPhoto2FileOperations,
+    pub folder_operations: GPhoto2FolderOperations,
+}
+
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GPhoto2StorageInfo {
+    pub label: Option<String>,
+    pub base_directory: Option<String>,
+    pub description: Option<String>,
+    pub capacity_kb: Option<u64>,
+    pub free_kb: Option<u64>,
+    pub free_images: Option<u64>,
+}
+
+#[frb(json_serializable)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GPhoto2CameraDetails {
+    pub about: Option<String>,
+    pub abilities: GPhoto2Abilities,
+    pub storages: Vec<GPhoto2StorageInfo>,
+    pub config: SimplifiedWidget,
+}
+
 pub fn convert_gphoto_config(gphoto_widget: &Widget) -> Option<SimplifiedWidget> {
     let name = gphoto_widget.name();
     let label = gphoto_widget.label();

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
@@ -801,13 +802,13 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   }
 
   Future<void> onGetCameraConfigPressed() async {
-    final config = await getIt<LiveViewManager>().gPhoto2Camera!.getConfig();
-    logInfo("Config: $config");
+    final details = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraDetails();
+    logInfo("Config: ${details.config}");
   }
 
   Future<void> onCopyCameraInfoToClipboardPressed() async {
-    String json = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraInfoJson();
-    await Clipboard.setData(ClipboardData(text: json));
+    final details = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraDetails();
+    await Clipboard.setData(ClipboardData(text: jsonEncode(details.toJson())));
   }
 
   // Debug camera config controllers

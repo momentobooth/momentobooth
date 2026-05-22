@@ -141,10 +141,9 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     unawaited(clearPreviousEvents());
   }
 
-  Future<SimplifiedWidget> getConfig() async {
+  Future<GPhoto2CameraDetails> getCameraDetails() async {
     if (handleId == null) throw GPhoto2Exception("Camera not open.");
-    var config = await gphoto2ListConfig(handleId: handleId!);
-    return config;
+    return await gphoto2GetCameraDetails(handleId: handleId!);
   }
 
   @override
@@ -162,10 +161,6 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
         downloadExtraFiles: getIt<SettingsManager>().settings.hardware.gPhoto2DownloadExtraFiles,
       );
     }
-  }
-
-  Future<String> getCameraInfoJson() async {
-    return await gphoto2GetCameraSettingsJson(handleId: handleId!);
   }
 
   Future<void> setConfigText(String keyName, String text) async {
