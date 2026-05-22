@@ -76,6 +76,15 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   TextEditingController? _faceRecognitionServerUrlController;
   TextEditingController get faceRecognitionServerUrlController => _faceRecognitionServerUrlController ??= TextEditingController(text: viewModel.faceRecognitionServerUrlSetting);
 
+  TextEditingController? _ffmpegArgumentsForRecordingController;
+  TextEditingController get ffmpegArgumentsForRecordingController => _ffmpegArgumentsForRecordingController ??= TextEditingController(text: viewModel.ffmpegArgumentsForRecordingSetting);
+  
+  TextEditingController? _textSummaryPromptController;
+  TextEditingController get textSummaryPromptController => _textSummaryPromptController ??= TextEditingController(text: viewModel.textSummaryPromptSetting);
+  
+  TextEditingController? _llmModelController;
+  TextEditingController get llmModelController => _llmModelController ??= TextEditingController(text: viewModel.llmModelSetting);
+
   // Initialization/Deinitialization
 
   SettingsOverlayController({
@@ -761,6 +770,48 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableVideoModeChanged(bool? enableVideoMode) {
+    if (enableVideoMode != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(enableVideoMode: enableVideoMode));
+    }
+  }
+
+  void onVideoDurationChanged(int? videoDuration) {
+    if (videoDuration != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoDuration: videoDuration));
+    }
+  }
+
+  void onVideoPreRecordDelayMsChanged(int? videoPreRecordDelayMs) {
+    if (videoPreRecordDelayMs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoPreRecordDelayMs: videoPreRecordDelayMs));
+    }
+  }
+
+  void onFfmpegArgumentsForRecordingChanged(String? ffmpegArgumentsForRecording) {
+    if (ffmpegArgumentsForRecording != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(ffmpegArgumentsForRecording: ffmpegArgumentsForRecording));
+    }
+  }
+
+  void onTextSummaryPromptChanged(String? textSummaryPrompt) {
+    if (textSummaryPrompt != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(textSummaryPrompt: textSummaryPrompt));
+    }
+  }
+
+  void onLlmModelChanged(String? llmModel) {
+    if (llmModel != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(llmModel: llmModel));
+    }
+  }
+
+  void onVideoPostRecordDelayMsChanged(int? videoPostRecordDelayMs) {
+    if (videoPostRecordDelayMs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(videoPostRecordDelayMs: videoPostRecordDelayMs));
+    }
+  }
+
   void onPlayAudioSamplePressed() {
     getIt<SfxManager>().playSampleSound();
   }
@@ -802,8 +853,8 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   }
 
   Future<void> onGetCameraConfigPressed() async {
-    final details = await getIt<LiveViewManager>().gPhoto2Camera!.getCameraDetails();
-    logInfo("Config: ${details.config}");
+    final config = await getIt<LiveViewManager>().gPhoto2Camera!.getConfig();
+    logInfo("Config: $config");
   }
 
   Future<void> onCopyCameraInfoToClipboardPressed() async {

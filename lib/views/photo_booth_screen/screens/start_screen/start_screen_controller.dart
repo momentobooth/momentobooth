@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/live_view_manager.dart';
+import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
@@ -25,6 +27,8 @@ class StartScreenController extends ScreenControllerBase<StartScreenViewModel> w
   }) {
     WidgetsBinding.instance.addPostFrameCallback((_) => noProjectOpenedDialog());
     getIt<WindowManager>().resetLanguage();
+    getIt<LiveViewManager>().isRecordingLayout = false;
+    getIt<PhotosManager>().photos.clear();
   }
 
   Future<void> noProjectOpenedDialog() async {

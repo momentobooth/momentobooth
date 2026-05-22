@@ -41,6 +41,20 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             buttonText: "Clear photos",
             onPressed: controller.onPhotosClearPressed,
           ),
+          SettingsActionTile(
+            icon: LucideIcons.folder,
+            title: "Get camera files",
+            subtitle: "Retrieve a list of files on the camera",
+            buttonText: "Get filelist",
+            onPressed: controller.onGetCameraFilesPressed,
+          ),
+          SettingsActionTile(
+            icon: LucideIcons.settings,
+            title: "Get camera config",
+            subtitle: "Retrieve the camera's full config",
+            buttonText: "Get config",
+            onPressed: controller.onGetCameraConfigPressed,
+          ),
         ],
       ),
       SettingsSection(
@@ -59,6 +73,27 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
             subtitle: "Test whether error reporting (to Sentry) works",
             buttonText: "Report Fake Error",
             onPressed: () => throw Exception("This is a fake error to test error reporting"),
+          ),
+          SettingsActionTile(
+            icon: LucideIcons.mailWarning,
+            title: "Print test to receipt printer",
+            subtitle: "Test whether printing to the receipt printer works",
+            buttonText: "Initiate test print",
+            onPressed: () async {
+              ByteData imageData = await rootBundle.load('assets/bitmap/placeholder.png');
+              await printReceipt(
+                receipt: Receipt(
+                  commands: [
+                    ReceiptPrinterCommand.printImage(imageData.buffer.asUint8List()),
+                    ReceiptPrinterCommand.feed(),
+                    ReceiptPrinterCommand.cut(),
+                  ],
+                ),
+                printerUsbVid: 0x0AA7,
+                printerUsbPid: 0x0304,
+                printingWidth: 576,
+              );
+            },
           ),
         ],
       ),
