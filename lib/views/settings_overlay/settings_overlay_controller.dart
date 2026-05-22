@@ -286,6 +286,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onGPhoto2UseLegacyCaptureMethodChanged(bool? gPhoto2UseLegacyCaptureMethod) {
+    if (gPhoto2UseLegacyCaptureMethod != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2UseLegacyCaptureMethod: gPhoto2UseLegacyCaptureMethod));
+    }
+  }
+
+  void onGPhoto2CaptureTimeoutMsChanged(int? gPhoto2CaptureTimeoutMs) {
+    if (gPhoto2CaptureTimeoutMs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2CaptureTimeoutMs: gPhoto2CaptureTimeoutMs));
+    }
+  }
+
   void onGPhoto2AutoFocusMsBeforeCaptureChanged(int? gPhoto2AutoFocusMsBeforeCapture) {
     if (gPhoto2AutoFocusMsBeforeCapture != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2AutoFocusMsBeforeCapture: gPhoto2AutoFocusMsBeforeCapture));

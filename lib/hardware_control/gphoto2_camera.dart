@@ -105,9 +105,11 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
 
   @override
   Future<PhotoCapture> captureAndGetPhoto() async {
-    String captureTarget = getIt<SettingsManager>().settings.hardware.gPhoto2CaptureTarget;
+    final hardware = getIt<SettingsManager>().settings.hardware;
     if (handleId == null) throw GPhoto2Exception("Camera not open.");
-    var capture = await gphoto2CapturePhoto(handleId: handleId!, captureTargetValue: captureTarget);
+    final capture = hardware.gPhoto2UseLegacyCaptureMethod
+        ? await gphoto2CapturePhotoLegacy(handleId: handleId!, captureTargetValue: hardware.gPhoto2CaptureTarget)
+        : await gphoto2CaptureImage(handleId: handleId!, captureTargetValue: hardware.gPhoto2CaptureTarget, timeoutMs: BigInt.from(hardware.gPhoto2CaptureTimeoutMs));
     await storePhotoSafe(capture.filename, capture.data);
 
     unawaited(clearPreviousEvents());
