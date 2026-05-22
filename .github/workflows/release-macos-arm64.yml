@@ -79,7 +79,7 @@ jobs:
           rust -> target
       
     - name: Setup sccache-cache
-      uses: mozilla-actions/sccache-action@v0.0.9
+      uses: mozilla-actions/sccache-action@v0.0.10
 
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main

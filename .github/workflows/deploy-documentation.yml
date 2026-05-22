@@ -48,7 +48,7 @@ jobs:
           toolchain: stable
 
       - name: Setup sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.9
+        uses: mozilla-actions/sccache-action@v0.0.10
 
       - name: Install mermaid preprocessor for mdBook
         uses: baptiste0928/cargo-install@v3
@@ -65,7 +65,7 @@ jobs:
           done
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
 
   deploy:
     name: Deploy
