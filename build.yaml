@@ -16,6 +16,7 @@ targets:
           include:
             - lib/models/*.dart
             - lib/models/**/*.dart
+            - lib/src/rust/models/*.dart
       mobx_codegen:mobx_generator:
         generate_for:
           - lib/managers/*.dart
