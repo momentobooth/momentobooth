@@ -158,6 +158,7 @@ async fn download_camera_file(camera: &GPhoto2Camera, folder: &str, name: &str) 
   debug!("Downloading file from camera: {}/{}", folder, name);
   let file = camera.camera.fs().download(folder, name).await?;
   let data = file.get_data(get_context()?).await?;
+  debug!("Downloaded {} bytes from {}/{}", data.len(), folder, name);
   Ok(GPhoto2File {
     source_folder: folder.to_string(),
     filename: name.to_string(),
@@ -169,12 +170,15 @@ pub async fn capture_photo_legacy(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, ca
   let camera = camera_ref.lock().await;
 
   if !capture_target_value.is_empty() {
+    debug!("Setting capture target to \"{}\"", capture_target_value);
     let opcode = camera.camera.config_key::<RadioWidget>("capturetarget").await?;
     opcode.set_choice(&capture_target_value)?;
     camera.camera.set_config(&opcode).await?;
   }
 
+  info!("Triggering legacy capture");
   let capture = camera.camera.capture_image().await?;
+  info!("Capture complete, got file path: {}/{}", capture.folder(), capture.name());
   download_camera_file(&camera, capture.folder().as_ref(), capture.name().as_ref()).await
 }
 
@@ -182,12 +186,15 @@ pub async fn capture_image(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_t
   let camera = camera_ref.lock().await;
 
   if !capture_target_value.is_empty() {
+    debug!("Setting capture target to \"{}\"", capture_target_value);
     let opcode = camera.camera.config_key::<RadioWidget>("capturetarget").await?;
     opcode.set_choice(&capture_target_value)?;
     camera.camera.set_config(&opcode).await?;
   }
 
+  info!("Triggering capture, timeout: {}ms", timeout.as_millis());
   camera.camera.trigger_capture().await?;
+  debug!("Trigger sent, waiting for NewFile event");
 
   let start = Instant::now();
   loop {
@@ -200,10 +207,14 @@ pub async fn capture_image(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, capture_t
     let event = camera.camera.wait_event(remaining).await?;
     match event {
       CameraEvent::NewFile(file_path) => {
+        info!("NewFile event received after {}ms: {}/{}", elapsed.as_millis(), file_path.folder(), file_path.name());
         return download_camera_file(&camera, file_path.folder().as_ref(), file_path.name().as_ref()).await;
       },
-      CameraEvent::Timeout => return Err(Gphoto2Error::CaptureTimeout),
-      _ => {},
+      CameraEvent::Timeout => {
+        info!("Capture timed out after {}ms", elapsed.as_millis());
+        return Err(Gphoto2Error::CaptureTimeout);
+      },
+      other => debug!("Ignoring camera event while waiting for capture: {:?}", other),
     }
   }
 }
