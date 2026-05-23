@@ -239,6 +239,8 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   GPhoto2SpecialHandling get gPhoto2SpecialHandling => getIt<SettingsManager>().settings.hardware.gPhoto2SpecialHandling;
   String get gPhoto2CaptureTargetSetting => getIt<SettingsManager>().settings.hardware.gPhoto2CaptureTarget;
   bool get gPhoto2DownloadExtraFilesSetting => getIt<SettingsManager>().settings.hardware.gPhoto2DownloadExtraFiles;
+  bool get gPhoto2UseLegacyCaptureMethodSetting => getIt<SettingsManager>().settings.hardware.gPhoto2UseLegacyCaptureMethod;
+  int get gPhoto2CaptureTimeoutMsSetting => getIt<SettingsManager>().settings.hardware.gPhoto2CaptureTimeoutMs;
   int get gPhoto2AutoFocusMsBeforeCaptureSetting => getIt<SettingsManager>().settings.hardware.gPhoto2AutoFocusMsBeforeCapture;
   int get captureDelayGPhoto2Setting => getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2;
   int get captureDelaySonySetting => getIt<SettingsManager>().settings.hardware.captureDelaySony;
