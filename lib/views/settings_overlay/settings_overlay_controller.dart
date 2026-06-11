@@ -434,6 +434,50 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnablePrinterRoutingChanged(bool? enable) {
+    if (enable != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(enablePrinterRouting: enable));
+    }
+  }
+
+  void onPrintDispatchModeChanged(PrintDispatchMode? mode) {
+    if (mode != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.hardware(printDispatchMode: mode));
+    }
+  }
+
+  void onAssignmentPrinterChanged(String? queueId, int index) {
+    if (queueId == null) return;
+    List<PrinterAssignment> currentList = List.from(viewModel.printerAssignmentsSetting);
+
+    if (queueId == viewModel.unusedPrinterValue) {
+      // Selecting "- Not used -" on the trailing (new) row is a no-op; on an existing row it removes it.
+      if (index < currentList.length) currentList.removeAt(index);
+    } else if (index >= currentList.length) {
+      currentList.add(PrinterAssignment(queueId: queueId));
+    } else {
+      currentList[index] = currentList[index].copyWith(queueId: queueId);
+    }
+    logDebug("Setting printer assignments to $currentList");
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(printerAssignments: currentList));
+  }
+
+  void onAssignmentEnabledChanged(int index, bool? enabled) {
+    if (enabled == null || index >= viewModel.printerAssignmentsSetting.length) return;
+    List<PrinterAssignment> currentList = List.from(viewModel.printerAssignmentsSetting);
+    currentList[index] = currentList[index].copyWith(enabled: enabled);
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(printerAssignments: currentList));
+  }
+
+  void onAssignmentPrintSizeToggled(int index, PrintSize size, bool selected) {
+    if (index >= viewModel.printerAssignmentsSetting.length) return;
+    List<PrinterAssignment> currentList = List.from(viewModel.printerAssignmentsSetting);
+    Set<PrintSize> sizes = Set.from(currentList[index].printSizes);
+    selected ? sizes.add(size) : sizes.remove(size);
+    currentList[index] = currentList[index].copyWith(printSizes: sizes);
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(printerAssignments: currentList));
+  }
+
   void onFlutterPrintingPrinterChanged(String? printerName, int? printerIndex) {
     if (printerName != null && printerIndex != null) {
       List<String> currentList = List.from(viewModel.flutterPrintingPrinterNamesSetting);
