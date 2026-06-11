@@ -258,6 +258,9 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   MediaSettings get mediaSizeTiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.mediaSizeTiny;
   GridSettings get gridTiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridTiny;
   List<String> get flutterPrintingPrinterNamesSetting => getIt<SettingsManager>().settings.hardware.flutterPrintingPrinterNames;
+  bool get enablePrinterRoutingSetting => getIt<SettingsManager>().settings.hardware.enablePrinterRouting;
+  PrintDispatchMode get printDispatchModeSetting => getIt<SettingsManager>().settings.hardware.printDispatchMode;
+  List<PrinterAssignment> get printerAssignmentsSetting => getIt<SettingsManager>().settings.hardware.printerAssignments;
   double get pageHeightSetting => getIt<SettingsManager>().settings.hardware.pageHeight;
   double get pageWidthSetting => getIt<SettingsManager>().settings.hardware.pageWidth;
   bool get usePrinterSettingsSetting => getIt<SettingsManager>().settings.hardware.usePrinterSettings;

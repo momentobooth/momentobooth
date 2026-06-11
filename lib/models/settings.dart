@@ -83,6 +83,9 @@ sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableVa
     @Default(true) bool saveCapturesToDisk,
     @Default(PrintingImplementation.flutterPrinting) PrintingImplementation printingImplementation,
     @Default([]) List<String> flutterPrintingPrinterNames,
+    @Default(false) bool enablePrinterRouting,
+    @Default([]) List<PrinterAssignment> printerAssignments,
+    @Default(PrintDispatchMode.sequential) PrintDispatchMode printDispatchMode,
     @Default("http://localhost:631/") String cupsUri,
     @Default(false) bool cupsIgnoreTlsErrors,
     @Default("") String cupsUsername,
@@ -126,6 +129,26 @@ sealed class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncod
   factory PrintLayoutSettings.withDefaults() => PrintLayoutSettings.fromJson({});
 
   factory PrintLayoutSettings.fromJson(Map<String, Object?> json) => _$PrintLayoutSettingsFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
+@Freezed(fromJson: true, toJson: true)
+sealed class PrinterAssignment with _$PrinterAssignment implements TomlEncodableValue {
+
+  const PrinterAssignment._();
+
+  const factory PrinterAssignment({
+    @Default("") String queueId,
+    @Default(true) bool enabled,
+    @Default(<PrintSize>{}) Set<PrintSize> printSizes,
+  }) = _PrinterAssignment;
+
+  factory PrinterAssignment.withDefaults() => PrinterAssignment.fromJson({});
+
+  factory PrinterAssignment.fromJson(Map<String, Object?> json) => _$PrinterAssignmentFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
