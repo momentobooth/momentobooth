@@ -221,6 +221,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   Color get primaryColorSetting => getIt<ProjectManager>().settings.primaryColor;
   Language get projectLanguageSetting => getIt<ProjectManager>().settings.language;
   List<Language> get projectAvailableLanguagesSetting => getIt<ProjectManager>().settings.availableLanguages;
+  bool get showGallerySetting => getIt<ProjectManager>().settings.showGallery;
 
   // System settings current values
   int get captureDelaySecondsSetting => getIt<SettingsManager>().settings.captureDelaySeconds;

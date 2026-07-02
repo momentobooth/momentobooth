@@ -77,6 +77,13 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
                 value: () => viewModel.projectAvailableLanguagesSetting,
                 onChanged: controller.onProjectAvailableLanguagesChanged,
               ),
+              SettingsToggleTile(
+                icon: LucideIcons.images,
+                title: "Show gallery",
+                subtitle: "If enabled, users can open the gallery to view previously captured photos. When disabled, the gallery button is hidden from the navigation screen and menu.",
+                value: () => viewModel.showGallerySetting,
+                onChanged: controller.onShowGalleryChanged,
+              ),
             ]
           );
         }
