@@ -119,16 +119,17 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Flexible(
-          child: PhotoBoothButton.action(
-            onPressed: controller.onClickGetQR,
-            child: AutoSizeTextAndIcon(
-              text: localizations.photoDetailsScreenGetQrButton,
-              leftIcon: LucideIcons.scanQrCode,
-              autoSizeGroup: controller.actionButtonGroup,
+        if (viewModel.showGetQrButton)
+          Flexible(
+            child: PhotoBoothButton.action(
+              onPressed: controller.onClickGetQR,
+              child: AutoSizeTextAndIcon(
+                text: localizations.photoDetailsScreenGetQrButton,
+                leftIcon: LucideIcons.scanQrCode,
+                autoSizeGroup: controller.actionButtonGroup,
+              ),
             ),
           ),
-        ),
         Flexible(
           child: Observer(
             builder: (context) => PhotoBoothButton.action(
