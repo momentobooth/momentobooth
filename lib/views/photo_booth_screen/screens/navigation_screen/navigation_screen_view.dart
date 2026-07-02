@@ -41,7 +41,8 @@ class NavigationScreenView extends ScreenViewBase<NavigationScreenViewModel, Nav
                 ] else ...[
                   Expanded(child: _photoButton),
                 ],
-                Expanded(child: _galleryButton),
+                if (viewModel.showGallery)
+                  Expanded(child: _galleryButton),
               ],
             ),
           ),
