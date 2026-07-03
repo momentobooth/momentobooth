@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -68,6 +69,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
             onConfirmPrint(size, copies);
           },
           onCancel: () => navigator.pop(),
+          maxPrints: getIt<ProjectManager>().settings.maxPrintsPerPhoto,
         );
       }),
     );

@@ -214,6 +214,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onMaxPrintsPerPhotoChanged(int? maxPrints) {
+    if (maxPrints != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(maxPrintsPerPhoto: maxPrints));
+    }
+  }
+
   void onEnableWakelockChanged(bool? enableWakelock) {
     if (enableWakelock != null) {
       viewModel.updateSettings((settings) => settings.copyWith(enableWakelock: enableWakelock));
