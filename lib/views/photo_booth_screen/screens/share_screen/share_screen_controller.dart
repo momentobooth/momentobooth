@@ -5,6 +5,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -100,6 +101,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
             onConfirmPrint(size, copies);
           },
           onCancel: () => navigator.pop(),
+          maxPrints: getIt<ProjectManager>().settings.maxPrintsPerPhoto,
         );
       }),
     );

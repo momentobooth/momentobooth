@@ -77,6 +77,14 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
                 value: () => viewModel.projectAvailableLanguagesSetting,
                 onChanged: controller.onProjectAvailableLanguagesChanged,
               ),
+              SettingsNumberEditTile(
+                icon: LucideIcons.printer,
+                title: "Maximum prints per photo",
+                subtitle: "The maximum number of copies a user can choose in the print dialog for a single photo. Set to 1 to lock printing to a single copy.",
+                value: () => viewModel.maxPrintsPerPhotoSetting,
+                onFinishedEditing: controller.onMaxPrintsPerPhotoChanged,
+                min: 1,
+              ),
             ]
           );
         }

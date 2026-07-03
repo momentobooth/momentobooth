@@ -80,21 +80,23 @@ class _PrintDialogState extends State<PrintDialog> {
             localizations.printDialogSummary(numPrints, numPrints * gridX * gridY),
             textAlign: TextAlign.left,
           ),
-          const SizedBox(height: 16.0),
-          Material(
-            color: Colors.transparent,
-            child: Slider(
-              activeColor: FluentTheme.of(context).accentColor,
-              value: numPrints.toDouble(),
-              min: 1,
-              max: widget.maxPrints.toDouble(),
-              divisions: widget.maxPrints - 1,
-              label: numPrints.toString(),
-              onChanged: (value) {
-                setState(() => numPrints = value.round());
-              },
+          if (widget.maxPrints > 1) ...[
+            const SizedBox(height: 16.0),
+            Material(
+              color: Colors.transparent,
+              child: Slider(
+                activeColor: FluentTheme.of(context).accentColor,
+                value: numPrints.toDouble(),
+                min: 1,
+                max: widget.maxPrints.toDouble(),
+                divisions: widget.maxPrints - 1,
+                label: numPrints.toString(),
+                onChanged: (value) {
+                  setState(() => numPrints = value.round());
+                },
+              ),
             ),
-          ),
+          ],
         ],
       ),
       actions: [
