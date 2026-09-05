@@ -186,12 +186,22 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   }
 
   Widget get _oneLayout {
-    return Padding(
-      padding: const EdgeInsets.all(gap),
-      child: _PhotoContainer(
-            rotated: true,
-            child: _getChosenImage(0),
-         ).inGridArea('l1content'),
+    return LayoutGrid(
+      areas: '''
+          l1content
+        ''',
+      rowSizes: [8.fr],
+      columnSizes: [1.fr],
+      columnGap: gap,
+      rowGap: gap,
+      children: [
+        if (widget.showLogo)
+          const _CenteredLogo().inGridArea('l1header'),
+       _PhotoContainer(
+          rotated: true,
+          child: _getChosenImage(0),
+       ).inGridArea('l1content'),
+      ],
     );
   }
 
