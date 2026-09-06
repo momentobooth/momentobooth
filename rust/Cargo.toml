@@ -8,7 +8,6 @@ crate-type = ["cdylib", "staticlib"]
 
 [dependencies]
 flutter_rust_bridge = { version = "=2.13.0", features = ["chrono"] }
-ffsend-api = "0.7.3"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.151"
 chrono = "0.4.45"
@@ -21,7 +20,7 @@ noise = "0.9.0"
 dashmap = "6.2.1"
 turborand = "0.10.1"
 pathsep = "0.1.1"
-tokio = { version = "1.53.1", features = ["rt-multi-thread"] }
+tokio = { version = "1.53.1", features = ["rt-multi-thread", "fs", "io-util", "time"] }
 gphoto2 = "3.4.1"
 ahash = "0.8.12"
 img-parts = "0.4.0"
@@ -40,6 +39,13 @@ libusb-sys = "0.2.3"
 futures = "0.3.34"
 kira = { version = "0.12.4", default-features = false, features = ["cpal", "flac", "mp3", "ogg", "pcm", "vorbis", "wav"] }
 snafu = "0.9.2"
+aes-gcm = "0.10"
+sha2 = "0.10"
+hkdf = "0.12"
+hmac = "0.12"
+base64 = "0.23"
+getrandom = "0.4"
+tokio-tungstenite = { version = "0.30", features = ["native-tls"] }
 
 [profile.dev]
 opt-level = 3

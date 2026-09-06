@@ -1,102 +1,69 @@
-use std::{path::PathBuf, str::FromStr, sync::{Arc, Mutex}, time::Duration};
+//! Firefox Send v3 client.
+//!
+//! This is a direct implementation of the parts of the Send protocol MomentoBooth uses, replacing
+//! the `ffsend-api` crate and the stack of unmaintained HTTP and websocket crates it depended on.
+//! The wire format is verified against `ffsend-api` by the tests in [`ece`] and [`crypto`].
 
-use chrono::{DateTime, Utc};
-use ffsend_api::{action::{delete::Delete, params::ParamsData, upload::Upload}, client::{Client, ClientConfig, ClientConfigBuilder}, file::remote_file::RemoteFile, pipe::ProgressReporter, url::Url};
+use std::{path::PathBuf, time::Duration};
 
-use crate::frb_generated::StreamSink;
+use flutter_rust_bridge::DartFnFuture;
 
-// ///////// //
-// Functions //
-// ///////// //
+use crate::api::ffsend::{FfSendUploadError, FfSendUploadProgress, FfSendUploadRequest, FfSendUploadResult};
 
-pub fn upload_file(host_url: String, file_path: String, download_filename: Option<String>, max_downloads: Option<u8>, expires_after_seconds: Option<u32>, update_sink: StreamSink<FfSendTransferProgress>, control_command_timeout: Duration, transfer_timeout: Duration) {
-    // Prepare upload
-    let version = ffsend_api::api::Version::V3;
-    let url = Url::parse(host_url.as_str()).expect("Could not parse host URL");
-    let file = PathBuf::from_str(file_path.as_str()).expect("Could not parse upload file path");
-    let name = download_filename;
-    let password = None;
-    let params = Some(ParamsData::from(max_downloads, expires_after_seconds.map(|n| n as usize)));
+mod crypto;
+mod ece;
+mod protocol;
 
-    let action = Upload::new(version, url, file, name, password, params);
-    let config = ClientConfigBuilder::default().timeout(Some(control_command_timeout)).transfer_timeout(Some(transfer_timeout)).build().unwrap();
-    let client = Client::new(config, true);
+/// Uploads a file, calling `on_progress` while it runs.
+///
+/// Progress is reported in plaintext bytes, so it lines up with the size of the file on disk rather
+/// than with the slightly larger ciphertext actually sent.
+pub async fn upload_file(
+    request: FfSendUploadRequest,
+    on_progress: impl Fn(FfSendUploadProgress) -> DartFnFuture<()>,
+) -> Result<FfSendUploadResult, FfSendUploadError> {
+    let request = protocol::UploadRequest {
+        host_url: request.host_url,
+        file_path: PathBuf::from(request.file_path),
+        download_filename: request.download_filename,
+        max_downloads: request.max_downloads,
+        expires_after: request.expires_after.map(to_std_duration),
+        control_timeout: to_std_duration(request.control_timeout),
+        transfer_timeout: to_std_duration(request.transfer_timeout),
+    };
 
-    // Initialize reporting and start upload
-    let transfer_progress_reporter = Arc::new(Mutex::new(FfSendTransferProgressReporter::new(update_sink)));
-    let clone = transfer_progress_reporter.clone();
-    let progress_reporter: Arc<Mutex<dyn ProgressReporter>> = transfer_progress_reporter;
-    let action_result = action.invoke(&client, Some(&progress_reporter));
+    let uploaded = protocol::upload(&request, |transferred_bytes, total_bytes| {
+        on_progress(FfSendUploadProgress { transferred_bytes, total_bytes })
+    })
+    .await?;
 
-    // Send final progress report containing URL
-    let file = action_result.expect("Could not upload file");
-    let mut progress = clone.lock().expect("Could not acquire lock on ProgressReporter");
-    progress.update_from_remote_file(file);
+    Ok(FfSendUploadResult {
+        download_url: uploaded.download_url,
+        expires_at: uploaded.expires_at.unwrap_or_else(chrono::Utc::now),
+        file_id: uploaded.file_id,
+        owner_token: uploaded.owner_token,
+    })
 }
 
-pub fn delete_file(file_id: String) {
-    let file = serde_json::from_str(file_id.as_str()).expect("Could not deserialize UploadFile from JSON");
-    let action = Delete::new(&file, None);
-    let client = Client::new(ClientConfig::default(), false);
-    let action_result = action.invoke(&client);
-    action_result.expect("Could not delete file");
+/// Clamps a duration coming from the settings to something [`std::time::Duration`] can hold.
+///
+/// A negative or absurd value in the settings file should not panic the upload.
+fn to_std_duration(duration: chrono::Duration) -> Duration {
+    duration.to_std().unwrap_or(Duration::ZERO)
 }
 
-// /////// //
-// Structs //
-// /////// //
+impl From<protocol::UploadError> for FfSendUploadError {
+    fn from(error: protocol::UploadError) -> Self {
+        use protocol::UploadError;
 
-#[derive(Debug, Clone)]
-pub struct FfSendTransferProgress {
-    pub is_finished: bool,
-    pub transferred_bytes: u32,
-    pub total_bytes: Option<u32>,
-    pub download_url: Option<String>,
-    pub expire_date: Option<DateTime<Utc>>,
-
-    pub file_id: Option<String>,
-}
-
-pub struct FfSendTransferProgressReporter {
-    stream_sink: StreamSink<FfSendTransferProgress>,
-    current_progress: FfSendTransferProgress,
-}
-
-impl FfSendTransferProgressReporter {
-    fn new(update_sink: StreamSink<FfSendTransferProgress>) -> FfSendTransferProgressReporter {
-        FfSendTransferProgressReporter {
-            stream_sink: update_sink,
-            current_progress: FfSendTransferProgress {
-                is_finished: false,
-                transferred_bytes: 0,
-                total_bytes: None,
-                download_url: None,
-                expire_date: None,
-                file_id: None,
-            },
+        match error {
+            UploadError::InvalidHostUrl(detail) => Self::InvalidHostUrl(detail),
+            UploadError::FileNotReadable(detail) => Self::FileNotReadable(detail),
+            UploadError::Connect(detail) => Self::Connect(detail),
+            UploadError::Rejected(detail) => Self::Rejected(detail),
+            UploadError::Transfer(detail) => Self::Transfer(detail),
+            UploadError::Crypto(detail) => Self::Crypto(detail),
+            UploadError::Timeout(detail) => Self::Timeout(detail),
         }
-    }
-
-    fn update_from_remote_file(&mut self, file: RemoteFile) {
-        self.current_progress.is_finished = true;
-        self.current_progress.download_url = Some(file.download_url(true).to_string());
-        self.current_progress.expire_date = if file.expire_uncertain() { None } else { Some(file.expire_at()) };
-        self.current_progress.file_id = Some(serde_json::to_string(&file).expect("Could not serialize UploadFile to JSON"));
-        let _ = self.stream_sink.add(self.current_progress.clone());
-    }
-}
-
-impl ProgressReporter for FfSendTransferProgressReporter {
-    fn start(&mut self, total: u64) {
-        self.current_progress.total_bytes = Some(total as u32);
-        let _ = self.stream_sink.add(self.current_progress.clone());
-    }
-
-    fn progress(&mut self, progress: u64) {
-        self.current_progress.transferred_bytes = progress as u32;
-        let _ = self.stream_sink.add(self.current_progress.clone());
-    }
-
-    fn finish(&mut self) {
     }
 }

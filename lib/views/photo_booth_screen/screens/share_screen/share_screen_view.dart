@@ -116,10 +116,14 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
   }
 
   Widget _getBottomRow() {
+    return Observer(builder: (_) => _bottomRow);
+  }
+
+  Widget get _bottomRow {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        if (viewModel.showGetQrButton)
+        if (viewModel.showGetQrButton && viewModel.qrSharingEnabled)
           Flexible(
             child: PhotoBoothButton.action(
               onPressed: controller.onClickGetQR,

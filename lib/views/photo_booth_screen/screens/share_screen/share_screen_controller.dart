@@ -8,6 +8,7 @@ import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/utils/ffsend_upload.dart';
 import 'package:momento_booth/views/base/printer_status_dialog_mixin.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
@@ -61,18 +62,19 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
 
   void onClickGetQR() {
+    if (!viewModel.qrSharingEnabled) return;
     viewModel.uploadPhotoToSend();
     showUserDialog(
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
         return QrShareDialog(
-          state: viewModel.uploadFailed
-              ? ShareDialogState.error
-              : viewModel.uploadProgress != null || viewModel.qrUrl == null
-                  ? ShareDialogState.uploading
-                  : ShareDialogState.uploaded,
-          uploadProgress: (viewModel.uploadProgress ?? 0) * 100,
-          qrText: viewModel.qrUrl,
+          state: switch (viewModel.upload.status) {
+            FfSendUploadStatus.failed => ShareDialogState.error,
+            FfSendUploadStatus.uploaded => ShareDialogState.uploaded,
+            _ => ShareDialogState.uploading,
+          },
+          uploadProgress: viewModel.upload.progress == null ? null : viewModel.upload.progress! * 100,
+          qrText: viewModel.upload.downloadUrl,
           onDismiss: () => navigator.pop(),
           onRedoUpload: viewModel.uploadPhotoToSend,
         );

@@ -73,9 +73,13 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
   }
 
   Widget _getBottomRow() {
+    return Observer(builder: (_) => _bottomRow);
+  }
+
+  Widget get _bottomRow {
     return Row(
       children: [
-        if (viewModel.showGetQrButton)
+        if (viewModel.showGetQrButton && viewModel.qrSharingEnabled)
           Flexible(
             child: Center(
               child: PhotoBoothButton.action(
