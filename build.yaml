@@ -9,6 +9,9 @@ targets:
             - lib/models/*.dart
             - lib/models/**/*.dart
             - lib/src/rust/models/*.dart
+            # flutter_rust_bridge emits freezed sealed classes for Rust enums with data,
+            # such as the Firefox Send upload error.
+            - lib/src/rust/api/*.dart
       json_serializable:
         options:
           explicit_to_json: true

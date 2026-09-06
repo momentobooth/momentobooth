@@ -11,7 +11,7 @@
 * Printing: [Printing](https://pub.dev/packages/printing)
 * Logging: [Talker](https://pub.dev/packages/talker)
 * Data classes: [Freezed](https://pub.dev/packages/freezed)
-* Firefox Send client: [ffsend-api](https://crates.io/crates/ffsend-api)
+* Firefox Send client: built into `rust/src/utils/ffsend_client`, on top of [tokio-tungstenite](https://crates.io/crates/tokio-tungstenite) and [aes-gcm](https://crates.io/crates/aes-gcm)
 * JPEG decoding: [zune-jpeg](https://crates.io/crates/zune-jpeg), encoding: [jpeg-encoder](https://crates.io/crates/jpeg-encoder)
 
 ## Requirements

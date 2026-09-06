@@ -8,10 +8,9 @@ import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/gallery_image.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
-import 'package:momento_booth/src/rust/api/ffsend.dart';
 import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
-import 'package:momento_booth/src/rust/utils/ffsend_client.dart';
+import 'package:momento_booth/utils/ffsend_upload.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:path/path.dart' as path;
 
@@ -40,56 +39,23 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   @observable
   bool printEnabled = true;
 
-  @readonly
-  double? _uploadProgress;
-
-  @readonly
-  bool _uploadFailed = false;
-
-  @readonly
-  String? _qrUrl;
+  late final FfSendUpload upload = FfSendUpload(onUploaded: getIt<StatsManager>().addUploadedPhoto);
 
   @readonly
   Size? _imageSize;
 
-  String get ffSendUrl => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
+  bool get qrSharingEnabled => getIt<SettingsManager>().settings.output.firefoxSendEnabled;
 
-  Future<void> uploadPhotoToSend() async {
-    logDebug("Uploading ${file!.path}");
-
-    String basename = path.basename(file!.path);
-    Stream<FfSendTransferProgress> stream = ffsendUploadFile(
-      filePath: file!.path,
-      hostUrl: ffSendUrl,
-      downloadFilename: basename,
-      controlCommandTimeout: getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout,
-      transferTimeout: getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout,
-    );
-
-    _uploadProgress = 0.0;
-    _uploadFailed = false;
-
-    stream.listen((event) async {
-      if (event.isFinished) {
-        logDebug("Upload complete: ${event.downloadUrl}");
-
-        await Future.delayed(const Duration(milliseconds: 500));
-        _qrUrl = event.downloadUrl;
-        _uploadProgress = null;
-
-        getIt<StatsManager>().addUploadedPhoto();
-      } else {
-        logDebug("Uploading: ${event.transferredBytes}/${event.totalBytes} bytes");
-        _uploadProgress = event.transferredBytes / (event.totalBytes ?? 0);
-      }
-    }).onError((x) async {
-      logError("Upload failed, file path: ${file!.path}", x);
-      await Future.delayed(const Duration(seconds: 1));
-      _uploadProgress = null;
-      _uploadFailed = true;
-    });
+  Future<void> uploadPhotoToSend() {
+    return upload.start(() async => (filePath: file!.path, downloadFilename: path.basename(file!.path)));
   }
 
   void onImageDecoded(Size size) => _imageSize = size;
+
+  @override
+  void dispose() {
+    upload.dispose();
+    super.dispose();
+  }
 
 }

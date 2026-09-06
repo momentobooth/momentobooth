@@ -186,6 +186,7 @@ sealed class OutputSettings with _$OutputSettings implements TomlEncodableValue 
     @Default(4.0) double resolutionMultiplier,
     @Default(false) bool useFullFrame1PhotoLayout,
     @Default(ExportFormat.jpgFormat) ExportFormat exportFormat,
+    @Default(true) bool firefoxSendEnabled,
     @Default("https://send.vis.ee/") String firefoxSendServerUrl,
     @Default(Duration(seconds: 5)) Duration firefoxSendControlCommandTimeout,
     @Default(Duration(seconds: 15)) Duration firefoxSendTransferTimeout,

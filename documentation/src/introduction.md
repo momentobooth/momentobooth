@@ -29,7 +29,7 @@
 * **Photo printing**
   * Lots of settings included to size and position your print well
   * Support for native printing method and dispatch to CUPS server
-* **Photo sharing using QR code** with [`ffsend`](https://github.com/timvisee/ffsend)
+* **Photo sharing using QR code** with a built-in [Firefox Send](https://github.com/timvisee/send) client
 * **Theming with collage template images** (background and foreground)
 * **Rich live view and capture options**
   * Select device with 1 click or select custom options & combinations

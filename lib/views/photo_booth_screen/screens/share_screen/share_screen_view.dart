@@ -116,19 +116,24 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
   }
 
   Widget _getBottomRow() {
+    return Observer(builder: (_) => _bottomRow);
+  }
+
+  Widget get _bottomRow {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Flexible(
-          child: PhotoBoothButton.action(
-            onPressed: controller.onClickGetQR,
-            child: AutoSizeTextAndIcon(
-              text: localizations.photoDetailsScreenGetQrButton,
-              leftIcon: LucideIcons.scanQrCode,
-              autoSizeGroup: controller.actionButtonGroup,
+        if (viewModel.qrSharingEnabled)
+          Flexible(
+            child: PhotoBoothButton.action(
+              onPressed: controller.onClickGetQR,
+              child: AutoSizeTextAndIcon(
+                text: localizations.photoDetailsScreenGetQrButton,
+                leftIcon: LucideIcons.scanQrCode,
+                autoSizeGroup: controller.actionButtonGroup,
+              ),
             ),
           ),
-        ),
         Flexible(
           child: Observer(
             builder: (context) => PhotoBoothButton.action(

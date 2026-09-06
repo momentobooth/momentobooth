@@ -500,6 +500,10 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onFirefoxSendEnabledChanged(bool firefoxSendEnabled) {
+    viewModel.updateSettings((settings) => settings.copyWith.output(firefoxSendEnabled: firefoxSendEnabled));
+  }
+
   void onFirefoxSendServerUrlChanged(String? firefoxSendServerUrl) {
     if (firefoxSendServerUrl != null) {
       viewModel.updateSettings((settings) => settings.copyWith.output(firefoxSendServerUrl: firefoxSendServerUrl));

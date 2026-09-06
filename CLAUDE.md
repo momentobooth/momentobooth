@@ -63,7 +63,7 @@ rust/src/
 │   ├── nokhwa.rs  # Webcam capture
 │   ├── gphoto2.rs # Digital camera (libgphoto2)
 │   ├── cups.rs    # Printing (CUPS / IPP)
-│   ├── ffsend.rs  # Photo sharing (Firefox Send)
+│   ├── ffsend.rs  # Photo sharing (Firefox Send, client in utils/ffsend_client)
 │   ├── images.rs  # Image processing
 │   └── sfx.rs     # Sound effects
 ├── hardware_control/

@@ -5,6 +5,7 @@ In the output settings, you can customize the output file generation and sharing
 Output files will be saved to the `Output` subdirectory of your project folder.
 
 ## Share using internet
+{{#include ./settings/ffsend_enabled.md}}
 {{#include ./settings/ffsend_url.md}}
 
 ## Image settings
