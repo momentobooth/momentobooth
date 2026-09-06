@@ -3,7 +3,7 @@ use std::{path::Path, sync::LazyLock};
 use img_parts::{jpeg::Jpeg, Bytes, ImageEXIF};
 use jpeg_encoder::{Encoder, ColorType};
 use little_exif::{exif_tag::ExifTag, filetype::FileExtension, metadata::Metadata};
-use num::FromPrimitive;
+use num_traits::FromPrimitive;
 use zune_jpeg::{JpegDecoder, zune_core::{bytestream::ZCursor, options::DecoderOptions, colorspace::ColorSpace}};
 use chrono::{Local, NaiveDateTime};
 

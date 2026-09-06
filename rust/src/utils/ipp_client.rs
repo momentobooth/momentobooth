@@ -2,8 +2,8 @@ use std::io::Cursor;
 use futures::AsyncReadExt;
 use chrono::{DateTime, Utc};
 
+use ipp::attribute::IppAttrWithName;
 use ipp::prelude::*;
-use ipp::value::IppValue::Keyword;
 use regex::Regex;
 use futures::future::join_all;
 
@@ -27,7 +27,7 @@ async fn send_ipp_request(uri: String, ignore_tls_errors: bool, op: Operation) -
         IppVersion::v1_1(),
         op,
         Some(uri_p.clone())
-    );
+    ).unwrap();
     let client = AsyncIppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
     let resp = client.send(req).await;
     resp.unwrap()
@@ -54,10 +54,10 @@ async fn send_ipp_job_request(uri: String, ignore_tls_errors: bool, op: Operatio
         IppVersion::v1_1(),
         op,
         Some(uri_p.clone())
-    );
+    ).unwrap();
     req.attributes_mut().add(
         DelimiterTag::OperationAttributes,
-        IppAttribute::new(IppAttribute::JOB_ID, IppValue::Integer(job_id)),
+        IppValue::new_integer(job_id).with_name(IppAttribute::JOB_ID).unwrap(),
     );
 
     let client = AsyncIppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
@@ -79,10 +79,10 @@ pub async fn print_job(uri: String, ignore_tls_errors: bool, job_name: String, p
     let pdf_data_payload = IppPayload::new(pdf_data_cursor);
     let print_job = IppOperationBuilder::print_job(uri_p.clone(), pdf_data_payload)
         .job_title(job_name)
-        .attribute(IppAttribute::new("media", Keyword(media_size)));
+        .attribute(IppValue::new_keyword(media_size).with_name("media").unwrap());
 
     let client = AsyncIppClient::builder(uri_p).ignore_tls_errors(ignore_tls_errors).build();
-    let resp = client.send(print_job.build()).await;
+    let resp = client.send(print_job.build().unwrap()).await;
     resp.unwrap().header().status_code().is_success()
 }
 
@@ -102,17 +102,16 @@ pub async fn get_printers(uri: String, ignore_tls_errors: bool) -> Vec<IppPrinte
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPrinters).await;
 
     resp.attributes().groups_of(DelimiterTag::PrinterAttributes).map(|printer| {
-        let group = printer.attributes().clone();
-        let state = group["printer-state"]
+        let state = printer.get("printer-state").unwrap()
             .value()
             .as_enum()
             .and_then(|v| PrinterState::from_i32(*v))
             .unwrap();
-        let job_count = group["queued-job-count"].value().as_integer().unwrap().clone();
-        let state_message = group["printer-state-message"].value().to_string().clone();
-        let queue_name = group["printer-name"].value().to_string().clone();
-        let description = group["printer-info"].value().to_string().clone();
-        let state_reason = group["printer-state-reasons"].value().to_string().clone();
+        let job_count = printer.get("queued-job-count").unwrap().value().as_integer().unwrap().clone();
+        let state_message = printer.get("printer-state-message").unwrap().value().to_string().clone();
+        let queue_name = printer.get("printer-name").unwrap().value().to_string().clone();
+        let description = printer.get("printer-info").unwrap().value().to_string().clone();
+        let state_reason = printer.get("printer-state-reasons").unwrap().value().to_string().clone();
         IppPrinterState { queue_name, description, state, job_count, state_message, state_reason }
     }).collect()
 }
@@ -121,18 +120,16 @@ pub async fn get_printer_state(uri: String, ignore_tls_errors: bool) -> IppPrint
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes).await;
 
     let group = resp.attributes().groups_of(DelimiterTag::PrinterAttributes).next().unwrap();
-    let attributes = group.attributes().clone();
-
-    let state = group.attributes()["printer-state"]
+    let state = group.get("printer-state").unwrap()
         .value()
         .as_enum()
         .and_then(|v| PrinterState::from_i32(*v))
         .unwrap();
-    let job_count = attributes["queued-job-count"].value().as_integer().unwrap().clone();
-    let state_message = attributes["printer-state-message"].value().to_string().clone();
-    let queue_name = attributes["printer-name"].value().to_string().clone();
-    let description = attributes["printer-info"].value().to_string().clone();
-    let state_reason = attributes["printer-state-reasons"].value().to_string().clone();
+    let job_count = group.get("queued-job-count").unwrap().value().as_integer().unwrap().clone();
+    let state_message = group.get("printer-state-message").unwrap().value().to_string().clone();
+    let queue_name = group.get("printer-name").unwrap().value().to_string().clone();
+    let description = group.get("printer-info").unwrap().value().to_string().clone();
+    let state_reason = group.get("printer-state-reasons").unwrap().value().to_string().clone();
 
     IppPrinterState { queue_name, description, state, job_count, state_message, state_reason }
 }
@@ -141,7 +138,7 @@ pub async fn get_jobs_states(uri: String, ignore_tls_errors: bool) -> Vec<PrintJ
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetJobs).await;
 
     join_all(resp.attributes().groups_of(DelimiterTag::JobAttributes).map(|job| {
-        let job_id = job.attributes()["job-id"].value().as_integer().unwrap().clone();
+        let job_id = job.get("job-id").unwrap().value().as_integer().unwrap().clone();
         get_job_state(uri.clone(), ignore_tls_errors, job_id)
     })).await
 }
@@ -150,24 +147,22 @@ async fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> Pri
     let resp = send_ipp_job_request(uri.clone(), ignore_tls_errors, Operation::GetJobAttributes, job_id).await;
 
     let group = resp.attributes().groups_of(DelimiterTag::JobAttributes).next().unwrap();
-    let attributes = group.attributes().clone();
-
-    let state = group.attributes()["job-state"]
+    let state = group.get("job-state").unwrap()
         .value()
         .as_enum()
         .and_then(|v| JobState::from_i32(*v))
         .unwrap();
 
-    let creation_time = DateTime::from_timestamp_millis((attributes["time-at-creation"].value().as_integer().unwrap().clone() as i64) * 1000).unwrap();
+    let creation_time = DateTime::from_timestamp_millis((group.get("time-at-creation").unwrap().value().as_integer().unwrap().clone() as i64) * 1000).unwrap();
 
     // Not every job seems to have a name
-    let job_name = if attributes.get_key_value("job-name").is_some() { attributes["job-name"].value().to_string().clone() } else { "".to_string() };
+    let job_name = if let Some(name) = group.get("job-name") { name.value().to_string() } else { "".to_string() };
 
     PrintJobState {
         name: job_name,
-        id: attributes["job-id"].value().as_integer().unwrap().clone(),
+        id: group.get("job-id").unwrap().value().as_integer().unwrap().clone(),
         state,
-        reason: attributes["job-state-reasons"].value().to_string().clone(),
+        reason: group.get("job-state-reasons").unwrap().value().to_string().clone(),
         created: creation_time,
     }
 }
@@ -175,8 +170,7 @@ async fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> Pri
 pub async fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec<PrintDimension> {
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes).await;
     let group = resp.attributes().groups_of(DelimiterTag::PrinterAttributes).next().unwrap();
-    let attributes = group.attributes().clone();
-    let state: Vec<String> = attributes["media-supported"].value().as_array().unwrap().iter().map(|e| {e.to_string()}).collect();
+    let state: Vec<String> = group.get("media-supported").unwrap().value().as_array().unwrap().iter().map(|e| {e.to_string()}).collect();
 
     let mut dimensions: Vec<PrintDimension> = Vec::new();
     let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPPD).await;

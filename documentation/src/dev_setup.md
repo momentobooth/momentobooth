@@ -24,10 +24,10 @@ For all languages, frameworks and tools, we support the latest versions.
   * Install using Cargo:
 
     ```sh
-    cargo install flutter_rust_bridge_codegen --version 2.12.0
+    cargo install flutter_rust_bridge_codegen --version 2.13.0
     ```
 
-* Flutter SDK 3.41.0+
+* Flutter SDK 3.47.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it.\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
 * Optional: For building the documentation mdBook and some extensions for mdBook are needed
