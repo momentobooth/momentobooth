@@ -6,13 +6,9 @@ part 'external_system_status.freezed.dart';
 
 @freezed
 class ExternalSystemStatus with _$ExternalSystemStatus {
-  @override
   final ExternalSystemCheckSetting check;
-  @override
   final SubsystemStatus isHealthy;
-  @override
   final DateTime timestamp;
-  @override
   final bool inProgress;
 
   ExternalSystemStatus({
