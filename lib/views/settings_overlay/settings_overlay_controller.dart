@@ -214,6 +214,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onShowGalleryChanged(bool? showGallery) {
+    if (showGallery != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(showGallery: showGallery));
+    }
+  }
+
   void onEnableWakelockChanged(bool? enableWakelock) {
     if (enableWakelock != null) {
       viewModel.updateSettings((settings) => settings.copyWith(enableWakelock: enableWakelock));
