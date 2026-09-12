@@ -8,8 +8,9 @@
 - New feature: Supported cameras can now start and stop video recording (for developers)
 - New feature: Supported cameras can now retrieve the list of files stored on the camera (for developers)
 
-- Dev change: Updated Flutter to 3.41.7
+- Dev change: Updated Flutter to 3.47.2
 - Dev change: Updated Dart and Rust dependencies
+- Dev change: Removed unused dependencies (Dart: wave; Rust: num, plus the unused bindgen/pkg-config build dependencies)
 - Dev change: Add photos and capture section to debug panel in settings
 - Dev change: Add camera config getters and setters to debug screen
 - Dev change: Add debug button to dump full camera info to clipboard

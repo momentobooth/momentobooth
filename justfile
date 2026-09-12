@@ -10,7 +10,7 @@ install-cargo-expand:
   cargo install cargo-expand
 
 install-bridge-codegen:
-  cargo install flutter_rust_bridge_codegen@2.12.0
+  cargo install flutter_rust_bridge_codegen@2.13.0
 
 install-flutter:
   fvm install -s --skip-pub-get
@@ -22,7 +22,7 @@ gen-bridge:
   flutter_rust_bridge_codegen generate
 
 gen-code:
-  fvm dart run build_runner build --delete-conflicting-outputs
+  fvm dart run build_runner build
 
 gen-l10n:
   fvm flutter gen-l10n
@@ -45,7 +45,7 @@ watch-bridge:
   flutter_rust_bridge_codegen generate --watch
 
 watch-code:
-  fvm dart run build_runner watch --delete-conflicting-outputs
+  fvm dart run build_runner watch
 
 ##
 # Building

@@ -96,9 +96,9 @@ rust/src/
 
 Requires:
 
-- Flutter 3.41.7 via FVM (`just install-flutter`)
+- Flutter 3.47.2 via FVM (`just install-flutter`)
 - Rust via rustup
-- `flutter_rust_bridge_codegen` 2.12.0 (`just install-bridge-codegen`)
+- `flutter_rust_bridge_codegen` 2.13.0 (`just install-bridge-codegen`)
 - **Windows:** MSYS2 with `libgphoto2`, `pkgconf`, `curl`
 - **Linux:** `llvm`, `libssl-dev`, `libcurl4-openssl-dev`, `libasound2-dev`
 - **macOS:** Homebrew `pkgconf`, `libgphoto2`
