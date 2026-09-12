@@ -29,6 +29,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   });
 
   Directory get outputDir => getIt<ProjectManager>().getOutputDir();
+  bool get showGetQrButton => getIt<ProjectManager>().settings.showGetQrButton;
   File? get file => File(path.join(outputDir.path, photoId));
   Future<List<MomentoBoothExifTag>> get metadata async => await getMomentoBoothExifTagsFromFile(imageFilePath: file!.path);
   Future<GalleryImage> get galleryImage async => GalleryImage(file: file!, exifTags: await metadata);

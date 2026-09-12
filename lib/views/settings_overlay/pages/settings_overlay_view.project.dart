@@ -84,6 +84,13 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
                 value: () => viewModel.showGallerySetting,
                 onChanged: controller.onShowGalleryChanged,
               ),
+              SettingsToggleTile(
+                icon: LucideIcons.qrCode,
+                title: "Show ‘Get QR’ button",
+                subtitle: "If enabled, the ‘Get QR’ button is shown on the share and photo detail screens so users can download their photo. Disable this if online sharing is not used.",
+                value: () => viewModel.showGetQrButtonSetting,
+                onChanged: controller.onShowGetQrButtonChanged,
+              ),
             ]
           );
         }

@@ -75,18 +75,19 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
   Widget _getBottomRow() {
     return Row(
       children: [
-        Flexible(
-          child: Center(
-            child: PhotoBoothButton.action(
-              onPressed: controller.onClickGetQR,
-              child: AutoSizeTextAndIcon(
-                text: localizations.photoDetailsScreenGetQrButton,
-                leftIcon: LucideIcons.scanQrCode,
-                autoSizeGroup: controller.actionButtonGroup,
+        if (viewModel.showGetQrButton)
+          Flexible(
+            child: Center(
+              child: PhotoBoothButton.action(
+                onPressed: controller.onClickGetQR,
+                child: AutoSizeTextAndIcon(
+                  text: localizations.photoDetailsScreenGetQrButton,
+                  leftIcon: LucideIcons.scanQrCode,
+                  autoSizeGroup: controller.actionButtonGroup,
+                ),
               ),
             ),
           ),
-        ),
         Flexible(
           child: Center(
             child: Observer(

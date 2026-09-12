@@ -34,6 +34,7 @@ sealed class ProjectSettings with _$ProjectSettings implements TomlEncodableValu
     @Default(Language.noLanguage) Language language,
     @Default([]) List<Language> availableLanguages,
     @Default(true) bool showGallery,
+    @Default(true) bool showGetQrButton,
   }) = _ProjectSettings;
 
   factory ProjectSettings.withDefaults() => ProjectSettings.fromJson({});

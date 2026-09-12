@@ -213,10 +213,16 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
       viewModel.updateProjectSettings((settings) => settings.copyWith(availableLanguages: languages));
     }
   }
-
+  
   void onShowGalleryChanged(bool? showGallery) {
     if (showGallery != null) {
       viewModel.updateProjectSettings((settings) => settings.copyWith(showGallery: showGallery));
+    }
+  }
+
+  void onShowGetQrButtonChanged(bool? showGetQrButton) {
+    if (showGetQrButton != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(showGetQrButton: showGetQrButton));
     }
   }
 
