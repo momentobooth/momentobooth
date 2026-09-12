@@ -19,7 +19,23 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ci_install_release_cert_using_api
 ```
 
+CI: install the Developer ID certificate and Direct profile using an App Store Connect API key
 
+### install_dev_cert
+
+```sh
+[bundle exec] fastlane install_dev_cert
+```
+
+Install the development certificate and profile into your login keychain, needed to run debug builds
+
+### install_release_cert
+
+```sh
+[bundle exec] fastlane install_release_cert
+```
+
+Install the Developer ID certificate and profile into your login keychain, needed to make release builds
 
 ----
 

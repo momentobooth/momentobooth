@@ -8,21 +8,21 @@ analyzer:
     - '**/*.json.dart'
     - '**/*.tailor.dart'
     - '.*/'
-    - 'android/'
     - 'assets/'
-    - 'build/'
     - 'documentation/'
     - 'fastlane/'
-    - 'ios/'
     - 'lib/l10n/generated/'
     - 'lib/src/'
-    - 'linux/'
-    - 'macos/'
     - 'misc/'
     - 'rust/'
     - 'rust_builder/'
-    - 'web/'
-    - 'windows/'
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
 
 linter:
   # More info: https://dart.dev/tools/linter-rules
@@ -33,7 +33,6 @@ linter:
     - avoid_bool_literals_in_conditional_expressions
     - avoid_dynamic_calls
     - avoid_field_initializers_in_const_classes
-    - avoid_private_typedef_functions
     - avoid_slow_async_io
     - avoid_type_to_string
     - avoid_types_on_closure_parameters

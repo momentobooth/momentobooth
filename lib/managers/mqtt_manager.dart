@@ -212,7 +212,7 @@ abstract class MqttManagerBase extends Subsystem with Store, Logger {
 
   void _createSubscriptions() {
     String rootTopic = getIt<SettingsManager>().settings.mqttIntegration.rootTopic;
-    _client!.updates.listen((messageList) {
+    _client!.updates!.listen((messageList) {
       MqttPublishMessage? message;
       try {
         // From example: mqtt5_server_client_secure.dart
