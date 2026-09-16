@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Markdown Style
+
+Do not hard-wrap prose lines in Markdown files (e.g. at 80/100 characters). Write each paragraph as a single line and let the editor's word-wrap handle display. Line breaks should only occur between actual block elements (paragraphs, list items, headings), not inside a sentence or paragraph.
+
 ## Project Overview
 
 MomentoBooth is a cross-platform photo booth application (Windows, Linux, macOS) built with **Flutter (Dart)** for the UI and **Rust** for performance-critical hardware control, image processing, and native integrations. The two layers communicate via **flutter_rust_bridge v2**.
@@ -49,6 +53,8 @@ lib/
 ├── l10n/                      # ARB localization files (en, nl, fr, de)
 └── src/rust/                  # Auto-generated Rust↔Dart FFI bindings
 ```
+
+**Before adding a new widget**, check `documentation/src/widget_overview.md` — a grep-friendly catalog of every reusable widget under `lib/views/`, organized by folder, to avoid duplicating an existing one.
 
 **UI framework:** `fluent_ui` (Windows design language)
 **Routing:** `go_router`

@@ -35,6 +35,7 @@
 
 # Developer
 - [Setup](./dev_setup.md)
+- [Widget overview](./widget_overview.md)
 
 # Misc
 - [Command Line Arguments](./cli.md)
