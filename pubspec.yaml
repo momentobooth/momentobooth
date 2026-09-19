@@ -27,11 +27,11 @@ dependencies:
   provider: 6.1.5+1
   confetti: 0.8.0
   texture_rgba_renderer: { git: https://github.com/momentobooth/flutter_texture_rgba_renderer }
-  lottie: 3.5.1
+  lottie: 3.6.1
   smooth_scroll_multiplatform: 1.0.8
   widgetbook: 3.25.0
   widgetbook_annotation: 3.11.0
-  lucide_icons_flutter: 3.1.18
+  lucide_icons_flutter: 3.1.20
   wizard_router: 1.4.1
   theme_tailor_annotation: 4.0.0
   google_fonts: 8.2.1
@@ -41,8 +41,8 @@ dependencies:
   screenshot: 3.0.0
 
   # MVC
-  mobx: 2.6.1
-  flutter_mobx: 2.3.0
+  mobx: 2.7.0
+  flutter_mobx: 2.4.0
 
   # Models
   freezed_annotation: 3.1.0
@@ -54,8 +54,8 @@ dependencies:
   flutter_rust_bridge: 2.13.0
 
   # Printing
-  printing: 5.15.0
-  pdf: 3.13.0
+  printing: 5.15.1
+  pdf: 3.13.1
 
   # System
   path_provider: 2.1.6
@@ -67,11 +67,11 @@ dependencies:
   # Log and error handling
   talker: 5.1.20
   talker_flutter: 5.1.16
-  sentry_flutter: 9.29.0
+  sentry_flutter: 9.30.0
   stack_trace: 1.12.2
 
   # Storage
-  flutter_secure_storage: 10.3.1
+  flutter_secure_storage: 10.3.4
   toml: 0.18.0
 
   # Networking
@@ -80,9 +80,9 @@ dependencies:
   mqtt5_client: 5.0.0
 
   # Misc
-  get_it: 9.2.1
+  get_it: 9.3.0
   meta: any
-  synchronized: 3.4.1+2
+  synchronized: 3.4.2
   collection: any
   dart_casing: 3.0.1
   package_info_plus: 9.0.1
@@ -104,7 +104,7 @@ dev_dependencies:
   theme_tailor: 4.0.1
 
   # MVC
-  mobx_codegen: 2.7.8
+  mobx_codegen: 2.8.0
 
   # Code quality
   flutter_lints: 6.0.0
