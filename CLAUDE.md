@@ -54,7 +54,7 @@ lib/
 └── src/rust/                  # Auto-generated Rust↔Dart FFI bindings
 ```
 
-**Before adding a new widget**, check `documentation/src/widget_overview.md` — a grep-friendly catalog of every reusable widget under `lib/views/`, organized by folder, to avoid duplicating an existing one.
+**Before adding a new widget**, check `documentation/src/widget_overview.md` — a grep-friendly catalog of every reusable widget under `lib/views/`, organized by folder, to avoid duplicating an existing one. **After adding, removing, renaming, or moving a widget**, update `documentation/src/widget_overview.md` to match — it must stay in sync with the actual widgets under `lib/views/`.
 
 **UI framework:** `fluent_ui` (Windows design language)
 **Routing:** `go_router`

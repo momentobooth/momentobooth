@@ -227,10 +227,14 @@ All settings tiles are built on `settings_tile.dart` — `SettingsTile` (base ca
 - `settings_number_edit_tile.dart` — `SettingsNumberEditTile<T extends num>` — numeric stepper/edit field.
 - `settings_password_edit_tile.dart` — `SettingsPasswordEditTile` — password-style masked text field.
 - `settings_secret_edit_tile.dart` — `SettingsSecretEditTile` — button opening `UpdateSecretDialog` to set a secure-storage secret.
-- `settings_text_display_tile.dart` — `SettingsTextDisplayTile` — read-only pill/badge-styled text value.
+- `settings_text_display_tile.dart` — `SettingsTextDisplayTile` — read-only pill/badge-styled text value, built on `settings_value_chip.dart`.
 - `settings_text_edit_tile.dart` — `SettingsTextEditTile` — plain text edit field.
 - `settings_toggle_tile.dart` — `SettingsToggleTile` — boolean on/off toggle switch.
 - `settings_tree_view_tile.dart` — `SettingsTreeViewTile<TValue>` — multi-select tree view of items.
+
+Standalone (no `SettingsTile` wrapper), used to display a read-only value, e.g. by `settings_text_display_tile.dart` or directly for multi-value rows like the statistics page:
+
+- `settings_value_chip.dart` — `SettingsValueChip` — read-only pill/badge-styled text value, with an optional override for its (default accent-colored) background color.
 
 Outside the tile family (no `SettingsTile` wrapper), for the "quick actions" grid:
 
