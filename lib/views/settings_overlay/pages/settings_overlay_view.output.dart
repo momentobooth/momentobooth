@@ -13,26 +13,43 @@ Widget _getOutputSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCon
       SettingsSection(
         title: "Share using internet",
         settings: [
-          SettingsTextEditTile(
-            icon: LucideIcons.globe,
-            title: "Firefox Send URL",
-            subtitle: "Firefox Send Server URL",
-            controller: controller.firefoxSendServerUrlController,
-            onFinishedEditing: controller.onFirefoxSendServerUrlChanged,
+          SettingsToggleTile(
+            icon: LucideIcons.qrCode,
+            title: "Enable QR code sharing",
+            subtitle: "If enabled, photos can be uploaded to a Firefox Send server and shared with a QR code. When disabled, the 'Get QR' button is hidden.",
+            value: () => viewModel.firefoxSendEnabledSetting,
+            onChanged: controller.onFirefoxSendEnabledChanged,
           ),
-          SettingsNumberEditTile(
-            icon: LucideIcons.timer,
-            title: "Firefox Send control command timeout",
-            subtitle: "The duration (in seconds) a control command is allowed to take",
-            value: () => viewModel.firefoxSendControlCommandTimeoutSetting,
-            onFinishedEditing: controller.onFirefoxSendControlCommandTimeoutChanged,
-          ),
-          SettingsNumberEditTile(
-            icon: LucideIcons.timer,
-            title: "Firefox Send transfer timeout",
-            subtitle: "The duration (in seconds) a picture upload is allowed to take",
-            value: () => viewModel.firefoxSendTransferTimeoutSetting,
-            onFinishedEditing: controller.onFirefoxSendTransferTimeoutChanged,
+          Observer(
+            builder: (_) => !viewModel.firefoxSendEnabledSetting
+                ? const SizedBox()
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SettingsTextEditTile(
+                        icon: LucideIcons.globe,
+                        title: "Firefox Send URL",
+                        subtitle: "Firefox Send Server URL",
+                        controller: controller.firefoxSendServerUrlController,
+                        onFinishedEditing: controller.onFirefoxSendServerUrlChanged,
+                      ),
+                      SettingsNumberEditTile(
+                        icon: LucideIcons.timer,
+                        title: "Firefox Send control command timeout",
+                        subtitle: "The duration (in seconds) a control command is allowed to take",
+                        value: () => viewModel.firefoxSendControlCommandTimeoutSetting,
+                        onFinishedEditing: controller.onFirefoxSendControlCommandTimeoutChanged,
+                      ),
+                      SettingsNumberEditTile(
+                        icon: LucideIcons.timer,
+                        title: "Firefox Send transfer timeout",
+                        subtitle: "The duration (in seconds) a picture upload is allowed to take. The upload is aborted and reported as failed when it takes longer.",
+                        value: () => viewModel.firefoxSendTransferTimeoutSetting,
+                        onFinishedEditing: controller.onFirefoxSendTransferTimeoutChanged,
+                      ),
+                    ],
+                  ),
           ),
         ],
       ),

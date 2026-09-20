@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Change: Allow better control over Firefox Send timeout, should fix long UI hangs over failing uploads
+
+- Dev change: Updated Flutter to 3.47.4
+- Dev change: Updated Dart and Rust dependencies
+
 ## 0.16.1
 
 - Change: Details can now be shown for successful external health checks runs
