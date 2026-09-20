@@ -9,10 +9,12 @@ import 'package:mobx/mobx.dart';
 import 'package:momento_booth/l10n/generated/app_localizations.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/fs_watcher_event_type.dart';
 import 'package:momento_booth/models/project_data.dart';
 import 'package:momento_booth/models/project_settings.dart';
+import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
@@ -46,6 +48,13 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
   @readonly
   bool _blockSaving = false;
 
+  @readonly
+  Stats _stats = const Stats();
+
+  Timer? _statsSaveTimer;
+
+  static const statsSaveTimerInterval = StatsManagerBase.statsSaveTimerInterval;
+
   static const subDirs = ["Input", "Output", "Templates"];
 
   @readonly
@@ -54,6 +63,11 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
   SerialiableRepository<ProjectSettings>? getRepo(){
     if (!_isOpen) return null;
     return TomlSerializableRepository(join(_path!.path, "ProjectSettings.toml"), ProjectSettings.fromJson);
+  }
+
+  SerialiableRepository<Stats>? getStatsRepo(){
+    if (!_isOpen) return null;
+    return TomlSerializableRepository(join(_path!.path, "Stats.toml"), Stats.fromJson);
   }
 
   @readonly
@@ -135,6 +149,10 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
   }
 
   Future<void> open(String projectPath) async {
+    // Flush the previous project's statistics to disk before switching away from it.
+    if (_isOpen) await _saveStats();
+    _statsSaveTimer?.cancel();
+
     // First task: find or create project list item
     var directory = Directory(projectPath);
     final absPath = canonicalize(directory.path);
@@ -183,8 +201,39 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
       );
     }
 
+    // Load project statistics
+    try {
+      final statsRepo = getStatsRepo()!;
+      bool hasExistingStats = await statsRepo.hasExistingData();
+
+      if (!hasExistingStats) {
+        _stats = const Stats();
+      } else {
+        _stats = await statsRepo.get();
+      }
+    } catch (e) {
+      _stats = const Stats();
+      logWarning("Could not read existing project statistics: $e\n\nThe project statistics have been cleared. As such the existing Stats file will be overwritten.");
+    }
+    _statsSaveTimer = Timer.periodic(statsSaveTimerInterval, (timer) => _saveStats());
+
     // Update available localizations
     await setAvailableLocalizations();
+  }
+
+  /// Applies the given mutation to the currently open project's statistics, if any project is open.
+  /// This does not immediately persist the change; it is flushed periodically and when switching projects.
+  @action
+  void addToProjectStats(Stats Function(Stats stats) mutator) {
+    if (!_isOpen) return;
+    _stats = mutator(_stats);
+  }
+
+  Future<void> _saveStats() async {
+    if (!_isOpen) return;
+    logDebug("Saving project statistics");
+    await getStatsRepo()!.write(_stats);
+    logDebug("Saved project statistics");
   }
 
   Future<void> setAvailableLocalizations() async {

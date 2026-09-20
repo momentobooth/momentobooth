@@ -12,6 +12,7 @@ import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
@@ -41,6 +42,7 @@ import 'package:momento_booth/views/settings_overlay/components/settings/setting
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_toggle_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_tree_view_tile.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings/settings_value_chip.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_list_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_section.dart';

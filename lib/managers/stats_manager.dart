@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
@@ -61,35 +62,43 @@ abstract class StatsManagerBase extends Subsystem with Store, Logger {
   // Updates //
   // /////// //
 
-  @action
-  void addTap() => _stats = _stats.copyWith(taps: _stats.taps + 1);
-
-  @action
-  void addPrintedPhoto({PrintSize size = PrintSize.normal}) {
-    _stats = switch (size) {
-      PrintSize.small => _stats.copyWith(printedPhotos: _stats.printedPhotosSmall + 1),
-      PrintSize.tiny => _stats.copyWith(printedPhotos: _stats.printedPhotosTiny + 1),
-      _ => _stats.copyWith(printedPhotos: _stats.printedPhotos + 1),
-    };
+  /// Applies [mutator] to both the global statistics and, if a project is currently open,
+  /// that project's statistics. This keeps call sites to a single method call while still
+  /// recording statistics at both the global and per-project level.
+  void _apply(Stats Function(Stats s) mutator) {
+    _stats = mutator(_stats);
+    getIt<ProjectManager>().addToProjectStats(mutator);
   }
 
   @action
-  void addUploadedPhoto() => _stats = _stats.copyWith(uploadedPhotos: _stats.uploadedPhotos + 1);
+  void addTap() => _apply((s) => s.copyWith(taps: s.taps + 1));
 
   @action
-  void addCapturedPhoto() => _stats = _stats.copyWith(capturedPhotos: _stats.capturedPhotos + 1);
+  void addPrintedPhoto({PrintSize size = PrintSize.normal}) {
+    _apply((s) => switch (size) {
+      PrintSize.small => s.copyWith(printedPhotosSmall: s.printedPhotosSmall + 1),
+      PrintSize.tiny => s.copyWith(printedPhotosTiny: s.printedPhotosTiny + 1),
+      _ => s.copyWith(printedPhotos: s.printedPhotos + 1),
+    });
+  }
 
   @action
-  void addCreatedSinglePhoto() => _stats = _stats.copyWith(createdSinglePhotos: _stats.createdSinglePhotos + 1);
+  void addUploadedPhoto() => _apply((s) => s.copyWith(uploadedPhotos: s.uploadedPhotos + 1));
 
   @action
-  void addRetake() => _stats = _stats.copyWith(retakes: _stats.retakes + 1);
+  void addCapturedPhoto() => _apply((s) => s.copyWith(capturedPhotos: s.capturedPhotos + 1));
 
   @action
-  void addCollageChange() => _stats = _stats.copyWith(retakes: _stats.collageChanges + 1);
+  void addCreatedSinglePhoto() => _apply((s) => s.copyWith(createdSinglePhotos: s.createdSinglePhotos + 1));
 
   @action
-  void addCreatedMultiCapturePhoto() => _stats = _stats.copyWith(createdMultiCapturePhotos: _stats.createdMultiCapturePhotos + 1);
+  void addRetake() => _apply((s) => s.copyWith(retakes: s.retakes + 1));
+
+  @action
+  void addCollageChange() => _apply((s) => s.copyWith(retakes: s.collageChanges + 1));
+
+  @action
+  void addCreatedMultiCapturePhoto() => _apply((s) => s.copyWith(createdMultiCapturePhotos: s.createdMultiCapturePhotos + 1));
 
   // /////////// //
   // Persistence //
