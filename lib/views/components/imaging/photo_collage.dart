@@ -188,10 +188,9 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   Widget get _oneLayout {
     return LayoutGrid(
       areas: '''
-          l1header
           l1content
         ''',
-      rowSizes: [1.fr, 8.fr],
+      rowSizes: [8.fr],
       columnSizes: [1.fr],
       columnGap: gap,
       rowGap: gap,
