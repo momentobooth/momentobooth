@@ -22,6 +22,7 @@ import 'package:momento_booth/views/onboarding_screen/pages/initialization_page.
 import 'package:momento_booth/views/onboarding_screen/pages/projects_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/settings_import_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/status_page.dart';
+import 'package:momento_booth/views/onboarding_screen/pages/update_available_page.dart';
 import 'package:momento_booth/views/onboarding_screen/pages/welcome_page.dart';
 import 'package:wizard_router/wizard_router.dart';
 
@@ -49,6 +50,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     '/welcome-page': WizardRoute(builder: (context) => WelcomePage(), onLoad: (_) {
       bool onboardingHasNewSteps = OnboardingStep.values.any((s) => !getIt<SettingsManager>().settings.onboardingStepsDone.contains(s));
       return onboardingHasNewSteps;
+    }),
+    '/update-available-page': WizardRoute(builder: (context) => UpdateAvailablePage(), onLoad: (_) {
+      return getIt<UpdateManager>().isUpdateAvailable;
     }),
     '/imaging-device-page': WizardRoute(builder: (context) => ImagingDevicePage(), onLoad: (_) {
       return getIt<LiveViewManager>().subsystemStatus is! SubsystemStatusOk ||
