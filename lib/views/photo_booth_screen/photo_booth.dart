@@ -12,6 +12,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/update_manager.dart';
 import 'package:momento_booth/managers/window_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
