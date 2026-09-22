@@ -181,5 +181,6 @@ jobs:
         allowUpdates: true
         prerelease: true
         replacesArtifacts: true
+        omitBodyDuringUpdate: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
         artifacts: "ci_build/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-AppleSilicon.dmg,ci_build/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-macOS-Intel.dmg"
