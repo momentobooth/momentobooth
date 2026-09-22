@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- New feature: MomentoBooth checks GitHub for newer releases on startup and shows the changelog of every newer version during onboarding
+- New feature: Added a "Releases" item to the Help menu
+- New feature: The About screen now shows which version was taken into use on which date
+- Change: Added a setting to enable or disable the check for new versions
+
+- Dev change: Release notes on GitHub now contain the changelog section of the released version
+- Dev change: Add a debug-only mock app version setting to test the update check
+
 ## 0.16.1
 
 - Change: Details can now be shown for successful external health checks runs
