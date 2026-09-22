@@ -15,6 +15,7 @@ import 'package:momento_booth/models/app_release.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/models/version_history.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/environment_info.dart';
