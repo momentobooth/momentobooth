@@ -62,6 +62,36 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
           ),
         ],
       ),
+      // The mock version is a development aid only: release builds always compare against
+      // the real application version.
+      if (kDebugMode)
+        SettingsSection(
+          title: "Update check",
+          settings: [
+            SettingsTextEditTile(
+              icon: LucideIcons.tag,
+              title: "Mock app version",
+              subtitle: "Pretend the app runs this version, so the update check finds newer releases. Leave empty to use the real version.",
+              controller: controller.mockAppVersionController,
+              onFinishedEditing: controller.onMockAppVersionChanged,
+            ),
+            SettingsActionTile(
+              icon: LucideIcons.refreshCw,
+              title: "Check for updates now",
+              subtitle: "Run the update check against GitHub without restarting the app",
+              buttonText: "Check now",
+              onPressed: controller.onCheckForUpdatePressed,
+            ),
+            Observer(
+              builder: (context) => SettingsTextDisplayTile(
+                icon: LucideIcons.gitBranch,
+                title: "Update check result",
+                subtitle: "The outcome of the most recent update check",
+                text: _updateCheckResult(getIt<UpdateManager>()),
+              ),
+            ),
+          ],
+        ),
       SettingsSection(
         title: "Actions - gPhoto2",
         settings: [
@@ -201,4 +231,15 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
       ),
     ],
   );
+}
+
+String _updateCheckResult(UpdateManager updateManager) {
+  if (updateManager.isChecking) return "Checking...";
+  if (updateManager.lastCheckError case final String error) return "Failed: $error";
+
+  AppRelease? latestRelease = updateManager.latestRelease;
+  if (latestRelease == null) return "Not checked yet";
+
+  String comparison = "running ${updateManager.currentVersion}, newest ${latestRelease.tagName}";
+  return updateManager.isUpdateAvailable ? "Update available ($comparison)" : "Up to date ($comparison)";
 }

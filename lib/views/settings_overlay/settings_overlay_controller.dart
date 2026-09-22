@@ -10,6 +10,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/live_view_manager.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
+import 'package:momento_booth/managers/update_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -75,6 +76,9 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
 
   TextEditingController? _faceRecognitionServerUrlController;
   TextEditingController get faceRecognitionServerUrlController => _faceRecognitionServerUrlController ??= TextEditingController(text: viewModel.faceRecognitionServerUrlSetting);
+
+  TextEditingController? _mockAppVersionController;
+  TextEditingController get mockAppVersionController => _mockAppVersionController ??= TextEditingController(text: viewModel.mockAppVersionSetting);
 
   // Initialization/Deinitialization
 
@@ -231,6 +235,20 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
       viewModel.updateSettings((settings) => settings.copyWith(enableWakelock: enableWakelock));
     }
   }
+
+  void onEnableUpdateCheckChanged(bool? enableUpdateCheck) {
+    if (enableUpdateCheck != null) {
+      viewModel.updateSettings((settings) => settings.copyWith(enableUpdateCheck: enableUpdateCheck));
+    }
+  }
+
+  void onMockAppVersionChanged(String? mockAppVersion) {
+    if (mockAppVersion != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(mockAppVersion: mockAppVersion.trim()));
+    }
+  }
+
+  Future<void> onCheckForUpdatePressed() => getIt<UpdateManager>().checkForUpdate();
 
   void onLiveViewAndCaptureRotateChanged(Rotate? liveViewAndCaptureRotate) {
     if (liveViewAndCaptureRotate != null) {

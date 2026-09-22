@@ -25,6 +25,13 @@ Widget _getGeneralSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
         value: () => viewModel.enableWakelockSetting,
         onChanged: controller.onEnableWakelockChanged,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.refreshCw,
+        title: "Check for new versions",
+        subtitle: "When enabled, MomentoBooth checks GitHub for a newer release on startup and shows what changed.",
+        value: () => viewModel.enableUpdateCheckSetting,
+        onChanged: controller.onEnableUpdateCheckChanged,
+      ),
       const SettingsSection(
         title: "Hotkeys",
         settings: [
