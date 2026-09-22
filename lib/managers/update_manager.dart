@@ -8,6 +8,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/app_release.dart';
 import 'package:momento_booth/models/changelog_section.dart';
+import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/version_history.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
 import 'package:momento_booth/utils/app_version.dart';
@@ -99,16 +100,26 @@ abstract class UpdateManagerBase with Store, Logger {
   // Initialization //
   // ////////////// //
 
+  /// Records the running version and, when enabled, checks for a newer release.
+  ///
+  /// This never throws. Unlike the subsystems, which are initialized through
+  /// [Subsystem.initializeSafe], this manager is awaited directly during application
+  /// startup, and an error escaping here would fail the whole startup and send the user
+  /// to the error page over something as inconsequential as an update check.
   Future<void> initialize() async {
-    await _loadVersionHistory();
-    await _recordCurrentVersion();
+    try {
+      await _loadVersionHistory();
+      await _recordCurrentVersion();
 
-    if (!_isAutomaticCheckEnabled) {
-      logDebug("Automatic update check is disabled");
-      return;
+      if (!_isAutomaticCheckEnabled) {
+        logDebug("Automatic update check is disabled");
+        return;
+      }
+
+      await checkForUpdate();
+    } catch (e, s) {
+      logError("Initialization of the update manager failed", e, s);
     }
-
-    await checkForUpdate();
   }
 
   // /////////////// //
