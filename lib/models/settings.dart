@@ -35,6 +35,7 @@ sealed class Settings with _$Settings implements TomlEncodableValue {
     @Default(1.5) double collageAspectRatio,
     @Default(0) double collagePadding,
     @Default(true) bool enableWakelock,
+    @Default(true) bool enableUpdateCheck,
     @JsonKey(defaultValue: HardwareSettings.withDefaults) required HardwareSettings hardware,
     @JsonKey(defaultValue: OutputSettings.withDefaults) required OutputSettings output,
     @JsonKey(defaultValue: UiSettings.withDefaults) required UiSettings ui,
@@ -360,6 +361,9 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(ColorVisionDeficiency.none) ColorVisionDeficiency simulateCvd,
     @Default(9) int simulateCvdSeverity,
     @Default(false) bool enableExtensivePrintJobLog,
+    /// Overrides the version the update check compares against. Only honoured in
+    /// debug builds, and ignored when empty.
+    @Default("") String mockAppVersion,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
