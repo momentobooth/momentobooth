@@ -11,6 +11,7 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
+import 'package:momento_booth/models/version_history.dart';
 import 'package:momento_booth/repositories/_all.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart';
 import 'package:momento_booth/src/rust/frb_generated.dart';
@@ -66,7 +67,8 @@ abstract class AppInitManagerBase with Store {
         ..registerManager(PrintingManager())
         ..registerManager(PhotosManager())
         ..registerManager(ExternalSystemStatusManager())
-        ..registerManager(WakelockManager());
+        ..registerManager(WakelockManager())
+        ..registerManager(UpdateManager());
 
       // ////////////////////////// //
       // Helper lib and Environment //
@@ -91,6 +93,9 @@ abstract class AppInitManagerBase with Store {
         )
         ..registerSingleton<SerialiableRepository<ProjectsList>>(
           TomlSerializableRepository(path.join(appDataPath, "Projects.toml"), ProjectsList.fromJson),
+        )
+        ..registerSingleton<SerialiableRepository<VersionHistory>>(
+          TomlSerializableRepository(path.join(appDataPath, "VersionHistory.toml"), VersionHistory.fromJson),
         );
 
       // /////////////////////// //
@@ -100,6 +105,7 @@ abstract class AppInitManagerBase with Store {
       await _setStatusAndRun('Initializing settings manager', getIt<SettingsManager>().initializeSafe);
       await _setStatusAndRun('Creating paths', _createPathsSafe);
       await _setStatusAndRun('Initializing statistics manager', getIt<StatsManager>().initializeSafe);
+      await _setStatusAndFireAndForget('Checking for updates', getIt<UpdateManager>().initialize);
 
       // ////////////// //
       // Other managers //
