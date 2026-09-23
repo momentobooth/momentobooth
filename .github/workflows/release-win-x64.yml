@@ -128,6 +128,27 @@ jobs:
         echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
         echo "build_number=$build_number" >> $GITHUB_OUTPUT
 
+    # The in-app update check reads its release notes from CHANGELOG.md on the default branch,
+    # but the release body should carry them as well for people browsing GitHub.
+    - name: Compose release notes
+      id: compose_release_notes
+      shell: bash
+      run: |
+        version="${{ steps.extract_release_version.outputs.friendly_version }}"
+        notes_file="release-notes.md"
+        section=$(awk -v heading="## $version" '$0 == heading { capture = 1; next } capture && /^## / { exit } capture { print }' CHANGELOG.md)
+        {
+          if [ -n "$(echo "$section" | tr -d '[:space:]')" ]; then
+            echo "## What's changed in $version"
+            echo "$section"
+          else
+            echo "No changelog entry was found for $version."
+          fi
+          echo
+          echo "For Windows users: MomentoBooth needs the [Visual C++ Redistributable runtime libraries](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170). The setup version will install these automatically. When using the zip, install them manually."
+        } > "$notes_file"
+        echo "notes_file=$notes_file" >> $GITHUB_OUTPUT
+
     - name: Build project
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter build windows -v --no-pub --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ steps.extract_release_version.outputs.distributor_version }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define LIBGPHOTO2_GIT_REV=${{ env.LIBGPHOTO2_GIT_REV }}
@@ -175,5 +196,4 @@ jobs:
         replacesArtifacts: true
         tag: ${{ steps.extract_release_version.outputs.release_version }}
         artifacts: "${{ env.DEV_DRIVE }}/momentobooth/build/windows/x64/runner/Release/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64.zip,${{ env.DEV_DRIVE }}/momentobooth/windows/installer/MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Win-x64-Setup.exe"
-        body: |
-          For Windows users: MomentoBooth needs the [Visual C++ Redistributable runtime libraries](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170). The setup version will install these automatically. When using the zip, install them manually.
+        bodyFile: ${{ steps.compose_release_notes.outputs.notes_file }}

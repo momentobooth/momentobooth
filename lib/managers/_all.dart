@@ -9,5 +9,6 @@ export 'project_manager.dart';
 export 'settings_manager.dart';
 export 'sfx_manager.dart';
 export 'stats_manager.dart';
+export 'update_manager.dart';
 export 'wakelock_manager.dart';
 export 'window_manager.dart';

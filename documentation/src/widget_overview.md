@@ -13,6 +13,7 @@ Each line follows the format `path` — `WidgetClassName` — description, to ke
     - [animations/](#lib-views-components-animations) — reusable fade/rotate/Lottie animation wrappers.
     - [buttons/](#lib-views-components-buttons) — generic dialog-style buttons.
     - [config/](#lib-views-components-config) — widgets that adapt behavior to app configuration/settings.
+    - [content/](#lib-views-components-content) — widgets that render document content such as Markdown.
     - [dialogs/](#lib-views-components-dialogs) — generic modal dialogs used across the app.
     - [imaging/](#lib-views-components-imaging) — image/camera rendering and transform widgets.
     - [indicators/](#lib-views-components-indicators) — small status/progress indicator widgets.
@@ -71,6 +72,14 @@ Generic dialog-style buttons.
 Widgets that adapt behavior to app configuration/settings.
 
 - `set_scroll_configuration.dart` — `SetScrollConfiguration` — wraps `child` in a `ScrollConfiguration` that conditionally allows mouse-drag scrolling.
+
+<a id="lib-views-components-content"></a>
+
+### lib/views/components/content/
+
+Widgets that render document content.
+
+- `markdown_view.dart` — `MarkdownView` — renders parsed Markdown blocks (headings, paragraphs, bullets, inline bold/italic/code/links) with Fluent UI typography, opening links in the browser.
 
 <a id="lib-views-components-dialogs"></a>
 
