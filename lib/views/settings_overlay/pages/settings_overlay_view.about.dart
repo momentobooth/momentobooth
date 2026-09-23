@@ -8,23 +8,26 @@ Widget get _aboutTab {
       shrinkWrap: true,
       children: [
         SvgPicture.asset('assets/svg/logo.svg'),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("Thank you for using ${packageInfo.appName}!"),
-            const SizedBox(height: 16),
-            Text('App version: ${packageInfo.version} (build ${packageInfo.buildNumber})'),
-            const Text('Flutter version: ${FlutterVersion.version}'),
-            const SizedBox(height: 8),
-            Text('Helper library version: ${helperLibraryVersionInfo.libraryVersion}'),
-            Text('Helper library Rust version: ${helperLibraryVersionInfo.rustVersion}'),
-            Text('Helper library target: ${helperLibraryVersionInfo.rustTarget}'),
-            const SizedBox(height: 8),
-            Text('libusb version: ${helperLibraryVersionInfo.libusbVersion}'),
-            Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}${libgphoto2GitRev.isNotEmpty ? ' (git rev ${libgphoto2GitRev.substring(0, 7)})' : ''}'),
-            const SizedBox(height: 16),
-            Observer(builder: (context) => _versionHistory(context, getIt<UpdateManager>().versionHistory)),
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Thank you for using MomentoBooth!"),
+              const SizedBox(height: 16),
+              Text('App version: ${packageInfo.version} (build ${packageInfo.buildNumber})'),
+              const Text('Flutter version: ${FlutterVersion.version}'),
+              const SizedBox(height: 8),
+              Text('Helper library version: ${helperLibraryVersionInfo.libraryVersion}'),
+              Text('Helper library Rust version: ${helperLibraryVersionInfo.rustVersion}'),
+              Text('Helper library target: ${helperLibraryVersionInfo.rustTarget}'),
+              const SizedBox(height: 8),
+              Text('libusb version: ${helperLibraryVersionInfo.libusbVersion}'),
+              Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}${libgphoto2GitRev.isNotEmpty ? ' (git rev ${libgphoto2GitRev.substring(0, 7)})' : ''}'),
+              const SizedBox(height: 16),
+              Observer(builder: (context) => _versionHistory(context, getIt<UpdateManager>().versionHistory)),
+            ],
+          ),
         ),
       ],
     ),
@@ -38,6 +41,7 @@ Widget _versionHistory(BuildContext context, VersionHistory versionHistory) {
 
   return Expander(
     header: const Text('Version history'),
+    contentBackgroundColor: Colors.white,
     content: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4,
