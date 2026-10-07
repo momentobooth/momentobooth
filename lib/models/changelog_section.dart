@@ -1,4 +1,3 @@
-import 'package:momento_booth/models/markdown_node.dart';
 import 'package:momento_booth/utils/app_version.dart';
 
 /// The changelog entries belonging to a single released version.
@@ -9,9 +8,9 @@ class ChangelogSection {
 
   final AppVersion parsedVersion;
 
-  /// The body of the section, as parsed Markdown blocks.
-  final List<MarkdownBlock> blocks;
+  /// The body of the section, as Markdown.
+  final String body;
 
-  const ChangelogSection({required this.version, required this.parsedVersion, required this.blocks});
+  const ChangelogSection({required this.version, required this.parsedVersion, required this.body});
 
 }

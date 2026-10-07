@@ -80,7 +80,7 @@ Widgets that adapt behavior to app configuration/settings.
 
 Widgets that render document content.
 
-- `markdown_view.dart` — `MarkdownView` — renders parsed Markdown blocks (headings, paragraphs, bullets, inline bold/italic/code/links) with Fluent UI typography, opening links in the browser.
+- `markdown_view.dart` — `MarkdownView` — renders Markdown (via `flutter_markdown_plus`) with a Fluent UI style sheet, opening links in the browser.
 
 <a id="lib-views-components-dialogs"></a>
 

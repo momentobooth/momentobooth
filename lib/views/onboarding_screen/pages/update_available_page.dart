@@ -79,7 +79,7 @@ class UpdateAvailablePage extends StatelessWidget {
           spacing: 8.0,
           children: [
             Text(section.version, style: FluentTheme.of(context).typography.subtitle),
-            MarkdownView(blocks: section.blocks),
+            MarkdownView(data: section.body),
           ],
         );
       },
