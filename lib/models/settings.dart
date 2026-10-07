@@ -392,6 +392,8 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(2500) int videoPreRecordDelayMs,
     @Default(0) int videoPostRecordDelayMs,
     @Default("") String ffmpegArgumentsForRecording,
+    @Default(false) bool enableVideoAudioProcessing,
+    @Default(false) bool enableVideoReceiptPrinting,
     @Default([]) List<OpenAiEndpointSetting> openAiEndpoints,
     @Default("") String transcriptionEndpointId,
     @Default("") String transcriptionModel,

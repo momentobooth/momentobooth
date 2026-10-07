@@ -84,9 +84,13 @@ abstract class PhotosManagerBase with Store, Logger {
       }
   }
 
-  Future<String> recordAndProcessAudio() async {
+  /// Records audio and, when audio processing is enabled, transcribes and summarizes it.
+  /// Returns null when processing is disabled.
+  Future<String?> recordAndProcessAudio() async {
     final audioFile = File(path.join(currentVideoDir!.path, "audio.m4a"));
     await recordAudio(audioFile);
+    if (!getIt<SettingsManager>().settings.debug.enableVideoAudioProcessing) return null;
+
     summaryText = await processAudio(audioFile, currentVideoDir!);
     return summaryText!;
   }

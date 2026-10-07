@@ -113,7 +113,12 @@ abstract class RecordingCountdownScreenViewModelBase extends ScreenViewModelBase
   void navigateAfterCapture() {
     if (!captureComplete) return;
     // getIt<StatsManager>().addCreatedSinglePhoto();
-    router.go(PostRecordingScreen.defaultRoute);
+    // The post recording screen only shows the processing result, so skip it when processing is disabled
+    if (getIt<SettingsManager>().settings.debug.enableVideoAudioProcessing) {
+      router.go(PostRecordingScreen.defaultRoute);
+    } else {
+      router.go(StartScreen.defaultRoute);
+    }
   }
 
 }

@@ -810,6 +810,18 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnableVideoAudioProcessingChanged(bool? enableVideoAudioProcessing) {
+    if (enableVideoAudioProcessing != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(enableVideoAudioProcessing: enableVideoAudioProcessing));
+    }
+  }
+
+  void onEnableVideoReceiptPrintingChanged(bool? enableVideoReceiptPrinting) {
+    if (enableVideoReceiptPrinting != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(enableVideoReceiptPrinting: enableVideoReceiptPrinting));
+    }
+  }
+
   /// Adds or updates [endpoint] and stores or removes its API key. A null [newApiKey] keeps the stored key.
   Future<void> onOpenAiEndpointSaved(OpenAiEndpointSetting endpoint, String? newApiKey, bool clearApiKey) async {
     final secretKey = openAiEndpointSecretKey(endpoint.id);

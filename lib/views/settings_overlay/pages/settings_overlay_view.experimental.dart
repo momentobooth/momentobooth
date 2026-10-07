@@ -49,6 +49,20 @@ Widget _getExperimentalBlock(SettingsOverlayViewModel viewModel, SettingsOverlay
         controller: controller.ffmpegArgumentsForRecordingController,
         onFinishedEditing: controller.onFfmpegArgumentsForRecordingChanged,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.audioLines,
+        title: "Process recorded audio",
+        subtitle: "Transcribe and summarize the recorded audio and show the result after recording. When disabled, the photo booth returns to the start screen right after recording.",
+        value: () => viewModel.enableVideoAudioProcessingSetting,
+        onChanged: controller.onEnableVideoAudioProcessingChanged,
+      ),
+      SettingsToggleTile(
+        icon: LucideIcons.printer,
+        title: "Print on receipt printer",
+        subtitle: "Print the snapshot and summary on the receipt printer after recording.",
+        value: () => viewModel.enableVideoReceiptPrintingSetting,
+        onChanged: controller.onEnableVideoReceiptPrintingChanged,
+      ),
       // Observer so the items update when endpoints are added, renamed or removed
       Observer(
         builder: (_) => SettingsComboBoxTile<String?>(
