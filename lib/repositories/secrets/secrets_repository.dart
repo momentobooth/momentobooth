@@ -1,6 +1,8 @@
 const String mqttPasswordSecretKey = 'mqtt_password';
 const String settingsPincodeKey = 'settings_pin';
-const String openaiAPISecretKey = 'openai_api_key';
+
+/// Returns the secret key under which the API key of the OpenAI-compatible endpoint with [endpointId] is stored.
+String openAiEndpointSecretKey(String endpointId) => 'openai_api_key.$endpointId';
 
 abstract class SecretsRepository {
 

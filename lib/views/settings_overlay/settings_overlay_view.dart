@@ -30,6 +30,8 @@ import 'package:momento_booth/views/settings_overlay/components/aspect_ratio_pre
 import 'package:momento_booth/views/settings_overlay/components/external_system_check_edit_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/components/external_system_check_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/import_field.dart';
+import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_edit_dialog.dart';
+import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_action.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_toggle.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_action_tile.dart';
@@ -203,7 +205,7 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                   key: ValueKey(SettingsPageKey.experimental),
                   icon: const Icon(LucideIcons.flaskConical),
                   title: const Text("Experimental"),
-                  body: Builder(builder: (_) => _getExperimentalTab(viewModel, controller)),
+                  body: Builder(builder: (context) => _getExperimentalTab(viewModel, controller, context)),
                 ),
                 PaneItem(
                   key: ValueKey(SettingsPageKey.log),

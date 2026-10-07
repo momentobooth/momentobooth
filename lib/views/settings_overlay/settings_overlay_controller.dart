@@ -13,6 +13,7 @@ import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
@@ -82,6 +83,9 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   TextEditingController? _textSummaryPromptController;
   TextEditingController get textSummaryPromptController => _textSummaryPromptController ??= TextEditingController(text: viewModel.textSummaryPromptSetting);
   
+  TextEditingController? _transcriptionModelController;
+  TextEditingController get transcriptionModelController => _transcriptionModelController ??= TextEditingController(text: viewModel.transcriptionModelSetting);
+
   TextEditingController? _llmModelController;
   TextEditingController get llmModelController => _llmModelController ??= TextEditingController(text: viewModel.llmModelSetting);
 
@@ -803,6 +807,57 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
   void onFfmpegArgumentsForRecordingChanged(String? ffmpegArgumentsForRecording) {
     if (ffmpegArgumentsForRecording != null) {
       viewModel.updateSettings((settings) => settings.copyWith.debug(ffmpegArgumentsForRecording: ffmpegArgumentsForRecording));
+    }
+  }
+
+  /// Adds or updates [endpoint] and stores or removes its API key. A null [newApiKey] keeps the stored key.
+  Future<void> onOpenAiEndpointSaved(OpenAiEndpointSetting endpoint, String? newApiKey, bool clearApiKey) async {
+    final secretKey = openAiEndpointSecretKey(endpoint.id);
+    if (clearApiKey) {
+      await getIt<SecretsRepository>().deleteSecret(secretKey);
+    } else if (newApiKey != null) {
+      await getIt<SecretsRepository>().storeSecret(secretKey, newApiKey);
+    }
+
+    final endpoints = [...viewModel.openAiEndpointsSetting];
+    final index = endpoints.indexWhere((e) => e.id == endpoint.id);
+    if (index >= 0) {
+      endpoints[index] = endpoint;
+    } else {
+      endpoints.add(endpoint);
+    }
+    await viewModel.updateSettings((settings) => settings.copyWith.debug(openAiEndpoints: endpoints));
+  }
+
+  /// Removes [endpoint] and its API key, and clears any action that referenced it.
+  Future<void> onOpenAiEndpointDeleted(OpenAiEndpointSetting endpoint) async {
+    await getIt<SecretsRepository>().deleteSecret(openAiEndpointSecretKey(endpoint.id));
+
+    await viewModel.updateSettings((settings) {
+      final debug = settings.debug;
+      return settings.copyWith.debug(
+        openAiEndpoints: debug.openAiEndpoints.where((e) => e.id != endpoint.id).toList(),
+        transcriptionEndpointId: debug.transcriptionEndpointId == endpoint.id ? '' : debug.transcriptionEndpointId,
+        summaryEndpointId: debug.summaryEndpointId == endpoint.id ? '' : debug.summaryEndpointId,
+      );
+    });
+  }
+
+  void onTranscriptionEndpointChanged(String? endpointId) {
+    if (endpointId != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(transcriptionEndpointId: endpointId));
+    }
+  }
+
+  void onTranscriptionModelChanged(String? transcriptionModel) {
+    if (transcriptionModel != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(transcriptionModel: transcriptionModel));
+    }
+  }
+
+  void onSummaryEndpointChanged(String? endpointId) {
+    if (endpointId != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(summaryEndpointId: endpointId));
     }
   }
 

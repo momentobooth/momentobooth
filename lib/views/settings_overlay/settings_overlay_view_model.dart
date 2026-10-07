@@ -313,8 +313,16 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   int get videoPreRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPreRecordDelayMs;
   int get videoPostRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPostRecordDelayMs;
   String get ffmpegArgumentsForRecordingSetting => getIt<SettingsManager>().settings.debug.ffmpegArgumentsForRecording;
+  List<OpenAiEndpointSetting> get openAiEndpointsSetting => getIt<SettingsManager>().settings.debug.openAiEndpoints;
+  /// The selected transcription endpoint id, or null when none is selected or the selected endpoint no longer exists.
+  String? get transcriptionEndpointIdSetting => _existingOpenAiEndpointId(getIt<SettingsManager>().settings.debug.transcriptionEndpointId);
+  String get transcriptionModelSetting => getIt<SettingsManager>().settings.debug.transcriptionModel;
+  /// The selected summary endpoint id, or null when none is selected or the selected endpoint no longer exists.
+  String? get summaryEndpointIdSetting => _existingOpenAiEndpointId(getIt<SettingsManager>().settings.debug.summaryEndpointId);
   String get textSummaryPromptSetting => getIt<SettingsManager>().settings.debug.textSummaryPrompt;
   String get llmModelSetting => getIt<SettingsManager>().settings.debug.llmModel;
+
+  String? _existingOpenAiEndpointId(String id) => openAiEndpointsSetting.any((e) => e.id == id) ? id : null;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

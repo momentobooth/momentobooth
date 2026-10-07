@@ -346,6 +346,33 @@ sealed class ExternalSystemCheckSetting with _$ExternalSystemCheckSetting implem
 
 }
 
+// /////////////////////// //
+// OpenAI-compatible APIs  //
+// /////////////////////// //
+
+const String defaultOpenAiBaseUrl = 'https://api.openai.com/v1';
+
+/// An OpenAI-compatible API endpoint. The API key is not part of the settings file, but is stored in the
+/// `SecretsRepository` under a key derived from [id] (see `openAiEndpointSecretKey`).
+@Freezed(fromJson: true, toJson: true)
+sealed class OpenAiEndpointSetting with _$OpenAiEndpointSetting implements TomlEncodableValue {
+
+  const OpenAiEndpointSetting._();
+
+  const factory OpenAiEndpointSetting({
+    /// Stable identifier, used to reference this endpoint from other settings and to store its API key.
+    required String id,
+    required String name,
+    @Default(defaultOpenAiBaseUrl) String baseUrl,
+  }) = _OpenAiEndpointSetting;
+
+  factory OpenAiEndpointSetting.fromJson(Map<String, Object?> json) => _$OpenAiEndpointSettingFromJson(json);
+
+  @override
+  Map<String, dynamic> toTomlValue() => toJson();
+
+}
+
 // ////////////// //
 // Debug Settings //
 // ////////////// //
@@ -365,8 +392,12 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(2500) int videoPreRecordDelayMs,
     @Default(0) int videoPostRecordDelayMs,
     @Default("") String ffmpegArgumentsForRecording,
+    @Default([]) List<OpenAiEndpointSetting> openAiEndpoints,
+    @Default("") String transcriptionEndpointId,
+    @Default("") String transcriptionModel,
+    @Default("") String summaryEndpointId,
     @Default("Summarize the following transcript in one sentence:") String textSummaryPrompt,
-    @Default("gpt-4o-mini") String llmModel,
+    @Default("") String llmModel,
   }) = _DebugSettings;
 
   factory DebugSettings.withDefaults() => DebugSettings.fromJson({});
