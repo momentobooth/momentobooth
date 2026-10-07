@@ -152,11 +152,6 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     return await gphoto2GetCameraDetails(handleId: handleId!);
   }
 
-  Future<GroupWidget> getConfig() async {
-    if (handleId == null) throw GPhoto2Exception("Camera not open.");
-    return await gphoto2ListConfig(handleId: handleId!);
-  }
-
   @override
   Duration get captureDelay => Duration(milliseconds: getIt<SettingsManager>().settings.hardware.captureDelayGPhoto2);
 

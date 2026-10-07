@@ -12,9 +12,15 @@ import 'package:momento_booth/views/components/imaging/rotate_flip_crop.dart';
 
 class LiveView extends StatefulWidget {
 
+  /// The BoxFit to use for the live view image.
   final BoxFit fit;
+  /// Whether to apply transformations (rotation, flipping, cropping) to the live view image.
   final bool applyPostProcessing;
+  /// Whether to show the overlay image on top of the live view.
+  /// It is shown for the "front layer" of the live view background, not the blurry "back layer".
+  /// An overlay is only displayed if an overlay image template exists.
   final bool showOverlay;
+  /// The σ (sigma) value for the Gaussian blur applied to the live view, for the blurry "back layer".
   final double blurSigma;
 
   const LiveView({
@@ -92,10 +98,47 @@ class _LiveViewState extends State<LiveView> with SingleTickerProviderStateMixin
             ),
           );
 
+          Widget lvImage = textureBox;
           if (widget.applyPostProcessing) {
-            return RotateFlipCrop(rotate: _rotate, flip: _flip, aspectRatio: _aspectRatioAnimation.value, child: textureBox);
+            final double targetAspectRatio = _getCurrentTargetAspectRatio();
+
+            // If the target aspect ratio has changed, update the Tween and start the animation
+            if (_animationEnd != targetAspectRatio) {
+              _animationBegin = _aspectRatioAnimation.value; // Start from current animated value
+              _animationEnd = targetAspectRatio;
+
+              // Re-drive the animation with new begin/end values
+              _aspectRatioAnimation = _aspectRatioController
+                  .drive(CurveTween(curve: Curves.ease))
+                  .drive(Tween<double>(begin: _animationBegin, end: _animationEnd));
+
+              _aspectRatioController.forward(from: 0); // Start the animation
+            }
+
+            lvImage = AnimatedBuilder(
+              animation: _aspectRatioAnimation,
+              builder: (context, child) {
+                return RotateFlipCrop(
+                  rotate: _rotate,
+                  flip: _flip,
+                  aspectRatio: _aspectRatioAnimation.value, // Use the animated value
+                  child: textureBox,
+                );
+              },
+            );
+          }
+
+          // When an overlay image template exists and the showOverlay flag is true, we stack the live view image with the overlay image.
+          if (overlayImage != null && widget.showOverlay) {
+            return Stack(
+              fit: StackFit.passthrough,
+              children: [
+                lvImage,
+                Positioned.fill(child: Image.file(overlayImage, fit: BoxFit.cover)),
+              ],
+            );
           } else {
-            return textureBox;
+            return lvImage;
           }
         },
       ),
