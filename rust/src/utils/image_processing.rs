@@ -34,7 +34,7 @@ pub fn execute_operations(image: &RawImage, operations: &Vec<ImageOperation>) ->
 fn crop_content_region(src_raw_image: &mut ImageBuffer<image::Rgba<u8>, Vec<u8>>) -> ImageBuffer<image::Rgba<u8>, Vec<u8>> {
     match detect_borders(src_raw_image, Rgb([10, 10, 10])) {
         Ok(content_region) => {
-            imageops::crop(src_raw_image, content_region.x as u32, content_region.y as u32, content_region.width as u32, content_region.y as u32).to_image()
+            imageops::crop(src_raw_image, content_region.x as u32, content_region.y as u32, content_region.width as u32, content_region.height as u32).to_image()
         }
         Err(e) => {
             warn!("No valid content region detected, {:?}", e);

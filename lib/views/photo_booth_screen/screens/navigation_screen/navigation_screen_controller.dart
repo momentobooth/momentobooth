@@ -45,7 +45,7 @@ class NavigationScreenController extends ScreenControllerBase<NavigationScreenVi
         showUserDialog(
           dialog: ModalDialog(
             title: "Action not possible",
-            body: Text("A camera with gPhoto2 is required to use the recording feature."),
+            body: Text("A camera with gPhoto2 is required to use the video message feature."),
             dialogType: ModalDialogType.warning,
           ),
           barrierDismissible: true,

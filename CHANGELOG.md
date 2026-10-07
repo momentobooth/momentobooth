@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- New feature (experimental): Video message mode, in which guests record a short video message for their hosts. Requires gPhoto2 camera. Can be enabled in the new Experimental settings tab
+- New feature (experimental): Audio of video messages can be recorded through FFmpeg, then transcribed and summarized through configurable OpenAI-compatible endpoints (including local servers)
+- New feature (experimental): The summary of a video message can be printed together with a snapshot on an ESC/POS receipt printer (currently fixed to the Wincor Nixdorf TH230+)
+
+- Dev change: Fix camera config key used by the debug actions to start and stop video recording
+- Dev change: Add image processing operation to automatically crop black borders from an image, not used yet. Should be useful when working with HDMI capture instead of gPhoto2 liveview.
+
 ## 0.16.1
 
 - Change: Details can now be shown for successful external health checks runs
