@@ -50,6 +50,7 @@ Reusable fade/rotate/Lottie animation wrappers.
 - `animated_delayed_fade_in.dart` — `AnimatedDelayedFadeIn` — fades in `child` after a configurable delay.
 - `fading_text_swticher.dart` — `FadingTextSwitcher` — cycles through a list of strings with a fade + auto-resize animation.
 - `lottie_animation_wrapper.dart` — `LottieAnimationWrapper` — overlays positioned/rotated Lottie animations on top of `child`.
+- `pulsating_opacity.dart` — `PulsatingOpacity` — continuously fades `child` between a min and max opacity (e.g. a blinking "recording" dot).
 - `repeating_indicator.dart` — `RepeatingIndicator` — periodically shows a Lottie animation at a random position (idle attention-grabber).
 - `rotating_collage_box.dart` — `RotatingCollageBox` — animates rotation of a collage widget when the `turns` prop changes.
 
@@ -101,9 +102,10 @@ Generic modal dialogs used across the app.
 Image/camera rendering and transform widgets.
 
 - `image_with_loader_fallback.dart` — `ImageWithLoaderFallback` — image loader with placeholder/fallback while decoding, `.memory()`/`.file()` constructors, optional rotate/flip/crop.
-- `live_view.dart` — `LiveView` — renders the live camera-preview texture with rotate/flip/crop, overlay image and filter settings.
+- `live_view.dart` — `LiveView` — renders the live camera-preview texture with rotate/flip/crop, overlay image and filter settings; animates the crop aspect ratio to 16:9 while the recording layout is active.
 - `live_view_background.dart` — `LiveViewBackground` — conditionally shows a blurred/live camera feed as a full-screen background depending on route/settings.
 - `photo_collage.dart` — `PhotoCollage` — renders a full photo collage (background/middle/foreground layers, logo, layout) from captured photos.
+- `quote_collage.dart` — `QuoteCollage` — receipt-width (576 px) column with a recording snapshot, the transcript summary and an optional separator template; `QuoteCollageState.getCollageImage()` screenshots it for the receipt printer.
 - `rotate_flip_crop.dart` — `RotateFlipCrop` — applies rotate/flip/aspect-ratio crop transforms to a `child`.
 
 <a id="lib-views-components-indicators"></a>
@@ -118,6 +120,7 @@ Small status/progress indicator widgets.
 - `subsystem_status_display.dart` — `SubsystemStatusDisplay` — expandable tile with a subsystem's status/message/recovery actions.
 - `subsystem_status_icon.dart` — `SubsystemStatusIcon` — maps a `SubsystemStatus` to a colored icon.
 - `subsystem_status_list.dart` — `SubsystemStatusList` — observable list of `SubsystemStatusDisplay` tiles.
+- `time_counter.dart` — `TimeCounter` — elapsed-time display (`mm:ss:mmm`, animated digits) counting up to `targetDuration`; started via `TimeCounterState.startTimer()`.
 
 <a id="lib-views-components-transitions"></a>
 
@@ -264,3 +267,5 @@ These exist on purpose but are easy to confuse — read the note before adding a
 4. `PhotoBoothTitle` vs `PhotoBoothSubtitle` — intentional theme-driven pair, same shape.
 5. `QuickAction` vs `QuickToggle` — intentional button/toggle pair, same visual shape.
 6. `MyDropRegion` (`settings_overlay/components/import_field.dart`) has a generic/placeholder name but is specific to TOML settings import — don't assume it's a general-purpose drop target.
+7. `CaptureCounter` vs `TimeCounter` — `CaptureCounter` counts down before a photo capture; `TimeCounter` counts elapsed time up during a video recording.
+8. `PhotoCollage` vs `QuoteCollage` — `PhotoCollage` is the template-driven photo collage; `QuoteCollage` is a fixed receipt-printer layout for the video recording flow.

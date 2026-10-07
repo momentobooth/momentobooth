@@ -14,20 +14,6 @@ import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart';
 import 'package:screenshot/screenshot.dart';
 
-enum TemplateKind {
-
-  front(0, "front"),
-  back(1, "back");
-
-  // can add more properties or getters/methods if needed
-  final int value;
-  final String name;
-
-  // can use named parameters if you want
-  const TemplateKind(this.value, this.name);
-
-}
-
 class QuoteCollage extends StatefulWidget {
 
   final double padding;
