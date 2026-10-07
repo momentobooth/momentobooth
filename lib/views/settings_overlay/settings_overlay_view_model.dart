@@ -308,6 +308,23 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   ColorVisionDeficiency get simulateCvd => getIt<SettingsManager>().settings.debug.simulateCvd;
   int get simulateCvdSeverity => getIt<SettingsManager>().settings.debug.simulateCvdSeverity;
   bool get enableExtensivePrintJobLog => getIt<SettingsManager>().settings.debug.enableExtensivePrintJobLog;
+  bool get enableVideoModeSetting => getIt<SettingsManager>().settings.debug.enableVideoMode;
+  int get videoDurationSetting => getIt<SettingsManager>().settings.debug.videoDuration;
+  int get videoPreRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPreRecordDelayMs;
+  int get videoPostRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPostRecordDelayMs;
+  String get ffmpegArgumentsForRecordingSetting => getIt<SettingsManager>().settings.debug.ffmpegArgumentsForRecording;
+  bool get enableVideoAudioProcessingSetting => getIt<SettingsManager>().settings.debug.enableVideoAudioProcessing;
+  bool get enableVideoReceiptPrintingSetting => getIt<SettingsManager>().settings.debug.enableVideoReceiptPrinting;
+  List<OpenAiEndpointSetting> get openAiEndpointsSetting => getIt<SettingsManager>().settings.debug.openAiEndpoints;
+  /// The selected transcription endpoint id, or null when none is selected or the selected endpoint no longer exists.
+  String? get transcriptionEndpointIdSetting => _existingOpenAiEndpointId(getIt<SettingsManager>().settings.debug.transcriptionEndpointId);
+  String get transcriptionModelSetting => getIt<SettingsManager>().settings.debug.transcriptionModel;
+  /// The selected summary endpoint id, or null when none is selected or the selected endpoint no longer exists.
+  String? get summaryEndpointIdSetting => _existingOpenAiEndpointId(getIt<SettingsManager>().settings.debug.summaryEndpointId);
+  String get textSummaryPromptSetting => getIt<SettingsManager>().settings.debug.textSummaryPrompt;
+  String get llmModelSetting => getIt<SettingsManager>().settings.debug.llmModel;
+
+  String? _existingOpenAiEndpointId(String id) => openAiEndpointsSetting.any((e) => e.id == id) ? id : null;
 
   double get outputResHeightExcl => resolutionMultiplier * 1000;
   double get outputResWidthExcl => outputResHeightExcl/collageAspectRatioSetting;

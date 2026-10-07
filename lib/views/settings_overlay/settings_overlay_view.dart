@@ -15,6 +15,8 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
+import 'package:momento_booth/src/rust/api/printing.dart';
+import 'package:momento_booth/src/rust/models/receipt_printing.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/views/base/screen_view_base.dart';
@@ -28,6 +30,8 @@ import 'package:momento_booth/views/settings_overlay/components/aspect_ratio_pre
 import 'package:momento_booth/views/settings_overlay/components/external_system_check_edit_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/components/external_system_check_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/import_field.dart';
+import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_edit_dialog.dart';
+import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_action.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_toggle.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_action_tile.dart';
@@ -53,6 +57,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 part 'pages/settings_overlay_view.about.dart';
 part 'pages/settings_overlay_view.debug.dart';
+part 'pages/settings_overlay_view.experimental.dart';
 part 'pages/settings_overlay_view.face_recognition.dart';
 part 'pages/settings_overlay_view.general.dart';
 part 'pages/settings_overlay_view.hardware.dart';
@@ -197,6 +202,12 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                   body: Builder(builder: (_) => _getDebugTab(viewModel, controller)),
                 ),
                 PaneItem(
+                  key: ValueKey(SettingsPageKey.experimental),
+                  icon: const Icon(LucideIcons.flaskConical),
+                  title: const Text("Experimental"),
+                  body: Builder(builder: (context) => _getExperimentalTab(viewModel, controller, context)),
+                ),
+                PaneItem(
                   key: ValueKey(SettingsPageKey.log),
                   icon: const Icon(LucideIcons.scrollText),
                   title: const Text("Log"),
@@ -253,6 +264,7 @@ enum SettingsPageKey {
   subsystemStatus,
   stats,
   debug,
+  experimental,
   log,
   about;
 

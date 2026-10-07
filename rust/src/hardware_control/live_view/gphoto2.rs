@@ -2,7 +2,7 @@ use std::{cell::Cell, collections::HashSet, env, hash::{Hash, Hasher}, sync::{at
 
 use ahash::AHasher;
 
-use ::gphoto2::{Camera, Context, Error, camera::CameraEvent, list::CameraDescriptor, widget::{GroupWidget, RadioWidget, RangeWidget, TextWidget, ToggleWidget, Widget}};
+use ::gphoto2::{Camera, Context, Error, camera::CameraEvent, list::CameraDescriptor, widget::{RadioWidget, RangeWidget, TextWidget, ToggleWidget}};
 use parking_lot::Mutex;
 use tokio::{sync::Mutex as AsyncMutex, time::sleep};
 use tokio::task::JoinHandle as AsyncJoinHandle;
@@ -386,11 +386,10 @@ pub async fn list_files(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, folder: Stri
   })
 }
 
-
 pub async fn set_video_recording_state(camera_ref: Arc<AsyncMutex<GPhoto2Camera>>, record: bool) -> Result<()> {
   let camera = camera_ref.lock().await;
 
-  let movie_toggle = camera.camera.config_key::<ToggleWidget>("/main/actions/movie").await?;
+  let movie_toggle = camera.camera.config_key::<ToggleWidget>("movie").await?;
   movie_toggle.set_toggled(record);
   camera.camera.set_config(&movie_toggle).await?;
 
