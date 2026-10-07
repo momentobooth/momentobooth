@@ -6,20 +6,23 @@
 - MomentoBooth checks GitHub for newer releases on startup and shows the changelog of every newer version during onboarding
 - Added a "Releases" item to the Help menu
 - The About screen now shows which version was taken into use on which date
+- Statistics are now also tracked per project, stored in a `Stats.toml` file in the project directory
 - (experimental) Video message mode, in which guests record a short video message for their hosts. Requires gPhoto2 camera. Can be enabled in the new Experimental settings tab
 - (experimental) Audio of video messages can be recorded through FFmpeg, then transcribed and summarized through configurable OpenAI-compatible endpoints (including local servers)
 - (experimental) The summary of a video message can be printed together with a snapshot on an ESC/POS receipt printer (currently fixed to the Wincor Nixdorf TH230+)
 
 ### Changes
 - Added a setting to enable or disable the check for new versions
-- Dev change: Fix camera config key used by the debug actions to start and stop video recording
+
+### Bugfixes
+- Smaller print sizes were not logged in the statistics
 
 ### Dev changes
 - Release notes on GitHub now contain the changelog section of the released version
 - Add a debug-only mock app version setting to test the update check
+- Render the in-app changelog with flutter_markdown_plus instead of a custom parser
+- Fix camera config key used by the debug actions to start and stop video recording
 - Add image processing operation to automatically crop black borders from an image, not used yet. Should be useful when working with HDMI capture instead of gPhoto2 liveview.
-- Release notes on GitHub now contain the changelog section of the released version
-- Add a debug-only mock app version setting to test the update check
 
 ## 0.16.1
 
