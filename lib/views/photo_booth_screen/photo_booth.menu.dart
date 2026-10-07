@@ -47,6 +47,7 @@ class MomentoMenuBar extends StatelessWidget {
           ]),
           MenuBarItem(title: localizations.genericHelp, items: [
             MenuFlyoutItem(text: Text(localizations.genericDocumentation), onPressed: () => launchUrl(Uri.parse("https://momentobooth.github.io/momentobooth/")), leading: Icon(LucideIcons.book)),
+            MenuFlyoutItem(text: Text(localizations.genericReleases), onPressed: () => launchUrl(Uri.parse(releasesPageUrl)), leading: Icon(LucideIcons.tag)),
             MenuFlyoutItem(text: Text(localizations.genericAbout), onPressed: () => SettingsOverlay.openDialog(context, initialPage: SettingsPageKey.about), leading: Icon(LucideIcons.info)),
           ]),
         ],

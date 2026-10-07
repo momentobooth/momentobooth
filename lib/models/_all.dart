@@ -1,5 +1,7 @@
+export 'app_release.dart';
 export 'app_version_info.dart';
 export 'capture_state.dart';
+export 'changelog_section.dart';
 export 'connection_state.dart';
 export 'constants.dart';
 export 'external_system_status.dart';
@@ -15,3 +17,4 @@ export 'settings.dart';
 export 'source_photo.dart';
 export 'stats.dart';
 export 'subsystem_status.dart';
+export 'version_history.dart';
