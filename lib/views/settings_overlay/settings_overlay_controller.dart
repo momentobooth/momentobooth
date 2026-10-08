@@ -21,6 +21,7 @@ import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/components/dialogs/gphoto2_camera_warning_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view_model.dart';
 
 class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayViewModel> {
@@ -130,9 +131,11 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     ));
   }
 
-  void setImagingGPhoto2(GPhoto2CameraInfo camera) {
+  Future<void> setImagingGPhoto2(GPhoto2CameraInfo camera) async {
+    if (!await GPhoto2CameraWarningDialog.confirmIfNeeded(contextAccessor.buildContext, camera.model)) return;
+
     viewModel.showCustomImagingSettings = false;
-    viewModel.updateSettings((settings) => settings.copyWith.hardware(
+    await viewModel.updateSettings((settings) => settings.copyWith.hardware(
       liveViewMethod: LiveViewMethod.gphoto2,
       captureMethod: CaptureMethod.gPhoto2,
       gPhoto2CameraId: GPhoto2Camera.fromCameraInfo(camera).id
@@ -305,9 +308,14 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
-  void onGPhoto2CameraIdChanged(String? gPhoto2CameraId) {
+  Future<void> onGPhoto2CameraIdChanged(String? gPhoto2CameraId) async {
     if (gPhoto2CameraId != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2CameraId: gPhoto2CameraId));
+      // The id has the form "<port>/<model>", only the model is stable across USB ports.
+      final model = gPhoto2CameraId.substring(gPhoto2CameraId.indexOf('/') + 1);
+      // Check if the camera has been confirmed before, and if not, show a warning dialog. If the user cancels, do not change the settings.
+      if (!await GPhoto2CameraWarningDialog.confirmIfNeeded(contextAccessor.buildContext, model)) return;
+
+      await viewModel.updateSettings((settings) => settings.copyWith.hardware(gPhoto2CameraId: gPhoto2CameraId));
     }
   }
 

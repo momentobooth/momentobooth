@@ -73,6 +73,7 @@ sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableVa
     @Default("") String liveViewWebcamId,
     @Default(CaptureMethod.liveViewSource) CaptureMethod captureMethod,
     @Default("") String gPhoto2CameraId,
+    @Default([]) List<String> gPhoto2ConfirmedCameras,
     @Default(GPhoto2SpecialHandling.none) GPhoto2SpecialHandling gPhoto2SpecialHandling,
     @Default("") String gPhoto2CaptureTarget,
     @Default(false) bool gPhoto2DownloadExtraFiles,

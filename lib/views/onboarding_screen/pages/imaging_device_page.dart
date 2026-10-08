@@ -14,6 +14,7 @@ import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
 import 'package:momento_booth/utils/file_utils.dart';
+import 'package:momento_booth/views/components/dialogs/gphoto2_camera_warning_dialog.dart';
 import 'package:momento_booth/views/components/imaging/live_view.dart';
 import 'package:momento_booth/views/onboarding_screen/components/wizard_page.dart';
 import 'package:momento_booth/views/settings_overlay/settings_overlay_view_model.dart' show UpdateSettingsCallback;
@@ -92,9 +93,13 @@ class _ImagingDevicePageState extends State<ImagingDevicePage> {
     ));
   }
 
-  void setImagingGPhoto2(GPhoto2CameraInfo camera) {
+  Future<void> setImagingGPhoto2(GPhoto2CameraInfo camera) async {
+    // Check if the camera has been confirmed before, and if not, show a warning dialog. If the user cancels, do not change the settings.
+    if (!await GPhoto2CameraWarningDialog.confirmIfNeeded(context, camera.model)) return;
+    if (!mounted) return;
+
     setState(() { prevConfigError = false; });
-    updateSettings((settings) => settings.copyWith.hardware(
+    await updateSettings((settings) => settings.copyWith.hardware(
       liveViewMethod: LiveViewMethod.gphoto2,
       captureMethod: CaptureMethod.gPhoto2,
       gPhoto2CameraId: GPhoto2Camera.fromCameraInfo(camera).id,

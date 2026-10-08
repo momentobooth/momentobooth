@@ -90,6 +90,7 @@ Generic modal dialogs used across the app.
 
 - `enter_pin_dialog.dart` — `EnterPinDialog` — numeric keypad dialog for entering a PIN code.
 - `find_face_dialog.dart` — `FindFaceDialog` — live view + countdown to capture a face photo for face-recognition lookup.
+- `gphoto2_camera_warning_dialog.dart` — `GPhoto2CameraWarningDialog` — SD-card corruption warning shown the first time a camera model is selected for gPhoto2; `confirmIfNeeded()` also remembers confirmed models.
 - `language_choice_dialog.dart` — `LanguageChoiceDialog` — dialog listing available languages to pick.
 - `loading_dialog.dart` — `LoadingDialog` — generic loading dialog (`.generic()` spinner, `.cameraDownload()` Lottie).
 - `modal_dialog.dart` — `ModalDialog` — base styled modal container (title, body, type icon, actions), builds on `PhotoBoothDialog`. Used by most other dialogs.
