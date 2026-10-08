@@ -105,14 +105,15 @@ jobs:
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
-    - name: Install cargo-expand, frbc, h3xup
-      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 h3xup --force -y
+    - name: Install cargo-expand, frbc, cargo-bundle-licenses, h3xup
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 cargo-bundle-licenses@4.2.0 h3xup --force -y
 
     - name: Prepare sources
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: |
         flutter pub get --enforce-lockfile
         flutter gen-l10n
+        dart run tool/generate_licenses.dart
         flutter_rust_bridge_codegen generate
         dart run build_runner build
         flutter analyze --no-pub

@@ -6,6 +6,7 @@
 - MomentoBooth checks GitHub for newer releases on startup and shows the changelog of every newer version during onboarding
 - Added a "Releases" item to the Help menu
 - The About screen now shows which version was taken into use on which date
+- The About screen now lists the licenses of all open source software MomentoBooth is built with
 - Statistics are now also tracked per project, stored in a `Stats.toml` file in the project directory
 - First time selection of a gPhoto2 camera now prompts a dialog with a warning about possible data corruption that needs to be confirmed before use
 - (experimental) Video message mode, in which guests record a short video message for their hosts. Requires gPhoto2 camera. Can be enabled in the new Experimental settings tab
@@ -25,6 +26,7 @@
 - Render the in-app changelog with flutter_markdown_plus instead of a custom parser
 - Fix camera config key used by the debug actions to start and stop video recording
 - Add image processing operation to automatically crop black borders from an image, not used yet. Should be useful when working with HDMI capture instead of gPhoto2 liveview.
+- `just gen-licenses` is now a build step
 
 ## 0.16.1
 

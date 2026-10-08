@@ -90,8 +90,8 @@ jobs:
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
-    - name: Install cargo-expand, frbc
-      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 --force -y
+    - name: Install cargo-expand, frbc, cargo-bundle-licenses
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 cargo-bundle-licenses@4.2.0 --force -y
 
     - name: Install build dependencies
       run: |
@@ -108,6 +108,7 @@ jobs:
       run: |
         flutter pub get --enforce-lockfile
         flutter gen-l10n
+        dart run tool/generate_licenses.dart
         PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
         dart run build_runner build
         flutter analyze --no-pub

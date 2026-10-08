@@ -26,6 +26,8 @@ Widget get _aboutTab {
               Text('libgphoto2 version: ${helperLibraryVersionInfo.libgphoto2Version}${libgphoto2GitRev.isNotEmpty ? ' (git rev ${libgphoto2GitRev.substring(0, 7)})' : ''}'),
               const SizedBox(height: 16),
               Observer(builder: (context) => _versionHistory(context, getIt<UpdateManager>().versionHistory)),
+              const SizedBox(height: 8),
+              const OpenSourceLicensesExpander(),
             ],
           ),
         ),
