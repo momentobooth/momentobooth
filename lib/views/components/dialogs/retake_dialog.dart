@@ -32,14 +32,14 @@ class RetakeDialog extends StatelessWidget {
           onPressed: onCancel,
         ),
         PhotoBoothFilledButton(
-          title: localizations.retakeDialogKeepButton,
-          icon: LucideIcons.save,
-          onPressed: onKeep,
-        ),
-        PhotoBoothFilledButton(
           title: localizations.genericDeleteButton,
           icon: LucideIcons.trash,
           onPressed: onDelete,
+        ),
+        PhotoBoothFilledButton(
+          title: localizations.retakeDialogKeepButton,
+          icon: LucideIcons.save,
+          onPressed: onKeep,
         ),
       ],
     );

@@ -7,12 +7,14 @@
 - Added a "Releases" item to the Help menu
 - The About screen now shows which version was taken into use on which date
 - Statistics are now also tracked per project, stored in a `Stats.toml` file in the project directory
+- First time selection of a gPhoto2 camera now prompts a dialog with a warning about possible data corruption that needs to be confirmed before use
 - (experimental) Video message mode, in which guests record a short video message for their hosts. Requires gPhoto2 camera. Can be enabled in the new Experimental settings tab
 - (experimental) Audio of video messages can be recorded through FFmpeg, then transcribed and summarized through configurable OpenAI-compatible endpoints (including local servers)
 - (experimental) The summary of a video message can be printed together with a snapshot on an ESC/POS receipt printer (currently fixed to the Wincor Nixdorf TH230+)
 
 ### Changes
 - Added a setting to enable or disable the check for new versions
+- Swapped the delete and keep buttons in the retake dialog, so keep is the rightmost button
 
 ### Bugfixes
 - Smaller print sizes were not logged in the statistics
