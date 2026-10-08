@@ -281,6 +281,25 @@ enum PrintSize {
   // can use named parameters if you want
   const PrintSize(this.name);
 
+  ComboBoxItem<PrintSize> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<PrintSize>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
+
+}
+
+enum PrintDispatchMode {
+
+  sequential("Sequential"),
+  parallel("Parallel");
+
+  final String name;
+
+  const PrintDispatchMode(this.name);
+
+  ComboBoxItem<PrintDispatchMode> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
+
+  static List<ComboBoxItem<PrintDispatchMode>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
+
 }
 
 enum ExternalSystemCheckType {
