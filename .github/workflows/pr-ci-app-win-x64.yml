@@ -118,6 +118,10 @@ jobs:
         dart run build_runner build
         flutter analyze --no-pub
 
+    - name: Run tests
+      working-directory: ${{ env.DEV_DRIVE }}/momentobooth
+      run: flutter test --no-pub
+
     - name: Build project
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
       run: flutter build windows -v --no-pub --release --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=libgphoto2_iolibs --dart-define CAMLIBS=libgphoto2_camlibs --dart-define LIBGPHOTO2_GIT_REV=${{ env.LIBGPHOTO2_GIT_REV }}

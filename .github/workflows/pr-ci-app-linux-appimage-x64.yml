@@ -81,6 +81,9 @@ jobs:
         dart run build_runner build
         flutter analyze --no-pub
 
+    - name: Run tests
+      run: flutter test --no-pub
+
     - name: Flutter build
       run: flutter build linux -v --no-pub --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define=SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }}
 

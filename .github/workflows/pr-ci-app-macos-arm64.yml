@@ -113,6 +113,9 @@ jobs:
         dart run build_runner build
         flutter analyze --no-pub
 
+    - name: Run tests
+      run: flutter test --no-pub
+
     - name: Build project (arm64)
       run: |
         rm macos/Podfile.lock

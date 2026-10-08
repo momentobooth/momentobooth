@@ -55,6 +55,7 @@ abstract class OpenSourcePackage with _$OpenSourcePackage {
   }
 
   /// Decodes the gzipped JSON written by tool/generate_licenses.dart.
+  @visibleForTesting
   static List<OpenSourcePackage> decodeAll(Uint8List bytes) {
     final json = jsonDecode(utf8.decode(gzip.decode(bytes))) as Map<String, dynamic>;
     // License texts are stored once and referenced by index, as many packages share the same text.

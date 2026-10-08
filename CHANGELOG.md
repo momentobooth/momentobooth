@@ -27,6 +27,7 @@
 - Fix camera config key used by the debug actions to start and stop video recording
 - Add image processing operation to automatically crop black borders from an image, not used yet. Should be useful when working with HDMI capture instead of gPhoto2 liveview.
 - `just gen-licenses` is now a build step
+- First unit test added
 
 ## 0.16.1
 
