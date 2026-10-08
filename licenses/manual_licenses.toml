@@ -1,0 +1,143 @@
+# Hand-maintained license information for software that is not covered by pubspec.lock or Cargo.lock.
+# `just gen-licenses` merges these entries into assets/licenses/licenses.json.gz.
+#
+# Fields per entry:
+#   name         Display name (required)
+#   description  Short description of what it is used for
+#   url          Project homepage
+#   license      SPDX license expression
+#   license_file Path to the full license text, relative to this file
+
+# Native libraries that are bundled with the application.
+[[native]]
+name = "libgphoto2"
+description = "Digital camera control library"
+url = "http://www.gphoto.org/proj/libgphoto2/"
+license = "LGPL-2.1-or-later"
+license_file = "texts/LGPL-2.1.txt"
+
+[[native]]
+name = "libusb"
+description = "USB device access library, used by libgphoto2"
+url = "https://libusb.info"
+license = "LGPL-2.1-or-later"
+license_file = "texts/LGPL-2.1.txt"
+
+[[native]]
+name = "libexif"
+description = "EXIF metadata library, used by libgphoto2"
+url = "https://libexif.github.io"
+license = "LGPL-2.1-or-later"
+license_file = "texts/LGPL-2.1.txt"
+
+[[native]]
+name = "libltdl"
+description = "Dynamic module loader from GNU Libtool, used by libgphoto2"
+url = "https://www.gnu.org/software/libtool/"
+license = "LGPL-2.1-or-later"
+license_file = "texts/LGPL-2.1.txt"
+
+[[native]]
+name = "PDFium"
+description = "PDF rendering library, used by the printing package"
+url = "https://pdfium.googlesource.com/pdfium/"
+license = "BSD-3-Clause AND Apache-2.0"
+license_file = "texts/pdfium.txt"
+
+[[native]]
+name = "sentry-native"
+description = "Native crash reporting SDK, used by sentry_flutter"
+url = "https://github.com/getsentry/sentry-native"
+license = "MIT"
+license_file = "texts/sentry-native.txt"
+
+# Tools used to develop, build and package the application. These are not shipped, so only a reference to the license is shown.
+[[toolchain]]
+name = "Flutter SDK"
+description = "UI toolkit the application is built with"
+url = "https://flutter.dev"
+license = "BSD-3-Clause"
+
+[[toolchain]]
+name = "Dart SDK"
+description = "Programming language and runtime of the user interface"
+url = "https://dart.dev"
+license = "BSD-3-Clause"
+
+[[toolchain]]
+name = "Rust"
+description = "Programming language of the helper library, including Cargo"
+url = "https://www.rust-lang.org"
+license = "MIT OR Apache-2.0"
+
+[[toolchain]]
+name = "flutter_rust_bridge codegen"
+description = "Generates the bindings between Dart and Rust"
+url = "https://github.com/fzyzcjy/flutter_rust_bridge"
+license = "MIT"
+
+[[toolchain]]
+name = "Cargokit"
+description = "Builds the Rust helper library as part of the Flutter build"
+url = "https://github.com/irondash/cargokit"
+license = "MIT OR Apache-2.0"
+
+[[toolchain]]
+name = "cargo-expand"
+description = "Macro expansion, used by the bridge code generator"
+url = "https://github.com/dtolnay/cargo-expand"
+license = "MIT OR Apache-2.0"
+
+[[toolchain]]
+name = "cargo-bundle-licenses"
+description = "Collects the licenses of the Rust dependencies for this overview"
+url = "https://github.com/sstadick/cargo-bundle-licenses"
+license = "MIT OR Apache-2.0"
+
+[[toolchain]]
+name = "FVM"
+description = "Flutter version management"
+url = "https://fvm.app"
+license = "MIT"
+
+[[toolchain]]
+name = "just"
+description = "Command runner for the development tasks"
+url = "https://github.com/casey/just"
+license = "CC0-1.0"
+
+[[toolchain]]
+name = "MSYS2"
+description = "Provides libgphoto2 and its dependencies on Windows"
+url = "https://www.msys2.org"
+license = "BSD-3-Clause"
+
+[[toolchain]]
+name = "LLVM / Clang"
+description = "Compiler toolchain for the native libraries on Windows"
+url = "https://llvm.org"
+license = "Apache-2.0 WITH LLVM-exception"
+
+[[toolchain]]
+name = "Inno Setup"
+description = "Builds the Windows installer"
+url = "https://jrsoftware.org/isinfo.php"
+license = "LicenseRef-InnoSetup"
+
+[[toolchain]]
+name = "appimagetool"
+description = "Packages the Linux AppImage"
+url = "https://github.com/AppImage/appimagetool"
+license = "MIT"
+
+[[toolchain]]
+name = "fastlane"
+description = "Code signing for macOS"
+url = "https://fastlane.tools"
+license = "MIT"
+
+[[toolchain]]
+name = "mdBook"
+description = "Builds the documentation website"
+url = "https://github.com/rust-lang/mdBook"
+license = "MPL-2.0"

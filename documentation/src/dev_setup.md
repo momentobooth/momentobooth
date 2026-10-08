@@ -27,6 +27,13 @@ For all languages, frameworks and tools, we support the latest versions.
     cargo install flutter_rust_bridge_codegen --version 2.13.0
     ```
 
+* `cargo-bundle-licenses`, used to collect the licenses of the Rust dependencies for the About screen
+  * Install using Cargo:
+
+    ```sh
+    cargo install cargo-bundle-licenses --version 4.2.0
+    ```
+
 * Flutter SDK 3.47.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it.\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
@@ -121,7 +128,14 @@ Please note: Run all commands from the root folder of the repository, unless men
    dart run build_runner build
    ```
 
-4. Build and run the app with `flutter run` or use your IDE to run the application
+4. Generate the open source license overview (optional, the About screen shows a notice when it is missing)
+
+   ```
+   dart run tool/generate_licenses.dart
+   ```
+
+    * Note: Bundled native libraries and the toolchain are maintained by hand in `licenses/manual_licenses.toml`.
+5. Build and run the app with `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
 ## Code signing on macOS
