@@ -3,7 +3,8 @@
 // Sources:
 // - Dart packages: pubspec.lock, via dart_pubspec_licenses (including the Flutter engine components).
 // - Rust crates: rust/Cargo.lock, via `cargo metadata` and `cargo bundle-licenses`.
-// - Native libraries and toolchain: licenses/manual_licenses.toml.
+// - Native libraries: the manifest of the prebuilt native dependencies in .native_deps (see `just get-native-deps`), if present.
+// - Other native libraries and the toolchain: licenses/manual_licenses.toml. Entries also found in the native dependencies manifest are skipped.
 //
 // Run with `just gen-licenses`.
 
@@ -17,6 +18,7 @@ import 'package:toml/toml.dart';
 const _outputPath = 'assets/licenses/licenses.json.gz';
 const _manualLicensesPath = 'licenses/manual_licenses.toml';
 const _rustProjectPath = 'rust';
+const _nativeDepsPath = '.native_deps';
 const _sdkLicensePrefix = 'sky_engine/';
 const _rustLicenseNotFound = 'NOT FOUND';
 
@@ -25,10 +27,12 @@ const _ownPackages = {'momento_booth', 'rust_lib_momento_booth'};
 
 Future<void> main() async {
   final texts = _LicenseTexts();
+  final nativeDepsPackages = await _nativeDepsPackages(texts);
   final packages = [
     ...await _dartPackages(texts),
     ...await _rustPackages(texts),
-    ...await _manualPackages(texts),
+    ...nativeDepsPackages,
+    ...await _manualPackages(texts, skip: {for (final package in nativeDepsPackages) package['name']! as String}),
   ]..sort((a, b) => (a['name']! as String).toLowerCase().compareTo((b['name']! as String).toLowerCase()));
 
   final outputFile = File(_outputPath);
@@ -190,23 +194,53 @@ Future<String> _run(String executable, List<String> arguments) async {
 // Native libraries and toolchain     //
 // ////////////////////////////////// //
 
-Future<List<Map<String, Object?>>> _manualPackages(_LicenseTexts texts) async {
+Future<List<Map<String, Object?>>> _nativeDepsPackages(_LicenseTexts texts) async {
+  final directory = Directory(_nativeDepsPath);
+  if (!directory.existsSync()) return const [];
+
+  final packages = [
+    for (final manifestFile in directory.listSync().whereType<Directory>().map((d) => File(path.join(d.path, 'manifest.json'))))
+      if (manifestFile.existsSync())
+        for (final component in ((jsonDecode(await manifestFile.readAsString()) as Map<String, dynamic>)['components'] as List)
+            .cast<Map<String, dynamic>>())
+          _entry(
+            name: component['name'],
+            // Build tools in the bundle, like pkgconf, are not shipped with the application.
+            ecosystem: component['usage'] == 'runtime' ? 'native' : 'toolchain',
+            usage: component['usage'],
+            version: component['version'],
+            description: component['description'],
+            url: component['url'],
+            license: component['license'],
+            licenseText: texts.add([
+              for (final licenseFile in (component['licenseFiles'] as List).cast<String>())
+                await File(path.join(manifestFile.parent.path, licenseFile)).readAsString(),
+            ].join('\n\n${'-' * 80}\n\n')),
+          ),
+  ];
+
+  // There may be bundles for multiple architectures (e.g. on macOS), which contain the same components.
+  return {for (final package in packages) package['name']: package}.values.toList();
+}
+
+Future<List<Map<String, Object?>>> _manualPackages(_LicenseTexts texts, {required Set<String> skip}) async {
   final manual = (await TomlDocument.load(_manualLicensesPath)).toMap();
 
   Future<List<Map<String, Object?>>> parse(String key, {required String ecosystem, required String usage}) async {
     return [
       for (final item in (manual[key] as List? ?? []).cast<Map<String, dynamic>>())
-        _entry(
-          name: item['name'],
-          ecosystem: ecosystem,
-          usage: usage,
-          description: item['description'],
-          url: item['url'],
-          license: item['license'],
-          licenseText: item['license_file'] == null
-              ? null
-              : texts.add(await File(path.join(path.dirname(_manualLicensesPath), item['license_file'])).readAsString()),
-        ),
+        if (!skip.contains(item['name']))
+          _entry(
+            name: item['name'],
+            ecosystem: ecosystem,
+            usage: usage,
+            description: item['description'],
+            url: item['url'],
+            license: item['license'],
+            licenseText: item['license_file'] == null
+                ? null
+                : texts.add(await File(path.join(path.dirname(_manualLicensesPath), item['license_file'])).readAsString()),
+          ),
     ];
   }
 

@@ -107,7 +107,7 @@ Requires:
 - Rust via rustup
 - `flutter_rust_bridge_codegen` 2.13.0 (`just install-bridge-codegen`)
 - `cargo-bundle-licenses` 4.2.0 (`just install-cargo-bundle-licenses`)
-- **Windows:** MSYS2 with `libgphoto2`, `pkgconf`, `curl`
+- **Windows:** LLVM (libclang for bindgen); libgphoto2 and its dependencies are downloaded prebuilt by `just get-native-deps`
 - **Linux:** `llvm`, `libssl-dev`, `libcurl4-openssl-dev`, `libasound2-dev`
 - **macOS:** Homebrew `pkgconf`, `libgphoto2`
 

@@ -8,7 +8,8 @@
 #   license      SPDX license expression
 #   license_file Path to the full license text, relative to this file
 
-# Native libraries that are bundled with the application.
+# Native libraries that are bundled with the application. Entries that are also in the manifest of the prebuilt native dependencies
+# (.native_deps, Windows) are replaced by the manifest entry, so libgphoto2 and its dependencies here only apply to the other platforms.
 [[native]]
 name = "libgphoto2"
 description = "Digital camera control library"

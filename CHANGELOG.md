@@ -28,6 +28,7 @@
 - Add image processing operation to automatically crop black borders from an image, not used yet. Should be useful when working with HDMI capture instead of gPhoto2 liveview.
 - `just gen-licenses` is now a build step
 - First unit test added
+- Windows: libgphoto2 and its dependencies are now downloaded prebuilt from momentobooth/native-deps (`just get-native-deps`) instead of installed through MSYS2. libgphoto2 is built without libgd and libcurl, which reduces the bundled DLLs from 57 to 13 and removes GPL licensed libraries (x265). The picture frame camlibs lose image conversion and the docupen and lumix (WiFi) camlibs are no longer included
 
 ## 0.16.1
 
