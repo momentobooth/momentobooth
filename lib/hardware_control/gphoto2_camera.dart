@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/exceptions/gphoto2_exception.dart';
@@ -185,10 +186,19 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     await gphoto2SetConfigRange(handleId: handleId!, keyName: keyName, value: value);
   }
 
+  /// Initializes libgphoto2, optionally overriding where it loads its drivers from.
+  /// See "libgphoto2 driver locations" in documentation/src/dev_setup.md.
   static Future<void> ensureLibraryInitialized() async {
     const String iolibsDefine = String.fromEnvironment("IOLIBS");
     const String camlibsDefine = String.fromEnvironment("CAMLIBS");
-    _initFuture ??= gphoto2Initialize(iolibsPath: iolibsDefine, camlibsPath: camlibsDefine);
+    // On Windows, the drivers are always in these directories next to the executable (e.g. build\windows\x64\runner\Debug\libgphoto2_iolibs).
+    // The paths are relative to the directory of the executable. windows/CMakeLists.txt copies them there on every build from the native
+    // dependencies in .native_deps\windows-x64\lib, which are downloaded by `just get-native-deps`.
+    final bool useWindowsDefault = Platform.isWindows && iolibsDefine.isEmpty && camlibsDefine.isEmpty;
+    _initFuture ??= gphoto2Initialize(
+      iolibsPath: useWindowsDefault ? 'libgphoto2_iolibs' : iolibsDefine,
+      camlibsPath: useWindowsDefault ? 'libgphoto2_camlibs' : camlibsDefine,
+    );
     await _initFuture;
   }
 
