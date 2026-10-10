@@ -85,7 +85,10 @@ jobs:
       uses: cargo-bins/cargo-binstall@main
 
     - name: Install cargo-expand, frbc, cargo-bundle-licenses
-      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 cargo-bundle-licenses@4.2.0 --force -y
+      env:
+        # Without a token, the GitHub API rate limit of the shared runner IP is often exceeded, making binstall build from source
+        GITHUB_TOKEN: ${{ github.token }}
+      run: cargo binstall cargo-expand@1.0.126 flutter_rust_bridge_codegen@2.13.0 cargo-bundle-licenses@4.2.0 --force -y
 
     - name: Install build dependencies
       run: |
