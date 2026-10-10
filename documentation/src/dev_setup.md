@@ -27,6 +27,13 @@ For all languages, frameworks and tools, we support the latest versions.
     cargo install flutter_rust_bridge_codegen --version 2.13.0
     ```
 
+* `cargo-bundle-licenses`, used to collect the licenses of the Rust dependencies for the About screen
+  * Install using Cargo:
+
+    ```sh
+    cargo install cargo-bundle-licenses --version 4.2.0
+    ```
+
 * Flutter SDK 3.47.0+
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it.\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
@@ -48,15 +55,12 @@ For all languages, frameworks and tools, we support the latest versions.
 * **Rust**
   * Recommended installation via [`rustup`](https://rustup.rs/) to keep components up to date
   * Use default options (MSVC host, target, and toolchain)
-* **MSYS2**
-  * Follow the instructions on the [MSYS2 website](https://www.msys2.org/)
-  * Install the following packages:
-
-    ```
-    mingw-w64-clang-x86_64-pkgconf mingw-w64-clang-x86_64-libgphoto2 mingw-w64-clang-x86_64-curl-winssl mingw-w64-clang-x86_64-nghttp2 mingw-w64-clang-x86_64-nghttp3
-    ```
-
-  * Make sure `{MSYS_INSTALL_PATH}\clang64\bin` is in your `PATH` (before other folders that also provide `pkg-config`/`pkgconf`)
+* **LLVM**, needed by bindgen to generate the Rust bindings for libgphoto2
+  * Install using `winget install LLVM.LLVM`, or with the installer from the [LLVM releases](https://github.com/llvm/llvm-project/releases)
+  * If LLVM is not installed in the default location, set `LIBCLANG_PATH` to the folder containing `libclang.dll`
+* **libgphoto2** and its dependencies are downloaded prebuilt from [momentobooth/native-deps](https://github.com/momentobooth/native-deps) by `just get-native-deps` (or run `windows/get_native_deps.ps1` directly)
+  * This also writes `.cargo/config.toml`, which points Cargo to the downloaded libraries
+  * The Windows build copies the libraries next to the executable, so no `PATH` changes are needed
 
 ### On macOS
 
@@ -102,6 +106,12 @@ Please note: This method expects global [fvm](https://fvm.app/) to be available 
 
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
+0. On Windows, download the native dependencies.
+
+   ```
+   ./windows/get_native_deps.ps1
+   ```
+
 1. Generate translation files.
 
    ```sh
@@ -121,8 +131,32 @@ Please note: Run all commands from the root folder of the repository, unless men
    dart run build_runner build
    ```
 
-4. Build and run the app with `flutter run` or use your IDE to run the application
+4. Generate the open source license overview (optional, the About screen shows a notice when it is missing)
+
+   ```
+   dart run tool/generate_licenses.dart
+   ```
+
+    * Note: The toolchain and bundled native libraries are maintained by hand in `licenses/manual_licenses.toml`. On Windows, `libgphoto2` and its dependencies are taken from the manifest of the downloaded native dependencies instead.
+5. Build and run the app with `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
+
+## libgphoto2 driver locations
+
+Camera support in `libgphoto2` is split into separate driver libraries, which it loads at runtime: camera drivers (*camlibs*, e.g. `ptp2`) and port drivers (*iolibs*, e.g. `usb1`). Each type is loaded from its own directory, which `libgphoto2` determines as follows:
+
+1. If the environment variables `CAMLIBS` and `IOLIBS` are set, it uses those directories.
+2. Otherwise it uses the directories that were configured when `libgphoto2` itself was compiled, e.g. `/usr/lib/x86_64-linux-gnu/libgphoto2/2.5.33`. These only exist on the machine where `libgphoto2` was installed to that location, so this only works for a system-wide installation, not for a copy of `libgphoto2` that is bundled with the application.
+
+> Release builds of MomentoBooth bundle `libgphoto2` with its drivers. `libgphoto2` must be pointed *to* those bundled driver directories through the environment variables. MomentoBooth can do this itself: when the [Dart defines](https://dart.dev/libraries/core/environment-declarations) `IOLIBS` and `CAMLIBS` are set at build time (`--dart-define IOLIBS=... --dart-define CAMLIBS=...`), or on Windows by default, the app resolves these paths relative to the executable's directory and sets the environment variables of its own process before initializing `libgphoto2`. The directories must exist, otherwise initializing gPhoto2 fails.
+
+| Platform | Release builds | Development |
+| - | - | - |
+| Windows | Built-in default in the app, no Dart defines needed: `libgphoto2_iolibs` and `libgphoto2_camlibs` next to the executable. `windows/CMakeLists.txt` copies them there from `.native_deps\windows-x64` (see `just get-native-deps`). | Same as release builds, as `libgphoto2` is bundled in development too. The drivers end up in `build\windows\x64\runner\Debug`. |
+| macOS | Dart defines `IOLIBS=../Libs/Iolibs` and `CAMLIBS=../Libs/Camlibs`, relative to `MomentoBooth.app/Contents/MacOS`. The release workflow copies the drivers into the app bundle. | Nothing needed, the Homebrew installation of `libgphoto2` uses its compiled-in directories. |
+| Linux | `linux/packaging/appimage/AppRun` sets the environment variables `IOLIBS=../iolibs` and `CAMLIBS=../camlibs` itself, relative to `$APPDIR/app`. | Nothing needed, the system-wide installation of `libgphoto2` uses its compiled-in directories. |
+
+When Dart defines are set on Windows, they take precedence over the built-in default. Because the app always sets the environment variables on Windows, setting `IOLIBS` or `CAMLIBS` yourself has no effect there.
 
 ## Code signing on macOS
 

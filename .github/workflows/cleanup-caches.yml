@@ -1,0 +1,43 @@
+name: Clean up caches of closed pull requests
+
+# Caches created by pull request runs can only be used by that pull request, but count towards the repository's cache size limit, causing
+# useful caches (e.g. those of main) to be evicted. This runs on a schedule rather than when a pull request closes, as the release
+# workflows still create caches after the pull request has been closed.
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+
+    steps:
+    - name: Delete caches of closed pull requests
+      run: |
+        # The GITHUB_TOKEN may do 1000 API requests per hour, so limit the number of deletions per run. The next run continues.
+        budget=800
+        deleted=0
+        open_prs=$(gh pr list --state open --limit 1000 --json number --jq '.[].number')
+
+        while read -r id ref; do
+          pr=$(cut -d/ -f3 <<<"$ref")
+          if grep -qx "$pr" <<<"$open_prs"; then continue; fi
+          if [[ $deleted -ge $budget ]]; then
+            echo "Reached the limit of $budget deletions, the remaining caches will be deleted in the next run"
+            break
+          fi
+          gh cache delete "$id" > /dev/null && deleted=$((deleted + 1)) || true
+        done < <(gh cache list --limit 100000 --json id,ref --jq '.[] | select(.ref | startswith("refs/pull/")) | "\(.id) \(.ref)"')
+
+        echo "Deleted $deleted caches of closed pull requests"
