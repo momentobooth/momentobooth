@@ -5,6 +5,10 @@ on:
     branches: [ main ]
     paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
     types: [opened, synchronize, reopened, ready_for_review]
+  # Builds on main fill the caches (sccache, Rust and Flutter), which pull requests can use, unlike each other's caches.
+  push:
+    branches: [ main ]
+    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -152,6 +156,7 @@ jobs:
       run: echo "SHORT_SHA=$("${{ github.sha }}".SubString(0, 8))" >> $env:GITHUB_ENV
 
     - name: Create h3xup version
+      if: ${{ github.event_name == 'pull_request' }}
       env:
         AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
         AWS_ENDPOINT: ${{ vars.AWS_ENDPOINT }}
