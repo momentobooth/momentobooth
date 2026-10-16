@@ -6,6 +6,7 @@ use little_exif::{exif_tag::ExifTag, filetype::FileExtension, metadata::Metadata
 use num_traits::FromPrimitive;
 use zune_jpeg::{JpegDecoder, zune_core::{bytestream::ZCursor, options::DecoderOptions, colorspace::ColorSpace}};
 use chrono::{Local, NaiveDateTime};
+use log::warn;
 
 use crate::models::images::{ExifOrientation, MomentoBoothExifTag, RawImage};
 
@@ -47,27 +48,35 @@ pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
 // EXIF //
 // //// //
 
+/// Reads the EXIF tags MomentoBooth uses from an image file. Files without (readable) EXIF data, such as
+/// PNG exports or images from other sources, yield no tags, and tags that cannot be converted are skipped.
 pub fn get_momento_booth_exif_tags_from_file(image_file_path: &str) -> Vec<MomentoBoothExifTag> {
-    let metadata = Metadata::new_from_path(Path::new(image_file_path)).unwrap();
-    let mut tags: Vec<MomentoBoothExifTag> = Vec::new();
+    let metadata = match Metadata::new_from_path(Path::new(image_file_path)) {
+        Ok(metadata) => metadata,
+        Err(error) => {
+            warn!("Could not read EXIF data from '{image_file_path}': {error}");
+            return Vec::new();
+        }
+    };
 
-    if let Some(tag) = metadata.get_tag(&ExifTag::ImageDescription(String::new())).next() {
-        tags.push(<MomentoBoothExifTag as TryFrom<&little_exif::exif_tag::ExifTag>>::try_from(tag).unwrap());
-    }
-    if let Some(tag) = metadata.get_tag(&ExifTag::Software(String::new())).next() {
-        tags.push(<MomentoBoothExifTag as TryFrom<&little_exif::exif_tag::ExifTag>>::try_from(tag).unwrap());
-    }
-    if let Some(tag) = metadata.get_tag(&ExifTag::CreateDate(String::new())).next() {
-        tags.push(<MomentoBoothExifTag as TryFrom<&little_exif::exif_tag::ExifTag>>::try_from(tag).unwrap());
-    }
-    if let Some(tag) = metadata.get_tag(&ExifTag::Orientation(Vec::<u16>::new())).next() {
-        tags.push(<MomentoBoothExifTag as TryFrom<&little_exif::exif_tag::ExifTag>>::try_from(tag).unwrap());
-    }
-    if let Some(tag) = metadata.get_tag(&ExifTag::MakerNote(Vec::<u8>::new())).next() {
-        tags.push(<MomentoBoothExifTag as TryFrom<&little_exif::exif_tag::ExifTag>>::try_from(tag).unwrap());
-    }
+    let tags_to_read = [
+        ExifTag::ImageDescription(String::new()),
+        ExifTag::Software(String::new()),
+        ExifTag::CreateDate(String::new()),
+        ExifTag::Orientation(Vec::<u16>::new()),
+        ExifTag::MakerNote(Vec::<u8>::new()),
+    ];
 
-    tags
+    tags_to_read.iter()
+        .filter_map(|tag_to_read| metadata.get_tag(tag_to_read).next())
+        .filter_map(|tag| match MomentoBoothExifTag::try_from(tag) {
+            Ok(tag) => Some(tag),
+            Err(error) => {
+                warn!("Skipping EXIF tag {tag:?} of '{image_file_path}': {error}");
+                None
+            }
+        })
+        .collect()
 }
 
 impl From<MomentoBoothExifTag> for little_exif::exif_tag::ExifTag {
@@ -90,17 +99,19 @@ impl TryFrom<&little_exif::exif_tag::ExifTag> for MomentoBoothExifTag {
             little_exif::exif_tag::ExifTag::ImageDescription(value) => Ok(MomentoBoothExifTag::ImageDescription(value.clone())),
             little_exif::exif_tag::ExifTag::Software(value) => Ok(MomentoBoothExifTag::Software(value.clone())),
             little_exif::exif_tag::ExifTag::CreateDate(value) => {
-                let fixed_offset_date = NaiveDateTime::parse_from_str(&value, "%Y:%m:%d %H:%M:%S").expect("Error while parsing EXIF create date").and_local_timezone(Local).unwrap();
-                Ok(MomentoBoothExifTag::CreateDate(fixed_offset_date))
+                let naive_date = NaiveDateTime::parse_from_str(&value, "%Y:%m:%d %H:%M:%S").map_err(|_| "Invalid create date")?;
+                // earliest() resolves ambiguous local times (DST changes) instead of failing
+                let local_date = naive_date.and_local_timezone(Local).earliest().ok_or("Create date does not exist in local timezone")?;
+                Ok(MomentoBoothExifTag::CreateDate(local_date))
             },
             little_exif::exif_tag::ExifTag::Orientation(value) => {
-                let orientation: Option<ExifOrientation> = ExifOrientation::from_u16(value[0]);
+                let orientation: Option<ExifOrientation> = value.first().and_then(|value| ExifOrientation::from_u16(*value));
                 match orientation {
                     Some(orientation) => Ok(MomentoBoothExifTag::Orientation(orientation)),
                     None => Err("Unknown orientation"),
                 }
             },
-            little_exif::exif_tag::ExifTag::MakerNote(value) => Ok(MomentoBoothExifTag::MakerNote(String::from_utf8(value.to_vec()).unwrap())),
+            little_exif::exif_tag::ExifTag::MakerNote(value) => String::from_utf8(value.to_vec()).map(MomentoBoothExifTag::MakerNote).map_err(|_| "Maker note is not valid UTF-8"),
             _ => Err("Unknown tag"),
         }
     }
