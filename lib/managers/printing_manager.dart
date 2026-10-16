@@ -71,8 +71,21 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   @computed
   bool get canPrint => printableSizes.isNotEmpty;
 
-  /// How many photos one copy of [size] puts on paper, or null when that depends on the printer it ends up at.
-  int? photosPerCopy(PrintSize size) => _router.photosPerCopy(size);
+  /// The print size a photo is printed at when users choose [chosen]: a collage of three photos chosen at normal size
+  /// is printed in halves, if that print size is routed to a printer.
+  PrintSize printSizeFor(PrintSize chosen, {required bool isThreePhotoCollage}) =>
+      chosen == PrintSize.normal && isThreePhotoCollage && printableSizes.contains(PrintSize.split) ? PrintSize.split : chosen;
+
+  /// How many physical copies guests get from one print when they choose [chosen], or null when that depends on the
+  /// printer it ends up at.
+  ///
+  /// A collage of three photos holds the photos twice, side by side, which end up as two copies: printed apart as a
+  /// split print, or cut apart otherwise.
+  int? copiesPerPrint(PrintSize chosen, {required bool isThreePhotoCollage}) {
+    final photos = _router.photosPerCopy(printSizeFor(chosen, isThreePhotoCollage: isThreePhotoCollage));
+    if (photos == null) return null;
+    return isThreePhotoCollage ? photos * 2 : photos;
+  }
 
   /// The printers the routing can send jobs to, without duplicates.
   Set<String> usedQueueIds(PrinterBackend backend) => {

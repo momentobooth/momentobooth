@@ -103,8 +103,8 @@
 
     "printDialogTitle": "Imprimer",
     "printDialogSizeSetting": "Taille :",
-    "printDialogNoOfPrintsSetting": "Nombre de copies :",
-    "printDialogSummary": "{numPrints} copies → {numImages} images imprimées",
+    "printDialogNumberOfPrints": "Nombre de tirages : {numPrints}",
+    "printDialogCopiesPerSheet": "{numCopies, plural, =1{1 feuille contient 1 copie} other{1 feuille contient {numCopies} copies}}",
 
     "printingErrorDialogTitle": "Erreur d'impression",
     "printingErrorDialogBodyTop": "En raison d'un problème inattendu, vos impression(s) ne peut pas être démarrée.",
@@ -187,12 +187,16 @@
             }
         }
     },
-    "@printDialogSummary": {
+    "@printDialogNumberOfPrints": {
         "placeholders": {
             "numPrints": {
                 "type": "int"
-            },
-            "numImages": {
+            }
+        }
+    },
+    "@printDialogCopiesPerSheet": {
+        "placeholders": {
+            "numCopies": {
                 "type": "int"
             }
         }

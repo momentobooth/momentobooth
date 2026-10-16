@@ -12,14 +12,19 @@ import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 class PrintDialog extends StatefulWidget {
 
   final VoidCallback onCancel;
+
+  /// Called with the print size to print at, which is split instead of the chosen normal size for a collage of three
+  /// photos (see [PrintingManagerBase.printSizeFor]).
   final void Function(PrintSize size, int copies) onPrintPressed;
   final int maxPrints;
+  final bool isThreePhotoCollage;
 
   const PrintDialog({
     super.key,
     required this.onCancel,
     required this.onPrintPressed,
     this.maxPrints = 5,
+    this.isThreePhotoCollage = false,
   });
 
   @override
@@ -41,8 +46,12 @@ class _PrintDialogState extends State<PrintDialog> {
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
-    // Unknown when the routes of this print size put a different number of photos on paper.
-    final photosPerCopy = getIt<PrintingManager>().photosPerCopy(printSize);
+    final printing = getIt<PrintingManager>();
+    final printedSize = printing.printSizeFor(printSize, isThreePhotoCollage: widget.isThreePhotoCollage);
+    // Unknown when the routes of this print size produce a different number of physical copies.
+    final copiesPerPrint = printing.copiesPerPrint(printSize, isThreePhotoCollage: widget.isThreePhotoCollage);
+    // The slider shows what guests get, the physical copies, while it counts prints.
+    final shownCopies = numPrints * (copiesPerPrint ?? 1);
 
     const textStyle = TextStyle(fontWeight: FontWeight.w500, fontSize: 18, height: 1);
 
@@ -69,13 +78,13 @@ class _PrintDialogState extends State<PrintDialog> {
           ),
           const SizedBox(height: 16.0),
           Text(
-            localizations.printDialogNoOfPrintsSetting,
+            localizations.printDialogNumberOfPrints(shownCopies),
             textAlign: TextAlign.left,
             style: textStyle,
           ),
-          if (photosPerCopy != null)
+          if (copiesPerPrint != null)
             Text(
-              localizations.printDialogSummary(numPrints, numPrints * photosPerCopy),
+              localizations.printDialogCopiesPerSheet(copiesPerPrint),
               textAlign: TextAlign.left,
             ),
           const SizedBox(height: 16.0),
@@ -87,7 +96,7 @@ class _PrintDialogState extends State<PrintDialog> {
               min: 1,
               max: widget.maxPrints.toDouble(),
               divisions: widget.maxPrints - 1,
-              label: numPrints.toString(),
+              label: shownCopies.toString(),
               onChanged: (value) {
                 setState(() => numPrints = value.round());
               },
@@ -103,7 +112,7 @@ class _PrintDialogState extends State<PrintDialog> {
         PhotoBoothFilledButton(
           title: localizations.genericPrintButton,
           icon: LucideIcons.printer,
-          onPressed: () => widget.onPrintPressed(printSize, numPrints),
+          onPressed: () => widget.onPrintPressed(printedSize, numPrints),
         ),
       ],
       dialogType: ModalDialogType.input,

@@ -108,8 +108,8 @@ class PrintRouter {
     };
   }
 
-  /// How many photos one copy of [size] puts on paper, or null when that depends on the printer it ends up at, or when
-  /// [size] is not routed.
+  /// How many times one copy of [size] puts the photo on paper: once per tile, and once for a split print, in two
+  /// halves. Null when that depends on the printer it ends up at, or when [size] is not routed.
   int? photosPerCopy(PrintSize size) {
     final starts = {
       for (final edge in _jobEdgesFrom[analysis.sourceId] ?? const <RoutingEdge>[])

@@ -56,12 +56,14 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printEnabled = true;
   }
 
-  void onClickPrint() {
+  Future<void> onClickPrint() async {
     if (!viewModel.printEnabled) return;
-    showUserDialog(
+    final imgSources = await viewModel.makerNoteData;
+    await showUserDialog(
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
         return PrintDialog(
+          isThreePhotoCollage: imgSources?.sourcePhotos.length == 3,
           onPrintPressed: (size, copies) {
             navigator.pop();
             onConfirmPrint(size, copies);
@@ -73,15 +75,6 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
-    final printing = getIt<PrintingManager>();
-    final imgSources = await viewModel.makerNoteData;
-    final sourceCount = imgSources?.sourcePhotos.length;
-    PrintSize usingSize = size;
-    // A collage of three photos is printed in halves, if that print size is routed to a printer.
-    if (size == PrintSize.normal && sourceCount == 3 && printing.printableSizes.contains(PrintSize.split)) {
-      usingSize = PrintSize.split;
-    }
-
     logDebug("Printing photo");
 
     viewModel
@@ -92,7 +85,7 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
 
     bool success = false;
     try {
-      await printing.printPhoto(jobName: jobName, image: await viewModel.file!.readAsBytes(), size: usingSize, copies: copies);
+      await getIt<PrintingManager>().printPhoto(jobName: jobName, image: await viewModel.file!.readAsBytes(), size: size, copies: copies);
       success = true;
     } catch (e, s) {
       logError("Failed to print photo", e, s);

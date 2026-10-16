@@ -106,8 +106,8 @@
 
     "printDialogTitle": "Afdrukken",
     "printDialogSizeSetting": "Formaat:",
-    "printDialogNoOfPrintsSetting": "Aantal prints:",
-    "printDialogSummary": "{numPrints} prints → {numImages} geprint foto's",
+    "printDialogNumberOfPrints": "Aantal prints: {numPrints}",
+    "printDialogCopiesPerSheet": "{numCopies, plural, =1{1 vel bevat 1 kopie} other{1 vel bevat {numCopies} kopieën}}",
 
     "printingErrorDialogTitle": "Printprobleem",
     "printingErrorDialogBodyTop": "Door een onverwachts probleem kunnen we de print(s) niet starten.",

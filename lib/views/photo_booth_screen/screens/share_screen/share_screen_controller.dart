@@ -95,6 +95,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
         return PrintDialog(
+          isThreePhotoCollage: getIt<PhotosManager>().chosenPhotos.length == 3,
           onPrintPressed: (size, copies) {
             navigator.pop();
             onConfirmPrint(size, copies);
@@ -106,13 +107,6 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
-    final printing = getIt<PrintingManager>();
-    PrintSize usingSize = size;
-    // A collage of three photos is printed in halves, if that print size is routed to a printer.
-    if (size == PrintSize.normal && getIt<PhotosManager>().chosenPhotos.length == 3 && printing.printableSizes.contains(PrintSize.split)) {
-      usingSize = PrintSize.split;
-    }
-
     logDebug("Printing photo");
 
     viewModel
@@ -124,7 +118,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
 
     bool success = false;
     try {
-      await printing.printPhoto(jobName: jobName, image: getIt<PhotosManager>().outputImage!, size: usingSize, copies: copies);
+      await getIt<PrintingManager>().printPhoto(jobName: jobName, image: getIt<PhotosManager>().outputImage!, size: size, copies: copies);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");

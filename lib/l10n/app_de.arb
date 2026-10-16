@@ -232,15 +232,18 @@
     "@printDialogTitle": {},
     "printDialogSizeSetting": "Größe:",
     "@printDialogSizeSetting": {},
-    "printDialogNoOfPrintsSetting": "Anzahl der Ausdrucke:",
-    "@printDialogNoOfPrintsSetting": {},
-    "printDialogSummary": "{numPrints} Drucke → {numImages} gedruckte Bilder",
-    "@printDialogSummary": {
+    "printDialogNumberOfPrints": "Anzahl der Ausdrucke: {numPrints}",
+    "@printDialogNumberOfPrints": {
         "placeholders": {
             "numPrints": {
                 "type": "int"
-            },
-            "numImages": {
+            }
+        }
+    },
+    "printDialogCopiesPerSheet": "{numCopies, plural, =1{1 Blatt enthält 1 Kopie} other{1 Blatt enthält {numCopies} Kopien}}",
+    "@printDialogCopiesPerSheet": {
+        "placeholders": {
+            "numCopies": {
                 "type": "int"
             }
         }
