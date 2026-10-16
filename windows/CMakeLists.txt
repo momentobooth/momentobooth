@@ -92,6 +92,27 @@ if(PLUGIN_BUNDLED_LIBRARIES)
     COMPONENT Runtime)
 endif()
 
+# Copy libgphoto2, its dependencies and its camera and port drivers, downloaded by windows/get_native_deps.ps1.
+set(NATIVE_DEPS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../.native_deps/windows-x64")
+if(NOT EXISTS "${NATIVE_DEPS_DIR}/manifest.json")
+  message(FATAL_ERROR "Native dependencies not found, run 'just get-native-deps' first")
+endif()
+install(DIRECTORY "${NATIVE_DEPS_DIR}/bin/"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
+  COMPONENT Runtime)
+# The driver directories are versioned (e.g. lib/libgphoto2/2.5.34), the application expects them at a fixed location.
+file(GLOB CAMLIBS_DIR LIST_DIRECTORIES true "${NATIVE_DEPS_DIR}/lib/libgphoto2/*")
+file(GLOB IOLIBS_DIR LIST_DIRECTORIES true "${NATIVE_DEPS_DIR}/lib/libgphoto2_port/*")
+install(CODE "
+  file(REMOVE_RECURSE \"${INSTALL_BUNDLE_LIB_DIR}/libgphoto2_camlibs\" \"${INSTALL_BUNDLE_LIB_DIR}/libgphoto2_iolibs\")
+  " COMPONENT Runtime)
+install(DIRECTORY "${CAMLIBS_DIR}/"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}/libgphoto2_camlibs"
+  COMPONENT Runtime)
+install(DIRECTORY "${IOLIBS_DIR}/"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}/libgphoto2_iolibs"
+  COMPONENT Runtime)
+
 # Copy the native assets provided by the build.dart from all packages.
 set(NATIVE_ASSETS_DIR "${PROJECT_BUILD_DIR}native_assets/windows/")
 install(DIRECTORY "${NATIVE_ASSETS_DIR}"

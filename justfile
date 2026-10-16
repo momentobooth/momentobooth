@@ -1,4 +1,4 @@
-default: install-cargo-expand install-bridge-codegen install-flutter get-deps gen-bridge gen-code gen-l10n
+default: install-cargo-expand install-bridge-codegen install-cargo-bundle-licenses install-flutter get-deps get-native-deps gen-bridge gen-code gen-l10n gen-licenses
 
 set windows-shell := ["pwsh.exe", "-NoProfile", "-c"]
 
@@ -12,11 +12,22 @@ install-cargo-expand:
 install-bridge-codegen:
   cargo install flutter_rust_bridge_codegen@2.13.0
 
+install-cargo-bundle-licenses:
+  cargo install cargo-bundle-licenses@4.2.0
+
 install-flutter:
   fvm install -s --skip-pub-get
 
 get-deps:
   fvm flutter pub get
+
+[windows]
+get-native-deps:
+  ./windows/get_native_deps.ps1
+
+[unix]
+get-native-deps:
+  @echo "Native dependencies are installed through the system package manager on this platform"
 
 gen-bridge:
   flutter_rust_bridge_codegen generate
@@ -26,6 +37,9 @@ gen-code:
 
 gen-l10n:
   fvm flutter gen-l10n
+
+gen-licenses:
+  fvm dart run tool/generate_licenses.dart
 
 ##
 # Signing

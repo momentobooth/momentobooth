@@ -5,6 +5,10 @@ on:
     branches: [ main ]
     paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
     types: [opened, synchronize, reopened, ready_for_review]
+  # Builds on main fill the caches (sccache, Rust and Flutter), which pull requests can use, unlike each other's caches.
+  push:
+    branches: [ main ]
+    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -90,8 +94,11 @@ jobs:
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
-    - name: Install cargo-expand, frbc
-      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 --force -y
+    - name: Install cargo-expand, frbc, cargo-bundle-licenses
+      env:
+        # Without a token, the GitHub API rate limit of the shared runner IP is often exceeded, making binstall build from source
+        GITHUB_TOKEN: ${{ github.token }}
+      run: cargo binstall cargo-expand@1.0.126 flutter_rust_bridge_codegen@2.13.0 cargo-bundle-licenses@4.2.0 --force -y
 
     - name: Install build dependencies
       run: |
@@ -108,9 +115,13 @@ jobs:
       run: |
         flutter pub get --enforce-lockfile
         flutter gen-l10n
+        dart run tool/generate_licenses.dart
         PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
         dart run build_runner build
         flutter analyze --no-pub
+
+    - name: Run tests
+      run: flutter test --no-pub
 
     - name: Build project (arm64)
       run: |

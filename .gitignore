@@ -88,3 +88,7 @@ ci_build
 
 # Rust
 target/
+
+# Native dependencies, see windows/get_native_deps.ps1
+/.native_deps/
+/.cargo/config.toml
