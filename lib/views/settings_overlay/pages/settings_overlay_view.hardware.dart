@@ -547,7 +547,7 @@ SettingsTile _cupsPageSizeCard(SettingsOverlayViewModel viewModel, SettingsOverl
   return SettingsTile(
     icon: icon,
     title: title,
-    subtitle: size.name,
+    subtitle: size.label,
     setting: ComboBox<String>(
       items: viewModel.cupsPaperSizes,
       value: currentSettings.mediaSizeString,

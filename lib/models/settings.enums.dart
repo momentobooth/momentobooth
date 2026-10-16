@@ -275,11 +275,9 @@ enum PrintSize {
   small("Small print size"),
   tiny("Tiny print size");
 
-  // can add more properties or getters/methods if needed
-  final String name;
+  final String label;
 
-  // can use named parameters if you want
-  const PrintSize(this.name);
+  const PrintSize(this.label);
 
 }
 

@@ -13,6 +13,7 @@ export 'open_source_package.dart';
 export 'photo_capture.dart';
 export 'print_queue_info.dart';
 export 'print_queue_task.dart';
+export 'print_routing_graph.dart';
 export 'printer_issue_type.dart';
 export 'settings.dart';
 export 'source_photo.dart';
