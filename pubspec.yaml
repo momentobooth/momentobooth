@@ -37,6 +37,7 @@ dependencies:
   theme_tailor_annotation: 4.0.2
   google_fonts: 9.0.0
   twinkling_stars: 1.0.3
+  fl_nodes_v2: 1.2.2
 
   # Printscreen/Image processing
   screenshot: 3.0.0

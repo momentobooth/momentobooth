@@ -8,6 +8,7 @@ import 'package:csslib/parser.dart' as css_parser;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/exceptions/default_setting_restore_exception.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
@@ -91,6 +92,7 @@ sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableVa
     @Default("") String cupsPassword,
     @Default([]) List<String> cupsPrinterQueues,
     @JsonKey(defaultValue: PrintLayoutSettings.withDefaults) required PrintLayoutSettings printLayoutSettings,
+    @JsonKey(defaultValue: PrintRoutingGraph.withDefaults) required PrintRoutingGraph printRoutingGraph,
     @Default(148) double pageHeight,
     @Default(100) double pageWidth,
     @Default(true) bool usePrinterSettings,

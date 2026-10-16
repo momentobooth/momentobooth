@@ -12,6 +12,7 @@ import 'package:momento_booth/managers/external_system_status_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
@@ -300,6 +301,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   double get printerMarginBottomSetting => getIt<SettingsManager>().settings.hardware.printerMarginBottom;
   double get printerMarginLeftSetting => getIt<SettingsManager>().settings.hardware.printerMarginLeft;
   int get printerQueueWarningThresholdSetting => getIt<SettingsManager>().settings.hardware.printerQueueWarningThreshold;
+  PrintRoutingGraph get printRoutingGraphSetting => getIt<SettingsManager>().settings.hardware.printRoutingGraph;
   String get firefoxSendServerUrlSetting => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
   int get firefoxSendControlCommandTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout.inSeconds;
   int get firefoxSendTransferTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout.inSeconds;

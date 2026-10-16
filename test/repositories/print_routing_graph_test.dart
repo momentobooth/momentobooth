@@ -45,7 +45,13 @@ void main() {
       });
 
       expect(graph.edges, isEmpty);
-      expect(graph.nodes.single, const RoutingNode(id: 'printer', data: RoutingNodeData.printer()));
+      expect(graph.nodes.last, const RoutingNode(id: 'printer', data: RoutingNodeData.printer()));
+    });
+
+    test('adds a missing source when decoding', () {
+      final graph = PrintRoutingGraph.fromJson({});
+
+      expect(graph.nodes.map((node) => node.data), [const RoutingNodeData.source()]);
     });
 
     test('stores positions in whole pixels', () {

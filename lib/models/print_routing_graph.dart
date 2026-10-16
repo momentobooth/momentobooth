@@ -24,7 +24,21 @@ sealed class PrintRoutingGraph with _$PrintRoutingGraph implements TomlEncodable
     @Default([]) List<RoutingEdge> edges,
   }) = _PrintRoutingGraph;
 
-  factory PrintRoutingGraph.fromJson(Map<String, Object?> json) => _$PrintRoutingGraphFromJson(json);
+  /// Routes normal prints to a single printer, which still has to be configured.
+  factory PrintRoutingGraph.withDefaults() => const PrintRoutingGraph(
+    nodes: [
+      RoutingNode(id: 'source', data: RoutingNodeData.source()),
+      RoutingNode(id: 'roundRobin', x: 260, data: RoutingNodeData.roundRobin()),
+      RoutingNode(id: 'printer', x: 520, data: RoutingNodeData.printer()),
+    ],
+    edges: [
+      RoutingEdge(fromNode: 'source', fromPort: 'normal', toNode: 'roundRobin', toPort: RoutingPorts.input),
+      RoutingEdge(fromNode: 'roundRobin', fromPort: RoutingPorts.output, toNode: 'printer', toPort: RoutingPorts.input),
+    ],
+  );
+
+  /// Adds a source node when the stored graph has none, see [withSource].
+  factory PrintRoutingGraph.fromJson(Map<String, Object?> json) => _$PrintRoutingGraphFromJson(json).withSource();
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();

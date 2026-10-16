@@ -12,6 +12,7 @@ import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/sfx_manager.dart';
 import 'package:momento_booth/managers/update_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
@@ -549,6 +550,10 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     if (warningThreshold != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(printerQueueWarningThreshold: warningThreshold));
     }
+  }
+
+  void onPrintRoutingGraphChanged(PrintRoutingGraph graph) {
+    viewModel.updateSettings((settings) => settings.copyWith.hardware(printRoutingGraph: graph));
   }
 
   void onFirefoxSendServerUrlChanged(String? firefoxSendServerUrl) {
