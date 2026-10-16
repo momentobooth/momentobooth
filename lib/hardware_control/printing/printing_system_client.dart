@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/main.dart';
@@ -23,6 +24,11 @@ abstract class PrintingSystemClient with Logger {
   Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData, {PrintSize printSize = PrintSize.normal});
 
   Future<void> printPdf(String taskName, Uint8List pdfData, {int copies=1, PrintSize printSize = PrintSize.normal}) async {
+    if (getIt<SettingsManager>().settings.hardware.enablePrinterRouting) {
+      await _printRouted(taskName, pdfData, copies: copies, printSize: printSize);
+      return;
+    }
+
     final printers = await getSelectedPrintQueues();
     if (printers.isEmpty) throw PrintingException('No valid printers selected');
 
@@ -55,6 +61,44 @@ abstract class PrintingSystemClient with Logger {
         'printers': usedPrinters,
         'printSize': printSize.toString(),
       }));
+    }
+  }
+
+  /// Routed printing: dispatch a job only to the printers whose assignment is enabled and covers [printSize].
+  /// This lets the user bind, for example, a physical printer to single-photo prints and a virtual printer to 3-photo collages.
+  Future<void> _printRouted(String taskName, Uint8List pdfData, {required int copies, required PrintSize printSize}) async {
+    final settings = getIt<SettingsManager>().settings.hardware;
+    final available = await getPrintQueues();
+
+    // Imprimantes activées dont l'assignation couvre ce type de collage.
+    final List<PrintQueueInfo> targets = [];
+    for (final assignment in settings.printerAssignments) {
+      if (!assignment.enabled || !assignment.printSizes.contains(printSize)) continue;
+      final PrintQueueInfo? match = available.firstWhereOrNull((printer) => printer.id == assignment.queueId);
+      if (match == null) {
+        logError("Routed printer not found or offline [${assignment.queueId}] for print size ${printSize.name}");
+      } else {
+        targets.add(match);
+      }
+    }
+
+    if (targets.isEmpty) throw PrintingException('No printer assigned to print size ${printSize.name}');
+
+    Future<void> printToTarget(PrintQueueInfo printer) async {
+      for (int i = 0; i < copies; i++) {
+        final String jobName = "$taskName | ${printSize.name} | copy ${i + 1} / $copies";
+        logDebug("Routed printing $taskName at ${printSize.name}, copy #${i + 1} / $copies to printer [${printer.name}]");
+        await printPdfToQueue(printer.id, jobName, pdfData, printSize: printSize);
+        getIt<StatsManager>().addPrintedPhoto(size: printSize);
+      }
+    }
+
+    if (settings.printDispatchMode == PrintDispatchMode.parallel) {
+      await Future.wait(targets.map(printToTarget));
+    } else {
+      for (final target in targets) {
+        await printToTarget(target);
+      }
     }
   }
 
