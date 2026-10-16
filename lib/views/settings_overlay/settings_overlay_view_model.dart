@@ -254,6 +254,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<Language> get projectAvailableLanguagesSetting => getIt<ProjectManager>().settings.availableLanguages;
   bool get showGallerySetting => getIt<ProjectManager>().settings.showGallery;
   bool get showGetQrButtonSetting => getIt<ProjectManager>().settings.showGetQrButton;
+  bool get enablePrintingSetting => getIt<ProjectManager>().settings.enablePrinting;
 
   // System settings current values
   int get captureDelaySecondsSetting => getIt<SettingsManager>().settings.captureDelaySeconds;

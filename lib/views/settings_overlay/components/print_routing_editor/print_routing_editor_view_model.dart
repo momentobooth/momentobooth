@@ -223,22 +223,28 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     return issue == null;
   }
 
-  /// Explains a refused connection when the port colours do not: a round-robin carries a single type, and connections
+  /// Explains a refused connection when the port colours do not: an arbiter carries a single type, and connections
   /// cannot loop.
   String? _hintFor(RoutingIssue issue, RoutingEdge edge, PrintRoutingGraph graph) {
     if (issue.kind == RoutingIssueKind.cycle) return 'This connection would create a loop.';
     if (issue.kind != RoutingIssueKind.incompatibleTypes) return null;
-    if (issue.edge != edge) return 'This would change what a round-robin carries, which breaks another of its connections.';
 
-    RoutingPortSpec? portOf(String nodeId, String portId) =>
-        graph.nodes.firstWhereOrNull((node) => node.id == nodeId)?.data.port(portId);
+    RoutingNodeData? dataOf(String? nodeId) => graph.nodes.firstWhereOrNull((node) => node.id == nodeId)?.data;
+    String kindOf(String? nodeId) => switch (dataOf(nodeId)) {
+      final RoutingNodeData data => RoutingNodeKind.of(data).label.toLowerCase(),
+      null => 'node',
+    };
+
+    if (issue.edge != edge) {
+      return 'This would change what a ${kindOf(issue.edge?.fromNode)} carries, which breaks another of its connections.';
+    }
     final fromType = analysis.arbiterTypes[edge.fromNode];
     final toType = analysis.arbiterTypes[edge.toNode];
-    if ((portOf(edge.fromNode, edge.fromPort)?.isPassthrough ?? false) && fromType != null) {
-      return 'This round-robin carries ${_plural(fromType)}, which this input does not accept.';
+    if ((dataOf(edge.fromNode)?.port(edge.fromPort)?.isPassthrough ?? false) && fromType != null) {
+      return 'This ${kindOf(edge.fromNode)} carries ${_plural(fromType)}, which this input does not accept.';
     }
-    if ((portOf(edge.toNode, edge.toPort)?.isPassthrough ?? false) && toType != null) {
-      return 'This round-robin already carries ${_plural(toType)}.';
+    if ((dataOf(edge.toNode)?.port(edge.toPort)?.isPassthrough ?? false) && toType != null) {
+      return 'This ${kindOf(edge.toNode)} already carries ${_plural(toType)}.';
     }
     return null;
   }

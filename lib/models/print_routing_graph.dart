@@ -124,6 +124,9 @@ sealed class RoutingNodeData with _$RoutingNodeData {
   /// Distributes jobs (each copy separately) over all connected outputs in turn.
   const factory RoutingNodeData.roundRobin() = RoundRobinNodeData;
 
+  /// Sends every job to all connected outputs, e.g. to print a photo both as a normal and as a tiled print.
+  const factory RoutingNodeData.duplicate() = DuplicateNodeData;
+
   /// Tiles a photo in a grid on the sheet of the printer it ends up at.
   const factory RoutingNodeData.tileLayout({
     @Default(1) int columns,
@@ -152,18 +155,24 @@ sealed class RoutingNodeData with _$RoutingNodeData {
 
   factory RoutingNodeData.fromJson(Map<String, Object?> json) => _$RoutingNodeDataFromJson(json);
 
+  // Only arbiters split the job flow, so jobs never fan out implicitly: other job outputs take a single connection.
   List<RoutingPortSpec> get ports => switch (this) {
     SourceNodeData() => [
       for (final size in PrintSize.values)
-        RoutingPortSpec(id: RoutingPorts.source(size), direction: RoutingPortDirection.output, types: const {RoutingPortType.photo}),
+        RoutingPortSpec(
+          id: RoutingPorts.source(size),
+          direction: RoutingPortDirection.output,
+          types: const {RoutingPortType.photo},
+          maxConnections: 1,
+        ),
     ],
-    RoundRobinNodeData() => const [
+    RoundRobinNodeData() || DuplicateNodeData() => const [
       RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: jobPortTypes, isPassthrough: true),
       RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: jobPortTypes, isPassthrough: true),
     ],
     TileLayoutNodeData() => const [
       RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: {RoutingPortType.photo}, maxConnections: 1),
-      RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: {RoutingPortType.sheet}),
+      RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: {RoutingPortType.sheet}, maxConnections: 1),
     ],
     MarginsNodeData() => const [
       RoutingPortSpec(id: RoutingPorts.margins, direction: RoutingPortDirection.output, types: {RoutingPortType.margins}),

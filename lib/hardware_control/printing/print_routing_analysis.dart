@@ -24,6 +24,9 @@ enum RoutingIssueKind {
   /// A printer that receives jobs, but has no queue or media size set.
   incompletePrinter(RoutingIssueSeverity.warning),
 
+  /// A tile layout on the route of split prints, which are always printed in halves.
+  ignoredLayout(RoutingIssueSeverity.warning),
+
   /// A print size that does not reach any printer, so it cannot be printed.
   unroutedPrintSize(RoutingIssueSeverity.warning);
 
@@ -70,7 +73,14 @@ class PrintRoutingAnalysis {
   /// The job type flowing through each arbiter node. Arbiters without incoming jobs are absent.
   final Map<String, RoutingPortType> arbiterTypes;
 
-  const PrintRoutingAnalysis._(this.issues, this.reachablePrinterIds, this.arbiterTypes);
+  /// The source node that routes, the first one in the graph.
+  final String? sourceId;
+
+  /// The edges jobs can be routed along: those without errors. Invalid edges are ignored rather than blocking the
+  /// rest of the graph.
+  final List<RoutingEdge> routableEdges;
+
+  const PrintRoutingAnalysis._(this.issues, this.reachablePrinterIds, this.arbiterTypes, this.sourceId, this.routableEdges);
 
   bool get hasErrors => issues.any((issue) => issue.severity == RoutingIssueSeverity.error);
 
@@ -92,6 +102,7 @@ class _Analyzer {
   final PrintRoutingGraph graph;
   final List<RoutingIssue> issues = [];
   final Map<String, RoutingNode> nodes = {};
+  final Set<RoutingEdge> incompatibleEdges = {};
   String? sourceId;
 
   _Analyzer(this.graph);
@@ -101,8 +112,9 @@ class _Analyzer {
     final edges = _validEdges();
     final acyclicEdges = _withoutCycles(edges);
     final arbiterTypes = _resolveTypes(acyclicEdges);
-    final reachable = _reachablePrinters(edges);
-    return PrintRoutingAnalysis._(issues, reachable, arbiterTypes);
+    final routableEdges = acyclicEdges.whereNot(incompatibleEdges.contains).toList();
+    final reachable = _reachablePrinters(routableEdges);
+    return PrintRoutingAnalysis._(issues, reachable, arbiterTypes, sourceId, routableEdges);
   }
 
   void _collectNodes() {
@@ -218,6 +230,7 @@ class _Analyzer {
 
         if (!toPort.types.contains(type) || (toPort.isPassthrough && (arbiterTypes[nodeId] ?? type) != type)) {
           issues.add(RoutingIssue(kind: RoutingIssueKind.incompatibleTypes, edge: edge));
+          incompatibleEdges.add(edge);
         } else if (toPort.isPassthrough) {
           arbiterTypes[nodeId] = type;
         }
@@ -249,7 +262,7 @@ class _Analyzer {
     final outgoing = edges
         .where((edge) => nodes[edge.toNode]!.data.port(edge.toPort)!.types.any(jobPortTypes.contains))
         .groupListsBy((edge) => (edge.fromNode, edge.fromPort));
-    final Set<String> incompletePrinterIds = {};
+    final Set<String> incompletePrinterIds = {}, ignoredLayoutIds = {};
 
     Set<String> printersFrom(PrintSize size) {
       final Set<String> visited = {}, printers = {};
@@ -260,6 +273,7 @@ class _Analyzer {
         if (!visited.add(nodeId)) continue;
 
         final data = nodes[nodeId]!.data;
+        if (size == PrintSize.split && data is TileLayoutNodeData) ignoredLayoutIds.add(nodeId);
         if (data is PrinterNodeData) {
           if (_isComplete(data)) {
             printers.add(nodeId);
@@ -279,6 +293,9 @@ class _Analyzer {
 
     for (final nodeId in nodes.keys.where(incompletePrinterIds.contains)) {
       issues.add(RoutingIssue(kind: RoutingIssueKind.incompletePrinter, nodeId: nodeId));
+    }
+    for (final nodeId in nodes.keys.where(ignoredLayoutIds.contains)) {
+      issues.add(RoutingIssue(kind: RoutingIssueKind.ignoredLayout, nodeId: nodeId, printSize: PrintSize.split));
     }
     for (final MapEntry(key: size, value: printers) in reachable.entries) {
       if (printers.isEmpty) issues.add(RoutingIssue(kind: RoutingIssueKind.unroutedPrintSize, printSize: size));

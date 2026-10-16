@@ -91,6 +91,13 @@ Widget _getProjectSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCo
                 value: () => viewModel.showGetQrButtonSetting,
                 onChanged: controller.onShowGetQrButtonChanged,
               ),
+              SettingsToggleTile(
+                icon: LucideIcons.printer,
+                title: "Enable printing",
+                subtitle: "If enabled, the print button is shown on the share and photo detail screens, provided at least one print size is routed to a printer on the Print routing page.",
+                value: () => viewModel.enablePrintingSetting,
+                onChanged: controller.onEnablePrintingChanged,
+              ),
             ]
           );
         }

@@ -51,7 +51,7 @@ class RoutingNodeCard extends StatelessWidget {
               ..._portRows(data),
               ...switch (data) {
                 SourceNodeData() => const [],
-                RoundRobinNodeData() => [_CarriedTypeRow(nodeId: node.id, viewModel: viewModel)],
+                RoundRobinNodeData() || DuplicateNodeData() => [_CarriedTypeRow(nodeId: node.id, viewModel: viewModel)],
                 TileLayoutNodeData() => _tileLayoutFields(data, update),
                 MarginsNodeData(:final margins) => [
                   const _CaptionRow(child: _SecondaryCaption('Values in mm')),

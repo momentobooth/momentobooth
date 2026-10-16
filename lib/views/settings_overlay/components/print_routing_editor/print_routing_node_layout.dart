@@ -17,6 +17,7 @@ enum RoutingNodeKind {
 
   source('Source', 180, RoutingNodeData.source()),
   roundRobin('Round-robin', 200, RoutingNodeData.roundRobin()),
+  duplicate('Duplicate', 200, RoutingNodeData.duplicate()),
   tileLayout('Tile layout', 240, RoutingNodeData.tileLayout()),
   margins('Margins', 260, RoutingNodeData.margins()),
   printer('Printer', 340, RoutingNodeData.printer());
@@ -30,6 +31,7 @@ enum RoutingNodeKind {
   IconData get icon => switch (this) {
     source => LucideIcons.images,
     roundRobin => LucideIcons.repeat,
+    duplicate => LucideIcons.copy,
     tileLayout => LucideIcons.layoutGrid,
     margins => LucideIcons.squareDashed,
     printer => LucideIcons.printer,
@@ -39,6 +41,7 @@ enum RoutingNodeKind {
   AccentColor get color => switch (this) {
     source => Colors.blue,
     roundRobin => Colors.purple,
+    duplicate => Colors.magenta,
     tileLayout => Colors.orange,
     margins => Colors.green,
     printer => Colors.teal,
@@ -47,6 +50,7 @@ enum RoutingNodeKind {
   static RoutingNodeKind of(RoutingNodeData data) => switch (data) {
     SourceNodeData() => source,
     RoundRobinNodeData() => roundRobin,
+    DuplicateNodeData() => duplicate,
     TileLayoutNodeData() => tileLayout,
     MarginsNodeData() => margins,
     PrinterNodeData() => printer,
@@ -65,7 +69,7 @@ String printSizeShortLabel(PrintSize size) => switch (size) {
 
 String routingPortLabel(RoutingNodeData data, RoutingPortSpec port) => switch (data) {
   SourceNodeData() => printSizeShortLabel(PrintSize.values.byName(port.id)),
-  RoundRobinNodeData() => port.direction == RoutingPortDirection.input ? 'In' : 'Out',
+  RoundRobinNodeData() || DuplicateNodeData() => port.direction == RoutingPortDirection.input ? 'In' : 'Out',
   TileLayoutNodeData() => port.direction == RoutingPortDirection.input ? 'Photo' : 'Sheet',
   MarginsNodeData() => 'Margins',
   PrinterNodeData() => port.id == RoutingPorts.margins ? 'Margins' : 'Job',
@@ -114,14 +118,17 @@ class RoutingNodeLayout {
   int get portRows => math.max(rowPorts(RoutingPortDirection.input).length, rowPorts(RoutingPortDirection.output).length);
 
   int get fieldRows => switch (data) {
-    SourceNodeData() || RoundRobinNodeData() || MarginsNodeData() => 0,
+    SourceNodeData() || RoundRobinNodeData() || DuplicateNodeData() || MarginsNodeData() => 0,
     TileLayoutNodeData() => 3,
     // Label, backend, queue, (media,) size.
     PrinterNodeData(:final backend) => backend == PrinterBackend.cups ? 5 : 4,
   };
 
-  /// A caption row tells what a round-robin carries, or heads a margins section.
-  bool get hasCaptionRow => data is RoundRobinNodeData || data is PrinterNodeData || data is MarginsNodeData;
+  /// A caption row tells what an arbiter carries, or heads a margins section.
+  bool get hasCaptionRow => switch (data) {
+    RoundRobinNodeData() || DuplicateNodeData() || PrinterNodeData() || MarginsNodeData() => true,
+    SourceNodeData() || TileLayoutNodeData() => false,
+  };
 
   int get marginFieldRows => switch (data) {
     MarginsNodeData() => 2,

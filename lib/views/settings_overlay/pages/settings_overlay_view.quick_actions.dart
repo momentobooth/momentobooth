@@ -20,6 +20,12 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               checked: getIt<WindowManager>().isFullScreen,
               onChanged: (_) => getIt<WindowManager>().toggleFullscreenSafe(),
             ),
+            QuickToggle(
+              title: 'Printing',
+              icon: LucideIcons.printer,
+              checked: viewModel.enablePrintingSetting,
+              onChanged: (_) => controller.onEnablePrintingChanged(!viewModel.enablePrintingSetting),
+            ),
             QuickAction(
               title: 'Restart live view',
               icon: LucideIcons.refreshCcw,

@@ -247,6 +247,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onEnablePrintingChanged(bool? enablePrinting) {
+    if (enablePrinting != null) {
+      viewModel.updateProjectSettings((settings) => settings.copyWith(enablePrinting: enablePrinting));
+    }
+  }
+
   void onEnableWakelockChanged(bool? enableWakelock) {
     if (enableWakelock != null) {
       viewModel.updateSettings((settings) => settings.copyWith(enableWakelock: enableWakelock));
