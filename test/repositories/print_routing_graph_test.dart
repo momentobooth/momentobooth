@@ -5,7 +5,7 @@ import 'package:toml/toml.dart';
 const _graph = PrintRoutingGraph(
   nodes: [
     RoutingNode(id: 'source', data: RoutingNodeData.source()),
-    RoutingNode(id: 'robin', x: 300, y: 50.5, data: RoutingNodeData.roundRobin()),
+    RoutingNode(id: 'robin', x: 300, y: 50, data: RoutingNodeData.roundRobin()),
     RoutingNode(id: 'tile', data: RoutingNodeData.tileLayout(columns: 2, rows: 2, rotate: true)),
     RoutingNode(id: 'margins', data: RoutingNodeData.margins(margins: PrintMargins(top: 1.5, left: 2))),
     RoutingNode(id: 'printer', data: RoutingNodeData.printer(
@@ -46,6 +46,39 @@ void main() {
 
       expect(graph.edges, isEmpty);
       expect(graph.nodes.single, const RoutingNode(id: 'printer', data: RoutingNodeData.printer()));
+    });
+
+    test('stores positions in whole pixels', () {
+      final json = const RoutingNode(id: 'robin', x: 12.4, y: 50.5, data: RoutingNodeData.roundRobin()).toJson();
+
+      expect((json['x'], json['y']), (12.0, 51.0));
+    });
+  });
+
+  group('PrintRoutingGraph.withSource', () {
+    test('adds a source with an unused ID when there is none', () {
+      const graph = PrintRoutingGraph(nodes: [RoutingNode(id: 'source', data: RoutingNodeData.roundRobin())]);
+
+      expect(graph.withSource().nodes.first, const RoutingNode(id: 'source_1', data: RoutingNodeData.source()));
+    });
+
+    test('keeps a graph that has a source', () {
+      expect(_graph.withSource(), same(_graph));
+    });
+  });
+
+  group('PrintRoutingGraph.withEdge', () {
+    const tinyToTile = RoutingEdge(fromNode: 'source', fromPort: 'tiny', toNode: 'tile', toPort: 'in');
+    const smallToTile = RoutingEdge(fromNode: 'source', fromPort: 'small', toNode: 'tile', toPort: 'in');
+    const normalToPrinter = RoutingEdge(fromNode: 'source', fromPort: 'normal', toNode: 'printer', toPort: 'in');
+
+    test('replaces the connection of a single-connection port', () {
+      expect(_graph.withEdge(smallToTile).edges, isNot(contains(tinyToTile)));
+      expect(_graph.withEdge(smallToTile).edges.last, smallToTile);
+    });
+
+    test('adds to ports without a connection limit', () {
+      expect(_graph.withEdge(normalToPrinter).edges, [..._graph.edges, normalToPrinter]);
     });
   });
 

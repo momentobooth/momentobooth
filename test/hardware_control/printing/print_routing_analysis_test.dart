@@ -124,6 +124,7 @@ void main() {
     test('allows one margins connection per printer, only on its margins port', () {
       final graph = PrintRoutingGraph(
         nodes: [
+          _node('source', const RoutingNodeData.source()),
           _node('margins', const RoutingNodeData.margins()),
           _node('other margins', const RoutingNodeData.margins()),
           _node('printer', _printer),
@@ -164,6 +165,7 @@ void main() {
 
     test('rejects duplicate node IDs and invalid parameters', () {
       final graph = PrintRoutingGraph(nodes: [
+        _node('source', const RoutingNodeData.source()),
         _node('tile', const RoutingNodeData.tileLayout(columns: 0)),
         _node('tile', const RoutingNodeData.roundRobin()),
         _node('other tile', const RoutingNodeData.tileLayout(rows: 0)),
@@ -174,6 +176,26 @@ void main() {
         RoutingIssue(kind: RoutingIssueKind.duplicateNodeId, nodeId: 'tile'),
         RoutingIssue(kind: RoutingIssueKind.invalidParameter, nodeId: 'other tile'),
       ]);
+    });
+
+    test('requires a source', () {
+      final graph = PrintRoutingGraph(nodes: [_node('printer', _printer)]);
+
+      expect(_errorKinds(graph), [RoutingIssueKind.missingSource]);
+    });
+
+    test('rejects additional sources and only routes from the first', () {
+      final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('second source', const RoutingNodeData.source()),
+          _node('printer', _printer),
+        ],
+        edges: [_edge('second source', 'normal', 'printer')],
+      ));
+
+      expect(analysis.errors, const [RoutingIssue(kind: RoutingIssueKind.duplicateSource, nodeId: 'second source')]);
+      expect(analysis.reachablePrinterIds[PrintSize.normal], isEmpty);
     });
 
     test('warns about incomplete printers that receive jobs and does not route to them', () {
@@ -206,6 +228,11 @@ void main() {
 
     test('allows a valid connection', () {
       expect(PrintRoutingAnalysis.checkConnection(graph, _edge('source', 'normal', 'robin')), isNull);
+    });
+
+    test('allows a connection that replaces the connection of a single-connection port', () {
+      // The tile input is already connected to the round-robin.
+      expect(PrintRoutingAnalysis.checkConnection(graph, _edge('source', 'small', 'tile')), isNull);
     });
 
     test('rejects a connection that creates a cycle', () {

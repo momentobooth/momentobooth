@@ -29,6 +29,36 @@ sealed class PrintRoutingGraph with _$PrintRoutingGraph implements TomlEncodable
   @override
   Map<String, dynamic> toTomlValue() => toJson();
 
+  /// Returns this graph with a source node added if it has none. A graph has exactly one source.
+  PrintRoutingGraph withSource() {
+    if (nodes.any((node) => node.data is SourceNodeData)) return this;
+
+    final Set<String> ids = {for (final node in nodes) node.id};
+    String id = 'source';
+    for (int i = 1; ids.contains(id); i++) {
+      id = 'source_$i';
+    }
+    return copyWith(nodes: [RoutingNode(id: id, data: const RoutingNodeData.source()), ...nodes]);
+  }
+
+  /// Returns this graph with [edge] added. Where that exceeds the maximum number of connections of a port, the oldest connections of that port are replaced.
+  PrintRoutingGraph withEdge(RoutingEdge edge) {
+    final Set<RoutingEdge> replaced = {};
+
+    void makeRoom(String nodeId, String portId, RoutingPortDirection direction, bool Function(RoutingEdge existing) isOnPort) {
+      final port = nodes.where((node) => node.id == nodeId).firstOrNull?.data.port(portId);
+      final maxConnections = port?.maxConnections;
+      if (port == null || port.direction != direction || maxConnections == null) return;
+
+      final connected = edges.where(isOnPort).toList();
+      if (connected.length >= maxConnections) replaced.addAll(connected.take(connected.length - maxConnections + 1));
+    }
+
+    makeRoom(edge.fromNode, edge.fromPort, RoutingPortDirection.output, (existing) => existing.fromNode == edge.fromNode && existing.fromPort == edge.fromPort);
+    makeRoom(edge.toNode, edge.toPort, RoutingPortDirection.input, (existing) => existing.toNode == edge.toNode && existing.toPort == edge.toPort);
+    return copyWith(edges: [...edges.where((existing) => !replaced.contains(existing)), edge]);
+  }
+
 }
 
 @Freezed(fromJson: true, toJson: true)
@@ -37,9 +67,9 @@ sealed class RoutingNode with _$RoutingNode {
   const factory RoutingNode({
     required String id,
 
-    /// Position of the node in the editor canvas.
-    @Default(0.0) double x,
-    @Default(0.0) double y,
+    /// Position of the node in the editor canvas, stored in whole pixels.
+    @JsonKey(toJson: _roundPosition) @Default(0.0) double x,
+    @JsonKey(toJson: _roundPosition) @Default(0.0) double y,
 
     required RoutingNodeData data,
   }) = _RoutingNode;
@@ -47,6 +77,8 @@ sealed class RoutingNode with _$RoutingNode {
   factory RoutingNode.fromJson(Map<String, Object?> json) => _$RoutingNodeFromJson(json);
 
 }
+
+double _roundPosition(double position) => position.roundToDouble();
 
 /// A connection from an output port to an input port.
 @Freezed(fromJson: true, toJson: true)
@@ -116,7 +148,7 @@ sealed class RoutingNodeData with _$RoutingNodeData {
       RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: jobPortTypes, isPassthrough: true),
     ],
     TileLayoutNodeData() => const [
-      RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: {RoutingPortType.photo}),
+      RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: {RoutingPortType.photo}, maxConnections: 1),
       RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: {RoutingPortType.sheet}),
     ],
     MarginsNodeData() => const [

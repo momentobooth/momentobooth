@@ -8,6 +8,10 @@ enum RoutingIssueSeverity { error, warning }
 enum RoutingIssueKind {
 
   duplicateNodeId(RoutingIssueSeverity.error),
+  missingSource(RoutingIssueSeverity.error),
+
+  /// A source node besides the first one. It does not route anything.
+  duplicateSource(RoutingIssueSeverity.error),
   invalidParameter(RoutingIssueSeverity.error),
   unknownNode(RoutingIssueSeverity.error),
   unknownPort(RoutingIssueSeverity.error),
@@ -74,12 +78,11 @@ class PrintRoutingAnalysis {
 
   factory PrintRoutingAnalysis.of(PrintRoutingGraph graph) => _Analyzer(graph).run();
 
-  /// Checks whether [edge] can be added to [graph] without introducing errors.
+  /// Checks whether [edge] can be added to [graph] with [PrintRoutingGraph.withEdge] without introducing errors.
   /// Returns the first new error, or null if the connection is allowed.
   static RoutingIssue? checkConnection(PrintRoutingGraph graph, RoutingEdge edge) {
     final currentErrors = PrintRoutingAnalysis.of(graph).errors.toSet();
-    final candidate = graph.copyWith(edges: [...graph.edges, edge]);
-    return PrintRoutingAnalysis.of(candidate).errors.firstWhereOrNull((issue) => !currentErrors.contains(issue));
+    return PrintRoutingAnalysis.of(graph.withEdge(edge)).errors.firstWhereOrNull((issue) => !currentErrors.contains(issue));
   }
 
 }
@@ -89,6 +92,7 @@ class _Analyzer {
   final PrintRoutingGraph graph;
   final List<RoutingIssue> issues = [];
   final Map<String, RoutingNode> nodes = {};
+  String? sourceId;
 
   _Analyzer(this.graph);
 
@@ -109,12 +113,22 @@ class _Analyzer {
       }
       nodes[node.id] = node;
 
+      if (node.data is SourceNodeData) {
+        if (sourceId == null) {
+          sourceId = node.id;
+        } else {
+          issues.add(RoutingIssue(kind: RoutingIssueKind.duplicateSource, nodeId: node.id));
+        }
+      }
+
       final bool validParameters = switch (node.data) {
         TileLayoutNodeData(:final columns, :final rows) => columns >= 1 && rows >= 1,
         _ => true,
       };
       if (!validParameters) issues.add(RoutingIssue(kind: RoutingIssueKind.invalidParameter, nodeId: node.id));
     }
+
+    if (sourceId == null) issues.add(const RoutingIssue(kind: RoutingIssueKind.missingSource));
   }
 
   /// Returns the edges that connect existing ports in the right direction, within the connection limits.
@@ -235,14 +249,11 @@ class _Analyzer {
     final outgoing = edges
         .where((edge) => nodes[edge.toNode]!.data.port(edge.toPort)!.types.any(jobPortTypes.contains))
         .groupListsBy((edge) => (edge.fromNode, edge.fromPort));
-    final sourceIds = nodes.values.where((node) => node.data is SourceNodeData).map((node) => node.id).toList();
     final Set<String> incompletePrinterIds = {};
 
     Set<String> printersFrom(PrintSize size) {
       final Set<String> visited = {}, printers = {};
-      final List<RoutingEdge> pending = [
-        for (final sourceId in sourceIds) ...?outgoing[(sourceId, RoutingPorts.source(size))],
-      ];
+      final List<RoutingEdge> pending = [...?outgoing[(sourceId, RoutingPorts.source(size))]];
 
       while (pending.isNotEmpty) {
         final nodeId = pending.removeLast().toNode;
