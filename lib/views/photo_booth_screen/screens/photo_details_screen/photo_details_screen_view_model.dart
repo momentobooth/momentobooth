@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -30,6 +31,7 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
 
   Directory get outputDir => getIt<ProjectManager>().getOutputDir();
   bool get showGetQrButton => getIt<ProjectManager>().settings.showGetQrButton;
+  bool get showPrintButton => getIt<PrintingManager>().canPrint;
   File? get file => File(path.join(outputDir.path, photoId));
   Future<List<MomentoBoothExifTag>> get metadata async => await getMomentoBoothExifTagsFromFile(imageFilePath: file!.path);
   Future<GalleryImage> get galleryImage async => GalleryImage(file: file!, exifTags: await metadata);

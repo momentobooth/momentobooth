@@ -178,6 +178,54 @@ void main() {
       ]);
     });
 
+    test('passes the job type through a duplicate, which reaches all its outputs', () {
+      final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('duplicate', const RoutingNodeData.duplicate()),
+          _node('tile', const RoutingNodeData.tileLayout()),
+          _node('a', _printer),
+          _node('b', _printer),
+        ],
+        edges: [
+          _edge('source', 'normal', 'duplicate'),
+          _edge('duplicate', 'out', 'a'),
+          _edge('duplicate', 'out', 'tile'),
+          _edge('tile', 'out', 'b'),
+        ],
+      ));
+
+      expect(analysis.errors, isEmpty);
+      expect(analysis.arbiterTypes, {'duplicate': RoutingPortType.photo});
+      expect(analysis.reachablePrinterIds[PrintSize.normal], {'a', 'b'});
+    });
+
+    test('allows a single connection on job outputs other than those of arbiters', () {
+      final graph = PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('a', _printer),
+          _node('b', _printer),
+        ],
+        edges: [_edge('source', 'normal', 'a'), _edge('source', 'normal', 'b')],
+      );
+
+      expect(_errorKinds(graph), [RoutingIssueKind.tooManyConnections]);
+    });
+
+    test('warns about a tile layout on the route of split prints', () {
+      final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('tile', const RoutingNodeData.tileLayout(columns: 2)),
+          _node('printer', _printer),
+        ],
+        edges: [_edge('source', 'split', 'tile'), _edge('tile', 'out', 'printer')],
+      ));
+
+      expect(analysis.issues, contains(const RoutingIssue(kind: RoutingIssueKind.ignoredLayout, nodeId: 'tile', printSize: PrintSize.split)));
+    });
+
     test('requires a source', () {
       final graph = PrintRoutingGraph(nodes: [_node('printer', _printer)]);
 

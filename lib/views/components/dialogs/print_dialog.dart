@@ -3,7 +3,7 @@ import 'package:flutter/material.dart' hide Colors;
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/main.dart';
-import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
 import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
@@ -29,24 +29,20 @@ class PrintDialog extends StatefulWidget {
 
 class _PrintDialogState extends State<PrintDialog> {
 
+  /// The print sizes users choose from. Split prints follow from the photo, so they are not a choice.
+  static List<PrintSize> get _choices => [
+    for (final size in [PrintSize.normal, PrintSize.small, PrintSize.tiny])
+      if (getIt<PrintingManager>().printableSizes.contains(size)) size,
+  ];
+
   int numPrints = 1;
-  PrintSize printSize = PrintSize.normal;
-
-  int get gridX => switch (printSize) {
-    PrintSize.small => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridSmall.x,
-    PrintSize.tiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridTiny.x,
-    _ => 1,
-  };
-
-  int get gridY => switch (printSize) {
-    PrintSize.small => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridSmall.y,
-    PrintSize.tiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridTiny.y,
-    _ => 1,
-  };
+  PrintSize printSize = _choices.firstOrNull ?? PrintSize.normal;
 
   @override
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
+    // Unknown when the routes of this print size put a different number of photos on paper.
+    final photosPerCopy = getIt<PrintingManager>().photosPerCopy(printSize);
 
     const textStyle = TextStyle(fontWeight: FontWeight.w500, fontSize: 18, height: 1);
 
@@ -63,6 +59,7 @@ class _PrintDialogState extends State<PrintDialog> {
               ),
               const SizedBox(width: 12),
               PrintSizeChoice(
+                choices: _choices,
                 printSize: printSize,
                 onChanged: (value) {
                   setState(() => printSize = value);
@@ -76,10 +73,11 @@ class _PrintDialogState extends State<PrintDialog> {
             textAlign: TextAlign.left,
             style: textStyle,
           ),
-          Text(
-            localizations.printDialogSummary(numPrints, numPrints * gridX * gridY),
-            textAlign: TextAlign.left,
-          ),
+          if (photosPerCopy != null)
+            Text(
+              localizations.printDialogSummary(numPrints, numPrints * photosPerCopy),
+              textAlign: TextAlign.left,
+            ),
           const SizedBox(height: 16.0),
           Material(
             color: Colors.transparent,
@@ -116,14 +114,14 @@ class _PrintDialogState extends State<PrintDialog> {
 
 class PrintSizeChoice extends StatelessWidget {
 
+  final List<PrintSize> choices;
   final PrintSize printSize;
   final ValueChanged<PrintSize> onChanged;
 
-  const PrintSizeChoice({super.key, required this.printSize, required this.onChanged});
+  const PrintSizeChoice({super.key, required this.choices, required this.printSize, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    final settings = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
     return SegmentedButton<PrintSize>(
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.resolveWith<Color>(
@@ -137,19 +135,14 @@ class PrintSizeChoice extends StatelessWidget {
         iconColor: WidgetStateProperty.all(Colors.white)
       ),
       segments: [
-        const ButtonSegment<PrintSize>(
-          value: PrintSize.normal,
-          label: Text('Normal'),
-        ),
-        if (settings.mediaSizeSmall.mediaSizeString.isNotEmpty)
-          const ButtonSegment<PrintSize>(
-            value: PrintSize.small,
-            label: Text('Small'),
-          ),
-        if (settings.mediaSizeTiny.mediaSizeString.isNotEmpty)
-          const ButtonSegment<PrintSize>(
-            value: PrintSize.tiny,
-            label: Text('Tiny'),
+        for (final size in choices)
+          ButtonSegment<PrintSize>(
+            value: size,
+            label: Text(switch (size) {
+              PrintSize.normal || PrintSize.split => 'Normal',
+              PrintSize.small => 'Small',
+              PrintSize.tiny => 'Tiny',
+            }),
           ),
       ],
       selected: {printSize},

@@ -7,13 +7,7 @@ Widget _getHardwareSettings(SettingsOverlayViewModel viewModel, SettingsOverlayC
       _getGeneralBlock(viewModel, controller),
       _getImagingBlock(viewModel, controller),
       _getPrintingBlock(viewModel, controller),
-      Observer(builder: (_) =>
-        switch(viewModel.printingImplementationSetting) {
-          PrintingImplementation.none => const SizedBox(),
-          PrintingImplementation.flutterPrinting => _getFlutterPrintingBlock(viewModel, controller),
-          PrintingImplementation.cups => _getCupsBlock(viewModel, controller),
-        }
-      ),
+      _getCupsBlock(viewModel, controller),
     ],
   );
 }
@@ -184,15 +178,19 @@ Widget _getPrintingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayCont
   return SettingsSection(
     title: "Printing",
     settings: [
-      SettingsComboBoxTile(
-        icon: LucideIcons.printer,
-        title: "Print method",
-        subtitle: "Method used for printing photos",
-        items: viewModel.printingImplementations,
-        value: () => viewModel.printingImplementationSetting,
-        onChanged: controller.onPrintingImplementationChanged,
+      SettingsTextDisplayTile(
+        icon: LucideIcons.route,
+        title: "Printers and print sizes",
+        subtitle: "Which printers print which print sizes, on what media and with which layout, is set on the Print routing page.",
+        text: "",
       ),
-      _printerMargins(viewModel, controller),
+      SettingsToggleTile(
+        icon: LucideIcons.settings,
+        title: "Use printer settings for native printers",
+        subtitle: "Controls the usePrinterSettings property of the Flutter printing library, which lets the printer driver apply its own settings.",
+        value: () => viewModel.usePrinterSettingsSetting,
+        onChanged: controller.onUsePrinterSettingsChanged,
+      ),
       SettingsNumberEditTile(
         icon: LucideIcons.printerCheck,
         title: "Queue warning threshold",
@@ -206,7 +204,7 @@ Widget _getPrintingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayCont
 
 Widget _getCupsBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
   return SettingsSection(
-    title: "CUPS",
+    title: "CUPS server",
     settings: [
       SettingsTextEditTile(
         icon: LucideIcons.server,
@@ -236,119 +234,7 @@ Widget _getCupsBlock(SettingsOverlayViewModel viewModel, SettingsOverlayControll
         controller: controller.cupsPasswordController,
         onFinishedEditing: controller.onCupsPasswordChanged,
       ),
-      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Normal", LucideIcons.square, PrintSize.normal, viewModel.mediaSizeNormal)),
-      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Split", LucideIcons.rows2, PrintSize.split, viewModel.mediaSizeSplit)),
-      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Small", LucideIcons.grid2x2, PrintSize.small, viewModel.mediaSizeSmall)),
-      Observer(builder: (_) => _gridPrint(viewModel, controller, "small", PrintSize.small, viewModel.gridSmall)),
-      Observer(builder: (_) => _cupsPageSizeCard(viewModel, controller, "Media size: Tiny", LucideIcons.grid3x3, PrintSize.tiny, viewModel.mediaSizeTiny)),
-      Observer(builder: (_) => _gridPrint(viewModel, controller, "tiny", PrintSize.tiny, viewModel.gridTiny)),
-      Observer(
-        builder: (context) => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (int i = 0; i <= viewModel.cupsPrinterQueuesSetting.length; i++)
-              _cupsQueuesCard(viewModel, controller, "Printer ${i + 1}", i),
-          ],
-        ),
-      ),
     ],
-  );
-}
-
-Widget _getFlutterPrintingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  return SettingsSection(
-    title: "Flutter Printing",
-    settings: [
-      Observer(builder: (context) =>
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (int i = 0; i <= viewModel.flutterPrintingPrinterNamesSetting.length; i++)
-              _printerCard(viewModel, controller, "Printer ${i+1}", i),
-          ],
-        ),
-      ),
-      SettingsNumberEditTile(
-        icon: LucideIcons.moveVertical,
-        title: "Page height",
-        subtitle: 'Page format height used for printing [mm]',
-        value: () => viewModel.pageHeightSetting,
-        onFinishedEditing: controller.onPageHeightChanged,
-        smallChange: 0.1,
-      ),
-      SettingsNumberEditTile(
-        icon: LucideIcons.moveHorizontal,
-        title: "Page width",
-        subtitle: 'Page format width used for printing [mm]',
-        value: () => viewModel.pageWidthSetting,
-        onFinishedEditing: controller.onPageWidthChanged,
-        smallChange: 0.1,
-      ),
-      SettingsToggleTile(
-        icon: LucideIcons.settings,
-        title: "usePrinterSettings for printing",
-        subtitle: "Control the usePrinterSettings property of the Flutter printing library.",
-        value: () => viewModel.usePrinterSettingsSetting,
-        onChanged: controller.onUsePrinterSettingsChanged,
-      ),
-    ],
-  );
-}
-
-SettingsTile _printerMargins(SettingsOverlayViewModel viewModel, SettingsOverlayController controller) {
-  const double numberWidth = 100;
-  const double padding = 10;
-  return SettingsTile(
-    icon: LucideIcons.file,
-    title: "Page margins used for printing",
-    subtitle: "Some printers cut off some part of the image. Use this to compensate.\nOrder: top, right, bottom, left [mm]",
-    setting: Row(
-      children: [
-        SizedBox(
-          width: numberWidth,
-          child: Observer(builder: (_) {
-            return NumberBox<double>(
-              value: viewModel.printerMarginTopSetting,
-              onChanged: controller.onPrinterMarginTopChanged,
-              smallChange: 0.1,
-            );
-          }),
-        ),
-        const SizedBox(width: padding),
-        SizedBox(
-          width: numberWidth,
-          child: Observer(builder: (_) {
-            return NumberBox<double>(
-              value: viewModel.printerMarginRightSetting,
-              onChanged: controller.onPrinterMarginRightChanged,
-              smallChange: 0.1,
-            );
-          }),
-        ),
-        const SizedBox(width: padding),
-        SizedBox(
-          width: numberWidth,
-          child: Observer(builder: (_) {
-            return NumberBox<double>(
-              value: viewModel.printerMarginBottomSetting,
-              onChanged: controller.onPrinterMarginBottomChanged,
-              smallChange: 0.1,
-            );
-          }),
-        ),
-        const SizedBox(width: padding),
-        SizedBox(
-          width: numberWidth,
-          child: Observer(builder: (_) {
-            return NumberBox<double>(
-              value: viewModel.printerMarginLeftSetting,
-              onChanged: controller.onPrinterMarginLeftChanged,
-              smallChange: 0.1,
-            );
-          }),
-        ),
-      ],
-    ),
   );
 }
 
@@ -488,105 +374,6 @@ SettingsTile _gPhoto2CamerasCard(SettingsOverlayViewModel viewModel, SettingsOve
             disabledPlaceholder: Text('<No options>'),
           );
         }),
-      ],
-    ),
-  );
-}
-
-SettingsTile _printerCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller, String title, int index) {
-  return SettingsTile(
-    icon: LucideIcons.printerCheck,
-    title: title,
-    subtitle: "Which printer(s) to use for printing photos",
-    setting: Row(
-      children: [
-        Button(
-          onPressed: viewModel.setFlutterPrintingQueueList,
-          child: const Text('Refresh'),
-        ),
-        const SizedBox(width: 10),
-        Observer(builder: (_) {
-          return ComboBox<String>(
-            items: viewModel.flutterPrintingQueues,
-            value: index < viewModel.flutterPrintingPrinterNamesSetting.length ? viewModel.flutterPrintingPrinterNamesSetting[index] : viewModel.unusedPrinterValue,
-            onChanged: (name) => controller.onFlutterPrintingPrinterChanged(name, index),
-            disabledPlaceholder: Text('<No options>'),
-          );
-        }),
-      ],
-    ),
-  );
-}
-
-SettingsTile _cupsQueuesCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller, String title, int index) {
-  return SettingsTile(
-    icon: LucideIcons.printerCheck,
-    title: title,
-    subtitle: "Which printer(s) to use for printing photos",
-    setting: Row(
-      children: [
-        Button(
-          onPressed: viewModel.setCupsQueueList,
-          child: const Text('Refresh'),
-        ),
-        const SizedBox(width: 10),
-        Observer(builder: (_) {
-          return ComboBox<String>(
-            items: viewModel.cupsQueues,
-            value: index < viewModel.cupsPrinterQueuesSetting.length ? viewModel.cupsPrinterQueuesSetting[index] : viewModel.unusedPrinterValue,
-            onChanged: (name) => controller.onCupsPrinterQueuesQueueChanged(name, index),
-            disabledPlaceholder: Text('<No options>'),
-          );
-        }),
-      ],
-    ),
-  );
-}
-
-SettingsTile _cupsPageSizeCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller, String title, IconData icon, PrintSize size, MediaSettings currentSettings) {
-  return SettingsTile(
-    icon: icon,
-    title: title,
-    subtitle: size.label,
-    setting: ComboBox<String>(
-      items: viewModel.cupsPaperSizes,
-      value: currentSettings.mediaSizeString,
-      onChanged: (value) => controller.onCupsPageSizeChanged(value, size),
-      disabledPlaceholder: Text('<No options>'),
-    ),
-  );
-}
-
-SettingsTile _gridPrint(SettingsOverlayViewModel viewModel, SettingsOverlayController controller, String sizeName, PrintSize size, GridSettings grid) {
-  const double numberWidth = 100;
-  const double padding = 10;
-  return SettingsTile(
-    icon: LucideIcons.layoutGrid,
-    title: "Grid for $sizeName print",
-    subtitle: "Set what grid to create for creating $sizeName prints. A grid of X by Y images is generated.\nOrder: X, Y, rotate images.",
-    setting: Row(
-      children: [
-        SizedBox(
-          width: numberWidth,
-          child: NumberBox<int>(
-            value: grid.x,
-            onChanged: (value) => controller.onCupsGridXChanged(value, size),
-          ),
-        ),
-        const SizedBox(width: padding),
-        SizedBox(
-          width: numberWidth,
-          child: NumberBox<int>(
-            value: grid.y,
-            onChanged: (value) => controller.onCupsGridYChanged(value, size),
-          ),
-        ),
-        const SizedBox(width: padding),
-        ToggleSwitch(
-          checked: grid.rotate,
-          onChanged: (value)  => controller.onCupsGridRotateChanged(value, size),
-        ),
-
       ],
     ),
   );

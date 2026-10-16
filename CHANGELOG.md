@@ -14,8 +14,13 @@
 - (experimental) Video message mode, in which guests record a short video message for their hosts. Requires gPhoto2 camera. Can be enabled in the new Experimental settings tab
 - (experimental) Audio of video messages can be recorded through FFmpeg, then transcribed and summarized through configurable OpenAI-compatible endpoints (including local servers)
 - (experimental) The summary of a video message can be printed together with a snapshot on an ESC/POS receipt printer (currently fixed to the Wincor Nixdorf TH230+)
+- Print routing: a node editor on the new Print routing settings page decides which printer prints which print size, on which media, with which margins and in which tile layout. Native and CUPS printers can be combined, round-robin nodes distribute copies over printers and duplicate nodes print a photo on several printers at once
+- A project can now disable printing, also with a quick action
 
 ### Changes
+- The printer, media size, grid and margin settings on the Hardware page are replaced by print routing. They are not migrated and have to be set up again on the Print routing page
+- Photos are now turned to match the orientation of the media or tile they are printed on, instead of assuming portrait media
+- Small and tiny prints no longer compensate the collage padding
 - Added a setting to enable or disable the check for new versions
 - Swapped the delete and keep buttons in the retake dialog, so keep is the rightmost button
 - macOS: MomentoBooth now requires macOS 15 (Sequoia) or newer on a Mac with Apple Silicon. Intel Macs are no longer supported

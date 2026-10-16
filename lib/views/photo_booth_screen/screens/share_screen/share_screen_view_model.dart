@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
+import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
@@ -27,6 +28,7 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
 
   bool get displayConfetti => getIt<ProjectManager>().settings.displayConfetti;
   bool get showGetQrButton => getIt<ProjectManager>().settings.showGetQrButton;
+  bool get showPrintButton => getIt<PrintingManager>().canPrint;
   late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
   Uint8List get outputImage => getIt<PhotosManager>().outputImage!;

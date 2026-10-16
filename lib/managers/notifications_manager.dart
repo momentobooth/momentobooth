@@ -45,12 +45,14 @@ abstract class NotificationsManagerBase with Store {
 
   Future<List<InfoBar>> _printerStatusCheck() async {
     final printerNotifications = List<InfoBar>.empty(growable: true);
-    final printerNames = getIt<SettingsManager>().settings.hardware.flutterPrintingPrinterNames;
+    // TODO: Replace by a status strategy that covers both backends and queues shared by several printer configurations.
+    final printerNames = getIt<PrintingManager>().usedQueueIds(PrinterBackend.native).toList();
     final printersStatus = await compute(checkPrintersStatus, printerNames);
     printersStatus.forEachIndexed((index, element) {
-      final hasErrorNotification = InfoBar.warning(title: const Text("Printer error"), content: Text("Printer ${index+1} has an error."));
-      final paperOutNotification = InfoBar.warning(title: const Text("Printer out of paper"), content: Text("Printer ${index+1} is out of paper."));
-      final longQueueNotification = InfoBar.info(title: const Text("Long printing queue"), content: Text("Printer ${index+1} has a long queue (${element.jobs} jobs). It might take a while for your print to appear."));
+      final name = printerNames[index];
+      final hasErrorNotification = InfoBar.warning(title: const Text("Printer error"), content: Text("Printer $name has an error."));
+      final paperOutNotification = InfoBar.warning(title: const Text("Printer out of paper"), content: Text("Printer $name is out of paper."));
+      final longQueueNotification = InfoBar.info(title: const Text("Long printing queue"), content: Text("Printer $name has a long queue (${element.jobs} jobs). It might take a while for your print to appear."));
       if (element.jobs >= getIt<SettingsManager>().settings.hardware.printerQueueWarningThreshold) {
         printerNotifications.add(longQueueNotification);
       }

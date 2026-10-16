@@ -18,7 +18,6 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/repositories/secrets/secrets_repository.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
-import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
@@ -382,92 +381,6 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
-  void onPrintingImplementationChanged(PrintingImplementation? printingImplementation) {
-    if (printingImplementation != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(printingImplementation: printingImplementation));
-    }
-  }
-
-  void onCupsPrinterQueuesQueueChanged(String? printerName, int? printerIndex) {
-    if (printerName != null && printerIndex != null) {
-      List<String> currentList = List.from(viewModel.cupsPrinterQueuesSetting);
-
-      if (printerName == viewModel.unusedPrinterValue) {
-        currentList.length = printerIndex;
-      } else {
-        if (printerIndex >= currentList.length) {
-          currentList.add(printerName);
-        } else {
-          currentList[printerIndex] = printerName;
-        }
-      }
-      logDebug("Setting CUPS printer list to $currentList");
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: currentList));
-      // If the first printer changed, update the available page size options
-      if (printerIndex == 0) {
-        viewModel.setCupsPageSizeOptions();
-      }
-    }
-  }
-
-  void onCupsPageSizeChanged(String? mediaSize, PrintSize? printSize) {
-    if (mediaSize != null && printSize != null) {
-      final dimension = mediaSize == ""
-              ? const PrintDimension(name: "", height: 0, width: 0, keyword: "")
-              : viewModel.mediaDimensions.where((element) => element.keyword == mediaSize).firstOrNull;
-      if (dimension == null) return;
-      final newSize = MediaSettings(mediaSizeString: dimension.keyword, mediaSizeHeight: dimension.height, mediaSizeWidth: dimension.width);
-      logDebug("Setting media size for $printSize to $newSize");
-
-      switch (printSize) {
-        case PrintSize.normal:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeNormal: newSize));
-        case PrintSize.split:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSplit: newSize));
-        case PrintSize.small:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeSmall: newSize));
-        case PrintSize.tiny:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings(mediaSizeTiny: newSize));
-      }
-    }
-  }
-
-  void onCupsGridXChanged(int? x, PrintSize? printSize) {
-    if (printSize != null && x != null) {
-      switch(printSize) {
-        case PrintSize.small:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(x: x));
-        case PrintSize.tiny:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(x: x));
-        default:
-      }
-    }
-  }
-
-  void onCupsGridYChanged(int? y, PrintSize? printSize) {
-    if (printSize != null && y != null) {
-      switch(printSize) {
-        case PrintSize.small:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(y: y));
-        case PrintSize.tiny:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(y: y));
-        default:
-      }
-    }
-  }
-
-  void onCupsGridRotateChanged(bool? rotate, PrintSize? printSize) {
-    if (printSize != null && rotate != null) {
-      switch(printSize) {
-        case PrintSize.small:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridSmall(rotate: rotate));
-        case PrintSize.tiny:
-          viewModel.updateSettings((settings) => settings.copyWith.hardware.printLayoutSettings.gridTiny(rotate: rotate));
-        default:
-      }
-    }
-  }
-
   void onCupsUriChanged(String? cupsUri) {
     if (cupsUri != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(cupsUri: cupsUri));
@@ -492,63 +405,9 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
-  void onFlutterPrintingPrinterChanged(String? printerName, int? printerIndex) {
-    if (printerName != null && printerIndex != null) {
-      List<String> currentList = List.from(viewModel.flutterPrintingPrinterNamesSetting);
-
-      if (printerName == viewModel.unusedPrinterValue) {
-        currentList.length = printerIndex;
-      } else {
-        if (printerIndex >= currentList.length) {
-          currentList.add(printerName);
-        } else {
-          currentList[printerIndex] = printerName;
-        }
-      }
-      logDebug("Setting Flutter printing printerlist to $currentList");
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: currentList));
-    }
-  }
-
-  void onPageHeightChanged(double? pageHeight) {
-    if (pageHeight != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(pageHeight: pageHeight));
-    }
-  }
-
-  void onPageWidthChanged(double? pageWidth) {
-    if (pageWidth != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(pageWidth: pageWidth));
-    }
-  }
-
   void onUsePrinterSettingsChanged(bool? usePrinterSettings) {
     if (usePrinterSettings != null) {
       viewModel.updateSettings((settings) => settings.copyWith.hardware(usePrinterSettings: usePrinterSettings));
-    }
-  }
-
-  void onPrinterMarginTopChanged(double? marginTop) {
-    if (marginTop != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginTop: marginTop));
-    }
-  }
-
-  void onPrinterMarginRightChanged(double? marginRight) {
-    if (marginRight != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginRight: marginRight));
-    }
-  }
-
-  void onPrinterMarginBottomChanged(double? marginBottom) {
-    if (marginBottom != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginBottom: marginBottom));
-    }
-  }
-
-  void onPrinterMarginLeftChanged(double? marginLeft) {
-    if (marginLeft != null) {
-      viewModel.updateSettings((settings) => settings.copyWith.hardware(printerMarginLeft: marginLeft));
     }
   }
 

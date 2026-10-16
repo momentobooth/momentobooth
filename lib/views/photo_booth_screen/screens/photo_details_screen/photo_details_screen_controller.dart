@@ -5,7 +5,6 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
@@ -74,10 +73,12 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
+    final printing = getIt<PrintingManager>();
     final imgSources = await viewModel.makerNoteData;
     final sourceCount = imgSources?.sourcePhotos.length;
     PrintSize usingSize = size;
-    if (size == PrintSize.normal && sourceCount == 3) {
+    // A collage of three photos is printed in halves, if that print size is routed to a printer.
+    if (size == PrintSize.normal && sourceCount == 3 && printing.printableSizes.contains(PrintSize.split)) {
       usingSize = PrintSize.split;
     }
 
@@ -87,13 +88,11 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printEnabled = false
       ..printText = localizations.photoDetailsScreenPrinting;
 
-    // Get photo and print it.
-    final pdfData = await getImagePdfWithPageSize(await viewModel.file!.readAsBytes(), usingSize);
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Reprint";
 
     bool success = false;
     try {
-      await getIt<PrintingManager>().printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
+      await printing.printPhoto(jobName: jobName, image: await viewModel.file!.readAsBytes(), size: usingSize, copies: copies);
       success = true;
     } catch (e, s) {
       logError("Failed to print photo", e, s);

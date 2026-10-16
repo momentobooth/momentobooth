@@ -130,18 +130,19 @@ class ShareScreenView extends ScreenViewBase<ShareScreenViewModel, ShareScreenCo
               ),
             ),
           ),
-        Flexible(
-          child: Observer(
-            builder: (context) => PhotoBoothButton.action(
-              onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
-              child: AutoSizeTextAndIcon(
-                text: viewModel.printText,
-                leftIcon: LucideIcons.printer,
-                autoSizeGroup: controller.actionButtonGroup,
+        if (viewModel.showPrintButton)
+          Flexible(
+            child: Observer(
+              builder: (context) => PhotoBoothButton.action(
+                onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
+                child: AutoSizeTextAndIcon(
+                  text: viewModel.printText,
+                  leftIcon: LucideIcons.printer,
+                  autoSizeGroup: controller.actionButtonGroup,
+                ),
               ),
             ),
           ),
-        ),
       ],
     );
   }

@@ -106,8 +106,10 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
+    final printing = getIt<PrintingManager>();
     PrintSize usingSize = size;
-    if (size == PrintSize.normal && getIt<PhotosManager>().chosenPhotos.length == 3) {
+    // A collage of three photos is printed in halves, if that print size is routed to a printer.
+    if (size == PrintSize.normal && getIt<PhotosManager>().chosenPhotos.length == 3 && printing.printableSizes.contains(PrintSize.split)) {
       usingSize = PrintSize.split;
     }
 
@@ -117,14 +119,12 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       ..printEnabled = false
       ..printText = localizations.shareScreenPrinting;
 
-    // Get photo and print it.
-    final pdfData = await getIt<PhotosManager>().getOutputPDF(usingSize);
     final lastFile = getIt<PhotosManager>().lastPhotoFile;
     String jobName = lastFile != null ? path.basenameWithoutExtension(lastFile.path) : "MomentoBooth Picture";
 
     bool success = false;
     try {
-      await getIt<PrintingManager>().printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
+      await printing.printPhoto(jobName: jobName, image: getIt<PhotosManager>().outputImage!, size: usingSize, copies: copies);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");

@@ -121,12 +121,6 @@ Widget _getTemplateSettings(SettingsOverlayViewModel viewModel, SettingsOverlayC
         value: () => viewModel.collagePaddingSetting,
         onFinishedEditing: controller.onCollagePaddingChanged,
       ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Observer(
-          builder: (context) => Text("→ Padding will be ${(viewModel.pageHeightSetting / 1000 * viewModel.collagePaddingSetting).toStringAsPrecision(3)} mm with ${viewModel.pageHeightSetting} mm page height."),
-        ),
-      ),
       SettingsNumberEditTile(
         icon: LucideIcons.proportions,
         title: "Output resolution multiplier     (same setting as output tab)",

@@ -88,20 +88,21 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
               ),
             ),
           ),
-        Flexible(
-          child: Center(
-            child: Observer(
-              builder: (context) => PhotoBoothButton.action(
-                onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
-                child: AutoSizeTextAndIcon(
-                  text: viewModel.printText,
-                  leftIcon: LucideIcons.printer,
-                  autoSizeGroup: controller.actionButtonGroup,
+        if (viewModel.showPrintButton)
+          Flexible(
+            child: Center(
+              child: Observer(
+                builder: (context) => PhotoBoothButton.action(
+                  onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
+                  child: AutoSizeTextAndIcon(
+                    text: viewModel.printText,
+                    leftIcon: LucideIcons.printer,
+                    autoSizeGroup: controller.actionButtonGroup,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
