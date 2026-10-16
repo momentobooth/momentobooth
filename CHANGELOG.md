@@ -18,6 +18,7 @@
 
 ### Bugfixes
 - Smaller print sizes were not logged in the statistics
+- The gallery crashed when the output folder contained images without EXIF data, such as PNG exports
 
 ### Dev changes
 - Release notes on GitHub now contain the changelog section of the released version
