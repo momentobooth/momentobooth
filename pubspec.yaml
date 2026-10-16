@@ -109,6 +109,7 @@ dev_dependencies:
 
   # Code quality
   flutter_lints: 6.0.0
+  flutter_test: { sdk: flutter }
 
   # Models
   freezed: 4.0.1
@@ -116,6 +117,7 @@ dev_dependencies:
 
   # Code generation
   build_runner: 2.16.1
+  dart_pubspec_licenses: 3.2.0
 
 flutter:
   uses-material-design: true
@@ -125,6 +127,7 @@ flutter:
     - assets/bitmap/
     - assets/svg/
     - assets/svg/flags/
+    - assets/licenses/
     - assets/fonts/brandon_grotesque/
     - assets/scripts/
     - assets/sounds/

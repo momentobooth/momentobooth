@@ -65,8 +65,8 @@ jobs:
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
 
-    - name: Install cargo-expand, frbc, lddtree
-      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 lddtree --force -y
+    - name: Install cargo-expand, frbc, cargo-bundle-licenses, lddtree
+      run: cargo binstall cargo-expand flutter_rust_bridge_codegen@2.13.0 cargo-bundle-licenses@4.2.0 lddtree --force -y
 
     - name: Install appimagetool
       run: wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" && chmod +x appimagetool && sudo mv appimagetool /usr/local/bin/
@@ -75,6 +75,7 @@ jobs:
       run: |
         flutter pub get --enforce-lockfile
         flutter gen-l10n
+        dart run tool/generate_licenses.dart
         flutter_rust_bridge_codegen generate
         dart run build_runner build
         flutter analyze --no-pub

@@ -32,6 +32,7 @@ import 'package:momento_booth/views/settings_overlay/components/aspect_ratio_pre
 import 'package:momento_booth/views/settings_overlay/components/external_system_check_edit_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/components/external_system_check_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/import_field.dart';
+import 'package:momento_booth/views/settings_overlay/components/open_source_licenses_expander.dart';
 import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_edit_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_action.dart';

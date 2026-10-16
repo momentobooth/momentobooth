@@ -32,6 +32,7 @@ Generated files (`*.freezed.dart`, `*.g.dart`, `lib/src/rust/`) are not committe
 | Generate Rust↔Dart bridge | `just gen-bridge` |
 | Generate Freezed/MobX/JSON | `just gen-code` |
 | Generate localizations | `just gen-l10n` |
+| Generate license overview | `just gen-licenses` |
 | Watch bridge changes | `just watch-bridge` |
 | Watch Dart gen changes | `just watch-code` |
 
@@ -105,6 +106,7 @@ Requires:
 - Flutter 3.47.2 via FVM (`just install-flutter`)
 - Rust via rustup
 - `flutter_rust_bridge_codegen` 2.13.0 (`just install-bridge-codegen`)
+- `cargo-bundle-licenses` 4.2.0 (`just install-cargo-bundle-licenses`)
 - **Windows:** MSYS2 with `libgphoto2`, `pkgconf`, `curl`
 - **Linux:** `llvm`, `libssl-dev`, `libcurl4-openssl-dev`, `libasound2-dev`
 - **macOS:** Homebrew `pkgconf`, `libgphoto2`
