@@ -28,7 +28,8 @@
     * Per project, a fixed language or a choice of languages for guests at multilingual events
   * Different UI themes available
 * **Photo printing**
-  * Lots of settings included to size and position your print well
+  * Visual print routing editor to decide which printer prints which print size, on what media and in which layout
+  * Combine multiple printers, e.g. to share the work or to print a photo in several ways at once
   * Support for native printing method and dispatch to CUPS server
 * **Photo sharing using QR code** with [`ffsend`](https://github.com/timvisee/ffsend)
 * **Theming with collage template images** (background and foreground) and a live view overlay image

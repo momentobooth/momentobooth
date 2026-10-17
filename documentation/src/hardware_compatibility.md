@@ -20,7 +20,7 @@ Sony | Alpha 6400[^NoSpecialHandling] | ✅ | ✅ | Also known as ILCE-6400 |
 
 ## Tested printers
 
-MomentoBooth uses the [printing](https://pub.dev/packages/printing) library for Flutter to print to any printer(s) installed on your computer and as such should offer the same compatibility as applications like your Office suite and web browser.
+MomentoBooth uses the [printing](https://pub.dev/packages/printing) library for Flutter to print to any printer(s) installed on your computer and as such should offer the same compatibility as applications like your Office suite and web browser. Alternatively, it can print to any printer that is available as a queue on a CUPS server. See the [printer setup page](printer_setup.md) for how to set up print routing.
 
 If you have any printers to add or any special remarks about your printer, please [let us know](https://github.com/momentobooth/momentobooth/issues/new) using a GitHub issue.
 
@@ -28,4 +28,4 @@ If you have any printers to add or any special remarks about your printer, pleas
 | - | - | - | - |
 | Canon | SELPHY CP1300 | ✅ | Works using USB (recommended) as well as WiFi; look [here](printer_setup.md) for sample settings |
 | Canon | SELPHY CP1500 | ✅ | Works using WiFi, not at all using USB (at least on Windows); look [here](printer_setup.md) for sample settings |
-| Kodak | 6850 | ✅ | Only has USB; works both with native and CUPS printing; look [here](printer_setup.md) for sample settings |
+| Kodak | 6850 | ✅ | Only has USB; works both with native and CUPS printer nodes; look [here](printer_setup.md) for sample settings |

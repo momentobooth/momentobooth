@@ -226,6 +226,18 @@ void main() {
       expect(analysis.issues, contains(const RoutingIssue(kind: RoutingIssueKind.ignoredLayout, nodeId: 'tile', printSize: PrintSize.split)));
     });
 
+    test('routes normal prints of the default graph to its printer, once configured', () {
+      final defaults = PrintRoutingGraph.withDefaults();
+      final configured = defaults.copyWith(nodes: [
+        for (final node in defaults.nodes)
+          if (node.data is PrinterNodeData) node.copyWith(data: _printer) else node,
+      ]);
+
+      expect(PrintRoutingAnalysis.of(defaults).issues, contains(const RoutingIssue(kind: RoutingIssueKind.incompletePrinter, nodeId: 'printer')));
+      expect(PrintRoutingAnalysis.of(configured).errors, isEmpty);
+      expect(PrintRoutingAnalysis.of(configured).reachablePrinterIds[PrintSize.normal], {'printer'});
+    });
+
     test('requires a source', () {
       final graph = PrintRoutingGraph(nodes: [_node('printer', _printer)]);
 

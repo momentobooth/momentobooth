@@ -28,12 +28,10 @@ sealed class PrintRoutingGraph with _$PrintRoutingGraph implements TomlEncodable
   factory PrintRoutingGraph.withDefaults() => const PrintRoutingGraph(
     nodes: [
       RoutingNode(id: 'source', data: RoutingNodeData.source()),
-      RoutingNode(id: 'roundRobin', x: 260, data: RoutingNodeData.roundRobin()),
-      RoutingNode(id: 'printer', x: 520, data: RoutingNodeData.printer()),
+      RoutingNode(id: 'printer', x: 260, data: RoutingNodeData.printer()),
     ],
     edges: [
-      RoutingEdge(fromNode: 'source', fromPort: 'normal', toNode: 'roundRobin', toPort: RoutingPorts.input),
-      RoutingEdge(fromNode: 'roundRobin', fromPort: RoutingPorts.output, toNode: 'printer', toPort: RoutingPorts.input),
+      RoutingEdge(fromNode: 'source', fromPort: 'normal', toNode: 'printer', toPort: RoutingPorts.input),
     ],
   );
 
