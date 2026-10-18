@@ -192,7 +192,10 @@ enum PrinterBackend { native, cups }
 sealed class PrintMedia with _$PrintMedia {
 
   const factory PrintMedia({
-    /// CUPS media keyword, e.g. `custom_100x148mm`. Empty for [PrinterBackend.native].
+    /// Identifies the media at the printer: the CUPS media keyword (e.g. `custom_100x148mm`) for [PrinterBackend.cups],
+    /// the paper number of the printer driver (e.g. `272`) for [PrinterBackend.native] on platforms that list papers
+    /// (Windows). Empty when the size is set by hand. The size alone does not identify the media, as several can share
+    /// it, e.g. a paper with and one without border.
     @Default('') String name,
     @Default(0.0) double widthMm,
     @Default(0.0) double heightMm,

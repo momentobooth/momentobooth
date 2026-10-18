@@ -85,13 +85,13 @@ A printer node is one printer configuration: one printer or CUPS queue with one 
 | Label | A name for this configuration, shown in the node header, the routes overview and the problems list. |
 | Backend | _Native_ prints through the operating system's printers. _CUPS_ prints to a queue on the CUPS server configured in the [hardware settings](settings_hardware.md#cups-server). Changing the backend clears the printer and media, as they mean nothing to the other backend. |
 | Printer / Queue | The printer (native) or CUPS queue to print to. The options are listed when the page opens, see [Refresh printers](#routes-problems-and-printers). A saved printer that is not available at the moment is shown with _(not found)_. |
-| Media | CUPS only. The media size to print on, chosen from the media the selected queue supports. Changing the queue clears the media, as media differ per queue. |
-| Size (mm) | The width and height of the media. For native printers you enter these yourself; set them to the paper size you print on. For CUPS printers they follow from the selected media. |
+| Media / Paper | The media to print on. For a CUPS printer (_Media_), chosen from the media the selected queue supports. For a native printer on Windows (_Paper_), chosen from the papers the printer driver supports, e.g. _4x6 (borderless)_; prints then use exactly that paper and keep the other settings of the driver, such as borderless printing. Papers that share a size, such as with and without border, are told apart. Changing the queue or printer clears the media, as media differ per printer. On macOS and Linux native printers have no _Paper_ field. |
+| Size (mm) | The width and height of the media. For CUPS printers and native printers on Windows they follow from the selected media. For native printers on macOS and Linux you enter these yourself; set them to the paper size you print on. |
 | Margins | The margins (top, right, bottom and left, in mm) for this printer, see [margins](#how-prints-are-laid-out). These fields are hidden when a margins node is connected to the margins input; the caption then reads _from the connected node_. |
 
 A printer node has two inputs. The **Job** input accepts photos as well as sheets and takes any number of connections. A photo that is connected directly, without a tile layout, is fitted on the sheet as a whole. The **Margins** input sits next to the margins fields and takes a single margins node.
 
-A printer node only prints once it is complete: a native printer needs a printer and a media width and height; a CUPS printer needs a queue and media. A printer that receives prints while it is incomplete gets a warning and is skipped. Unconnected printer nodes are fine, so you can keep configurations around for later use.
+A printer node only prints once it is complete: a native printer needs a printer and a media width and height; a CUPS printer needs a queue and media. A native printer on Windows whose size was set by hand, e.g. on another computer, still prints as before, without choosing a paper; select a _Paper_ to print on that exact paper. A printer that receives prints while it is incomplete gets a warning and is skipped. Unconnected printer nodes are fine, so you can keep configurations around for later use.
 
 ## Ports and connections
 
@@ -115,7 +115,7 @@ The side panel to the right of the canvas has three sections:
 
 - **Routes** lists, per print size, the printers it can end up at by their label (or _Unnamed printer_), or _Not printed_ when the print size is not routed.
 - **Problems** lists the errors and warnings of all nodes. Click a problem to select and centre its node on the canvas. The same problems are shown as notes on the nodes themselves: red for errors, yellow for warnings.
-- **Printers** has the **Refresh printers** button. The printers, CUPS queues and media to choose from are listed when the page opens. Refresh them after connecting a printer, starting the CUPS server or changing the CUPS server settings.
+- **Printers** has the **Refresh printers** button. The printers, CUPS queues, media and papers to choose from are listed when the page opens. Refresh them after connecting a printer, starting the CUPS server or changing the CUPS server settings.
 
 Connections with errors are ignored, while the rest of the routing keeps working. When the routing has problems, the printing subsystem shows a warning on the [subsystem status](settings_subsystem.md) page; when no print size is routed at all, the subsystem is disabled.
 

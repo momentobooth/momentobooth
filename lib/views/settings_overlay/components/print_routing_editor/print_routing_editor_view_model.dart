@@ -54,9 +54,14 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
   @observable
   ObservableList<PrintQueueInfo> cupsQueues = ObservableList();
 
-  /// Media per CUPS queue, loaded on first use by [ensureCupsMedia].
-  final ObservableMap<String, List<PrintDimension>> cupsMedia = ObservableMap();
-  final Set<String> _requestedCupsMedia = {};
+  /// Whether native printers list their papers, so their media is chosen like that of CUPS queues.
+  @override
+  @observable
+  bool canListNativeMedia = false;
+
+  /// Media per backend and queue, loaded on first use by [ensureMedia].
+  final ObservableMap<(PrinterBackend, String), List<PrintDimension>> media = ObservableMap();
+  final Set<(PrinterBackend, String)> _requestedMedia = {};
 
   int _syncedRevision = -1;
   bool _disposed = false;
@@ -347,13 +352,13 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     if (isRefreshingPrinters) return;
     runInAction(() {
       isRefreshingPrinters = true;
-      cupsMedia.clear();
+      media.clear();
     });
-    _requestedCupsMedia.clear();
+    _requestedMedia.clear();
     try {
       await loadQueues();
       for (final node in graph.nodes) {
-        if (node.data case PrinterNodeData(backend: PrinterBackend.cups, :final queueId)) ensureCupsMedia(queueId);
+        if (node.data case PrinterNodeData(:final backend, :final queueId)) ensureMedia(backend, queueId);
       }
     } finally {
       runInAction(() => isRefreshingPrinters = false);
@@ -361,6 +366,17 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
   }
 
   Future<void> loadQueues() async {
+    try {
+      final canList = await hardware.canListNativeMedia();
+      if (canList != canListNativeMedia && !_disposed) {
+        runInAction(() => canListNativeMedia = canList);
+        // The media field of native printers appears or disappears, which changes their height.
+        editor.revalidate();
+      }
+    } catch (error, stackTrace) {
+      logWarning('Could not check whether native printers list their media', error, stackTrace);
+    }
+
     for (final backend in PrinterBackend.values) {
       try {
         final queues = ObservableList.of(await hardware.listQueues(backend));
@@ -374,18 +390,20 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     }
   }
 
-  /// Loads the media of CUPS queue [queueId] into [cupsMedia], once. Safe to call while building.
-  void ensureCupsMedia(String queueId) {
-    if (queueId.isEmpty || !_requestedCupsMedia.add(queueId)) return;
-    unawaited(_loadCupsMedia(queueId));
+  /// Loads the media of queue [queueId] into [media], once. Does nothing for native printers when they do not list
+  /// their media. Safe to call while building.
+  void ensureMedia(PrinterBackend backend, String queueId) {
+    if (queueId.isEmpty || (backend == PrinterBackend.native && !canListNativeMedia)) return;
+    if (!_requestedMedia.add((backend, queueId))) return;
+    unawaited(_loadMedia(backend, queueId));
   }
 
-  Future<void> _loadCupsMedia(String queueId) async {
+  Future<void> _loadMedia(PrinterBackend backend, String queueId) async {
     try {
-      final media = await hardware.listCupsMedia(queueId);
-      runInAction(() => cupsMedia[queueId] = media);
+      final list = await hardware.listMedia(backend, queueId);
+      runInAction(() => media[(backend, queueId)] = list);
     } catch (error, stackTrace) {
-      logWarning('Could not list the media of CUPS queue $queueId', error, stackTrace);
+      logWarning('Could not list the media of ${backend.name} queue $queueId', error, stackTrace);
     }
   }
 

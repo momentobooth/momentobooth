@@ -57,7 +57,14 @@ class RoutingNodeCard extends StatelessWidget {
                   const _CaptionRow(child: _SecondaryCaption('Values in mm')),
                   _MarginsFields(margins: margins, onChanged: (margins) => update(data.copyWith(margins: margins))),
                 ],
-                PrinterNodeData() => _printerFields(data, update, marginsWired: marginsWired),
+                // Whether native printers list their media is only known once the printers are loaded.
+                PrinterNodeData() => [
+                  Observer(builder: (_) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: _printerFields(data, update, marginsWired: marginsWired),
+                  )),
+                ],
               },
               _NoteRows(nodeId: node.id, viewModel: viewModel),
               const SizedBox(height: RoutingNodeMetrics.bottomPadding),
@@ -69,7 +76,7 @@ class RoutingNodeCard extends StatelessWidget {
   }
 
   List<Widget> _portRows(RoutingNodeData data) {
-    final layout = RoutingNodeLayout(data, marginsWired: false, noteRows: 0);
+    final layout = RoutingNodeLayout(data, marginsWired: false, noteRows: 0, canListNativeMedia: viewModel.canListNativeMedia);
     final inputs = layout.rowPorts(RoutingPortDirection.input);
     final outputs = layout.rowPorts(RoutingPortDirection.output);
     return [
@@ -124,6 +131,8 @@ class RoutingNodeCard extends StatelessWidget {
 
   List<Widget> _printerFields(PrinterNodeData data, ValueChanged<RoutingNodeData> update, {required bool marginsWired}) {
     final isCups = data.backend == PrinterBackend.cups;
+    // Read first, so the observer around these fields always tracks it.
+    final listsMedia = viewModel.canListNativeMedia || isCups;
     return [
       _FieldRow(
         key: const ValueKey('label'),
@@ -157,16 +166,17 @@ class RoutingNodeCard extends StatelessWidget {
         child: Observer(builder: (_) => _QueueComboBox(
           queues: isCups ? viewModel.cupsQueues : viewModel.nativeQueues,
           queueId: data.queueId,
-          // Media differ per queue, so a CUPS printer has to pick its media again.
-          onChanged: (value) => update(isCups ? data.copyWith(queueId: value, media: const PrintMedia()) : data.copyWith(queueId: value)),
+          // Media differ per queue, so a printer that lists its media has to pick it again.
+          onChanged: (value) => update(listsMedia ? data.copyWith(queueId: value, media: const PrintMedia()) : data.copyWith(queueId: value)),
         )),
       ),
-      if (isCups)
+      if (listsMedia)
         _FieldRow(
-          key: const ValueKey('media'),
-          label: 'Media',
-          child: _CupsMediaComboBox(
+          key: ValueKey('media-${data.backend.name}'),
+          label: isCups ? 'Media' : 'Paper',
+          child: _MediaComboBox(
             viewModel: viewModel,
+            backend: data.backend,
             queueId: data.queueId,
             media: data.media,
             onChanged: (media) => update(data.copyWith(media: media)),
@@ -175,7 +185,7 @@ class RoutingNodeCard extends StatelessWidget {
       _FieldRow(
         key: ValueKey('size-${data.backend.name}'),
         label: 'Size (mm)',
-        child: isCups
+        child: listsMedia
             ? Text(
                 data.media.widthMm > 0 ? 'W ${_formatMm(data.media.widthMm)} × H ${_formatMm(data.media.heightMm)}' : '–',
               )
@@ -187,7 +197,8 @@ class RoutingNodeCard extends StatelessWidget {
                     child: _MillimeterBox(
                       value: data.media.widthMm,
                       placeholder: 'Width',
-                      onChanged: (value) => update(data.copyWith(media: data.media.copyWith(widthMm: value))),
+                      // A size set by hand no longer identifies a media of the printer.
+                      onChanged: (value) => update(data.copyWith(media: PrintMedia(widthMm: value, heightMm: data.media.heightMm))),
                     ),
                   ),
                   const SizedBox(width: 4),
@@ -196,7 +207,7 @@ class RoutingNodeCard extends StatelessWidget {
                     child: _MillimeterBox(
                       value: data.media.heightMm,
                       placeholder: 'Height',
-                      onChanged: (value) => update(data.copyWith(media: data.media.copyWith(heightMm: value))),
+                      onChanged: (value) => update(data.copyWith(media: PrintMedia(widthMm: data.media.widthMm, heightMm: value))),
                     ),
                   ),
                 ],
@@ -564,29 +575,38 @@ class _QueueComboBox extends StatelessWidget {
 
 }
 
-class _CupsMediaComboBox extends StatelessWidget {
+/// Chooses from the media a CUPS queue or a native printer lists, e.g. the papers of its Windows driver.
+class _MediaComboBox extends StatelessWidget {
 
   final PrintRoutingEditorViewModel viewModel;
+  final PrinterBackend backend;
   final String queueId;
   final PrintMedia media;
   final ValueChanged<PrintMedia> onChanged;
 
-  const _CupsMediaComboBox({required this.viewModel, required this.queueId, required this.media, required this.onChanged});
+  const _MediaComboBox({required this.viewModel, required this.backend, required this.queueId, required this.media, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    viewModel.ensureCupsMedia(queueId);
+    viewModel.ensureMedia(backend, queueId);
+    final isCups = backend == PrinterBackend.cups;
     return Observer(builder: (context) {
-      final available = viewModel.cupsMedia[queueId] ?? const [];
+      final available = viewModel.media[(backend, queueId)] ?? const [];
       return ComboBox<String>(
         value: media.name.isEmpty ? null : media.name,
         isExpanded: true,
-        placeholder: Text(queueId.isEmpty ? 'Select a queue first' : 'Select'),
+        placeholder: Text(queueId.isEmpty ? (isCups ? 'Select a queue first' : 'Select a printer first') : 'Select'),
         items: [
           for (final dimension in available)
             ComboBoxItem(value: dimension.keyword, child: Text(dimension.name, overflow: TextOverflow.ellipsis)),
           if (media.name.isNotEmpty && !available.any((dimension) => dimension.keyword == media.name))
-            ComboBoxItem(value: media.name, child: Text('${media.name} (not found)', overflow: TextOverflow.ellipsis)),
+            ComboBoxItem(
+              value: media.name,
+              child: Text(
+                isCups ? '${media.name} (not found)' : 'Paper ${media.name} (not found)',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
         ],
         onChanged: (keyword) {
           final dimension = available.where((dimension) => dimension.keyword == keyword).firstOrNull;

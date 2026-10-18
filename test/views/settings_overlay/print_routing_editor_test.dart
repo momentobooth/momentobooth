@@ -14,8 +14,11 @@ import 'package:momento_booth/views/settings_overlay/components/print_routing_ed
 
 class _FakeHardware implements PrintRoutingHardware {
 
+  final bool listsNativeMedia;
   int queueListings = 0;
   int mediaListings = 0;
+
+  _FakeHardware({this.listsNativeMedia = false});
 
   @override
   Future<List<PrintQueueInfo>> listQueues(PrinterBackend backend) async {
@@ -27,12 +30,22 @@ class _FakeHardware implements PrintRoutingHardware {
   }
 
   @override
-  Future<List<PrintDimension>> listCupsMedia(String queueId) async {
+  Future<bool> canListNativeMedia() async => listsNativeMedia;
+
+  @override
+  Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId) async {
     mediaListings++;
-    return const [
-      PrintDimension(name: '4x6', width: 101.6, height: 152.4, keyword: 'na_index-4x6_4x6in'),
-      PrintDimension(name: '2x6', width: 50.8, height: 152.4, keyword: 'custom_2x6'),
-    ];
+    return switch (backend) {
+      // Papers of a Windows driver, which can share a size.
+      PrinterBackend.native => const [
+        PrintDimension(name: '4x6 (borderless)', width: 101.6, height: 152.4, keyword: '272'),
+        PrintDimension(name: '4x6', width: 101.6, height: 152.4, keyword: '273'),
+      ],
+      PrinterBackend.cups => const [
+        PrintDimension(name: '4x6', width: 101.6, height: 152.4, keyword: 'na_index-4x6_4x6in'),
+        PrintDimension(name: '2x6', width: 50.8, height: 152.4, keyword: 'custom_2x6'),
+      ],
+    };
   }
 
 }
@@ -73,7 +86,7 @@ Future<void> _settle() => Future<void>.delayed(Duration.zero);
 void main() {
   group('RoutingNodeLayout', () {
     test('puts the margins port of a printer at its margins section', () {
-      const layout = RoutingNodeLayout(RoutingNodeData.printer(), marginsWired: false, noteRows: 1);
+      const layout = RoutingNodeLayout(RoutingNodeData.printer(), marginsWired: false, noteRows: 1, canListNativeMedia: false);
       final marginsPort = const RoutingNodeData.printer().port(RoutingPorts.margins)!;
 
       // Header, the job port row and four field rows (label, backend, printer, size) precede the caption row.
@@ -84,6 +97,19 @@ void main() {
         captionTop + RoutingNodeMetrics.captionRowHeight + 2 * RoutingNodeMetrics.fieldRowHeight +
             RoutingNodeMetrics.noteRowHeight + RoutingNodeMetrics.bottomPadding,
       );
+    });
+
+    test('gives a native printer a media row when it lists its media', () {
+      RoutingNodeLayout layout(PrinterBackend backend, {required bool canListNativeMedia}) => RoutingNodeLayout(
+        RoutingNodeData.printer(backend: backend),
+        marginsWired: false,
+        noteRows: 0,
+        canListNativeMedia: canListNativeMedia,
+      );
+
+      expect(layout(PrinterBackend.native, canListNativeMedia: false).fieldRows, 4);
+      expect(layout(PrinterBackend.native, canListNativeMedia: true).fieldRows, 5);
+      expect(layout(PrinterBackend.cups, canListNativeMedia: false).fieldRows, 5);
     });
   });
 
@@ -178,14 +204,40 @@ void main() {
 
     test('lists printers and media again on refresh', () async {
       await viewModel.loadQueues();
-      viewModel.ensureCupsMedia('dnp');
+      viewModel
+        ..ensureMedia(PrinterBackend.cups, 'dnp')
+        // Native printers that do not list their media are not asked.
+        ..ensureMedia(PrinterBackend.native, 'canon');
       await _settle();
       expect((hardware.queueListings, hardware.mediaListings), (2, 1));
 
       await viewModel.refreshPrinters();
       await _settle();
       expect((hardware.queueListings, hardware.mediaListings), (4, 2));
-      expect(viewModel.cupsMedia['dnp'], hasLength(2));
+      expect(viewModel.media[(PrinterBackend.cups, 'dnp')], hasLength(2));
+    });
+
+    test('gives native printers a media row once it is known that they list their media', () async {
+      viewModel.dispose();
+      hardware = _FakeHardware(listsNativeMedia: true);
+      viewModel = PrintRoutingEditorViewModel(_graph, onGraphChanged: saved.add, hardware: hardware);
+      final canon = _graph.nodes.firstWhere((node) => node.id == 'canon').data;
+      double expectedHeight({required bool canListNativeMedia}) => RoutingNodeLayout(
+        canon,
+        marginsWired: false,
+        noteRows: viewModel.noteRows('canon'),
+        canListNativeMedia: canListNativeMedia,
+      ).height;
+
+      expect(editor().graph.nodes['canon']!.height, expectedHeight(canListNativeMedia: false));
+      await viewModel.loadQueues();
+      expect(viewModel.canListNativeMedia, isTrue);
+      expect(editor().graph.nodes['canon']!.height, expectedHeight(canListNativeMedia: true));
+      expect(saved, isEmpty);
+
+      await viewModel.refreshPrinters();
+      await _settle();
+      expect(viewModel.media[(PrinterBackend.native, 'canon')], hasLength(2));
     });
 
     test('colours a port that accepts several types after what is connected to it', () async {
@@ -207,9 +259,9 @@ void main() {
     late List<PrintRoutingGraph> saved;
     late _FakeHardware hardware;
 
-    Future<void> pumpEditor(WidgetTester tester) async {
+    Future<void> pumpEditor(WidgetTester tester, {bool listsNativeMedia = false}) async {
       saved = [];
-      hardware = _FakeHardware();
+      hardware = _FakeHardware(listsNativeMedia: listsNativeMedia);
       tester.view
         ..physicalSize = const Size(1920, 1080)
         ..devicePixelRatio = 1;
@@ -241,6 +293,9 @@ void main() {
       expect(inNode('dnp', find.text('W 50.8 × H 152.4')), findsOneWidget);
       expect(inNode('dnp', find.text('from the connected node')), findsOneWidget);
       expect(inNode('canon', find.text('in mm')), findsOneWidget);
+      // Without a list of papers, the size of a native printer is set by hand.
+      expect(inNode('canon', find.text('Paper')), findsNothing);
+      expect(inNode('canon', find.byType(NumberBox<double>)), findsNWidgets(6));
       expect(inNode('source', find.text('Not routed: Split, Tiny')), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
@@ -298,6 +353,24 @@ void main() {
       final printer = editorOf(tester).graph.nodes['dnp']!.field<RoutingNodeData>(routingDataKey)! as PrinterNodeData;
       expect(printer.media, const PrintMedia(name: 'na_index-4x6_4x6in', widthMm: 101.6, heightMm: 152.4));
       expect(inNode('dnp', find.text('W 101.6 × H 152.4')), findsOneWidget);
+    });
+
+    testWidgets('selecting the paper of a native printer stores which one, as papers can share a size', (tester) async {
+      await pumpEditor(tester, listsNativeMedia: true);
+      expect(inNode('canon', find.text('Paper')), findsOneWidget);
+      expect(inNode('canon', find.text('W 100 × H 148')), findsOneWidget);
+      // The rows of the card fill the height the layout gives the node.
+      expect(tester.getSize(inNode('canon', find.byType(Column)).first).height, editorOf(tester).graph.nodes['canon']!.height);
+
+      await tester.tap(inNode('canon', find.byType(ComboBox<String>)).last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('4x6').last);
+      await tester.pumpAndSettle();
+
+      final printer = editorOf(tester).graph.nodes['canon']!.field<RoutingNodeData>(routingDataKey)! as PrinterNodeData;
+      expect(printer.media, const PrintMedia(name: '273', widthMm: 101.6, heightMm: 152.4));
+      expect(inNode('canon', find.text('W 101.6 × H 152.4')), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('adds nodes from the toolbar', (tester) async {

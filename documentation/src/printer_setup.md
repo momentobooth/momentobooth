@@ -9,7 +9,7 @@ Getting the print settings right requires quite a bit of trial and error. Ideall
 MomentoBooth supports two ways of printing, and you can combine them in one set-up:
 
 - **Native** printing uses the [printing package](https://pub.dev/packages/printing) to print to the printers installed on your computer, like any other application does. This is the easiest way to get started.
-- **CUPS** printing sends the prints to a queue on a CUPS server, which can run on the same computer or elsewhere on the network. The server is configured in the [hardware settings](settings_hardware.md#cups-server). With CUPS, MomentoBooth can list the media sizes each queue supports, so you do not have to enter the paper size yourself.
+- **CUPS** printing sends the prints to a queue on a CUPS server, which can run on the same computer or elsewhere on the network. The server is configured in the [hardware settings](settings_hardware.md#cups-server). With CUPS, MomentoBooth can list the media sizes each queue supports, so you do not have to enter the paper size yourself. On Windows, native printers list the papers of their driver too.
 
 ## Basic set-up
 
@@ -19,7 +19,7 @@ MomentoBooth supports two ways of printing, and you can combine them in one set-
    1. Give it a **Label**, e.g. the name of the printer and the paper, so you can recognise it in the routes overview.
    1. Choose the **Backend**: _Native_ or _CUPS_.
    1. Select the **Printer** (native) or **Queue** (CUPS).
-   1. For a native printer, enter the **Size** of the paper in mm. For a CUPS printer, select the **Media**; the size follows from it.
+   1. For a CUPS printer, select the **Media**; the size follows from it. For a native printer on Windows, select the **Paper** in the same way. For a native printer on macOS or Linux, enter the **Size** of the paper in mm.
    1. Leave the **Margins** at 0 for now.
 1. Check the **Routes** in the side panel: _Normal_ should list your printer, and the **Problems** list should be empty.
 1. Make sure the project setting [Enable printing](settings_project.md#enable-printing) is on.

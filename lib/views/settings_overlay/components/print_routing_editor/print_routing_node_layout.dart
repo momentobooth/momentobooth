@@ -106,7 +106,10 @@ class RoutingNodeLayout {
   final bool marginsWired;
   final int noteRows;
 
-  const RoutingNodeLayout(this.data, {required this.marginsWired, required this.noteRows});
+  /// Whether native printers list their media, which a printer then chooses from like a CUPS queue.
+  final bool canListNativeMedia;
+
+  const RoutingNodeLayout(this.data, {required this.marginsWired, required this.noteRows, required this.canListNativeMedia});
 
   /// The ports drawn in the rows below the header: inputs on the left, outputs on the right. The margins input of a
   /// printer is drawn at its margins section instead.
@@ -121,7 +124,7 @@ class RoutingNodeLayout {
     SourceNodeData() || RoundRobinNodeData() || DuplicateNodeData() || MarginsNodeData() => 0,
     TileLayoutNodeData() => 3,
     // Label, backend, queue, (media,) size.
-    PrinterNodeData(:final backend) => backend == PrinterBackend.cups ? 5 : 4,
+    PrinterNodeData(:final backend) => backend == PrinterBackend.cups || canListNativeMedia ? 5 : 4,
   };
 
   /// A caption row tells what an arbiter carries, or heads a margins section.
@@ -165,6 +168,8 @@ abstract interface class RoutingNodeShapeSource {
 
   int noteRows(String nodeId);
 
+  bool get canListNativeMedia;
+
 }
 
 /// One definition per node type. Ports and height are derived from the [RoutingNodeData], the wiring and [shapes] on
@@ -186,6 +191,7 @@ RoutingNodeLayout? _layoutOf(NodeResolutionContext context, RoutingNodeShapeSour
     data,
     marginsWired: data is PrinterNodeData && context.isConnected(RoutingPorts.margins),
     noteRows: shapes.noteRows(context.nodeId),
+    canListNativeMedia: shapes.canListNativeMedia,
   );
 }
 

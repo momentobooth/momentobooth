@@ -9,7 +9,11 @@ abstract interface class PrintRoutingHardware {
 
   Future<List<PrintQueueInfo>> listQueues(PrinterBackend backend);
 
-  Future<List<PrintDimension>> listCupsMedia(String queueId);
+  /// Whether [listMedia] lists the papers of native printers. Otherwise their media size is set by hand.
+  Future<bool> canListNativeMedia();
+
+  /// The media of queue [queueId], with their size in mm. The keyword identifies a media, see [PrintMedia.name].
+  Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId);
 
 }
 
@@ -24,6 +28,12 @@ class SystemPrintRoutingHardware implements PrintRoutingHardware {
   };
 
   @override
-  Future<List<PrintDimension>> listCupsMedia(String queueId) => CupsClient().getPrinterMediaDimensions(queueId);
+  Future<bool> canListNativeMedia() => FlutterPrintingClient().canListPrinterMedia();
+
+  @override
+  Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId) => switch (backend) {
+    PrinterBackend.native => FlutterPrintingClient().getPrinterMediaDimensions(queueId),
+    PrinterBackend.cups => CupsClient().getPrinterMediaDimensions(queueId),
+  };
 
 }
