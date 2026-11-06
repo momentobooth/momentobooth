@@ -191,14 +191,18 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
   static Future<void> ensureLibraryInitialized() async {
     const String iolibsDefine = String.fromEnvironment("IOLIBS");
     const String camlibsDefine = String.fromEnvironment("CAMLIBS");
-    // On Windows, the drivers are always in these directories next to the executable (e.g. build\windows\x64\runner\Debug\libgphoto2_iolibs).
-    // The paths are relative to the directory of the executable. windows/CMakeLists.txt copies them there on every build from the native
-    // dependencies in .native_deps\windows-x64\lib, which are downloaded by `just get-native-deps`.
-    final bool useWindowsDefault = Platform.isWindows && iolibsDefine.isEmpty && camlibsDefine.isEmpty;
-    _initFuture ??= gphoto2Initialize(
-      iolibsPath: useWindowsDefault ? 'libgphoto2_iolibs' : iolibsDefine,
-      camlibsPath: useWindowsDefault ? 'libgphoto2_camlibs' : camlibsDefine,
-    );
+    // On Windows and macOS, the drivers are always in these directories, relative to the directory of the executable. Every build copies
+    // them there from the native dependencies in .native_deps, which are downloaded by `just get-native-deps`: windows/CMakeLists.txt
+    // next to the executable, macos/embed_native_deps.sh into MomentoBooth.app/Contents/Libs.
+    final (String, String)? bundledDrivers = switch (Platform.operatingSystem) {
+      'windows' => ('libgphoto2_iolibs', 'libgphoto2_camlibs'),
+      'macos' => ('../Libs/Iolibs', '../Libs/Camlibs'),
+      _ => null,
+    };
+    final (String iolibsPath, String camlibsPath) = bundledDrivers != null && iolibsDefine.isEmpty && camlibsDefine.isEmpty
+        ? bundledDrivers
+        : (iolibsDefine, camlibsDefine);
+    _initFuture ??= gphoto2Initialize(iolibsPath: iolibsPath, camlibsPath: camlibsPath);
     await _initFuture;
   }
 

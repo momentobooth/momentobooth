@@ -64,17 +64,23 @@ For all languages, frameworks and tools, we support the latest versions.
 
 ### On macOS
 
+* **A Mac with Apple Silicon** running macOS 15 or newer, Intel Macs are not supported
 * **Xcode**
   * Installing from the App Store is recommended (automatic updates)
-* **Rust** (`aarch64-apple-darwin` or `x86_64-apple-darwin`, depending on your architecture)
+* **Rust** (`aarch64-apple-darwin`)
   * Recommended installation via [`rustup`](https://rustup.rs/)
   * `rustup` is also available via [Homebrew](https://formulae.brew.sh/formula/rustup)
-* **Homebrew**
+* **pkgconf**, used by the Rust build scripts to find libgphoto2
   * Install with
 
     ```sh
-    brew install pkgconf libgphoto2
+    brew install pkgconf
     ```
+
+* **libgphoto2** and its dependencies are downloaded prebuilt from [momentobooth/native-deps](https://github.com/momentobooth/native-deps) by `just get-native-deps` (or run `macos/get_native_deps.sh` directly)
+  * This also writes `.cargo/config.toml`, which points Cargo to the downloaded libraries
+  * The Xcode build copies the libraries into `MomentoBooth.app/Contents/Libs`, for debug builds too, so a Homebrew installation of libgphoto2 is not needed and not used
+  * The minimum macOS version is that of the downloaded libraries, see the [native-deps README](https://github.com/momentobooth/native-deps#build-configuration)
 
 * **Code signing certificates**
   * Both debug and release builds need a certificate and provisioning profile from the MomentoBooth certificates repository, see [Code signing on macOS](#code-signing-on-macos)
@@ -106,10 +112,14 @@ Please note: This method expects global [fvm](https://fvm.app/) to be available 
 
 Please note: Run all commands from the root folder of the repository, unless mentioned otherwise.
 
-0. On Windows, download the native dependencies.
+0. On Windows and macOS, download the native dependencies.
 
    ```
    ./windows/get_native_deps.ps1
+   ```
+
+   ```sh
+   ./macos/get_native_deps.sh
    ```
 
 1. Generate translation files.
@@ -137,7 +147,7 @@ Please note: Run all commands from the root folder of the repository, unless men
    dart run tool/generate_licenses.dart
    ```
 
-    * Note: The toolchain and bundled native libraries are maintained by hand in `licenses/manual_licenses.toml`. On Windows, `libgphoto2` and its dependencies are taken from the manifest of the downloaded native dependencies instead.
+    * Note: The toolchain and bundled native libraries are maintained by hand in `licenses/manual_licenses.toml`. On Windows and macOS, `libgphoto2` and its dependencies are taken from the manifest of the downloaded native dependencies instead.
 5. Build and run the app with `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
@@ -148,15 +158,15 @@ Camera support in `libgphoto2` is split into separate driver libraries, which it
 1. If the environment variables `CAMLIBS` and `IOLIBS` are set, it uses those directories.
 2. Otherwise it uses the directories that were configured when `libgphoto2` itself was compiled, e.g. `/usr/lib/x86_64-linux-gnu/libgphoto2/2.5.33`. These only exist on the machine where `libgphoto2` was installed to that location, so this only works for a system-wide installation, not for a copy of `libgphoto2` that is bundled with the application.
 
-> Release builds of MomentoBooth bundle `libgphoto2` with its drivers. `libgphoto2` must be pointed *to* those bundled driver directories through the environment variables. MomentoBooth can do this itself: when the [Dart defines](https://dart.dev/libraries/core/environment-declarations) `IOLIBS` and `CAMLIBS` are set at build time (`--dart-define IOLIBS=... --dart-define CAMLIBS=...`), or on Windows by default, the app resolves these paths relative to the executable's directory and sets the environment variables of its own process before initializing `libgphoto2`. The directories must exist, otherwise initializing gPhoto2 fails.
+> Release builds of MomentoBooth bundle `libgphoto2` with its drivers. `libgphoto2` must be pointed *to* those bundled driver directories through the environment variables. MomentoBooth can do this itself: when the [Dart defines](https://dart.dev/libraries/core/environment-declarations) `IOLIBS` and `CAMLIBS` are set at build time (`--dart-define IOLIBS=... --dart-define CAMLIBS=...`), or on Windows and macOS by default, the app resolves these paths relative to the executable's directory and sets the environment variables of its own process before initializing `libgphoto2`. The directories must exist, otherwise initializing gPhoto2 fails.
 
 | Platform | Release builds | Development |
 | - | - | - |
 | Windows | Built-in default in the app, no Dart defines needed: `libgphoto2_iolibs` and `libgphoto2_camlibs` next to the executable. `windows/CMakeLists.txt` copies them there from `.native_deps\windows-x64` (see `just get-native-deps`). | Same as release builds, as `libgphoto2` is bundled in development too. The drivers end up in `build\windows\x64\runner\Debug`. |
-| macOS | Dart defines `IOLIBS=../Libs/Iolibs` and `CAMLIBS=../Libs/Camlibs`, relative to `MomentoBooth.app/Contents/MacOS`. The release workflow copies the drivers into the app bundle. | Nothing needed, the Homebrew installation of `libgphoto2` uses its compiled-in directories. |
+| macOS | Built-in default in the app, no Dart defines needed: `../Libs/Iolibs` and `../Libs/Camlibs`, relative to `MomentoBooth.app/Contents/MacOS`. The Xcode build phase *Embed native dependencies* (`macos/embed_native_deps.sh`) copies them there from `.native_deps/macos-arm64` (see `just get-native-deps`). | Same as release builds, as `libgphoto2` is bundled in development too. The drivers end up in `build/macos/Build/Products/Debug/MomentoBooth.app/Contents/Libs`. |
 | Linux | `linux/packaging/appimage/AppRun` sets the environment variables `IOLIBS=../iolibs` and `CAMLIBS=../camlibs` itself, relative to `$APPDIR/app`. | Nothing needed, the system-wide installation of `libgphoto2` uses its compiled-in directories. |
 
-When Dart defines are set on Windows, they take precedence over the built-in default. Because the app always sets the environment variables on Windows, setting `IOLIBS` or `CAMLIBS` yourself has no effect there.
+When Dart defines are set on Windows or macOS, they take precedence over the built-in default. Because the app always sets the environment variables on these platforms, setting `IOLIBS` or `CAMLIBS` yourself has no effect there.
 
 ## Code signing on macOS
 
@@ -239,7 +249,28 @@ printf '%s' '<authServiceKey>' > /tmp/spaceship_itc_service_key.txt
 
 You can read that value from your browser: open App Store Connect, sign out, and in the network tab of the developer tools look up the `X-Apple-Widget-Key` request header of the call to `idmsa.apple.com/appleauth/auth/signin`.
 
+### Release builds and notarization
+
+macOS only starts a downloaded app without warnings when Apple has *notarized* it: Apple scans the signed app and registers a ticket for it. The ticket is then *stapled* to the app and to the dmg, so that Gatekeeper also accepts them on a Mac without an internet connection.
+
+The Xcode build of the Release configuration produces a signature that Apple accepts for this, through three build settings of the Runner target:
+
+| Build setting | Effect |
+| - | - |
+| `ENABLE_HARDENED_RUNTIME = YES` | Enables the hardened runtime, which notarization requires |
+| `OTHER_CODE_SIGN_FLAGS = --timestamp` | Gives every signature a secure timestamp. The scripts that embed the frameworks and the native dependencies (`macos/embed_native_deps.sh`) use this setting as well |
+| `CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO` | Keeps Xcode from adding the `get-task-allow` debugging entitlement, which notarization rejects |
+
+Things to keep in mind:
+
+* Do not change or re-sign the app bundle after the build. Signing it again without its entitlements removes them, after which the Keychain (secure storage) no longer works.
+* With the hardened runtime, access to a protected resource needs an entitlement in `macos/Runner/Release.entitlements`, like the one for the camera. Debug builds do not use the hardened runtime, so a missing entitlement only shows up in a release build.
+* `macos/ci_notarize.sh <app bundle or dmg>` notarizes and staples. It uses the App Store Connect API key from the same environment variables as fastlane.
+* To check a build: `spctl -a -vv MomentoBooth.app` prints `accepted` with `source=Notarized Developer ID`.
+
 ### On CI
+
+CI builds the app, notarizes it, puts it in a dmg, and signs and notarizes the dmg.
 
 CI uses the `ci_install_release_cert_using_api` lane, which is the same as `install_release_cert` but additionally runs `setup_ci` to install everything into a temporary keychain. **Do not run that lane on your own machine** — the temporary keychain disappears again, and the certificates will not be where Xcode expects them.
 

@@ -9,7 +9,7 @@
 #   license_file Path to the full license text, relative to this file
 
 # Native libraries that are bundled with the application. Entries that are also in the manifest of the prebuilt native dependencies
-# (.native_deps, Windows) are replaced by the manifest entry, so libgphoto2 and its dependencies here only apply to the other platforms.
+# (.native_deps, Windows and macOS) are replaced by the manifest entry, so libgphoto2 and its dependencies here only apply to Linux.
 [[native]]
 name = "libgphoto2"
 description = "Digital camera control library"
@@ -112,6 +112,12 @@ name = "MSYS2"
 description = "Provides libgphoto2 and its dependencies on Windows"
 url = "https://www.msys2.org"
 license = "BSD-3-Clause"
+
+[[toolchain]]
+name = "Homebrew"
+description = "Provides the dependencies of libgphoto2 on macOS"
+url = "https://brew.sh"
+license = "BSD-2-Clause"
 
 [[toolchain]]
 name = "LLVM / Clang"

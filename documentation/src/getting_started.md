@@ -15,8 +15,8 @@ THe minimal setup mentioned above approximately consists of a computer that is n
       - Windows 7/8/8.1 might work, but untested
     - Linux
       - Ubuntu 20.04 or newer, other recent distros should also be fine
-    - macOS
-      - Only tested on macOS 13 (Ventura), older versions might work but untested
+    - macOS 15 (Sequoia) or newer
+      - Only on Macs with Apple Silicon, Intel Macs are not supported
   - **CPU**: Intel Core i5 (2<sup>nd</sup> gen) or equivalent
     - Older might work, but untested
   - **GPU**: Integrated or dedicated graphics by Intel/AMD/NVIDIA
@@ -45,7 +45,7 @@ If you want to provide the full experience to the people at your event, a decent
     - Windows 10/11
     - Linux
       - Ubuntu 20.04 or newer, other recent distros should also be fine
-    - macOS 13
+    - macOS 15 (Sequoia) or newer, on a Mac with Apple Silicon
   - **CPU**: Intel Core i3 (6<sup>th</sup> gen) or equivalent
   - **GPU**: Integrated or dedicated graphics by Intel/AMD/NVIDIA
   - **Memory**: 8 GB

@@ -16,6 +16,8 @@
 ### Changes
 - Added a setting to enable or disable the check for new versions
 - Swapped the delete and keep buttons in the retake dialog, so keep is the rightmost button
+- macOS: MomentoBooth now requires macOS 15 (Sequoia) or newer on a Mac with Apple Silicon. Intel Macs are no longer supported
+- macOS: releases are now notarized by Apple, so macOS no longer refuses to open MomentoBooth after downloading it
 
 ### Bugfixes
 - Smaller print sizes were not logged in the statistics
@@ -30,6 +32,9 @@
 - `just gen-licenses` is now a build step
 - First unit test added
 - Windows: libgphoto2 and its dependencies are now downloaded prebuilt from momentobooth/native-deps (`just get-native-deps`) instead of installed through MSYS2. libgphoto2 is built without libgd and libcurl, which reduces the bundled DLLs from 57 to 13 and removes GPL licensed libraries (x265). The picture frame camlibs lose image conversion and the docupen and lumix (WiFi) camlibs are no longer included
+- macOS: libgphoto2 and its dependencies are now downloaded prebuilt from momentobooth/native-deps (`just get-native-deps`) as well, instead of installed through Homebrew, and with the same changes to libgphoto2 as on Windows. The Xcode build copies them into the app bundle, so debug builds use the same libraries as releases and no longer need the `IOLIBS` and `CAMLIBS` Dart defines
+- macOS: the CI no longer builds for Intel, the minimum macOS version is that of the prebuilt libraries
+- macOS: the Xcode build now makes the final signature of a release build, with the hardened runtime and secure timestamps, and the CI notarizes and staples the app and the dmg (`macos/ci_notarize.sh`). The CI no longer signs the app again, as that removed its entitlements
 
 ## 0.16.1
 

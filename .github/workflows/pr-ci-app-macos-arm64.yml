@@ -78,14 +78,13 @@ jobs:
       uses: dtolnay/rust-toolchain@master
       with:
         toolchain: stable
-        targets: aarch64-apple-darwin,x86_64-apple-darwin
+        targets: aarch64-apple-darwin
 
     - name: Setup Rust cache
       uses: Swatinem/rust-cache@v2
       with:
         workspaces: |
           rust -> ../build/macos/Build/Intermediates.noindex/Pods.build/Release/rust_lib_momento_booth.build/aarch64-apple-darwin
-          rust -> ../build/macos/Build/Intermediates.noindex/Pods.build/Release/rust_lib_momento_booth.build/x86_64-apple-darwin
           rust -> target
       
     - name: Setup sccache-cache
@@ -104,93 +103,55 @@ jobs:
       run: |
         brew install pkgconf create-dmg
 
-    - name: Download and unpack Homebrew libraries
-      run: |
-        mkdir ci_build && cd ci_build
-        ../macos/ci_download_deps.sh -a arm64_ventura,ventura libgphoto2
-        ../macos/ci_adapt_pkgconf_dirs.sh ventura/lib/pkgconfig
-        ../macos/ci_adapt_pkgconf_dirs.sh arm64_ventura/lib/pkgconfig
+    - name: Download native dependencies
+      run: ./macos/get_native_deps.sh
 
     - name: Prepare sources
       run: |
         flutter pub get --enforce-lockfile
         flutter gen-l10n
         dart run tool/generate_licenses.dart
-        PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter_rust_bridge_codegen generate
+        flutter_rust_bridge_codegen generate
         dart run build_runner build
         flutter analyze --no-pub
 
     - name: Run tests
       run: flutter test --no-pub
 
-    - name: Build project (arm64)
+    - name: Build project
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=arm64 PKG_CONFIG_PATH=$(realpath ci_build/arm64_ventura/lib/pkgconfig) flutter build macos -v --no-pub --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
+        FLUTTER_XCODE_ARCHS=arm64 flutter build macos -v --no-pub --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }}
 
-        mkdir ci_build/arm64_bundle
+        mkdir -p ci_build/arm64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/
 
-        flutter clean
-        flutter pub get --enforce-lockfile
+    # The app gets its own ticket before it goes into the dmg: it cannot be stapled afterwards, and without a stapled ticket the copy
+    # in /Applications is only accepted by Gatekeeper when the Mac is online.
+    - name: Notarize app
+      env:
+        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
+      run: ./macos/ci_notarize.sh ci_build/arm64_bundle/MomentoBooth.app
 
-    - name: Build project (x86_64)
-      run: |
-        rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=x86_64 PKG_CONFIG_PATH=$(realpath ci_build/ventura/lib/pkgconfig) PKG_CONFIG_SYSROOT_DIR=$(realpath ci_build/ventura) flutter build macos -v --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }} --dart-define IOLIBS=../Libs/Iolibs --dart-define CAMLIBS=../Libs/Camlibs
-
-        mkdir ci_build/x86_64_bundle
-        mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/x86_64_bundle/
-
-    - name: Bundle libraries
-      run: |
-        cd ci_build/arm64_bundle
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Frameworks MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
-        mkdir -p ./MomentoBooth.app/Contents/Libs/{Camlibs,Iolibs}
-        cp ../arm64_ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/Camlibs
-        cp ../arm64_ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/Iolibs
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Camlibs MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Iolibs MomentoBooth.app/Contents/Libs ../arm64_ventura/lib
-        chmod 755 MomentoBooth.app/Contents/Libs/* MomentoBooth.app/Contents/Libs/Camlibs/* MomentoBooth.app/Contents/Libs/Iolibs/*
-
-        cd ../x86_64_bundle
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/MacOS/MomentoBooth MomentoBooth.app/Contents/Libs ../ventura/lib
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Frameworks MomentoBooth.app/Contents/Libs ../ventura/lib
-        mkdir -p ./MomentoBooth.app/Contents/Libs/{Camlibs,Iolibs}
-        cp ../ventura/lib/libgphoto2/*/*.so ./MomentoBooth.app/Contents/Libs/Camlibs
-        cp ../ventura/lib/libgphoto2_port/*/*.so ./MomentoBooth.app/Contents/Libs/Iolibs
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Camlibs MomentoBooth.app/Contents/Libs ../ventura/lib
-        python3 ../../macos/ci_bundle_libraries.py MomentoBooth.app/Contents/Libs/Iolibs MomentoBooth.app/Contents/Libs ../ventura/lib
-        chmod 755 MomentoBooth.app/Contents/Libs/* MomentoBooth.app/Contents/Libs/Camlibs/* MomentoBooth.app/Contents/Libs/Iolibs/*
-
-    - name: Resign bundles
-      run: |
-        cd ci_build
-        python3 ../macos/ci_resign_everything.py arm64_bundle/MomentoBooth.app "${{ secrets.APPLE_SIGNING_IDENTITY }}"
-        python3 ../macos/ci_resign_everything.py x86_64_bundle/MomentoBooth.app "${{ secrets.APPLE_SIGNING_IDENTITY }}"
-
-    - name: Create dmg installers and sign
+    - name: Create dmg installer, sign and notarize
+      env:
+        APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+        APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+        APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
       run: |
         cd ci_build
         create-dmg --volname "MomentoBooth (Apple Silicon) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-AppleSilicon.dmg" "arm64_bundle/MomentoBooth.app"
-        create-dmg --volname "MomentoBooth (Intel) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-Intel.dmg" "x86_64_bundle/MomentoBooth.app"
 
-        python3 ../macos/ci_resign_everything.py MomentoBooth-AppleSilicon.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
-        python3 ../macos/ci_resign_everything.py MomentoBooth-Intel.dmg "${{ secrets.APPLE_SIGNING_IDENTITY }}"
+        codesign --sign "${{ secrets.APPLE_SIGNING_IDENTITY }}" --timestamp MomentoBooth-AppleSilicon.dmg
+        ../macos/ci_notarize.sh MomentoBooth-AppleSilicon.dmg
 
     - name: Upload arm64 dmg
       uses: actions/upload-artifact@v7
       with:
         name: MomentoBooth-AppleSilicon.dmg
         path: ci_build/MomentoBooth-AppleSilicon.dmg
-        archive: false
-
-    - name: Upload x86_64 dmg
-      uses: actions/upload-artifact@v7
-      with:
-        name: MomentoBooth-Intel.dmg
-        path: ci_build/MomentoBooth-Intel.dmg
         archive: false
 
     - name: Commit changes to macOS build files and create PR
