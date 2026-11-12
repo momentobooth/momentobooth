@@ -220,6 +220,7 @@ Chrome for the settings overlay (pages, sections, dialogs).
 - `external_system_check_tile.dart` — `ExternalSystemCheckTile` — expandable tile for an external system health check.
 - `openai_endpoint_edit_dialog.dart` — `OpenAiEndpointEditDialog` — create/edit an OpenAI-compatible endpoint (name, base URL, API key).
 - `openai_endpoint_tile.dart` — `OpenAiEndpointTile` — tile for an OpenAI-compatible endpoint, showing whether an API key is stored.
+- `open_source_licenses_expander.dart` — `OpenSourceLicensesExpander` — About-page expander listing third-party licenses as compact tables (name, version, license) in lazily built groups; clicking a row opens a dialog with the license text.
 - `import_field.dart` — `MyDropRegion` — drag-and-drop / clipboard-paste region for importing a TOML settings file. *(Placeholder-style name — actually settings-import specific, not a generic drop region.)*
 - `settings_list_page.dart` — `SettingsListPage` — settings page variant rendering a scrollable list of setting "blocks".
 - `settings_page.dart` — `SettingsPage` — base settings-page chrome (title, scroll-shadowed body, "auto-saved" info bar).

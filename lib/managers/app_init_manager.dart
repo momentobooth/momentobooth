@@ -54,6 +54,7 @@ abstract class AppInitManagerBase with Store {
 
         // Repositories
         ..registerSingleton<SecretsRepository>(const SecureStorageSecretsRepository())
+        ..registerSingleton(OpenSourceLicensesRepository())
 
         // Managers
         ..registerManager(StatsManager())

@@ -745,7 +745,7 @@ dependencies = [
  "jni",
  "js-sys",
  "libc",
- "mach2",
+ "mach2 0.6.0",
  "ndk",
  "ndk-context",
  "num-derive 0.4.2",
@@ -1156,7 +1156,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2d99f31a523ee3303acdf4f31589f4d0d99eddee843fb02737d50c44e6a0b315"
 dependencies = [
  "encoding_rs",
- "log 0.4.29",
+ "log 0.4.34",
  "nusb",
 ]
 
@@ -2075,7 +2075,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "06d3a048d09fbb6597dbf7c69f40d14df4a49487db1487191618c893fc3b1c26"
 dependencies = [
  "core-foundation-sys 0.8.7",
- "mach2",
+ "mach2 0.5.0",
 ]
 
 [[package]]
@@ -2388,6 +2388,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fae87c125b03c1d2c0150c90365d7d6bcc53fb73a9acaef207d2d065860f062"
 dependencies = [
  "imgref",
+]
+
+[[package]]
+name = "mach2"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a1b95cd5421ec55b445b5ae102f5ea0e768de1f82bd3001e11f426c269c3aea"
+dependencies = [
+ "libc",
 ]
 
 [[package]]
@@ -2896,7 +2905,7 @@ dependencies = [
  "futures-core",
  "io-kit-sys",
  "linux-raw-sys 0.12.1",
- "log 0.4.29",
+ "log 0.4.34",
  "once_cell",
  "rustix 1.1.4",
  "slab",
@@ -3839,7 +3848,7 @@ dependencies = [
  "serde_json",
  "snafu",
  "susync",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
  "tokio",
  "turborand",
  "url 2.5.8",
