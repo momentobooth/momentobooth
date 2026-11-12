@@ -49,6 +49,15 @@ jobs:
         SENTRY_RELEASE: ${{ steps.extract_release_version.outputs.distributor_version }}
       run: printf '{"SENTRY_DSN":"%s","SENTRY_ENVIRONMENT":"Production","SENTRY_RELEASE":"%s"}\n' "$SENTRY_DSN" "$SENTRY_RELEASE" > linux/packaging/flatpak/dart-defines.json
 
+    # The metainfo is what Flatpak and software centers show as the version
+    - name: Set release in metainfo
+      env:
+        RELEASE_VERSION: ${{ steps.extract_release_version.outputs.release_version }}
+      run: |
+        metainfo=linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.metainfo.xml
+        sed -i -E "s|<release version=\"[^\"]*\" date=\"[^\"]*\"/>|<release version=\"$RELEASE_VERSION\" date=\"$(date -u +%F)\"/>|" "$metainfo"
+        grep -F "<release version=\"$RELEASE_VERSION\"" "$metainfo"
+
     - name: Build Flatpak
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:

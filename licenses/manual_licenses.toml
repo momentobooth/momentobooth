@@ -20,6 +20,13 @@ license = "LGPL-2.1-or-later"
 license_file = "texts/LGPL-2.1.txt"
 
 [[native]]
+name = "iputils"
+description = "Provides ping in the Linux Flatpak, for the ping health check of external systems"
+url = "https://github.com/iputils/iputils"
+license = "BSD-3-Clause"
+license_file = "texts/iputils.txt"
+
+[[native]]
 name = "PDFium"
 description = "PDF rendering library, used by the printing package"
 url = "https://pdfium.googlesource.com/pdfium/"

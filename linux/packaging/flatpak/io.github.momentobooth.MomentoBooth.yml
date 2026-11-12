@@ -76,6 +76,24 @@ modules:
       - /share/doc
       - /share/man
 
+  # ping, for the ping health check of external systems, as the runtime does not have it. A Flatpak cannot have the capability to open
+  # raw sockets, so ping uses ICMP datagram sockets, which only work when the host's net.ipv4.ping_group_range includes the user.
+  - name: iputils
+    buildsystem: meson
+    config-opts:
+      - -DBUILD_ARPING=false
+      - -DBUILD_CLOCKDIFF=false
+      - -DBUILD_TRACEPATH=false
+      - -DBUILD_MANS=false
+      - -DUSE_CAP=false
+      - -DUSE_IDN=false
+      - -DUSE_GETTEXT=false
+      - -DSKIP_TESTS=true
+    sources:
+      - type: archive
+        url: https://github.com/iputils/iputils/releases/download/20250605/iputils-20250605.tar.xz
+        sha256: 6f213700dbf96b5cc4499ca70cb15ecd69c09f405b06785bb4a1a10b572b6276
+
   # Code generation tools, only used during the build. A separate module, so flatpak-builder caches them between builds.
   - name: build-tools
     buildsystem: simple

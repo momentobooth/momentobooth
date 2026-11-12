@@ -54,6 +54,13 @@ Some notes on the Flatpak:
 * Settings and other application data are stored in `~/.var/app/io.github.momentobooth.MomentoBooth`.
 * MomentoBooth has access to USB devices and webcams, the home directory, and removable drives under `/media` and `/run/media`. To use a folder elsewhere, give MomentoBooth access to it with `flatpak override --user --filesystem=/path/to/folder io.github.momentobooth.MomentoBooth`.
 * Digital cameras (gPhoto2) need the udev rules of libgphoto2 on the system itself, which give the logged in user access to the camera. Most distributions install them along with the libgphoto2 package (e.g. `libgphoto2-6t64` on Ubuntu).
+* The ping health check of external systems only works when the system allows ping for regular users, as the Flatpak cannot use the elevated privileges the system's own `ping` has. Some distributions, such as Ubuntu 24.04, do not allow it by default; the check then fails with "Operation not permitted". To allow it, run:
+
+  ```sh
+  echo 'net.ipv4.ping_group_range = 0 2147483647' | sudo tee /etc/sysctl.d/60-ping-group-range.conf
+  sudo sysctl --system
+  ```
+
 * The experimental recording of video message audio (through FFmpeg) is not available in the Flatpak.
 
 You can also choose to [set up the development environment](dev_setup.md#requirements).
