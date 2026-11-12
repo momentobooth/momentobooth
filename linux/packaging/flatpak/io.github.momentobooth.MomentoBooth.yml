@@ -42,6 +42,12 @@ finish-args:
   # Secure storage (flutter_secure_storage through libsecret)
   - --talk-name=org.freedesktop.secrets
 
+build-options:
+  env:
+    # flatpak-builder runs as root in CI, where tar would otherwise try to keep the owner of the files in the Flutter artifacts,
+    # which does not exist in the build sandbox
+    TAR_OPTIONS: --no-same-owner
+
 cleanup:
   - /include
   - /lib/pkgconfig
