@@ -24,7 +24,8 @@ jobs:
     if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
 
     runs-on: macos-latest
-    timeout-minutes: 45
+    # Manual runs notarize the app and the dmg, which each takes Apple 10 to 15+ minutes.
+    timeout-minutes: 90
 
     env:
       CARGO_PROFILE_RELEASE_LTO: true
@@ -127,26 +128,31 @@ jobs:
         mkdir -p ci_build/arm64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/
 
+    # Notarization takes Apple 10 to 15+ minutes per submission, so it only runs when the workflow is started manually, to check it.
+    # The release workflow always notarizes.
     # The app gets its own ticket before it goes into the dmg: it cannot be stapled afterwards, and without a stapled ticket the copy
     # in /Applications is only accepted by Gatekeeper when the Mac is online.
     - name: Notarize app
+      if: ${{ github.event_name == 'workflow_dispatch' }}
       env:
         APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
       run: ./macos/ci_notarize.sh ci_build/arm64_bundle/MomentoBooth.app
 
-    - name: Create dmg installer, sign and notarize
+    - name: Create dmg installer and sign
+      run: |
+        cd ci_build
+        create-dmg --volname "MomentoBooth (Apple Silicon) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-AppleSilicon.dmg" "arm64_bundle/MomentoBooth.app"
+        codesign --sign "${{ secrets.APPLE_SIGNING_IDENTITY }}" --timestamp MomentoBooth-AppleSilicon.dmg
+
+    - name: Notarize dmg
+      if: ${{ github.event_name == 'workflow_dispatch' }}
       env:
         APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
         APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
         APP_STORE_CONNECT_KEY: ${{ secrets.APP_STORE_CONNECT_KEY }}
-      run: |
-        cd ci_build
-        create-dmg --volname "MomentoBooth (Apple Silicon) Installer" --hide-extension "MomentoBooth.app" --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 "MomentoBooth-AppleSilicon.dmg" "arm64_bundle/MomentoBooth.app"
-
-        codesign --sign "${{ secrets.APPLE_SIGNING_IDENTITY }}" --timestamp MomentoBooth-AppleSilicon.dmg
-        ../macos/ci_notarize.sh MomentoBooth-AppleSilicon.dmg
+      run: ./macos/ci_notarize.sh ci_build/MomentoBooth-AppleSilicon.dmg
 
     - name: Upload arm64 dmg
       uses: actions/upload-artifact@v7

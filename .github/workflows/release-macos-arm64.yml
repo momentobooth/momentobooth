@@ -14,7 +14,8 @@ jobs:
     if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
 
     runs-on: macos-latest
-    timeout-minutes: 45
+    # Notarizing the app and the dmg each takes Apple 10 to 15+ minutes.
+    timeout-minutes: 90
 
     env:
       CARGO_PROFILE_RELEASE_LTO: true

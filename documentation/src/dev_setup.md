@@ -271,7 +271,7 @@ Things to keep in mind:
 
 ### On CI
 
-CI builds the app, notarizes it, puts it in a dmg, and signs and notarizes the dmg.
+The release workflow builds the app, notarizes it, puts it in a dmg, and signs and notarizes the dmg. As notarization takes Apple 10 to 15+ minutes per submission, the PR CI workflow only notarizes when it is started manually (*Run workflow* in the Actions tab).
 
 CI uses the `ci_install_release_cert_using_api` lane, which is the same as `install_release_cert` but additionally runs `setup_ci` to install everything into a temporary keychain. **Do not run that lane on your own machine** — the temporary keychain disappears again, and the certificates will not be where Xcode expects them.
 
