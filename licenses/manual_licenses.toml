@@ -9,32 +9,13 @@
 #   license_file Path to the full license text, relative to this file
 
 # Native libraries that are bundled with the application. Entries that are also in the manifest of the prebuilt native dependencies
-# (.native_deps, Windows and macOS) are replaced by the manifest entry, so libgphoto2 and its dependencies here only apply to Linux.
+# (.native_deps, Windows and macOS) are replaced by the manifest entry, so libgphoto2 here only applies to Linux, where the Flatpak
+# manifest (linux/packaging/flatpak) builds it. Its dependencies (libusb, libexif, libltdl) are part of the Flatpak runtime there, so
+# they are not distributed with the application and not listed.
 [[native]]
 name = "libgphoto2"
 description = "Digital camera control library"
 url = "http://www.gphoto.org/proj/libgphoto2/"
-license = "LGPL-2.1-or-later"
-license_file = "texts/LGPL-2.1.txt"
-
-[[native]]
-name = "libusb"
-description = "USB device access library, used by libgphoto2"
-url = "https://libusb.info"
-license = "LGPL-2.1-or-later"
-license_file = "texts/LGPL-2.1.txt"
-
-[[native]]
-name = "libexif"
-description = "EXIF metadata library, used by libgphoto2"
-url = "https://libexif.github.io"
-license = "LGPL-2.1-or-later"
-license_file = "texts/LGPL-2.1.txt"
-
-[[native]]
-name = "libltdl"
-description = "Dynamic module loader from GNU Libtool, used by libgphoto2"
-url = "https://www.gnu.org/software/libtool/"
 license = "LGPL-2.1-or-later"
 license_file = "texts/LGPL-2.1.txt"
 
@@ -121,7 +102,7 @@ license = "BSD-2-Clause"
 
 [[toolchain]]
 name = "LLVM / Clang"
-description = "Compiler toolchain for the native libraries on Windows"
+description = "Compiler toolchain for the native libraries on Windows and the Linux build"
 url = "https://llvm.org"
 license = "Apache-2.0 WITH LLVM-exception"
 
@@ -132,10 +113,10 @@ url = "https://jrsoftware.org/isinfo.php"
 license = "LicenseRef-InnoSetup"
 
 [[toolchain]]
-name = "appimagetool"
-description = "Packages the Linux AppImage"
-url = "https://github.com/AppImage/appimagetool"
-license = "MIT"
+name = "flatpak-builder"
+description = "Builds and packages the Linux Flatpak"
+url = "https://github.com/flatpak/flatpak-builder"
+license = "LGPL-2.1-or-later"
 
 [[toolchain]]
 name = "fastlane"

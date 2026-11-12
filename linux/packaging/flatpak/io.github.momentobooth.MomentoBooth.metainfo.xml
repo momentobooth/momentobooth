@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.momentobooth.MomentoBooth</id>
+  <name>MomentoBooth</name>
+  <summary>Capture your events in an easy and fun way</summary>
+  <developer id="io.github.momentobooth">
+    <name>MomentoBooth</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MPL-2.0</project_license>
+  <description>
+    <p>Cross-platform open source photo booth software. Guests take photos with a digital camera or webcam, choose a collage layout and print or share the result.</p>
+  </description>
+  <launchable type="desktop-id">io.github.momentobooth.MomentoBooth.desktop</launchable>
+  <url type="homepage">https://github.com/momentobooth/momentobooth</url>
+  <url type="bugtracker">https://github.com/momentobooth/momentobooth/issues</url>
+  <url type="translate">https://hosted.weblate.org/engage/momentobooth-photobooth/</url>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.16.1" date="2026-09-12"/>
+  </releases>
+</component>

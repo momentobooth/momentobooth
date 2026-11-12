@@ -12,7 +12,7 @@
 <a href="https://discord.gg/mCMEv2fHSN" title="Join our Discord server!"><img src="https://img.shields.io/discord/1434316075633344643?label=Discord"></a>
 <img src="https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-win-x64.yml?label=Windows%20build" alt="GitHub Windows build workflow status">
 <img src="https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-macos-arm64.yml?label=macOS%20build" alt="GitHub macOS build workflow status">
-<img src="https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-linux-appimage-x64.yml?label=Linux%20build" alt="GitHub linux build workflow status">
+<img src="https://img.shields.io/github/actions/workflow/status/momentobooth/momentobooth/release-linux-flatpak.yml?label=Linux%20build" alt="GitHub linux build workflow status">
 <a href="https://github.com/momentobooth/momentobooth/releases"><img title="GitHub release (latest SemVer including pre-releases)" src="https://img.shields.io/github/v/release/momentobooth/momentobooth?include_prereleases&label=Latest%20version"></a>
 <a href="https://hosted.weblate.org/engage/momentobooth-photobooth/"><img src="https://hosted.weblate.org/widget/momentobooth-photobooth/svg-badge.svg" alt="Translation status" /></a>
 </p>

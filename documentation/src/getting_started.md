@@ -14,7 +14,7 @@ THe minimal setup mentioned above approximately consists of a computer that is n
     - Windows 10/11
       - Windows 7/8/8.1 might work, but untested
     - Linux
-      - Ubuntu 20.04 or newer, other recent distros should also be fine
+      - Any recent distribution with Flatpak support, on x86_64 or arm64 (aarch64)
     - macOS 15 (Sequoia) or newer
       - Only on Macs with Apple Silicon, Intel Macs are not supported
   - **CPU**: Intel Core i5 (2<sup>nd</sup> gen) or equivalent
@@ -44,7 +44,7 @@ If you want to provide the full experience to the people at your event, a decent
   - **OS** either:
     - Windows 10/11
     - Linux
-      - Ubuntu 20.04 or newer, other recent distros should also be fine
+      - Any recent distribution with Flatpak support, on x86_64 or arm64 (aarch64)
     - macOS 15 (Sequoia) or newer, on a Mac with Apple Silicon
   - **CPU**: Intel Core i3 (6<sup>th</sup> gen) or equivalent
   - **GPU**: Integrated or dedicated graphics by Intel/AMD/NVIDIA
@@ -113,5 +113,3 @@ Once you have the basics up and running you can try [connecting a camera](camera
   - Many mirrorless (non-DSLR) cameras may work fine anyway due to live view mode being activated automatically (e.g. Sony α6400).
   - The camera handling code is written with future special cases for different brands and models in mind, however we do not have any devices available for development and testing currently.
   - **Workaround**: Try the different options available in the settings screen. If these don't work, your help might needed to fix the issue if possible at all. Please let us know by [raising an issue on GitHub](https://github.com/momentobooth/momentobooth/issues/new). Be sure to first check whether your model is listed on the [gPhoto2 compatibility list](http://www.gphoto.org/proj/libgphoto2/support.php). We might be able to expand the compatibility of the application with some remote testing. No guarantees however.
-- **Linux AppImage** might not work due to packaging issues
-  - **Workaround**: Run the application on Linux using `flutter run --release`. This should work on both x86_64 and arm64.

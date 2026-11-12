@@ -1,0 +1,14 @@
+#!/bin/sh
+# Minimal rustup stand-in for cargokit, which calls rustup to check the installed toolchain and targets and to run cargo.
+# The Flatpak SDK provides cargo and rustc through the rust-stable extension, without rustup. Only the stable toolchain for the
+# host target is available, so only the calls cargokit makes for a native build are supported.
+set -e
+
+host=$(rustc -vV | sed -n 's/^host: //p')
+
+case "$1 $2" in
+  "toolchain list") echo "stable-$host (default)" ;;
+  "target list") echo "$host" ;;
+  "run stable") shift 2; exec "$@" ;;
+  *) echo "rustup stand-in: unsupported command: rustup $*" >&2; exit 1 ;;
+esac

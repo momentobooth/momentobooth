@@ -61,7 +61,7 @@
 ### Planned
 
 * Improve distribution options
-  * [ ] Linux Flatpak distribution (x86_64 and arm64)
+  * [x] Linux Flatpak distribution (x86_64 and arm64)
   * [ ] Windows arm64 distribution
   * [ ] Up to date macOS builds (with correct signing)
 * Maturing

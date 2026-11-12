@@ -1,0 +1,73 @@
+name: Release - Linux Flatpak
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+
+# Sets permissions to allow version tag
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: ${{ github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/') }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: aarch64
+            runner: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.variant.runner }}
+    # Without cache, the build tools and the Rust crates are compiled from scratch
+    timeout-minutes: 90
+
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-51
+      options: --privileged
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    # Extract version from branch name
+    - name: Extract release version
+      id: extract_release_version
+      shell: bash
+      run: |
+        release_version=$(echo ${{ github.event.pull_request.head.ref }} | cut -d/ -f2)
+        echo "release_version=$release_version" >> $GITHUB_OUTPUT
+        echo "distributor_version=${release_version/-/+}" >> $GITHUB_OUTPUT
+
+    - name: Write Dart defines
+      env:
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        SENTRY_RELEASE: ${{ steps.extract_release_version.outputs.distributor_version }}
+      run: printf '{"SENTRY_DSN":"%s","SENTRY_ENVIRONMENT":"Production","SENTRY_RELEASE":"%s"}\n' "$SENTRY_DSN" "$SENTRY_RELEASE" > linux/packaging/flatpak/dart-defines.json
+
+    - name: Build Flatpak
+      uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      with:
+        manifest-path: linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.yml
+        arch: ${{ matrix.variant.arch }}
+        # Releases are installed from the stable branch, so they are kept apart from PR builds (master)
+        branch: stable
+        bundle: MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-${{ matrix.variant.arch }}.flatpak
+        upload-artifact: false
+        # Inside build/, which the manifest does not copy into the app sources
+        build-dir: build/flatpak
+        repo-dir: build/flatpak-repo
+
+    - name: Create GitHub release
+      uses: ncipollo/release-action@v1
+      with:
+        allowUpdates: true
+        prerelease: true
+        replacesArtifacts: true
+        omitBodyDuringUpdate: true
+        tag: ${{ steps.extract_release_version.outputs.release_version }}
+        artifacts: "MomentoBooth-${{ steps.extract_release_version.outputs.release_version }}-Linux-${{ matrix.variant.arch }}.flatpak"

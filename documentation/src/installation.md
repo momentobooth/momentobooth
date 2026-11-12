@@ -36,7 +36,25 @@ h3xup update
 This is not recommended if you just want to try out the software. However, if you want to make edits to the software or test in-development features, you can [set up a development environment](dev_setup.md#requirements).
 
 ## Linux
-For Linux, an `appimage` is available on the [releases page on GitHub](https://github.com/momentobooth/momentobooth/releases). Though you *should* be able to download this file and run it directly (making sure the file is executable with `chmod`), there seems to be an issue where the appimage does not work unless a `flutter run` has been done in a development environment. Fixing this issue, and a Flatpak application image for easier updates and possible space saving, are on the to-do list, but not available yet.
+For Linux, MomentoBooth is distributed as a [Flatpak](https://flatpak.org/). The [releases page on GitHub](https://github.com/momentobooth/momentobooth/releases) has a bundle for x86_64 PCs (`MomentoBooth-X.XX.X-XXX-Linux-x86_64.flatpak`) and one for arm64 devices (`MomentoBooth-X.XX.X-XXX-Linux-aarch64.flatpak`), such as a Raspberry Pi with a 64-bit OS.
+
+1. Make sure Flatpak is installed and the Flathub repository is added, see the [Flathub setup guide](https://flathub.org/setup) for your distribution. MomentoBooth runs on the GNOME runtime, which is downloaded from Flathub during the installation.
+2. Install the downloaded bundle:
+
+   ```sh
+   flatpak install --user MomentoBooth-X.XX.X-XXX-Linux-x86_64.flatpak
+   ```
+
+3. Start MomentoBooth from the application menu, or with `flatpak run io.github.momentobooth.MomentoBooth`.
+
+To update, download the bundle of the new release and install it in the same way.
+
+Some notes on the Flatpak:
+
+* Settings and other application data are stored in `~/.var/app/io.github.momentobooth.MomentoBooth`.
+* MomentoBooth has access to USB devices and webcams, the home directory, and removable drives under `/media` and `/run/media`. To use a folder elsewhere, give MomentoBooth access to it with `flatpak override --user --filesystem=/path/to/folder io.github.momentobooth.MomentoBooth`.
+* Digital cameras (gPhoto2) need the udev rules of libgphoto2 on the system itself, which give the logged in user access to the camera. Most distributions install them along with the libgphoto2 package (e.g. `libgphoto2-6t64` on Ubuntu).
+* The experimental recording of video message audio (through FFmpeg) is not available in the Flatpak.
 
 You can also choose to [set up the development environment](dev_setup.md#requirements).
 
