@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:fl_nodes_v2/fl_nodes_v2.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/hardware_control/printing/print_routing_analysis.dart';
@@ -48,6 +47,10 @@ class _PrintRoutingEditorState extends State<PrintRoutingEditor> {
 
   /// Held once: the editor compares node builders by identity, and a new closure per build rebuilds every node.
   late final NodeWidgetBuilder _nodeBuilder = _buildNode;
+
+  /// A wire takes the colour of the type it carries. Static, as a new function per build repaints every wire.
+  static ConnectionAppearance _connectionAppearance(NodeConnection connection, NodePort from, NodePort to) =>
+      ConnectionAppearance(color: from.color);
 
   NodeEditorController get _editor => _viewModel.editor;
 
@@ -145,60 +148,6 @@ class _PrintRoutingEditorState extends State<PrintRoutingEditor> {
     ]);
   }
 
-  // ////////////////// //
-  // Keyboard shortcuts //
-  // ////////////////// //
-
-  /// The library's shortcuts are disabled, as copying, cutting and deleting have to leave the source alone.
-  KeyEventResult _onKeyEvent(FocusNode node, KeyEvent event) {
-    if (event is! KeyDownEvent && event is! KeyRepeatEvent) return KeyEventResult.ignored;
-
-    // Only act for the canvas, never for a field inside a node: a text box leaves Backspace unhandled once there is
-    // nothing left to delete, which would otherwise delete the node.
-    final focused = FocusManager.instance.primaryFocus?.context;
-    if (focused == null || focused.findAncestorWidgetOfExactType<RoutingNodeCard>() != null) return KeyEventResult.ignored;
-
-    final command = _shortcutFor(event.logicalKey);
-    if (command == null) return KeyEventResult.ignored;
-    command();
-    return KeyEventResult.handled;
-  }
-
-  static final Map<LogicalKeyboardKey, Offset> _nudgeDirections = {
-    LogicalKeyboardKey.arrowLeft: const Offset(-1, 0),
-    LogicalKeyboardKey.arrowRight: const Offset(1, 0),
-    LogicalKeyboardKey.arrowUp: const Offset(0, -1),
-    LogicalKeyboardKey.arrowDown: const Offset(0, 1),
-  };
-
-  VoidCallback? _shortcutFor(LogicalKeyboardKey key) {
-    final keyboard = HardwareKeyboard.instance;
-    final bool control = keyboard.isControlPressed || keyboard.isMetaPressed;
-
-    if (key == LogicalKeyboardKey.delete || key == LogicalKeyboardKey.backspace) return _viewModel.deleteSelection;
-    if (key == LogicalKeyboardKey.escape) return _editor.selection.clear;
-    if (control) {
-      if (key == LogicalKeyboardKey.keyA) return _editor.selection.selectAll;
-      if (key == LogicalKeyboardKey.keyZ) return keyboard.isShiftPressed ? _editor.history.redo : _editor.history.undo;
-      if (key == LogicalKeyboardKey.keyY) return _editor.history.redo;
-      if (key == LogicalKeyboardKey.keyC) return _viewModel.copySelection;
-      if (key == LogicalKeyboardKey.keyX) return _viewModel.cutSelection;
-      if (key == LogicalKeyboardKey.keyV) return _viewModel.paste;
-      if (key == LogicalKeyboardKey.keyD) return _viewModel.duplicateSelection;
-      return null;
-    }
-
-    final direction = _nudgeDirections[key];
-    if (direction == null || _editor.selection.nodeIds.isEmpty) return null;
-    return () {
-      // Shift is the fine nudge, which also ignores the grid.
-      final bool fine = keyboard.isShiftPressed;
-      final grid = _editor.snapStep;
-      final step = fine ? 1.0 : (grid > 0 ? grid : 8.0);
-      _editor.translateNodes(_editor.selection.nodeIds.toList(), direction * step, snap: !fine);
-    };
-  }
-
   // ////// //
   // Layout //
   // ////// //
@@ -227,25 +176,20 @@ class _PrintRoutingEditorState extends State<PrintRoutingEditor> {
                     child: Listener(
                       onPointerUp: (_) => _viewModel.clearConnectionHint(),
                       onPointerCancel: (_) => _viewModel.clearConnectionHint(),
-                      child: Focus(
-                        canRequestFocus: false,
-                        skipTraversal: true,
-                        onKeyEvent: _onKeyEvent,
-                        child: FlyoutTarget(
-                          controller: _menuController,
-                          child: NodeEditor(
-                            key: _editorKey,
-                            controller: _editor,
-                            nodeBuilder: _nodeBuilder,
-                            theme: _editorTheme(theme),
-                            enableKeyboardShortcuts: false,
-                            // The built-in menus are Material MenuAnchors; Fluent flyouts are opened from the callbacks.
-                            contextMenus: null,
-                            onCanvasSecondaryTap: _onCanvasSecondaryTap,
-                            onNodeSecondaryTap: _onNodeSecondaryTap,
-                            onConnectionSecondaryTap: _onConnectionSecondaryTap,
-                            onPortSecondaryTap: _onPortSecondaryTap,
-                          ),
+                      child: FlyoutTarget(
+                        controller: _menuController,
+                        child: NodeEditor(
+                          key: _editorKey,
+                          controller: _editor,
+                          nodeBuilder: _nodeBuilder,
+                          theme: _editorTheme(theme),
+                          connectionAppearance: _connectionAppearance,
+                          // The built-in menus are Material MenuAnchors; Fluent flyouts are opened from the callbacks.
+                          contextMenus: null,
+                          onCanvasSecondaryTap: _onCanvasSecondaryTap,
+                          onNodeSecondaryTap: _onNodeSecondaryTap,
+                          onConnectionSecondaryTap: _onConnectionSecondaryTap,
+                          onPortSecondaryTap: _onPortSecondaryTap,
                         ),
                       ),
                     ),

@@ -103,7 +103,7 @@ The ports are coloured by what they carry:
 | Orange | Sheet | A photo laid out on a sheet. Comes from a tile layout. |
 | Green | Margins | A set of margins. Comes from a margins node. |
 
-The ports of round-robin and duplicate nodes take the colour of what they carry, and are grey while nothing is connected to them yet. The job input of a printer takes the colour of what is connected to it.
+The ports of round-robin and duplicate nodes take the colour of what they carry, and are grey while nothing is connected to them yet. The job input of a printer takes the colour of what is connected to it. Connections take the colour of the port they start at.
 
 To connect two nodes, drag from a port to a port of another node. Only matching ports can be connected: the editor refuses a connection that carries the wrong type or that would create a loop, and the status line at the bottom explains why when the colours do not already tell. A round-robin or duplicate node carries a single type, so it cannot mix photos and sheets.
 

@@ -174,15 +174,16 @@ void main() {
     });
 
     test('keeps exactly one source', () {
-      editor().selection.selectAll();
-      viewModel.deleteSelection();
+      editor().selection
+        ..selectAll()
+        ..deleteSelected();
       expect(viewModel.graph.nodes.map((node) => node.id), ['source']);
       editor().history.undo();
 
       editor().selection.selectAll();
-      viewModel
-        ..duplicateSelection()
-        ..copySelection()
+      editor().clipboard
+        ..duplicate()
+        ..copy()
         ..paste();
       expect(viewModel.graph.nodes.where((node) => node.data is SourceNodeData), hasLength(1));
       expect(viewModel.graph.nodes, hasLength(_graph.nodes.length * 3 - 2));
@@ -193,10 +194,10 @@ void main() {
 
     test('empties the clipboard when only the source is copied', () {
       editor().selection.selectNode('tile');
-      viewModel.copySelection();
+      editor().clipboard.copy();
       editor().selection.selectNode('source');
-      viewModel
-        ..copySelection()
+      editor().clipboard
+        ..copy()
         ..paste();
 
       expect(viewModel.graph.nodes, hasLength(_graph.nodes.length));

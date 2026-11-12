@@ -181,6 +181,9 @@ NodeDefinitionRegistry routingNodeDefinitions(RoutingNodeShapeSource shapes) => 
       defaultWidth: kind.width,
       ports: [DynamicPortFamily(id: 'ports', build: (context) => _buildPorts(context, shapes))],
       resolveHeight: (context) => _layoutOf(context, shapes)?.height,
+      // A graph has exactly one source: the editor's delete, copy, cut, duplicate and paste leave it alone.
+      deletable: kind != RoutingNodeKind.source,
+      copyable: kind != RoutingNodeKind.source,
     ),
 ]);
 

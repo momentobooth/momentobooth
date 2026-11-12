@@ -152,7 +152,7 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     // Groups (Ctrl+G), comments, connection labels and waypoints cannot be stored. Refusing groups also keeps the
     // library's Material group dialogs unreachable.
     GraphEditKind.group || GraphEditKind.comment || GraphEditKind.labelConnection || GraphEditKind.routeConnection => false,
-    // A graph has exactly one source. Copies of it are prevented by the selection commands below.
+    // A graph has exactly one source. The editor's own commands leave it alone, as its definition is not deletable.
     GraphEditKind.removeNodes => !edit.nodeIds.contains(sourceId),
     _ => true,
   };
@@ -312,32 +312,6 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
 
   void updateNodeData(String nodeId, RoutingNodeData data) {
     editor.updateNode(nodeId, (node) => node.withData({routingDataKey: data}));
-  }
-
-  // The selection commands leave the source out of what they copy or remove, so the graph keeps exactly one.
-
-  void deleteSelection() => _withSourceDeselected(editor.selection.deleteSelected, restore: false);
-
-  // Copying only the source copies nothing, which must not leave an earlier copy behind to be pasted.
-
-  void copySelection() => _withSourceDeselected(() {
-    if (!editor.clipboard.copy()) editor.clipboard.clear();
-  }, restore: true);
-
-  void cutSelection() => _withSourceDeselected(() {
-    if (!editor.clipboard.cut()) editor.clipboard.clear();
-  }, restore: false);
-
-  void duplicateSelection() => _withSourceDeselected(() => editor.clipboard.duplicate(), restore: false);
-
-  void paste() => editor.clipboard.paste();
-
-  void _withSourceDeselected(void Function() command, {required bool restore}) {
-    final id = sourceId;
-    final bool wasSelected = id != null && editor.selection.containsNode(id);
-    if (wasSelected) editor.selection.toggleNode(id);
-    command();
-    if (restore && wasSelected) editor.selection.toggleNode(id);
   }
 
   // ////////////////// //
