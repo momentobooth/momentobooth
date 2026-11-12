@@ -103,6 +103,12 @@ install(DIRECTORY "${NATIVE_DEPS_DIR}/bin/"
 # The driver directories are versioned (e.g. lib/libgphoto2/2.5.34), the application expects them at a fixed location.
 file(GLOB CAMLIBS_DIR LIST_DIRECTORIES true "${NATIVE_DEPS_DIR}/lib/libgphoto2/*")
 file(GLOB IOLIBS_DIR LIST_DIRECTORIES true "${NATIVE_DEPS_DIR}/lib/libgphoto2_port/*")
+foreach(DRIVER_DIR_VARIABLE CAMLIBS_DIR IOLIBS_DIR)
+  list(LENGTH ${DRIVER_DIR_VARIABLE} DRIVER_DIR_COUNT)
+  if(NOT DRIVER_DIR_COUNT EQUAL 1)
+    message(FATAL_ERROR "Expected exactly one driver directory, found '${${DRIVER_DIR_VARIABLE}}'. Run 'just get-native-deps' again.")
+  endif()
+endforeach()
 install(CODE "
   file(REMOVE_RECURSE \"${INSTALL_BUNDLE_LIB_DIR}/libgphoto2_camlibs\" \"${INSTALL_BUNDLE_LIB_DIR}/libgphoto2_iolibs\")
   " COMPONENT Runtime)

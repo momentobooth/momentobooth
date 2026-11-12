@@ -121,7 +121,7 @@ jobs:
     - name: Build project
       run: |
         rm macos/Podfile.lock
-        FLUTTER_XCODE_ARCHS=arm64 flutter build macos -v --no-pub --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }}
+        flutter build macos -v --no-pub --dart-define SENTRY_DSN=${{ secrets.SENTRY_DSN }} --dart-define SENTRY_ENVIRONMENT=Production --dart-define SENTRY_RELEASE=${{ github.sha }}
 
         mkdir -p ci_build/arm64_bundle
         mv build/macos/Build/Products/Release/MomentoBooth.app ci_build/arm64_bundle/
@@ -154,7 +154,9 @@ jobs:
         path: ci_build/MomentoBooth-AppleSilicon.dmg
         archive: false
 
+    # Only for pull requests, as the comment step needs one to comment on.
     - name: Commit changes to macOS build files and create PR
+      if: ${{ github.event_name == 'pull_request' }}
       id: cpr
       uses: peter-evans/create-pull-request@v8
       with:
@@ -165,7 +167,7 @@ jobs:
         branch: chore/update-macos-build-files
 
     - name: Add comment to remind of created PR
-      if: ${{ steps.cpr.outputs.pull-request-number }}
+      if: ${{ github.event_name == 'pull_request' && steps.cpr.outputs.pull-request-number }}
       uses: thollander/actions-comment-pull-request@v3
       with:
         message: I created PR \#${{ steps.cpr.outputs.pull-request-number }} for you to update the macOS build.

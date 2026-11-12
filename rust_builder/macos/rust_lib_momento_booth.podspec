@@ -44,6 +44,8 @@ A new Flutter FFI plugin project.
     'DEFINES_MODULE' => 'YES',
     # Flutter.framework does not contain a i386 slice.
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386',
+    # The native dependencies are only available for Apple Silicon, so cargokit must not build the Rust library for Intel Macs.
+    'EXCLUDED_ARCHS[sdk=macosx*]' => 'x86_64',
     'OTHER_LDFLAGS' => '-force_load ${BUILT_PRODUCTS_DIR}/librust_lib_momento_booth.a',
     'LIBRARY_SEARCH_PATHS' => native_deps_library_search_paths,
   }

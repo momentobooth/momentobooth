@@ -23,7 +23,9 @@ const _sdkLicensePrefix = 'sky_engine/';
 const _rustLicenseNotFound = 'NOT FOUND';
 
 /// Files and directories whose changes affect the output. `.fvmrc` pins the Flutter version, which determines the Flutter engine components.
-const _inputPaths = ['pubspec.lock', 'rust/Cargo.lock', '.fvmrc', 'licenses', 'tool/generate_licenses.dart'];
+/// The native dependencies scripts rewrite a marker file in [_nativeDepsPath] on every extraction, as extracted files keep their original
+/// modification times.
+const _inputPaths = ['pubspec.lock', 'rust/Cargo.lock', '.fvmrc', 'licenses', _nativeDepsPath, 'tool/generate_licenses.dart'];
 
 /// Packages that are part of MomentoBooth itself and should not be listed.
 const _ownPackages = {'momento_booth', 'rust_lib_momento_booth'};

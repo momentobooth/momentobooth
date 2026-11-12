@@ -23,7 +23,8 @@ $Sha256 = '41d1177ed1e3a1e98917cc2bace7f3b9a26ff192d7e82fed1f4d0f56ace8f915'
 $repositoryRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $destination = Join-Path $repositoryRoot '.native_deps\windows-x64'
 $marker = Join-Path $destination '.source'
-$source = if ($ZipPath) { (Resolve-Path $ZipPath).Path } else { "$Release/$Asset@$Sha256" }
+# For a local zip, the checksum is included so that a rebuilt zip at the same path is extracted again.
+$source = if ($ZipPath) { "$((Resolve-Path $ZipPath).Path)@$((Get-FileHash $ZipPath -Algorithm SHA256).Hash)" } else { "$Release/$Asset@$Sha256" }
 
 if ((Test-Path $marker) -and (Get-Content $marker -Raw).Trim() -eq $source) {
   Write-Output "Native dependencies are up to date ($source)"

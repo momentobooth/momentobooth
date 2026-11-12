@@ -77,10 +77,9 @@ build-release: gen-licenses
 build-release: gen-licenses
   fvm flutter build linux --release
 
-# Without FLUTTER_XCODE_ARCHS, Flutter also builds for Intel Macs, which the native dependencies are not available for.
 [macos]
 build-release: gen-licenses
-  FLUTTER_XCODE_ARCHS=arm64 fvm flutter build macos --release
+  fvm flutter build macos --release
 
 test:
   fvm flutter test

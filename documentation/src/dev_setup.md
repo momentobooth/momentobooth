@@ -65,6 +65,7 @@ For all languages, frameworks and tools, we support the latest versions.
 ### On macOS
 
 * **A Mac with Apple Silicon** running macOS 15 or newer, Intel Macs are not supported
+  * The Xcode project and the Rust plugin exclude `x86_64` (`EXCLUDED_ARCHS`), so `flutter build macos` only builds for Apple Silicon
 * **Xcode**
   * Installing from the App Store is recommended (automatic updates)
 * **Rust** (`aarch64-apple-darwin`)
