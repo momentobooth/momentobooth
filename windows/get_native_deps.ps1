@@ -16,9 +16,9 @@ param(
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
-$Release = 'libgphoto2-2.5.34-1'
+$Release = 'libgphoto2-2.5.34-2'
 $Asset = 'libgphoto2-windows-x64.zip'
-$Sha256 = 'd5922224123c102a8703e7d0a6c937d5b41143747653f5953c4fb03a95c67e07'
+$Sha256 = '41d1177ed1e3a1e98917cc2bace7f3b9a26ff192d7e82fed1f4d0f56ace8f915'
 
 $repositoryRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 $destination = Join-Path $repositoryRoot '.native_deps\windows-x64'

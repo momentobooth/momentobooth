@@ -11,8 +11,7 @@ set -euo pipefail
 
 release=libgphoto2-2.5.34-2
 asset=libgphoto2-macos-arm64.zip
-# TODO: set to the checksum from SHA256SUMS of the release, which is not published yet. Until then, pass a locally built zip.
-sha256=
+sha256=4c86cfe86b2c6dad5f452f4434b7405e2aa7f9f4f7525b6b7cd5c625a672d61e
 
 if [[ $# -gt 1 ]]; then
   echo "Usage: $0 [zip]" >&2
