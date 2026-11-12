@@ -58,15 +58,15 @@ watch-code:
 ##
 
 [windows]
-build-release:
+build-release: gen-licenses
   fvm flutter build windows --release
 
 [linux]
-build-release:
+build-release: gen-licenses
   fvm flutter build linux --release
 
 [macos]
-build-release:
+build-release: gen-licenses
   fvm flutter build macos --release
 
 test:

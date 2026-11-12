@@ -4,13 +4,14 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:momento_booth/models/open_source_package.dart';
+import 'package:momento_booth/repositories/open_source_licenses/open_source_licenses_repository.dart';
 
 Uint8List _encode(Map<String, Object?> json) => Uint8List.fromList(gzip.encode(utf8.encode(jsonEncode(json))));
 
 void main() {
-  group('OpenSourcePackage.decodeAll', () {
+  group('OpenSourceLicensesRepository.decode', () {
     test('resolves shared license texts by index', () {
-      final packages = OpenSourcePackage.decodeAll(_encode({
+      final packages = OpenSourceLicensesRepository.decode(_encode({
         'texts': ['MIT text', 'Apache text'],
         'packages': [
           {'name': 'a', 'ecosystem': 'dart', 'usage': 'runtime', 'isDirect': true, 'version': '1.0.0', 'license': 'MIT', 'licenseText': 0},
@@ -32,7 +33,7 @@ void main() {
     });
 
     test('defaults optional fields when they are absent', () {
-      final [package] = OpenSourcePackage.decodeAll(_encode({
+      final [package] = OpenSourceLicensesRepository.decode(_encode({
         'texts': <String>[],
         'packages': [
           {'name': 'Inno Setup', 'ecosystem': 'toolchain', 'usage': 'buildTime'},

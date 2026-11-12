@@ -5,7 +5,7 @@
 // - Rust crates: rust/Cargo.lock, via `cargo metadata` and `cargo bundle-licenses`.
 // - Native libraries and toolchain: licenses/manual_licenses.toml.
 //
-// Run with `just gen-licenses`.
+// Run with `just gen-licenses`. Generation is skipped when the output is newer than all inputs, unless `--force` is passed.
 
 import 'dart:convert';
 import 'dart:io';
@@ -20,10 +20,18 @@ const _rustProjectPath = 'rust';
 const _sdkLicensePrefix = 'sky_engine/';
 const _rustLicenseNotFound = 'NOT FOUND';
 
+/// Files and directories whose changes affect the output. `.fvmrc` pins the Flutter version, which determines the Flutter engine components.
+const _inputPaths = ['pubspec.lock', 'rust/Cargo.lock', '.fvmrc', 'licenses', 'tool/generate_licenses.dart'];
+
 /// Packages that are part of MomentoBooth itself and should not be listed.
 const _ownPackages = {'momento_booth', 'rust_lib_momento_booth'};
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
+  if (!args.contains('--force') && _isUpToDate()) {
+    stdout.writeln('$_outputPath is up to date, skipping. Pass --force to regenerate anyway.');
+    return;
+  }
+
   final texts = _LicenseTexts();
   final packages = [
     ...await _dartPackages(texts),
@@ -36,6 +44,21 @@ Future<void> main() async {
   await outputFile.writeAsBytes(GZipCodec(level: 9).encode(utf8.encode(jsonEncode({'texts': texts.all, 'packages': packages}))));
 
   stdout.writeln('Wrote ${packages.length} packages with ${texts.all.length} unique license texts to $_outputPath');
+}
+
+bool _isUpToDate() {
+  final output = File(_outputPath);
+  if (!output.existsSync()) return false;
+  final outputModified = output.lastModifiedSync();
+
+  final inputs = [
+    for (final inputPath in _inputPaths)
+      if (FileSystemEntity.isDirectorySync(inputPath))
+        ...Directory(inputPath).listSync(recursive: true).whereType<File>()
+      else if (FileSystemEntity.isFileSync(inputPath))
+        File(inputPath),
+  ];
+  return inputs.every((input) => input.lastModifiedSync().isBefore(outputModified));
 }
 
 /// Deduplicates license texts, as many packages share the exact same text.
@@ -72,13 +95,19 @@ Map<String, Object?> _entry({
     'isDirect': isDirect,
     'version': ?version,
     'description': ?_nullIfBlank(description),
-    'url': ?_nullIfBlank(url),
+    'url': ?_webUrlOrNull(url),
     'license': ?_nullIfBlank(license),
     'licenseText': ?licenseText,
   };
 }
 
 String? _nullIfBlank(String? value) => value == null || value.trim().isEmpty ? null : value.trim();
+
+/// Only keeps http(s) URLs, as package metadata may contain anything, e.g. `git://` URLs or URLs without a scheme.
+String? _webUrlOrNull(String? value) {
+  final uri = Uri.tryParse(value?.trim() ?? '');
+  return uri != null && (uri.isScheme('http') || uri.isScheme('https')) && uri.host.isNotEmpty ? uri.toString() : null;
+}
 
 // ////////////// //
 // Dart packages  //
@@ -101,6 +130,7 @@ Future<List<Map<String, Object?>>> _dartPackages(_LicenseTexts texts) async {
   root.dependencies.forEach(collectRuntime);
 
   final directNames = {...root.dependencies.map((p) => p.name), ...root.devDependencies.map((p) => p.name)};
+  // The detected SPDX identifiers are listed rather than combined into an expression, as a license file does not state whether multiple licenses apply jointly (AND) or as alternatives (OR).
   final flutterLicense = structure.allDependencies.where((p) => p.name == 'flutter').firstOrNull?.license;
 
   return [
@@ -110,7 +140,7 @@ Future<List<Map<String, Object?>>> _dartPackages(_LicenseTexts texts) async {
           name: package.name.substring(_sdkLicensePrefix.length),
           ecosystem: 'flutterEngine',
           usage: 'runtime',
-          license: package.spdxIdentifiers.join(' AND '),
+          license: package.spdxIdentifiers.join(', '),
           licenseText: texts.add(package.license),
         )
       else
@@ -122,7 +152,7 @@ Future<List<Map<String, Object?>>> _dartPackages(_LicenseTexts texts) async {
           version: package.version,
           description: package.description,
           url: package.homepage ?? package.repository,
-          license: package.spdxIdentifiers.join(' AND '),
+          license: package.spdxIdentifiers.join(', '),
           // Flutter SDK packages like flutter_localizations do not ship a license file of their own.
           licenseText: texts.add(package.license?.trim().isNotEmpty == true || !package.isSdk ? package.license : flutterLicense),
         ),

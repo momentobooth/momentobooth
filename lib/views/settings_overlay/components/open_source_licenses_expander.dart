@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/open_source_package.dart';
+import 'package:momento_booth/repositories/open_source_licenses/open_source_licenses_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Lists the licenses of all third-party software MomentoBooth uses, grouped by how it is used.
@@ -16,7 +18,7 @@ class OpenSourceLicensesExpander extends StatefulWidget {
 
 class _OpenSourceLicensesExpanderState extends State<OpenSourceLicensesExpander> {
 
-  late final Future<List<OpenSourcePackage>> _packages = OpenSourcePackage.loadAll();
+  late final Future<List<OpenSourcePackage>> _packages = getIt<OpenSourceLicensesRepository>().getAll();
 
   @override
   Widget build(BuildContext context) {
