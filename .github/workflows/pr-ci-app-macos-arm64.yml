@@ -9,6 +9,7 @@ on:
   push:
     branches: [ main ]
     paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md ]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
