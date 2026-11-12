@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:fluent_ui/fluent_ui.dart' show ComboBoxItem, Text;
 import 'package:momento_booth/exceptions/gphoto2_exception.dart';
@@ -185,10 +186,23 @@ class GPhoto2Camera extends PhotoCaptureMethod implements LiveViewSource {
     await gphoto2SetConfigRange(handleId: handleId!, keyName: keyName, value: value);
   }
 
+  /// Initializes libgphoto2, optionally overriding where it loads its drivers from.
+  /// See "libgphoto2 driver locations" in documentation/src/dev_setup.md.
   static Future<void> ensureLibraryInitialized() async {
     const String iolibsDefine = String.fromEnvironment("IOLIBS");
     const String camlibsDefine = String.fromEnvironment("CAMLIBS");
-    _initFuture ??= gphoto2Initialize(iolibsPath: iolibsDefine, camlibsPath: camlibsDefine);
+    // On Windows and macOS, the drivers are always in these directories, relative to the directory of the executable. Every build copies
+    // them there from the native dependencies in .native_deps, which are downloaded by `just get-native-deps`: windows/CMakeLists.txt
+    // next to the executable, macos/embed_native_deps.sh into MomentoBooth.app/Contents/Libs.
+    final (String, String)? bundledDrivers = switch (Platform.operatingSystem) {
+      'windows' => ('libgphoto2_iolibs', 'libgphoto2_camlibs'),
+      'macos' => ('../Libs/Iolibs', '../Libs/Camlibs'),
+      _ => null,
+    };
+    final (String iolibsPath, String camlibsPath) = bundledDrivers != null && iolibsDefine.isEmpty && camlibsDefine.isEmpty
+        ? bundledDrivers
+        : (iolibsDefine, camlibsDefine);
+    _initFuture ??= gphoto2Initialize(iolibsPath: iolibsPath, camlibsPath: camlibsPath);
     await _initFuture;
   }
 
