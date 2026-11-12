@@ -1,0 +1,172 @@
+# Flatpak manifest for MomentoBooth.
+#
+# Build and install locally (from the repository root):
+#   flatpak install --user flathub org.flatpak.Builder org.gnome.Sdk//51 org.gnome.Platform//51 \
+#     org.freedesktop.Sdk.Extension.rust-stable//26.08 org.freedesktop.Sdk.Extension.llvm22//26.08 org.freedesktop.Sdk.Extension.openjdk21//26.08
+#   flatpak run org.flatpak.Builder --user --install --force-clean --disable-rofiles-fuse build/flatpak linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.yml
+#   flatpak run io.github.momentobooth.MomentoBooth
+#
+# --disable-rofiles-fuse is needed when flatpak-builder runs as a Flatpak itself (org.flatpak.Builder), where FUSE is not available.
+#
+# The build needs network access (pub packages, crates, Flutter engine artifacts), so it is not suitable for Flathub as is.
+
+id: io.github.momentobooth.MomentoBooth
+runtime: org.gnome.Platform
+runtime-version: '51'
+sdk: org.gnome.Sdk
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+  - org.freedesktop.Sdk.Extension.llvm22
+  # Only to build the jni plugin (dependency of sentry_flutter, used on Android only), which requires a JDK on Linux up to jni 1.0.
+  # Can be removed once sentry_flutter is updated to 10.2 or later, which uses jni 1.1.
+  - org.freedesktop.Sdk.Extension.openjdk21
+command: momentobooth
+
+finish-args:
+  # Display
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+  # Cameras and printers: gPhoto2 and ESC/POS over raw USB, webcams through /dev/video* (V4L2). --device=usb does not cover the latter.
+  - --device=all
+  # Printing through CUPS, and IPP printers, MQTT, update check and sharing over the network
+  - --socket=cups
+  - --share=network
+  # Sound effects
+  - --socket=pulseaudio
+  # Project folders and output paths are stored in the settings and can be anywhere, so file portals are not enough
+  - --filesystem=home
+  - --filesystem=/media
+  - --filesystem=/run/media
+  # Secure storage (flutter_secure_storage through libsecret)
+  - --talk-name=org.freedesktop.secrets
+
+build-options:
+  env:
+    # flatpak-builder runs as root in CI, where tar would otherwise try to keep the owner of the files in the Flutter artifacts,
+    # which does not exist in the build sandbox
+    TAR_OPTIONS: --no-same-owner
+
+cleanup:
+  - /include
+  - /lib/pkgconfig
+  - '*.la'
+  - '*.a'
+
+modules:
+  # Built with the same options as the libgphoto2 of momentobooth/native-deps (Windows and macOS): without libgd and libcurl, so no GPL
+  # code is included. libusb, libexif and libltdl are provided by the runtime.
+  - name: libgphoto2
+    buildsystem: autotools
+    config-opts:
+      - --with-libusb=no
+      - --with-gdlib=no
+      - --with-libcurl=no
+      - --with-libtiff-4=no
+      - --disable-nls
+      - --disable-internal-docs
+    sources:
+      - type: archive
+        url: https://github.com/gphoto/libgphoto2/releases/download/v2.5.34/libgphoto2-2.5.34.tar.xz
+        sha256: 51993f5d9bfb6b4e5925cbbe5883085791bff6f81bcacb8ffe1b783ce76d586a
+    cleanup:
+      - /bin
+      - /lib/udev
+      - /share/doc
+      - /share/man
+
+  # ping, for the ping health check of external systems, as the runtime does not have it. A Flatpak cannot have the capability to open
+  # raw sockets, so ping uses ICMP datagram sockets, which only work when the host's net.ipv4.ping_group_range includes the user.
+  - name: iputils
+    buildsystem: meson
+    config-opts:
+      - -DBUILD_ARPING=false
+      - -DBUILD_CLOCKDIFF=false
+      - -DBUILD_TRACEPATH=false
+      - -DBUILD_MANS=false
+      - -DUSE_CAP=false
+      - -DUSE_IDN=false
+      - -DUSE_GETTEXT=false
+      - -DSKIP_TESTS=true
+    sources:
+      - type: archive
+        url: https://github.com/iputils/iputils/releases/download/20250605/iputils-20250605.tar.xz
+        sha256: 6f213700dbf96b5cc4499ca70cb15ecd69c09f405b06785bb4a1a10b572b6276
+
+  # Code generation tools, only used during the build. A separate module, so flatpak-builder caches them between builds.
+  - name: build-tools
+    buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/rust-stable/bin
+      build-args:
+        - --share=network
+      env:
+        CARGO_HOME: /run/build/build-tools/cargo
+    build-commands:
+      - cargo install --locked --root /app/build-tools flutter_rust_bridge_codegen@2.13.0 cargo-expand@1.0.126 cargo-bundle-licenses@4.2.0
+      - install -Dm755 rustup /app/build-tools/bin/rustup
+    sources:
+      - type: file
+        path: rustup
+    cleanup:
+      - '*'
+
+  # Flutter SDK, only used during the build. Version from .fvmrc.
+  - name: flutter-sdk
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - cp -a . /app/flutter
+      - /app/flutter/bin/flutter config --no-analytics --no-cli-animations
+      - /app/flutter/bin/flutter precache --linux --no-android --no-ios --no-web
+    sources:
+      - type: git
+        url: https://github.com/flutter/flutter.git
+        tag: 3.47.4
+        commit: 9584c6713b324636289d067944a46fd6b49df14b
+    cleanup:
+      - '*'
+
+  - name: momentobooth
+    buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin:/usr/lib/sdk/openjdk21/bin:/app/build-tools/bin:/app/flutter/bin
+      prepend-ld-library-path: /usr/lib/sdk/llvm22/lib
+      build-args:
+        - --share=network
+      env:
+        JAVA_HOME: /usr/lib/sdk/openjdk21/jvm/openjdk-21
+        CARGO_HOME: /run/build/momentobooth/.cargo
+        PUB_CACHE: /run/build/momentobooth/.pub-cache
+        LIBCLANG_PATH: /usr/lib/sdk/llvm22/lib
+        CARGO_PROFILE_RELEASE_LTO: 'true'
+        CARGO_PROFILE_RELEASE_CODEGEN_UNITS: '1'
+    build-commands:
+      - flutter config --no-analytics --no-cli-animations
+      - flutter pub get --enforce-lockfile
+      - flutter gen-l10n
+      - dart run tool/generate_licenses.dart
+      - flutter_rust_bridge_codegen generate
+      - dart run build_runner build
+      # CI writes the Sentry configuration to dart-defines.json (not committed), local builds go without
+      - flutter build linux --release --no-pub $(test -f linux/packaging/flatpak/dart-defines.json && echo --dart-define-from-file=linux/packaging/flatpak/dart-defines.json)
+      - mkdir -p /app/momentobooth /app/bin
+      - cp -a build/linux/*/release/bundle/. /app/momentobooth/
+      - ln -s ../momentobooth/photobooth /app/bin/momentobooth
+      - install -Dm644 linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.desktop -t /app/share/applications
+      - install -Dm644 linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.metainfo.xml -t /app/share/metainfo
+      - install -Dm644 assets/svg/app_icon.svg /app/share/icons/hicolor/scalable/apps/io.github.momentobooth.MomentoBooth.svg
+    sources:
+      - type: dir
+        path: ../../..
+        skip:
+          - .git
+          - .claude
+          - .dart_tool
+          - .flatpak-builder
+          - .fvm
+          - build
+          - rust/target

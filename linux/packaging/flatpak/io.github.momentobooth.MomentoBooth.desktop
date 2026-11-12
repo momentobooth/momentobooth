@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=MomentoBooth
+Comment=Photo booth application
+Exec=momentobooth
+Icon=io.github.momentobooth.MomentoBooth
+Categories=Photography;Graphics;
+Keywords=photo;booth;camera;
+# The GTK application ID of the runner (APPLICATION_ID in linux/CMakeLists.txt), so the window is associated with this entry.
+StartupWMClass=com.momentobooth.photobooth

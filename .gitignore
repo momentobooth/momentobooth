@@ -64,9 +64,11 @@ dist/
 # mdBook output
 index.html
 
-# AppDir/AppImage/Flatpak
-AppDir/
+# Flatpak
 .flatpak-builder/
+*.flatpak
+linux/packaging/flatpak/dart-defines.json
+linux/packaging/flatpak/flatpak-github-action-modified-*
 
 # FVM Version Cache
 .fvm/

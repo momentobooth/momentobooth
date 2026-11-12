@@ -94,9 +94,12 @@ For all languages, frameworks and tools, we support the latest versions.
 * **Additional packages**
 
   ```
-  llvm libssl-dev libdigest-sha-perl libcurl4-openssl-dev libasound2-dev
+  llvm libssl-dev libdigest-sha-perl libcurl4-openssl-dev libasound2-dev libgphoto2-dev libsecret-1-dev libusb-1.0-0-dev liblzma-dev
   ```
 
+* **JDK** (any recent version, e.g. `openjdk-21-jdk-headless`)
+  * Needed to build the `jni` plugin, which `sentry_flutter` uses on Android only. Set `JAVA_HOME` if CMake cannot find it (`Could NOT find JNI`). Can be dropped once `sentry_flutter` is updated to 10.2 or later.
+  * If the first build failed on this, delete `build/linux/x64/release/CMakeCache.txt` before building again, otherwise the build tries to install the app to `/usr/local`.
 * **Rust** (`x86_64-unknown-linux-gnu` or `aarch64-unknown-linux-gnu`, depending on your architecture)
   * Recommended installation via [`rustup`](https://rustup.rs/)
 
@@ -152,6 +155,35 @@ Please note: Run all commands from the root folder of the repository, unless men
 5. Build and run the app with `flutter run` or use your IDE to run the application
     * Note: This will automatically build the Rust subproject before building the Flutter project, so no need to worry about that!
 
+## Linux Flatpak
+
+Linux releases are distributed as a Flatpak, built from `linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.yml`. The whole build runs inside the GNOME SDK, so the application is built against the same libraries (glibc, GTK) as it runs with, independent of the build machine. No development environment is needed on the host, only Flatpak with the Flathub repository.
+
+1. Install flatpak-builder and the SDK with its extensions (once):
+
+   ```sh
+   flatpak install --user flathub org.flatpak.Builder org.gnome.Sdk//51 org.gnome.Platform//51 org.freedesktop.Sdk.Extension.rust-stable//26.08 org.freedesktop.Sdk.Extension.llvm22//26.08 org.freedesktop.Sdk.Extension.openjdk21//26.08
+   ```
+
+2. Build and install the Flatpak, from the root folder of the repository:
+
+   ```sh
+   flatpak run org.flatpak.Builder --user --install --force-clean --disable-rofiles-fuse build/flatpak linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.yml
+   ```
+
+3. Run it with `flatpak run io.github.momentobooth.MomentoBooth`.
+
+To install the result on another machine, export a single-file bundle with `flatpak build-bundle --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo ~/.local/share/flatpak/repo MomentoBooth.flatpak io.github.momentobooth.MomentoBooth`.
+
+Notes on the manifest:
+
+* `libgphoto2` is built as a module with the same options as the prebuilt native dependencies of Windows and macOS. Its dependencies (`libusb`, `libexif`, `libltdl`) are part of the runtime.
+* The build tools (`flutter_rust_bridge_codegen`, `cargo-expand`, `cargo-bundle-licenses`) and the Flutter SDK are separate modules, which flatpak-builder caches in `.flatpak-builder/` between builds and leaves out of the result. Only the application module is rebuilt when the sources change.
+* The build downloads pub packages, crates and the Flutter engine artifacts, so it needs network access. This is fine for self-hosted bundles, but not allowed on Flathub.
+* Cargokit runs `cargo` through `rustup`, which the SDK does not have. `linux/packaging/flatpak/rustup` is a minimal stand-in for the calls it makes.
+* The CI writes the Sentry configuration to `linux/packaging/flatpak/dart-defines.json` (not committed), which the build passes to `flutter build` when it exists.
+* `--disable-rofiles-fuse` is needed because flatpak-builder runs as a Flatpak itself, in which FUSE is not available.
+
 ## libgphoto2 driver locations
 
 Camera support in `libgphoto2` is split into separate driver libraries, which it loads at runtime: camera drivers (*camlibs*, e.g. `ptp2`) and port drivers (*iolibs*, e.g. `usb1`). Each type is loaded from its own directory, which `libgphoto2` determines as follows:
@@ -165,7 +197,7 @@ Camera support in `libgphoto2` is split into separate driver libraries, which it
 | - | - | - |
 | Windows | Built-in default in the app, no Dart defines needed: `libgphoto2_iolibs` and `libgphoto2_camlibs` next to the executable. `windows/CMakeLists.txt` copies them there from `.native_deps\windows-x64` (see `just get-native-deps`). | Same as release builds, as `libgphoto2` is bundled in development too. The drivers end up in `build\windows\x64\runner\Debug`. |
 | macOS | Built-in default in the app, no Dart defines needed: `../Libs/Iolibs` and `../Libs/Camlibs`, relative to `MomentoBooth.app/Contents/MacOS`. The Xcode build phase *Embed native dependencies* (`macos/embed_native_deps.sh`) copies them there from `.native_deps/macos-arm64` (see `just get-native-deps`). | Same as release builds, as `libgphoto2` is bundled in development too. The drivers end up in `build/macos/Build/Products/Debug/MomentoBooth.app/Contents/Libs`. |
-| Linux | `linux/packaging/appimage/AppRun` sets the environment variables `IOLIBS=../iolibs` and `CAMLIBS=../camlibs` itself, relative to `$APPDIR/app`. | Nothing needed, the system-wide installation of `libgphoto2` uses its compiled-in directories. |
+| Linux | Nothing needed: the Flatpak manifest builds `libgphoto2` with prefix `/app`, so its compiled-in directories (`/app/lib/libgphoto2/<version>` and `/app/lib/libgphoto2_port/<version>`) are where the drivers are inside the Flatpak. | Nothing needed, the system-wide installation of `libgphoto2` uses its compiled-in directories. |
 
 When Dart defines are set on Windows or macOS, they take precedence over the built-in default. Because the app always sets the environment variables on these platforms, setting `IOLIBS` or `CAMLIBS` yourself has no effect there.
 

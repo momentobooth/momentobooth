@@ -18,6 +18,7 @@
 - Swapped the delete and keep buttons in the retake dialog, so keep is the rightmost button
 - macOS: MomentoBooth now requires macOS 15 (Sequoia) or newer on a Mac with Apple Silicon. Intel Macs are no longer supported
 - macOS: releases are now notarized by Apple, so macOS no longer refuses to open MomentoBooth after downloading it
+- Linux: MomentoBooth is now distributed as a Flatpak for x86_64 and arm64 (e.g. a Raspberry Pi with a 64-bit OS), replacing the AppImage. Settings are stored in `~/.var/app/io.github.momentobooth.MomentoBooth`. Recording video message audio through FFmpeg is not available in the Flatpak. The ping health check only works when the system allows ping for regular users, see the installation documentation
 
 ### Bugfixes
 - Smaller print sizes were not logged in the statistics
@@ -35,6 +36,9 @@
 - macOS: libgphoto2 and its dependencies are now downloaded prebuilt from momentobooth/native-deps (`just get-native-deps`) as well, instead of installed through Homebrew, and with the same changes to libgphoto2 as on Windows. The Xcode build copies them into the app bundle, so debug builds use the same libraries as releases and no longer need the `IOLIBS` and `CAMLIBS` Dart defines
 - macOS: the CI no longer builds for Intel, the minimum macOS version is that of the prebuilt libraries
 - macOS: the Xcode build now makes the final signature of a release build, with the hardened runtime and secure timestamps, and the CI notarizes and staples the app and the dmg (`macos/ci_notarize.sh`). The CI no longer signs the app again, as that removed its entitlements
+- Linux: the release is built as a Flatpak entirely inside the GNOME SDK (`linux/packaging/flatpak`), so it no longer depends on the libraries of the build machine. libgphoto2 2.5.34 is built in the manifest with the same options as on Windows and macOS, its dependencies come from the runtime. The CI builds x86_64 and aarch64 (on GitHub's arm64 runners), the AppImage workflows and packaging files are removed
+- Linux: the crash handler of Sentry is now installed with execute permission, so native crashes of local builds are reported. The Flatpak cannot report native crashes, as its sandbox does not allow the crash handler to attach to the app
+- Linux: building now requires a JDK, for the `jni` plugin of `sentry_flutter` (Android only, but its Linux build requires JNI)
 
 ## 0.16.1
 
