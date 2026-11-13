@@ -97,9 +97,6 @@ For all languages, frameworks and tools, we support the latest versions.
   llvm libssl-dev libdigest-sha-perl libcurl4-openssl-dev libasound2-dev libgphoto2-dev libsecret-1-dev libusb-1.0-0-dev liblzma-dev
   ```
 
-* **JDK** (any recent version, e.g. `openjdk-21-jdk-headless`)
-  * Needed to build the `jni` plugin, which `sentry_flutter` uses on Android only. Set `JAVA_HOME` if CMake cannot find it (`Could NOT find JNI`). Can be dropped once `sentry_flutter` is updated to 10.2 or later.
-  * If the first build failed on this, delete `build/linux/x64/release/CMakeCache.txt` before building again, otherwise the build tries to install the app to `/usr/local`.
 * **Rust** (`x86_64-unknown-linux-gnu` or `aarch64-unknown-linux-gnu`, depending on your architecture)
   * Recommended installation via [`rustup`](https://rustup.rs/)
 
@@ -162,7 +159,7 @@ Linux releases are distributed as a Flatpak, built from `linux/packaging/flatpak
 1. Install flatpak-builder and the SDK with its extensions (once):
 
    ```sh
-   flatpak install --user flathub org.flatpak.Builder org.gnome.Sdk//51 org.gnome.Platform//51 org.freedesktop.Sdk.Extension.rust-stable//26.08 org.freedesktop.Sdk.Extension.llvm22//26.08 org.freedesktop.Sdk.Extension.openjdk21//26.08
+   flatpak install --user flathub org.flatpak.Builder org.gnome.Sdk//51 org.gnome.Platform//51 org.freedesktop.Sdk.Extension.rust-stable//26.08 org.freedesktop.Sdk.Extension.llvm22//26.08
    ```
 
 2. Build and install the Flatpak, from the root folder of the repository:
