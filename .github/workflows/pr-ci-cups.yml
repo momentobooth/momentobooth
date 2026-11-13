@@ -1,0 +1,87 @@
+name: PR CI - CUPS integration tests
+
+# Runs the CUPS integration tests (rust/src/tests/cups.rs) against a CUPS server in Docker, see "CUPS integration tests" in dev_setup.md.
+on:
+  pull_request:
+    branches: [ main ]
+    paths: [ rust/**, test/cups/**, .github/workflows/pr-ci-cups.yml ]
+    types: [opened, synchronize, reopened, ready_for_review]
+  # Runs on main fill the caches (Rust and Flutter), which pull requests can use, unlike each other's caches.
+  push:
+    branches: [ main ]
+    paths: [ rust/**, test/cups/**, .github/workflows/pr-ci-cups.yml ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    if: ${{ startsWith(github.event.pull_request.head.ref, 'release/') != true && github.event.pull_request.draft != true }}
+
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    env:
+      CUPS_TEST_URI: http://localhost:6310/
+      CUPS_TEST_USERNAME: admin
+      CUPS_TEST_PASSWORD: momentobooth
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v7
+
+    - name: Start CUPS server
+      run: |
+        docker run -d --name momentobooth-cups-test -p 6310:631 -e ADMIN_PASSWORD="$CUPS_TEST_PASSWORD" ydkn/cups:380
+        docker cp test/cups/setup.sh momentobooth-cups-test:/tmp/setup.sh
+        docker exec momentobooth-cups-test sh /tmp/setup.sh
+
+    - name: Install native dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends libclang-dev libgphoto2-dev libusb-1.0-0-dev libssl-dev libasound2-dev
+
+    # flutter_rust_bridge_codegen generates rust/src/frb_generated.rs, which the Rust library needs to compile.
+    - name: Detect Flutter Version
+      uses: kuhnroyal/flutter-fvm-config-action@v3
+
+    - name: Setup Flutter
+      uses: flutter-actions/setup-flutter@v5
+      with:
+        channel: stable
+        version: ${{ env.FLUTTER_VERSION }}
+        cache: true
+        cache-sdk: true
+
+    - name: Install minimal Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Setup Rust compiled code cache
+      uses: Swatinem/rust-cache@v2
+      with:
+        workspaces: rust -> target
+
+    - name: Install cargo-binstall
+      uses: cargo-bins/cargo-binstall@main
+
+    - name: Install cargo-expand and frbc
+      env:
+        # Without a token, the GitHub API rate limit of the shared runner IP is often exceeded, making binstall build from source
+        GITHUB_TOKEN: ${{ github.token }}
+      run: cargo binstall cargo-expand@1.0.126 flutter_rust_bridge_codegen@2.13.0 --force -y
+
+    - name: Generate the bridge code
+      run: |
+        flutter config --no-analytics --no-cli-animations
+        flutter pub get --enforce-lockfile
+        flutter_rust_bridge_codegen generate
+
+    - name: Run CUPS integration tests
+      working-directory: rust
+      run: cargo test --lib tests::cups
+
+    - name: Show CUPS log
+      if: failure()
+      run: docker exec momentobooth-cups-test cat /var/log/cups/error_log || docker logs momentobooth-cups-test

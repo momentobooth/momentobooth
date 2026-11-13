@@ -84,6 +84,24 @@ build-release: gen-licenses
 test:
   fvm flutter test
 
+cups_test_container := "momentobooth-cups-test"
+
+# Starts a CUPS server in Docker with the queue for the CUPS integration tests, on port 6310. Replaces a running one.
+start-cups-test-server:
+  -docker rm -f {{cups_test_container}}
+  docker run -d --name {{cups_test_container}} -p 6310:631 -e ADMIN_PASSWORD=momentobooth ydkn/cups:380
+  docker cp test/cups/setup.sh {{cups_test_container}}:/tmp/setup.sh
+  docker exec {{cups_test_container}} sh /tmp/setup.sh
+
+# Runs the CUPS integration tests (rust/src/tests/cups.rs) against a fresh CUPS server in Docker. The server keeps running afterwards, for debugging.
+[windows]
+test-cups: start-cups-test-server
+  $env:CUPS_TEST_URI = "http://localhost:6310/"; $env:CUPS_TEST_USERNAME = "admin"; $env:CUPS_TEST_PASSWORD = "momentobooth"; $env:PATH = "{{justfile_directory()}}/.native_deps/windows-x64/bin;$env:PATH"; cargo test --manifest-path rust/Cargo.toml --lib tests::cups
+
+[unix]
+test-cups: start-cups-test-server
+  CUPS_TEST_URI=http://localhost:6310/ CUPS_TEST_USERNAME=admin CUPS_TEST_PASSWORD=momentobooth cargo test --manifest-path rust/Cargo.toml --lib tests::cups
+
 ##
 # Docs
 ##
