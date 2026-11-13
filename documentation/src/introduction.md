@@ -44,29 +44,30 @@
   * (beta) Analyse images and
     * Order by # of people on picture
     * Find your image with face recognition
-* **Keeps (local) use statistics** – how many photos were taken, prints were made, …
+* **Keeps (local) use statistics** – how many photos were taken, prints were made, …, in total and per project
 * **Easy administration**
   * Clear *settings panel*
   * Keep organised with *project directories*
   * Health checks of external IPs/HTTP services with clear warning banners
+  * Notifies you of new releases and shows what changed
 * **Cross platform**
-  * Supported on Windows, Linux, and macOS
+  * Windows (x64), macOS (Apple Silicon, macOS 15 or newer) and Linux (Flatpak for x86_64 and arm64, including the Raspberry Pi)
 * **Low system requirements**
   * Can run comfortably, even on old hardware
 * **Integrates with Home Assistant**
   * State communicated over MQTT
   * Easy automation – e.g. WLED lights that respond to countdown and capture
+* **(experimental) Video messages**
+  * Guests record a short video message for the hosts
+  * Transcription and summary through OpenAI-compatible endpoints, printed on a receipt printer
 
 
 ### Planned
 
 * Improve distribution options
-  * [x] Linux Flatpak distribution (x86_64 and arm64)
   * [ ] Windows arm64 distribution
-  * [ ] Up to date macOS builds (with correct signing)
 * Maturing
   * [ ] Provide choices in exception sharing
-  * [ ] List licenses of libraries
 * Translate
   * … to more languages
   * … more parts of the app
@@ -85,7 +86,7 @@
 
 ## Development
 
-For development setup instructions, see the [dev documentation](https://momentobooth.github.io/momentobooth/dev_setup.md).
+For development setup instructions, see the [dev documentation](https://momentobooth.github.io/momentobooth/dev_setup.html).
 
 ## Translations
 
