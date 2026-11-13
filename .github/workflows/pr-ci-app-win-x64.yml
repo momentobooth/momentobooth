@@ -101,6 +101,10 @@ jobs:
 
     - name: Setup sccache
       uses: mozilla-actions/sccache-action@v0.0.11
+      with:
+        # sccache 0.17 to 0.19 expand the response file cargo uses for long rustc command lines and then fail to spawn rustc (os error 206),
+        # which happens on Windows since Rust 1.100. Unpin when https://github.com/mozilla/sccache/pull/3026 is released.
+        version: "v0.16.0"
 
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
