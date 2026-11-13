@@ -37,8 +37,8 @@
 - macOS: the CI no longer builds for Intel, the minimum macOS version is that of the prebuilt libraries
 - macOS: the Xcode build now makes the final signature of a release build, with the hardened runtime and secure timestamps, and the CI notarizes and staples the app and the dmg (`macos/ci_notarize.sh`). The CI no longer signs the app again, as that removed its entitlements
 - Linux: the release is built as a Flatpak entirely inside the GNOME SDK (`linux/packaging/flatpak`), so it no longer depends on the libraries of the build machine. libgphoto2 2.5.34 is built in the manifest with the same options as on Windows and macOS, its dependencies come from the runtime. The CI builds x86_64 and aarch64 (on GitHub's arm64 runners), the AppImage workflows and packaging files are removed
-- Linux: the crash handler of Sentry is now installed with execute permission, so native crashes of local builds are reported. The Flatpak cannot report native crashes, as its sandbox does not allow the crash handler to attach to the app
-- Linux: building now requires a JDK, for the `jni` plugin of `sentry_flutter` (Android only, but its Linux build requires JNI)
+- Updated sentry_flutter to 10, which reports native crashes on Windows and Linux with Breakpad inside the app process instead of a separate Crashpad handler, and no longer needs a JDK to build on Linux
+- Updated Flutter to 3.47.9 and the Dart, Rust and GitHub Actions dependencies
 
 ## 0.16.1
 
