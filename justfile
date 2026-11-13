@@ -33,7 +33,8 @@ get-native-deps:
 get-native-deps:
   @echo "Native dependencies are installed through the system package manager on this platform"
 
-gen-bridge:
+# RUSTC_BOOTSTRAP: since Rust 1.100, cargo-expand (used by flutter_rust_bridge_codegen) no longer gets its nightly flag accepted on Windows.
+gen-bridge $RUSTC_BOOTSTRAP="1":
   flutter_rust_bridge_codegen generate
 
 gen-code:
@@ -59,7 +60,7 @@ install-release-cert:
 # Watching
 ##
 
-watch-bridge:
+watch-bridge $RUSTC_BOOTSTRAP="1":
   flutter_rust_bridge_codegen generate --watch
 
 watch-code:
