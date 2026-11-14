@@ -171,10 +171,40 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
     if (cupsPrinterQueuesSetting.isEmpty) return;
     _mediaDimensions = await CupsClient().getPrinterMediaDimensions(cupsPrinterQueuesSetting.first);
 
+    await _migrateMediaSizeKeywords();
+
     cupsPaperSizes = [
       const ComboBoxItem(value: "", child: Text("- Not used -")),
       ..._mediaDimensions.map((m) => ComboBoxItem(value: m.keyword, child: _mediaSizeCardText(m))),
     ];
+  }
+
+  /// Until 0.17.0, the paper size keywords came from the `media-supported` attribute of the printer (e.g.
+  /// `custom_104.99x156.13mm_104.99x156.13mm`), now they come from its PPD (e.g. `w288h432`). A stored keyword that is not offered
+  /// anymore is replaced by the keyword of the only paper size with the stored dimensions. When several sizes share these dimensions (e.g.
+  /// the cutting modes of some dye-sublimation printers), it is left as it is, and the user has to select the size again.
+  Future<void> _migrateMediaSizeKeywords() async {
+    if (_mediaDimensions.isEmpty) return;
+
+    MediaSettings migrate(MediaSettings media) {
+      if (media.mediaSizeString.isEmpty || _mediaDimensions.any((d) => d.keyword == media.mediaSizeString)) return media;
+      final matches = _mediaDimensions.where(
+        (d) => (d.width - media.mediaSizeWidth).abs() < 0.05 && (d.height - media.mediaSizeHeight).abs() < 0.05,
+      );
+      return matches.length == 1 ? media.copyWith(mediaSizeString: matches.single.keyword) : media;
+    }
+
+    final PrintLayoutSettings current = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
+    final PrintLayoutSettings migrated = current.copyWith(
+      mediaSizeNormal: migrate(current.mediaSizeNormal),
+      mediaSizeSplit: migrate(current.mediaSizeSplit),
+      mediaSizeSmall: migrate(current.mediaSizeSmall),
+      mediaSizeTiny: migrate(current.mediaSizeTiny),
+    );
+    if (migrated == current) return;
+
+    logInfo("Migrated CUPS paper size keywords to the keywords of the printer's PPD");
+    await updateSettings((settings) => settings.copyWith.hardware(printLayoutSettings: migrated));
   }
 
   Future<void> setImagingDeviceList() async {

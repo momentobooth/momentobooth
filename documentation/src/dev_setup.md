@@ -317,6 +317,20 @@ Its secrets are configured on the repository in GitHub. The App Store Connect AP
 
 Note that Apple only lets you download the `.p8` file once, at the moment the key is created.
 
+## CUPS integration tests
+
+The functions that print through a CUPS server (`rust/src/api/cups.rs`) are tested against a real CUPS server in Docker, so that changes to the IPP code or an update of the `ipp` crate are verified without a printer. The server is the [`ydkn/cups`](https://hub.docker.com/r/ydkn/cups) image, in which `test/cups/setup.sh` creates a paused queue `MomentoBoothTest` with the driver of a DNP DS620 photo printer. Jobs stay in the paused queue, so no device is needed.
+
+Run them with Docker running:
+
+```sh
+just test-cups
+```
+
+This starts the server on port 6310 and runs the Rust tests (`cargo test --lib`) with the `CUPS_TEST_URI`, `CUPS_TEST_USERNAME` and `CUPS_TEST_PASSWORD` environment variables. Without `CUPS_TEST_URI`, the CUPS tests return immediately, so a plain `cargo test` does not need Docker. The server keeps running afterwards; its web interface is at <http://localhost:6310> (user `admin`, password `momentobooth`), and `docker rm -f momentobooth-cups-test` removes it.
+
+On CI, the workflow `pr-ci-cups.yml` runs the tests on pull requests that change `rust/` or `test/cups/`.
+
 ## Developing tips
 
 ### When to re-run build steps
