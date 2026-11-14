@@ -36,8 +36,12 @@ pub fn gphoto2_clear_events(handle_id: u32, download_extra_files: bool) {
     gphoto2::gphoto2_clear_events(handle_id, download_extra_files)
 }
 
-pub fn gphoto2_capture_photo(handle_id: u32, capture_target_value: String) -> GPhoto2File {
-    gphoto2::gphoto2_capture_photo(handle_id, capture_target_value)
+pub fn gphoto2_capture_photo_legacy(handle_id: u32, capture_target_value: String) -> GPhoto2File {
+    gphoto2::gphoto2_capture_photo_legacy(handle_id, capture_target_value)
+}
+
+pub fn gphoto2_capture_image(handle_id: u32, capture_target_value: String, timeout_ms: u64) -> GPhoto2File {
+    gphoto2::gphoto2_capture_image(handle_id, capture_target_value, timeout_ms)
 }
 
 pub fn gphoto2_list_files(handle_id: u32, folder: String) -> GPhoto2FileCategories {
