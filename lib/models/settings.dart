@@ -317,6 +317,8 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(ColorVisionDeficiency.none) ColorVisionDeficiency simulateCvd,
     @Default(9) int simulateCvdSeverity,
     @Default(false) bool enableExtensivePrintJobLog,
+    /// Renders print jobs as usual, but does not send them to the printers.
+    @Default(false) bool skipSendingPrintJobs,
     @Default(false) bool enableVideoMode,
     @Default(10) int videoDuration,
     @Default(2500) int videoPreRecordDelayMs,

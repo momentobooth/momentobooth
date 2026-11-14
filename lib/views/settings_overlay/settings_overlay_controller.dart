@@ -682,6 +682,12 @@ class SettingsOverlayController extends ScreenControllerBase<SettingsOverlayView
     }
   }
 
+  void onSkipSendingPrintJobsChanged(bool? skipSendingPrintJobs) {
+    if (skipSendingPrintJobs != null) {
+      viewModel.updateSettings((settings) => settings.copyWith.debug(skipSendingPrintJobs: skipSendingPrintJobs));
+    }
+  }
+
   void onEnableVideoModeChanged(bool? enableVideoMode) {
     if (enableVideoMode != null) {
       viewModel.updateSettings((settings) => settings.copyWith.debug(enableVideoMode: enableVideoMode));

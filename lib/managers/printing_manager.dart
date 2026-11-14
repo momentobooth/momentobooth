@@ -112,9 +112,14 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
         final printer = route.printer;
         final sheetName = "$jobName | ${size.label} | copy $copy / $copies";
 
-        logDebug("Printing $sheetName with [${printer.label}] (${printer.backend.name} queue [${printer.queueId}])");
-        await _clients[printer.backend]!.printPdfToQueue(printer.queueId, sheetName, pdfData, media: printer.media);
-        getIt<StatsManager>().addPrintedPhoto(size: size);
+        final target = "[${printer.label}] (${printer.backend.name} queue [${printer.queueId}])";
+        if (getIt<SettingsManager>().settings.debug.skipSendingPrintJobs) {
+          logWarning("Skipped sending $sheetName to $target, as sending print jobs is disabled in the debug settings");
+        } else {
+          logDebug("Printing $sheetName with $target");
+          await _clients[printer.backend]!.printPdfToQueue(printer.queueId, sheetName, pdfData, media: printer.media);
+          getIt<StatsManager>().addPrintedPhoto(size: size);
+        }
 
         printedSheets.add({
           'copy': copy,
