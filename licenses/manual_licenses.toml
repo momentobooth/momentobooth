@@ -40,6 +40,13 @@ url = "https://github.com/getsentry/sentry-native"
 license = "MIT"
 license_file = "texts/sentry-native.txt"
 
+[[native]]
+name = "Breakpad"
+description = "Crash reporting backend of sentry-native on Windows and Linux"
+url = "https://github.com/getsentry/breakpad"
+license = "BSD-3-Clause"
+license_file = "texts/breakpad.txt"
+
 # Tools used to develop, build and package the application. These are not shipped, so only a reference to the license is shown.
 [[toolchain]]
 name = "Flutter SDK"

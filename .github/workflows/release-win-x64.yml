@@ -24,7 +24,7 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         submodules: 'true'
 
@@ -58,7 +58,7 @@ jobs:
       uses: kuhnroyal/flutter-fvm-config-action@v3
 
     - name: Setup Flutter
-      uses: flutter-actions/setup-flutter@v4
+      uses: flutter-actions/setup-flutter@v5
       with:
         channel: stable
         version: ${{ env.FLUTTER_VERSION }}
@@ -95,7 +95,11 @@ jobs:
           ${{ env.DEV_DRIVE }}/momentobooth/rust -> target
 
     - name: Setup sccache
-      uses: mozilla-actions/sccache-action@v0.0.10
+      uses: mozilla-actions/sccache-action@v0.0.11
+      with:
+        # sccache 0.17 to 0.19 expand the response file cargo uses for long rustc command lines and then fail to spawn rustc (os error 206),
+        # which happens on Windows since Rust 1.100. Unpin when https://github.com/mozilla/sccache/pull/3026 is released.
+        version: "v0.16.0"
 
     - name: Install cargo-binstall
       uses: cargo-bins/cargo-binstall@main
@@ -108,6 +112,9 @@ jobs:
 
     - name: Prepare sources
       working-directory: ${{ env.DEV_DRIVE }}/momentobooth
+      env:
+        # Since Rust 1.100, cargo-expand (used by flutter_rust_bridge_codegen) no longer gets its nightly flag accepted on Windows.
+        RUSTC_BOOTSTRAP: "1"
       run: |
         flutter pub get --enforce-lockfile
         flutter gen-l10n

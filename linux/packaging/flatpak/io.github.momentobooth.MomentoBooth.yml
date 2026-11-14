@@ -2,7 +2,7 @@
 #
 # Build and install locally (from the repository root):
 #   flatpak install --user flathub org.flatpak.Builder org.gnome.Sdk//51 org.gnome.Platform//51 \
-#     org.freedesktop.Sdk.Extension.rust-stable//26.08 org.freedesktop.Sdk.Extension.llvm22//26.08 org.freedesktop.Sdk.Extension.openjdk21//26.08
+#     org.freedesktop.Sdk.Extension.rust-stable//26.08 org.freedesktop.Sdk.Extension.llvm22//26.08
 #   flatpak run org.flatpak.Builder --user --install --force-clean --disable-rofiles-fuse build/flatpak linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.yml
 #   flatpak run io.github.momentobooth.MomentoBooth
 #
@@ -17,9 +17,6 @@ sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
   - org.freedesktop.Sdk.Extension.llvm22
-  # Only to build the jni plugin (dependency of sentry_flutter, used on Android only), which requires a JDK on Linux up to jni 1.0.
-  # Can be removed once sentry_flutter is updated to 10.2 or later, which uses jni 1.1.
-  - org.freedesktop.Sdk.Extension.openjdk21
 command: momentobooth
 
 finish-args:
@@ -125,20 +122,19 @@ modules:
     sources:
       - type: git
         url: https://github.com/flutter/flutter.git
-        tag: 3.47.4
-        commit: 9584c6713b324636289d067944a46fd6b49df14b
+        tag: 3.47.9
+        commit: c197ca5199e9ee5661e865596c9c07294dfab51c
     cleanup:
       - '*'
 
   - name: momentobooth
     buildsystem: simple
     build-options:
-      append-path: /usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin:/usr/lib/sdk/openjdk21/bin:/app/build-tools/bin:/app/flutter/bin
+      append-path: /usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/llvm22/bin:/app/build-tools/bin:/app/flutter/bin
       prepend-ld-library-path: /usr/lib/sdk/llvm22/lib
       build-args:
         - --share=network
       env:
-        JAVA_HOME: /usr/lib/sdk/openjdk21/jvm/openjdk-21
         CARGO_HOME: /run/build/momentobooth/.cargo
         PUB_CACHE: /run/build/momentobooth/.pub-cache
         LIBCLANG_PATH: /usr/lib/sdk/llvm22/lib
