@@ -13,6 +13,7 @@ use ipp::prelude::*;
 use tokio::sync::Mutex;
 
 use crate::api::cups::*;
+use crate::utils::ipp_client;
 
 const QUEUE: &str = "MomentoBoothTest";
 
@@ -41,22 +42,8 @@ fn server() -> Option<CupsServerInfo> {
     })
 }
 
-fn clone_server(server: &CupsServerInfo) -> CupsServerInfo {
-    CupsServerInfo {
-        uri: server.uri.clone(),
-        ignore_tls_errors: server.ignore_tls_errors,
-        username: server.username.clone(),
-        password: server.password.clone(),
-    }
-}
-
 fn queue_uri(server: &CupsServerInfo) -> Uri {
-    let mut url = url::Url::parse(&server.uri).unwrap();
-    if !server.username.is_empty() {
-        url.set_username(&server.username).unwrap();
-        url.set_password(Some(&server.password)).unwrap();
-    }
-    url.join("printers/").unwrap().join(QUEUE).unwrap().to_string().parse().unwrap()
+    cups_build_url(server, Some(QUEUE.to_string())).parse().unwrap()
 }
 
 /// Sends an operation that the application itself does not use, to set up or clean up the queue.
@@ -74,8 +61,14 @@ async fn reset_queue(server: &CupsServerInfo) {
     send(server, IppRequestResponse::new(IppVersion::v1_1(), Operation::PurgeJobs, Some(uri)).unwrap()).await;
 }
 
+/// Prints like `cups_print_job`, but fails the test when CUPS does not accept the job.
+async fn print(server: &CupsServerInfo, name: &str, media: &str) {
+    let printed = ipp_client::print_job(cups_build_url(server, Some(QUEUE.to_string())), false, name.to_string(), TEST_PDF.to_vec(), media.to_string()).await;
+    assert!(printed, "CUPS did not accept print job {name} with media {media}");
+}
+
 async fn print_test_job(server: &CupsServerInfo, name: &str) {
-    cups_print_job(clone_server(server), QUEUE.to_string(), name.to_string(), TEST_PDF.to_vec(), "w288h432".to_string()).await;
+    print(server, name, "w288h432").await;
 }
 
 #[tokio::test]
@@ -129,12 +122,12 @@ async fn prints_with_the_media_of_a_cutting_mode() {
     let Some(server) = server() else { return };
     let _lock = QUEUE_LOCK.lock().await;
     reset_queue(&server).await;
-    let dimensions = cups_get_printer_media_dimensions(clone_server(&server), QUEUE.to_string()).await;
+    let dimensions = cups_get_printer_media_dimensions(server.clone(), QUEUE.to_string()).await;
     let strips = dimensions.iter().find(|d| d.name == "2x6*2").expect("2x6*2 not found");
 
-    cups_print_job(clone_server(&server), QUEUE.to_string(), "strips".to_string(), TEST_PDF.to_vec(), strips.keyword.clone()).await;
+    print(&server, "strips", &strips.keyword).await;
 
-    let jobs = cups_get_jobs_states(clone_server(&server), QUEUE.to_string()).await;
+    let jobs = cups_get_jobs_states(server.clone(), QUEUE.to_string()).await;
     let mut request = IppRequestResponse::new(IppVersion::v1_1(), Operation::GetJobAttributes, Some(queue_uri(&server))).unwrap();
     request.attributes_mut().add(DelimiterTag::OperationAttributes, IppValue::new_integer(jobs[0].id).with_name(IppAttribute::JOB_ID).unwrap());
     let response = send(&server, request).await;
@@ -168,10 +161,10 @@ async fn releases_a_held_job() {
         .build()
         .unwrap();
     send(&server, held_job.into()).await;
-    let jobs = cups_get_jobs_states(clone_server(&server), QUEUE.to_string()).await;
+    let jobs = cups_get_jobs_states(server.clone(), QUEUE.to_string()).await;
     assert!(matches!(jobs[0].state, JobState::PendingHeld), "{jobs:?}");
 
-    cups_release_job(clone_server(&server), QUEUE.to_string(), jobs[0].id).await;
+    cups_release_job(server.clone(), QUEUE.to_string(), jobs[0].id).await;
 
     let jobs = cups_get_jobs_states(server, QUEUE.to_string()).await;
     assert!(matches!(jobs[0].state, JobState::Pending), "{jobs:?}");
@@ -183,9 +176,9 @@ async fn resumes_the_printer() {
     let _lock = QUEUE_LOCK.lock().await;
     reset_queue(&server).await;
 
-    cups_resume_printer(clone_server(&server), QUEUE.to_string()).await;
+    cups_resume_printer(server.clone(), QUEUE.to_string()).await;
 
-    let state = cups_get_printer_state(clone_server(&server), QUEUE.to_string()).await;
+    let state = cups_get_printer_state(server.clone(), QUEUE.to_string()).await;
     assert!(!matches!(state.state, PrinterState::Stopped), "{state:?}");
     reset_queue(&server).await;
 }

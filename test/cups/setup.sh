@@ -7,7 +7,7 @@ set -e
 
 # Wait until cupsd accepts requests.
 for _ in $(seq 1 30); do
-  lpstat -r >/dev/null 2>&1 && break
+  lpstat -r 2>/dev/null | grep -q 'is running' && break
   sleep 1
 done
 

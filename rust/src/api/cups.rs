@@ -7,7 +7,7 @@ use url::Url;
 
 use crate::utils::ipp_client::{self, IppPrinterState, PrintJobState, PrintDimension};
 
-fn cups_build_url(server_info: &CupsServerInfo, queue_id: Option<String>) -> String {
+pub(crate) fn cups_build_url(server_info: &CupsServerInfo, queue_id: Option<String>) -> String {
     let mut cups_url = Url::parse(&server_info.uri).unwrap();
     if !server_info.username.is_empty() && !server_info.password.is_empty() {
         cups_url.set_username(&server_info.username).unwrap();
@@ -74,6 +74,7 @@ pub async fn cups_get_printer_media_dimensions(server_info: CupsServerInfo, queu
 // Structs //
 // /////// //
 
+#[derive(Clone)]
 pub struct CupsServerInfo {
     pub uri: String,
     pub ignore_tls_errors: bool,

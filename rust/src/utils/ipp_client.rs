@@ -1,4 +1,5 @@
 use std::io::Cursor;
+use std::sync::LazyLock;
 use futures::AsyncReadExt;
 use chrono::{DateTime, Utc};
 
@@ -169,10 +170,21 @@ async fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> Pri
 
 pub async fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec<PrintDimension> {
     let resp = send_ipp_request(uri, ignore_tls_errors, Operation::CupsGetPPD).await;
+    if !resp.header().status_code().is_success() {
+        log::warn!("Could not get the PPD of the printer: {:?}", resp.header().status_code());
+        return Vec::new();
+    }
     let mut payload = resp.into_payload();
-    let mut ppd = String::new();
-    let _ = payload.read_to_string(&mut ppd).await;
-    parse_paper_dimensions(&ppd)
+    let mut ppd = Vec::new();
+    if let Err(e) = payload.read_to_end(&mut ppd).await {
+        log::warn!("Could not read the PPD of the printer: {e}");
+    }
+    // PPDs are not always UTF-8 (*LanguageEncoding: ISOLatin1), but the page size keywords and dimensions are ASCII.
+    let dimensions = parse_paper_dimensions(&String::from_utf8_lossy(&ppd));
+    if dimensions.is_empty() {
+        log::warn!("The PPD of the printer has no page sizes");
+    }
+    dimensions
 }
 
 /// Reads the page sizes from the `*PaperDimension` lines of a PPD, e.g. `*PaperDimension w288h432-div2/2x6*2: "307.680 442.560"`.
@@ -181,11 +193,11 @@ pub async fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) 
 /// attribute of the printer, as CUPS lists page sizes with the same dimensions only once there, e.g. the cutting modes of a dye-sublimation
 /// printer that all use 4x6 inch paper. Only the PPD keyword selects such a page size.
 fn parse_paper_dimensions(ppd: &str) -> Vec<PrintDimension> {
-    let re = Regex::new(r#"^\*PaperDimension\s+([^/:]+)(?:/([^:]+))?:\s*"(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)""#).unwrap();
+    static RE: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"^\*PaperDimension\s+([^/:]+)(?:/([^:]+))?:\s*"(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)""#).unwrap());
     let points_per_mm = 72.0 / 25.4;
 
     ppd.lines().filter_map(|line| {
-        let caps = re.captures(line)?;
+        let caps = RE.captures(line)?;
         let keyword = caps[1].trim().to_string();
         let name = caps.get(2).map_or(keyword.clone(), |name| name.as_str().trim().to_string());
         let width = caps[3].parse::<f64>().ok()? / points_per_mm;

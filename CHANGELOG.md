@@ -23,7 +23,7 @@
 ### Bugfixes
 - Smaller print sizes were not logged in the statistics
 - The gallery crashed when the output folder contained images without EXIF data, such as PNG exports
-- CUPS: the list of paper sizes failed to load for printers whose driver has several sizes with the same paper, such as the cutting modes of many dye-sublimation printers (DNP, Citizen, HiTi, Mitsubishi and others with Gutenprint), and could send a print job with the media of another size. Paper sizes are now sent with the keyword of the driver, so cutting modes like 2x6*2 reach the printer. Printers with such a driver need their paper sizes selected again
+- CUPS: the list of paper sizes failed to load for printers whose driver has several sizes with the same paper, such as the cutting modes of many dye-sublimation printers (DNP, Citizen, HiTi, Mitsubishi and others with Gutenprint), and could send a print job with the media of another size. Paper sizes are now sent with the keyword of the driver, so cutting modes like 2x6*2 reach the printer. Selected paper sizes are taken over where the printer has only one size with those dimensions; otherwise they need to be selected again
 
 ### Dev changes
 - Release notes on GitHub now contain the changelog section of the released version
