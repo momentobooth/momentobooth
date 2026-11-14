@@ -30,9 +30,10 @@
 ### Bugfixes
 - Smaller print sizes were not logged in the statistics
 - The gallery crashed when the output folder contained images without EXIF data, such as PNG exports
-- CUPS: the list of paper sizes failed to load for printers whose driver has several sizes with the same paper, such as the cutting modes of many dye-sublimation printers (DNP, Citizen, HiTi, Mitsubishi and others with Gutenprint), and could send a print job with the media of another size. Paper sizes are now sent with the keyword of the driver, so cutting modes like 2x6*2 reach the printer. Selected paper sizes are taken over where the printer has only one size with those dimensions; otherwise they need to be selected again
+- CUPS: the list of paper sizes failed to load for printers whose driver has several sizes with the same paper, such as the cutting modes of many dye-sublimation printers (DNP, Citizen, HiTi, Mitsubishi and others with Gutenprint), and could send a print job with the media of another size. Paper sizes are now sent with the keyword of the driver, so cutting modes like 2x6*2 reach the printer.
 
 ### Dev changes
+- Debug setting to skip sending print jobs to the printers, to test the print routing without printing
 - Release notes on GitHub now contain the changelog section of the released version
 - Add a debug-only mock app version setting to test the update check
 - Render the in-app changelog with flutter_markdown_plus instead of a custom parser
