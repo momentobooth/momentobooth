@@ -327,7 +327,7 @@ Run them with Docker running:
 just test-cups
 ```
 
-This starts the server on port 6310 and runs `cargo test --lib tests::cups` with the `CUPS_TEST_URI`, `CUPS_TEST_USERNAME` and `CUPS_TEST_PASSWORD` environment variables. Without `CUPS_TEST_URI`, the tests return immediately, so a plain `cargo test` does not need Docker. The server keeps running afterwards; its web interface is at <http://localhost:6310> (user `admin`, password `momentobooth`), and `docker rm -f momentobooth-cups-test` removes it.
+This starts the server on port 6310 and runs the Rust tests (`cargo test --lib`) with the `CUPS_TEST_URI`, `CUPS_TEST_USERNAME` and `CUPS_TEST_PASSWORD` environment variables. Without `CUPS_TEST_URI`, the CUPS tests return immediately, so a plain `cargo test` does not need Docker. The server keeps running afterwards; its web interface is at <http://localhost:6310> (user `admin`, password `momentobooth`), and `docker rm -f momentobooth-cups-test` removes it.
 
 On CI, the workflow `pr-ci-cups.yml` runs the tests on pull requests that change `rust/` or `test/cups/`.
 

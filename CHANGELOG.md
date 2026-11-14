@@ -23,6 +23,7 @@
 ### Bugfixes
 - Smaller print sizes were not logged in the statistics
 - The gallery crashed when the output folder contained images without EXIF data, such as PNG exports
+- CUPS: the list of paper sizes failed to load for printers whose driver has several sizes with the same paper, such as the cutting modes of many dye-sublimation printers (DNP, Citizen, HiTi, Mitsubishi and others with Gutenprint), and could send a print job with the media of another size. Paper sizes are now sent with the keyword of the driver, so cutting modes like 2x6*2 reach the printer. Printers with such a driver need their paper sizes selected again
 
 ### Dev changes
 - Release notes on GitHub now contain the changelog section of the released version
@@ -32,6 +33,7 @@
 - Add image processing operation to automatically crop black borders from an image, not used yet. Should be useful when working with HDMI capture instead of gPhoto2 liveview.
 - `just gen-licenses` is now a build step
 - First unit test added
+- Rust tests, including integration tests of the CUPS printing functions against a CUPS server in Docker (`just test-cups`), run on CI for changes to the Rust code
 - Windows: libgphoto2 and its dependencies are now downloaded prebuilt from momentobooth/native-deps (`just get-native-deps`) instead of installed through MSYS2. libgphoto2 is built without libgd and libcurl, which reduces the bundled DLLs from 57 to 13 and removes GPL licensed libraries (x265). The picture frame camlibs lose image conversion and the docupen and lumix (WiFi) camlibs are no longer included
 - macOS: libgphoto2 and its dependencies are now downloaded prebuilt from momentobooth/native-deps (`just get-native-deps`) as well, instead of installed through Homebrew, and with the same changes to libgphoto2 as on Windows. The Xcode build copies them into the app bundle, so debug builds use the same libraries as releases and no longer need the `IOLIBS` and `CAMLIBS` Dart defines
 - macOS: the CI no longer builds for Intel, the minimum macOS version is that of the prebuilt libraries

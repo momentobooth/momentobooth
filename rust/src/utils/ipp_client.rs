@@ -168,30 +168,30 @@ async fn get_job_state(uri: String, ignore_tls_errors: bool, job_id: i32) -> Pri
 }
 
 pub async fn get_printer_media_dimensions(uri: String, ignore_tls_errors: bool) -> Vec<PrintDimension> {
-    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::GetPrinterAttributes).await;
-    let group = resp.attributes().groups_of(DelimiterTag::PrinterAttributes).next().unwrap();
-    let state: Vec<String> = group.get("media-supported").unwrap().value().as_array().unwrap().iter().map(|e| {e.to_string()}).collect();
-
-    let mut dimensions: Vec<PrintDimension> = Vec::new();
-    let resp = send_ipp_request(uri.clone(), ignore_tls_errors, Operation::CupsGetPPD).await;
+    let resp = send_ipp_request(uri, ignore_tls_errors, Operation::CupsGetPPD).await;
     let mut payload = resp.into_payload();
-    let mut buffer = "".to_string();
-    let _ = payload.read_to_string(&mut buffer).await;
-    let re = Regex::new(r#"/(.+):[\t ]+"(\d+\.\d+) (\d+\.\d+)""#).unwrap();
-    let conversion_unit = 72.0/25.4;
+    let mut ppd = String::new();
+    let _ = payload.read_to_string(&mut ppd).await;
+    parse_paper_dimensions(&ppd)
+}
 
-    for line in buffer.lines() {
-        if line.starts_with("*PaperDimension") {
-            let caps = re.captures(line).unwrap();
-            let name = caps.get(1).unwrap().as_str().to_string();
-            let width = caps.get(2).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
-            let height = caps.get(3).unwrap().as_str().parse::<f64>().unwrap()/conversion_unit;
-            let format = &state[dimensions.len()];
-            let dim = PrintDimension { name, height, width, keyword: format.to_string() };
-            dimensions.push(dim);
-        }
-    }
-    dimensions
+/// Reads the page sizes from the `*PaperDimension` lines of a PPD, e.g. `*PaperDimension w288h432-div2/2x6*2: "307.680 442.560"`.
+///
+/// The keyword (`w288h432-div2`) is what a print job passes as `media`. It is taken from the PPD rather than from the `media-supported`
+/// attribute of the printer, as CUPS lists page sizes with the same dimensions only once there, e.g. the cutting modes of a dye-sublimation
+/// printer that all use 4x6 inch paper. Only the PPD keyword selects such a page size.
+fn parse_paper_dimensions(ppd: &str) -> Vec<PrintDimension> {
+    let re = Regex::new(r#"^\*PaperDimension\s+([^/:]+)(?:/([^:]+))?:\s*"(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)""#).unwrap();
+    let points_per_mm = 72.0 / 25.4;
+
+    ppd.lines().filter_map(|line| {
+        let caps = re.captures(line)?;
+        let keyword = caps[1].trim().to_string();
+        let name = caps.get(2).map_or(keyword.clone(), |name| name.as_str().trim().to_string());
+        let width = caps[3].parse::<f64>().ok()? / points_per_mm;
+        let height = caps[4].parse::<f64>().ok()? / points_per_mm;
+        Some(PrintDimension { name, height, width, keyword })
+    }).collect()
 }
 
 // Use for debugging:
@@ -230,4 +230,34 @@ pub struct PrintDimension {
     pub height: f64,
     pub width: f64,
     pub keyword: String
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_page_sizes_with_the_same_dimensions_separately() {
+        // From the Gutenprint PPD of the DNP DS620, where several cutting modes use the same paper.
+        let ppd = "*PaperDimension w288h432/4x6:\t\"297.600 460.800\"\n*PaperDimension w288h432-div2/2x6*2:\t\"297.600 460.800\"\n*ImageableArea w288h432/4x6: \"0 0 297.6 460.8\"\n";
+
+        let dimensions = parse_paper_dimensions(ppd);
+
+        assert_eq!(dimensions.len(), 2);
+        assert_eq!((dimensions[0].name.as_str(), dimensions[0].keyword.as_str()), ("4x6", "w288h432"));
+        assert_eq!((dimensions[1].name.as_str(), dimensions[1].keyword.as_str()), ("2x6*2", "w288h432-div2"));
+        assert!((dimensions[1].width - 104.99).abs() < 0.01 && (dimensions[1].height - 162.56).abs() < 0.01);
+    }
+
+    #[test]
+    fn parses_page_sizes_without_translation_or_decimals() {
+        let ppd = "*PaperDimension A4: \"595 842\"\n*PaperDimension Custom.1x1/Custom: \"72 72\"\n";
+
+        let dimensions = parse_paper_dimensions(ppd);
+
+        assert_eq!(dimensions.len(), 2);
+        assert_eq!((dimensions[0].name.as_str(), dimensions[0].keyword.as_str()), ("A4", "A4"));
+        assert!((dimensions[0].width - 209.9).abs() < 0.1 && (dimensions[0].height - 297.0).abs() < 0.1);
+        assert_eq!(dimensions[1].keyword, "Custom.1x1");
+    }
 }

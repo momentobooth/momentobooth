@@ -113,15 +113,33 @@ async fn gets_the_media_dimensions() {
 
     let dimensions = cups_get_printer_media_dimensions(server, QUEUE.to_string()).await;
 
-    assert!(!dimensions.is_empty());
-    // 4x6 inch, one of the sizes of the DNP DS620. Its PPD gives the size of the paper including the bleed, 297.6 x 460.8 points.
-    let size = dimensions.iter().find(|d| d.name == "4x6").expect("4x6 inch size not found");
-    assert!((size.width - 104.99).abs() < 0.1, "{size:?}");
-    assert!((size.height - 162.56).abs() < 0.1, "{size:?}");
-    for dimension in &dimensions {
-        assert!(dimension.width > 0.0 && dimension.height > 0.0, "{dimension:?}");
-        assert!(!dimension.keyword.is_empty(), "{dimension:?}");
+    // The PPD of the DNP DS620 has 18 page sizes, several with the same paper, which CUPS lists only 11 times in media-supported.
+    assert_eq!(dimensions.len(), 18, "{dimensions:?}");
+    // The PPD gives the size of the paper including the bleed, 297.6 x 460.8 points for both.
+    for (name, keyword) in [("4x6", "w288h432"), ("2x6*2", "w288h432-div2")] {
+        let size = dimensions.iter().find(|d| d.name == name).unwrap_or_else(|| panic!("{name} not found"));
+        assert_eq!(size.keyword, keyword);
+        assert!((size.width - 104.99).abs() < 0.1, "{size:?}");
+        assert!((size.height - 162.56).abs() < 0.1, "{size:?}");
     }
+}
+
+#[tokio::test]
+async fn prints_with_the_media_of_a_cutting_mode() {
+    let Some(server) = server() else { return };
+    let _lock = QUEUE_LOCK.lock().await;
+    reset_queue(&server).await;
+    let dimensions = cups_get_printer_media_dimensions(clone_server(&server), QUEUE.to_string()).await;
+    let strips = dimensions.iter().find(|d| d.name == "2x6*2").expect("2x6*2 not found");
+
+    cups_print_job(clone_server(&server), QUEUE.to_string(), "strips".to_string(), TEST_PDF.to_vec(), strips.keyword.clone()).await;
+
+    let jobs = cups_get_jobs_states(clone_server(&server), QUEUE.to_string()).await;
+    let mut request = IppRequestResponse::new(IppVersion::v1_1(), Operation::GetJobAttributes, Some(queue_uri(&server))).unwrap();
+    request.attributes_mut().add(DelimiterTag::OperationAttributes, IppValue::new_integer(jobs[0].id).with_name(IppAttribute::JOB_ID).unwrap());
+    let response = send(&server, request).await;
+    let job = response.attributes().groups_of(DelimiterTag::JobAttributes).next().unwrap();
+    assert_eq!(job.get("media").unwrap().value().to_string(), "w288h432-div2");
 }
 
 #[tokio::test]

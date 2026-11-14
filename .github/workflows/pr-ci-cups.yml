@@ -78,9 +78,9 @@ jobs:
         flutter pub get --enforce-lockfile
         flutter_rust_bridge_codegen generate
 
-    - name: Run CUPS integration tests
+    - name: Run Rust tests, including the CUPS integration tests
       working-directory: rust
-      run: cargo test --lib tests::cups
+      run: cargo test --lib
 
     - name: Show CUPS log
       if: failure()
