@@ -44,7 +44,23 @@ jobs:
         SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
       run: printf '{"SENTRY_DSN":"%s","SENTRY_ENVIRONMENT":"Production","SENTRY_RELEASE":"%s"}\n' "$SENTRY_DSN" "$GITHUB_SHA" > linux/packaging/flatpak/dart-defines.json
 
+    # Updating the runtimes in the container sometimes fails with "Invalid cross-device link" followed by a segmentation fault of
+    # flatpak-builder (https://github.com/flatpak/flatpak-github-actions/issues/267), so a failed build is tried once more.
     - name: Build Flatpak
+      id: build
+      continue-on-error: true
+      uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+      with:
+        manifest-path: linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.yml
+        arch: ${{ matrix.variant.arch }}
+        bundle: MomentoBooth-Linux-${{ matrix.variant.arch }}.flatpak
+        artifact-name: Linux ${{ matrix.variant.arch }} Flatpak
+        # Inside build/, which the manifest does not copy into the app sources
+        build-dir: build/flatpak
+        repo-dir: build/flatpak-repo
+
+    - name: Build Flatpak (second attempt)
+      if: steps.build.outcome == 'failure'
       uses: flatpak/flatpak-github-actions/flatpak-builder@v6
       with:
         manifest-path: linux/packaging/flatpak/io.github.momentobooth.MomentoBooth.yml
