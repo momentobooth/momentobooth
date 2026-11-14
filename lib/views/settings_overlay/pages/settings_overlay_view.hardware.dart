@@ -192,6 +192,32 @@ Widget _getPrintingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayCont
         value: () => viewModel.printingImplementationSetting,
         onChanged: controller.onPrintingImplementationChanged,
       ),
+      SettingsToggleTile(
+        icon: LucideIcons.route,
+        title: "Route prints by collage type",
+        subtitle: "Assign each printer to specific collage types (print sizes), e.g. a physical printer for single-photo prints and a virtual printer for 3-photo collages. When disabled, selected printers are used in round-robin.",
+        value: () => viewModel.enablePrinterRoutingSetting,
+        onChanged: controller.onEnablePrinterRoutingChanged,
+      ),
+      Observer(builder: (_) => viewModel.enablePrinterRoutingSetting
+          ? SettingsComboBoxTile(
+              icon: LucideIcons.splitSquareHorizontal,
+              title: "Dispatch mode",
+              subtitle: "When several printers are assigned to the same collage type: print one after another (sequential) or simultaneously (parallel).",
+              items: PrintDispatchMode.asComboBoxItems(),
+              value: () => viewModel.printDispatchModeSetting,
+              onChanged: controller.onPrintDispatchModeChanged,
+            )
+          : const SizedBox()),
+      Observer(builder: (_) => viewModel.enablePrinterRoutingSetting
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (int i = 0; i <= viewModel.printerAssignmentsSetting.length; i++)
+                  _printerAssignmentCard(viewModel, controller, "Assignment ${i + 1}", i),
+              ],
+            )
+          : const SizedBox()),
       _printerMargins(viewModel, controller),
       SettingsNumberEditTile(
         icon: LucideIcons.printerCheck,
@@ -513,6 +539,68 @@ SettingsTile _printerCard(SettingsOverlayViewModel viewModel, SettingsOverlayCon
             disabledPlaceholder: Text('<No options>'),
           );
         }),
+      ],
+    ),
+  );
+}
+
+SettingsTile _printerAssignmentCard(SettingsOverlayViewModel viewModel, SettingsOverlayController controller, String title, int index) {
+  final bool exists = index < viewModel.printerAssignmentsSetting.length;
+  final PrinterAssignment? assignment = exists ? viewModel.printerAssignmentsSetting[index] : null;
+  final bool useCups = viewModel.printingImplementationSetting == PrintingImplementation.cups;
+  final List<ComboBoxItem<String>> queueItems = useCups ? viewModel.cupsQueues : viewModel.flutterPrintingQueues;
+
+  return SettingsTile(
+    icon: LucideIcons.printerCheck,
+    title: title,
+    subtitle: "Pick a printer and the collage types (print sizes) it should handle.",
+    setting: Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Button(
+              onPressed: useCups ? viewModel.setCupsQueueList : viewModel.setFlutterPrintingQueueList,
+              child: const Text('Refresh'),
+            ),
+            const SizedBox(width: 10),
+            ComboBox<String>(
+              items: queueItems,
+              value: assignment?.queueId.isNotEmpty == true ? assignment!.queueId : viewModel.unusedPrinterValue,
+              onChanged: (value) => controller.onAssignmentPrinterChanged(value, index),
+              disabledPlaceholder: const Text('<No options>'),
+            ),
+          ],
+        ),
+        if (exists) ...[
+          const SizedBox(height: 8),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("Enabled"),
+              const SizedBox(width: 8),
+              ToggleSwitch(
+                checked: assignment!.enabled,
+                onChanged: (value) => controller.onAssignmentEnabledChanged(index, value),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            runSpacing: 4,
+            alignment: WrapAlignment.end,
+            children: [
+              for (final size in PrintSize.values)
+                Checkbox(
+                  checked: assignment.printSizes.contains(size),
+                  content: Text(size.name),
+                  onChanged: (value) => controller.onAssignmentPrintSizeToggled(index, size, value ?? false),
+                ),
+            ],
+          ),
+        ],
       ],
     ),
   );
