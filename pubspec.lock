@@ -1163,7 +1163,7 @@ packages:
     description:
       path: printing
       ref: "feature/windows-paper-sizes"
-      resolved-ref: "2d4c4b9e9da1c3f3a72cfd17a397694854f02d72"
+      resolved-ref: e93d9bbfd623ada5c5b049cfcd64fdaa0e762aae
       url: "https://github.com/momentobooth/dart_pdf"
     source: git
     version: "5.16.0"
