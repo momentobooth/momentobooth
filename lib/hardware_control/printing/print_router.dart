@@ -153,3 +153,12 @@ class PrintRouter {
   };
 
 }
+
+/// The print sizes users can choose for a photo, given the [routed] print sizes. Split prints are not a choice: a
+/// collage of three photos chosen at normal size is printed split when that is routed, so normal is offered for it even
+/// when only split is routed.
+List<PrintSize> choosablePrintSizes(Set<PrintSize> routed, {required bool isThreePhotoCollage}) => [
+  if (routed.contains(PrintSize.normal) || (isThreePhotoCollage && routed.contains(PrintSize.split))) PrintSize.normal,
+  for (final size in [PrintSize.small, PrintSize.tiny])
+    if (routed.contains(size)) size,
+];

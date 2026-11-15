@@ -111,6 +111,7 @@
 
     "printingErrorDialogTitle": "Print error",
     "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
+    "printingErrorDialogBodyTopPartial": "Due to an unexpected issue, not all of your prints could be started. Some of them may still come out of the printer.",
     "printingErrorDialogBodyBottom": "Try again later or download your photo using the QR feature.",
 
     "retakeDialogBody": "Do you want to keep the current result?",

@@ -6,7 +6,10 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class PrintingErrorDialog extends StatelessWidget {
 
-  const PrintingErrorDialog({super.key});
+  /// Some sheets were sent to a printer before printing failed, so guests may get part of their prints.
+  final bool partiallyPrinted;
+
+  const PrintingErrorDialog({super.key, this.partiallyPrinted = false});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,7 @@ class PrintingErrorDialog extends StatelessWidget {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(localizations.printingErrorDialogBodyTop),
+          Text(partiallyPrinted ? localizations.printingErrorDialogBodyTopPartial : localizations.printingErrorDialogBodyTop),
           const SizedBox(height: 16.0),
           Lottie.asset(
             'assets/animations/Animation - 1709936404300.json',
@@ -39,4 +42,9 @@ class PrintingErrorDialog extends StatelessWidget {
 @UseCase(name: 'Printing error', type: PrintingErrorDialog)
 Widget printingErrorDialog(BuildContext context) {
   return PrintingErrorDialog();
+}
+
+@UseCase(name: 'Printing error after some prints', type: PrintingErrorDialog)
+Widget printingErrorDialogPartial(BuildContext context) {
+  return PrintingErrorDialog(partiallyPrinted: true);
 }

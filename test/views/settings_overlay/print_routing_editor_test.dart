@@ -142,10 +142,22 @@ void main() {
       await _settle();
       expect(viewModel.connectionHint, isNull);
 
-      // A sheet into a round-robin that carries photos.
-      expect(editor().canConnect(const PortRef('tile', 'out'), const PortRef('robin', 'in')), isFalse);
+      // A round-robin that carries sheets into a photo input.
+      viewModel.addNode(RoutingNodeKind.roundRobin, Offset.zero);
+      final sheets = viewModel.graph.nodes.last.id;
+      viewModel.addNode(RoutingNodeKind.tileLayout, Offset.zero);
+      final tile2 = viewModel.graph.nodes.last.id;
+      expect(editor().connect(const PortRef('tile', 'out'), PortRef(sheets, 'in')), isNotNull);
+      expect(editor().canConnect(PortRef(sheets, 'out'), PortRef(tile2, 'in')), isFalse);
       await _settle();
-      expect(viewModel.connectionHint, 'This round-robin already carries photos.');
+      expect(viewModel.connectionHint, 'This round-robin carries sheets, which this input does not accept.');
+
+      // Sheets into the round-robin whose photos go to a tile layout. The new input replaces the old one, but breaks
+      // the connection to the tile layout.
+      expect(editor().connect(const PortRef('robin', 'out'), PortRef(tile2, 'in')), isNotNull);
+      expect(editor().canConnect(PortRef(sheets, 'out'), const PortRef('robin', 'in')), isFalse);
+      await _settle();
+      expect(viewModel.connectionHint, 'This would change what a round-robin carries, which breaks another of its connections.');
 
       // A loop through two round-robins.
       viewModel.addNode(RoutingNodeKind.roundRobin, Offset.zero);

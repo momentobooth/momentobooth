@@ -108,6 +108,7 @@
 
     "printingErrorDialogTitle": "Erreur d'impression",
     "printingErrorDialogBodyTop": "En raison d'un problème inattendu, vos impression(s) ne peut pas être démarrée.",
+    "printingErrorDialogBodyTopPartial": "En raison d'un problème inattendu, toutes vos impressions n'ont pas pu être démarrées. Certaines peuvent encore sortir de l'imprimante.",
     "printingErrorDialogBodyBottom": "Réessayez plus tard ou téléchargez votre photo à l'aide de la fonction QR.",
 
     "retakeDialogBody": "Voulez-vous conserver le résultat actuel?",

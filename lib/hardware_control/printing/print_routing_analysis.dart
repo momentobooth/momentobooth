@@ -24,11 +24,17 @@ enum RoutingIssueKind {
   /// A printer that receives jobs, but has no queue or media size set.
   incompletePrinter(RoutingIssueSeverity.warning),
 
+  /// A printer that receives jobs, but whose margins leave no room on its media. It does not print.
+  marginsTooLarge(RoutingIssueSeverity.error),
+
   /// A tile layout on the route of split prints, which are always printed in halves.
   ignoredLayout(RoutingIssueSeverity.warning),
 
   /// A print size that does not reach any printer, so it cannot be printed.
-  unroutedPrintSize(RoutingIssueSeverity.warning);
+  unroutedPrintSize(RoutingIssueSeverity.warning),
+
+  /// Split prints are routed, but normal prints are not, so only collages of three photos can be printed.
+  splitWithoutNormal(RoutingIssueSeverity.warning);
 
   final RoutingIssueSeverity severity;
 
@@ -103,6 +109,7 @@ class _Analyzer {
   final List<RoutingIssue> issues = [];
   final Map<String, RoutingNode> nodes = {};
   final Set<RoutingEdge> incompatibleEdges = {};
+  final Set<String> invalidNodeIds = {};
   String? sourceId;
 
   _Analyzer(this.graph);
@@ -112,7 +119,11 @@ class _Analyzer {
     final edges = _validEdges();
     final acyclicEdges = _withoutCycles(edges);
     final arbiterTypes = _resolveTypes(acyclicEdges);
-    final routableEdges = acyclicEdges.whereNot(incompatibleEdges.contains).toList();
+    // Nodes with invalid parameters do not route anything.
+    final routableEdges = acyclicEdges
+        .whereNot(incompatibleEdges.contains)
+        .whereNot((edge) => invalidNodeIds.contains(edge.fromNode) || invalidNodeIds.contains(edge.toNode))
+        .toList();
     final reachable = _reachablePrinters(routableEdges);
     return PrintRoutingAnalysis._(issues, reachable, arbiterTypes, sourceId, routableEdges);
   }
@@ -137,7 +148,10 @@ class _Analyzer {
         TileLayoutNodeData(:final columns, :final rows) => columns >= 1 && rows >= 1,
         _ => true,
       };
-      if (!validParameters) issues.add(RoutingIssue(kind: RoutingIssueKind.invalidParameter, nodeId: node.id));
+      if (!validParameters) {
+        invalidNodeIds.add(node.id);
+        issues.add(RoutingIssue(kind: RoutingIssueKind.invalidParameter, nodeId: node.id));
+      }
     }
 
     if (sourceId == null) issues.add(const RoutingIssue(kind: RoutingIssueKind.missingSource));
@@ -213,7 +227,7 @@ class _Analyzer {
     return edges.whereNot(backEdges.contains).toList();
   }
 
-  /// Checks the port types of all edges. Arbiters take the type of their first incoming job, so this follows the job flow.
+  /// Checks the port types of all edges. Arbiters take the type of their incoming job, so this follows the job flow.
   Map<String, RoutingPortType> _resolveTypes(List<RoutingEdge> acyclicEdges) {
     final Map<String, RoutingPortType> arbiterTypes = {};
     final incoming = acyclicEdges.groupListsBy((edge) => edge.toNode);
@@ -262,7 +276,12 @@ class _Analyzer {
     final outgoing = edges
         .where((edge) => nodes[edge.toNode]!.data.port(edge.toPort)!.types.any(jobPortTypes.contains))
         .groupListsBy((edge) => (edge.fromNode, edge.fromPort));
-    final Set<String> incompletePrinterIds = {}, ignoredLayoutIds = {};
+    final Map<String, PrintMargins> connectedMargins = {
+      for (final edge in edges)
+        if (nodes[edge.fromNode]!.data case MarginsNodeData(:final margins) when edge.toPort == RoutingPorts.margins)
+          edge.toNode: margins,
+    };
+    final Set<String> incompletePrinterIds = {}, tooLargeMarginsIds = {}, ignoredLayoutIds = {};
 
     Set<String> printersFrom(PrintSize size) {
       final Set<String> visited = {}, printers = {};
@@ -275,10 +294,12 @@ class _Analyzer {
         final data = nodes[nodeId]!.data;
         if (size == PrintSize.split && data is TileLayoutNodeData) ignoredLayoutIds.add(nodeId);
         if (data is PrinterNodeData) {
-          if (_isComplete(data)) {
-            printers.add(nodeId);
-          } else {
+          if (!_isComplete(data)) {
             incompletePrinterIds.add(nodeId);
+          } else if (!_hasPrintableArea(data, connectedMargins[nodeId] ?? data.margins)) {
+            tooLargeMarginsIds.add(nodeId);
+          } else {
+            printers.add(nodeId);
           }
           continue;
         }
@@ -294,11 +315,17 @@ class _Analyzer {
     for (final nodeId in nodes.keys.where(incompletePrinterIds.contains)) {
       issues.add(RoutingIssue(kind: RoutingIssueKind.incompletePrinter, nodeId: nodeId));
     }
+    for (final nodeId in nodes.keys.where(tooLargeMarginsIds.contains)) {
+      issues.add(RoutingIssue(kind: RoutingIssueKind.marginsTooLarge, nodeId: nodeId));
+    }
     for (final nodeId in nodes.keys.where(ignoredLayoutIds.contains)) {
       issues.add(RoutingIssue(kind: RoutingIssueKind.ignoredLayout, nodeId: nodeId, printSize: PrintSize.split));
     }
     for (final MapEntry(key: size, value: printers) in reachable.entries) {
       if (printers.isEmpty) issues.add(RoutingIssue(kind: RoutingIssueKind.unroutedPrintSize, printSize: size));
+    }
+    if (reachable[PrintSize.split]!.isNotEmpty && reachable[PrintSize.normal]!.isEmpty) {
+      issues.add(RoutingIssue(kind: RoutingIssueKind.splitWithoutNormal, nodeId: sourceId, printSize: PrintSize.normal));
     }
     return reachable;
   }
@@ -307,6 +334,9 @@ class _Analyzer {
     final maxConnections = port.maxConnections;
     return maxConnections != null && connectionCount >= maxConnections;
   }
+
+  static bool _hasPrintableArea(PrinterNodeData printer, PrintMargins margins) =>
+      margins.left + margins.right < printer.media.widthMm && margins.top + margins.bottom < printer.media.heightMm;
 
   static bool _isComplete(PrinterNodeData printer) {
     final bool hasMediaName = printer.backend != PrinterBackend.cups || printer.media.name.isNotEmpty;

@@ -73,37 +73,39 @@ class PhotoDetailsScreenView extends ScreenViewBase<PhotoDetailsScreenViewModel,
   }
 
   Widget _getBottomRow() {
-    return Row(
-      children: [
-        if (viewModel.showGetQrButton)
-          Flexible(
-            child: Center(
-              child: PhotoBoothButton.action(
-                onPressed: controller.onClickGetQR,
-                child: AutoSizeTextAndIcon(
-                  text: localizations.photoDetailsScreenGetQrButton,
-                  leftIcon: LucideIcons.scanQrCode,
-                  autoSizeGroup: controller.actionButtonGroup,
-                ),
-              ),
-            ),
-          ),
-        if (viewModel.showPrintButton)
-          Flexible(
-            child: Center(
-              child: Observer(
-                builder: (context) => PhotoBoothButton.action(
-                  onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
+    return Observer(
+      builder: (_) => Row(
+        children: [
+          if (viewModel.showGetQrButton)
+            Flexible(
+              child: Center(
+                child: PhotoBoothButton.action(
+                  onPressed: controller.onClickGetQR,
                   child: AutoSizeTextAndIcon(
-                    text: viewModel.printText,
-                    leftIcon: LucideIcons.printer,
+                    text: localizations.photoDetailsScreenGetQrButton,
+                    leftIcon: LucideIcons.scanQrCode,
                     autoSizeGroup: controller.actionButtonGroup,
                   ),
                 ),
               ),
             ),
-          ),
-      ],
+          if (viewModel.showPrintButton)
+            Flexible(
+              child: Center(
+                child: Observer(
+                  builder: (context) => PhotoBoothButton.action(
+                    onPressed: viewModel.printEnabled ? controller.onClickPrint : null,
+                    child: AutoSizeTextAndIcon(
+                      text: viewModel.printText,
+                      leftIcon: LucideIcons.printer,
+                      autoSizeGroup: controller.actionButtonGroup,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 

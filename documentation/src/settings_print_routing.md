@@ -20,8 +20,8 @@ graph LR
 A few rules follow from this:
 
 - A print size that is not routed to a usable printer disappears from the print dialog.
-- The print button is only shown when the project setting [Enable printing](settings_project.md#enable-printing) is on and at least one print size is routed to a printer.
-- The _Split_ print size is not a choice in the print dialog. When a user prints a collage of three photos at _Normal_ size and _Split_ is routed, the print follows the _Split_ route instead. When _Split_ is not routed, the _Normal_ route is used.
+- The print button is only shown when the project setting [Enable printing](settings_project.md#enable-printing) is on and the photo can be printed at one of the routed print sizes.
+- The _Split_ print size is not a choice in the print dialog. When a user prints a collage of three photos at _Normal_ size and _Split_ is routed, the print follows the _Split_ route instead. When _Split_ is not routed, the _Normal_ route is used. A booth that only offers split prints can route _Split_ alone: collages of three photos then offer _Normal_, which prints split, and other photos cannot be printed.
 - Every copy is routed separately. When a user prints three copies, each copy follows its own route, so a round-robin node can send them to different printers.
 - Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works.
 
@@ -56,7 +56,7 @@ The node remembers whose turn it is until the print routing is changed or the ap
 
 A duplicate node sends every copy to all its connected outputs. Use it to print one photo in several ways at once, for example as a normal print on one printer and as a tiled sheet of small photos on another. The number of copies shown in the print dialog takes this into account.
 
-Round-robin and duplicate nodes have an **In** and an **Out** port, which both accept any number of connections. They carry either photos or sheets (see [ports and connections](#ports-and-connections)), whichever is connected to them first. A caption on the node shows what it carries: _Carries photos_, _Carries sheets_ or _Carries nothing yet_.
+Round-robin and duplicate nodes have an **In** port, which takes a single connection, and an **Out** port, which accepts any number of connections. So such a node handles a single print size; print sizes only come together at a printer. To let two print sizes share the same printers, use a round-robin node for each print size and connect both to the printers. They carry either photos or sheets (see [ports and connections](#ports-and-connections)), whichever is connected to them. A caption on the node shows what it carries: _Carries photos_, _Carries sheets_ or _Carries nothing yet_.
 
 ### Tile layout
 
@@ -91,7 +91,7 @@ A printer node is one printer configuration: one printer or CUPS queue with one 
 
 A printer node has two inputs. The **Job** input accepts photos as well as sheets and takes any number of connections. A photo that is connected directly, without a tile layout, is fitted on the sheet as a whole. The **Margins** input sits next to the margins fields and takes a single margins node.
 
-A printer node only prints once it is complete: a native printer needs a printer and a media width and height; a CUPS printer needs a queue and media. A native printer on Windows whose size was set by hand, e.g. on another computer, still prints as before, without choosing a paper; select a _Paper_ to print on that exact paper. A printer that receives prints while it is incomplete gets a warning and is skipped. Unconnected printer nodes are fine, so you can keep configurations around for later use.
+A printer node only prints once it is complete: a native printer needs a printer and a media width and height; a CUPS printer needs a queue and media. A native printer on Windows whose size was set by hand, e.g. on another computer, still prints as before, without choosing a paper; select a _Paper_ to print on that exact paper. A printer that receives prints while it is incomplete gets a warning and is skipped. So is a printer whose margins leave no room on its media. Unconnected printer nodes are fine, so you can keep configurations around for later use.
 
 ## Ports and connections
 
@@ -107,7 +107,7 @@ The ports of round-robin and duplicate nodes take the colour of what they carry,
 
 To connect two nodes, drag from a port to a port of another node. Only matching ports can be connected: the editor refuses a connection that carries the wrong type or that would create a loop, and the status line at the bottom explains why when the colours do not already tell. A round-robin or duplicate node carries a single type, so it cannot mix photos and sheets.
 
-Some ports take a single connection: the outputs of the source, both ports of a tile layout and the margins input of a printer. Connecting a new connection to such a port replaces the old one.
+Some ports take a single connection: the outputs of the source, the inputs of round-robin and duplicate nodes, both ports of a tile layout and the margins input of a printer. Connecting a new connection to such a port replaces the old one.
 
 ## Routes, problems and printers
 
@@ -123,14 +123,16 @@ Connections with errors are ignored, while the rest of the routing keeps working
 |---|---|
 | Select a printer and set the media size to print with it. | A native printer receives prints, but has no printer or media size set. It is skipped. |
 | Select a queue and media to print with this printer. | A CUPS printer receives prints, but has no queue or media set. It is skipped. |
+| The margins leave no room to print on the media. | The left and right margins together, or the top and bottom margins together, are as large as the media or larger. The printer is skipped. |
 | Split prints are always printed in halves, so this layout is not used for them. | A tile layout is on the route of the _Split_ print size. It is still used for the other print sizes. |
+| Normal prints are not routed, so only collages of three photos can be printed. | Information on the source: _Split_ is routed, but _Normal_ is not. Photos that are not a collage of three photos cannot be printed. |
 | Not routed: … | Information on the source: these print sizes are not routed to any printer and are not offered in the print dialog. |
 | This input accepts a single connection. | More than one connection ends at a port that takes a single connection. |
 | The connection from … carries the wrong type. | A connection carries photos where sheets are expected, or the other way around. |
 | Connections form a loop. | The connections lead back to a node they came from. |
 | Only one source is used, this one is ignored. | There is more than one source node. Only the first one routes prints. |
 | There is no source node. | The routing has no source, so nothing can be printed. |
-| Columns and rows must be at least 1. | A tile layout has an invalid grid. |
+| Columns and rows must be at least 1. | A tile layout has an invalid grid. Its connections are ignored. |
 | A stored connection is invalid and is ignored. / A connection is stored twice. / Two nodes share the ID "…". | The saved routing is damaged, for example after editing the settings file by hand or importing settings. |
 
 ## Editing

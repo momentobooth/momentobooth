@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -27,11 +28,32 @@ abstract class PhotoDetailsScreenViewModelBase extends ScreenViewModelBase with 
   PhotoDetailsScreenViewModelBase({
     required super.contextAccessor,
     required this.photoId,
-  });
+  }) {
+    unawaited(_loadIsThreePhotoCollage());
+  }
 
   Directory get outputDir => getIt<ProjectManager>().getOutputDir();
   bool get showGetQrButton => getIt<ProjectManager>().settings.showGetQrButton;
-  bool get showPrintButton => getIt<PrintingManager>().canPrint;
+  /// Whether the photo is a collage of three photos, which decides the print sizes to choose from. Null while it is
+  /// read from the photo.
+  @readonly
+  bool? _isThreePhotoCollage;
+
+  @computed
+  bool get showPrintButton {
+    final isThreePhotoCollage = _isThreePhotoCollage;
+    return isThreePhotoCollage != null && getIt<PrintingManager>().canPrint(isThreePhotoCollage: isThreePhotoCollage);
+  }
+
+  Future<void> _loadIsThreePhotoCollage() async {
+    bool isThreePhotoCollage = false;
+    try {
+      isThreePhotoCollage = (await makerNoteData)?.sourcePhotos.length == 3;
+    } catch (error, stackTrace) {
+      logWarning("Could not read the source photos of $photoId", error, stackTrace);
+    }
+    runInAction(() => _isThreePhotoCollage = isThreePhotoCollage);
+  }
   File? get file => File(path.join(outputDir.path, photoId));
   Future<List<MomentoBoothExifTag>> get metadata async => await getMomentoBoothExifTagsFromFile(imageFilePath: file!.path);
   Future<GalleryImage> get galleryImage async => GalleryImage(file: file!, exifTags: await metadata);

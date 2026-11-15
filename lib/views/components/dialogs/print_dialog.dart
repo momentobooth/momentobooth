@@ -35,13 +35,10 @@ class PrintDialog extends StatefulWidget {
 class _PrintDialogState extends State<PrintDialog> {
 
   /// The print sizes users choose from. Split prints follow from the photo, so they are not a choice.
-  static List<PrintSize> get _choices => [
-    for (final size in [PrintSize.normal, PrintSize.small, PrintSize.tiny])
-      if (getIt<PrintingManager>().printableSizes.contains(size)) size,
-  ];
+  List<PrintSize> get _choices => getIt<PrintingManager>().choosableSizes(isThreePhotoCollage: widget.isThreePhotoCollage);
 
   int numPrints = 1;
-  PrintSize printSize = _choices.firstOrNull ?? PrintSize.normal;
+  late PrintSize printSize = _choices.firstOrNull ?? PrintSize.normal;
 
   @override
   Widget build(BuildContext context) {

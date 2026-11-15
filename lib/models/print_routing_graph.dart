@@ -154,6 +154,8 @@ sealed class RoutingNodeData with _$RoutingNodeData {
   factory RoutingNodeData.fromJson(Map<String, Object?> json) => _$RoutingNodeDataFromJson(json);
 
   // Only arbiters split the job flow, so jobs never fan out implicitly: other job outputs take a single connection.
+  // Print sizes only come together at printers: every job input except that of a printer takes a single connection, so
+  // each arbiter carries one print size.
   List<RoutingPortSpec> get ports => switch (this) {
     SourceNodeData() => [
       for (final size in PrintSize.values)
@@ -165,7 +167,13 @@ sealed class RoutingNodeData with _$RoutingNodeData {
         ),
     ],
     RoundRobinNodeData() || DuplicateNodeData() => const [
-      RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: jobPortTypes, isPassthrough: true),
+      RoutingPortSpec(
+        id: RoutingPorts.input,
+        direction: RoutingPortDirection.input,
+        types: jobPortTypes,
+        isPassthrough: true,
+        maxConnections: 1,
+      ),
       RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: jobPortTypes, isPassthrough: true),
     ],
     TileLayoutNodeData() => const [

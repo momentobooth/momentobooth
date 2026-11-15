@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/photos_manager.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
@@ -95,7 +96,7 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
         return PrintDialog(
-          isThreePhotoCollage: getIt<PhotosManager>().chosenPhotos.length == 3,
+          isThreePhotoCollage: viewModel.isThreePhotoCollage,
           onPrintPressed: (size, copies) {
             navigator.pop();
             onConfirmPrint(size, copies);
@@ -116,16 +117,17 @@ class ShareScreenController extends ScreenControllerBase<ShareScreenViewModel> w
     final lastFile = getIt<PhotosManager>().lastPhotoFile;
     String jobName = lastFile != null ? path.basenameWithoutExtension(lastFile.path) : "MomentoBooth Picture";
 
-    bool success = false;
+    bool success = false, partiallyPrinted = false;
     try {
       await getIt<PrintingManager>().printPhoto(jobName: jobName, image: getIt<PhotosManager>().outputImage!, size: size, copies: copies);
       success = true;
     } catch (e) {
       logError("Failed to print photo: $e");
+      partiallyPrinted = e is PrintingException && e.sentSheets > 0;
     }
 
     successfulPrints += success ? copies : 0;
-    if (!success) unawaited(showUserDialog(dialog: const PrintingErrorDialog(), barrierDismissible: true));
+    if (!success) unawaited(showUserDialog(dialog: PrintingErrorDialog(partiallyPrinted: partiallyPrinted), barrierDismissible: true));
     resetPrint();
 
     await checkPrintersAndShowWarnings();

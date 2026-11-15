@@ -48,6 +48,66 @@ void main() {
       ]);
     });
 
+    test('does not route through a tile layout with an invalid grid', () {
+      final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('tile', const RoutingNodeData.tileLayout(columns: 0)),
+          _node('printer', _printer),
+        ],
+        edges: [
+          _edge('source', 'small', 'tile'),
+          _edge('tile', 'out', 'printer'),
+        ],
+      ));
+
+      expect(analysis.errors.map((issue) => issue.kind), [RoutingIssueKind.invalidParameter]);
+      expect(analysis.reachablePrinterIds[PrintSize.small], isEmpty);
+      expect(analysis.routableEdges, isEmpty);
+    });
+
+    test('does not print with margins that leave no room on the media', () {
+      PrintRoutingAnalysis analyze({required PrintMargins own, PrintMargins? connected}) => PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('printer', RoutingNodeData.printer(queueId: 'queue', media: const PrintMedia(widthMm: 100, heightMm: 148), margins: own)),
+          if (connected != null) _node('margins', RoutingNodeData.margins(margins: connected)),
+        ],
+        edges: [
+          _edge('source', 'normal', 'printer'),
+          if (connected != null) _edge('margins', 'margins', 'printer', 'margins'),
+        ],
+      ));
+      const tooWide = PrintMargins(left: 50, right: 50), tooHigh = PrintMargins(top: 100, bottom: 48), fits = PrintMargins(left: 49, right: 50);
+
+      for (final margins in [tooWide, tooHigh]) {
+        final analysis = analyze(own: margins);
+        expect(analysis.errors, [const RoutingIssue(kind: RoutingIssueKind.marginsTooLarge, nodeId: 'printer')]);
+        expect(analysis.reachablePrinterIds[PrintSize.normal], isEmpty);
+      }
+      expect(analyze(own: fits).reachablePrinterIds[PrintSize.normal], {'printer'});
+
+      // The margins of a connected margins node replace those of the printer.
+      expect(analyze(own: fits, connected: tooWide).reachablePrinterIds[PrintSize.normal], isEmpty);
+      expect(analyze(own: tooWide, connected: fits).reachablePrinterIds[PrintSize.normal], {'printer'});
+    });
+
+    test('warns when split prints are routed and normal prints are not', () {
+      final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('printer', _printer),
+        ],
+        edges: [_edge('source', 'split', 'printer')],
+      ));
+
+      expect(
+        analysis.issues,
+        contains(const RoutingIssue(kind: RoutingIssueKind.splitWithoutNormal, nodeId: 'source', printSize: PrintSize.normal)),
+      );
+      expect(analysis.hasErrors, isFalse);
+    });
+
     test('accepts unconnected nodes', () {
       final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
         nodes: [
@@ -70,7 +130,6 @@ void main() {
           _node('robin2', const RoutingNodeData.roundRobin()),
         ],
         edges: [
-          _edge('source', 'normal', 'robin1'),
           _edge('robin1', 'out', 'robin2'),
           _edge('robin2', 'out', 'robin1'),
         ],
@@ -102,7 +161,7 @@ void main() {
       ]);
     });
 
-    test('rejects mixed job types into one arbiter', () {
+    test('takes a single input per arbiter, so print sizes only come together at printers', () {
       final graph = PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
@@ -117,7 +176,7 @@ void main() {
       );
 
       expect(PrintRoutingAnalysis.of(graph).errors, [
-        RoutingIssue(kind: RoutingIssueKind.incompatibleTypes, edge: _edge('tile', 'out', 'robin')),
+        RoutingIssue(kind: RoutingIssueKind.tooManyConnections, edge: _edge('tile', 'out', 'robin')),
       ]);
     });
 

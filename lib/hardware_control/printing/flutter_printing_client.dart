@@ -42,8 +42,8 @@ class FlutterPrintingClient extends PrintingSystemClient {
       printer: printer,
       name: jobName,
       onLayout: (pageFormat) => pdfData,
-      // The orientation of the paper follows the format.
-      format: paper != null ? PdfPageFormat(media.widthMm * PdfPageFormat.mm, media.heightMm * PdfPageFormat.mm) : PdfPageFormat.standard,
+      // The orientation of the paper follows the format. Without a paper, the driver is asked for a paper of this size.
+      format: PdfPageFormat(media.widthMm * PdfPageFormat.mm, media.heightMm * PdfPageFormat.mm),
       usePrinterSettings: getIt<SettingsManager>().settings.hardware.usePrinterSettings,
       paper: paper,
     );

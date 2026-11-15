@@ -132,4 +132,16 @@ void main() {
       expect(routerWith(const RoutingNodeData.tileLayout() as TileLayoutNodeData).photosPerCopy(PrintSize.tiny), isNull);
     });
   });
+
+  group('choosablePrintSizes', () {
+    test('offers the routed sizes, without split', () {
+      expect(choosablePrintSizes(PrintSize.values.toSet(), isThreePhotoCollage: false), [PrintSize.normal, PrintSize.small, PrintSize.tiny]);
+      expect(choosablePrintSizes({PrintSize.small}, isThreePhotoCollage: true), [PrintSize.small]);
+    });
+
+    test('offers normal for a collage of three photos when only split is routed', () {
+      expect(choosablePrintSizes({PrintSize.split}, isThreePhotoCollage: true), [PrintSize.normal]);
+      expect(choosablePrintSizes({PrintSize.split}, isThreePhotoCollage: false), isEmpty);
+    });
+  });
 }

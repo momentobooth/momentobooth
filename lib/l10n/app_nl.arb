@@ -111,6 +111,7 @@
 
     "printingErrorDialogTitle": "Printprobleem",
     "printingErrorDialogBodyTop": "Door een onverwachts probleem kunnen we de print(s) niet starten.",
+    "printingErrorDialogBodyTopPartial": "Door een onverwachts probleem konden niet al je prints gestart worden. Een deel kan nog uit de printer komen.",
     "printingErrorDialogBodyBottom": "Probeer het later nogmaals of download je foto met de QR-functie.",
 
     "retakeDialogBody": "Wil je het huidige resultaat behouden?",

@@ -64,12 +64,16 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     }
   }
 
-  /// The print sizes users can choose. Empty when printing is disabled for the project.
+  /// The print sizes that are routed to a printer. Empty when printing is disabled for the project.
   @computed
   Set<PrintSize> get printableSizes => getIt<ProjectManager>().settings.enablePrinting ? _router.printableSizes : const {};
 
-  @computed
-  bool get canPrint => printableSizes.isNotEmpty;
+  /// The print sizes users can choose for a photo. Split prints are not a choice, they follow from choosing normal
+  /// for a collage of three photos, see [printSizeFor].
+  List<PrintSize> choosableSizes({required bool isThreePhotoCollage}) =>
+      choosablePrintSizes(printableSizes, isThreePhotoCollage: isThreePhotoCollage);
+
+  bool canPrint({required bool isThreePhotoCollage}) => choosableSizes(isThreePhotoCollage: isThreePhotoCollage).isNotEmpty;
 
   /// The print size a photo is printed at when users choose [chosen]: a collage of three photos chosen at normal size
   /// is printed in halves, if that print size is routed to a printer.
@@ -98,11 +102,35 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   // //////// //
 
   /// Prints [copies] copies of [image] at [size]. Every copy follows its own route through the print routing graph.
+  ///
+  /// Stops at the first sheet that cannot be rendered or sent. The [PrintingException] then tells how many sheets were
+  /// sent before. The rendered sheets are kept in any case.
   Future<void> printPhoto({required String jobName, required Uint8List image, required PrintSize size, int copies = 1}) async {
     // Within one print, every distinct sheet is rendered once.
     final Map<Object, Future<Uint8List>> renderings = {};
     final List<Map<String, Object?>> printedSheets = [];
+    int sentSheets = 0;
 
+    try {
+      await _printCopies(jobName, image, size, copies, renderings, printedSheets, onSent: () => sentSheets++);
+    } catch (error, stackTrace) {
+      if (sentSheets == 0) rethrow;
+      logError("Printing $jobName stopped after $sentSheets sheet(s) were sent", error, stackTrace);
+      Error.throwWithStackTrace(PrintingException('$error', sentSheets: sentSheets), stackTrace);
+    } finally {
+      await _keepPrintedPdfs(jobName, size, renderings.values, printedSheets);
+    }
+  }
+
+  Future<void> _printCopies(
+    String jobName,
+    Uint8List image,
+    PrintSize size,
+    int copies,
+    Map<Object, Future<Uint8List>> renderings,
+    List<Map<String, Object?>> printedSheets, {
+    required void Function() onSent,
+  }) async {
     for (int copy = 1; copy <= copies; copy++) {
       final routes = _router.nextCopy(size);
       if (routes.isEmpty) throw PrintingException('No printer is routed for ${size.label}');
@@ -118,6 +146,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
         } else {
           logDebug("Printing $sheetName with $target");
           await _clients[printer.backend]!.printPdfToQueue(printer.queueId, sheetName, pdfData, media: printer.media);
+          onSent();
           getIt<StatsManager>().addPrintedPhoto(size: size);
         }
 
@@ -132,12 +161,21 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
         });
       }
     }
-
-    await _keepPrintedPdfs(jobName, size, renderings.values, printedSheets);
   }
 
+  /// Keeps the sheets that could be rendered. Never throws, so it does not hide why a print failed.
   Future<void> _keepPrintedPdfs(String jobName, PrintSize size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
-    final pdfs = await Future.wait(renderings);
+    try {
+      await _writePrintedPdfs(jobName, size, renderings, printedSheets);
+    } catch (error, stackTrace) {
+      logError("Could not keep the PDFs of print job $jobName", error, stackTrace);
+    }
+  }
+
+  Future<void> _writePrintedPdfs(String jobName, PrintSize size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
+    final pdfs = [
+      for (final rendering in renderings) ?await rendering.then<Uint8List?>((pdf) => pdf, onError: (_) => null),
+    ];
     if (pdfs.isEmpty) return;
 
     final outputDir = getIt<ProjectManager>().getOutputDir();

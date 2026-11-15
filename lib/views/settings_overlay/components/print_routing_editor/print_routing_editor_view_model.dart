@@ -244,12 +244,10 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
       return 'This would change what a ${kindOf(issue.edge?.fromNode)} carries, which breaks another of its connections.';
     }
     final fromType = analysis.arbiterTypes[edge.fromNode];
-    final toType = analysis.arbiterTypes[edge.toNode];
+    // An arbiter takes the type of its single input, which a new connection replaces, so only what it sends on can
+    // conflict.
     if ((dataOf(edge.fromNode)?.port(edge.fromPort)?.isPassthrough ?? false) && fromType != null) {
       return 'This ${kindOf(edge.fromNode)} carries ${_plural(fromType)}, which this input does not accept.';
-    }
-    if ((dataOf(edge.toNode)?.port(edge.toPort)?.isPassthrough ?? false) && toType != null) {
-      return 'This ${kindOf(edge.toNode)} already carries ${_plural(toType)}.';
     }
     return null;
   }

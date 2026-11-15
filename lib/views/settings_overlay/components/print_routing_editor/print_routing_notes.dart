@@ -48,8 +48,10 @@ String describeRoutingIssue(RoutingIssue issue, PrintRoutingGraph graph) {
       PrinterNodeData(backend: PrinterBackend.cups) => 'Select a queue and media to print with this printer.',
       _ => 'Select a printer and set the media size to print with it.',
     },
+    RoutingIssueKind.marginsTooLarge => 'The margins leave no room to print on the media.',
     RoutingIssueKind.ignoredLayout => 'Split prints are always printed in halves, so this layout is not used for them.',
     RoutingIssueKind.unroutedPrintSize => '${printSizeShortLabel(issue.printSize!)} prints are not routed to a printer.',
+    RoutingIssueKind.splitWithoutNormal => 'Normal prints are not routed, so only collages of three photos can be printed.',
   };
 }
 

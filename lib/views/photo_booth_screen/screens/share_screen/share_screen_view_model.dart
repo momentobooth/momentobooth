@@ -28,7 +28,8 @@ abstract class ShareScreenViewModelBase extends ScreenViewModelBase with Store {
 
   bool get displayConfetti => getIt<ProjectManager>().settings.displayConfetti;
   bool get showGetQrButton => getIt<ProjectManager>().settings.showGetQrButton;
-  bool get showPrintButton => getIt<PrintingManager>().canPrint;
+  bool get isThreePhotoCollage => getIt<PhotosManager>().chosenPhotos.length == 3;
+  bool get showPrintButton => getIt<PrintingManager>().canPrint(isThreePhotoCollage: isThreePhotoCollage);
   late final ConfettiController confettiController = ConfettiController(duration: const Duration(milliseconds: 100))..play();
 
   Uint8List get outputImage => getIt<PhotosManager>().outputImage!;
