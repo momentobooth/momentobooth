@@ -44,7 +44,7 @@ escpos = { version = "0.20.1", features = ["native_usb"] }
 thiserror = "2.0.21"
 
 [dev-dependencies]
-tokio = { version = "1.53.1", features = ["macros"] }
+tokio = { version = "1.54.1", features = ["macros"] }
 
 [profile.dev]
 opt-level = 3
