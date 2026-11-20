@@ -99,6 +99,18 @@ rust/src/
 
 **Home Assistant integration:** `MqttManager` handles MQTT communication for automation (e.g., WLED lighting sync during countdown).
 
+## Engineering Principles
+
+Design decisions follow `documentation/src/engineering_principles.md`. Read it before designing a feature or changing an existing design. Each principle has a weight (rule, strong, default): a rule needs explicit agreement to deviate from, a strong preference needs a reason in the PR, and a default is only a starting point. To review whether a change goes in the right direction (rather than whether the code is correct), use the `review-direction` skill.
+
+## Pull Request Checklist
+
+- Every user-visible change gets a line in the `## Unreleased` section of `CHANGELOG.md` in the same PR, under `### Breaking changes`, `### New features`, `### Changes`, `### Bugfixes`, or `### Dev changes`.
+- A change that breaks existing settings, projects, or templates (or removes behaviour users rely on) is listed under `### Breaking changes`, also when no migration is provided.
+- The PR description states what was tested and what was not, including platforms and hardware.
+- Unrelated reformatting stays out of the diff.
+- Log through the logger, never with `print()`.
+
 ## Development Setup
 
 Requires:
