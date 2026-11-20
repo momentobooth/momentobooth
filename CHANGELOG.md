@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.17.0
+
 ### New features
 - MomentoBooth checks GitHub for newer releases on startup and shows the changelog of every newer version during onboarding
 - Added a "Releases" item to the Help menu
