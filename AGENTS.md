@@ -101,7 +101,11 @@ rust/src/
 
 ## Engineering Principles
 
-Design decisions follow `documentation/src/engineering_principles.md`. Read it before designing a feature or changing an existing design. Each principle has a weight (rule, strong, default): a rule needs explicit agreement to deviate from, a strong preference needs a reason in the PR, and a default is only a starting point. To review whether a change goes in the right direction (rather than whether the code is correct), use the `review-direction` skill (`.claude/skills/review-direction/SKILL.md`).
+Design decisions follow `documentation/src/engineering_principles.md`. Read it before designing a feature or changing an existing design. Each principle has a weight (rule, strong, default): a rule needs explicit agreement to deviate from, a strong preference needs a reason in the PR, and a default is only a starting point. To review whether a change goes in the right direction (rather than whether the code is correct), use the `review-direction` skill (`.agents/skills/review-direction/SKILL.md`).
+
+## Skills
+
+Skills follow the [Agent Skills](https://agentskills.io) standard and live in `.agents/skills/<name>/SKILL.md`, which most coding agents read. Claude Code only reads `.claude/skills/`, so each skill also gets a stub there: `.claude/skills/<name>/SKILL.md` with the same `name` and `description` frontmatter and a body of only `@.agents/skills/<name>/SKILL.md`. When changing a skill's description, update both.
 
 ## Pull Request Checklist
 
