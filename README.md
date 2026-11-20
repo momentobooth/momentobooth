@@ -36,12 +36,13 @@
 * **User friendly, touch-centered interface**
   * Beautiful animations
   * [Multi-language support](#translations)
+    * Per project, a fixed language or a choice of languages for guests at multilingual events
   * Different UI themes available
 * **Photo printing**
   * Lots of settings included to size and position your print well
   * Support for native printing method and dispatch to CUPS server
 * **Photo sharing using QR code** with [`ffsend`](https://github.com/timvisee/ffsend)
-* **Theming with collage template images** (background and foreground)
+* **Theming with collage template images** (background and foreground) and a live view overlay image
 * **Rich live view and capture options**
   * Select device with 1 click or select custom options & combinations
   * *Webcam*
@@ -59,10 +60,15 @@
 * **Easy administration**
   * Clear *settings panel*
   * Keep organised with *project directories*
+  * Per project options, e.g. hiding the gallery or the QR code button
+  * Onboarding wizard for the first setup
+  * Command line options to open a project or start in full screen
   * Health checks of external IPs/HTTP services with clear warning banners
   * Notifies you of new releases and shows what changed
 * **Cross platform**
   * Windows (x64), macOS (Apple Silicon, macOS 15 or newer) and Linux (Flatpak for x86_64 and arm64, including the Raspberry Pi)
+* **Open source**
+  * The About screen lists the licenses of all open source software MomentoBooth is built with
 * **Low system requirements**
   * Can run comfortably, even on old hardware
 * **Integrates with Home Assistant**
