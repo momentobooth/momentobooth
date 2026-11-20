@@ -2,12 +2,14 @@
 
 ## Unreleased
 
+## 0.17.0
+
 ### New features
 - MomentoBooth checks GitHub for newer releases on startup and shows the changelog of every newer version during onboarding
 - Added a "Releases" item to the Help menu
 - The About screen now shows which version was taken into use on which date
 - The About screen now lists the licenses of all open source software MomentoBooth is built with
-- Statistics are now also tracked per project, stored in a `Stats.toml` file in the project directory
+- Statistics are now also tracked per project, stored in a `Stats.toml` file in the project directory, and shown in the settings
 - First time selection of a gPhoto2 camera now prompts a dialog with a warning about possible data corruption that needs to be confirmed before use
 - (experimental) Video message mode, in which guests record a short video message for their hosts. Requires gPhoto2 camera. Can be enabled in the new Experimental settings tab
 - (experimental) Audio of video messages can be recorded through FFmpeg, then transcribed and summarized through configurable OpenAI-compatible endpoints (including local servers)
@@ -41,6 +43,11 @@
 - Linux: the release is built as a Flatpak entirely inside the GNOME SDK (`linux/packaging/flatpak`), so it no longer depends on the libraries of the build machine. libgphoto2 2.5.34 is built in the manifest with the same options as on Windows and macOS, its dependencies come from the runtime. The CI builds x86_64 and aarch64 (on GitHub's arm64 runners), the AppImage workflows and packaging files are removed
 - Updated sentry_flutter to 10, which reports native crashes on Windows and Linux with Breakpad inside the app process instead of a separate Crashpad handler, and no longer needs a JDK to build on Linux
 - Updated Flutter to 3.47.9 and the Dart, Rust and GitHub Actions dependencies
+- CI: builds on main fill the Rust and Flutter caches that pull requests reuse, caches of closed pull requests are cleaned up daily, and cargo-binstall uses the GitHub token so it is no longer rate limited
+- CI: the macOS pull request workflow is enabled again and can be run manually; it notarizes only in manual runs, releases always notarize
+- CI: Windows builds work with Rust 1.100, which passes long rustc command lines through a response file that cargo-expand and sccache 0.17+ do not handle (`RUSTC_BOOTSTRAP` for the bridge codegen, sccache pinned to 0.16.0)
+- CI: the Flatpak installation of the Linux CI container is on a volume, so updating the GNOME runtimes no longer fails with "Invalid cross-device link"
+- Add a catalog of the reusable widgets to the documentation (`widget_overview.md`)
 
 ## 0.16.1
 
