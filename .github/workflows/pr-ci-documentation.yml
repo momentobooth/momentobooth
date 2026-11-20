@@ -24,7 +24,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install mdbook
         run: |
@@ -39,7 +39,7 @@ jobs:
           toolchain: stable
 
       - name: Setup sccache-cache
-        uses: mozilla-actions/sccache-action@v0.0.10
+        uses: mozilla-actions/sccache-action@v0.0.11
 
       - name: Install mermaid preprocessor for mdBook
         uses: baptiste0928/cargo-install@v3

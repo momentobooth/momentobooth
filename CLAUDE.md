@@ -103,12 +103,12 @@ rust/src/
 
 Requires:
 
-- Flutter 3.47.4 via FVM (`just install-flutter`)
+- Flutter 3.47.9 via FVM (`just install-flutter`)
 - Rust via rustup
 - `flutter_rust_bridge_codegen` 2.13.0 (`just install-bridge-codegen`)
 - `cargo-bundle-licenses` 4.2.0 (`just install-cargo-bundle-licenses`)
 - **Windows:** LLVM (libclang for bindgen); libgphoto2 and its dependencies are downloaded prebuilt by `just get-native-deps`
-- **Linux:** `llvm`, `libssl-dev`, `libcurl4-openssl-dev`, `libasound2-dev`, `libgphoto2-dev`, `libsecret-1-dev`, `libusb-1.0-0-dev`, and a JDK (`JAVA_HOME`) for the `jni` plugin of `sentry_flutter`. Releases are Flatpaks built from `linux/packaging/flatpak/` (see "Linux Flatpak" in `dev_setup.md`)
+- **Linux:** `llvm`, `libssl-dev`, `libcurl4-openssl-dev`, `libasound2-dev`, `libgphoto2-dev`, `libsecret-1-dev`, and `libusb-1.0-0-dev`. Releases are Flatpaks built from `linux/packaging/flatpak/` (see "Linux Flatpak" in `dev_setup.md`)
 - **macOS:** Apple Silicon only; Homebrew `pkgconf`; libgphoto2 and its dependencies are downloaded prebuilt by `just get-native-deps`
 
 Full setup guide: `documentation/src/dev_setup.md`
