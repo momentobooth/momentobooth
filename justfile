@@ -85,6 +85,15 @@ build-release: gen-licenses
 test:
   fvm flutter test
 
+# Runs the Rust unit tests. The CUPS integration tests skip themselves unless CUPS_TEST_URI is set (see test-cups).
+[windows]
+test-rust:
+  $env:PATH = "{{justfile_directory()}}/.native_deps/windows-x64/bin;$env:PATH"; cargo test --manifest-path rust/Cargo.toml --lib
+
+[unix]
+test-rust:
+  cargo test --manifest-path rust/Cargo.toml --lib
+
 cups_test_container := "momentobooth-cups-test"
 
 # Starts a CUPS server in Docker with the queue for the CUPS integration tests, on port 6310. Replaces a running one.
@@ -119,6 +128,12 @@ build-docs:
 
 lint:
   fvm flutter analyze
+
+# Runs the checks of the pull request CI: regenerates the bridge, Dart code and localizations, then runs the analyzer, the Flutter tests and the Rust unit tests. Run it before opening a pull request.
+check: gen-bridge gen-code gen-l10n lint test test-rust
+
+# Runs the analyzer and the Flutter tests without regenerating code first, for quick feedback while working.
+check-quick: lint test
 
 show-outdated:
   fvm flutter pub outdated
