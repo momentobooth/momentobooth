@@ -18,7 +18,10 @@ All build tasks use `just` (see `justfile`). Flutter commands use `fvm flutter` 
 |------|---------|
 | Install dependencies | `just` (default recipe) |
 | Get Flutter deps | `just get-deps` |
+| All PR checks (regenerate code, analyze, Flutter and Rust tests) | `just check` |
+| Quick check (analyze and Flutter tests, no codegen) | `just check-quick` |
 | Run tests | `just test` |
+| Run Rust unit tests | `just test-rust` |
 | Lint (Dart analysis) | `just lint` |
 | Build release | `just build-release` |
 | Single test file | `fvm flutter test test/path/to/file_test.dart` |
@@ -114,6 +117,7 @@ Skills follow the [Agent Skills](https://agentskills.io) standard and live in `.
 - The PR description states what was tested and what was not, including platforms and hardware.
 - Unrelated reformatting stays out of the diff.
 - Log through the logger, never with `print()`.
+- Run `just check` before opening the PR.
 
 ## Development Setup
 
