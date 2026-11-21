@@ -35,10 +35,14 @@ class PrintRoute {
 
 }
 
+/// Sends one sheet of a print to a printer. Returns whether the printer took it.
+typedef PrintSheet = Future<bool> Function(PrintRoute route);
+
 /// Picks the printers for the copies of a print by following the routable edges of a [PrintRoutingGraph].
 ///
 /// Round-robin nodes keep their position for as long as the router lives. Branches that do not lead to a usable printer
-/// for the print size are skipped, so a job never ends up nowhere.
+/// for the print size are skipped, so a job never ends up nowhere. When a printer fails, a round-robin node tries its
+/// next output, and a duplicate node still prints on its other outputs.
 class PrintRouter {
 
   final PrintRoutingGraph graph;
@@ -74,38 +78,58 @@ class PrintRouter {
     for (final printerIds in analysis.reachablePrinterIds.values) ...printerIds,
   }.map((id) => _nodes[id]!.data as PrinterNodeData);
 
-  /// The sheets to print for the next copy of a print of [size]: one per printer the copy reaches, so several when its
-  /// route passes a duplicate node. Empty when [size] is not routed to a printer.
-  List<PrintRoute> nextCopy(PrintSize size) {
+  /// Prints the next copy of a print of [size] with [printSheet]: one sheet per printer the copy reaches, so several
+  /// when its route passes a duplicate node. Returns whether at least one printer took a sheet; false as well when
+  /// [size] is not routed to a printer.
+  Future<bool> printCopy(PrintSize size, PrintSheet printSheet) async {
     final sourceId = analysis.sourceId;
-    if (sourceId == null) return const [];
-    return [
+    if (sourceId == null) return false;
+    final starts = [
       for (final edge in _jobEdgesFrom[sourceId] ?? const <RoutingEdge>[])
-        if (edge.fromPort == RoutingPorts.source(size)) ..._follow(size, edge.toNode, null),
+        if (edge.fromPort == RoutingPorts.source(size)) edge,
     ];
+    return _printOnAll(size, starts, null, printSheet);
   }
 
-  List<PrintRoute> _follow(PrintSize size, String nodeId, TileLayoutNodeData? layout) {
-    if (!_reaches(size, nodeId)) return const [];
+  Future<bool> _print(PrintSize size, String nodeId, TileLayoutNodeData? layout, PrintSheet printSheet) async {
+    if (!_reaches(size, nodeId)) return false;
     final candidates = [
       for (final edge in _jobEdgesFrom[nodeId] ?? const <RoutingEdge>[])
         if (_reaches(size, edge.toNode)) edge,
     ];
 
-    return switch (_nodes[nodeId]!.data) {
-      final PrinterNodeData printer => [
-        PrintRoute(printerNodeId: nodeId, printer: printer, margins: _marginsOf(nodeId, printer), layout: layout),
-      ],
-      // Split prints are always printed in halves.
-      final TileLayoutNodeData tile => [
-        for (final edge in candidates) ..._follow(size, edge.toNode, size == PrintSize.split ? layout : tile),
-      ],
-      RoundRobinNodeData() => _follow(size, candidates[_nextPosition(nodeId, candidates.length)].toNode, layout),
-      DuplicateNodeData() => [
-        for (final edge in candidates) ..._follow(size, edge.toNode, layout),
-      ],
-      SourceNodeData() || MarginsNodeData() => const [],
-    };
+    switch (_nodes[nodeId]!.data) {
+      case final PrinterNodeData printer:
+        return printSheet(PrintRoute(printerNodeId: nodeId, printer: printer, margins: _marginsOf(nodeId, printer), layout: layout));
+      case final TileLayoutNodeData tile:
+        // Split prints are always printed in halves.
+        return _printOnAll(size, candidates, size == PrintSize.split ? layout : tile, printSheet);
+      case DuplicateNodeData():
+        return _printOnAll(size, candidates, layout, printSheet);
+      case RoundRobinNodeData():
+        // Starting at its turn, the first output whose printers take the copy prints it. The next copy starts after it.
+        final start = _roundRobinPositions[nodeId] ?? 0;
+        for (int i = 0; i < candidates.length; i++) {
+          final position = (start + i) % candidates.length;
+          if (await _print(size, candidates[position].toNode, layout, printSheet)) {
+            _roundRobinPositions[nodeId] = position + 1;
+            return true;
+          }
+        }
+        _roundRobinPositions[nodeId] = start + 1;
+        return false;
+      case SourceNodeData() || MarginsNodeData():
+        return false;
+    }
+  }
+
+  /// Prints on every one of [edges], also when an earlier one fails. Returns whether any printer took a sheet.
+  Future<bool> _printOnAll(PrintSize size, List<RoutingEdge> edges, TileLayoutNodeData? layout, PrintSheet printSheet) async {
+    bool printed = false;
+    for (final edge in edges) {
+      if (await _print(size, edge.toNode, layout, printSheet)) printed = true;
+    }
+    return printed;
   }
 
   /// How many times one copy of [size] puts the photo on paper: once per tile, and once for a split print, in two
@@ -140,12 +164,6 @@ class PrintRouter {
     null => false,
     _ => (_jobEdgesFrom[nodeId] ?? const <RoutingEdge>[]).any((edge) => _reaches(size, edge.toNode)),
   };
-
-  int _nextPosition(String nodeId, int count) {
-    final position = _roundRobinPositions[nodeId] ?? 0;
-    _roundRobinPositions[nodeId] = position + 1;
-    return position % count;
-  }
 
   PrintMargins _marginsOf(String printerNodeId, PrinterNodeData printer) => switch (_nodes[_marginsNodeOf[printerNodeId]]?.data) {
     MarginsNodeData(:final margins) => margins,

@@ -23,7 +23,7 @@ A few rules follow from this:
 - The print button is only shown when the project setting [Enable printing](settings_project.md#enable-printing) is on and the photo can be printed at one of the routed print sizes.
 - The _Split_ print size is not a choice in the print dialog. When a user prints a collage of three photos at _Normal_ size and _Split_ is routed, the print follows the _Split_ route instead. When _Split_ is not routed, the _Normal_ route is used. A booth that only offers split prints can route _Split_ alone: collages of three photos then offer _Normal_, which prints split, and other photos cannot be printed.
 - Every copy is routed separately. When a user prints three copies, each copy follows its own route, so a round-robin node can send them to different printers.
-- Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works.
+- Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works. When a printer fails while printing, a round-robin node lets its next output print the copy, and a duplicate node still prints on its other outputs. The print only fails when no printer takes a copy.
 
 A new installation starts with a source whose _Normal_ output is connected to a single printer node. That printer still has to be configured before anything can be printed.
 
@@ -50,11 +50,11 @@ Each output takes a single connection. To send a print size to more than one pla
 
 A round-robin node distributes copies over all its connected outputs in turn: the first copy goes to the first output, the next copy to the second output, and so on. Use it to spread the load over several printers, for example two printers that each print half of the copies.
 
-The node remembers whose turn it is until the print routing is changed or the app is restarted. Outputs that do not lead to a usable printer for the print size at hand are skipped.
+The node remembers whose turn it is until the print routing is changed or the app is restarted. Outputs that do not lead to a usable printer for the print size at hand are skipped. When the printer whose turn it is fails, the next output prints the copy, and the next copy starts after that output.
 
 ### Duplicate
 
-A duplicate node sends every copy to all its connected outputs. Use it to print one photo in several ways at once, for example as a normal print on one printer and as a tiled sheet of small photos on another. The number of copies shown in the print dialog takes this into account.
+A duplicate node sends every copy to all its connected outputs, also when one of their printers fails. Use it to print one photo in several ways at once, for example as a normal print on one printer and as a tiled sheet of small photos on another. The number of copies shown in the print dialog takes this into account.
 
 Round-robin and duplicate nodes have an **In** port, which takes a single connection, and an **Out** port, which accepts any number of connections. So such a node handles a single print size; print sizes only come together at a printer. To let two print sizes share the same printers, use a round-robin node for each print size and connect both to the printers. They carry either photos or sheets (see [ports and connections](#ports-and-connections)), whichever is connected to them. A caption on the node shows what it carries: _Carries photos_, _Carries sheets_ or _Carries nothing yet_.
 
@@ -117,7 +117,7 @@ The side panel to the right of the canvas has three sections:
 - **Problems** lists the errors and warnings of all nodes. Click a problem to select and centre its node on the canvas. The same problems are shown as notes on the nodes themselves: red for errors, yellow for warnings.
 - **Printers** has the **Refresh printers** button. The printers, CUPS queues, media and papers to choose from are listed when the page opens. Refresh them after connecting a printer, starting the CUPS server or changing the CUPS server settings.
 
-Connections with errors are ignored, while the rest of the routing keeps working. When the routing has problems, the printing subsystem shows a warning on the [subsystem status](settings_subsystem.md) page; when no print size is routed at all, the subsystem is disabled.
+Connections with errors are ignored, while the rest of the routing keeps working. When the routing has problems, when no print size reaches a configured printer, or when a printer failed during the last print, the printing subsystem shows a warning on the [subsystem status](settings_subsystem.md) page. The subsystem is only disabled when the project setting [Enable printing](settings_project.md#enable-printing) is off.
 
 | Message | Meaning |
 |---|---|

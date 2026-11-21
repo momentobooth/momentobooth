@@ -42,6 +42,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   @override
   Null initialize() {
     reaction((_) => getIt<SettingsManager>().settings.hardware.printRoutingGraph, _updateRouter, fireImmediately: true);
+    reaction((_) => getIt<ProjectManager>().settings.enablePrinting, (_) => _reportStatus());
   }
 
   // /////// //
@@ -55,8 +56,20 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   void _updateRouter(PrintRoutingGraph graph) {
     // The round-robin nodes start over with a new graph, which is fine after editing it.
     _router = PrintRouter(graph);
-    if (_router.printableSizes.isEmpty) {
+    _reportStatus();
+  }
+
+  /// The labels of the printers that failed during the last print.
+  Set<String> _failedPrinters = const {};
+
+  @action
+  void _reportStatus() {
+    if (!getIt<ProjectManager>().settings.enablePrinting) {
       reportSubsystemDisabled();
+    } else if (_router.printableSizes.isEmpty) {
+      reportSubsystemWarning(message: "Printing is enabled, but no print size reaches a configured printer. Set up a printer on the Print routing settings page.");
+    } else if (_failedPrinters.isNotEmpty) {
+      reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it.");
     } else if (_router.analysis.hasErrors) {
       reportSubsystemWarning(message: "The print routing graph has problems, which are listed on the Print routing settings page. Connections with problems are ignored.");
     } else {
@@ -103,64 +116,66 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
 
   /// Prints [copies] copies of [image] at [size]. Every copy follows its own route through the print routing graph.
   ///
-  /// Stops at the first sheet that cannot be rendered or sent. The [PrintingException] then tells how many sheets were
-  /// sent before. The rendered sheets are kept in any case.
+  /// A printer that fails is skipped where the routing offers another one: a round-robin node tries its next output, a
+  /// duplicate node still prints on its other outputs. Printing stops when no printer takes a copy; the
+  /// [PrintingException] then tells how many sheets were sent before. The rendered sheets are kept in any case.
   Future<void> printPhoto({required String jobName, required Uint8List image, required PrintSize size, int copies = 1}) async {
     // Within one print, every distinct sheet is rendered once.
     final Map<Object, Future<Uint8List>> renderings = {};
     final List<Map<String, Object?>> printedSheets = [];
+    final Set<String> failedPrinters = {};
     int sentSheets = 0;
 
     try {
-      await _printCopies(jobName, image, size, copies, renderings, printedSheets, onSent: () => sentSheets++);
-    } catch (error, stackTrace) {
-      if (sentSheets == 0) rethrow;
-      logError("Printing $jobName stopped after $sentSheets sheet(s) were sent", error, stackTrace);
-      Error.throwWithStackTrace(PrintingException('$error', sentSheets: sentSheets), stackTrace);
+      for (int copy = 1; copy <= copies; copy++) {
+        final sheetName = "$jobName | ${size.label} | copy $copy / $copies";
+        final printed = await _router.printCopy(size, (route) async {
+          final sheet = <String, Object?>{
+            'copy': copy,
+            'printer': route.printer.label,
+            'backend': route.printer.backend.name,
+            'queue': route.printer.queueId,
+            'media': route.printer.media.toJson(),
+            'margins': route.margins.toJson(),
+            'layout': route.layout?.toJson(),
+          };
+          printedSheets.add(sheet);
+          try {
+            final pdfData = await (renderings[route.renderKey] ??= renderPrintPdf(image, route, split: size == PrintSize.split));
+            if (await _sendSheet(sheetName, route, pdfData)) {
+              sentSheets++;
+              getIt<StatsManager>().addPrintedPhoto(size: size);
+            }
+            return true;
+          } catch (error, stackTrace) {
+            logError("Failed to print $sheetName with [${route.printer.label}]", error, stackTrace);
+            sheet['error'] = '$error';
+            failedPrinters.add(route.printer.label.isEmpty ? route.printerNodeId : route.printer.label);
+            return false;
+          }
+        });
+        if (!printed) {
+          throw PrintingException('No printer took copy $copy / $copies at ${size.label}', sentSheets: sentSheets);
+        }
+      }
     } finally {
+      _failedPrinters = failedPrinters;
+      _reportStatus();
       await _keepPrintedPdfs(jobName, size, renderings.values, printedSheets);
     }
   }
 
-  Future<void> _printCopies(
-    String jobName,
-    Uint8List image,
-    PrintSize size,
-    int copies,
-    Map<Object, Future<Uint8List>> renderings,
-    List<Map<String, Object?>> printedSheets, {
-    required void Function() onSent,
-  }) async {
-    for (int copy = 1; copy <= copies; copy++) {
-      final routes = _router.nextCopy(size);
-      if (routes.isEmpty) throw PrintingException('No printer is routed for ${size.label}');
-
-      for (final route in routes) {
-        final pdfData = await (renderings[route.renderKey] ??= renderPrintPdf(image, route, split: size == PrintSize.split));
-        final printer = route.printer;
-        final sheetName = "$jobName | ${size.label} | copy $copy / $copies";
-
-        final target = "[${printer.label}] (${printer.backend.name} queue [${printer.queueId}])";
-        if (getIt<SettingsManager>().settings.debug.skipSendingPrintJobs) {
-          logWarning("Skipped sending $sheetName to $target, as sending print jobs is disabled in the debug settings");
-        } else {
-          logDebug("Printing $sheetName with $target");
-          await _clients[printer.backend]!.printPdfToQueue(printer.queueId, sheetName, pdfData, media: printer.media);
-          onSent();
-          getIt<StatsManager>().addPrintedPhoto(size: size);
-        }
-
-        printedSheets.add({
-          'copy': copy,
-          'printer': printer.label,
-          'backend': printer.backend.name,
-          'queue': printer.queueId,
-          'media': printer.media.toJson(),
-          'margins': route.margins.toJson(),
-          'layout': route.layout?.toJson(),
-        });
-      }
+  /// Sends [pdfData] to the printer of [route]. Returns false when sending is skipped in the debug settings.
+  Future<bool> _sendSheet(String sheetName, PrintRoute route, Uint8List pdfData) async {
+    final printer = route.printer;
+    final target = "[${printer.label}] (${printer.backend.name} queue [${printer.queueId}])";
+    if (getIt<SettingsManager>().settings.debug.skipSendingPrintJobs) {
+      logWarning("Skipped sending $sheetName to $target, as sending print jobs is disabled in the debug settings");
+      return false;
     }
+    logDebug("Printing $sheetName with $target");
+    await _clients[printer.backend]!.printPdfToQueue(printer.queueId, sheetName, pdfData, media: printer.media);
+    return true;
   }
 
   /// Keeps the sheets that could be rendered. Never throws, so it does not hide why a print failed.

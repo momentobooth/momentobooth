@@ -17,9 +17,20 @@ RoutingEdge _edge(String fromNode, String fromPort, String toNode, [String toPor
 
 List<String> _printers(List<PrintRoute> routes) => [for (final route in routes) route.printerNodeId];
 
+/// Prints the next copy of [size] and returns the routes that took a sheet. The printers in [failing] refuse theirs.
+Future<List<PrintRoute>> _copy(PrintRouter router, PrintSize size, {Set<String> failing = const {}}) async {
+  final List<PrintRoute> printed = [];
+  await router.printCopy(size, (route) async {
+    if (failing.contains(route.printerNodeId)) return false;
+    printed.add(route);
+    return true;
+  });
+  return printed;
+}
+
 void main() {
   group('PrintRouter', () {
-    test('alternates between the outputs of a round-robin, per copy', () {
+    test('alternates between the outputs of a round-robin, per copy', () async {
       final router = PrintRouter(PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
@@ -30,12 +41,12 @@ void main() {
         edges: [_edge('source', 'normal', 'robin'), _edge('robin', 'out', 'a'), _edge('robin', 'out', 'b')],
       ));
 
-      expect([for (int i = 0; i < 3; i++) ..._printers(router.nextCopy(PrintSize.normal))], ['a', 'b', 'a']);
-      expect(router.nextCopy(PrintSize.small), isEmpty);
+      expect([for (int i = 0; i < 3; i++) ..._printers(await _copy(router, PrintSize.normal))], ['a', 'b', 'a']);
+      expect(await _copy(router, PrintSize.small), isEmpty);
       expect(router.printableSizes, {PrintSize.normal});
     });
 
-    test('prints a copy on every output of a duplicate, each with its own layout and margins', () {
+    test('prints a copy on every output of a duplicate, each with its own layout and margins', () async {
       final router = PrintRouter(PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
@@ -54,7 +65,7 @@ void main() {
         ],
       ));
 
-      expect(router.nextCopy(PrintSize.normal), [
+      expect(await _copy(router, PrintSize.normal), [
         PrintRoute(printerNodeId: 'a', printer: _printer('a', margins: const PrintMargins(left: 1)) as PrinterNodeData, margins: const PrintMargins(left: 1)),
         PrintRoute(
           printerNodeId: 'b',
@@ -66,7 +77,7 @@ void main() {
       expect(router.photosPerCopy(PrintSize.normal), 5);
     });
 
-    test('skips outputs that lead to an incomplete printer', () {
+    test('skips outputs that lead to an incomplete printer', () async {
       final router = PrintRouter(PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
@@ -77,10 +88,50 @@ void main() {
         edges: [_edge('source', 'normal', 'robin'), _edge('robin', 'out', 'incomplete'), _edge('robin', 'out', 'a')],
       ));
 
-      expect([for (int i = 0; i < 2; i++) ..._printers(router.nextCopy(PrintSize.normal))], ['a', 'a']);
+      expect([for (int i = 0; i < 2; i++) ..._printers(await _copy(router, PrintSize.normal))], ['a', 'a']);
     });
 
-    test('ignores connections with problems', () {
+    test('lets the next output of a round-robin print when a printer fails', () async {
+      final router = PrintRouter(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('robin', const RoutingNodeData.roundRobin()),
+          _node('a', _printer('a')),
+          _node('b', _printer('b')),
+          _node('c', _printer('c')),
+        ],
+        edges: [
+          _edge('source', 'normal', 'robin'),
+          _edge('robin', 'out', 'a'),
+          _edge('robin', 'out', 'b'),
+          _edge('robin', 'out', 'c'),
+        ],
+      ));
+
+      // b fails on its turn, so c prints that copy and the next copy starts after c.
+      expect(_printers(await _copy(router, PrintSize.normal, failing: {'b'})), ['a']);
+      expect(_printers(await _copy(router, PrintSize.normal, failing: {'b'})), ['c']);
+      expect(_printers(await _copy(router, PrintSize.normal, failing: {'b'})), ['a']);
+      expect(await router.printCopy(PrintSize.normal, (_) async => false), isFalse);
+    });
+
+    test('prints on the other outputs of a duplicate when a printer fails', () async {
+      final router = PrintRouter(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('duplicate', const RoutingNodeData.duplicate()),
+          _node('a', _printer('a')),
+          _node('b', _printer('b')),
+        ],
+        edges: [_edge('source', 'normal', 'duplicate'), _edge('duplicate', 'out', 'a'), _edge('duplicate', 'out', 'b')],
+      ));
+
+      expect(_printers(await _copy(router, PrintSize.normal, failing: {'a'})), ['b']);
+      expect(await router.printCopy(PrintSize.normal, (route) async => route.printerNodeId == 'b'), isTrue);
+      expect(await router.printCopy(PrintSize.normal, (_) async => false), isFalse);
+    });
+
+    test('ignores connections with problems', () async {
       final router = PrintRouter(PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
@@ -92,11 +143,11 @@ void main() {
       ));
 
       expect(router.analysis.hasErrors, isTrue);
-      expect(_printers(router.nextCopy(PrintSize.normal)), ['a']);
-      expect(router.nextCopy(PrintSize.small), isEmpty);
+      expect(_printers(await _copy(router, PrintSize.normal)), ['a']);
+      expect(await _copy(router, PrintSize.small), isEmpty);
     });
 
-    test('prints split photos in halves, without the tile layout on their route', () {
+    test('prints split photos in halves, without the tile layout on their route', () async {
       final router = PrintRouter(PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
@@ -106,7 +157,7 @@ void main() {
         edges: [_edge('source', 'split', 'tile'), _edge('tile', 'out', 'a')],
       ));
 
-      expect(router.nextCopy(PrintSize.split).single.layout, isNull);
+      expect((await _copy(router, PrintSize.split)).single.layout, isNull);
       expect(router.photosPerCopy(PrintSize.split), 1);
     });
 
