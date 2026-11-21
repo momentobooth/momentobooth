@@ -41,10 +41,9 @@ PdfPageFormat _pageFormat(PrintRoute route, {bool leftMargin = true, bool rightM
 
 bool _isLandscape(double width, double height) => width > height;
 
-/// The photo, fitted in a box of [width] by [height] and turned a quarter when that fits its orientation better, or when
-/// [invert] is set.
-pw.Widget _fittedPhoto(pw.MemoryImage photo, double width, double height, {bool invert = false}) {
-  final bool turn = (_isLandscape(photo.width!.toDouble(), photo.height!.toDouble()) != _isLandscape(width, height)) != invert;
+/// The photo, fitted in a box of [width] by [height] and turned a quarter when that fits its orientation better.
+pw.Widget _fittedPhoto(pw.MemoryImage photo, double width, double height) {
+  final bool turn = _isLandscape(photo.width!.toDouble(), photo.height!.toDouble()) != _isLandscape(width, height);
   // When turned, the size must be given in the photo's own orientation, or it ends up too small.
   return turn
       ? pw.Transform.rotateBox(angle: 0.5 * pi, child: pw.Image(photo, fit: pw.BoxFit.contain, width: height, height: width))
@@ -61,7 +60,7 @@ void _addFittedPage(pw.Document doc, pw.MemoryImage photo, PdfPageFormat format)
 void _addTiledPage(pw.Document doc, pw.MemoryImage photo, PdfPageFormat format, TileLayoutNodeData layout) {
   final cellWidth = format.availableWidth / layout.columns;
   final cellHeight = format.availableHeight / layout.rows;
-  final cell = pw.Center(child: _fittedPhoto(photo, cellWidth, cellHeight, invert: layout.rotate));
+  final cell = pw.Center(child: _fittedPhoto(photo, cellWidth, cellHeight));
 
   doc.addPage(pw.Page(
     pageFormat: format,

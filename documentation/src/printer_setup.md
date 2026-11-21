@@ -57,7 +57,7 @@ When both printers are of the same type, connect a margins node to the margins i
 
 ### Small prints, tiled 2×2
 
-Small and tiny prints put several copies of a photo on one sheet, e.g. to hand out to a group. Route the _Small_ output through a tile layout node with 2 columns and 2 rows to a printer, and every sheet holds four copies of the photo. The print dialog shows how many copies a sheet contains.
+Small and tiny prints put several copies of a photo on one sheet, e.g. to hand out to a group. Route the _Small_ output through a tile layout node with 2 columns and 2 rows to a printer, and every sheet holds four copies of the photo. The print dialog shows how many copies a user gets at a time.
 
 ```mermaid
 graph LR
@@ -66,7 +66,7 @@ graph LR
     T -- Sheet --> P2["Printer: 4×6 (small)"]
 ```
 
-A printer node accepts photos as well as tiled sheets, so the tile layout could also be connected to the first printer node. A separate printer node, using the same printer or queue, is needed when the tiled prints use different media or margins. The photos are turned to match the orientation of the tiles automatically; switch on _Rotate_ on the tile layout to turn them the other way.
+A printer node accepts photos as well as tiled sheets, so the tile layout could also be connected to the first printer node. A separate printer node, using the same printer or queue, is needed when the tiled prints use different media or margins. The photos are turned to fill the tiles best automatically, so the grid decides how they lie: with 1 column and 2 rows on portrait media, landscape photos lie horizontally, one above the other. See [tile layout](settings_print_routing.md#tile-layout) for more examples.
 
 ### A normal print plus a tiled copy
 

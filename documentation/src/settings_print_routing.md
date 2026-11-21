@@ -66,11 +66,22 @@ A tile layout node places a photo several times on one sheet, in a grid. It take
 |---|---|
 | Columns | The number of columns of the grid, at least 1. |
 | Rows | The number of rows of the grid, at least 1. |
-| Rotate | Turns every photo a quarter turn compared to how it would be placed by default. |
 
-The grid is laid out on the media and within the margins of the printer the sheet ends up at, so the same tile layout can feed printers with different media. Every tile has the same size, and the photo is fitted in each tile. By default the photo is turned to match the orientation of the tile: a landscape photo in a portrait tile is turned a quarter turn. _Rotate_ inverts that choice.
+A tile layout has no size of its own. The grid is laid out on the media of the printer the sheet ends up at, within the margins of that printer: the printable area is divided into _columns_ × _rows_ tiles of equal size. The photo is fitted in each tile as a whole, centred and without cropping, so a tile only shows white space where its shape differs from that of the photo. There is no extra space between the tiles; the [collage padding](settings_templating.md#collage-padding) leaves room to cut them apart.
 
-Split prints are always printed in halves, so a tile layout on the route of the _Split_ print size is not used for them. The editor shows a warning when that happens.
+Each photo is **turned to fill its tile best**: a landscape photo in a portrait tile is turned a quarter turn, a landscape photo in a landscape tile is not. So the grid decides how the photos lie, together with the media. Take, for example, a landscape collage on portrait 4×6" media (about 100 × 148 mm):
+
+| Grid | Tiles | Photos |
+|---|---|---|
+| 1 column, 2 rows | 2 tiles of about 100 × 74 mm (landscape) | Lie horizontally, one above the other |
+| 2 columns, 1 row | 2 tiles of about 50 × 148 mm (portrait) | Turned a quarter turn, side by side |
+| 2 columns, 2 rows | 4 tiles of about 50 × 74 mm (portrait) | Turned a quarter turn |
+
+Because the tiles follow the printer, one tile layout can feed printers with different media. Connected to a round-robin node with a 4×6" and a 2×6" printer behind it, the same 1 by 2 grid gives two landscape tiles on the 4×6" media and two portrait tiles on the 2×6" media, and the photos are turned to match on each.
+
+The print dialog takes the grid into account: with 2 columns and 2 rows, every copy a user orders gives four photos on one sheet, and the dialog shows that it prints 4 copies at a time.
+
+Split prints are always printed in halves, so a tile layout on the route of the _Split_ print size is not used for them. The editor shows a warning when that happens. A tile layout with fewer than 1 column or row is an error; its connections are ignored.
 
 ### Margins
 
@@ -171,7 +182,7 @@ The shortcuts do not apply while you are typing in a field of a node. The source
 The printable area of a sheet is the media size of the printer minus its margins. The margins describe the part of the media that ends up visible on the print: increase a margin when the printer cuts off part of the photo on that side, and decrease it when a white border remains.
 
 - **Without a tile layout**, the photo is fitted in the printable area as a whole, centred and without cropping. It is turned a quarter turn when its orientation does not match that of the area, so a landscape collage on portrait media is printed sideways to use the paper well.
-- **With a tile layout**, the printable area is divided into equal tiles, and the photo is fitted in each tile, turned to match the orientation of the tile (or the other way when _Rotate_ is on).
+- **With a tile layout**, the printable area is divided into equal tiles, and the photo is fitted in each tile, turned to fill the tile best, see [tile layout](#tile-layout).
 - **Split prints** are printed as two pages: the left half of the collage on the first page and the right half on the second. Each half fills the height of the printable area. The margins between the halves (the right margin of the first page and the left margin of the second) are left out, so the halves line up when put together. Tile layouts are not used for split prints.
 
 The last printed sheet is saved as `latest-print.pdf` in the output folder of the project, which is handy to check the layout without wasting paper. For more detail, turn on _Enable extensive print job logging_ in the [debug settings](settings_debug.md), which keeps the PDFs and details of every print job in a `PrintJobs` folder inside the output folder. To test the routing without printing at all, turn on _Skip sending print jobs to printers_ in the same settings: prints are routed and rendered as usual, but not sent to a printer, and not counted in the statistics.

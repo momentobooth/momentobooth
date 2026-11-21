@@ -119,14 +119,6 @@ class RoutingNodeCard extends StatelessWidget {
         onChanged: (value) => update(data.copyWith(rows: value ?? data.rows)),
       ),
     ),
-    _FieldRow(
-      key: const ValueKey('rotate'),
-      label: 'Rotate',
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: ToggleSwitch(checked: data.rotate, onChanged: (value) => update(data.copyWith(rotate: value))),
-      ),
-    ),
   ];
 
   List<Widget> _printerFields(PrinterNodeData data, ValueChanged<RoutingNodeData> update, {required bool marginsWired}) {

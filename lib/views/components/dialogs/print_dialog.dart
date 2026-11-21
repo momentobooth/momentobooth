@@ -79,9 +79,9 @@ class _PrintDialogState extends State<PrintDialog> {
             textAlign: TextAlign.left,
             style: textStyle,
           ),
-          if (copiesPerPrint != null)
+          if (copiesPerPrint != null && copiesPerPrint > 1)
             Text(
-              localizations.printDialogCopiesPerSheet(copiesPerPrint),
+              localizations.printDialogCopiesAtATime(copiesPerPrint),
               textAlign: TextAlign.left,
             ),
           const SizedBox(height: 16.0),

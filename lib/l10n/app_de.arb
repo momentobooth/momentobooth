@@ -232,7 +232,7 @@
     "@printDialogTitle": {},
     "printDialogSizeSetting": "Größe:",
     "@printDialogSizeSetting": {},
-    "printDialogNumberOfPrints": "Anzahl der Ausdrucke: {numPrints}",
+    "printDialogNumberOfPrints": "Anzahl der Kopien: {numPrints}",
     "@printDialogNumberOfPrints": {
         "placeholders": {
             "numPrints": {
@@ -240,8 +240,8 @@
             }
         }
     },
-    "printDialogCopiesPerSheet": "{numCopies, plural, =1{1 Blatt enthält 1 Kopie} other{1 Blatt enthält {numCopies} Kopien}}",
-    "@printDialogCopiesPerSheet": {
+    "printDialogCopiesAtATime": "{numCopies, plural, =1{1 Kopie wird auf einmal gedruckt} other{{numCopies} Kopien werden auf einmal gedruckt}}",
+    "@printDialogCopiesAtATime": {
         "placeholders": {
             "numCopies": {
                 "type": "int"

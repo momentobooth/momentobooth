@@ -26,7 +26,7 @@ void main() {
         printerNodeId: 'printer',
         printer: _printer,
         margins: PrintMargins(),
-        layout: TileLayoutNodeData(columns: 2, rows: 2, rotate: true),
+        layout: TileLayoutNodeData(columns: 2, rows: 2),
       );
 
       expect(_pageCount(await renderPrintPdf(_photo, route, split: false)), 1);

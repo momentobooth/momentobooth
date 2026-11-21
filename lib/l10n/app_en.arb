@@ -106,8 +106,8 @@
 
     "printDialogTitle": "Print",
     "printDialogSizeSetting": "Size:",
-    "printDialogNumberOfPrints": "Number of prints: {numPrints}",
-    "printDialogCopiesPerSheet": "{numCopies, plural, =1{1 sheet contains 1 copy} other{1 sheet contains {numCopies} copies}}",
+    "printDialogNumberOfPrints": "Number of copies: {numPrints}",
+    "printDialogCopiesAtATime": "{numCopies, plural, =1{1 copy is printed at a time} other{{numCopies} copies are printed at a time}}",
 
     "printingErrorDialogTitle": "Print error",
     "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
@@ -202,7 +202,7 @@
             }
         }
     },
-    "@printDialogCopiesPerSheet": {
+    "@printDialogCopiesAtATime": {
         "placeholders": {
             "numCopies": {
                 "type": "int"

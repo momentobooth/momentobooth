@@ -125,11 +125,11 @@ sealed class RoutingNodeData with _$RoutingNodeData {
   /// Sends every job to all connected outputs, e.g. to print a photo both as a normal and as a tiled print.
   const factory RoutingNodeData.duplicate() = DuplicateNodeData;
 
-  /// Tiles a photo in a grid on the sheet of the printer it ends up at.
+  /// Tiles a photo in a grid on the sheet of the printer it ends up at. Each photo is turned to fill its tile best, so
+  /// the shape of the tiles, which follows from the grid and the media, decides how the photos lie.
   const factory RoutingNodeData.tileLayout({
     @Default(1) int columns,
     @Default(1) int rows,
-    @Default(false) bool rotate,
   }) = TileLayoutNodeData;
 
   /// Margins that can be shared between printer configurations.
