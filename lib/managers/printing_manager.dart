@@ -64,10 +64,11 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
 
   @action
   void _reportStatus() {
-    if (!getIt<ProjectManager>().settings.enablePrinting) {
+    // Disabled until a printer is set up on this computer, or when the project does not print.
+    if (!getIt<ProjectManager>().settings.enablePrinting || !_router.analysis.hasConfiguredPrinter) {
       reportSubsystemDisabled();
     } else if (_router.printableSizes.isEmpty) {
-      reportSubsystemWarning(message: "Printing is enabled, but no print size reaches a configured printer. Set up a printer on the Print routing settings page.");
+      reportSubsystemWarning(message: "Printing is enabled, but no print size reaches a configured printer. Connect a printer on the Print routing settings page.");
     } else if (_failedPrinters.isNotEmpty) {
       reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it.");
     } else if (_router.analysis.hasErrors) {

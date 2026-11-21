@@ -331,6 +331,14 @@ class _SidePanel extends StatelessWidget {
                 ],
               ),
             ),
+          if (!analysis.hasConfiguredPrinter)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                'Printing stays disabled until a printer is set up: select a printer and its media in a printer node.',
+                style: theme.typography.caption?.copyWith(color: theme.resources.textFillColorSecondary),
+              ),
+            ),
           const SizedBox(height: 16),
           Text('Problems', style: theme.typography.bodyStrong),
           const SizedBox(height: 4),

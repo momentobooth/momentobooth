@@ -122,6 +122,17 @@ void main() {
       expect(analysis.issues, isEmpty);
     });
 
+    test('knows whether any printer is set up, connected or not', () {
+      PrintRoutingAnalysis analyze(List<RoutingNode> printers) => PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [_node('source', const RoutingNodeData.source()), ...printers],
+        edges: const [],
+      ));
+
+      expect(PrintRoutingAnalysis.of(PrintRoutingGraph.withDefaults()).hasConfiguredPrinter, isFalse);
+      expect(analyze([_node('empty', const RoutingNodeData.printer())]).hasConfiguredPrinter, isFalse);
+      expect(analyze([_node('unconnected', _printer)]).hasConfiguredPrinter, isTrue);
+    });
+
     test('reports edges that close a cycle', () {
       final graph = PrintRoutingGraph(
         nodes: [

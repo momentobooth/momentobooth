@@ -86,7 +86,18 @@ class PrintRoutingAnalysis {
   /// rest of the graph.
   final List<RoutingEdge> routableEdges;
 
-  const PrintRoutingAnalysis._(this.issues, this.reachablePrinterIds, this.arbiterTypes, this.sourceId, this.routableEdges);
+  /// Whether any printer node has a printer or queue and media set, connected or not. Until then, printing is not set
+  /// up on this computer.
+  final bool hasConfiguredPrinter;
+
+  const PrintRoutingAnalysis._(
+    this.issues,
+    this.reachablePrinterIds,
+    this.arbiterTypes,
+    this.sourceId,
+    this.routableEdges,
+    this.hasConfiguredPrinter,
+  );
 
   bool get hasErrors => issues.any((issue) => issue.severity == RoutingIssueSeverity.error);
 
@@ -125,7 +136,11 @@ class _Analyzer {
         .whereNot((edge) => invalidNodeIds.contains(edge.fromNode) || invalidNodeIds.contains(edge.toNode))
         .toList();
     final reachable = _reachablePrinters(routableEdges);
-    return PrintRoutingAnalysis._(issues, reachable, arbiterTypes, sourceId, routableEdges);
+    final hasConfiguredPrinter = nodes.values.any((node) => switch (node.data) {
+      final PrinterNodeData printer => _isComplete(printer),
+      _ => false,
+    });
+    return PrintRoutingAnalysis._(issues, reachable, arbiterTypes, sourceId, routableEdges, hasConfiguredPrinter);
   }
 
   void _collectNodes() {

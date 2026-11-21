@@ -117,7 +117,7 @@ The side panel to the right of the canvas has three sections:
 - **Problems** lists the errors and warnings of all nodes. Click a problem to select and centre its node on the canvas. The same problems are shown as notes on the nodes themselves: red for errors, yellow for warnings.
 - **Printers** has the **Refresh printers** button. The printers, CUPS queues, media and papers to choose from are listed when the page opens. Refresh them after connecting a printer, starting the CUPS server or changing the CUPS server settings.
 
-Connections with errors are ignored, while the rest of the routing keeps working. When the routing has problems, when no print size reaches a configured printer, or when a printer failed during the last print, the printing subsystem shows a warning on the [subsystem status](settings_subsystem.md) page. The subsystem is only disabled when the project setting [Enable printing](settings_project.md#enable-printing) is off.
+Connections with errors are ignored, while the rest of the routing keeps working. The printing subsystem on the [subsystem status](settings_subsystem.md) page stays disabled until a printer is set up: until a printer node has a printer or queue and media, connected or not. It is also disabled when the project setting [Enable printing](settings_project.md#enable-printing) is off. Once a printer is set up, the subsystem shows a warning when the routing has problems, when no print size reaches a configured printer, or when a printer failed during the last print.
 
 | Message | Meaning |
 |---|---|
