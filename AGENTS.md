@@ -1,0 +1,134 @@
+# AGENTS.md
+
+This file provides guidance to AI coding agents (such as Claude Code) when working with code in this repository.
+
+## Markdown Style
+
+Do not hard-wrap prose lines in Markdown files (e.g. at 80/100 characters). Write each paragraph as a single line and let the editor's word-wrap handle display. Line breaks should only occur between actual block elements (paragraphs, list items, headings), not inside a sentence or paragraph.
+
+## Project Overview
+
+MomentoBooth is a cross-platform photo booth application (Windows, Linux, macOS) built with **Flutter (Dart)** for the UI and **Rust** for performance-critical hardware control, image processing, and native integrations. The two layers communicate via **flutter_rust_bridge v2**.
+
+## Commands
+
+All build tasks use `just` (see `justfile`). Flutter commands use `fvm flutter` (Flutter Version Manager).
+
+| Task | Command |
+|------|---------|
+| Install dependencies | `just` (default recipe) |
+| Get Flutter deps | `just get-deps` |
+| All PR checks (regenerate code, analyze, Flutter and Rust tests) | `just check` |
+| Quick check (analyze and Flutter tests, no codegen) | `just check-quick` |
+| Run tests | `just test` |
+| Run Rust unit tests | `just test-rust` |
+| Lint (Dart analysis) | `just lint` |
+| Build release | `just build-release` |
+| Single test file | `fvm flutter test test/path/to/file_test.dart` |
+
+### Code Generation
+
+Generated files (`*.freezed.dart`, `*.g.dart`, `lib/src/rust/`) are not committed and must be regenerated after model or Rust API changes:
+
+| Task | Command |
+|------|---------|
+| Generate Rust↔Dart bridge | `just gen-bridge` |
+| Generate Freezed/MobX/JSON | `just gen-code` |
+| Generate localizations | `just gen-l10n` |
+| Generate license overview | `just gen-licenses` |
+| Watch bridge changes | `just watch-bridge` |
+| Watch Dart gen changes | `just watch-code` |
+
+After pulling changes that modify `rust/src/api/**/*.rs` or any `*.dart` model files, run `just gen-bridge` and/or `just gen-code` before building.
+
+## Architecture
+
+### Flutter Side (`lib/`)
+
+```
+lib/
+├── main.dart                  # Entry point
+├── momento_booth_app.dart     # Root widget + go_router routing
+├── views/                     # UI screens (Fluent UI widgets)
+├── managers/                  # MobX stores — all app state lives here
+├── models/                    # Freezed immutable data classes
+├── repositories/              # Persistence (TOML config, encrypted storage)
+├── hardware_control/          # Camera/printer abstractions (Dart side)
+├── l10n/                      # ARB localization files (en, nl, fr, de)
+└── src/rust/                  # Auto-generated Rust↔Dart FFI bindings
+```
+
+**Before adding a new widget**, check `documentation/src/widget_overview.md` — a grep-friendly catalog of every reusable widget under `lib/views/`, organized by folder, to avoid duplicating an existing one. **After adding, removing, renaming, or moving a widget**, update `documentation/src/widget_overview.md` to match — it must stay in sync with the actual widgets under `lib/views/`.
+
+**UI framework:** `fluent_ui` (Windows design language)
+**Routing:** `go_router`
+**State management:** MobX (`mobx` + `flutter_mobx`) — managers are MobX stores observed by views
+**Models:** `freezed` for immutability and serialization
+
+### Rust Side (`rust/src/`)
+
+```
+rust/src/
+├── api/           # Functions exposed to Dart via flutter_rust_bridge
+│   ├── nokhwa.rs  # Webcam capture
+│   ├── gphoto2.rs # Digital camera (libgphoto2)
+│   ├── cups.rs    # Printing (CUPS / IPP)
+│   ├── ffsend.rs  # Photo sharing (Firefox Send)
+│   ├── images.rs  # Image processing
+│   └── sfx.rs     # Sound effects
+├── hardware_control/
+│   └── live_view/ # Live camera feed streaming
+├── models/        # Shared data structures
+└── utils/         # Image utilities, network clients
+```
+
+### Flutter↔Rust Bridge
+
+- Config: `flutter_rust_bridge.yaml` maps `rust/src/api/**/*.rs` → `lib/src/rust/`
+- To add a new Rust function callable from Dart: add it to a file under `rust/src/api/`, then run `just gen-bridge`
+- Generated Dart bindings land in `lib/src/rust/api/` and `lib/src/rust/frb_generated.dart`
+
+## Key Patterns
+
+**Adding a new Dart model:** Create a Freezed class in `lib/models/`, run `just gen-code` to generate `.freezed.dart` and `.g.dart`.
+
+**Adding a new Rust model:** Create a struct in `rust/src/models/`, run `just gen-bridge` to generate bridging code.
+
+**Adding a new manager:** Create a MobX store in `lib/managers/` with `@observable`/`@action` annotations, run `just gen-code` to generate `.g.dart`.
+
+**Hardware control flow:** Dart `hardware_control/` classes call generated Rust bindings in `lib/src/rust/api/` which dispatch to Rust implementations in `rust/src/api/`.
+
+**Settings persistence:** Managed via `SettingsManager` + repositories using TOML files.
+
+**Home Assistant integration:** `MqttManager` handles MQTT communication for automation (e.g., WLED lighting sync during countdown).
+
+## Engineering Principles
+
+Design decisions follow `documentation/src/engineering_principles.md`. Read it before designing a feature or changing an existing design. Each principle has a weight (rule, strong, default): a rule needs explicit agreement to deviate from, a strong preference needs a reason in the PR, and a default is only a starting point. To review whether a change goes in the right direction (rather than whether the code is correct), use the `review-direction` skill (`.agents/skills/review-direction/SKILL.md`).
+
+## Skills
+
+Skills follow the [Agent Skills](https://agentskills.io) standard and live in `.agents/skills/<name>/SKILL.md`, which most coding agents read. Claude Code only reads `.claude/skills/`, so each skill also gets a stub there: `.claude/skills/<name>/SKILL.md` with the same `name` and `description` frontmatter and a body of only `@.agents/skills/<name>/SKILL.md`. When changing a skill's description, update both.
+
+## Pull Request Checklist
+
+- Every user-visible change gets a line in the `## Unreleased` section of `CHANGELOG.md` in the same PR, under `### Breaking changes`, `### New features`, `### Changes`, `### Bugfixes`, or `### Dev changes`.
+- A change that breaks existing settings, projects, or templates (or removes behaviour users rely on) is listed under `### Breaking changes`, also when no migration is provided.
+- The PR description states what was tested and what was not, including platforms and hardware.
+- Unrelated reformatting stays out of the diff.
+- Log through the logger, never with `print()`.
+- Run `just check` before opening the PR.
+
+## Development Setup
+
+Requires:
+
+- Flutter 3.47.9 via FVM (`just install-flutter`)
+- Rust via rustup
+- `flutter_rust_bridge_codegen` 2.13.0 (`just install-bridge-codegen`)
+- `cargo-bundle-licenses` 4.2.0 (`just install-cargo-bundle-licenses`)
+- **Windows:** LLVM (libclang for bindgen); libgphoto2 and its dependencies are downloaded prebuilt by `just get-native-deps`
+- **Linux:** `llvm`, `libssl-dev`, `libcurl4-openssl-dev`, `libasound2-dev`, `libgphoto2-dev`, `libsecret-1-dev`, and `libusb-1.0-0-dev`. Releases are Flatpaks built from `linux/packaging/flatpak/` (see "Linux Flatpak" in `dev_setup.md`)
+- **macOS:** Apple Silicon only; Homebrew `pkgconf`; libgphoto2 and its dependencies are downloaded prebuilt by `just get-native-deps`
+
+Full setup guide: `documentation/src/dev_setup.md`
