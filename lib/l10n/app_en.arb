@@ -106,11 +106,12 @@
 
     "printDialogTitle": "Print",
     "printDialogSizeSetting": "Size:",
-    "printDialogNoOfPrintsSetting": "Number of prints:",
-    "printDialogSummary": "{numPrints} prints → {numImages} printed images",
+    "printDialogNumberOfPrints": "Number of copies: {numPrints}",
+    "printDialogCopiesAtATime": "{numCopies, plural, =1{1 copy is printed at a time} other{{numCopies} copies are printed at a time}}",
 
     "printingErrorDialogTitle": "Print error",
     "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
+    "printingErrorDialogBodyTopPartial": "Due to an unexpected issue, not all of your prints could be started. Some of them may still come out of the printer.",
     "printingErrorDialogBodyBottom": "Try again later or download your photo using the QR feature.",
 
     "retakeDialogBody": "Do you want to keep the current result?",
@@ -194,12 +195,16 @@
             }
         }
     },
-    "@printDialogSummary": {
+    "@printDialogNumberOfPrints": {
         "placeholders": {
             "numPrints": {
                 "type": "int"
-            },
-            "numImages": {
+            }
+        }
+    },
+    "@printDialogCopiesAtATime": {
+        "placeholders": {
+            "numCopies": {
                 "type": "int"
             }
         }

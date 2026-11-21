@@ -35,6 +35,7 @@ import 'package:momento_booth/views/settings_overlay/components/import_field.dar
 import 'package:momento_booth/views/settings_overlay/components/open_source_licenses_expander.dart';
 import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_edit_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/components/openai_endpoint_tile.dart';
+import 'package:momento_booth/views/settings_overlay/components/print_routing_editor/print_routing_editor.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_action.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/quick_toggle.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_action_tile.dart';
@@ -67,6 +68,7 @@ part 'pages/settings_overlay_view.hardware.dart';
 part 'pages/settings_overlay_view.import.dart';
 part 'pages/settings_overlay_view.mqtt_integration.dart';
 part 'pages/settings_overlay_view.output.dart';
+part 'pages/settings_overlay_view.print_routing.dart';
 part 'pages/settings_overlay_view.project.dart';
 part 'pages/settings_overlay_view.quick_actions.dart';
 part 'pages/settings_overlay_view.stats.dart';
@@ -151,6 +153,12 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                   icon: const Icon(LucideIcons.cable),
                   title: const Text("Hardware"),
                   body: Builder(builder: (_) => _getHardwareSettings(viewModel, controller)),
+                ),
+                PaneItem(
+                  key: ValueKey(SettingsPageKey.printRouting),
+                  icon: const Icon(LucideIcons.route),
+                  title: const Text("Print routing"),
+                  body: Builder(builder: (_) => _getPrintRoutingSettings(viewModel, controller)),
                 ),
                 PaneItem(
                   key: ValueKey(SettingsPageKey.output),
@@ -258,6 +266,7 @@ enum SettingsPageKey {
   import,
   general,
   hardware,
+  printRouting,
   output,
   ui,
   templating,

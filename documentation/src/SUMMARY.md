@@ -24,6 +24,7 @@
   - [Settings import](./settings_import.md)
   - [General settings](./settings_general.md)
   - [Hardware settings](./settings_hardware.md)
+  - [Print routing settings](./settings_print_routing.md)
   - [Output settings](./settings_output.md)
   - [User interface settings](./settings_ui.md)
   - [Templating settings](./settings_templating.md)

@@ -103,11 +103,12 @@
 
     "printDialogTitle": "Imprimer",
     "printDialogSizeSetting": "Taille :",
-    "printDialogNoOfPrintsSetting": "Nombre de copies :",
-    "printDialogSummary": "{numPrints} copies → {numImages} images imprimées",
+    "printDialogNumberOfPrints": "Nombre de copies : {numPrints}",
+    "printDialogCopiesAtATime": "{numCopies, plural, =1{1 copie est imprimée à la fois} other{{numCopies} copies sont imprimées à la fois}}",
 
     "printingErrorDialogTitle": "Erreur d'impression",
     "printingErrorDialogBodyTop": "En raison d'un problème inattendu, vos impression(s) ne peut pas être démarrée.",
+    "printingErrorDialogBodyTopPartial": "En raison d'un problème inattendu, toutes vos impressions n'ont pas pu être démarrées. Certaines peuvent encore sortir de l'imprimante.",
     "printingErrorDialogBodyBottom": "Réessayez plus tard ou téléchargez votre photo à l'aide de la fonction QR.",
 
     "retakeDialogBody": "Voulez-vous conserver le résultat actuel?",
@@ -187,12 +188,16 @@
             }
         }
     },
-    "@printDialogSummary": {
+    "@printDialogNumberOfPrints": {
         "placeholders": {
             "numPrints": {
                 "type": "int"
-            },
-            "numImages": {
+            }
+        }
+    },
+    "@printDialogCopiesAtATime": {
+        "placeholders": {
+            "numCopies": {
                 "type": "int"
             }
         }

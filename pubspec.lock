@@ -474,6 +474,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  fl_nodes_v2:
+    dependency: "direct main"
+    description:
+      name: fl_nodes_v2
+      sha256: "324efb43b618b706afc0e4bf0010f3ebc7b3864c0a3ff6750be4c30e7bf0a062"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.0"
   flow_builder:
     dependency: transitive
     description:
@@ -1153,11 +1161,12 @@ packages:
   printing:
     dependency: "direct main"
     description:
-      name: printing
-      sha256: "0f72f29f2e08b8453b7a45b6c7781eb792b1da3468bf0910be0eb3b1d6781f49"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.15.1"
+      path: printing
+      ref: e93d9bbfd623ada5c5b049cfcd64fdaa0e762aae
+      resolved-ref: e93d9bbfd623ada5c5b049cfcd64fdaa0e762aae
+      url: "https://github.com/momentobooth/dart_pdf"
+    source: git
+    version: "5.16.0"
   provider:
     dependency: "direct main"
     description:

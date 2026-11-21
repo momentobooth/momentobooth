@@ -8,6 +8,7 @@ The settings panel can be opened using the menubar or by pressing `Ctrl+S`. When
  * [Import](settings_import.md)
  * [General](settings_general.md)
  * [Hardware](settings_hardware.md)
+ * [Print routing](settings_print_routing.md)
  * [Output](settings_output.md)
  * [User interface](settings_ui.md)
  * [Templating](settings_templating.md)

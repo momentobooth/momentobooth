@@ -6,5 +6,6 @@ These settings are project-specific. As such, the settings are saved in your pro
 {{#include ./settings/display_confetti.md}}
 {{#include ./settings/colorize_confetti.md}}
 {{#include ./settings/touch_to_start_text.md}}
+{{#include ./settings/enable_printing.md}}
 {{#include ./settings/single_photo_collage.md}}
 

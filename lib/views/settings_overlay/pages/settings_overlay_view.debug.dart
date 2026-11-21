@@ -220,6 +220,18 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
         ],
       ),
       SettingsSection(
+        title: "Printing",
+        settings: [
+          SettingsToggleTile(
+            icon: LucideIcons.printerX,
+            title: "Skip sending print jobs to printers",
+            subtitle: "Print jobs are routed and rendered as usual, but not sent to a printer, e.g. to test the print routing. The last sheet is kept as 'latest-print.pdf' in the output folder; enable extensive print job logging to keep every sheet. Skipped prints are not counted in the statistics.",
+            value: () => viewModel.skipSendingPrintJobs,
+            onChanged: controller.onSkipSendingPrintJobsChanged,
+          ),
+        ],
+      ),
+      SettingsSection(
         title: "Logging",
         settings: [
           SettingsToggleTile(

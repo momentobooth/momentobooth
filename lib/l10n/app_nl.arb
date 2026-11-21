@@ -106,11 +106,12 @@
 
     "printDialogTitle": "Afdrukken",
     "printDialogSizeSetting": "Formaat:",
-    "printDialogNoOfPrintsSetting": "Aantal prints:",
-    "printDialogSummary": "{numPrints} prints → {numImages} geprint foto's",
+    "printDialogNumberOfPrints": "Aantal kopieën: {numPrints}",
+    "printDialogCopiesAtATime": "{numCopies, plural, =1{Er wordt 1 kopie tegelijk geprint} other{Er worden {numCopies} kopieën tegelijk geprint}}",
 
     "printingErrorDialogTitle": "Printprobleem",
     "printingErrorDialogBodyTop": "Door een onverwachts probleem kunnen we de print(s) niet starten.",
+    "printingErrorDialogBodyTopPartial": "Door een onverwachts probleem konden niet al je prints gestart worden. Een deel kan nog uit de printer komen.",
     "printingErrorDialogBodyBottom": "Probeer het later nogmaals of download je foto met de QR-functie.",
 
     "retakeDialogBody": "Wil je het huidige resultaat behouden?",

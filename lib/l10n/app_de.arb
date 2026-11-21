@@ -232,15 +232,18 @@
     "@printDialogTitle": {},
     "printDialogSizeSetting": "Größe:",
     "@printDialogSizeSetting": {},
-    "printDialogNoOfPrintsSetting": "Anzahl der Ausdrucke:",
-    "@printDialogNoOfPrintsSetting": {},
-    "printDialogSummary": "{numPrints} Drucke → {numImages} gedruckte Bilder",
-    "@printDialogSummary": {
+    "printDialogNumberOfPrints": "Anzahl der Kopien: {numPrints}",
+    "@printDialogNumberOfPrints": {
         "placeholders": {
             "numPrints": {
                 "type": "int"
-            },
-            "numImages": {
+            }
+        }
+    },
+    "printDialogCopiesAtATime": "{numCopies, plural, =1{1 Kopie wird auf einmal gedruckt} other{{numCopies} Kopien werden auf einmal gedruckt}}",
+    "@printDialogCopiesAtATime": {
+        "placeholders": {
+            "numCopies": {
                 "type": "int"
             }
         }
@@ -249,6 +252,8 @@
     "@printingErrorDialogTitle": {},
     "printingErrorDialogBodyTop": "Wegen eines unerwarteten Problems können deine Ausdrucke nicht gestartet werden.",
     "@printingErrorDialogBodyTop": {},
+    "printingErrorDialogBodyTopPartial": "Wegen eines unerwarteten Problems konnten nicht alle deine Ausdrucke gestartet werden. Einige können noch aus dem Drucker kommen.",
+    "@printingErrorDialogBodyTopPartial": {},
     "printingErrorDialogBodyBottom": "Versuch's später nochmal oder lade dein Foto über die QR-Funktion runter.",
     "@printingErrorDialogBodyBottom": {},
     "retakeDialogBody": "Willst du das aktuelle Ergebnis behalten?",

@@ -30,6 +30,7 @@ Each line follows the format `path` — `WidgetClassName` — description, to ke
   - `settings_overlay/`
     - [components/](#lib-views-settings-overlay-components) — chrome for the settings overlay (pages, sections, dialogs).
     - [components/settings/](#lib-views-settings-overlay-components-settings) — one row-widget per setting type, plus the "quick actions" grid buttons.
+    - [components/print_routing_editor/](#lib-views-settings-overlay-components-print-routing-editor) — node editor for the print routing graph.
 - [Menus / app-level widgets](#menus-app-level-widgets) — top-level `lib/` widgets outside the `views/` tree.
 - [Known near-duplicates / naming overlaps](#known-near-duplicates-naming-overlaps) — intentional or confusable look-alike widgets to check before adding a new one.
 
@@ -97,8 +98,8 @@ Generic modal dialogs used across the app.
 - `no_project_open_dialog.dart` — `NoProjectOpenDialog` — shown when no project is open, lists recent projects.
 - `photo_booth_dialog.dart` — `PhotoBoothDialog` — lower-level rounded-card dialog shell (width/height/title/indicator/body/actions), used underneath `ModalDialog`.
 - `printer_issue_dialog.dart` — `PrinterIssueDialog` — reports a stuck/failed printer with stuck-job list and resume/ignore actions.
-- `printing_error_dialog.dart` — `PrintingErrorDialog` — generic printing error dialog with Lottie animation.
-- `print_dialog.dart` — `PrintDialog` — choose print size and copy count; also exports `PrintSizeChoice`.
+- `printing_error_dialog.dart` — `PrintingErrorDialog` — generic printing error dialog with Lottie animation; says so when some prints may have started.
+- `print_dialog.dart` — `PrintDialog` — choose print size (only those the photo can be printed at) and copy count; also exports `PrintSizeChoice`.
 - `qr_share_dialog.dart` — `QrShareDialog` — upload progress + QR code for sharing photos.
 - `retake_dialog.dart` — `RetakeDialog` — confirm delete/keep a photo before retaking.
 - `settings_import_dialog.dart` — `SettingsImportDialog` — preview settings-import diffs before applying.
@@ -223,9 +224,18 @@ Chrome for the settings overlay (pages, sections, dialogs).
 - `open_source_licenses_expander.dart` — `OpenSourceLicensesExpander` — About-page expander listing third-party licenses as compact tables (name, version, license) in lazily built groups; clicking a row opens a dialog with the license text.
 - `import_field.dart` — `MyDropRegion` — drag-and-drop / clipboard-paste region for importing a TOML settings file. *(Placeholder-style name — actually settings-import specific, not a generic drop region.)*
 - `settings_list_page.dart` — `SettingsListPage` — settings page variant rendering a scrollable list of setting "blocks".
-- `settings_page.dart` — `SettingsPage` — base settings-page chrome (title, scroll-shadowed body, "auto-saved" info bar).
+- `settings_page.dart` — `SettingsPage` — base settings-page chrome (title, scroll-shadowed body, "auto-saved" info bar); `SettingsPage.fixed` fills the space with a non-scrolling body instead.
 - `settings_section.dart` — `SettingsSection` — titled vertical group wrapper for a list of setting widgets.
 - `update_secret_dialog.dart` — `UpdateSecretDialog` — enter/save a new secret value (API key/password).
+
+<a id="lib-views-settings-overlay-components-print-routing-editor"></a>
+
+### lib/views/settings_overlay/components/print_routing_editor/
+
+The `fl_nodes_v2` node editor for the print routing graph on the "Print routing" settings page.
+
+- `print_routing_editor.dart` — `PrintRoutingEditor` — node canvas with toolbar, Fluent context menus and keyboard shortcuts, a side panel listing the routes per print size and the problems, and a status line explaining refused connections.
+- `print_routing_node_card.dart` — `RoutingNodeCard` — body of one node: header, port labels coloured by type, Fluent fields (incl. queue and media combo boxes for CUPS queues and for native printers that list their papers, inline printer margins) and notes; its rows follow `RoutingNodeLayout`.
 
 <a id="lib-views-settings-overlay-components-settings"></a>
 

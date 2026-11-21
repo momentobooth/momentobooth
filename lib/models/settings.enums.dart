@@ -250,24 +250,6 @@ enum BackgroundBlur {
 
 }
 
-enum PrintingImplementation {
-
-  none("Disable printing"),
-  flutterPrinting("Flutter printing plugin"),
-  cups("CUPS");
-
-  // can add more properties or getters/methods if needed
-  final String name;
-
-  // can use named parameters if you want
-  const PrintingImplementation(this.name);
-
-  ComboBoxItem<PrintingImplementation> toComboBoxItem() => ComboBoxItem(value: this, child: Text(name));
-
-  static List<ComboBoxItem<PrintingImplementation>> asComboBoxItems() => values.map((value) => value.toComboBoxItem()).toList();
-
-}
-
 enum PrintSize {
 
   normal("Normal print size"),
@@ -275,11 +257,9 @@ enum PrintSize {
   small("Small print size"),
   tiny("Tiny print size");
 
-  // can add more properties or getters/methods if needed
-  final String name;
+  final String label;
 
-  // can use named parameters if you want
-  const PrintSize(this.name);
+  const PrintSize(this.label);
 
 }
 

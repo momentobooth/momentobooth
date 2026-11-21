@@ -8,6 +8,7 @@ import 'package:csslib/parser.dart' as css_parser;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:momento_booth/exceptions/default_setting_restore_exception.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
@@ -83,91 +84,18 @@ sealed class HardwareSettings with _$HardwareSettings implements TomlEncodableVa
     @JsonKey(defaultValue: _captureLocationFromJson) required String captureLocation,
     @JsonKey(defaultValue: _captureLocationFromJson) required String serveFromDirectoryPath,
     @Default(true) bool saveCapturesToDisk,
-    @Default(PrintingImplementation.flutterPrinting) PrintingImplementation printingImplementation,
-    @Default([]) List<String> flutterPrintingPrinterNames,
     @Default("http://localhost:631/") String cupsUri,
     @Default(false) bool cupsIgnoreTlsErrors,
     @Default("") String cupsUsername,
     @Default("") String cupsPassword,
-    @Default([]) List<String> cupsPrinterQueues,
-    @JsonKey(defaultValue: PrintLayoutSettings.withDefaults) required PrintLayoutSettings printLayoutSettings,
-    @Default(148) double pageHeight,
-    @Default(100) double pageWidth,
+    @JsonKey(defaultValue: PrintRoutingGraph.withDefaults) required PrintRoutingGraph printRoutingGraph,
     @Default(true) bool usePrinterSettings,
-    @Default(0) double printerMarginTop,
-    @Default(0) double printerMarginRight,
-    @Default(0) double printerMarginBottom,
-    @Default(0) double printerMarginLeft,
     @Default(4) int printerQueueWarningThreshold,
   }) = _HardwareSettings;
 
   factory HardwareSettings.withDefaults() => HardwareSettings.fromJson({});
 
   factory HardwareSettings.fromJson(Map<String, Object?> json) => _$HardwareSettingsFromJson(json);
-
-  @override
-  Map<String, dynamic> toTomlValue() => toJson();
-
-}
-
-@Freezed(fromJson: true, toJson: true)
-sealed class PrintLayoutSettings with _$PrintLayoutSettings implements TomlEncodableValue {
-
-  const PrintLayoutSettings._();
-
-  const factory PrintLayoutSettings({
-
-    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeNormal,
-    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSplit,
-    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeSmall,
-    @JsonKey(defaultValue: GridSettings.withDefaults) required GridSettings gridSmall,
-    @JsonKey(defaultValue: MediaSettings.withDefaults) required MediaSettings mediaSizeTiny,
-    @JsonKey(defaultValue: GridSettings.withDefaults) required GridSettings gridTiny,
-  }) = _PrintLayoutSettings;
-
-  factory PrintLayoutSettings.withDefaults() => PrintLayoutSettings.fromJson({});
-
-  factory PrintLayoutSettings.fromJson(Map<String, Object?> json) => _$PrintLayoutSettingsFromJson(json);
-
-  @override
-  Map<String, dynamic> toTomlValue() => toJson();
-
-}
-
-@Freezed(fromJson: true, toJson: true)
-sealed class MediaSettings with _$MediaSettings implements TomlEncodableValue {
-
-  const MediaSettings._();
-
-  const factory MediaSettings({
-    @Default("") String mediaSizeString,
-    @Default(0.0) double mediaSizeHeight,
-    @Default(0.0) double mediaSizeWidth,
-  }) = _MediaSettings;
-
-  factory MediaSettings.withDefaults() => MediaSettings.fromJson({});
-
-  factory MediaSettings.fromJson(Map<String, Object?> json) => _$MediaSettingsFromJson(json);
-
-  @override
-  Map<String, dynamic> toTomlValue() => toJson();
-
-}
-
-@Freezed(fromJson: true, toJson: true)
-sealed class GridSettings with _$GridSettings implements TomlEncodableValue {
-
-  const GridSettings._();
-
-  const factory GridSettings({
-    @Default(1) int x,
-    @Default(1) int y,
-    @Default(false) bool rotate,
-  }) = _GridSettings;
-
-  factory GridSettings.withDefaults() => GridSettings.fromJson({});
-
-  factory GridSettings.fromJson(Map<String, Object?> json) => _$GridSettingsFromJson(json);
 
   @override
   Map<String, dynamic> toTomlValue() => toJson();
@@ -389,6 +317,8 @@ sealed class DebugSettings with _$DebugSettings implements TomlEncodableValue {
     @Default(ColorVisionDeficiency.none) ColorVisionDeficiency simulateCvd,
     @Default(9) int simulateCvdSeverity,
     @Default(false) bool enableExtensivePrintJobLog,
+    /// Renders print jobs as usual, but does not send them to the printers.
+    @Default(false) bool skipSendingPrintJobs,
     @Default(false) bool enableVideoMode,
     @Default(10) int videoDuration,
     @Default(2500) int videoPreRecordDelayMs,

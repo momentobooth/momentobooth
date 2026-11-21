@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Breaking changes
+- The printer, media size, grid and margin settings on the Hardware page are replaced by print routing. They are not migrated and have to be set up again on the Print routing page
+
+### New features
+- Print routing: a node editor on the new Print routing settings page decides which printer prints which print size, on which media, with which margins and in which tile layout. Native and CUPS printers can be combined, round-robin nodes distribute copies over printers and duplicate nodes print a photo on several printers at once. When a printer fails, the other printers of a round-robin or duplicate node take over
+- Windows: native printers offer the papers of their driver, such as 4x6 with and without border
+- A project can now disable printing, also with a quick action
+
+### Changes
+- Photos are now turned to match the orientation of the media or tile they are printed on, instead of assuming portrait media
+- Small and tiny prints no longer compensate the collage padding
+
+### Dev changes
+- Debug setting to skip sending print jobs to the printers, to test the print routing without printing
+
 ## 0.17.0
 
 ### New features

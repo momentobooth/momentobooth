@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:momento_booth/utils/hardware.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
@@ -57,12 +57,13 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
       ..printEnabled = true;
   }
 
-  void onClickPrint() {
+  Future<void> onClickPrint() async {
     if (!viewModel.printEnabled) return;
-    showUserDialog(
+    await showUserDialog(
       barrierDismissible: false,
       dialog: Observer(builder: (_) {
         return PrintDialog(
+          isThreePhotoCollage: viewModel.isThreePhotoCollage ?? false,
           onPrintPressed: (size, copies) {
             navigator.pop();
             onConfirmPrint(size, copies);
@@ -74,33 +75,25 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
   }
 
   Future<void> onConfirmPrint(PrintSize size, int copies) async {
-    final imgSources = await viewModel.makerNoteData;
-    final sourceCount = imgSources?.sourcePhotos.length;
-    PrintSize usingSize = size;
-    if (size == PrintSize.normal && sourceCount == 3) {
-      usingSize = PrintSize.split;
-    }
-
     logDebug("Printing photo");
 
     viewModel
       ..printEnabled = false
       ..printText = localizations.photoDetailsScreenPrinting;
 
-    // Get photo and print it.
-    final pdfData = await getImagePdfWithPageSize(await viewModel.file!.readAsBytes(), usingSize);
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Reprint";
 
-    bool success = false;
+    bool success = false, partiallyPrinted = false;
     try {
-      await getIt<PrintingManager>().printPdf(jobName, pdfData, copies: copies, printSize: usingSize);
+      await getIt<PrintingManager>().printPhoto(jobName: jobName, image: await viewModel.file!.readAsBytes(), size: size, copies: copies);
       success = true;
     } catch (e, s) {
       logError("Failed to print photo", e, s);
+      partiallyPrinted = e is PrintingException && e.sentSheets > 0;
     }
 
     successfulPrints += success ? copies : 0;
-    if (!success) unawaited(showUserDialog(dialog: const PrintingErrorDialog(), barrierDismissible: true));
+    if (!success) unawaited(showUserDialog(dialog: PrintingErrorDialog(partiallyPrinted: partiallyPrinted), barrierDismissible: true));
     resetPrint();
   }
 

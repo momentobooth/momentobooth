@@ -6,7 +6,9 @@ import 'package:momento_booth/hardware_control/printing/printing_system_client.d
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
-import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
+import 'package:momento_booth/src/rust/utils/ipp_client.dart';
+import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 
 /// Printing implementation that uses the flutter `printing` library to print.
@@ -19,48 +21,51 @@ class FlutterPrintingClient extends PrintingSystemClient {
     return printers.map((printer) => printer.asPrintQueueInfo).toList();
   }
 
-  Future<List<Printer>> _getSelectedPrintQueues() async {
-    final sourcePrinters = await Printing.listPrinters();
-    List<Printer> printers = <Printer>[];
+  /// Whether this platform lists the papers of a printer, see [getPrinterMediaDimensions]. Only Windows does.
+  Future<bool> canListPrinterMedia() async => (await Printing.info()).canListPaperSizes;
 
-    // Match all printers with printers set in settings.
-    for (String name in getIt<SettingsManager>().settings.hardware.flutterPrintingPrinterNames) {
-      Printer? selected = sourcePrinters.firstWhereOrNull((printer) => printer.name == name);
-
-      // Ignore printers that are not available.
-      if (selected == null) {
-        logError("Could not find selected printer ($name)");
-      } else {
-        printers.add(selected);
-      }
-    }
-
-    return printers;
+  /// The papers the driver of printer [printerName] supports, with their paper number as keyword and their size in mm.
+  Future<List<PrintDimension>> getPrinterMediaDimensions(String printerName) async {
+    final papers = await Printing.listPaperSizes(await _printer(printerName));
+    return papers.map((paper) => paper.asPrintDimension).toList();
   }
 
+  /// The media is part of [pdfData]; the printer driver decides how to put it on paper. When [media] was chosen from
+  /// the papers of the printer, the job is printed on that paper with the other settings of the driver, e.g.
+  /// borderless printing.
   @override
-  Future<List<PrintQueueInfo>> getSelectedPrintQueues() async {
-    List<Printer> selectedPrintQueues = await _getSelectedPrintQueues();
-    return selectedPrintQueues.map((queue) => queue.asPrintQueueInfo).toList();
-  }
+  Future<void> printPdfToQueue(String queueId, String jobName, Uint8List pdfData, {required PrintMedia media}) async {
+    final printer = await _printer(queueId);
+    final paper = await _paperOf(printer, media);
 
-  @override
-  Future<void> printPdfToQueue(String queueId, String taskName, Uint8List pdfData, {PrintSize printSize = PrintSize.normal}) async {
-    // Find specific printer
-    final printers = await _getSelectedPrintQueues();
-    Printer? printer = printers.firstWhereOrNull((printer) => printer.name == queueId);
-    if (printer == null) throw PrintingException('Could not find printer with name [$queueId]');
-
-    // Print
-    final settings = getIt<SettingsManager>().settings.hardware;
     bool success = await Printing.directPrintPdf(
       printer: printer,
-      name: taskName,
+      name: jobName,
       onLayout: (pageFormat) => pdfData,
-      usePrinterSettings: settings.usePrinterSettings,
+      // The orientation of the paper follows the format. Without a paper, the driver is asked for a paper of this size.
+      format: PdfPageFormat(media.widthMm * PdfPageFormat.mm, media.heightMm * PdfPageFormat.mm),
+      usePrinterSettings: getIt<SettingsManager>().settings.hardware.usePrinterSettings,
+      paper: paper,
     );
 
     if (!success) throw PrintingException('Printing.directPrintPdf returned false');
+  }
+
+  Future<Printer> _printer(String name) async {
+    final printers = await Printing.listPrinters();
+    Printer? printer = printers.firstWhereOrNull((printer) => printer.name == name);
+    if (printer == null) throw PrintingException('Could not find printer with name [$name]');
+    return printer;
+  }
+
+  /// The paper [media] was chosen from, or null when its size was set by hand.
+  Future<PrinterPaper?> _paperOf(Printer printer, PrintMedia media) async {
+    if (media.name.isEmpty || !await canListPrinterMedia()) return null;
+
+    final papers = await Printing.listPaperSizes(printer);
+    final paper = papers.firstWhereOrNull((paper) => paper.id == media.name);
+    if (paper == null) logWarning('Printer [${printer.name}] has no paper [${media.name}], printing without selecting a paper');
+    return paper;
   }
 
 }
@@ -73,6 +78,21 @@ extension _PrinterExtension on Printer {
       name: name,
       isAvailable: isAvailable,
       isDefault: isDefault,
+    );
+  }
+
+}
+
+extension _PrinterPaperExtension on PrinterPaper {
+
+  // Drivers report sizes in tenths of a mm, so rounding to that only undoes the conversion to points.
+  PrintDimension get asPrintDimension {
+    double toMm(double points) => (points / PdfPageFormat.mm * 10).roundToDouble() / 10;
+    return PrintDimension(
+      keyword: id,
+      name: name,
+      width: toMm(width),
+      height: toMm(height),
     );
   }
 

@@ -1,17 +1,14 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/hardware_control/gphoto2_camera.dart';
 import 'package:momento_booth/hardware_control/live_view_streaming/nokhwa_camera.dart';
-import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/external_system_status_manager.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
-import 'package:momento_booth/models/print_queue_info.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/project_settings.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
@@ -19,11 +16,9 @@ import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/gphoto2.dart';
 import 'package:momento_booth/src/rust/hardware_control/live_view/nokhwa.dart';
-import 'package:momento_booth/src/rust/utils/ipp_client.dart';
 import 'package:momento_booth/utils/color_vision_deficiency.dart';
 import 'package:momento_booth/views/base/screen_view_model_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
-import 'package:printing/printing.dart';
 
 part 'settings_overlay_view_model.g.dart';
 
@@ -65,7 +60,6 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<ComboBoxItem<Rotate>> get liveViewAndCaptureRotateOptions => Rotate.asComboBoxItems();
   List<ComboBoxItem<Flip>> get flipOptions => Flip.asComboBoxItems();
   List<ComboBoxItem<CaptureMethod>> get captureMethods => CaptureMethod.asComboBoxItems();
-  List<ComboBoxItem<PrintingImplementation>> get printingImplementations => PrintingImplementation.asComboBoxItems();
   List<ComboBoxItem<ExportFormat>> get exportFormats => ExportFormat.asComboBoxItems();
   List<ComboBoxItem<Language>> get languages => Language.asComboBoxItems();
   List<ComboBoxItem<Language>> get languagesProject => Language.asOptionalComboBoxItems();
@@ -74,15 +68,6 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<ComboBoxItem<FilterQuality>> get filterQualityOptions => FilterQuality.asComboBoxItems();
   List<ComboBoxItem<GPhoto2SpecialHandling>> get gPhoto2SpecialHandlingOptions => GPhoto2SpecialHandling.asComboBoxItems();
   List<ComboBoxItem<UiTheme>> get uiThemeOptions => UiTheme.asComboBoxItems();
-
-  @observable
-  List<ComboBoxItem<String>> flutterPrintingQueues = List<ComboBoxItem<String>>.empty();
-
-  @observable
-  List<ComboBoxItem<String>> cupsQueues = List<ComboBoxItem<String>>.empty();
-
-  @observable
-  List<ComboBoxItem<String>> cupsPaperSizes = List<ComboBoxItem<String>>.empty();
 
   @observable
   List<ComboBoxItem<String>> webcamComboBoxItems = List<ComboBoxItem<String>>.empty();
@@ -110,101 +95,6 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
     } else {
       return const SubsystemStatus.ok();
     }
-  }
-
-  RichText _printerCardText(String printerName, bool isAvailable, bool? isDefault) {
-    final icon = isAvailable ? LucideIcons.plug : LucideIcons.unplug;
-    return RichText(
-      text: TextSpan(
-        style: const TextStyle(color: Color(0xFF000000)),
-        children: [
-          TextSpan(text: "$printerName  "),
-          if (isDefault == true) ...[
-            const WidgetSpan(child: Icon(LucideIcons.printerCheck)),
-            const TextSpan(text: "  "),
-          ],
-          WidgetSpan(child: Icon(icon)),
-        ],
-      ),
-    );
-  }
-
-  Text _mediaSizeCardText(PrintDimension size) {
-    return Text("${size.name} (${size.height.toStringAsFixed(2)}↕ × ${size.width.toStringAsFixed(2)}↔ mm)");
-  }
-
-  final String unusedPrinterValue = "UNUSED";
-
-  Future<void> setFlutterPrintingQueueList() async {
-    final printers = await Printing.listPrinters();
-
-    flutterPrintingQueues = [
-      ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)),
-      ...printers.map((p) => ComboBoxItem(value: p.name, child: _printerCardText(p.name, p.isAvailable, p.isDefault))),
-    ];
-
-    // If there is no printer selected yet, set the OS's default printer as our first printer.
-    Printer? osDefaultPrinter = printers.firstWhereOrNull((p) => p.isDefault);
-    if (osDefaultPrinter != null && flutterPrintingPrinterNamesSetting.isEmpty) {
-      await updateSettings((settings) => settings.copyWith.hardware(flutterPrintingPrinterNames: [osDefaultPrinter.name]));
-    }
-  }
-
-  Future<void> setCupsQueueList() async {
-    final List<PrintQueueInfo> printers = await CupsClient().getPrintQueues();
-
-    cupsQueues = [
-      ComboBoxItem(value: unusedPrinterValue, child: _printerCardText("- Not used -", false, false)),
-      ...printers.map((p) => ComboBoxItem(value: p.id, child: _printerCardText(p.name, p.isAvailable, p.isDefault))),
-    ];
-
-    // If there is no printer selected yet, set the first found printer as our first printer.
-    if (printers.isNotEmpty && cupsPrinterQueuesSetting.isEmpty) {
-      await updateSettings((settings) => settings.copyWith.hardware(cupsPrinterQueues: [printers.first.id]));
-    }
-  }
-
-  List<PrintDimension> _mediaDimensions = [];
-  List<PrintDimension> get mediaDimensions => _mediaDimensions;
-
-  Future<void> setCupsPageSizeOptions() async {
-    if (cupsPrinterQueuesSetting.isEmpty) return;
-    _mediaDimensions = await CupsClient().getPrinterMediaDimensions(cupsPrinterQueuesSetting.first);
-
-    await _migrateMediaSizeKeywords();
-
-    cupsPaperSizes = [
-      const ComboBoxItem(value: "", child: Text("- Not used -")),
-      ..._mediaDimensions.map((m) => ComboBoxItem(value: m.keyword, child: _mediaSizeCardText(m))),
-    ];
-  }
-
-  /// Until 0.17.0, the paper size keywords came from the `media-supported` attribute of the printer (e.g.
-  /// `custom_104.99x156.13mm_104.99x156.13mm`), now they come from its PPD (e.g. `w288h432`). A stored keyword that is not offered
-  /// anymore is replaced by the keyword of the only paper size with the stored dimensions. When several sizes share these dimensions (e.g.
-  /// the cutting modes of some dye-sublimation printers), it is left as it is, and the user has to select the size again.
-  Future<void> _migrateMediaSizeKeywords() async {
-    if (_mediaDimensions.isEmpty) return;
-
-    MediaSettings migrate(MediaSettings media) {
-      if (media.mediaSizeString.isEmpty || _mediaDimensions.any((d) => d.keyword == media.mediaSizeString)) return media;
-      final matches = _mediaDimensions.where(
-        (d) => (d.width - media.mediaSizeWidth).abs() < 0.05 && (d.height - media.mediaSizeHeight).abs() < 0.05,
-      );
-      return matches.length == 1 ? media.copyWith(mediaSizeString: matches.single.keyword) : media;
-    }
-
-    final PrintLayoutSettings current = getIt<SettingsManager>().settings.hardware.printLayoutSettings;
-    final PrintLayoutSettings migrated = current.copyWith(
-      mediaSizeNormal: migrate(current.mediaSizeNormal),
-      mediaSizeSplit: migrate(current.mediaSizeSplit),
-      mediaSizeSmall: migrate(current.mediaSizeSmall),
-      mediaSizeTiny: migrate(current.mediaSizeTiny),
-    );
-    if (migrated == current) return;
-
-    logInfo("Migrated CUPS paper size keywords to the keywords of the printer's PPD");
-    await updateSettings((settings) => settings.copyWith.hardware(printLayoutSettings: migrated));
   }
 
   Future<void> setImagingDeviceList() async {
@@ -253,6 +143,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   List<Language> get projectAvailableLanguagesSetting => getIt<ProjectManager>().settings.availableLanguages;
   bool get showGallerySetting => getIt<ProjectManager>().settings.showGallery;
   bool get showGetQrButtonSetting => getIt<ProjectManager>().settings.showGetQrButton;
+  bool get enablePrintingSetting => getIt<ProjectManager>().settings.enablePrinting;
 
   // System settings current values
   int get captureDelaySecondsSetting => getIt<SettingsManager>().settings.captureDelaySeconds;
@@ -279,27 +170,13 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   String get captureLocationSetting => getIt<SettingsManager>().settings.hardware.captureLocation;
   String get serveFromDirectoryPathSetting => getIt<SettingsManager>().settings.hardware.serveFromDirectoryPath;
   bool get saveCapturesToDiskSetting => getIt<SettingsManager>().settings.hardware.saveCapturesToDisk;
-  PrintingImplementation get printingImplementationSetting => getIt<SettingsManager>().settings.hardware.printingImplementation;
   String get cupsUriSetting => getIt<SettingsManager>().settings.hardware.cupsUri;
   bool get cupsIgnoreTlsErrors => getIt<SettingsManager>().settings.hardware.cupsIgnoreTlsErrors;
   String get cupsUsernameSetting => getIt<SettingsManager>().settings.hardware.cupsUsername;
   String get cupsPasswordSetting => getIt<SettingsManager>().settings.hardware.cupsPassword;
-  List<String> get cupsPrinterQueuesSetting => getIt<SettingsManager>().settings.hardware.cupsPrinterQueues;
-  MediaSettings get mediaSizeNormal => getIt<SettingsManager>().settings.hardware.printLayoutSettings.mediaSizeNormal;
-  MediaSettings get mediaSizeSplit => getIt<SettingsManager>().settings.hardware.printLayoutSettings.mediaSizeSplit;
-  MediaSettings get mediaSizeSmall => getIt<SettingsManager>().settings.hardware.printLayoutSettings.mediaSizeSmall;
-  GridSettings get gridSmall => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridSmall;
-  MediaSettings get mediaSizeTiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.mediaSizeTiny;
-  GridSettings get gridTiny => getIt<SettingsManager>().settings.hardware.printLayoutSettings.gridTiny;
-  List<String> get flutterPrintingPrinterNamesSetting => getIt<SettingsManager>().settings.hardware.flutterPrintingPrinterNames;
-  double get pageHeightSetting => getIt<SettingsManager>().settings.hardware.pageHeight;
-  double get pageWidthSetting => getIt<SettingsManager>().settings.hardware.pageWidth;
   bool get usePrinterSettingsSetting => getIt<SettingsManager>().settings.hardware.usePrinterSettings;
-  double get printerMarginTopSetting => getIt<SettingsManager>().settings.hardware.printerMarginTop;
-  double get printerMarginRightSetting => getIt<SettingsManager>().settings.hardware.printerMarginRight;
-  double get printerMarginBottomSetting => getIt<SettingsManager>().settings.hardware.printerMarginBottom;
-  double get printerMarginLeftSetting => getIt<SettingsManager>().settings.hardware.printerMarginLeft;
   int get printerQueueWarningThresholdSetting => getIt<SettingsManager>().settings.hardware.printerQueueWarningThreshold;
+  PrintRoutingGraph get printRoutingGraphSetting => getIt<SettingsManager>().settings.hardware.printRoutingGraph;
   String get firefoxSendServerUrlSetting => getIt<SettingsManager>().settings.output.firefoxSendServerUrl;
   int get firefoxSendControlCommandTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendControlCommandTimeout.inSeconds;
   int get firefoxSendTransferTimeoutSetting => getIt<SettingsManager>().settings.output.firefoxSendTransferTimeout.inSeconds;
@@ -340,6 +217,7 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   ColorVisionDeficiency get simulateCvd => getIt<SettingsManager>().settings.debug.simulateCvd;
   int get simulateCvdSeverity => getIt<SettingsManager>().settings.debug.simulateCvdSeverity;
   bool get enableExtensivePrintJobLog => getIt<SettingsManager>().settings.debug.enableExtensivePrintJobLog;
+  bool get skipSendingPrintJobs => getIt<SettingsManager>().settings.debug.skipSendingPrintJobs;
   bool get enableVideoModeSetting => getIt<SettingsManager>().settings.debug.enableVideoMode;
   int get videoDurationSetting => getIt<SettingsManager>().settings.debug.videoDuration;
   int get videoPreRecordDelayMsSetting => getIt<SettingsManager>().settings.debug.videoPreRecordDelayMs;
@@ -368,13 +246,10 @@ abstract class SettingsOverlayViewModelBase extends ScreenViewModelBase with Sto
   SettingsOverlayViewModelBase({
     required super.contextAccessor,
   }) {
-    setFlutterPrintingQueueList();
-    setCupsQueueList();
     setWebcamList();
     setWebcamList2();
     setCameraList();
     setCameraList2();
-    setCupsPageSizeOptions();
   }
 
   // Methods

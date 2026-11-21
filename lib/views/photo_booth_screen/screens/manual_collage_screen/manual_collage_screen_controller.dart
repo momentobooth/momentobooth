@@ -8,7 +8,7 @@ import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/photo_capture.dart';
-import 'package:momento_booth/utils/hardware.dart';
+import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
 import 'package:momento_booth/views/components/imaging/photo_collage.dart';
 import 'package:momento_booth/views/photo_booth_screen/screens/manual_collage_screen/manual_collage_screen_view_model.dart';
@@ -117,9 +117,9 @@ class ManualCollageScreenController extends ScreenControllerBase<ManualCollageSc
     File? file = await getIt<PhotosManager>().writeOutput(advance: true);
     logDebug("Saved collage image to disk");
 
-    if (viewModel.printOnSave) {
+    if (viewModel.printOnSave && getIt<PrintingManager>().printableSizes.contains(PrintSize.normal)) {
       String jobName = file != null ? path.basenameWithoutExtension(file.path) : "MomentoBooth Collage";
-      await getIt<PrintingManager>().printPdf(jobName, await getImagePDF(exportImage!));
+      await getIt<PrintingManager>().printPhoto(jobName: jobName, image: exportImage!, size: PrintSize.normal);
     }
     if (viewModel.clearOnSave) {
       clearSelection();
