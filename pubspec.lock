@@ -1162,7 +1162,7 @@ packages:
     dependency: "direct main"
     description:
       path: printing
-      ref: "feature/windows-paper-sizes"
+      ref: e93d9bbfd623ada5c5b049cfcd64fdaa0e762aae
       resolved-ref: e93d9bbfd623ada5c5b049cfcd64fdaa0e762aae
       url: "https://github.com/momentobooth/dart_pdf"
     source: git

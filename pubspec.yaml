@@ -56,7 +56,9 @@ dependencies:
   flutter_rust_bridge: 2.13.0
 
   # Printing
-  printing: { git: { url: https://github.com/momentobooth/dart_pdf, path: printing, ref: feature/windows-paper-sizes } }
+  # Fork with Windows paper selection (branch feature/windows-paper-sizes).
+  # TODO: Switch back to the released package once DavBfr/dart_pdf#2031 is released.
+  printing: { git: { url: https://github.com/momentobooth/dart_pdf, path: printing, ref: e93d9bbfd623ada5c5b049cfcd64fdaa0e762aae } }
   pdf: 3.13.1
 
   # System
