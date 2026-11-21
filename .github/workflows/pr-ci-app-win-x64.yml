@@ -3,12 +3,12 @@ name: PR CI App - Windows x64
 on:
   pull_request:
     branches: [ main ]
-    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md, CHANGELOG.md, AGENTS.md, CLAUDE.md, .claude/**, .agents/** ]
+    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, '*.md', .claude/**, .agents/** ]
     types: [opened, synchronize, reopened, ready_for_review]
   # Builds on main fill the caches (sccache, Rust and Flutter), which pull requests can use, unlike each other's caches.
   push:
     branches: [ main ]
-    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, README.md, CHANGELOG.md, AGENTS.md, CLAUDE.md, .claude/**, .agents/** ]
+    paths-ignore: [ documentation/**, .github/workflows/pr-ci-documentation.yml, .github/workflows/deploy-documentation.yml, '*.md', .claude/**, .agents/** ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
