@@ -135,6 +135,22 @@ Widget _getImagingBlock(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               onChanged: controller.onGPhoto2DownloadExtraFilesChanged,
             ),
           if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2)
+            SettingsToggleTile(
+              icon: LucideIcons.camera,
+              title: "Use legacy capture method",
+              subtitle: "Use the legacy capture method (capture_image) instead of the newer event-based method (trigger_capture + wait for NewFile event). Enable this if your camera does not work with the default method.",
+              value: () => viewModel.gPhoto2UseLegacyCaptureMethodSetting,
+              onChanged: controller.onGPhoto2UseLegacyCaptureMethodChanged,
+            ),
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2 && !viewModel.gPhoto2UseLegacyCaptureMethodSetting)
+            SettingsNumberEditTile(
+              icon: LucideIcons.timer,
+              title: "Capture timeout",
+              subtitle: "Time in [ms] to wait for the camera to produce a NewFile event after triggering capture. Increase this if captures time out on slow cameras.",
+              value: () => viewModel.gPhoto2CaptureTimeoutMsSetting,
+              onFinishedEditing: controller.onGPhoto2CaptureTimeoutMsChanged,
+            ),
+          if (viewModel.captureMethodSetting == CaptureMethod.gPhoto2)
             SettingsTextEditTile(
               icon: LucideIcons.memoryStick,
               title: "Camera capture target",
