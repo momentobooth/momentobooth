@@ -6,7 +6,7 @@ Like the hardware settings, print routing is an app setting: it is saved with th
 
 ## How print routing works
 
-When a user prints a photo, they choose a print size in the print dialog: _Normal_, _Small_ or _Tiny_. The print starts at the output of that print size on the **source** node and follows the connections to the **printer** nodes it ends up at. On the way it can be distributed over several printers, duplicated, or laid out in a grid.
+When a user prints a photo, they choose a print size in the print dialog: _Normal_, _Small_ or _Tiny_. The print starts at the output of that print size on the **source** node and follows the connections to the **printer** nodes it ends up at. On the way it can be distributed over several printers, duplicated, laid out in a grid, or stacked with its other copies on a sheet.
 
 ```mermaid
 graph LR
@@ -22,7 +22,7 @@ A few rules follow from this:
 - A print size that is not routed to a usable printer disappears from the print dialog.
 - The print button is only shown when the project setting [Enable printing](settings_project.md#enable-printing) is on and the photo can be printed at one of the routed print sizes.
 - The _Split_ print size is not a choice in the print dialog. When a user prints a collage of three photos at _Normal_ size and _Split_ is routed, the print follows the _Split_ route instead. When _Split_ is not routed, the _Normal_ route is used. A booth that only offers split prints can route _Split_ alone: collages of three photos then offer _Normal_, which prints split, and other photos cannot be printed.
-- Every copy is routed separately. When a user prints three copies, each copy follows its own route, so a round-robin node can send them to different printers.
+- Every copy is routed separately. When a user prints three copies, each copy follows its own route, so a round-robin node can send them to different printers. Copies that end up at the same [stack](#stack) share its sheets.
 - Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works. When a printer fails while printing, a round-robin node lets its next output print the copy, and a duplicate node still prints on its other outputs. The print only fails when no printer takes a copy.
 
 A new installation starts with a source whose _Normal_ output is connected to a single printer node. That printer still has to be configured before anything can be printed.
@@ -56,7 +56,7 @@ The node remembers whose turn it is until the print routing is changed or the ap
 
 A duplicate node sends every copy to all its connected outputs, also when one of their printers fails. Use it to print one photo in several ways at once, for example as a normal print on one printer and as a tiled sheet of small photos on another. The number of copies shown in the print dialog takes this into account.
 
-Round-robin and duplicate nodes have an **In** port, which takes a single connection, and an **Out** port, which accepts any number of connections. So such a node handles a single print size; print sizes only come together at a printer. To let two print sizes share the same printers, use a round-robin node for each print size and connect both to the printers. They carry either photos or sheets (see [ports and connections](#ports-and-connections)), whichever is connected to them. A caption on the node shows what it carries: _Carries photos_, _Carries sheets_ or _Carries nothing yet_.
+Round-robin and duplicate nodes have an **In** port, which takes a single connection, and an **Out** port, which accepts any number of connections. So such a node handles a single print size; print sizes only come together at a printer or a stack. To let two print sizes share the same printers, use a round-robin node for each print size and connect both to the printers. They carry either photos or sheets (see [ports and connections](#ports-and-connections)), whichever is connected to them. A caption on the node shows what it carries: _Carries photos_, _Carries sheets_ or _Carries nothing yet_.
 
 ### Tile layout
 
@@ -83,6 +83,25 @@ The print dialog takes the grid into account: with 2 columns and 2 rows, every c
 
 Split prints are always printed in halves, so a tile layout on the route of the _Split_ print size is not used for them. The editor shows a warning when that happens. A tile layout with fewer than 1 column or row is an error; its connections are ignored.
 
+### Stack
+
+A stack node puts the copies of a print together on as few sheets as possible, to cut them apart afterwards. It is meant for a regular printer with A4 or Letter paper, for when no photo printer is at hand: a single print would leave most of that paper unused. It takes a **Photo** and turns it into a **Stack**. The **Photo** input accepts any number of connections, so several print sizes can share a stack, e.g. _Normal_ and _Split_. The **Stack** output takes a single connection and only connects to a printer, as the sheets are filled for the media of that printer. Its fields are:
+
+| Field | Meaning |
+|---|---|
+| Columns | The number of columns the printable area is divided into, at least 1. |
+| Gap (mm) | The space between the copies, to cut them apart. 3 mm by default. |
+
+Like a tile layout, a stack has no size of its own. Each copy gets the width of a column and the height that follows from its own shape, and is **turned to use the least height**: a portrait photo lies sideways. The copies are placed from the top of the sheet down. Each copy goes to the column that is filled least, below the copies already there, and when it does not fit in any column, it starts a new sheet. All sheets of a print are sent to the printer as a single job.
+
+Take, for example, three copies of a landscape collage (3:2) on A4 media (210 × 297 mm) with margins of 5 mm and 2 columns. Each column is about 98 mm wide, so each copy is about 98 × 66 mm. The first two copies lie side by side at the top of the sheet, and the third one below the first. After cutting off the copies, the rest of the sheet can be fed into the printer again for the next print. Whether a printer accepts such a shorter sheet differs per printer; most have a minimum paper length.
+
+The halves of a split print are stacked as two separate copies, so each half lies sideways across its column as a strip.
+
+Only the copies that end up at the same stack share sheets. Behind a round-robin node with a stack per printer, the copies alternate between the stacks, and each stack fills its own sheets. The sheets of a stack are sent once all copies of the print are routed, so when its printer fails, no other printer can take over these copies, and the print fails.
+
+A stack with fewer than 1 column or a negative gap is an error; its connections are ignored.
+
 ### Margins
 
 A margins node holds a set of margins (top, right, bottom and left, in mm) that can be shared between printer nodes. Its **Margins** output can be connected to the margins input of any number of printers, so you only have to tune the margins of, say, three identical printers once.
@@ -100,7 +119,7 @@ A printer node is one printer configuration: one printer or CUPS queue with one 
 | Size (mm) | The width and height of the media. For CUPS printers and native printers on Windows they follow from the selected media. For native printers on macOS and Linux you enter these yourself; set them to the paper size you print on. |
 | Margins | The margins (top, right, bottom and left, in mm) for this printer, see [margins](#how-prints-are-laid-out). These fields are hidden when a margins node is connected to the margins input; the caption then reads _from the connected node_. |
 
-A printer node has two inputs. The **Job** input accepts photos as well as sheets and takes any number of connections. A photo that is connected directly, without a tile layout, is fitted on the sheet as a whole. The **Margins** input sits next to the margins fields and takes a single margins node.
+A printer node has two inputs. The **Job** input accepts photos, sheets and stacks, and takes any number of connections. A photo that is connected directly, without a tile layout, is fitted on the sheet as a whole. The **Margins** input sits next to the margins fields and takes a single margins node.
 
 A printer node only prints once it is complete: a native printer needs a printer and a media width and height; a CUPS printer needs a queue and media. A native printer on Windows whose size was set by hand, e.g. on another computer, still prints as before, without choosing a paper; select a _Paper_ to print on that exact paper. A printer that receives prints while it is incomplete gets a warning and is skipped. So is a printer whose margins leave no room on its media. Unconnected printer nodes are fine, so you can keep configurations around for later use.
 
@@ -112,13 +131,14 @@ The ports are coloured by what they carry:
 |---|---|---|
 | Blue | Photo | A photo at the print size the user chose. Comes from the source. |
 | Orange | Sheet | A photo laid out on a sheet. Comes from a tile layout. |
+| Yellow | Stack | The copies of a print stacked on sheets. Comes from a stack, and only goes to a printer. |
 | Green | Margins | A set of margins. Comes from a margins node. |
 
 The ports of round-robin and duplicate nodes take the colour of what they carry, and are grey while nothing is connected to them yet. The job input of a printer takes the colour of what is connected to it. Connections take the colour of the port they start at.
 
 To connect two nodes, drag from a port to a port of another node. Only matching ports can be connected: the editor refuses a connection that carries the wrong type or that would create a loop, and the status line at the bottom explains why when the colours do not already tell. A round-robin or duplicate node carries a single type, so it cannot mix photos and sheets.
 
-Some ports take a single connection: the outputs of the source, the inputs of round-robin and duplicate nodes, both ports of a tile layout and the margins input of a printer. Connecting a new connection to such a port replaces the old one.
+Some ports take a single connection: the outputs of the source, the inputs of round-robin and duplicate nodes, both ports of a tile layout, the output of a stack and the margins input of a printer. Connecting a new connection to such a port replaces the old one.
 
 ## Routes, problems and printers
 
@@ -139,11 +159,12 @@ Connections with errors are ignored, while the rest of the routing keeps working
 | Normal prints are not routed, so only collages of three photos can be printed. | Information on the source: _Split_ is routed, but _Normal_ is not. Photos that are not a collage of three photos cannot be printed. |
 | Not routed: … | Information on the source: these print sizes are not routed to any printer and are not offered in the print dialog. |
 | This input accepts a single connection. | More than one connection ends at a port that takes a single connection. |
-| The connection from … carries the wrong type. | A connection carries photos where sheets are expected, or the other way around. |
+| The connection from … carries the wrong type. | A connection carries photos where sheets are expected, or the other way around, or a stack is connected to something other than a printer. |
 | Connections form a loop. | The connections lead back to a node they came from. |
 | Only one source is used, this one is ignored. | There is more than one source node. Only the first one routes prints. |
 | There is no source node. | The routing has no source, so nothing can be printed. |
 | Columns and rows must be at least 1. | A tile layout has an invalid grid. Its connections are ignored. |
+| Columns must be at least 1, and the gap cannot be negative. | A stack has invalid fields. Its connections are ignored. |
 | A stored connection is invalid and is ignored. / A connection is stored twice. / Two nodes share the ID "…". | The saved routing is damaged, for example after editing the settings file by hand or importing settings. |
 
 ## Editing
@@ -183,6 +204,7 @@ The printable area of a sheet is the media size of the printer minus its margins
 
 - **Without a tile layout**, the photo is fitted in the printable area as a whole, centred and without cropping. It is turned a quarter turn when its orientation does not match that of the area, so a landscape collage on portrait media is printed sideways to use the paper well.
 - **With a tile layout**, the printable area is divided into equal tiles, and the photo is fitted in each tile, turned to fill the tile best, see [tile layout](#tile-layout).
+- **With a stack**, the copies of a print are placed in columns from the top of the printable area down, each turned to use the least height, see [stack](#stack).
 - **Split prints** are printed as two pages: the left half of the collage on the first page and the right half on the second. Each half fills the height of the printable area. The margins between the halves (the right margin of the first page and the left margin of the second) are left out, so the halves line up when put together. Tile layouts are not used for split prints.
 
 The last printed sheet is saved as `latest-print.pdf` in the output folder of the project, which is handy to check the layout without wasting paper. For more detail, turn on _Enable extensive print job logging_ in the [debug settings](settings_debug.md), which keeps the PDFs and details of every print job in a `PrintJobs` folder inside the output folder. To test the routing without printing at all, turn on _Skip sending print jobs to printers_ in the same settings: prints are routed and rendered as usual, but not sent to a printer, and not counted in the statistics.
