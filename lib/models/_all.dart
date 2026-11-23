@@ -2,6 +2,7 @@ export 'app_release.dart';
 export 'app_version_info.dart';
 export 'capture_state.dart';
 export 'changelog_section.dart';
+export 'collected_copy.dart';
 export 'connection_state.dart';
 export 'constants.dart';
 export 'external_system_status.dart';

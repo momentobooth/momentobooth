@@ -4,8 +4,11 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:momento_booth/hardware_control/printing/print_job_runner.dart';
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
+import 'package:momento_booth/hardware_control/printing/stack_collector.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/settings.dart';
+
+import 'memory_collected_copy_store.dart';
 
 /// A PNG of one pixel.
 final _photo = base64Decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
@@ -51,8 +54,21 @@ class _Printers {
 PrintRouter _router(List<RoutingNode> nodes, List<RoutingEdge> edges) =>
     PrintRouter(PrintRoutingGraph(nodes: [_node('source', const RoutingNodeData.source()), ...nodes], edges: edges));
 
-Future<PrintJobReport> _run(_Printers printers, PrintRouter router, {PrintSize size = PrintSize.normal, int copies = 1}) =>
-    printers.runner.run(router, jobName: 'job', image: Uint8List.fromList(_photo), size: size, copies: copies);
+Future<PrintJobReport> _run(
+  _Printers printers,
+  PrintRouter router, {
+  PrintSize size = PrintSize.normal,
+  int copies = 1,
+  StackCollector? collector,
+  String jobName = 'job',
+}) =>
+    printers.runner.run(router, jobName: jobName, image: Uint8List.fromList(_photo), size: size, copies: copies, collector: collector);
+
+/// A stack in collect mode with two columns on media of 100 × 148 mm: four copies of the square photo fit on a sheet.
+PrintRouter _collectingRouter() => _router(
+  [_node('stack', const RoutingNodeData.stack(mode: StackMode.collect, lanes: 2, gap: 0)), _node('a', _printer('a'))],
+  [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'a')],
+);
 
 void main() {
   group('PrintJobRunner', () {
@@ -177,6 +193,52 @@ void main() {
 
       expect(report.failure?.message, 'No printer took copy 1 / 1 at Small print size');
       expect(report.sheets, isEmpty);
+    });
+  });
+
+  group('PrintJobRunner in collect mode', () {
+    test('lets copies wait until their sheet is full, and then prints the copies of several prints together', () async {
+      final printers = _Printers();
+      final collector = StackCollector(MemoryCollectedCopyStore());
+      final router = _collectingRouter();
+
+      final first = await _run(printers, router, collector: collector, jobName: 'first');
+      expect(first.failure, isNull);
+      expect(first.waitingCopies, 1);
+      expect(printers.sent, isEmpty);
+
+      final second = await _run(printers, router, collector: collector, jobName: 'second', copies: 3);
+      expect(second.waitingCopies, 0);
+      expect(printers.sent, [('a', 'Collected sheet | 4 copies of first, second')]);
+      expect(printers.counted, hasLength(4));
+      expect(collector.copies, isEmpty);
+    });
+
+    test('keeps the copies of a sheet that fails waiting, and prints them with a later sheet', () async {
+      final collector = StackCollector(MemoryCollectedCopyStore());
+      final router = _collectingRouter();
+
+      final failing = _Printers(failing: {'a'});
+      final failed = await _run(failing, router, collector: collector, copies: 4);
+      // Not a failure for the guest: the copies wait for the next sheet.
+      expect(failed.failure, isNull);
+      expect(failed.waitingCopies, 4);
+      expect(failed.failedPrinters, {'a'});
+      expect(failing.counted, isEmpty);
+
+      final printers = _Printers();
+      final later = await _run(printers, router, collector: collector, jobName: 'later');
+      expect(printers.sent, [('a', 'Collected sheet | 4 copies of job')]);
+      expect(later.waitingCopies, 1);
+      expect(collector.copies.single.jobName, 'later');
+    });
+
+    test('prints right away without a place to keep waiting copies', () async {
+      final printers = _Printers();
+      final report = await _run(printers, _collectingRouter());
+
+      expect(report.waitingCopies, 0);
+      expect(printers.sent, [('a', 'job | Normal print size | 1 of 1 copies stacked')]);
     });
   });
 }

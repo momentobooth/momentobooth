@@ -124,6 +124,19 @@ class RoutingNodeCard extends StatelessWidget {
 
   List<Widget> _stackFields(StackNodeData data, ValueChanged<RoutingNodeData> update) => [
     _FieldRow(
+      key: const ValueKey('mode'),
+      label: 'Print',
+      child: ComboBox<StackMode>(
+        value: data.mode,
+        isExpanded: true,
+        items: const [
+          ComboBoxItem(value: StackMode.direct, child: Text('Right away')),
+          ComboBoxItem(value: StackMode.collect, child: Text('When a sheet is full')),
+        ],
+        onChanged: (value) => update(data.copyWith(mode: value ?? data.mode)),
+      ),
+    ),
+    _FieldRow(
       key: const ValueKey('direction'),
       label: 'Fill',
       child: ComboBox<StackDirection>(

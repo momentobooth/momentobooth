@@ -10,6 +10,7 @@ import 'package:momento_booth/hardware_control/printing/flutter_printing_client.
 import 'package:momento_booth/hardware_control/printing/print_job_runner.dart';
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
+import 'package:momento_booth/hardware_control/printing/stack_collector.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
@@ -43,6 +44,24 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   Null initialize() {
     reaction((_) => getIt<SettingsManager>().settings.hardware.printRoutingGraph, _updateRouter, fireImmediately: true);
     reaction((_) => getIt<ProjectManager>().settings.enablePrinting, (_) => _reportStatus());
+    reaction((_) => getIt<ProjectManager>().path, _openCollector, fireImmediately: true);
+  }
+
+  /// The copies that wait on stacks in collect mode, kept in the project folder. Null without an open project.
+  StackCollector? _collector;
+
+  Future<void> _openCollector(Directory? projectPath) async {
+    if (projectPath == null) {
+      _collector = null;
+      return;
+    }
+    final collector = StackCollector(DirectoryCollectedCopyStore(Directory(path.join(projectPath.path, 'CollectedPrints'))));
+    try {
+      await collector.load();
+    } catch (error, stackTrace) {
+      logError("Could not load the copies waiting on stacks from ${projectPath.path}", error, stackTrace);
+    }
+    _collector = collector;
   }
 
   // /////// //
@@ -124,7 +143,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   /// Prints [copies] copies of [image] at [size], see [PrintJobRunner.run]. Throws a [PrintingException] when not every
   /// copy was printed. The rendered sheets are kept in any case.
   Future<void> printPhoto({required String jobName, required Uint8List image, required PrintSize size, int copies = 1}) async {
-    final report = await _jobRunner.run(_router, jobName: jobName, image: image, size: size, copies: copies);
+    final report = await _jobRunner.run(_router, jobName: jobName, image: image, size: size, copies: copies, collector: _collector);
     _failedPrinters = report.failedPrinters;
     _reportStatus();
     await _keepPrintedPdfs(jobName, size, report.renderings, report.sheets);

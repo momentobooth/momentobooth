@@ -1,4 +1,6 @@
 import 'package:flutter/foundation.dart';
+import 'package:momento_booth/hardware_control/printing/print_router.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
 
 /// Where an item of a stack ends up on a sheet. Lengths are in the units of the area the items were packed in,
 /// measured from its top left corner.
@@ -41,6 +43,27 @@ class StackPlacement {
   @override
   String toString() => 'StackPlacement($item, $left, $top, ${width}x$height${turned ? ', turned' : ''})';
 
+}
+
+/// The aspect ratios of the items a copy of a photo with [aspectRatio] takes on a stack: the photo, or its two halves
+/// for a split print.
+List<double> stackItemsOf(double aspectRatio, {required bool split}) =>
+    split ? [aspectRatio / 2, aspectRatio / 2] : [aspectRatio];
+
+/// Packs items with [aspectRatios] on the printable area of [route] with the settings of its stack, see [packStack].
+/// Lengths are in mm, times [unit].
+List<List<StackPlacement>> packStackOn(PrintRoute route, List<double> aspectRatios, {double unit = 1}) {
+  final stack = route.stack!;
+  final media = route.printer.media;
+  final margins = route.margins;
+  return packStack(
+    aspectRatios,
+    width: (media.widthMm - margins.left - margins.right) * unit,
+    height: (media.heightMm - margins.top - margins.bottom) * unit,
+    lanes: stack.lanes,
+    gap: stack.gap * unit,
+    rows: stack.direction == StackDirection.rows,
+  );
 }
 
 /// Packs items with the given [aspectRatios] (width / height) on sheets with an area of [width] by [height], and

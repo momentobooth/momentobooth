@@ -7,7 +7,7 @@ const _graph = PrintRoutingGraph(
     RoutingNode(id: 'source', data: RoutingNodeData.source()),
     RoutingNode(id: 'robin', x: 300, y: 50, data: RoutingNodeData.roundRobin()),
     RoutingNode(id: 'tile', data: RoutingNodeData.tileLayout(columns: 2, rows: 2)),
-    RoutingNode(id: 'stack', data: RoutingNodeData.stack(direction: StackDirection.rows, lanes: 2, gap: 2.5)),
+    RoutingNode(id: 'stack', data: RoutingNodeData.stack(mode: StackMode.collect, direction: StackDirection.rows, lanes: 2, gap: 2.5)),
     RoutingNode(id: 'margins', data: RoutingNodeData.margins(margins: PrintMargins(top: 1.5, left: 2))),
     RoutingNode(id: 'printer', data: RoutingNodeData.printer(
       label: 'DNP strip',

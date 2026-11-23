@@ -138,7 +138,11 @@ sealed class RoutingNodeData with _$RoutingNodeData {
   /// Every copy goes to the column that is filled least, so the sheet fills from the top and the rest of it can be fed
   /// again. Rows work the same way from the left. Sheets are filled for one printer, so a stack only connects to a
   /// printer.
+  ///
+  /// In [StackMode.direct], the copies of one print share sheets, which are printed right away. In
+  /// [StackMode.collect], copies of several prints wait until their sheet is full.
   const factory RoutingNodeData.stack({
+    @Default(StackMode.direct) StackMode mode,
     @Default(StackDirection.columns) StackDirection direction,
 
     /// The number of columns or rows.
@@ -219,6 +223,10 @@ enum PrinterBackend { native, cups }
 
 /// How a stack fills its sheets: in columns from the top, or in rows from the left.
 enum StackDirection { columns, rows }
+
+/// When a stack prints its sheets: right away with the copies of one print, or once a sheet is full with copies of
+/// several prints.
+enum StackMode { direct, collect }
 
 @Freezed(fromJson: true, toJson: true)
 sealed class PrintMedia with _$PrintMedia {
