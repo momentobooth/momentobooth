@@ -225,7 +225,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
           SettingsToggleTile(
             icon: LucideIcons.printerX,
             title: "Skip sending print jobs to printers",
-            subtitle: "Print jobs are routed and rendered as usual, but not sent to a printer, e.g. to test the print routing. The last sheet is kept as 'latest-print.pdf' in the output folder; enable extensive print job logging to keep every sheet. Skipped prints are not counted in the statistics.",
+            subtitle: "Print jobs are routed and rendered as usual, but not sent to a printer, e.g. to test the print routing. The last sheet is kept as 'latest-print.pdf' in the 'Prints' folder of the project; enable extensive print job logging to keep every sheet. Skipped prints are not counted in the statistics.",
             value: () => viewModel.skipSendingPrintJobs,
             onChanged: controller.onSkipSendingPrintJobsChanged,
           ),
@@ -237,7 +237,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
           SettingsToggleTile(
             icon: LucideIcons.logs,
             title: "Enable extensive print job logging",
-            subtitle: "Store every print job and meta data (e.g. requested paper size) in folder named 'PrintJobs' inside the output folder.",
+            subtitle: "Store every print job and meta data (e.g. requested paper size) in a folder named 'PrintJobs' inside the 'Prints' folder of the project.",
             value: () => viewModel.enableExtensivePrintJobLog,
             onChanged: controller.onEnableExtensivePrintJobLogChanged,
           ),

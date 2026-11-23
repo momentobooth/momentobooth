@@ -55,7 +55,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
       _collector = null;
       return;
     }
-    final collector = StackCollector(DirectoryCollectedCopyStore(Directory(path.join(projectPath.path, 'CollectedPrints'))));
+    final collector = StackCollector(DirectoryCollectedCopyStore(Directory(path.join(projectPath.path, 'Prints', 'Collections'))));
     try {
       await collector.load();
     } catch (error, stackTrace) {
@@ -178,11 +178,12 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     ];
     if (pdfs.isEmpty) return;
 
-    final outputDir = getIt<ProjectManager>().getOutputDir();
-    await writeBytesToFileLocked(path.join(outputDir.path, 'latest-print.pdf'), pdfs.last);
+    final printsDir = getIt<ProjectManager>().getPrintsDir();
+    await printsDir.create(recursive: true);
+    await writeBytesToFileLocked(path.join(printsDir.path, 'latest-print.pdf'), pdfs.last);
 
     if (!getIt<SettingsManager>().settings.debug.enableExtensivePrintJobLog) return;
-    final printJobDirectory = Directory(path.join(outputDir.path, 'PrintJobs'));
+    final printJobDirectory = Directory(path.join(printsDir.path, 'PrintJobs'));
     if (!printJobDirectory.existsSync()) printJobDirectory.createSync();
 
     final printJobPath = path.join(printJobDirectory.path, DateFormat('yyyyMMdd_HHmmss').format(DateTime.now()));

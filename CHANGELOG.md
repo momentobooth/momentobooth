@@ -14,6 +14,7 @@
 ### Changes
 - Photos are now turned to match the orientation of the media or tile they are printed on, instead of assuming portrait media
 - Small and tiny prints no longer compensate the collage padding
+- `latest-print.pdf` and the `PrintJobs` folder of the extensive print job log moved from the `Output` folder to a new `Prints` folder in the project
 
 ### Dev changes
 - Debug setting to skip sending print jobs to the printers, to test the print routing without printing

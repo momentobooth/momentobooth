@@ -55,7 +55,7 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
 
   static const statsSaveTimerInterval = StatsManagerBase.statsSaveTimerInterval;
 
-  static const subDirs = ["Input", "Output", "Templates", "Videos"];
+  static const subDirs = ["Input", "Output", "Templates", "Videos", "Prints"];
 
   @readonly
   late ProjectsList _projectsList;
@@ -281,6 +281,11 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
 
   Directory getVideoDir() {
     return Directory(join(_path!.path, subDirs[3]));
+  }
+
+  /// Where printing keeps its files: the copies waiting on stacks, the last printed sheet and the print job log.
+  Directory getPrintsDir() {
+    return Directory(join(_path!.path, subDirs[4]));
   }
 
   @action
