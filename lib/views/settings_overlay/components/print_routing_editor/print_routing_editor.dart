@@ -275,8 +275,8 @@ class _AddNodeButton extends StatelessWidget {
         style: ButtonStyle(
           // In the colours of the node header, a little stronger on interaction.
           backgroundColor: WidgetStateProperty.resolveWith((states) => switch (states) {
-            _ when states.contains(WidgetState.pressed) => kind.color.normal.withValues(alpha: 0.32),
-            _ when states.contains(WidgetState.hovered) => kind.color.normal.withValues(alpha: 0.22),
+            _ when states.contains(WidgetState.pressed) => kind.tintBase.withValues(alpha: 0.32),
+            _ when states.contains(WidgetState.hovered) => kind.tintBase.withValues(alpha: 0.22),
             _ => routingNodeKindTint(kind),
           }),
         ),

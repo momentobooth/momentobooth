@@ -50,6 +50,10 @@ enum RoutingNodeKind {
     printer => Colors.teal,
   };
 
+  /// The shade the header tint and the button that adds the node are derived from. The normal shade of yellow is so
+  /// light that it hardly shows as a tint.
+  Color get tintBase => this == stack ? color.darker : color.normal;
+
   static RoutingNodeKind of(RoutingNodeData data) => switch (data) {
     SourceNodeData() => source,
     RoundRobinNodeData() => roundRobin,
@@ -62,7 +66,7 @@ enum RoutingNodeKind {
 
 }
 
-Color routingNodeKindTint(RoutingNodeKind kind) => kind.color.normal.withValues(alpha: 0.14);
+Color routingNodeKindTint(RoutingNodeKind kind) => kind.tintBase.withValues(alpha: 0.14);
 
 String printSizeShortLabel(PrintSize size) => switch (size) {
   PrintSize.normal => 'Normal',
@@ -84,7 +88,8 @@ String routingPortLabel(RoutingNodeData data, RoutingPortSpec port) => switch (d
 Color? routingPortTypeColor(RoutingPortType? type) => switch (type) {
   RoutingPortType.photo => Colors.blue.normal,
   RoutingPortType.sheet => Colors.orange.normal,
-  RoutingPortType.stack => Colors.yellow.normal,
+  // The normal shade of yellow is too bright on a light canvas.
+  RoutingPortType.stack => Colors.yellow.darker,
   RoutingPortType.margins => Colors.green.normal,
   null => null,
 };
