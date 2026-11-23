@@ -80,7 +80,26 @@ graph LR
     T -- Sheet --> P2["Printer: 2×6"]
 ```
 
+For a landscape collage, the user gets a 4×6" print with the collage turned to fill it, and a 2×6" strip with two smaller copies, also turned:
+
+```mermaid
+block-beta
+    columns 4
+    block:normal:2
+        columns 1
+        n1["<br><br>4×6:<br>collage<br><br><br>"]
+    end
+    space
+    block:strip
+        columns 1
+        t1["<br>2×3<br><br>"]
+        t2["<br>2×3<br><br>"]
+    end
+```
+
 ### Split prints for three-photo collages
+
+This "print size" can only be used with photo printers that have a cutting mechanism.
 
 A collage of three photos holds the photos twice, side by side, so it can be printed as two strips. When the _Split_ output is routed, a three-photo collage printed at normal size follows the _Split_ route: the left and right halves are printed as two separate pages, e.g. on 2×6" media. When _Split_ is not routed, the collage follows the _Normal_ route and is printed as a whole, to be cut apart afterwards.
 
@@ -88,6 +107,23 @@ A collage of three photos holds the photos twice, side by side, so it can be pri
 graph LR
     S["Source"] -- Normal --> P1["Printer: Kodak 4×6"]
     S -- Split --> P2["Printer: Kodak 2×6"]
+```
+
+Each half of the collage is printed on a page of its own:
+
+```mermaid
+block-beta
+    columns 3
+    block:collage
+        columns 2
+        cl["<br><br>Left<br>half<br><br><br>"] cr["<br><br>Right<br>half<br><br><br>"]
+    end
+    space
+    block:pages
+        columns 2
+        page1["<br><br>Page 1<br><br><br>"] page2["<br><br>Page 2<br><br><br>"]
+    end
+    collage --> pages
 ```
 
 Split prints are always printed in halves, so tile layouts on their route are not used.

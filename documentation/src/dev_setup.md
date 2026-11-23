@@ -38,11 +38,8 @@ For all languages, frameworks and tools, we support the latest versions.
   * Be sure that the `flutter` command is available globally as `flutter_rust_bridge_codegen` needs it.\
     This is especially important when using Flutter SDK managers like `asdf` or `fvm`
 * Optional: For building the documentation mdBook and some extensions for mdBook are needed
-  * Install using Cargo:
-
-    ```sh
-    cargo install mdbook mdbook-mermaid
-    ```
+  * Install the versions the documentation workflows use with `just install-mdbook`
+  * Build the documentation with `just build-docs`, which also installs Mermaid (it is not kept in the repository)
 
 * Be sure to read the docs for troubleshooting and workarounds
 

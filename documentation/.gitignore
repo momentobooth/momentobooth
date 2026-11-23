@@ -1,1 +1,4 @@
 book
+# Installed by `mdbook-mermaid install` before building, see the justfile and the documentation workflows.
+mermaid.min.js
+mermaid-init.js

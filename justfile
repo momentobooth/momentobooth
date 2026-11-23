@@ -116,11 +116,24 @@ test-cups: start-cups-test-server
 # Docs
 ##
 
+# The same versions as the documentation workflows.
 install-mdbook:
-  cargo install mdbook mdbook-mermaid
+  cargo install mdbook --version 0.5.1 --locked
+  cargo install mdbook-mermaid --version 0.17.1 --locked
 
-build-docs:
+build-docs: install-mermaid
   mdbook build documentation
+
+# Installs Mermaid in the documentation. mdbook-mermaid does not replace existing files, so the old ones go first.
+[windows]
+install-mermaid:
+  -Remove-Item -ErrorAction Ignore documentation/mermaid.min.js, documentation/mermaid-init.js
+  mdbook-mermaid install documentation
+
+[unix]
+install-mermaid:
+  rm -f documentation/mermaid.min.js documentation/mermaid-init.js
+  mdbook-mermaid install documentation
 
 ##
 # Other commands

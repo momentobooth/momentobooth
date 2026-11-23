@@ -2,6 +2,8 @@ name: Deploy docs to GitHub Pages
 
 env:
   MDBOOK_VERSION: "0.5.1"
+  # Also decides the Mermaid version, which it installs.
+  MDBOOK_MERMAID_VERSION: "0.17.1"
   BOOK_LOCATION: "documentation"
 
 on:
@@ -54,6 +56,10 @@ jobs:
         uses: baptiste0928/cargo-install@v3
         with:
           crate: mdbook-mermaid
+          version: ${{ env.MDBOOK_MERMAID_VERSION }}
+
+      - name: Install Mermaid
+        run: mdbook-mermaid install ${{ env.BOOK_LOCATION }}
 
       - name: Build static site
         run: mdbook build ${{ env.BOOK_LOCATION }} --dest-dir _site
