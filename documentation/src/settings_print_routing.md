@@ -77,6 +77,29 @@ Each photo is **turned to fill its tile best**: a landscape photo in a portrait 
 | 2 columns, 1 row | 2 tiles of about 50 × 148 mm (portrait) | Turned a quarter turn, side by side |
 | 2 columns, 2 rows | 4 tiles of about 50 × 74 mm (portrait) | Turned a quarter turn |
 
+The same three grids, from left to right:
+
+```mermaid
+block-beta
+    columns 5
+    block:oneByTwo
+        columns 1
+        a1["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Photo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>"]
+        a2["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Photo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br><br>"]
+    end
+    space
+    block:twoByOne
+        columns 2
+        b1["<br><br>Photo,<br>turned<br><br><br>"] b2["<br><br>Photo,<br>turned<br><br><br>"]
+    end
+    space
+    block:twoByTwo
+        columns 2
+        c1["<br>Turned<br><br>"] c2["<br>Turned<br><br>"]
+        c3["<br>Turned<br><br>"] c4["<br>Turned<br><br>"]
+    end
+```
+
 Because the tiles follow the printer, one tile layout can feed printers with different media. Connected to a round-robin node with a 4×6" and a 2×6" printer behind it, the same 1 by 2 grid gives two landscape tiles on the 4×6" media and two portrait tiles on the 2×6" media, and the photos are turned to match on each.
 
 The print dialog takes the grid into account: with 2 columns and 2 rows, every copy a user orders gives four photos on one sheet, and the dialog shows that it prints 4 copies at a time.
@@ -94,7 +117,25 @@ A stack node puts the copies of a print together on as few sheets as possible, t
 
 Like a tile layout, a stack has no size of its own. Each copy gets the width of a column and the height that follows from its own shape, and is **turned to use the least height**: a portrait photo lies sideways. The copies are placed from the top of the sheet down. Each copy goes to the column that is filled least, below the copies already there, and when it does not fit in any column, it starts a new sheet. All sheets of a print are sent to the printer as a single job.
 
-Take, for example, three copies of a landscape collage (3:2) on A4 media (210 × 297 mm) with margins of 5 mm and 2 columns. Each column is about 98 mm wide, so each copy is about 98 × 66 mm. The first two copies lie side by side at the top of the sheet, and the third one below the first. After cutting off the copies, the rest of the sheet can be fed into the printer again for the next print. Whether a printer accepts such a shorter sheet differs per printer; most have a minimum paper length.
+Take, for example, three copies of a landscape collage (3:2) on A4 media (210 × 297 mm) with margins of 5 mm and 2 columns. Each column is about 98 mm wide, so each copy is about 98 × 66 mm. The first two copies lie side by side at the top of the sheet, and the third one below the first:
+
+```mermaid
+---
+config:
+  block:
+    useMaxWidth: false
+---
+block-beta
+    block:sheet
+        columns 2
+        copy1["Copy 1<br>98 × 66 mm"] copy2["Copy 2<br>98 × 66 mm"]
+        copy3["Copy 3<br>98 × 66 mm"] space
+        rest["<br>Rest of the sheet:<br>cut off and fed again<br>for the next print<br><br>"]:2
+    end
+    style rest fill:none,stroke-dasharray:4 4
+```
+
+After cutting off the copies, the rest of the sheet can be fed into the printer again for the next print. Whether a printer accepts such a shorter sheet differs per printer; most have a minimum paper length.
 
 The halves of a split print are stacked as two separate copies, so each half lies sideways across its column as a strip.
 

@@ -17,6 +17,7 @@
 
 ### Dev changes
 - Debug setting to skip sending print jobs to the printers, to test the print routing without printing
+- Documentation: Mermaid is no longer kept in the repository, but installed by mdbook-mermaid before building. Its version is set in the documentation workflows and the justfile (mdbook-mermaid 0.17.1, Mermaid 11.6.0, was 9.2.2)
 
 ## 0.17.0
 
