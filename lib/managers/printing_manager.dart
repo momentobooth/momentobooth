@@ -70,7 +70,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     } else if (_router.printableSizes.isEmpty) {
       reportSubsystemWarning(message: "Printing is enabled, but no print size reaches a configured printer. Connect a printer on the Print routing settings page.");
     } else if (_failedPrinters.isNotEmpty) {
-      reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it.");
+      reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it, which is not the case for stacked copies.");
     } else if (_router.analysis.hasErrors) {
       reportSubsystemWarning(message: "The print routing graph has problems, which are listed on the Print routing settings page. Connections with problems are ignored.");
     } else {

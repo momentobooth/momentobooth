@@ -109,6 +109,23 @@ void main() {
       }
     });
 
+    test('does not route through a stack whose gaps take up the printable width of its printer', () {
+      // The printer is 100 mm wide: 3 columns 50 mm apart need 100 mm for the gaps alone.
+      PrintRoutingAnalysis analyze(double gap) => PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('stack', RoutingNodeData.stack(columns: 3, gap: gap)),
+          _node('printer', _printer),
+        ],
+        edges: [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'printer')],
+      ));
+
+      expect(analyze(50).errors, const [RoutingIssue(kind: RoutingIssueKind.stackTooWide, nodeId: 'stack')]);
+      expect(analyze(50).reachablePrinterIds[PrintSize.normal], isEmpty);
+      expect(analyze(49).errors, isEmpty);
+      expect(analyze(49).reachablePrinterIds[PrintSize.normal], {'printer'});
+    });
+
     test('does not print with margins that leave no room on the media', () {
       PrintRoutingAnalysis analyze({required PrintMargins own, PrintMargins? connected}) => PrintRoutingAnalysis.of(PrintRoutingGraph(
         nodes: [

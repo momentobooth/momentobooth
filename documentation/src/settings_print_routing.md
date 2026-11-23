@@ -23,7 +23,7 @@ A few rules follow from this:
 - The print button is only shown when the project setting [Enable printing](settings_project.md#enable-printing) is on and the photo can be printed at one of the routed print sizes.
 - The _Split_ print size is not a choice in the print dialog. When a user prints a collage of three photos at _Normal_ size and _Split_ is routed, the print follows the _Split_ route instead. When _Split_ is not routed, the _Normal_ route is used. A booth that only offers split prints can route _Split_ alone: collages of three photos then offer _Normal_, which prints split, and other photos cannot be printed.
 - Every copy is routed separately. When a user prints three copies, each copy follows its own route, so a round-robin node can send them to different printers. Copies that end up at the same [stack](#stack) share its sheets.
-- Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works. When a printer fails while printing, a round-robin node lets its next output print the copy, and a duplicate node still prints on its other outputs. The print only fails when no printer takes a copy.
+- Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works. When a printer fails while printing, a round-robin node lets its next output print the copy, and a duplicate node still prints on its other outputs. The print only fails when no printer takes a copy, or when the printer of a [stack](#stack) fails.
 
 A new installation starts with a source whose _Normal_ output is connected to a single printer node. That printer still has to be configured before anything can be printed.
 
@@ -100,7 +100,7 @@ The halves of a split print are stacked as two separate copies, so each half lie
 
 Only the copies that end up at the same stack share sheets. Behind a round-robin node with a stack per printer, the copies alternate between the stacks, and each stack fills its own sheets. The sheets of a stack are sent once all copies of the print are routed, so when its printer fails, no other printer can take over these copies, and the print fails.
 
-A stack with fewer than 1 column or a negative gap is an error; its connections are ignored.
+A stack with fewer than 1 column or a negative gap is an error; its connections are ignored. So is a stack whose gaps between the columns take up the whole printable width of its printer.
 
 ### Margins
 
@@ -165,6 +165,7 @@ Connections with errors are ignored, while the rest of the routing keeps working
 | There is no source node. | The routing has no source, so nothing can be printed. |
 | Columns and rows must be at least 1. | A tile layout has an invalid grid. Its connections are ignored. |
 | Columns must be at least 1, and the gap cannot be negative. | A stack has invalid fields. Its connections are ignored. |
+| The gaps between the columns do not fit on the media of the printer. | The gaps of a stack take up the whole printable width of its printer, so no room is left for the copies. The stack is skipped. |
 | A stored connection is invalid and is ignored. / A connection is stored twice. / Two nodes share the ID "…". | The saved routing is damaged, for example after editing the settings file by hand or importing settings. |
 
 ## Editing
