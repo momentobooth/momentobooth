@@ -92,6 +92,18 @@ graph LR
 
 Split prints are always printed in halves, so tile layouts on their route are not used.
 
+### Saving paper on a regular printer
+
+Not everyone has a photo printer, and apart from a compact one like the Canon Selphy, buying one for a single event is usually not worth it. A regular inkjet or laser printer will do as well, but prints on A4 or Letter paper, of which a single print leaves most unused. Route the _Normal_ output through a stack node to that printer, and the copies of a print are put together on as few sheets as possible, to be cut apart afterwards.
+
+```mermaid
+graph LR
+    S["Source"] -- Normal --> K["Stack: 2 columns"]
+    K -- Stack --> P["Printer: A4"]
+```
+
+With 2 columns, three copies of a landscape collage fit at the top of an A4 sheet. The rest of the sheet can be fed into the printer again for the next print, if the printer accepts shorter paper. See [stack](settings_print_routing.md#stack) for how the copies are placed.
+
 ## Recommended settings for Canon Selphy CP1300/CP1500
 
 The Canon Selphy series of cheap and compact photo printers. The Selphy printers are quite convenient for photo booth purposes, as long as the volume of prints is not too big, since they have a limited and ink roll paper storage volume.

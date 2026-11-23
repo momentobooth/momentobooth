@@ -132,6 +132,18 @@ sealed class RoutingNodeData with _$RoutingNodeData {
     @Default(1) int rows,
   }) = TileLayoutNodeData;
 
+  /// Stacks the copies of a print on the sheet of the printer it is connected to, to be cut apart afterwards. The
+  /// sheet is divided into [columns] of equal width; each copy gets the width of a column and the height that follows
+  /// from its own aspect ratio, turned to use the least height. Every copy goes to the column that is filled least, so
+  /// the sheet fills from the top and the rest of it can be fed again. Sheets are filled for one printer, so a stack
+  /// only connects to a printer.
+  const factory RoutingNodeData.stack({
+    @Default(1) int columns,
+
+    /// Space in mm between the copies, to cut them apart.
+    @Default(3.0) double gap,
+  }) = StackNodeData;
+
   /// Margins that can be shared between printer configurations.
   const factory RoutingNodeData.margins({
     @Default(PrintMargins()) PrintMargins margins,
@@ -154,8 +166,8 @@ sealed class RoutingNodeData with _$RoutingNodeData {
   factory RoutingNodeData.fromJson(Map<String, Object?> json) => _$RoutingNodeDataFromJson(json);
 
   // Only arbiters split the job flow, so jobs never fan out implicitly: other job outputs take a single connection.
-  // Print sizes only come together at printers: every job input except that of a printer takes a single connection, so
-  // each arbiter carries one print size.
+  // Print sizes only come together at printers and stacks: every other job input takes a single connection, so each
+  // arbiter carries one print size.
   List<RoutingPortSpec> get ports => switch (this) {
     SourceNodeData() => [
       for (final size in PrintSize.values)
@@ -180,12 +192,17 @@ sealed class RoutingNodeData with _$RoutingNodeData {
       RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: {RoutingPortType.photo}, maxConnections: 1),
       RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: {RoutingPortType.sheet}, maxConnections: 1),
     ],
+    StackNodeData() => const [
+      // Like a printer, a stack is where print sizes may come together.
+      RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: {RoutingPortType.photo}),
+      RoutingPortSpec(id: RoutingPorts.output, direction: RoutingPortDirection.output, types: {RoutingPortType.stack}, maxConnections: 1),
+    ],
     MarginsNodeData() => const [
       RoutingPortSpec(id: RoutingPorts.margins, direction: RoutingPortDirection.output, types: {RoutingPortType.margins}),
     ],
     PrinterNodeData() => const [
       // A photo connected directly is fitted on the sheet as a single tile.
-      RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: jobPortTypes),
+      RoutingPortSpec(id: RoutingPorts.input, direction: RoutingPortDirection.input, types: {...jobPortTypes, RoutingPortType.stack}),
       RoutingPortSpec(id: RoutingPorts.margins, direction: RoutingPortDirection.input, types: {RoutingPortType.margins}, maxConnections: 1),
     ],
   };
@@ -242,11 +259,15 @@ enum RoutingPortType {
   /// A photo laid out on a sheet.
   sheet,
 
+  /// Copies stacked on a sheet. Only a printer accepts them, as the sheet is filled for its media.
+  stack,
+
   margins,
 
 }
 
-/// Types that carry print jobs, as opposed to values like margins.
+/// Types that carry print jobs, as opposed to values like margins, and that arbiters pass on. Stacks carry print jobs
+/// too, but only go to a printer.
 const Set<RoutingPortType> jobPortTypes = {RoutingPortType.photo, RoutingPortType.sheet};
 
 class RoutingPortSpec {

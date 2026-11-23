@@ -14,7 +14,19 @@ class PrintRoute {
   /// Null when the photo is fitted on the sheet as a whole.
   final TileLayoutNodeData? layout;
 
-  const PrintRoute({required this.printerNodeId, required this.printer, required this.margins, this.layout});
+  /// The stack node the copy passes, which puts it on a sheet together with the other copies of the print. Null when
+  /// the copy is printed on a sheet of its own.
+  final String? stackNodeId;
+  final StackNodeData? stack;
+
+  const PrintRoute({
+    required this.printerNodeId,
+    required this.printer,
+    required this.margins,
+    this.layout,
+    this.stackNodeId,
+    this.stack,
+  });
 
   /// What the rendered sheet depends on besides the photo. Routes with the same key can share one rendering.
   Object get renderKey => (printer.media.widthMm, printer.media.heightMm, margins, layout);
@@ -25,17 +37,20 @@ class PrintRoute {
       other.printerNodeId == printerNodeId &&
       other.printer == printer &&
       other.margins == margins &&
-      other.layout == layout;
+      other.layout == layout &&
+      other.stackNodeId == stackNodeId &&
+      other.stack == stack;
 
   @override
-  int get hashCode => Object.hash(printerNodeId, printer, margins, layout);
+  int get hashCode => Object.hash(printerNodeId, printer, margins, layout, stackNodeId, stack);
 
   @override
-  String toString() => 'PrintRoute($printerNodeId, ${printer.label}, $margins, $layout)';
+  String toString() => 'PrintRoute(${[printerNodeId, printer.label, margins, ?layout, ?stackNodeId].join(', ')})';
 
 }
 
-/// Sends one sheet of a print to a printer. Returns whether the printer took it.
+/// Sends one sheet of a print to a printer, or, for a route through a stack node, puts the copy on the stack. Returns
+/// whether the printer took it.
 typedef PrintSheet = Future<bool> Function(PrintRoute route);
 
 /// Picks the printers for the copies of a print by following the routable edges of a [PrintRoutingGraph].
@@ -91,7 +106,7 @@ class PrintRouter {
     return _printOnAll(size, starts, null, printSheet);
   }
 
-  Future<bool> _print(PrintSize size, String nodeId, TileLayoutNodeData? layout, PrintSheet printSheet) async {
+  Future<bool> _print(PrintSize size, String nodeId, TileLayoutNodeData? layout, PrintSheet printSheet, {String? stackNodeId}) async {
     if (!_reaches(size, nodeId)) return false;
     final candidates = [
       for (final edge in _jobEdgesFrom[nodeId] ?? const <RoutingEdge>[])
@@ -100,10 +115,20 @@ class PrintRouter {
 
     switch (_nodes[nodeId]!.data) {
       case final PrinterNodeData printer:
-        return printSheet(PrintRoute(printerNodeId: nodeId, printer: printer, margins: _marginsOf(nodeId, printer), layout: layout));
+        return printSheet(PrintRoute(
+          printerNodeId: nodeId,
+          printer: printer,
+          margins: _marginsOf(nodeId, printer),
+          layout: layout,
+          stackNodeId: stackNodeId,
+          stack: _nodes[stackNodeId]?.data as StackNodeData?,
+        ));
       case final TileLayoutNodeData tile:
         // Split prints are always printed in halves.
         return _printOnAll(size, candidates, size == PrintSize.split ? layout : tile, printSheet);
+      case StackNodeData():
+        // Only connects to a printer.
+        return _printOnAll(size, candidates, null, printSheet, stackNodeId: nodeId);
       case DuplicateNodeData():
         return _printOnAll(size, candidates, layout, printSheet);
       case RoundRobinNodeData():
@@ -124,10 +149,10 @@ class PrintRouter {
   }
 
   /// Prints on every one of [edges], also when an earlier one fails. Returns whether any printer took a sheet.
-  Future<bool> _printOnAll(PrintSize size, List<RoutingEdge> edges, TileLayoutNodeData? layout, PrintSheet printSheet) async {
+  Future<bool> _printOnAll(PrintSize size, List<RoutingEdge> edges, TileLayoutNodeData? layout, PrintSheet printSheet, {String? stackNodeId}) async {
     bool printed = false;
     for (final edge in edges) {
-      if (await _print(size, edge.toNode, layout, printSheet)) printed = true;
+      if (await _print(size, edge.toNode, layout, printSheet, stackNodeId: stackNodeId)) printed = true;
     }
     return printed;
   }
@@ -153,6 +178,7 @@ class PrintRouter {
       PrinterNodeData() => layout == null ? 1 : layout.columns * layout.rows,
       final TileLayoutNodeData tile => onlyValue(branches(size == PrintSize.split ? layout : tile)),
       RoundRobinNodeData() => onlyValue(branches(layout)),
+      StackNodeData() => onlyValue(branches(null)),
       DuplicateNodeData() => branches(layout).fold<int?>(0, (sum, photos) => sum == null || photos == null ? null : sum + photos),
       SourceNodeData() || MarginsNodeData() => null,
     };

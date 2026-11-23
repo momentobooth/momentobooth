@@ -184,6 +184,53 @@ void main() {
     });
   });
 
+  group('PrintRouter with stacks', () {
+    test('marks copies that pass a stack with the stack', () async {
+      final router = PrintRouter(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('stack', const RoutingNodeData.stack(columns: 2)),
+          _node('a', _printer('a')),
+        ],
+        edges: [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'a')],
+      ));
+
+      expect(await _copy(router, PrintSize.normal), [
+        PrintRoute(
+          printerNodeId: 'a',
+          printer: _printer('a') as PrinterNodeData,
+          margins: const PrintMargins(),
+          stackNodeId: 'stack',
+          stack: const RoutingNodeData.stack(columns: 2) as StackNodeData,
+        ),
+      ]);
+      expect(router.photosPerCopy(PrintSize.normal), 1);
+    });
+
+    test('alternates between stacks behind a round-robin', () async {
+      final router = PrintRouter(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('robin', const RoutingNodeData.roundRobin()),
+          _node('stack a', const RoutingNodeData.stack()),
+          _node('stack b', const RoutingNodeData.stack()),
+          _node('a', _printer('a')),
+          _node('b', _printer('b')),
+        ],
+        edges: [
+          _edge('source', 'normal', 'robin'),
+          _edge('robin', 'out', 'stack a'),
+          _edge('robin', 'out', 'stack b'),
+          _edge('stack a', 'out', 'a'),
+          _edge('stack b', 'out', 'b'),
+        ],
+      ));
+
+      final stacks = [for (int i = 0; i < 3; i++) for (final route in await _copy(router, PrintSize.normal)) route.stackNodeId];
+      expect(stacks, ['stack a', 'stack b', 'stack a']);
+    });
+  });
+
   group('choosablePrintSizes', () {
     test('offers the routed sizes, without split', () {
       expect(choosablePrintSizes(PrintSize.values.toSet(), isThreePhotoCollage: false), [PrintSize.normal, PrintSize.small, PrintSize.tiny]);

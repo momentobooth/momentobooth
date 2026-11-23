@@ -167,6 +167,14 @@ void main() {
       await _settle();
       expect(viewModel.connectionHint, 'This connection would create a loop.');
 
+      // A stack into anything but a printer.
+      viewModel.addNode(RoutingNodeKind.stack, Offset.zero);
+      final stack = viewModel.graph.nodes.last.id;
+      expect(editor().canConnect(PortRef(stack, 'out'), PortRef(robin2, 'in')), isFalse);
+      await _settle();
+      expect(viewModel.connectionHint, 'A stack connects straight to a printer, as it fills sheets for the media of that printer.');
+      expect(editor().canConnect(PortRef(stack, 'out'), const PortRef('canon', 'in')), isTrue);
+
       expect(editor().canConnect(const PortRef('source', 'tiny'), const PortRef('canon', 'in')), isTrue);
       await _settle();
       expect(viewModel.connectionHint, isNull);
