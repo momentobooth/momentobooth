@@ -37,7 +37,7 @@ String describeRoutingIssue(RoutingIssue issue, PrintRoutingGraph graph) {
     RoutingIssueKind.missingSource => 'There is no source node.',
     RoutingIssueKind.duplicateSource => 'Only one source is used, this one is ignored.',
     RoutingIssueKind.invalidParameter => switch (nodeById(issue.nodeId)?.data) {
-      StackNodeData() => 'There must be at least 1 column or row, and the gap cannot be negative.',
+      StackNodeData() => 'There must be at least 1 column or row, and the gap and idle time cannot be negative.',
       _ => 'Columns and rows must be at least 1.',
     },
     RoutingIssueKind.unknownNode || RoutingIssueKind.unknownPort || RoutingIssueKind.wrongDirection =>

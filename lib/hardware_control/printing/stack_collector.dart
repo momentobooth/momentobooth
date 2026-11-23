@@ -147,6 +147,14 @@ class StackCollector {
 
   Future<Uint8List> readImage(CollectedCopy copy) => store.readImage(copy.imageFile);
 
+  /// When the last copy was added to stack [stackNodeId], or null when no copy waits on it.
+  DateTime? lastAddedAt(String stackNodeId) {
+    for (final copy in _copies.reversed) {
+      if (copy.stackNodeId == stackNodeId) return copy.addedAt;
+    }
+    return null;
+  }
+
   /// The copies waiting on [stackNodeId], divided over the sheets of [route] in the order they came in. A copy is never
   /// divided over two sheets. Every sheet but the last is full; the last one is only included when it is full too, or
   /// with [includeUnfull].

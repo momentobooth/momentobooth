@@ -165,7 +165,7 @@ class _Analyzer {
 
       final bool validParameters = switch (node.data) {
         TileLayoutNodeData(:final columns, :final rows) => columns >= 1 && rows >= 1,
-        StackNodeData(:final lanes, :final gap) => lanes >= 1 && gap >= 0,
+        StackNodeData(:final lanes, :final gap, :final printAfterIdleMinutes) => lanes >= 1 && gap >= 0 && printAfterIdleMinutes >= 0,
         _ => true,
       };
       if (!validParameters) {

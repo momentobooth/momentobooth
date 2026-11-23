@@ -136,6 +136,21 @@ class RoutingNodeCard extends StatelessWidget {
         onChanged: (value) => update(data.copyWith(mode: value ?? data.mode)),
       ),
     ),
+    if (data.mode == StackMode.collect)
+      _FieldRow(
+        key: const ValueKey('printAfterIdleMinutes'),
+        label: 'Idle (min)',
+        child: Tooltip(
+          message: 'Also print a sheet that is not full once no copy was added for this many minutes. 0 waits for a full sheet.',
+          child: NumberBox<int>(
+            value: data.printAfterIdleMinutes,
+            min: 0,
+            clearButton: false,
+            mode: SpinButtonPlacementMode.inline,
+            onChanged: (value) => update(data.copyWith(printAfterIdleMinutes: value ?? data.printAfterIdleMinutes)),
+          ),
+        ),
+      ),
     _FieldRow(
       key: const ValueKey('direction'),
       label: 'Fill',

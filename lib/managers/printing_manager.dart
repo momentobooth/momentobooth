@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -45,7 +46,11 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     reaction((_) => getIt<SettingsManager>().settings.hardware.printRoutingGraph, _updateRouter, fireImmediately: true);
     reaction((_) => getIt<ProjectManager>().settings.enablePrinting, (_) => _reportStatus());
     reaction((_) => getIt<ProjectManager>().path, _openCollector, fireImmediately: true);
+    Timer.periodic(idleCheckInterval, (_) => _printIdleStacks());
   }
+
+  /// How often the stacks with an idle time are checked.
+  static const idleCheckInterval = Duration(seconds: 30);
 
   /// The copies that wait on stacks in collect mode, kept in the project folder. Null without an open project.
   StackCollector? _collector;
@@ -62,6 +67,26 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
       logError("Could not load the copies waiting on stacks from ${projectPath.path}", error, stackTrace);
     }
     _collector = collector;
+    _updateWaitingCopies();
+  }
+
+  /// The copies that wait on stacks for their sheet.
+  @readonly
+  int _waitingCopies = 0;
+
+  /// The waiting copies of stacks that do not reach a printer.
+  int _strandedCopies = 0;
+
+  @action
+  void _updateWaitingCopies() {
+    final copies = _collector?.copies ?? const [];
+    final strandedStacks = {
+      for (final copy in copies)
+        if (_router.stackRoute(copy.stackNodeId) == null) copy.stackNodeId,
+    };
+    _waitingCopies = copies.length;
+    _strandedCopies = copies.where((copy) => strandedStacks.contains(copy.stackNodeId)).length;
+    _reportStatus();
   }
 
   // /////// //
@@ -75,7 +100,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   void _updateRouter(PrintRoutingGraph graph) {
     // The round-robin nodes start over with a new graph, which is fine after editing it.
     _router = PrintRouter(graph);
-    _reportStatus();
+    _updateWaitingCopies();
   }
 
   /// The labels of the printers that failed during the last print.
@@ -83,17 +108,20 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
 
   @action
   void _reportStatus() {
+    final actions = {if (_waitingCopies > 0) 'Print collected sheets': printCollectedSheets};
     // Disabled until a printer is set up on this computer, or when the project does not print.
     if (!getIt<ProjectManager>().settings.enablePrinting || !_router.analysis.hasConfiguredPrinter) {
       reportSubsystemDisabled();
     } else if (_router.printableSizes.isEmpty) {
-      reportSubsystemWarning(message: "Printing is enabled, but no print size reaches a configured printer. Connect a printer on the Print routing settings page.");
+      reportSubsystemWarning(message: "Printing is enabled, but no print size reaches a configured printer. Connect a printer on the Print routing settings page.", actions: actions);
     } else if (_failedPrinters.isNotEmpty) {
-      reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it, which is not the case for stacked copies.");
+      reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it, which is not the case for stacked copies. Copies on collected sheets keep waiting.", actions: actions);
+    } else if (_strandedCopies > 0) {
+      reportSubsystemWarning(message: "$_strandedCopies copies wait on a stack that does not reach a printer. Connect the stack to a printer to print them.", actions: actions);
     } else if (_router.analysis.hasErrors) {
-      reportSubsystemWarning(message: "The print routing graph has problems, which are listed on the Print routing settings page. Connections with problems are ignored.");
+      reportSubsystemWarning(message: "The print routing graph has problems, which are listed on the Print routing settings page. Connections with problems are ignored.", actions: actions);
     } else {
-      reportSubsystemOk();
+      reportSubsystemOk(message: _waitingCopies > 0 ? "$_waitingCopies copies wait on stacks until their sheet is full." : null, actions: actions);
     }
   }
 
@@ -140,14 +168,40 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     logError: logError,
   );
 
-  /// Prints [copies] copies of [image] at [size], see [PrintJobRunner.run]. Throws a [PrintingException] when not every
-  /// copy was printed. The rendered sheets are kept in any case.
-  Future<void> printPhoto({required String jobName, required Uint8List image, required PrintSize size, int copies = 1}) async {
+  /// Prints [copies] copies of [image] at [size], see [PrintJobRunner.run]. Returns how many copies wait on a stack, to
+  /// be printed with a later sheet. Throws a [PrintingException] when not every copy was printed or is waiting. The
+  /// rendered sheets are kept in any case.
+  Future<int> printPhoto({required String jobName, required Uint8List image, required PrintSize size, int copies = 1}) async {
     final report = await _jobRunner.run(_router, jobName: jobName, image: image, size: size, copies: copies, collector: _collector);
     _failedPrinters = report.failedPrinters;
-    _reportStatus();
+    _updateWaitingCopies();
     await _keepPrintedPdfs(jobName, size, report.renderings, report.sheets);
     if (report.failure case final failure?) throw failure;
+    return report.waitingCopies;
+  }
+
+  /// Prints the sheets of every copy that waits on a stack, also the sheets that are not full. Never throws; sheets
+  /// that fail show in the status, and their copies keep waiting.
+  Future<void> printCollectedSheets() => _printCollected(_jobRunner.printCollected);
+
+  Future<void> _printIdleStacks() async {
+    if (_collector == null || !getIt<ProjectManager>().settings.enablePrinting) return;
+    await _printCollected((router, collector) => _jobRunner.printIdleStacks(router, collector, now: DateTime.now()));
+  }
+
+  Future<void> _printCollected(Future<PrintJobReport> Function(PrintRouter router, StackCollector collector) printRound) async {
+    final collector = _collector;
+    if (collector == null || collector.copies.isEmpty) return;
+    try {
+      final report = await printRound(_router, collector);
+      if (report.sheets.isEmpty) return;
+      _failedPrinters = report.failedPrinters;
+      await _keepPrintedPdfs('Collected sheets', null, report.renderings, report.sheets);
+    } catch (error, stackTrace) {
+      logError("Could not print the collected sheets", error, stackTrace);
+    } finally {
+      _updateWaitingCopies();
+    }
   }
 
   /// Sends [pdfData] to the printer of [route]. Returns false when sending is skipped in the debug settings.
@@ -164,7 +218,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   }
 
   /// Keeps the sheets that could be rendered. Never throws, so it does not hide why a print failed.
-  Future<void> _keepPrintedPdfs(String jobName, PrintSize size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
+  Future<void> _keepPrintedPdfs(String jobName, PrintSize? size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
     try {
       await _writePrintedPdfs(jobName, size, renderings, printedSheets);
     } catch (error, stackTrace) {
@@ -172,7 +226,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     }
   }
 
-  Future<void> _writePrintedPdfs(String jobName, PrintSize size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
+  Future<void> _writePrintedPdfs(String jobName, PrintSize? size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
     final pdfs = [
       for (final rendering in renderings) ?await rendering.then<Uint8List?>((pdf) => pdf, onError: (_) => null),
     ];
@@ -192,7 +246,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     }
     await File('$printJobPath.json').writeAsString(jsonEncode({
       'taskName': jobName,
-      'printSize': size.name,
+      'printSize': size?.name,
       'sheets': printedSheets,
     }));
   }

@@ -99,6 +99,7 @@ Generic modal dialogs used across the app.
 - `photo_booth_dialog.dart` — `PhotoBoothDialog` — lower-level rounded-card dialog shell (width/height/title/indicator/body/actions), used underneath `ModalDialog`.
 - `printer_issue_dialog.dart` — `PrinterIssueDialog` — reports a stuck/failed printer with stuck-job list and resume/ignore actions.
 - `printing_error_dialog.dart` — `PrintingErrorDialog` — generic printing error dialog with Lottie animation; says so when some prints may have started.
+- `print_collected_dialog.dart` — `PrintCollectedDialog` — tells guests their print comes out later, as it waits on a stack to fill a sheet with the photos of other guests.
 - `print_dialog.dart` — `PrintDialog` — choose print size (only those the photo can be printed at) and copy count; also exports `PrintSizeChoice`.
 - `qr_share_dialog.dart` — `QrShareDialog` — upload progress + QR code for sharing photos.
 - `retake_dialog.dart` — `RetakeDialog` — confirm delete/keep a photo before retaking.

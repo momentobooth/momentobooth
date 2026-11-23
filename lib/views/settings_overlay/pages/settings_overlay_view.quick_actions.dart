@@ -26,6 +26,12 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
               checked: viewModel.enablePrintingSetting,
               onChanged: (_) => controller.onEnablePrintingChanged(!viewModel.enablePrintingSetting),
             ),
+            if (getIt<PrintingManager>().waitingCopies > 0)
+              QuickAction(
+                title: 'Print collected sheets (${getIt<PrintingManager>().waitingCopies})',
+                icon: LucideIcons.layers,
+                onPressed: () => getIt<PrintingManager>().printCollectedSheets(),
+              ),
             QuickAction(
               title: 'Restart live view',
               icon: LucideIcons.refreshCcw,

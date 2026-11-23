@@ -65,8 +65,11 @@ Future<PrintJobReport> _run(
     printers.runner.run(router, jobName: jobName, image: Uint8List.fromList(_photo), size: size, copies: copies, collector: collector);
 
 /// A stack in collect mode with two columns on media of 100 × 148 mm: four copies of the square photo fit on a sheet.
-PrintRouter _collectingRouter() => _router(
-  [_node('stack', const RoutingNodeData.stack(mode: StackMode.collect, lanes: 2, gap: 0)), _node('a', _printer('a'))],
+PrintRouter _collectingRouter({StackMode mode = StackMode.collect, int printAfterIdleMinutes = 0}) => _router(
+  [
+    _node('stack', RoutingNodeData.stack(mode: mode, printAfterIdleMinutes: printAfterIdleMinutes, lanes: 2, gap: 0)),
+    _node('a', _printer('a')),
+  ],
   [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'a')],
 );
 
@@ -239,6 +242,71 @@ void main() {
 
       expect(report.waitingCopies, 0);
       expect(printers.sent, [('a', 'job | Normal print size | 1 of 1 copies stacked')]);
+    });
+  });
+
+  group('PrintJobRunner printing collected sheets', () {
+    test('prints the sheets that are not full on request', () async {
+      final printers = _Printers();
+      final collector = StackCollector(MemoryCollectedCopyStore());
+      await _run(printers, _collectingRouter(), collector: collector);
+
+      final report = await printers.runner.printCollected(_collectingRouter(), collector);
+      expect(report.failure, isNull);
+      expect(report.waitingCopies, 0);
+      expect(printers.sent, [('a', 'Collected sheet | 1 copies of job')]);
+      expect(printers.counted, [PrintSize.normal]);
+    });
+
+    test('keeps the copies of a stack that does not reach a printer waiting', () async {
+      final collector = StackCollector(MemoryCollectedCopyStore());
+      await _run(_Printers(), _collectingRouter(), collector: collector);
+
+      final printers = _Printers();
+      final report = await printers.runner.printCollected(_router([], []), collector);
+      expect(report.waitingCopies, 1);
+      expect(printers.sent, isEmpty);
+    });
+
+    test('fails when a collected sheet fails, and keeps its copies waiting', () async {
+      final collector = StackCollector(MemoryCollectedCopyStore());
+      await _run(_Printers(), _collectingRouter(), collector: collector);
+
+      final report = await _Printers(failing: {'a'}).runner.printCollected(_collectingRouter(), collector);
+      expect(report.failure, isNotNull);
+      expect(report.failedPrinters, {'a'});
+      expect(report.waitingCopies, 1);
+    });
+
+    test('prints a stack once no copy was added for its idle time', () async {
+      DateTime now = DateTime(2026, 11, 23, 12);
+      final collector = StackCollector(MemoryCollectedCopyStore(), now: () => now);
+      final router = _collectingRouter(printAfterIdleMinutes: 5);
+      final printers = _Printers();
+      await _run(printers, router, collector: collector, jobName: 'first');
+      now = now.add(const Duration(minutes: 4));
+      await _run(printers, router, collector: collector, jobName: 'second');
+
+      // The idle time starts again with every copy.
+      await printers.runner.printIdleStacks(router, collector, now: now.add(const Duration(minutes: 4)));
+      expect(printers.sent, isEmpty);
+
+      await printers.runner.printIdleStacks(router, collector, now: now.add(const Duration(minutes: 5)));
+      expect(printers.sent, [('a', 'Collected sheet | 2 copies of first, second')]);
+      expect(collector.copies, isEmpty);
+    });
+
+    test('waits for a full sheet without an idle time, unless the stack now prints right away', () async {
+      final now = DateTime(2026, 11, 23, 12);
+      final collector = StackCollector(MemoryCollectedCopyStore(), now: () => now);
+      final printers = _Printers();
+      await _run(printers, _collectingRouter(), collector: collector);
+
+      await printers.runner.printIdleStacks(_collectingRouter(), collector, now: now.add(const Duration(days: 1)));
+      expect(printers.sent, isEmpty);
+
+      await printers.runner.printIdleStacks(_collectingRouter(mode: StackMode.direct), collector, now: now);
+      expect(printers.sent, [('a', 'Collected sheet | 1 copies of job')]);
     });
   });
 }

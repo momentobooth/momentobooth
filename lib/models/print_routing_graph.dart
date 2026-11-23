@@ -140,9 +140,14 @@ sealed class RoutingNodeData with _$RoutingNodeData {
   /// printer.
   ///
   /// In [StackMode.direct], the copies of one print share sheets, which are printed right away. In
-  /// [StackMode.collect], copies of several prints wait until their sheet is full.
+  /// [StackMode.collect], copies of several prints wait until their sheet is full, or until no copy was added for
+  /// [printAfterIdleMinutes].
   const factory RoutingNodeData.stack({
     @Default(StackMode.direct) StackMode mode,
+
+    /// In collect mode, a sheet that is not full is also printed once no copy was added for this many minutes. 0 waits
+    /// for a full sheet.
+    @Default(0) int printAfterIdleMinutes,
     @Default(StackDirection.columns) StackDirection direction,
 
     /// The number of columns or rows.

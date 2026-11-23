@@ -135,7 +135,7 @@ class RoutingNodeLayout {
     SourceNodeData() || RoundRobinNodeData() || DuplicateNodeData() || MarginsNodeData() => 0,
     TileLayoutNodeData() => 2,
     // Mode, direction, lanes, gap.
-    StackNodeData() => 4,
+    StackNodeData(:final mode) => mode == StackMode.collect ? 5 : 4,
     // Label, backend, queue, (media,) size.
     PrinterNodeData(:final backend) => backend == PrinterBackend.cups || canListNativeMedia ? 5 : 4,
   };

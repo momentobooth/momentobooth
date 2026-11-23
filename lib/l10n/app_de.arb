@@ -248,6 +248,10 @@
             }
         }
     },
+    "printCollectedDialogTitle": "Dein Ausdruck kommt gleich",
+    "@printCollectedDialogTitle": {},
+    "printCollectedDialogBody": "Um Papier zu sparen, drucken wir dein Foto zusammen mit den Fotos anderer Gäste. Es kommt also etwas später aus dem Drucker.",
+    "@printCollectedDialogBody": {},
     "printingErrorDialogTitle": "Druckfehler",
     "@printingErrorDialogTitle": {},
     "printingErrorDialogBodyTop": "Wegen eines unerwarteten Problems können deine Ausdrucke nicht gestartet werden.",

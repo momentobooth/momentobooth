@@ -31,7 +31,8 @@ class PrintJobReport {
 
   final int sentSheets;
 
-  /// The copies of this print that wait on a stack in collect mode, to be printed with a later sheet.
+  /// The copies of this print that wait on a stack in collect mode, to be printed with a later sheet. After printing
+  /// collected sheets, every copy that still waits.
   final int waitingCopies;
 
   /// Why the print failed, or null when every copy was printed or is waiting.
@@ -148,6 +149,38 @@ class PrintJobRunner {
       },
     );
   }
+
+  /// Prints the sheets of the copies waiting on stacks, the last one of a stack included when it is not full: of the
+  /// stacks [where] accepts, or of every stack. Copies on a stack that does not reach a printer keep waiting.
+  ///
+  /// The stacks are chosen once the actions before this one on the [collector] are done.
+  Future<PrintJobReport> printCollected(
+    PrintRouter router,
+    StackCollector collector, {
+    bool Function(String stackNodeId, StackNodeData stack)? where,
+  }) => collector.locked(() async {
+    final session = _PrintSession(this);
+    for (final stackNodeId in {for (final copy in collector.copies) copy.stackNodeId}) {
+      final route = router.stackRoute(stackNodeId);
+      if (route == null || !(where?.call(stackNodeId, route.stack!) ?? true)) continue;
+      await session.printCollected(collector, route, stackNodeId, includeUnfull: true);
+    }
+    return session.report(
+      waitingCopies: collector.copies.length,
+      failure: session.failedPrinters.isEmpty
+          ? null
+          : PrintingException('Not all collected sheets were printed', sentSheets: session.sentSheets),
+    );
+  });
+
+  /// Prints the sheets of the stacks that waited long enough, see [printCollected]: a stack in collect mode once no
+  /// copy was added for its [StackNodeData.printAfterIdleMinutes], and a stack that now prints right away.
+  Future<PrintJobReport> printIdleStacks(PrintRouter router, StackCollector collector, {required DateTime now}) =>
+      printCollected(router, collector, where: (stackNodeId, stack) => switch (stack.mode) {
+        StackMode.direct => true,
+        StackMode.collect => stack.printAfterIdleMinutes > 0 &&
+            !now.isBefore(collector.lastAddedAt(stackNodeId)!.add(Duration(minutes: stack.printAfterIdleMinutes))),
+      });
 
 }
 
