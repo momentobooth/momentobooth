@@ -66,6 +66,49 @@ void main() {
       expect(analysis.routableEdges, isEmpty);
     });
 
+    test('routes several print sizes through a stack, which only connects to a printer', () {
+      final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('stack', const RoutingNodeData.stack()),
+          _node('other stack', const RoutingNodeData.stack()),
+          _node('robin', const RoutingNodeData.roundRobin()),
+          _node('printer', _printer),
+        ],
+        edges: [
+          _edge('source', 'normal', 'stack'),
+          _edge('source', 'split', 'stack'),
+          _edge('stack', 'out', 'printer'),
+          _edge('source', 'small', 'other stack'),
+          _edge('other stack', 'out', 'robin'),
+          _edge('robin', 'out', 'printer'),
+        ],
+      ));
+
+      expect(analysis.errors, [
+        RoutingIssue(kind: RoutingIssueKind.incompatibleTypes, edge: _edge('other stack', 'out', 'robin')),
+      ]);
+      expect(analysis.reachablePrinterIds[PrintSize.normal], {'printer'});
+      expect(analysis.reachablePrinterIds[PrintSize.split], {'printer'});
+      expect(analysis.reachablePrinterIds[PrintSize.small], isEmpty);
+    });
+
+    test('does not route through a stack without columns or with a negative gap', () {
+      for (final stack in const [RoutingNodeData.stack(columns: 0), RoutingNodeData.stack(gap: -1)]) {
+        final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
+          nodes: [
+            _node('source', const RoutingNodeData.source()),
+            _node('stack', stack),
+            _node('printer', _printer),
+          ],
+          edges: [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'printer')],
+        ));
+
+        expect(analysis.errors, const [RoutingIssue(kind: RoutingIssueKind.invalidParameter, nodeId: 'stack')]);
+        expect(analysis.reachablePrinterIds[PrintSize.normal], isEmpty);
+      }
+    });
+
     test('does not print with margins that leave no room on the media', () {
       PrintRoutingAnalysis analyze({required PrintMargins own, PrintMargins? connected}) => PrintRoutingAnalysis.of(PrintRoutingGraph(
         nodes: [

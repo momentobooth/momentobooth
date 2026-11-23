@@ -7,6 +7,7 @@ const _graph = PrintRoutingGraph(
     RoutingNode(id: 'source', data: RoutingNodeData.source()),
     RoutingNode(id: 'robin', x: 300, y: 50, data: RoutingNodeData.roundRobin()),
     RoutingNode(id: 'tile', data: RoutingNodeData.tileLayout(columns: 2, rows: 2)),
+    RoutingNode(id: 'stack', data: RoutingNodeData.stack(columns: 2, gap: 2.5)),
     RoutingNode(id: 'margins', data: RoutingNodeData.margins(margins: PrintMargins(top: 1.5, left: 2))),
     RoutingNode(id: 'printer', data: RoutingNodeData.printer(
       label: 'DNP strip',
@@ -34,7 +35,7 @@ void main() {
       final nodes = (_graph.toJson()['nodes'] as List).cast<Map<String, dynamic>>();
       final types = [for (final node in nodes) (node['data'] as Map<String, dynamic>)['type']];
 
-      expect(types, ['source', 'roundRobin', 'tileLayout', 'margins', 'printer']);
+      expect(types, ['source', 'roundRobin', 'tileLayout', 'stack', 'margins', 'printer']);
     });
 
     test('defaults absent fields', () {

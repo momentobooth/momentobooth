@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
+import 'package:momento_booth/hardware_control/printing/print_stack_packer.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -23,6 +24,73 @@ Future<Uint8List> renderPrintPdf(Uint8List image, PrintRoute route, {required bo
     _addFittedPage(doc, photo, _pageFormat(route));
   }
   return doc.save();
+}
+
+/// Renders [copies] copies of [image] stacked on the media of [route], within its margins, see [packStack]. Every
+/// sheet the copies fill is a page. The halves of a split print are stacked as separate items.
+Future<Uint8List> renderStackPdf(Uint8List image, PrintRoute route, {required int copies, required bool split}) {
+  final stack = route.stack!;
+  final photo = pw.MemoryImage(image);
+  final doc = pw.Document(title: "MomentoBooth image");
+  final format = _pageFormat(route);
+
+  final List<pw.Alignment?> items = [
+    for (int copy = 0; copy < copies; copy++)
+      if (split) ...const [pw.Alignment.centerLeft, pw.Alignment.centerRight] else null,
+  ];
+  final photoAspectRatio = photo.width! / photo.height!;
+  final sheets = packStack(
+    [
+      for (final half in items)
+        if (half == null) photoAspectRatio else photoAspectRatio / 2,
+    ],
+    width: format.availableWidth,
+    height: format.availableHeight,
+    columns: stack.columns,
+    gap: stack.gap * PdfPageFormat.mm,
+  );
+
+  for (final sheet in sheets) {
+    doc.addPage(pw.Page(
+      pageFormat: format,
+      build: (_) => pw.Align(
+        alignment: pw.Alignment.topLeft,
+        child: pw.SizedBox(
+          width: format.availableWidth,
+          height: format.availableHeight,
+          child: pw.Stack(
+            children: [
+              for (final placement in sheet)
+                pw.Positioned(
+                  left: placement.left,
+                  top: placement.top,
+                  child: switch (items[placement.item]) {
+                    null => _fittedPhoto(photo, placement.width, placement.height),
+                    final half => _halfPhoto(photo, half, placement),
+                  },
+                ),
+            ],
+          ),
+        ),
+      ),
+    ));
+  }
+  return doc.save();
+}
+
+/// The half of the photo at [half] (left or right), filling [placement].
+pw.Widget _halfPhoto(pw.MemoryImage photo, pw.Alignment half, StackPlacement placement) {
+  // Laid out in the photo's own orientation, and turned as a whole.
+  final width = placement.turned ? placement.height : placement.width;
+  final height = placement.turned ? placement.width : placement.height;
+  final pw.Widget part = pw.SizedBox(
+    width: width,
+    height: height,
+    child: pw.ClipRect(
+      child: pw.Image(photo, fit: pw.BoxFit.fitHeight, width: width, height: height, alignment: half),
+    ),
+  );
+  return placement.turned ? pw.Transform.rotateBox(angle: 0.5 * pi, child: part) : part;
 }
 
 PdfPageFormat _pageFormat(PrintRoute route, {bool leftMargin = true, bool rightMargin = true}) {

@@ -53,6 +53,7 @@ class RoutingNodeCard extends StatelessWidget {
                 SourceNodeData() => const [],
                 RoundRobinNodeData() || DuplicateNodeData() => [_CarriedTypeRow(nodeId: node.id, viewModel: viewModel)],
                 TileLayoutNodeData() => _tileLayoutFields(data, update),
+                StackNodeData() => _stackFields(data, update),
                 MarginsNodeData(:final margins) => [
                   const _CaptionRow(child: _SecondaryCaption('Values in mm')),
                   _MarginsFields(margins: margins, onChanged: (margins) => update(data.copyWith(margins: margins))),
@@ -118,6 +119,25 @@ class RoutingNodeCard extends StatelessWidget {
         mode: SpinButtonPlacementMode.inline,
         onChanged: (value) => update(data.copyWith(rows: value ?? data.rows)),
       ),
+    ),
+  ];
+
+  List<Widget> _stackFields(StackNodeData data, ValueChanged<RoutingNodeData> update) => [
+    _FieldRow(
+      key: const ValueKey('columns'),
+      label: 'Columns',
+      child: NumberBox<int>(
+        value: data.columns,
+        min: 1,
+        clearButton: false,
+        mode: SpinButtonPlacementMode.inline,
+        onChanged: (value) => update(data.copyWith(columns: value ?? data.columns)),
+      ),
+    ),
+    _FieldRow(
+      key: const ValueKey('gap'),
+      label: 'Gap (mm)',
+      child: _MillimeterBox(value: data.gap, onChanged: (value) => update(data.copyWith(gap: value))),
     ),
   ];
 
@@ -374,6 +394,8 @@ class _CarriedTypeRow extends StatelessWidget {
           switch (type) {
             RoutingPortType.photo => 'Carries photos',
             RoutingPortType.sheet => 'Carries sheets',
+            // Arbiters do not accept stacks.
+            RoutingPortType.stack => 'Carries stacks',
             RoutingPortType.margins || null => 'Carries nothing yet',
           },
           style: theme.typography.caption?.copyWith(color: theme.resources.textFillColorSecondary),

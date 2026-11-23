@@ -235,6 +235,9 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     if (issue.kind != RoutingIssueKind.incompatibleTypes) return null;
 
     RoutingNodeData? dataOf(String? nodeId) => graph.nodes.firstWhereOrNull((node) => node.id == nodeId)?.data;
+    if (dataOf(edge.fromNode) is StackNodeData && issue.edge == edge) {
+      return 'A stack connects straight to a printer, as it fills sheets for the media of that printer.';
+    }
     String kindOf(String? nodeId) => switch (dataOf(nodeId)) {
       final RoutingNodeData data => RoutingNodeKind.of(data).label.toLowerCase(),
       null => 'node',
@@ -255,6 +258,7 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
   static String _plural(RoutingPortType type) => switch (type) {
     RoutingPortType.photo => 'photos',
     RoutingPortType.sheet => 'sheets',
+    RoutingPortType.stack => 'stacks',
     RoutingPortType.margins => 'margins',
   };
 

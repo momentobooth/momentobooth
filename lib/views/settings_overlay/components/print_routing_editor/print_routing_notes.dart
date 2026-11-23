@@ -36,7 +36,10 @@ String describeRoutingIssue(RoutingIssue issue, PrintRoutingGraph graph) {
     RoutingIssueKind.duplicateNodeId => 'Two nodes share the ID "${issue.nodeId}".',
     RoutingIssueKind.missingSource => 'There is no source node.',
     RoutingIssueKind.duplicateSource => 'Only one source is used, this one is ignored.',
-    RoutingIssueKind.invalidParameter => 'Columns and rows must be at least 1.',
+    RoutingIssueKind.invalidParameter => switch (nodeById(issue.nodeId)?.data) {
+      StackNodeData() => 'Columns must be at least 1, and the gap cannot be negative.',
+      _ => 'Columns and rows must be at least 1.',
+    },
     RoutingIssueKind.unknownNode || RoutingIssueKind.unknownPort || RoutingIssueKind.wrongDirection =>
       'A stored connection is invalid and is ignored.',
     RoutingIssueKind.duplicateEdge => 'A connection is stored twice.',
