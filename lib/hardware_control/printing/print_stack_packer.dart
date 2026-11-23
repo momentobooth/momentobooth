@@ -46,14 +46,44 @@ class StackPlacement {
 /// Packs items with the given [aspectRatios] (width / height) on sheets with an area of [width] by [height], and
 /// returns the placements per sheet.
 ///
-/// The area is divided into [columns] of equal width, [gap] apart. Each item gets the width of a column, turned so it
+/// The area is divided into [lanes] columns of equal width, [gap] apart. Each item gets the width of a column, turned so it
 /// uses the least height, and goes to the column that is filled least, below the items already there. So the sheet
 /// fills from the top, and the rest of it stays in one piece. A sheet is full when the next item does not fit in any
 /// column; that item starts the next sheet. An item that is higher than the area even when turned is scaled down to
 /// fit, and centred in its column.
 ///
-/// Packing in rows instead, filling the sheet from the left, is the same with width and height swapped.
+/// With [rows], the area is divided into [lanes] rows of equal height instead, which fill from the left, and each item is
+/// turned to use the least width. That is the same packing with width and height swapped.
 List<List<StackPlacement>> packStack(
+  List<double> aspectRatios, {
+  required double width,
+  required double height,
+  required int lanes,
+  required double gap,
+  bool rows = false,
+}) {
+  if (rows) {
+    final transposed = _packColumns([for (final ratio in aspectRatios) 1 / ratio], width: height, height: width, columns: lanes, gap: gap);
+    return [
+      for (final sheet in transposed)
+        [
+          for (final placement in sheet)
+            // Swapping both the box and the item keeps whether the item is turned.
+            StackPlacement(
+              item: placement.item,
+              left: placement.top,
+              top: placement.left,
+              width: placement.height,
+              height: placement.width,
+              turned: placement.turned,
+            ),
+        ],
+    ];
+  }
+  return _packColumns(aspectRatios, width: width, height: height, columns: lanes, gap: gap);
+}
+
+List<List<StackPlacement>> _packColumns(
   List<double> aspectRatios, {
   required double width,
   required double height,

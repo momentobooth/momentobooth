@@ -94,7 +94,7 @@ void main() {
     });
 
     test('does not route through a stack without columns or with a negative gap', () {
-      for (final stack in const [RoutingNodeData.stack(columns: 0), RoutingNodeData.stack(gap: -1)]) {
+      for (final stack in const [RoutingNodeData.stack(lanes: 0), RoutingNodeData.stack(gap: -1)]) {
         final analysis = PrintRoutingAnalysis.of(PrintRoutingGraph(
           nodes: [
             _node('source', const RoutingNodeData.source()),
@@ -114,16 +114,32 @@ void main() {
       PrintRoutingAnalysis analyze(double gap) => PrintRoutingAnalysis.of(PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
-          _node('stack', RoutingNodeData.stack(columns: 3, gap: gap)),
+          _node('stack', RoutingNodeData.stack(lanes: 3, gap: gap)),
           _node('printer', _printer),
         ],
         edges: [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'printer')],
       ));
 
-      expect(analyze(50).errors, const [RoutingIssue(kind: RoutingIssueKind.stackTooWide, nodeId: 'stack')]);
+      expect(analyze(50).errors, const [RoutingIssue(kind: RoutingIssueKind.stackGapsTooLarge, nodeId: 'stack')]);
       expect(analyze(50).reachablePrinterIds[PrintSize.normal], isEmpty);
       expect(analyze(49).errors, isEmpty);
       expect(analyze(49).reachablePrinterIds[PrintSize.normal], {'printer'});
+    });
+
+    test('checks the rows of a stack against the printable height of its printer', () {
+      // The printer is 148 mm high: 3 rows 74 mm apart need 148 mm for the gaps alone.
+      PrintRoutingAnalysis analyze(double gap) => PrintRoutingAnalysis.of(PrintRoutingGraph(
+        nodes: [
+          _node('source', const RoutingNodeData.source()),
+          _node('stack', RoutingNodeData.stack(direction: StackDirection.rows, lanes: 3, gap: gap)),
+          _node('printer', _printer),
+        ],
+        edges: [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'printer')],
+      ));
+
+      expect(analyze(74).errors, const [RoutingIssue(kind: RoutingIssueKind.stackGapsTooLarge, nodeId: 'stack')]);
+      // As columns, 73 mm gaps would not fit in the 100 mm width.
+      expect(analyze(73).errors, isEmpty);
     });
 
     test('does not print with margins that leave no room on the media', () {

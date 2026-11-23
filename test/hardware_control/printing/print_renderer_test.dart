@@ -45,7 +45,7 @@ void main() {
       printer: _printer,
       margins: const PrintMargins(),
       stackNodeId: 'stack',
-      stack: StackNodeData(columns: columns, gap: 3),
+      stack: StackNodeData(lanes: columns, gap: 3),
     );
 
     test('puts the copies on as few pages as they fit on', () async {

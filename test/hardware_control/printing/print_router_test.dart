@@ -189,7 +189,7 @@ void main() {
       final router = PrintRouter(PrintRoutingGraph(
         nodes: [
           _node('source', const RoutingNodeData.source()),
-          _node('stack', const RoutingNodeData.stack(columns: 2)),
+          _node('stack', const RoutingNodeData.stack(lanes: 2)),
           _node('a', _printer('a')),
         ],
         edges: [_edge('source', 'normal', 'stack'), _edge('stack', 'out', 'a')],
@@ -201,7 +201,7 @@ void main() {
           printer: _printer('a') as PrinterNodeData,
           margins: const PrintMargins(),
           stackNodeId: 'stack',
-          stack: const RoutingNodeData.stack(columns: 2) as StackNodeData,
+          stack: const RoutingNodeData.stack(lanes: 2) as StackNodeData,
         ),
       ]);
       expect(router.photosPerCopy(PrintSize.normal), 1);

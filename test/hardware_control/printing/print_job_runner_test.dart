@@ -104,7 +104,7 @@ void main() {
         _router(
           [
             _node('duplicate', const RoutingNodeData.duplicate()),
-            _node('stack', const RoutingNodeData.stack(columns: 2)),
+            _node('stack', const RoutingNodeData.stack(lanes: 2)),
             _node('a', _printer('a')),
             _node('b', _printer('b')),
           ],

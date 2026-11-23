@@ -46,7 +46,8 @@ Future<Uint8List> renderStackPdf(Uint8List image, PrintRoute route, {required in
     ],
     width: format.availableWidth,
     height: format.availableHeight,
-    columns: stack.columns,
+    lanes: stack.lanes,
+    rows: stack.direction == StackDirection.rows,
     gap: stack.gap * PdfPageFormat.mm,
   );
 

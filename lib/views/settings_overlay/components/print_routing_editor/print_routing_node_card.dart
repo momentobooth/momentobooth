@@ -124,14 +124,30 @@ class RoutingNodeCard extends StatelessWidget {
 
   List<Widget> _stackFields(StackNodeData data, ValueChanged<RoutingNodeData> update) => [
     _FieldRow(
-      key: const ValueKey('columns'),
-      label: 'Columns',
+      key: const ValueKey('direction'),
+      label: 'Fill',
+      child: ComboBox<StackDirection>(
+        value: data.direction,
+        isExpanded: true,
+        items: const [
+          ComboBoxItem(value: StackDirection.columns, child: Text('Columns, from the top')),
+          ComboBoxItem(value: StackDirection.rows, child: Text('Rows, from the left')),
+        ],
+        onChanged: (value) => update(data.copyWith(direction: value ?? data.direction)),
+      ),
+    ),
+    _FieldRow(
+      key: const ValueKey('lanes'),
+      label: switch (data.direction) {
+        StackDirection.columns => 'Columns',
+        StackDirection.rows => 'Rows',
+      },
       child: NumberBox<int>(
-        value: data.columns,
+        value: data.lanes,
         min: 1,
         clearButton: false,
         mode: SpinButtonPlacementMode.inline,
-        onChanged: (value) => update(data.copyWith(columns: value ?? data.columns)),
+        onChanged: (value) => update(data.copyWith(lanes: value ?? data.lanes)),
       ),
     ),
     _FieldRow(

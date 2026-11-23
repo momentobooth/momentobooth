@@ -27,8 +27,9 @@ enum RoutingIssueKind {
   /// A printer that receives jobs, but whose margins leave no room on its media. It does not print.
   marginsTooLarge(RoutingIssueSeverity.error),
 
-  /// A stack whose columns and gaps do not fit in the printable width of its printer. It does not route anything.
-  stackTooWide(RoutingIssueSeverity.error),
+  /// A stack whose gaps between its columns or rows take up the printable width or height of its printer. It does not
+  /// route anything.
+  stackGapsTooLarge(RoutingIssueSeverity.error),
 
   /// A tile layout on the route of split prints, which are always printed in halves.
   ignoredLayout(RoutingIssueSeverity.warning),
@@ -164,7 +165,7 @@ class _Analyzer {
 
       final bool validParameters = switch (node.data) {
         TileLayoutNodeData(:final columns, :final rows) => columns >= 1 && rows >= 1,
-        StackNodeData(:final columns, :final gap) => columns >= 1 && gap >= 0,
+        StackNodeData(:final lanes, :final gap) => lanes >= 1 && gap >= 0,
         _ => true,
       };
       if (!validParameters) {
@@ -301,12 +302,12 @@ class _Analyzer {
           edge.toNode: margins,
     };
     final Set<String> incompletePrinterIds = {}, tooLargeMarginsIds = {}, ignoredLayoutIds = {};
-    // A stack connects to a single printer, whose printable width its columns must fit in.
+    // A stack connects to a single printer, whose printable area its columns or rows must fit in.
     final Set<String> tooWideStackIds = {
       for (final edge in edges)
         if ((nodes[edge.fromNode]!.data, nodes[edge.toNode]!.data)
-            case (final StackNodeData stack, final PrinterNodeData printer) when printer.media.widthMm > 0)
-          if (!_fitsColumns(stack, printer, connectedMargins[edge.toNode] ?? printer.margins)) edge.fromNode,
+            case (final StackNodeData stack, final PrinterNodeData printer) when printer.media.widthMm > 0 && printer.media.heightMm > 0)
+          if (!_fitsLanes(stack, printer, connectedMargins[edge.toNode] ?? printer.margins)) edge.fromNode,
     };
 
     Set<String> printersFrom(PrintSize size) {
@@ -346,7 +347,7 @@ class _Analyzer {
       issues.add(RoutingIssue(kind: RoutingIssueKind.marginsTooLarge, nodeId: nodeId));
     }
     for (final nodeId in nodes.keys.where(tooWideStackIds.contains)) {
-      issues.add(RoutingIssue(kind: RoutingIssueKind.stackTooWide, nodeId: nodeId));
+      issues.add(RoutingIssue(kind: RoutingIssueKind.stackGapsTooLarge, nodeId: nodeId));
     }
     for (final nodeId in nodes.keys.where(ignoredLayoutIds.contains)) {
       issues.add(RoutingIssue(kind: RoutingIssueKind.ignoredLayout, nodeId: nodeId, printSize: PrintSize.split));
@@ -368,10 +369,14 @@ class _Analyzer {
   static bool _hasPrintableArea(PrinterNodeData printer, PrintMargins margins) =>
       margins.left + margins.right < printer.media.widthMm && margins.top + margins.bottom < printer.media.heightMm;
 
-  /// Whether the columns of [stack] keep some width within the printable width of [printer], see packStack.
-  static bool _fitsColumns(StackNodeData stack, PrinterNodeData printer, PrintMargins margins) {
-    final printableWidth = printer.media.widthMm - margins.left - margins.right;
-    return printableWidth - (stack.columns - 1) * stack.gap > 0;
+  /// Whether the gaps between the columns or rows of [stack] leave room within the printable area of [printer], see
+  /// packStack.
+  static bool _fitsLanes(StackNodeData stack, PrinterNodeData printer, PrintMargins margins) {
+    final printableLength = switch (stack.direction) {
+      StackDirection.columns => printer.media.widthMm - margins.left - margins.right,
+      StackDirection.rows => printer.media.heightMm - margins.top - margins.bottom,
+    };
+    return printableLength - (stack.lanes - 1) * stack.gap > 0;
   }
 
   static bool _isComplete(PrinterNodeData printer) {
