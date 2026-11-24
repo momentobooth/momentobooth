@@ -36,6 +36,7 @@
 
 # Developer
 - [Setup](./dev_setup.md)
+- [Engineering principles](./engineering_principles.md)
 - [Widget overview](./widget_overview.md)
 
 # Misc
