@@ -120,7 +120,7 @@ It takes a **Photo** and turns it into a **Stack**. The **Photo** input accepts 
 | Columns / Rows | The number of columns or rows, at least 1. |
 | Gap (mm) | The space between the copies, to cut them apart. 3 mm by default. |
 
-Like a tile layout, a stack has no size of its own. In columns, each copy gets the width of a column and the height that follows from its own shape, and is **turned to use the least height**: a portrait photo lies sideways. The copies are placed from the top of the sheet down. Each copy goes to the column that is filled least, below the copies already there, and when it does not fit in any column, it starts a new sheet. With _Right away_, all sheets of a print are sent to the printer as a single job.
+Like a tile layout, a stack has no size of its own. In columns, each copy gets the width of a column and the height that follows from its own shape, and is **turned to use the least height**: a portrait photo lies sideways. The copies go on the sheets in their order: a sheet takes copies until the next one does not fit, and that copy starts a new sheet. Within a sheet, the copies are divided over the columns so the longest column is as short as possible, and each column is filled from the top down. So the copies on a sheet may be rearranged to make room for the next one, and the rest of the sheet stays as large as possible. With _Right away_, all sheets of a print are sent to the printer as a single job.
 
 In rows, the same happens sideways: each copy gets the height of a row, is **turned to use the least width**, and the rows fill from the left. The rest of the sheet is then a strip along its full length, which most printers cannot take again, so rows are mostly useful when [collecting copies](#collecting-copies).
 

@@ -25,12 +25,33 @@ void main() {
       expect(placement, const StackPlacement(item: 0, left: 0, top: 0, width: 100, height: 50, turned: true));
     });
 
-    test('puts each item in the column that is filled least', () {
+    test('divides the items over the columns so the highest column is as low as possible', () {
       // Columns of 50 wide: the square item is 50 high, the wide ones 25.
       final sheets = packStack([1, 2, 2, 2], width: 104, height: 200, lanes: 2, gap: 4);
 
       expect(_positions(sheets), [
         [(0, 0.0, 0.0), (1, 54.0, 0.0), (2, 54.0, 29.0), (3, 0.0, 54.0)],
+      ]);
+    });
+
+    test('rearranges a sheet to make room for the next item', () {
+      // Columns of 100 wide: square items are 100 high, the halves of a split print (2:1) 50. Each in the column
+      // filled least, the halves would end up in different columns and leave no room for the last square item.
+      final sheets = packStack([1, 1, 2, 2, 1], width: 200, height: 200, lanes: 2, gap: 0);
+
+      expect(_positions(sheets), [
+        [(0, 0.0, 0.0), (1, 100.0, 0.0), (2, 100.0, 100.0), (3, 100.0, 150.0), (4, 0.0, 100.0)],
+      ]);
+    });
+
+    test('keeps the items in their order over the sheets', () {
+      // Columns of 100 wide on an area of 150 high: the first two items take a column each, so the third starts a
+      // new sheet, also though the small fourth one would still fit.
+      final sheets = packStack([1, 1, 1, 4], width: 200, height: 150, lanes: 2, gap: 0);
+
+      expect(_positions(sheets), [
+        [(0, 0.0, 0.0), (1, 100.0, 0.0)],
+        [(2, 0.0, 0.0), (3, 100.0, 0.0)],
       ]);
     });
 
