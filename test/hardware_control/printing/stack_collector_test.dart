@@ -55,6 +55,22 @@ void main() {
       expect(_jobs(collector.sheets('stack', _route, includeUnfull: true)), [['normal', 'normal', 'normal'], ['split']]);
     });
 
+    test('tells how far the last sheet is on its way to full', () async {
+      final collector = StackCollector(MemoryCollectedCopyStore());
+      expect(collector.fillOfLastSheet('stack', _route), isNull);
+
+      // 50 of 200 mm used: three more normal copies fit.
+      await _addNormal(collector);
+      expect(collector.fillOfLastSheet('stack', _route), 0.25);
+
+      // No other split fits, but one more normal copy does.
+      await _addSplit(collector);
+      expect(collector.fillOfLastSheet('stack', _route), closeTo(2 / 3, 1e-9));
+
+      await _addNormal(collector);
+      expect(collector.fillOfLastSheet('stack', _route), 1);
+    });
+
     test('only takes the copies of the stack', () async {
       final collector = StackCollector(MemoryCollectedCopyStore());
       await collector.add(stackNodeId: 'other', jobName: 'other', size: PrintSize.normal, image: Uint8List(1), aspectRatio: 2, count: 4);

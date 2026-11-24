@@ -28,7 +28,11 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
             ),
             if (getIt<PrintingManager>().waitingCopies > 0)
               QuickAction(
-                title: 'Print collected sheets (${getIt<PrintingManager>().waitingCopies})',
+                title: [
+                  'Print collected sheets (${getIt<PrintingManager>().waitingCopies} copies',
+                  if (getIt<PrintingManager>().sheetFills.isNotEmpty) ', ${getIt<PrintingManager>().sheetFills}',
+                  ')',
+                ].join(),
                 icon: LucideIcons.layers,
                 onPressed: () => getIt<PrintingManager>().printCollectedSheets(),
               ),

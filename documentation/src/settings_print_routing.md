@@ -114,9 +114,9 @@ It takes a **Photo** and turns it into a **Stack**. The **Photo** input accepts 
 
 | Field | Meaning |
 |---|---|
-| Print | When the sheets are printed. _Right away_ prints the copies of each print on sheets of their own. _When a sheet is full_ collects the copies of several prints on the same sheets, see [collecting copies](#collecting-copies). |
-| Idle (min) | Only shown for _When a sheet is full_. A sheet that is not full is printed as well once no copy was added to the stack for this many minutes. 0 (the default) waits for a full sheet. |
-| Fill | _Columns, from the top_ divides the printable area into columns, _Rows, from the left_ into rows. |
+| Print | When the sheets are printed. _Right away_ prints the copies of each print on sheets of their own. _When full_ collects the copies of several prints on the same sheets, see [collecting copies](#collecting-copies). |
+| Idle (min) | Only shown for _When full_. A sheet that is not full is printed as well once no copy was added to the stack for this many minutes. 0 (the default) waits for a full sheet. |
+| Fill | _Columns_ divides the printable area into columns, which fill from the top. _Rows_ divides it into rows, which fill from the left. |
 | Columns / Rows | The number of columns or rows, at least 1. |
 | Gap (mm) | The space between the copies, to cut them apart. 3 mm by default. |
 
@@ -152,14 +152,14 @@ A stack with fewer than 1 column or row, a negative gap or a negative idle time 
 
 #### Collecting copies
 
-With _Print_ set to _When a sheet is full_, a stack collects the copies of several prints and only prints a sheet once it is full. This saves the most paper when guests print one or two copies at a time: with _Right away_, every print starts a sheet of its own.
+With _Print_ set to _When full_, a stack collects the copies of several prints and only prints a sheet once it is full. This saves the most paper when guests print one or two copies at a time: with _Right away_, every print starts a sheet of its own.
 
 The copies are placed on the sheets in the order they came in. A copy is never divided over two sheets, so both halves of a split print end up on the same sheet. A sheet is **full** when no copy like the ones on it fits any more: one of the same shape, and for a split print, both halves. A sheet that is full is printed right away, as part of the print that filled it.
 
 The waiting copies are kept in a `Collections` folder inside the `Prints` folder of the project, each with a copy of its photo, so they survive a restart of the app. A sheet that is not full is printed as well:
 
 - once no copy was added to the stack for the number of minutes set in _Idle (min)_. The app checks this about every 30 seconds.
-- with the _Print collected sheets_ quick action in the settings panel, or the action with the same name on the printing subsystem on the [subsystem status](settings_subsystem.md) page. These print the last sheet of every stack, full or not, and are only shown while copies wait.
+- with the _Print collected sheets_ quick action in the settings panel, or the action with the same name on the printing subsystem on the [subsystem status](settings_subsystem.md) page. These print the last sheet of every stack, full or not, and are only shown while copies wait. The quick action shows how many copies wait, and how far the last sheet of each stack is on its way to full, e.g. _(5 copies, 60% / 20%)_: 3 copies on a sheet that takes 6 of them is 50%.
 - when the stack is set to _Right away_. The copies that still wait are then printed at the next check.
 
 A guest whose print waits on a stack sees a message that their photo is printed together with the photos of other guests, and comes out of the printer a bit later. The copies are not marked with a name or number, so guests have to recognise their own photo.

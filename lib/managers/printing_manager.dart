@@ -74,18 +74,30 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   @readonly
   int _waitingCopies = 0;
 
+  /// How far the last sheet of each stack with waiting copies is on its way to full, e.g. "60% / 20%". Empty when no
+  /// copies wait on a stack that reaches a printer.
+  @readonly
+  String _sheetFills = '';
+
   /// The waiting copies of stacks that do not reach a printer.
   int _strandedCopies = 0;
 
   @action
   void _updateWaitingCopies() {
-    final copies = _collector?.copies ?? const [];
+    final collector = _collector;
+    final copies = collector?.copies ?? const [];
+    final stackNodeIds = {for (final copy in copies) copy.stackNodeId};
     final strandedStacks = {
-      for (final copy in copies)
-        if (_router.stackRoute(copy.stackNodeId) == null) copy.stackNodeId,
+      for (final stackNodeId in stackNodeIds)
+        if (_router.stackRoute(stackNodeId) == null) stackNodeId,
     };
     _waitingCopies = copies.length;
     _strandedCopies = copies.where((copy) => strandedStacks.contains(copy.stackNodeId)).length;
+    _sheetFills = [
+      for (final stackNodeId in stackNodeIds.difference(strandedStacks))
+        if (collector!.fillOfLastSheet(stackNodeId, _router.stackRoute(stackNodeId)!) case final fill?)
+          '${(fill * 100).round()}%',
+    ].join(' / ');
     _reportStatus();
   }
 
@@ -121,7 +133,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     } else if (_router.analysis.hasErrors) {
       reportSubsystemWarning(message: "The print routing graph has problems, which are listed on the Print routing settings page. Connections with problems are ignored.", actions: actions);
     } else {
-      reportSubsystemOk(message: _waitingCopies > 0 ? "$_waitingCopies copies wait on stacks until their sheet is full." : null, actions: actions);
+      reportSubsystemOk(message: _waitingCopies > 0 ? "$_waitingCopies copies wait on stacks until their sheet is full (now $_sheetFills full)." : null, actions: actions);
     }
   }
 

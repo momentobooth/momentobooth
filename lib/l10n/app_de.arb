@@ -250,7 +250,7 @@
     },
     "printCollectedDialogTitle": "Dein Ausdruck kommt gleich",
     "@printCollectedDialogTitle": {},
-    "printCollectedDialogBody": "Um Papier zu sparen, drucken wir dein Foto zusammen mit den Fotos anderer Gäste. Es kommt also etwas später aus dem Drucker.",
+    "printCollectedDialogBody": "Um Papier zu sparen, drucken wir dein Foto zusammen mit den Fotos anderer Gäste. Es sollte also später aus dem Drucker kommen.",
     "@printCollectedDialogBody": {},
     "printingErrorDialogTitle": "Druckfehler",
     "@printingErrorDialogTitle": {},

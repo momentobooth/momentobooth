@@ -131,7 +131,7 @@ class RoutingNodeCard extends StatelessWidget {
         isExpanded: true,
         items: const [
           ComboBoxItem(value: StackMode.direct, child: Text('Right away')),
-          ComboBoxItem(value: StackMode.collect, child: Text('When a sheet is full')),
+          ComboBoxItem(value: StackMode.collect, child: Text('When full')),
         ],
         onChanged: (value) => update(data.copyWith(mode: value ?? data.mode)),
       ),
@@ -154,14 +154,18 @@ class RoutingNodeCard extends StatelessWidget {
     _FieldRow(
       key: const ValueKey('direction'),
       label: 'Fill',
-      child: ComboBox<StackDirection>(
-        value: data.direction,
-        isExpanded: true,
-        items: const [
-          ComboBoxItem(value: StackDirection.columns, child: Text('Columns, from the top')),
-          ComboBoxItem(value: StackDirection.rows, child: Text('Rows, from the left')),
-        ],
-        onChanged: (value) => update(data.copyWith(direction: value ?? data.direction)),
+      child: Tooltip(
+        message: 'Columns fill the sheet from the top, with each copy turned to use the least height. '
+            'Rows fill it from the left, with each copy turned to use the least width.',
+        child: ComboBox<StackDirection>(
+          value: data.direction,
+          isExpanded: true,
+          items: const [
+            ComboBoxItem(value: StackDirection.columns, child: Text('Columns')),
+            ComboBoxItem(value: StackDirection.rows, child: Text('Rows')),
+          ],
+          onChanged: (value) => update(data.copyWith(direction: value ?? data.direction)),
+        ),
       ),
     ),
     _FieldRow(

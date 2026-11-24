@@ -14,6 +14,8 @@ class PrintCollectedDialog extends StatelessWidget {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
     return ModalDialog(
+      // The body is a single long text, which would otherwise stretch the dialog to its length.
+      width: 600,
       title: localizations.printCollectedDialogTitle,
       body: Text(localizations.printCollectedDialogBody),
     );

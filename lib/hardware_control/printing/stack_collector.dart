@@ -162,15 +162,10 @@ class StackCollector {
   /// The last sheet is full when no copy like the ones on it fits any more: of the same shape, and for a split print,
   /// both halves.
   List<List<CollectedCopy>> sheets(String stackNodeId, PrintRoute route, {bool includeUnfull = false}) {
-    bool fitsOnOneSheet(Iterable<(double, bool)> copies) => packStackOn(route, [
-      for (final (aspectRatio, split) in copies) ...stackItemsOf(aspectRatio, split: split),
-    ]).length <= 1;
-    (double, bool) shapeOf(CollectedCopy copy) => (copy.aspectRatio, copy.size == PrintSize.split);
-
     final List<List<CollectedCopy>> sheets = [];
     List<CollectedCopy> sheet = [];
     for (final copy in _copies.where((copy) => copy.stackNodeId == stackNodeId)) {
-      if (sheet.isNotEmpty && !fitsOnOneSheet([...sheet.map(shapeOf), shapeOf(copy)])) {
+      if (sheet.isNotEmpty && !_fitsOnOneSheet(route, [...sheet.map(_shapeOf), _shapeOf(copy)])) {
         sheets.add(sheet);
         sheet = [];
       }
@@ -178,11 +173,37 @@ class StackCollector {
     }
     if (sheet.isEmpty) return sheets;
 
-    final shapes = sheet.map(shapeOf).toList();
-    final bool full = shapes.toSet().every((shape) => !fitsOnOneSheet([...shapes, shape]));
+    final shapes = sheet.map(_shapeOf).toList();
+    final bool full = shapes.toSet().every((shape) => !_fitsOnOneSheet(route, [...shapes, shape]));
     if (full || includeUnfull) sheets.add(sheet);
     return sheets;
   }
+
+  /// How far the last sheet of [stackNodeId] is on its way to full, from 0 to 1: the copies on it, divided by those
+  /// copies plus the most copies of one shape on it that still fit. So it is 1 exactly when the sheet is full, see
+  /// [sheets]. Null when no copy waits on the stack.
+  double? fillOfLastSheet(String stackNodeId, PrintRoute route) {
+    final sheet = sheets(stackNodeId, route, includeUnfull: true).lastOrNull;
+    if (sheet == null) return null;
+    final shapes = sheet.map(_shapeOf).toList();
+    int mostMore = 0;
+    for (final shape in shapes.toSet()) {
+      int more = 0;
+      // Every copy takes room, so this ends; the limit only guards against a packer that would think otherwise.
+      while (more < 1000 && _fitsOnOneSheet(route, [...shapes, for (int i = 0; i <= more; i++) shape])) {
+        more++;
+      }
+      if (more > mostMore) mostMore = more;
+    }
+    return shapes.length / (shapes.length + mostMore);
+  }
+
+  static bool _fitsOnOneSheet(PrintRoute route, Iterable<(double, bool)> shapes) => packStackOn(route, [
+    for (final (aspectRatio, split) in shapes) ...stackItemsOf(aspectRatio, split: split),
+  ]).length <= 1;
+
+  /// What decides the room a copy takes on a stack: its aspect ratio, and whether it is printed in halves.
+  static (double, bool) _shapeOf(CollectedCopy copy) => (copy.aspectRatio, copy.size == PrintSize.split);
 
   String _newId(DateTime now) {
     // Unique within this list, also for prints added in the same microsecond.

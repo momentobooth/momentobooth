@@ -110,7 +110,7 @@
     "printDialogCopiesAtATime": "{numCopies, plural, =1{1 copy is printed at a time} other{{numCopies} copies are printed at a time}}",
 
     "printCollectedDialogTitle": "Your print is on its way",
-    "printCollectedDialogBody": "To save paper, your photo is printed together with the photos of other guests. It comes out of the printer a bit later.",
+    "printCollectedDialogBody": "To save paper, your photo is printed together with the photos of other guests. It will come out of the printer a bit later.",
     "printingErrorDialogTitle": "Print error",
     "printingErrorDialogBodyTop": "Due to an unexpected issue, your print(s) cannot be started.",
     "printingErrorDialogBodyTopPartial": "Due to an unexpected issue, not all of your prints could be started. Some of them may still come out of the printer.",

@@ -140,7 +140,7 @@ graph LR
 
 With 2 columns, three copies of a landscape collage fit at the top of an A4 sheet. The rest of the sheet can be fed into the printer again for the next print, if the printer accepts shorter paper. See [stack](settings_print_routing.md#stack) for how the copies are placed.
 
-When guests mostly print a single copy, we suggest setting _Print_ on the stack to _When a sheet is full_. The stack then collects the copies of several guests and only prints a sheet once it is full. You may also set an _Idle (min)_ time to limit the maximum waiting time, an incompletely filled sheet will still print after this period. See [collecting copies](settings_print_routing.md#collecting-copies).
+When guests mostly print a single copy, we suggest setting _Print_ on the stack to _When full_. The stack then collects the copies of several guests and only prints a sheet once it is full. You may also set an _Idle (min)_ time to limit the maximum waiting time, an incompletely filled sheet will still print after this period. See [collecting copies](settings_print_routing.md#collecting-copies).
 
 ## Recommended settings for Canon Selphy CP1300/CP1500
 

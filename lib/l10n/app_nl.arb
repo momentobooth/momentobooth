@@ -110,7 +110,7 @@
     "printDialogCopiesAtATime": "{numCopies, plural, =1{Er wordt 1 kopie tegelijk geprint} other{Er worden {numCopies} kopieën tegelijk geprint}}",
 
     "printCollectedDialogTitle": "Je print komt eraan",
-    "printCollectedDialogBody": "Om papier te besparen printen we je foto samen met de foto's van andere gasten. Hij komt dus wat later uit de printer.",
+    "printCollectedDialogBody": "Om papier te besparen printen we je foto samen met de foto's van andere gasten. Hij zal dus later uit de printer komen.",
     "printingErrorDialogTitle": "Printprobleem",
     "printingErrorDialogBodyTop": "Door een onverwachts probleem kunnen we de print(s) niet starten.",
     "printingErrorDialogBodyTopPartial": "Door een onverwachts probleem konden niet al je prints gestart worden. Een deel kan nog uit de printer komen.",
