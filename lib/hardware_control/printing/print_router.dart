@@ -157,6 +157,26 @@ class PrintRouter {
     return printed;
   }
 
+  /// The route to the printer of stack [stackNodeId], or null when it has none: the stack does not exist (any more),
+  /// or its printer is not usable. Used to print copies that waited on the stack.
+  PrintRoute? stackRoute(String stackNodeId) {
+    if (_nodes[stackNodeId]?.data case final StackNodeData stack) {
+      final usablePrinters = {for (final printerIds in analysis.reachablePrinterIds.values) ...printerIds};
+      for (final edge in _jobEdgesFrom[stackNodeId] ?? const <RoutingEdge>[]) {
+        if (_nodes[edge.toNode]?.data case final PrinterNodeData printer when usablePrinters.contains(edge.toNode)) {
+          return PrintRoute(
+            printerNodeId: edge.toNode,
+            printer: printer,
+            margins: _marginsOf(edge.toNode, printer),
+            stackNodeId: stackNodeId,
+            stack: stack,
+          );
+        }
+      }
+    }
+    return null;
+  }
+
   /// How many times one copy of [size] puts the photo on paper: once per tile, and once for a split print, in two
   /// halves. Null when that depends on the printer it ends up at, or when [size] is not routed.
   int? photosPerCopy(PrintSize size) {

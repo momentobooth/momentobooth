@@ -106,6 +106,8 @@
     "printDialogNumberOfPrints": "Nombre de copies : {numPrints}",
     "printDialogCopiesAtATime": "{numCopies, plural, =1{1 copie est imprimée à la fois} other{{numCopies} copies sont imprimées à la fois}}",
 
+    "printCollectedDialogTitle": "Votre impression est en route",
+    "printCollectedDialogBody": "Pour économiser du papier, nous imprimons votre photo avec celles d'autres invités. Elle sortira donc un peu plus tard de l'imprimante.",
     "printingErrorDialogTitle": "Erreur d'impression",
     "printingErrorDialogBodyTop": "En raison d'un problème inattendu, vos impression(s) ne peut pas être démarrée.",
     "printingErrorDialogBodyTopPartial": "En raison d'un problème inattendu, toutes vos impressions n'ont pas pu être démarrées. Certaines peuvent encore sortir de l'imprimante.",

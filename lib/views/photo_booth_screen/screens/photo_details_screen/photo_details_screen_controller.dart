@@ -7,6 +7,7 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/views/base/screen_controller_base.dart';
+import 'package:momento_booth/views/components/dialogs/print_collected_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/print_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/printing_error_dialog.dart';
 import 'package:momento_booth/views/components/dialogs/qr_share_dialog.dart';
@@ -84,8 +85,9 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     String jobName = viewModel.file != null ? path.basenameWithoutExtension(viewModel.file!.path) : "MomentoBooth Reprint";
 
     bool success = false, partiallyPrinted = false;
+    int waitingCopies = 0;
     try {
-      await getIt<PrintingManager>().printPhoto(jobName: jobName, image: await viewModel.file!.readAsBytes(), size: size, copies: copies);
+      waitingCopies = await getIt<PrintingManager>().printPhoto(jobName: jobName, image: await viewModel.file!.readAsBytes(), size: size, copies: copies);
       success = true;
     } catch (e, s) {
       logError("Failed to print photo", e, s);
@@ -93,7 +95,11 @@ class PhotoDetailsScreenController extends ScreenControllerBase<PhotoDetailsScre
     }
 
     successfulPrints += success ? copies : 0;
-    if (!success) unawaited(showUserDialog(dialog: PrintingErrorDialog(partiallyPrinted: partiallyPrinted), barrierDismissible: true));
+    if (!success) {
+      unawaited(showUserDialog(dialog: PrintingErrorDialog(partiallyPrinted: partiallyPrinted), barrierDismissible: true));
+    } else if (waitingCopies > 0) {
+      unawaited(showUserDialog(dialog: const PrintCollectedDialog(), barrierDismissible: true));
+    }
     resetPrint();
   }
 

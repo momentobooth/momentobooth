@@ -133,12 +133,25 @@ sealed class RoutingNodeData with _$RoutingNodeData {
   }) = TileLayoutNodeData;
 
   /// Stacks the copies of a print on the sheet of the printer it is connected to, to be cut apart afterwards. The
-  /// sheet is divided into [columns] of equal width; each copy gets the width of a column and the height that follows
-  /// from its own aspect ratio, turned to use the least height. Every copy goes to the column that is filled least, so
-  /// the sheet fills from the top and the rest of it can be fed again. Sheets are filled for one printer, so a stack
-  /// only connects to a printer.
+  /// sheet is divided into [lanes] of equal width (columns) or height (rows), see [direction]. In columns, each copy
+  /// gets the width of a column and the height that follows from its own aspect ratio, turned to use the least height.
+  /// Every copy goes to the column that is filled least, so the sheet fills from the top and the rest of it can be fed
+  /// again. Rows work the same way from the left. Sheets are filled for one printer, so a stack only connects to a
+  /// printer.
+  ///
+  /// In [StackMode.direct], the copies of one print share sheets, which are printed right away. In
+  /// [StackMode.collect], copies of several prints wait until their sheet is full, or until no copy was added for
+  /// [printAfterIdleMinutes].
   const factory RoutingNodeData.stack({
-    @Default(1) int columns,
+    @Default(StackMode.direct) StackMode mode,
+
+    /// In collect mode, a sheet that is not full is also printed once no copy was added for this many minutes. 0 waits
+    /// for a full sheet.
+    @Default(0) int printAfterIdleMinutes,
+    @Default(StackDirection.columns) StackDirection direction,
+
+    /// The number of columns or rows.
+    @Default(1) int lanes,
 
     /// Space in mm between the copies, to cut them apart.
     @Default(3.0) double gap,
@@ -212,6 +225,13 @@ sealed class RoutingNodeData with _$RoutingNodeData {
 }
 
 enum PrinterBackend { native, cups }
+
+/// How a stack fills its sheets: in columns from the top, or in rows from the left.
+enum StackDirection { columns, rows }
+
+/// When a stack prints its sheets: right away with the copies of one print, or once a sheet is full with copies of
+/// several prints.
+enum StackMode { direct, collect }
 
 @Freezed(fromJson: true, toJson: true)
 sealed class PrintMedia with _$PrintMedia {

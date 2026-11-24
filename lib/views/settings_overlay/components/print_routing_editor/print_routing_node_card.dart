@@ -124,14 +124,62 @@ class RoutingNodeCard extends StatelessWidget {
 
   List<Widget> _stackFields(StackNodeData data, ValueChanged<RoutingNodeData> update) => [
     _FieldRow(
-      key: const ValueKey('columns'),
-      label: 'Columns',
+      key: const ValueKey('mode'),
+      label: 'Print',
+      child: ComboBox<StackMode>(
+        value: data.mode,
+        isExpanded: true,
+        items: const [
+          ComboBoxItem(value: StackMode.direct, child: Text('Right away')),
+          ComboBoxItem(value: StackMode.collect, child: Text('When full')),
+        ],
+        onChanged: (value) => update(data.copyWith(mode: value ?? data.mode)),
+      ),
+    ),
+    if (data.mode == StackMode.collect)
+      _FieldRow(
+        key: const ValueKey('printAfterIdleMinutes'),
+        label: 'Idle (min)',
+        child: Tooltip(
+          message: 'Also print a sheet that is not full once no copy was added for this many minutes. 0 waits for a full sheet.',
+          child: NumberBox<int>(
+            value: data.printAfterIdleMinutes,
+            min: 0,
+            clearButton: false,
+            mode: SpinButtonPlacementMode.inline,
+            onChanged: (value) => update(data.copyWith(printAfterIdleMinutes: value ?? data.printAfterIdleMinutes)),
+          ),
+        ),
+      ),
+    _FieldRow(
+      key: const ValueKey('direction'),
+      label: 'Fill',
+      child: Tooltip(
+        message: 'Columns fill the sheet from the top, with each copy turned to use the least height. '
+            'Rows fill it from the left, with each copy turned to use the least width.',
+        child: ComboBox<StackDirection>(
+          value: data.direction,
+          isExpanded: true,
+          items: const [
+            ComboBoxItem(value: StackDirection.columns, child: Text('Columns')),
+            ComboBoxItem(value: StackDirection.rows, child: Text('Rows')),
+          ],
+          onChanged: (value) => update(data.copyWith(direction: value ?? data.direction)),
+        ),
+      ),
+    ),
+    _FieldRow(
+      key: const ValueKey('lanes'),
+      label: switch (data.direction) {
+        StackDirection.columns => 'Columns',
+        StackDirection.rows => 'Rows',
+      },
       child: NumberBox<int>(
-        value: data.columns,
+        value: data.lanes,
         min: 1,
         clearButton: false,
         mode: SpinButtonPlacementMode.inline,
-        onChanged: (value) => update(data.copyWith(columns: value ?? data.columns)),
+        onChanged: (value) => update(data.copyWith(lanes: value ?? data.lanes)),
       ),
     ),
     _FieldRow(

@@ -10,10 +10,13 @@
 - Windows: native printers offer the papers of their driver, such as 4x6 with and without border
 - A project can now disable printing, also with a quick action
 - Print routing: a stack node puts the copies of a print together on as few sheets as possible, so a regular A4 or Letter printer can be used and the prints cut apart afterwards
+- Print routing: a stack can fill its sheets in rows from the left instead of columns from the top
+- Print routing: a stack can collect the copies of several prints and only print a sheet once it is full. The waiting copies are kept in the project folder, so they survive a restart. A sheet that is not full is printed after an idle time set per stack, or with the new _Print collected sheets_ quick action. Waiting copies can be thrown away with the _Discard collected copies_ quick action. Copies that were already waiting when the project was opened are held until the next print. Guests are told when their print comes out later
 
 ### Changes
 - Photos are now turned to match the orientation of the media or tile they are printed on, instead of assuming portrait media
 - Small and tiny prints no longer compensate the collage padding
+- `latest-print.pdf` and the `PrintJobs` folder of the extensive print job log moved from the `Output` folder to a new `Prints` folder in the project
 
 ### Dev changes
 - Debug setting to skip sending print jobs to the printers, to test the print routing without printing

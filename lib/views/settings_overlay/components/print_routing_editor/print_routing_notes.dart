@@ -37,7 +37,7 @@ String describeRoutingIssue(RoutingIssue issue, PrintRoutingGraph graph) {
     RoutingIssueKind.missingSource => 'There is no source node.',
     RoutingIssueKind.duplicateSource => 'Only one source is used, this one is ignored.',
     RoutingIssueKind.invalidParameter => switch (nodeById(issue.nodeId)?.data) {
-      StackNodeData() => 'Columns must be at least 1, and the gap cannot be negative.',
+      StackNodeData() => 'There must be at least 1 column or row, and the gap and idle time cannot be negative.',
       _ => 'Columns and rows must be at least 1.',
     },
     RoutingIssueKind.unknownNode || RoutingIssueKind.unknownPort || RoutingIssueKind.wrongDirection =>
@@ -52,7 +52,7 @@ String describeRoutingIssue(RoutingIssue issue, PrintRoutingGraph graph) {
       _ => 'Select a printer and set the media size to print with it.',
     },
     RoutingIssueKind.marginsTooLarge => 'The margins leave no room to print on the media.',
-    RoutingIssueKind.stackTooWide => 'The gaps between the columns do not fit on the media of the printer.',
+    RoutingIssueKind.stackGapsTooLarge => 'The gaps between the columns or rows do not fit on the media of the printer.',
     RoutingIssueKind.ignoredLayout => 'Split prints are always printed in halves, so this layout is not used for them.',
     RoutingIssueKind.unroutedPrintSize => '${printSizeShortLabel(issue.printSize!)} prints are not routed to a printer.',
     RoutingIssueKind.splitWithoutNormal => 'Normal prints are not routed, so only collages of three photos can be printed.',

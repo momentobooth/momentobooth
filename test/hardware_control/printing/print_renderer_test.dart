@@ -10,6 +10,8 @@ final _photo = base64Decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUl
 
 const _printer = PrinterNodeData(queueId: 'printer', media: PrintMedia(widthMm: 100, heightMm: 148));
 
+List<StackedCopy> _copies(int count, {required bool split}) => [for (int i = 0; i < count; i++) StackedCopy(_photo, split: split)];
+
 /// The number of pages in [pdf], from the page count in its page tree.
 int _pageCount(List<int> pdf) => int.parse(RegExp(r'/Count (\d+)').firstMatch(latin1.decode(pdf))!.group(1)!);
 
@@ -45,19 +47,19 @@ void main() {
       printer: _printer,
       margins: const PrintMargins(),
       stackNodeId: 'stack',
-      stack: StackNodeData(columns: columns, gap: 3),
+      stack: StackNodeData(lanes: columns, gap: 3),
     );
 
     test('puts the copies on as few pages as they fit on', () async {
       // The square photo is 100 mm high in one column, so one fits on 148 mm; in two columns of 48.5 mm, two rows fit.
-      expect(_pageCount(await renderStackPdf(_photo, stackRoute(1), copies: 3, split: false)), 3);
-      expect(_pageCount(await renderStackPdf(_photo, stackRoute(2), copies: 5, split: false)), 2);
+      expect(_pageCount(await renderStackPdf(_copies(3, split: false), stackRoute(1))), 3);
+      expect(_pageCount(await renderStackPdf(_copies(5, split: false), stackRoute(2))), 2);
     });
 
     test('stacks the halves of a split print separately', () async {
       // Each half is turned to 100 by 50 mm: two fit on a page with a gap.
-      expect(_pageCount(await renderStackPdf(_photo, stackRoute(1), copies: 1, split: true)), 1);
-      expect(_pageCount(await renderStackPdf(_photo, stackRoute(1), copies: 2, split: true)), 2);
+      expect(_pageCount(await renderStackPdf(_copies(1, split: true), stackRoute(1))), 1);
+      expect(_pageCount(await renderStackPdf(_copies(2, split: true), stackRoute(1))), 2);
     });
   });
 }

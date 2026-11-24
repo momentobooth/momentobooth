@@ -26,29 +26,43 @@ Future<Uint8List> renderPrintPdf(Uint8List image, PrintRoute route, {required bo
   return doc.save();
 }
 
-/// Renders [copies] copies of [image] stacked on the media of [route], within its margins, see [packStack]. Every
-/// sheet the copies fill is a page. The halves of a split print are stacked as separate items.
-Future<Uint8List> renderStackPdf(Uint8List image, PrintRoute route, {required int copies, required bool split}) {
-  final stack = route.stack!;
+/// The width of [image] divided by its height.
+double photoAspectRatio(Uint8List image) {
   final photo = pw.MemoryImage(image);
+  return photo.width! / photo.height!;
+}
+
+/// A copy to put on a stack: a photo, or both its halves for a split print.
+class StackedCopy {
+
+  final Uint8List image;
+  final bool split;
+
+  const StackedCopy(this.image, {required this.split});
+
+}
+
+/// Renders [copies] stacked on the media of [route], within its margins, see [packStack]. Every sheet the copies fill
+/// is a page. The halves of a split print are stacked as separate items.
+Future<Uint8List> renderStackPdf(List<StackedCopy> copies, PrintRoute route) {
   final doc = pw.Document(title: "MomentoBooth image");
   final format = _pageFormat(route);
 
-  final List<pw.Alignment?> items = [
-    for (int copy = 0; copy < copies; copy++)
-      if (split) ...const [pw.Alignment.centerLeft, pw.Alignment.centerRight] else null,
-  ];
-  final photoAspectRatio = photo.width! / photo.height!;
-  final sheets = packStack(
-    [
-      for (final half in items)
-        if (half == null) photoAspectRatio else photoAspectRatio / 2,
-    ],
-    width: format.availableWidth,
-    height: format.availableHeight,
-    columns: stack.columns,
-    gap: stack.gap * PdfPageFormat.mm,
-  );
+  // Every distinct photo is embedded once.
+  final Map<Uint8List, pw.MemoryImage> photos = {};
+  final List<(pw.MemoryImage photo, pw.Alignment? half)> items = [];
+  final List<double> aspectRatios = [];
+  for (final copy in copies) {
+    final photo = photos[copy.image] ??= pw.MemoryImage(copy.image);
+    final aspectRatio = photo.width! / photo.height!;
+    if (copy.split) {
+      items.addAll([(photo, pw.Alignment.centerLeft), (photo, pw.Alignment.centerRight)]);
+    } else {
+      items.add((photo, null));
+    }
+    aspectRatios.addAll(stackItemsOf(aspectRatio, split: copy.split));
+  }
+  final sheets = packStackOn(route, aspectRatios, unit: PdfPageFormat.mm);
 
   for (final sheet in sheets) {
     doc.addPage(pw.Page(
@@ -65,8 +79,8 @@ Future<Uint8List> renderStackPdf(Uint8List image, PrintRoute route, {required in
                   left: placement.left,
                   top: placement.top,
                   child: switch (items[placement.item]) {
-                    null => _fittedPhoto(photo, placement.width, placement.height),
-                    final half => _halfPhoto(photo, half, placement),
+                    (final photo, null) => _fittedPhoto(photo, placement.width, placement.height),
+                    (final photo, final half?) => _halfPhoto(photo, half, placement),
                   },
                 ),
             ],

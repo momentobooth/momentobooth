@@ -23,7 +23,7 @@ MomentoBooth supports two ways of printing, and you can combine them in one set-
    1. Leave the **Margins** at 0 for now.
 1. Check the **Routes** in the side panel: _Normal_ should list your printer, and the **Problems** list should be empty.
 1. Make sure the project setting [Enable printing](settings_project.md#enable-printing) is on.
-1. Take a photo and print it. Tune the margins of the printer node until the print shows the full collage without white borders: increase a margin when the printer cuts off part of the photo on that side, decrease it when a white border remains. The last printed sheet is also saved as `latest-print.pdf` in the output folder of the project.
+1. Take a photo and print it. Tune the margins of the printer node until the print shows the full collage without white borders: increase a margin when the printer cuts off part of the photo on that side, decrease it when a white border remains. The last printed sheet is also saved as `latest-print.pdf` in the `Prints` folder of the project.
 
 Print sizes that are not routed to a printer are not offered in the print dialog. So with the basic set-up, users can only choose the normal print size.
 
@@ -139,6 +139,8 @@ graph LR
 ```
 
 With 2 columns, three copies of a landscape collage fit at the top of an A4 sheet. The rest of the sheet can be fed into the printer again for the next print, if the printer accepts shorter paper. See [stack](settings_print_routing.md#stack) for how the copies are placed.
+
+When guests mostly print a single copy, we suggest setting _Print_ on the stack to _When full_. The stack then collects the copies of several guests and only prints a sheet once it is full. You may also set an _Idle (min)_ time to limit the maximum waiting time, an incompletely filled sheet will still print after this period. See [collecting copies](settings_print_routing.md#collecting-copies).
 
 ## Recommended settings for Canon Selphy CP1300/CP1500
 
