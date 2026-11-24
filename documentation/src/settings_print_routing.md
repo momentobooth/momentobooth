@@ -23,7 +23,7 @@ A few rules follow from this:
 - The print button is only shown when the project setting [Enable printing](settings_project.md#enable-printing) is on and the photo can be printed at one of the routed print sizes.
 - The _Split_ print size is not a choice in the print dialog. When a user prints a collage of three photos at _Normal_ size and _Split_ is routed, the print follows the _Split_ route instead. When _Split_ is not routed, the _Normal_ route is used. A booth that only offers split prints can route _Split_ alone: collages of three photos then offer _Normal_, which prints split, and other photos cannot be printed.
 - Every copy is routed separately. When a user prints three copies, each copy follows its own route, so a round-robin node can send them to different printers. Copies that end up at the same [stack](#stack) share its sheets.
-- Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works. When a printer fails while printing, a round-robin node lets its next output print the copy, and a duplicate node still prints on its other outputs. The print only fails when no printer takes a copy, or when the printer of a [stack](#stack) fails.
+- Branches that do not lead to a usable printer for the print size are skipped, so a print never ends up nowhere as long as one route works. When a printer fails while printing, a round-robin node lets its next output print the copy, and a duplicate node still prints on its other outputs. The print only fails when no printer takes a copy, or when the printer of a [stack](#stack) fails (when the stack collects copies, they keep waiting instead).
 
 A new installation starts with a source whose _Normal_ output is connected to a single printer node. That printer still has to be configured before anything can be printed.
 
@@ -108,14 +108,21 @@ Split prints are always printed in halves, so a tile layout on the route of the 
 
 ### Stack
 
-A stack node puts the copies of a print together on as few sheets as possible, to cut them apart afterwards. It is meant for a regular printer with A4 or Letter paper, for when no photo printer is at hand: a single print would leave most of that paper unused. It takes a **Photo** and turns it into a **Stack**. The **Photo** input accepts any number of connections, so several print sizes can share a stack, e.g. _Normal_ and _Split_. The **Stack** output takes a single connection and only connects to a printer, as the sheets are filled for the media of that printer. Its fields are:
+A stack node puts the copies of a print together on as few sheets as possible, to cut them apart afterwards. It is meant for a regular printer with A4 or Letter paper, for when no photo printer is at hand: a single print would leave most of that paper unused.
+
+It takes a **Photo** and turns it into a **Stack**. The **Photo** input accepts any number of connections, so several print sizes can share a stack, e.g. _Normal_ and _Split_. The **Stack** output takes a single connection and only connects to a printer, as the sheets are filled for the media of that printer. Its fields are:
 
 | Field | Meaning |
 |---|---|
-| Columns | The number of columns the printable area is divided into, at least 1. |
+| Print | When the sheets are printed. _Right away_ prints the copies of each print on sheets of their own. _When a sheet is full_ collects the copies of several prints on the same sheets, see [collecting copies](#collecting-copies). |
+| Idle (min) | Only shown for _When a sheet is full_. A sheet that is not full is printed as well once no copy was added to the stack for this many minutes. 0 (the default) waits for a full sheet. |
+| Fill | _Columns, from the top_ divides the printable area into columns, _Rows, from the left_ into rows. |
+| Columns / Rows | The number of columns or rows, at least 1. |
 | Gap (mm) | The space between the copies, to cut them apart. 3 mm by default. |
 
-Like a tile layout, a stack has no size of its own. Each copy gets the width of a column and the height that follows from its own shape, and is **turned to use the least height**: a portrait photo lies sideways. The copies are placed from the top of the sheet down. Each copy goes to the column that is filled least, below the copies already there, and when it does not fit in any column, it starts a new sheet. All sheets of a print are sent to the printer as a single job.
+Like a tile layout, a stack has no size of its own. In columns, each copy gets the width of a column and the height that follows from its own shape, and is **turned to use the least height**: a portrait photo lies sideways. The copies are placed from the top of the sheet down. Each copy goes to the column that is filled least, below the copies already there, and when it does not fit in any column, it starts a new sheet. With _Right away_, all sheets of a print are sent to the printer as a single job.
+
+In rows, the same happens sideways: each copy gets the height of a row, is **turned to use the least width**, and the rows fill from the left. The rest of the sheet is then a strip along its full length, which most printers cannot take again, so rows are mostly useful when [collecting copies](#collecting-copies).
 
 Take, for example, three copies of a landscape collage (3:2) on A4 media (210 × 297 mm) with margins of 5 mm and 2 columns. Each column is about 98 mm wide, so each copy is about 98 × 66 mm. The first two copies lie side by side at the top of the sheet, and the third one below the first:
 
@@ -141,7 +148,25 @@ The halves of a split print are stacked as two separate copies, so each half lie
 
 Only the copies that end up at the same stack share sheets. Behind a round-robin node with a stack per printer, the copies alternate between the stacks, and each stack fills its own sheets. The sheets of a stack are sent once all copies of the print are routed, so when its printer fails, no other printer can take over these copies, and the print fails.
 
-A stack with fewer than 1 column or a negative gap is an error; its connections are ignored. So is a stack whose gaps between the columns take up the whole printable width of its printer.
+A stack with fewer than 1 column or row, a negative gap or a negative idle time is an error; its connections are ignored. So is a stack whose gaps between the columns or rows take up the whole printable width or height of its printer.
+
+#### Collecting copies
+
+With _Print_ set to _When a sheet is full_, a stack collects the copies of several prints and only prints a sheet once it is full. This saves the most paper when guests print one or two copies at a time: with _Right away_, every print starts a sheet of its own.
+
+The copies are placed on the sheets in the order they came in. A copy is never divided over two sheets, so both halves of a split print end up on the same sheet. A sheet is **full** when no copy like the ones on it fits any more: one of the same shape, and for a split print, both halves. A sheet that is full is printed right away, as part of the print that filled it.
+
+The waiting copies are kept in a `Collections` folder inside the `Prints` folder of the project, each with a copy of its photo, so they survive a restart of the app. A sheet that is not full is printed as well:
+
+- once no copy was added to the stack for the number of minutes set in _Idle (min)_. The app checks this about every 30 seconds.
+- with the _Print collected sheets_ quick action in the settings panel, or the action with the same name on the printing subsystem on the [subsystem status](settings_subsystem.md) page. These print the last sheet of every stack, full or not, and are only shown while copies wait.
+- when the stack is set to _Right away_. The copies that still wait are then printed at the next check.
+
+A guest whose print waits on a stack sees a message that their photo is printed together with the photos of other guests, and comes out of the printer a bit later. The copies are not marked with a name or number, so guests have to recognise their own photo.
+
+When the printer of a collected sheet fails, the copies on that sheet keep waiting. They are tried again with the next sheet of the stack, after the idle time, or with the quick action. When a stack no longer reaches a printer, for example after removing its connection, its copies keep waiting as well, and the printing subsystem shows a warning. Connect the stack to a printer again to print them. There is no action to throw waiting copies away (yet); to do so, close the app and delete the `Collections` folder.
+
+Collected copies are counted in the [statistics](settings_debug.md#statistics) when their sheet is printed.
 
 ### Margins
 
@@ -189,7 +214,7 @@ The side panel to the right of the canvas has three sections:
 - **Problems** lists the errors and warnings of all nodes. Click a problem to select and centre its node on the canvas. The same problems are shown as notes on the nodes themselves: red for errors, yellow for warnings.
 - **Printers** has the **Refresh printers** button. The printers, CUPS queues, media and papers to choose from are listed when the page opens. Refresh them after connecting a printer, starting the CUPS server or changing the CUPS server settings.
 
-Connections with errors are ignored, while the rest of the routing keeps working. The printing subsystem on the [subsystem status](settings_subsystem.md) page stays disabled until a printer is set up: until a printer node has a printer or queue and media, connected or not. It is also disabled when the project setting [Enable printing](settings_project.md#enable-printing) is off. Once a printer is set up, the subsystem shows a warning when the routing has problems, when no print size reaches a configured printer, or when a printer failed during the last print.
+Connections with errors are ignored, while the rest of the routing keeps working. The printing subsystem on the [subsystem status](settings_subsystem.md) page stays disabled until a printer is set up: until a printer node has a printer or queue and media, connected or not. It is also disabled when the project setting [Enable printing](settings_project.md#enable-printing) is off. Once a printer is set up, the subsystem shows a warning when the routing has problems, when no print size reaches a configured printer, when a printer failed during the last print, or when copies wait on a stack that does not reach a printer. While copies wait on stacks, the subsystem shows how many, with the action _Print collected sheets_.
 
 | Message | Meaning |
 |---|---|
@@ -205,8 +230,8 @@ Connections with errors are ignored, while the rest of the routing keeps working
 | Only one source is used, this one is ignored. | There is more than one source node. Only the first one routes prints. |
 | There is no source node. | The routing has no source, so nothing can be printed. |
 | Columns and rows must be at least 1. | A tile layout has an invalid grid. Its connections are ignored. |
-| Columns must be at least 1, and the gap cannot be negative. | A stack has invalid fields. Its connections are ignored. |
-| The gaps between the columns do not fit on the media of the printer. | The gaps of a stack take up the whole printable width of its printer, so no room is left for the copies. The stack is skipped. |
+| There must be at least 1 column or row, and the gap and idle time cannot be negative. | A stack has invalid fields. Its connections are ignored. |
+| The gaps between the columns or rows do not fit on the media of the printer. | The gaps of a stack take up the whole printable width or height of its printer, so no room is left for the copies. The stack is skipped. |
 | A stored connection is invalid and is ignored. / A connection is stored twice. / Two nodes share the ID "…". | The saved routing is damaged, for example after editing the settings file by hand or importing settings. |
 
 ## Editing
@@ -246,7 +271,7 @@ The printable area of a sheet is the media size of the printer minus its margins
 
 - **Without a tile layout**, the photo is fitted in the printable area as a whole, centred and without cropping. It is turned a quarter turn when its orientation does not match that of the area, so a landscape collage on portrait media is printed sideways to use the paper well.
 - **With a tile layout**, the printable area is divided into equal tiles, and the photo is fitted in each tile, turned to fill the tile best, see [tile layout](#tile-layout).
-- **With a stack**, the copies of a print are placed in columns from the top of the printable area down, each turned to use the least height, see [stack](#stack).
+- **With a stack**, the copies are placed in columns from the top of the printable area down, each turned to use the least height, or in rows from the left, each turned to use the least width, see [stack](#stack).
 - **Split prints** are printed as two pages: the left half of the collage on the first page and the right half on the second. Each half fills the height of the printable area. The margins between the halves (the right margin of the first page and the left margin of the second) are left out, so the halves line up when put together. Tile layouts are not used for split prints.
 
 The last printed sheet is saved as `latest-print.pdf` in the `Prints` folder of the project, which is handy to check the layout without wasting paper. For more detail, turn on _Enable extensive print job logging_ in the [debug settings](settings_debug.md), which keeps the PDFs and details of every print job in a `PrintJobs` folder inside the `Prints` folder. To test the routing without printing at all, turn on _Skip sending print jobs to printers_ in the same settings: prints are routed and rendered as usual, but not sent to a printer, and not counted in the statistics.
