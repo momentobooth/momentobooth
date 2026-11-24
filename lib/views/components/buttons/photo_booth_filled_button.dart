@@ -74,7 +74,18 @@ class _PhotoBoothFilledButtonState extends State<PhotoBoothFilledButton> with Ti
 
   @override
   Widget build(BuildContext context) {
-    ButtonStyle style = context.theme.dialogTheme.buttonStyle;
+    // Fluent derives the hover and press colors from shades of the accent color, but the booth only defines its normal
+    // shade, so hovering barely changes the button. Darken the primary color instead, like the outlined button does.
+    Color primaryColor = FluentTheme.of(context).accentColor.normal;
+    ButtonStyle style = context.theme.dialogTheme.buttonStyle.merge(ButtonStyle(
+      backgroundColor: WidgetStateProperty.resolveWith((states) {
+        // Keep Fluent's own color for a disabled button.
+        if (states.isDisabled) return null;
+        if (states.isPressed) return Color.alphaBlend(Colors.black.withValues(alpha: 0.2), primaryColor);
+        if (states.isHovered) return Color.alphaBlend(Colors.black.withValues(alpha: 0.1), primaryColor);
+        return primaryColor;
+      }),
+    ))!;
     Widget button = FilledButton(
       onPressed: widget.onPressed == null ? null : _onPressed,
       style: style,
