@@ -175,6 +175,19 @@ class PrintJobRunner {
 
   /// Prints the sheets of the stacks that waited long enough, see [printCollected]: a stack in collect mode once no
   /// copy was added for its [StackNodeData.printAfterIdleMinutes], and a stack that now prints right away.
+  /// Removes the copies that wait on stacks without printing them: all of them, or with [strandedOnly], only those on
+  /// stacks that do not reach a printer. Returns the removed copies. The photos the copies were made from are not
+  /// touched.
+  Future<List<CollectedCopy>> discardCollected(PrintRouter router, StackCollector collector, {bool strandedOnly = false}) =>
+      collector.locked(() async {
+        final discarded = [
+          for (final copy in collector.copies)
+            if (!strandedOnly || router.stackRoute(copy.stackNodeId) == null) copy,
+        ];
+        await collector.remove(discarded);
+        return discarded;
+      });
+
   Future<PrintJobReport> printIdleStacks(PrintRouter router, StackCollector collector, {required DateTime now}) =>
       printCollected(router, collector, where: (stackNodeId, stack) => switch (stack.mode) {
         StackMode.direct => true,

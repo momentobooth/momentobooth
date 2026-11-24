@@ -268,6 +268,25 @@ void main() {
       expect(printers.sent, isEmpty);
     });
 
+    test('discards the copies of stacks that do not reach a printer, or all copies', () async {
+      final printers = _Printers();
+      final collector = StackCollector(MemoryCollectedCopyStore());
+      await _run(printers, _collectingRouter(), collector: collector);
+
+      // The stack still reaches its printer.
+      expect(await printers.runner.discardCollected(_collectingRouter(), collector, strandedOnly: true), isEmpty);
+      expect(collector.copies, hasLength(1));
+
+      final discarded = await printers.runner.discardCollected(_router([], []), collector, strandedOnly: true);
+      expect([for (final copy in discarded) copy.jobName], ['job']);
+      expect(collector.copies, isEmpty);
+
+      await _run(printers, _collectingRouter(), collector: collector);
+      expect(await printers.runner.discardCollected(_collectingRouter(), collector), hasLength(1));
+      expect(collector.copies, isEmpty);
+      expect(printers.sent, isEmpty);
+    });
+
     test('fails when a collected sheet fails, and keeps its copies waiting', () async {
       final collector = StackCollector(MemoryCollectedCopyStore());
       await _run(_Printers(), _collectingRouter(), collector: collector);

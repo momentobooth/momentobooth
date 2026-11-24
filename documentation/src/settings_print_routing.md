@@ -164,7 +164,9 @@ The waiting copies are kept in a `Collections` folder inside the `Prints` folder
 
 A guest whose print waits on a stack sees a message that their photo is printed together with the photos of other guests, and comes out of the printer a bit later. The copies are not marked with a name or number, so guests have to recognise their own photo.
 
-When the printer of a collected sheet fails, the copies on that sheet keep waiting. They are tried again with the next sheet of the stack, after the idle time, or with the quick action. When a stack no longer reaches a printer, for example after removing its connection, its copies keep waiting as well, and the printing subsystem shows a warning. Connect the stack to a printer again to print them. There is no action to throw waiting copies away (yet); to do so, close the app and delete the `Collections` folder.
+When the printer of a collected sheet fails, the copies on that sheet keep waiting. They are tried again with the next sheet of the stack, after the idle time, or with the quick action. When a stack no longer reaches a printer, for example after removing its connection, its copies keep waiting as well, and the printing subsystem shows a warning. Connect the stack to a printer again to print them.
+
+To throw waiting copies away instead, for example at the end of an event, use the _Discard collected copies_ quick action. It asks for confirmation, and when some copies wait on a stack that does not reach a printer, it offers to discard only those. Discarded copies are not printed, but their photos stay in the gallery and can be printed again from there.
 
 Collected copies are counted in the [statistics](settings_debug.md#statistics) when their sheet is printed.
 

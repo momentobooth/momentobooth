@@ -36,6 +36,13 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
                 icon: LucideIcons.layers,
                 onPressed: () => getIt<PrintingManager>().printCollectedSheets(),
               ),
+            if (getIt<PrintingManager>().waitingCopies > 0)
+              QuickAction(
+                title: 'Discard to-be-printed collected copies',
+                icon: LucideIcons.trash2,
+                iconColor: Colors.orange,
+                onPressed: () => _discardCollectedCopies(context),
+              ),
             QuickAction(
               title: 'Restart live view',
               icon: LucideIcons.refreshCcw,
@@ -68,4 +75,31 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
       );
     },
   );
+}
+
+/// Asks which waiting copies to throw away, if any, and does so.
+Future<void> _discardCollectedCopies(BuildContext context) async {
+  final printingManager = getIt<PrintingManager>();
+  final waiting = printingManager.waitingCopies;
+  final stranded = printingManager.strandedCopies;
+  // Null when cancelled.
+  final strandedOnly = await showDialog<bool>(
+    context: context,
+    builder: (context) => ContentDialog(
+      title: const Text('Discard collected copies'),
+      content: Text([
+        '$waiting copies wait on stacks.',
+        if (stranded > 0 && stranded < waiting) '$stranded of them wait on a stack that does not reach a printer.',
+        'Discarded copies are not printed, but their photos stay in the gallery and can be printed again from there.',
+      ].join(' ')),
+      actions: [
+        Button(child: const Text('Cancel'), onPressed: () => Navigator.of(context).pop()),
+        if (stranded > 0 && stranded < waiting)
+          Button(child: Text('Discard stranded ($stranded)'), onPressed: () => Navigator.of(context).pop(true)),
+        FilledButton(child: Text('Discard all ($waiting)'), onPressed: () => Navigator.of(context).pop(false)),
+      ],
+    ),
+  );
+  if (strandedOnly == null) return;
+  await printingManager.discardCollectedCopies(strandedOnly: strandedOnly);
 }

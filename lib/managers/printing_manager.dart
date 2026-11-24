@@ -80,6 +80,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   String _sheetFills = '';
 
   /// The waiting copies of stacks that do not reach a printer.
+  @readonly
   int _strandedCopies = 0;
 
   @action
@@ -129,7 +130,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     } else if (_failedPrinters.isNotEmpty) {
       reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it, which is not the case for stacked copies. Copies on collected sheets keep waiting.", actions: actions);
     } else if (_strandedCopies > 0) {
-      reportSubsystemWarning(message: "$_strandedCopies copies wait on a stack that does not reach a printer. Connect the stack to a printer to print them.", actions: actions);
+      reportSubsystemWarning(message: "$_strandedCopies copies wait on a stack that does not reach a printer. Connect the stack to a printer to print them, or discard them with the quick action.", actions: actions);
     } else if (_router.analysis.hasErrors) {
       reportSubsystemWarning(message: "The print routing graph has problems, which are listed on the Print routing settings page. Connections with problems are ignored.", actions: actions);
     } else {
@@ -195,6 +196,23 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   /// Prints the sheets of every copy that waits on a stack, also the sheets that are not full. Never throws; sheets
   /// that fail show in the status, and their copies keep waiting.
   Future<void> printCollectedSheets() => _printCollected(_jobRunner.printCollected);
+
+  /// Throws away the copies that wait on stacks, see [PrintJobRunner.discardCollected]. Their photos stay in the
+  /// gallery, so they can be printed again from there. Never throws.
+  Future<void> discardCollectedCopies({bool strandedOnly = false}) async {
+    final collector = _collector;
+    if (collector == null) return;
+    try {
+      final discarded = await _jobRunner.discardCollected(_router, collector, strandedOnly: strandedOnly);
+      if (discarded.isNotEmpty) {
+        logInfo("Discarded ${discarded.length} waiting copies of ${{for (final copy in discarded) copy.jobName}.join(', ')}");
+      }
+    } catch (error, stackTrace) {
+      logError("Could not discard the waiting copies", error, stackTrace);
+    } finally {
+      _updateWaitingCopies();
+    }
+  }
 
   Future<void> _printIdleStacks() async {
     if (_collector == null || !getIt<ProjectManager>().settings.enablePrinting) return;
