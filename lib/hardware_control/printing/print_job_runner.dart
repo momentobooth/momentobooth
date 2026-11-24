@@ -151,19 +151,21 @@ class PrintJobRunner {
   }
 
   /// Prints the sheets of the copies waiting on stacks, the last one of a stack included when it is not full: of the
-  /// stacks [where] accepts, or of every stack. Copies on a stack that does not reach a printer keep waiting.
+  /// stacks [where] accepts, or of every stack. Copies on a stack that does not reach a printer keep waiting, and so do
+  /// held copies without [includeHeld], see [StackCollector.isHeld].
   ///
   /// The stacks are chosen once the actions before this one on the [collector] are done.
   Future<PrintJobReport> printCollected(
     PrintRouter router,
     StackCollector collector, {
     bool Function(String stackNodeId, StackNodeData stack)? where,
+    bool includeHeld = true,
   }) => collector.locked(() async {
     final session = _PrintSession(this);
     for (final stackNodeId in {for (final copy in collector.copies) copy.stackNodeId}) {
       final route = router.stackRoute(stackNodeId);
       if (route == null || !(where?.call(stackNodeId, route.stack!) ?? true)) continue;
-      await session.printCollected(collector, route, stackNodeId, includeUnfull: true);
+      await session.printCollected(collector, route, stackNodeId, includeUnfull: true, includeHeld: includeHeld);
     }
     return session.report(
       waitingCopies: collector.copies.length,
@@ -173,8 +175,6 @@ class PrintJobRunner {
     );
   });
 
-  /// Prints the sheets of the stacks that waited long enough, see [printCollected]: a stack in collect mode once no
-  /// copy was added for its [StackNodeData.printAfterIdleMinutes], and a stack that now prints right away.
   /// Removes the copies that wait on stacks without printing them: all of them, or with [strandedOnly], only those on
   /// stacks that do not reach a printer. Returns the removed copies. The photos the copies were made from are not
   /// touched.
@@ -188,8 +188,10 @@ class PrintJobRunner {
         return discarded;
       });
 
+  /// Prints the sheets of the stacks that waited long enough, see [printCollected]: a stack in collect mode once no
+  /// copy was added for its [StackNodeData.printAfterIdleMinutes], and a stack that now prints right away. Held copies keep waiting.
   Future<PrintJobReport> printIdleStacks(PrintRouter router, StackCollector collector, {required DateTime now}) =>
-      printCollected(router, collector, where: (stackNodeId, stack) => switch (stack.mode) {
+      printCollected(router, collector, includeHeld: false, where: (stackNodeId, stack) => switch (stack.mode) {
         StackMode.direct => true,
         StackMode.collect => stack.printAfterIdleMinutes > 0 &&
             !now.isBefore(collector.lastAddedAt(stackNodeId)!.add(Duration(minutes: stack.printAfterIdleMinutes))),
@@ -247,10 +249,17 @@ class _PrintSession {
   }
 
   /// Prints the sheets of the copies waiting on [stackNodeId]: the full ones, and with [includeUnfull] the last one as
-  /// well. A sheet that is printed is removed from the [collector]; the copies of a sheet that fails keep waiting.
-  /// Copies whose photo cannot be read any more are dropped, as they can never be printed.
-  Future<void> printCollected(StackCollector collector, PrintRoute route, String stackNodeId, {bool includeUnfull = false}) async {
-    for (final sheet in collector.sheets(stackNodeId, route, includeUnfull: includeUnfull)) {
+  /// well, and with [includeHeld] the held copies too. A sheet that is printed is removed from the [collector]; the
+  /// copies of a sheet that fails keep waiting. Copies whose photo cannot be read any more are dropped, as they can
+  /// never be printed.
+  Future<void> printCollected(
+    StackCollector collector,
+    PrintRoute route,
+    String stackNodeId, {
+    bool includeUnfull = false,
+    bool includeHeld = false,
+  }) async {
+    for (final sheet in collector.sheets(stackNodeId, route, includeUnfull: includeUnfull, includeHeld: includeHeld)) {
       final Map<String, Uint8List> images = {};
       final List<CollectedCopy> unreadable = [];
       for (final copy in sheet) {

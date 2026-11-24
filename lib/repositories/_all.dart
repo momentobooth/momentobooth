@@ -1,3 +1,6 @@
+export 'collected_copies/collected_copy_repository.dart';
+export 'collected_copies/directory_collected_copy_repository.dart';
+
 export 'open_source_licenses/open_source_licenses_repository.dart';
 
 export 'secrets/secrets_repository.dart';

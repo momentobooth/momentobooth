@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:momento_booth/hardware_control/printing/stack_collector.dart';
 import 'package:momento_booth/models/collected_copy.dart';
+import 'package:momento_booth/repositories/collected_copies/collected_copy_repository.dart';
 
 /// Keeps the waiting list in memory.
-class MemoryCollectedCopyStore implements CollectedCopyStore {
+class MemoryCollectedCopyRepository implements CollectedCopyRepository {
 
   List<CollectedCopy> saved = [];
   final Map<String, Uint8List> images = {};

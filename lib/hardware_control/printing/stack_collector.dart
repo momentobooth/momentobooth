@@ -1,93 +1,45 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
 import 'package:momento_booth/hardware_control/printing/print_stack_packer.dart';
 import 'package:momento_booth/models/collected_copy.dart';
 import 'package:momento_booth/models/settings.dart';
-import 'package:path/path.dart' as path;
-
-/// Where the copies that wait on stacks are kept: the list, and a file per photo.
-abstract interface class CollectedCopyStore {
-
-  Future<List<CollectedCopy>> load();
-
-  Future<void> save(List<CollectedCopy> copies);
-
-  Future<void> writeImage(String name, Uint8List image);
-
-  Future<Uint8List> readImage(String name);
-
-  /// Does nothing when the image does not exist.
-  Future<void> deleteImage(String name);
-
-}
-
-/// Keeps the waiting copies in [directory]: the list in `waiting.json`, and the photos next to it.
-class DirectoryCollectedCopyStore implements CollectedCopyStore {
-
-  final Directory directory;
-
-  const DirectoryCollectedCopyStore(this.directory);
-
-  File get _listFile => File(path.join(directory.path, 'waiting.json'));
-
-  @override
-  Future<List<CollectedCopy>> load() async {
-    if (!_listFile.existsSync()) return const [];
-    final json = jsonDecode(await _listFile.readAsString()) as Map<String, dynamic>;
-    return [
-      for (final copy in json['copies'] as List<dynamic>) CollectedCopy.fromJson(copy as Map<String, Object?>),
-    ];
-  }
-
-  @override
-  Future<void> save(List<CollectedCopy> copies) async {
-    await directory.create(recursive: true);
-    // Written next to the list and then moved over it, so a crash never leaves half a list.
-    final temporary = File('${_listFile.path}.tmp');
-    await temporary.writeAsString(jsonEncode({'copies': [for (final copy in copies) copy.toJson()]}), flush: true);
-    await temporary.rename(_listFile.path);
-  }
-
-  @override
-  Future<void> writeImage(String name, Uint8List image) async {
-    await directory.create(recursive: true);
-    await File(path.join(directory.path, name)).writeAsBytes(image, flush: true);
-  }
-
-  @override
-  Future<Uint8List> readImage(String name) => File(path.join(directory.path, name)).readAsBytes();
-
-  @override
-  Future<void> deleteImage(String name) async {
-    final file = File(path.join(directory.path, name));
-    if (file.existsSync()) await file.delete();
-  }
-
-}
+import 'package:momento_booth/repositories/collected_copies/collected_copy_repository.dart';
+import 'package:synchronized/synchronized.dart';
 
 /// The copies that wait on stacks in collect mode, until their sheet is printed.
 ///
-/// Every change is saved to the [store] right away, so the waiting copies survive a restart. Operations that read and
+/// Every change is saved to the [repository] right away, so the waiting copies survive a restart. Operations that read and
 /// change the list together run one at a time with [locked].
 class StackCollector {
 
-  final CollectedCopyStore store;
+  final CollectedCopyRepository repository;
   final DateTime Function() _now;
   int _lastId = 0;
 
   List<CollectedCopy> _copies = const [];
-  Future<void> _tail = Future.value();
+  Set<String> _heldIds = const {};
 
-  StackCollector(this.store, {DateTime Function()? now}) : _now = now ?? DateTime.now;
+  /// When the first print after loading released the held copies, see [isHeld].
+  DateTime? _resumedAt;
+  final Lock _lock = Lock();
+
+  StackCollector(this.repository, {DateTime Function()? now}) : _now = now ?? DateTime.now;
 
   /// The waiting copies, oldest first.
   List<CollectedCopy> get copies => _copies;
 
+  /// Whether [copy] was already waiting when the list was loaded: it is from an earlier session, for example after the
+  /// computer restarted or when a project is opened again days after an event. Such a copy is held until a new print
+  /// is added, which resumes the event: until then it is only printed on request, see [sheets].
+  bool isHeld(CollectedCopy copy) => _heldIds.contains(copy.id);
+
+  /// The held copies that still wait, see [isHeld].
+  Iterable<CollectedCopy> get heldCopies => _copies.where(isHeld);
+
   Future<void> load() async {
-    _copies = List.unmodifiable(await store.load());
+    _copies = List.unmodifiable(await repository.load());
+    _heldIds = {for (final copy in _copies) copy.id};
     // New IDs continue after the ones that are waiting.
     for (final copy in _copies) {
       final id = int.tryParse(copy.printId) ?? 0;
@@ -96,13 +48,10 @@ class StackCollector {
   }
 
   /// Runs [action] once the actions before it are done.
-  Future<T> locked<T>(Future<T> Function() action) {
-    final result = _tail.then((_) => action());
-    _tail = result.then((_) {}, onError: (_) {});
-    return result;
-  }
+  Future<T> locked<T>(Future<T> Function() action) => _lock.synchronized(action);
 
-  /// Adds [count] copies of [image] to stack [stackNodeId], as one print. Returns the ID of the print.
+  /// Adds [count] copies of [image] to stack [stackNodeId], as one print, and releases the held copies, see [isHeld].
+  /// Returns the ID of the print.
   Future<String> add({
     required String stackNodeId,
     required String jobName,
@@ -114,7 +63,7 @@ class StackCollector {
     final now = _now();
     final printId = _newId(now);
     final imageFile = '$printId${_extensionOf(image)}';
-    await store.writeImage(imageFile, image);
+    await repository.writeImage(imageFile, image);
     _copies = List.unmodifiable([
       ..._copies,
       for (int copy = 1; copy <= count; copy++)
@@ -129,7 +78,11 @@ class StackCollector {
           addedAt: now,
         ),
     ]);
-    await store.save(_copies);
+    await repository.save(_copies);
+    if (_heldIds.isNotEmpty) {
+      _heldIds = const {};
+      _resumedAt = now;
+    }
     return printId;
   }
 
@@ -138,33 +91,36 @@ class StackCollector {
     final ids = {for (final copy in copies) copy.id};
     final removed = _copies.where((copy) => ids.contains(copy.id)).toList();
     _copies = List.unmodifiable(_copies.where((copy) => !ids.contains(copy.id)));
-    await store.save(_copies);
+    await repository.save(_copies);
     final stillUsed = {for (final copy in _copies) copy.imageFile};
     for (final imageFile in {for (final copy in removed) copy.imageFile}.difference(stillUsed)) {
-      await store.deleteImage(imageFile);
+      await repository.deleteImage(imageFile);
     }
   }
 
-  Future<Uint8List> readImage(CollectedCopy copy) => store.readImage(copy.imageFile);
+  Future<Uint8List> readImage(CollectedCopy copy) => repository.readImage(copy.imageFile);
 
-  /// When the last copy was added to stack [stackNodeId], or null when no copy waits on it.
+  /// When the last copy was added to stack [stackNodeId], or null when no copy waits on it. The copies that were held
+  /// count as added when they were released, so their idle time starts again.
   DateTime? lastAddedAt(String stackNodeId) {
     for (final copy in _copies.reversed) {
-      if (copy.stackNodeId == stackNodeId) return copy.addedAt;
+      if (copy.stackNodeId != stackNodeId) continue;
+      final resumedAt = _resumedAt;
+      return resumedAt != null && resumedAt.isAfter(copy.addedAt) ? resumedAt : copy.addedAt;
     }
     return null;
   }
 
   /// The copies waiting on [stackNodeId], divided over the sheets of [route] in the order they came in. A copy is never
   /// divided over two sheets. Every sheet but the last is full; the last one is only included when it is full too, or
-  /// with [includeUnfull].
+  /// with [includeUnfull]. Held copies are left out, unless [includeHeld], see [isHeld].
   ///
   /// The last sheet is full when no copy like the ones on it fits any more: of the same shape, and for a split print,
   /// both halves.
-  List<List<CollectedCopy>> sheets(String stackNodeId, PrintRoute route, {bool includeUnfull = false}) {
+  List<List<CollectedCopy>> sheets(String stackNodeId, PrintRoute route, {bool includeUnfull = false, bool includeHeld = false}) {
     final List<List<CollectedCopy>> sheets = [];
     List<CollectedCopy> sheet = [];
-    for (final copy in _copies.where((copy) => copy.stackNodeId == stackNodeId)) {
+    for (final copy in _copies.where((copy) => copy.stackNodeId == stackNodeId && (includeHeld || !isHeld(copy)))) {
       if (sheet.isNotEmpty && !_fitsOnOneSheet(route, [...sheet.map(_shapeOf), _shapeOf(copy)])) {
         sheets.add(sheet);
         sheet = [];
@@ -181,7 +137,7 @@ class StackCollector {
 
   /// How far the last sheet of [stackNodeId] is on its way to full, from 0 to 1: the copies on it, divided by those
   /// copies plus the most copies of one shape on it that still fit. So it is 1 exactly when the sheet is full, see
-  /// [sheets]. Null when no copy waits on the stack.
+  /// [sheets]. Null when no copy waits on the stack, apart from held ones.
   double? fillOfLastSheet(String stackNodeId, PrintRoute route) {
     final sheet = sheets(stackNodeId, route, includeUnfull: true).lastOrNull;
     if (sheet == null) return null;

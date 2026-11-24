@@ -19,6 +19,7 @@ import 'package:momento_booth/managers/stats_manager.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
+import 'package:momento_booth/repositories/collected_copies/directory_collected_copy_repository.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
@@ -60,7 +61,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
       _collector = null;
       return;
     }
-    final collector = StackCollector(DirectoryCollectedCopyStore(Directory(path.join(projectPath.path, 'Prints', 'Collections'))));
+    final collector = StackCollector(DirectoryCollectedCopyRepository(Directory(path.join(getIt<ProjectManager>().getPrintsDir().path, 'Collections'))));
     try {
       await collector.load();
     } catch (error, stackTrace) {
@@ -83,6 +84,9 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   @readonly
   int _strandedCopies = 0;
 
+  /// The waiting copies from an earlier session, held until the next print, see [StackCollector.isHeld].
+  int _heldCopies = 0;
+
   @action
   void _updateWaitingCopies() {
     final collector = _collector;
@@ -94,6 +98,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     };
     _waitingCopies = copies.length;
     _strandedCopies = copies.where((copy) => strandedStacks.contains(copy.stackNodeId)).length;
+    _heldCopies = collector?.heldCopies.length ?? 0;
     _sheetFills = [
       for (final stackNodeId in stackNodeIds.difference(strandedStacks))
         if (collector!.fillOfLastSheet(stackNodeId, _router.stackRoute(stackNodeId)!) case final fill?)
@@ -131,6 +136,8 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
       reportSubsystemWarning(message: "Printing failed on ${_failedPrinters.join(', ')} during the last print. Other printers took over where the print routing allows it, which is not the case for stacked copies. Copies on collected sheets keep waiting.", actions: actions);
     } else if (_strandedCopies > 0) {
       reportSubsystemWarning(message: "$_strandedCopies copies wait on a stack that does not reach a printer. Connect the stack to a printer to print them, or discard them with the quick action.", actions: actions);
+    } else if (_heldCopies > 0) {
+      reportSubsystemWarning(message: "$_heldCopies copies from an earlier session wait on stacks. They are held until the next print comes in, or print or discard them with the quick actions.", actions: actions);
     } else if (_router.analysis.hasErrors) {
       reportSubsystemWarning(message: "The print routing graph has problems, which are listed on the Print routing settings page. Connections with problems are ignored.", actions: actions);
     } else {

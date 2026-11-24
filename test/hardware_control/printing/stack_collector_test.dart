@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -8,7 +7,7 @@ import 'package:momento_booth/models/collected_copy.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/settings.dart';
 
-import 'memory_collected_copy_store.dart';
+import 'memory_collected_copy_repository.dart';
 
 /// A stack of one column on media of 100 × 200 mm, without margins or gaps.
 const _route = PrintRoute(
@@ -33,7 +32,7 @@ List<List<String>> _jobs(List<List<CollectedCopy>> sheets) => [
 void main() {
   group('StackCollector.sheets', () {
     test('keeps a sheet waiting while a copy like one on it still fits', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       await _addNormal(collector);
       await _addSplit(collector);
 
@@ -46,7 +45,7 @@ void main() {
     });
 
     test('never divides a copy over two sheets', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       await _addNormal(collector, 3);
       await _addSplit(collector);
 
@@ -56,7 +55,7 @@ void main() {
     });
 
     test('tells how far the last sheet is on its way to full', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       expect(collector.fillOfLastSheet('stack', _route), isNull);
 
       // 50 of 200 mm used: three more normal copies fit.
@@ -71,8 +70,29 @@ void main() {
       expect(collector.fillOfLastSheet('stack', _route), 1);
     });
 
+    test('holds the copies that were waiting when the list was loaded, until a new print is added', () async {
+      final store = MemoryCollectedCopyRepository();
+      final earlier = StackCollector(store, now: () => DateTime(2026, 11, 23));
+      await _addNormal(earlier, 3);
+      await earlier.add(stackNodeId: 'other', jobName: 'other', size: PrintSize.normal, image: Uint8List(1), aspectRatio: 2, count: 1);
+      final resumedAt = DateTime(2026, 11, 25);
+      final collector = StackCollector(store, now: () => resumedAt);
+      await collector.load();
+
+      expect(collector.heldCopies, hasLength(4));
+      expect(collector.sheets('stack', _route, includeUnfull: true), isEmpty);
+      expect(collector.fillOfLastSheet('stack', _route), isNull);
+      expect(collector.sheets('stack', _route, includeUnfull: true, includeHeld: true).single, hasLength(3));
+
+      await _addNormal(collector);
+      expect(collector.heldCopies, isEmpty);
+      expect(collector.sheets('stack', _route).single, hasLength(4));
+      // The idle time of every stack starts again, also of one that got no new copy.
+      expect(collector.lastAddedAt('other'), resumedAt);
+    });
+
     test('only takes the copies of the stack', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       await collector.add(stackNodeId: 'other', jobName: 'other', size: PrintSize.normal, image: Uint8List(1), aspectRatio: 2, count: 4);
 
       expect(collector.sheets('stack', _route, includeUnfull: true), isEmpty);
@@ -81,7 +101,7 @@ void main() {
 
   group('StackCollector', () {
     test('saves every change, and keeps a photo until no copy needs it', () async {
-      final store = MemoryCollectedCopyStore();
+      final store = MemoryCollectedCopyRepository();
       final collector = StackCollector(store);
       await collector.add(stackNodeId: 'stack', jobName: 'job', size: PrintSize.normal, image: Uint8List.fromList([0xFF, 0xD8, 1]), aspectRatio: 2, count: 2);
 
@@ -98,7 +118,7 @@ void main() {
     });
 
     test('loads the copies that were waiting, with unique IDs for new ones', () async {
-      final store = MemoryCollectedCopyStore();
+      final store = MemoryCollectedCopyRepository();
       final now = DateTime(2026, 11, 23, 12);
       await _addNormal(StackCollector(store, now: () => now), 2);
 
@@ -111,7 +131,7 @@ void main() {
     });
 
     test('runs locked actions one at a time', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       final List<String> order = [];
       final first = collector.locked(() async {
         order.add('first starts');
@@ -125,23 +145,4 @@ void main() {
     });
   });
 
-  group('DirectoryCollectedCopyStore', () {
-    test('keeps the list and the photos in its directory', () async {
-      final directory = await Directory.systemTemp.createTemp('collected_copies_test');
-      addTearDown(() => directory.delete(recursive: true));
-      final store = DirectoryCollectedCopyStore(Directory('${directory.path}/CollectedPrints'));
-
-      expect(await store.load(), isEmpty);
-
-      final collector = StackCollector(store);
-      await _addNormal(collector, 2);
-      final reloaded = await DirectoryCollectedCopyStore(store.directory).load();
-      expect(reloaded, collector.copies);
-      expect(await store.readImage(reloaded.first.imageFile), Uint8List(1));
-
-      await collector.remove(collector.copies);
-      expect(await store.load(), isEmpty);
-      expect(store.directory.listSync().map((entity) => entity.uri.pathSegments.last), ['waiting.json']);
-    });
-  });
 }

@@ -8,7 +8,7 @@ import 'package:momento_booth/hardware_control/printing/stack_collector.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/settings.dart';
 
-import 'memory_collected_copy_store.dart';
+import 'memory_collected_copy_repository.dart';
 
 /// A PNG of one pixel.
 final _photo = base64Decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==');
@@ -202,7 +202,7 @@ void main() {
   group('PrintJobRunner in collect mode', () {
     test('lets copies wait until their sheet is full, and then prints the copies of several prints together', () async {
       final printers = _Printers();
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       final router = _collectingRouter();
 
       final first = await _run(printers, router, collector: collector, jobName: 'first');
@@ -218,7 +218,7 @@ void main() {
     });
 
     test('keeps the copies of a sheet that fails waiting, and prints them with a later sheet', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       final router = _collectingRouter();
 
       final failing = _Printers(failing: {'a'});
@@ -236,6 +236,30 @@ void main() {
       expect(collector.copies.single.jobName, 'later');
     });
 
+    test('holds the copies of an earlier session until the next print', () async {
+      final now = DateTime(2026, 11, 23, 12);
+      final store = MemoryCollectedCopyRepository();
+      final router = _collectingRouter(printAfterIdleMinutes: 5);
+      await _run(_Printers(), router, collector: StackCollector(store, now: () => now), jobName: 'earlier');
+
+      // The project is opened again two days later: the idle time has long passed, but the copy is held.
+      DateTime later = now.add(const Duration(days: 2));
+      final collector = StackCollector(store, now: () => later);
+      await collector.load();
+      final printers = _Printers();
+      await printers.runner.printIdleStacks(router, collector, now: later);
+      expect(printers.sent, isEmpty);
+
+      // A new print resumes the event: the held copy waits with it, and the idle time starts again.
+      await _run(printers, router, collector: collector, jobName: 'new');
+      expect(collector.heldCopies, isEmpty);
+      await printers.runner.printIdleStacks(router, collector, now: later.add(const Duration(minutes: 4)));
+      expect(printers.sent, isEmpty);
+
+      await printers.runner.printIdleStacks(router, collector, now: later.add(const Duration(minutes: 5)));
+      expect(printers.sent, [('a', 'Collected sheet | 2 copies of earlier, new')]);
+    });
+
     test('prints right away without a place to keep waiting copies', () async {
       final printers = _Printers();
       final report = await _run(printers, _collectingRouter());
@@ -248,7 +272,7 @@ void main() {
   group('PrintJobRunner printing collected sheets', () {
     test('prints the sheets that are not full on request', () async {
       final printers = _Printers();
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       await _run(printers, _collectingRouter(), collector: collector);
 
       final report = await printers.runner.printCollected(_collectingRouter(), collector);
@@ -259,7 +283,7 @@ void main() {
     });
 
     test('keeps the copies of a stack that does not reach a printer waiting', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       await _run(_Printers(), _collectingRouter(), collector: collector);
 
       final printers = _Printers();
@@ -270,7 +294,7 @@ void main() {
 
     test('discards the copies of stacks that do not reach a printer, or all copies', () async {
       final printers = _Printers();
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       await _run(printers, _collectingRouter(), collector: collector);
 
       // The stack still reaches its printer.
@@ -288,7 +312,7 @@ void main() {
     });
 
     test('fails when a collected sheet fails, and keeps its copies waiting', () async {
-      final collector = StackCollector(MemoryCollectedCopyStore());
+      final collector = StackCollector(MemoryCollectedCopyRepository());
       await _run(_Printers(), _collectingRouter(), collector: collector);
 
       final report = await _Printers(failing: {'a'}).runner.printCollected(_collectingRouter(), collector);
@@ -299,7 +323,7 @@ void main() {
 
     test('prints a stack once no copy was added for its idle time', () async {
       DateTime now = DateTime(2026, 11, 23, 12);
-      final collector = StackCollector(MemoryCollectedCopyStore(), now: () => now);
+      final collector = StackCollector(MemoryCollectedCopyRepository(), now: () => now);
       final router = _collectingRouter(printAfterIdleMinutes: 5);
       final printers = _Printers();
       await _run(printers, router, collector: collector, jobName: 'first');
@@ -317,7 +341,7 @@ void main() {
 
     test('waits for a full sheet without an idle time, unless the stack now prints right away', () async {
       final now = DateTime(2026, 11, 23, 12);
-      final collector = StackCollector(MemoryCollectedCopyStore(), now: () => now);
+      final collector = StackCollector(MemoryCollectedCopyRepository(), now: () => now);
       final printers = _Printers();
       await _run(printers, _collectingRouter(), collector: collector);
 
