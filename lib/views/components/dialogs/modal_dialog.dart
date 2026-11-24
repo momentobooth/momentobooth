@@ -11,6 +11,9 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart';
 
 class ModalDialog extends StatelessWidget {
 
+  /// How long dialogs that only inform guests stay open before they close by themselves, see [autoDismissAfter].
+  static const Duration guestInfoAutoDismissAfter = Duration(seconds: 10);
+
   final double? width;
   final double? height;
   final String title;
@@ -18,6 +21,10 @@ class ModalDialog extends StatelessWidget {
   final Widget body;
   final List<Widget>? actions;
   final VoidCallback? onDismiss;
+
+  /// When set, the default continue button presses itself after this duration, so the dialog closes when guests walk
+  /// away. Has no effect when [actions] are given.
+  final Duration? autoDismissAfter;
 
   const ModalDialog({
     super.key,
@@ -28,6 +35,7 @@ class ModalDialog extends StatelessWidget {
     required this.body,
     this.actions,
     this.onDismiss,
+    this.autoDismissAfter,
   });
 
   @override
@@ -49,6 +57,7 @@ class ModalDialog extends StatelessWidget {
                   title: localizations.genericContinueButton,
                   icon: LucideIcons.check,
                   onPressed: onDismiss ?? () => Navigator.of(context).maybePop(),
+                  autoPressAfter: autoDismissAfter,
                 ),
               ],
         ),
@@ -98,5 +107,15 @@ Widget loadingDialog(BuildContext context) {
     dialogType: context.knobs.object.dropdown(label: 'Dialog Type', initialOption: ModalDialogType.info, options: ModalDialogType.values),
     body: Text(context.knobs.string(label: 'Body Text', initialValue: 'Something has happened and we just need to acknowledge it.')),
     onDismiss: () {},
+  );
+}
+
+@UseCase(name: 'Modal Dialog with auto dismiss', type: ModalDialog)
+Widget modalDialogAutoDismiss(BuildContext context) {
+  return ModalDialog(
+    title: context.knobs.string(label: 'Title', initialValue: 'Please read this'),
+    body: Text(context.knobs.string(label: 'Body Text', initialValue: 'This dialog closes by itself when nobody taps it.')),
+    onDismiss: () {},
+    autoDismissAfter: Duration(seconds: context.knobs.int.slider(label: 'Auto dismiss after (seconds)', initialValue: 10, min: 1, max: 30)),
   );
 }

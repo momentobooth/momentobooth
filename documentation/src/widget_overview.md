@@ -62,7 +62,7 @@ Reusable fade/rotate/Lottie animation wrappers.
 
 Generic dialog-style buttons.
 
-- `photo_booth_filled_button.dart` — `PhotoBoothFilledButton` — dialog-style filled button with optional icon + title.
+- `photo_booth_filled_button.dart` — `PhotoBoothFilledButton` — dialog-style filled button with optional icon + title; with `autoPressAfter` it presses itself after a timeout while its background fills up (countdown button).
 - `photo_booth_outlined_button.dart` — `PhotoBoothOutlinedButton` — outlined variant of `PhotoBoothFilledButton`.
 
 > Note: these are **generic dialog buttons**, not the same as `PhotoBoothButton` in `photo_booth_screen/screens/components/buttons/` (themed booth action/nav button). Three "PhotoBooth*Button" widgets exist across the codebase — pick carefully.
@@ -94,12 +94,12 @@ Generic modal dialogs used across the app.
 - `gphoto2_camera_warning_dialog.dart` — `GPhoto2CameraWarningDialog` — SD-card corruption warning shown the first time a camera model is selected for gPhoto2; `confirmIfNeeded()` also remembers confirmed models.
 - `language_choice_dialog.dart` — `LanguageChoiceDialog` — dialog listing available languages to pick.
 - `loading_dialog.dart` — `LoadingDialog` — generic loading dialog (`.generic()` spinner, `.cameraDownload()` Lottie).
-- `modal_dialog.dart` — `ModalDialog` — base styled modal container (title, body, type icon, actions), builds on `PhotoBoothDialog`. Used by most other dialogs.
+- `modal_dialog.dart` — `ModalDialog` — base styled modal container (title, body, type icon, actions), builds on `PhotoBoothDialog`. Used by most other dialogs. `autoDismissAfter` closes it by itself via the default continue button; `guestInfoAutoDismissAfter` is the timeout for guest info dialogs.
 - `no_project_open_dialog.dart` — `NoProjectOpenDialog` — shown when no project is open, lists recent projects.
 - `photo_booth_dialog.dart` — `PhotoBoothDialog` — lower-level rounded-card dialog shell (width/height/title/indicator/body/actions), used underneath `ModalDialog`.
 - `printer_issue_dialog.dart` — `PrinterIssueDialog` — reports a stuck/failed printer with stuck-job list and resume/ignore actions.
-- `printing_error_dialog.dart` — `PrintingErrorDialog` — generic printing error dialog with Lottie animation; says so when some prints may have started.
-- `print_collected_dialog.dart` — `PrintCollectedDialog` — tells guests their print comes out later, as it waits on a stack to fill a sheet with the photos of other guests.
+- `printing_error_dialog.dart` — `PrintingErrorDialog` — generic printing error dialog with Lottie animation; says so when some prints may have started. Closes by itself.
+- `print_collected_dialog.dart` — `PrintCollectedDialog` — tells guests their print comes out later, as it waits on a stack to fill a sheet with the photos of other guests. Closes by itself.
 - `print_dialog.dart` — `PrintDialog` — choose print size (only those the photo can be printed at) and copy count; also exports `PrintSizeChoice`.
 - `qr_share_dialog.dart` — `QrShareDialog` — upload progress + QR code for sharing photos.
 - `retake_dialog.dart` — `RetakeDialog` — confirm delete/keep a photo before retaking.
