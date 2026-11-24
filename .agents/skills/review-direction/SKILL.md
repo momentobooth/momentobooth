@@ -26,7 +26,7 @@ Collect what the change is meant to do **before** reading the code, so the chose
 - **Branch target** (default: current branch against `main`): `git log --format='%s%n%b' main..<branch>` and `git diff --stat main...<branch>`
 - The lines the change adds to `CHANGELOG.md`
 
-Only use the commit messages and the list of changed files here, not the diff itself. From the PR description, read the problem, motivation and linked issues now; leave sections that describe the solution (design decisions, implementation notes, diagrams) for step 5. When the description mixes the two, anchoring cannot be avoided completely; just be aware of it in step 4.
+Only use the commit messages and the list of changed files here, not the diff itself. From the PR description, read the problem, motivation and linked issues now; leave sections that describe the solution (design decisions, implementation notes, diagrams) for step 5. When the description mixes the two, anchoring cannot be avoided completely; just be aware of it in step 4. When the description has no problem statement, take it from the linked issues, issues mentioned in the description, or their discussion.
 
 ## Step 2: classify the change
 
@@ -39,9 +39,13 @@ Decide how central and how reversible the change is, and set the depth of the re
 | **Hard to reverse** | File and settings formats, data models, ownership of a pipeline, a new (native) dependency, a new architectural pattern, removed behaviour |
 | **Easy to reverse** | An implementation behind an existing interface, UI layout, internal refactors |
 
+A format or data model of a feature that is not released yet counts as easy to reverse: no compatibility is needed for states that nobody has. Check `CHANGELOG.md` to see whether the feature already shipped in a version.
+
 - **Light** (peripheral and easy to reverse): only check for an obviously simpler alternative and for rule deviations. At most three findings
 - **Normal** (central but easy to reverse, or peripheral but hard to reverse): all steps, at most six findings
 - **Deep** (central and hard to reverse): all steps thoroughly, including searching the code base for existing mechanisms, at most ten findings. Also consider whether the decision deserved discussion before the implementation started; for a PR that is already finished, that becomes a question when the approach can still change, and is left out otherwise
+
+The limits count issues, questions and suggestions; the "Fits well" points, follow-ups and notes on the principles do not count.
 
 For a large diff, do not read everything with the same attention. Read the data model, persistence, runtime behaviour and public interfaces fully, and skim UI code and generated or mechanical changes.
 
@@ -57,7 +61,7 @@ Still before reading the diff, sketch two or three plausible approaches. Always 
 - **Using what exists**: an existing manager, subsystem, widget (check `documentation/src/widget_overview.md`), setting or concept that could carry the feature. Search the code base for it
 - **Fixing it elsewhere**: upstream in a dependency, or at the cause instead of the symptom
 
-Search the target branch for mechanisms the change could use. When the change replaces or removes an existing mechanism, also look at how `main` did it (`git show origin/main:<path>`): the old behaviour is part of the comparison, and behaviour that silently disappears (such as skipping an unavailable device) is a direction question.
+Search the branch under review (the PR branch, not its base) for mechanisms the change could use. When the change replaces or removes an existing mechanism, also look at how `main` did it (`git show origin/main:<path>`): the old behaviour is part of the comparison, and behaviour that silently disappears (such as skipping an unavailable device) is a direction question.
 
 For a light review, one quick alternative is enough.
 
@@ -94,7 +98,7 @@ Specific situations that always deserve a question:
 - Many decisions are made in conversations between the maintainers that are not on GitHub. When a choice has no visible rationale, **ask** about it instead of assuming it is wrong
 - Maintainers review outside their own area of expertise too. An approval there says little about the direction, so do not treat an existing approval as an endorsement
 - Build, CI and packaging changes are often written with AI help and get little human review. Review those thoroughly yourself
-- When a principle seems wrong for the case at hand, say so. That is feedback for the principles document, not a finding against the PR
+- When a principle seems wrong, missing or impossible to follow for the case at hand, say so under "Notes on the principles". That is feedback for the principles document, not a finding against the PR
 - Some examples in the principles document come from earlier pull requests. When the PR under review is the origin of an example, that example is not independent support for the PR's approach
 
 ## Output
@@ -114,5 +118,6 @@ Write in the language of the conversation; use English when the result is meant 
 5. **Fits well** (optional): at most three short points where the change follows the principles in a way worth keeping
 6. **Findings**, grouped as issues (rule deviations), questions and suggestions. Each one names the principle or pattern it relates to, the location, and a concrete alternative. An objection to the direction without a concrete alternative is phrased as a question
 7. **Follow-ups**: valuable work that is out of scope for this PR
+8. **Notes on the principles** (optional): where a principle seemed wrong, missing or impossible to follow, with a proposed change to `documentation/src/engineering_principles.md`
 
 Leave out empty sections. Do not pad the review: "On track" with no findings is a valid result.
