@@ -34,6 +34,7 @@ class PrintingErrorDialog extends StatelessWidget {
           Text(localizations.printingErrorDialogBodyBottom),
         ],
       ),
+      autoDismissAfter: ModalDialog.guestInfoAutoDismissAfter,
     );
   }
 

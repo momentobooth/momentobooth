@@ -18,6 +18,7 @@ class PrintCollectedDialog extends StatelessWidget {
       width: 600,
       title: localizations.printCollectedDialogTitle,
       body: Text(localizations.printCollectedDialogBody),
+      autoDismissAfter: ModalDialog.guestInfoAutoDismissAfter,
     );
   }
 
