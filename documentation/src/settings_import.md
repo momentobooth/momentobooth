@@ -1,4 +1,4 @@
-# Settings import
+# Settings import & backups
 
 This settings panel contains a UI to import a settings fragment and apply the settings in the fragment over your existing settings. This can be handy to, for example, copy someone else's print routing. Before the settings are applied, a pop-up shows you what the ‘overlay’ will do:
 

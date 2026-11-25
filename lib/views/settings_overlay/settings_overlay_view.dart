@@ -140,7 +140,7 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                 PaneItem(
                   key: ValueKey(SettingsPageKey.import),
                   icon: const Icon(LucideIcons.import),
-                  title: const Text("Import"),
+                  title: const Text("Import & backups"),
                   body: Builder(builder: (_) => _getImportSettings(viewModel, controller)),
                 ),
                 PaneItem(
