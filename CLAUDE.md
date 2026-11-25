@@ -89,6 +89,31 @@ rust/src/
 
 When you run the app (e.g. to verify a change), give it its own data directory with `--data-dir=.dev-data` (e.g. `fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"`), or set `MOMENTOBOOTH_DATA_DIR`. Without it, every branch and worktree shares the user's real `Settings.toml`, and a build that lacks a setting drops it on the next save. `.dev-data/` is gitignored and relative to the working directory, so each worktree gets its own. On first start, `Settings.toml` and `Projects.toml` are copied from the default data directory, so the app starts with the user's configuration (including hardware and MQTT settings, so do not run it next to the user's own instance with the same MQTT client ID). Projects are not copied: the app still opens the user's real project folders. See "Using a separate data directory per branch or worktree" in `documentation/src/dev_setup.md`.
 
+### Verifying UI Changes Yourself
+
+You can drive the running app to check a UI change (tap, enter text, read the widget tree, take screenshots) through the `dart` MCP server from `.mcp.json` (`fvm dart mcp-server`):
+
+1. Make sure the generated code exists (a fresh worktree needs `just get-native-deps`, `just gen-bridge`, `just gen-code`, `just gen-l10n` and `just gen-licenses`).
+2. Start the debug entrypoint `test_driver/app.dart`, which enables the Flutter Driver extension, as a background command: `fvm flutter run -d windows -t test_driver/app.dart --dart-entrypoint-args="--data-dir=.dev-data" --print-dtd` (`-d linux` or `-d macos` on those platforms, both untested). The first build compiles all Rust code and takes several minutes.
+3. Wait for the line `The Dart Tooling Daemon is available at: ws://…` (printed after the build) and connect with the `dtd` tool (`connect` with that URI). `listDtdUris` also finds it; pick the instance whose workspace root is your working directory, since the user's IDE has its own instances.
+4. Call `flutter_driver_command` with `set_frame_sync` and `enabled: "false"` first. With frame sync on, the driver waits for animations to stop before it looks for a widget, and the onboarding and start screens animate continuously, so `tap`, `waitFor` etc. time out.
+5. The app starts in the onboarding wizard, which may stop on a page (camera, subsystem status, update available). Take a `screenshot`; tap `Next step` until the start screen with the menu bar shows.
+6. Use `widget_inspector` (`get_widget_tree`) to find widgets, `flutter_driver_command` to `tap`, `enter_text`, `waitFor` and take a `screenshot`, and `get_runtime_errors` to check for exceptions.
+
+Things that trip up the driver in this app:
+
+- The driver cannot send key presses, so hotkeys like Ctrl+S do not work. Open the settings overlay with `tap` on `File` and then `Settings`. These menu labels follow the UI language of the copied settings (`Bestand` and `Instellingen` in Dutch, `Exit` is `Sluiten`); settings page titles and `Next step` are always English.
+- `summaryOnly: true` leaves out widgets built inside fluent_ui, such as the menu titles; request the full tree when a label is missing.
+- A finder must match exactly one widget, otherwise `tap` fails (e.g. `Project` and the open page's title appear twice in the settings overlay). Narrow it with a `Descendant` finder and `firstMatchOnly: "true"`.
+- `ByTooltipMessage` only finds Material tooltips, not fluent_ui ones, and `ByValueKey` only String and int keys (the settings pane uses enum keys).
+- A timeout (`Timed out waiting for Flutter Driver response.`, after 5 s) usually means the finder matched nothing: check the text and language in the tree. Pass `timeout` (milliseconds, as a string) for slow steps.
+- `enter_text` replaces the whole content of the focused text field; tap the field first. Turning text entry emulation off makes `enter_text` fail.
+- The app uses the user's real camera, printer and MQTT connection from the copied settings, and opens the user's real project folders. Do not change project settings, and do not capture or print unless the task needs it.
+- The window blocks closing the usual way. When done, tap `File` and then `Exit`, stop the background `flutter run`, and check that no `photobooth.exe` from your working directory is left (other ones may be the user's own).
+- If a Windows build in a worktree fails with `LNK1104` or `sccache: failed to persist temporary file`, see "Building from a deep directory on Windows" in `documentation/src/dev_setup.md`.
+
+See "Driving the running app from agents and tools" in `documentation/src/dev_setup.md` for details.
+
 ## Key Patterns
 
 **Adding a new Dart model:** Create a Freezed class in `lib/models/`, run `just gen-code` to generate `.freezed.dart` and `.g.dart`.

@@ -114,6 +114,9 @@ dev_dependencies:
   flutter_lints: 6.0.0
   flutter_test: { sdk: flutter }
 
+  # UI automation by agents (see test_driver/app.dart)
+  flutter_driver: { sdk: flutter }
+
   # Models
   freezed: 4.0.1
   json_serializable: 6.15.2

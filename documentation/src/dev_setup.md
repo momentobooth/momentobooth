@@ -348,6 +348,69 @@ The projects themselves are not copied: a build with another data directory stil
 fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"
 ```
 
+### Driving the running app from agents and tools
+
+A running debug build can be controlled from outside the app: tap widgets, enter text, read the widget tree and take screenshots. This is mainly meant for coding agents (such as Claude Code), so they can check a UI change themselves instead of asking you to look at it. It consists of two parts:
+
+* **`test_driver/app.dart`**: a debug entrypoint that enables the [Flutter Driver](https://api.flutter.dev/flutter/flutter_driver/flutter_driver-library.html) extension and then calls the normal `main`. Since it lives outside `lib/`, `flutter_driver` stays a dev dependency and release builds do not contain it.
+* **The Dart MCP server** (`dart mcp-server`, part of the Dart SDK): it connects to the running app through the Dart Tooling Daemon (DTD) and offers the driver commands, the widget inspector, runtime errors and hot reload as tools. `.mcp.json` registers it for Claude Code (which asks you to approve it on first use).
+
+`.mcp.json` starts the server with `fvm dart mcp-server`. If your `fvm` is a batch file (e.g. installed with `dart pub global activate fvm`), Claude Code might not be able to start it; a standalone installation of FVM (`fvm.exe`) works.
+
+#### Starting the app
+
+The generated code must exist first; in a fresh checkout or worktree, run `just get-native-deps`, `just gen-bridge`, `just gen-code`, `just gen-l10n` and `just gen-licenses` (`just` without a recipe does all of that, and also installs the tools). Then start the app with the driver entrypoint and its own data directory. `--print-dtd` prints the URI of the Tooling Daemon:
+
+```sh
+fvm flutter run -d windows -t test_driver/app.dart --dart-entrypoint-args="--data-dir=.dev-data" --print-dtd
+```
+
+The first build compiles all Rust code, which takes several minutes. The line `The Dart Tooling Daemon is available at: ws://…` only appears after the build, once the app runs.
+
+On Windows, building from a Claude Code worktree (or another deep directory) needs Cargo's `build-dir` setting, which Claude Code sessions get from `.claude/settings.json`. See [Building from a deep directory on Windows](#building-from-a-deep-directory-on-windows).
+
+#### Driving the app
+
+From the MCP client:
+
+1. Connect with the `dtd` tool, using `connect` and the URI from the line above. Or, use `listDtdUris` and pick the instance whose workspace root is your checkout (your IDE has its own instances, which may run another copy of the app).
+2. Turn off frame sync with `flutter_driver_command`, command `set_frame_sync` and `enabled: "false"`. By default, the driver waits until no animation is running before it looks for a widget. The onboarding and start screens animate continuously, so `tap`, `waitFor` and other commands that look for a widget would time out. `screenshot` is not affected.
+3. Get through the onboarding wizard. The app starts there and only continues to the start screen by itself when everything is fine; otherwise it stops on a page, for example when the camera is not available or an update is available. Take a `screenshot` and tap `Next step` until the start screen with the menu bar shows.
+4. Use `widget_inspector` (`get_widget_tree`) to see which widgets are present, and `flutter_driver_command` to `tap`, `enter_text`, `waitFor` or take a `screenshot`. `get_runtime_errors` shows exceptions that occurred in the app.
+
+Take, for example, opening the import page of the settings and taking a screenshot of it. These are the arguments of successive `flutter_driver_command` calls:
+
+```text
+{"command": "set_frame_sync", "enabled": "false"}
+{"command": "tap", "finderType": "ByText", "text": "File"}
+{"command": "tap", "finderType": "ByText", "text": "Settings"}
+{"command": "tap", "finderType": "ByText", "text": "Import & backups"}
+{"command": "screenshot"}
+```
+
+#### Finding widgets
+
+Widgets are found by text (`ByText`), type (`ByType`), key (`ByValueKey`), or a combination (`Descendant`, `Ancestor`). A few things are specific to this app:
+
+* The labels of the menu bar follow the UI language of the settings, which `--data-dir` copies from your own: in Dutch, `File`, `Settings` and `Exit` are `Bestand`, `Instellingen` and `Sluiten`. The titles of the settings pages and the onboarding's `Next step` button are always English.
+* `get_widget_tree` with `summaryOnly: true` is shorter, but leaves out widgets that are built inside fluent_ui, such as the menu titles. Request the full tree when a label is missing.
+* A finder must match exactly one widget, otherwise `tap` fails. In the settings overlay, for example, `Project` appears twice, and so does the title of the open page (in the pane and as the page heading). Narrow it down with a `Descendant` finder and `firstMatchOnly: "true"`.
+* `ByValueKey` only supports `String` and `int` keys; the items of the settings pane use enum keys. The tooltip finder (`ByTooltipMessage`) only finds Material tooltips, not the fluent_ui ones this app uses.
+* When a command times out (`Timed out waiting for Flutter Driver response.`, after 5 seconds by default), the finder usually matched nothing: check the text, and the language, in the widget tree. For slow steps, pass `timeout` in milliseconds (as a string).
+* The settings pane collapses to icons when the window is narrower than about 1000 pixels, so the page titles cannot be found by text then. Keep the default window size.
+
+#### Side effects and stopping
+
+The copied settings include your camera, printer and MQTT connection, and the project folders are not copied (see [Using a separate data directory per branch or worktree](#using-a-separate-data-directory-per-branch-or-worktree)). A driven app therefore uses your real hardware, can disconnect your normal instance from the MQTT broker, and saves changes to project settings in your real projects. Agents should not change project settings, and should not capture or print unless that is what they are testing.
+
+The window blocks closing the usual way. To stop the app, tap `File` and then `Exit`, and stop `flutter run`. Then check that no `photobooth.exe` from your checkout keeps running, since it locks the next build (other ones may be your own instances).
+
+#### Limitations
+
+* The driver cannot send key presses, so hotkeys (Ctrl+S etc.) do not work. Most of them are also available in the menu bar.
+* `enter_text` replaces the whole content of the focused text field, so tap the field first. The driver extension replaces text input by an emulation, which means typing on the real keyboard into a text field does not work in this build. The `set_text_entry_emulation` command switches that off, but `enter_text` then fails until it is switched back on.
+* It only works with debug builds started through `flutter run`. Linux and macOS (`-d linux`, `-d macos`) should work the same, but are untested.
+
 ### Adding a new screen using the VS Code extension Template
 
 1. Make sure to have the [Template extension](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) installed
