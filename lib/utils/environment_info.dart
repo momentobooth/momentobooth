@@ -16,6 +16,9 @@ late final PackageInfo packageInfo;
 late final String appDataPath;
 late final lib_version_info_models.VersionInfo helperLibraryVersionInfo;
 
+/// The application version including its build number, e.g. `0.17.0+123`.
+String get appVersionWithBuild => '${packageInfo.version}+${packageInfo.buildNumber}';
+
 String get exifSoftwareName => '${packageInfo.appName} ${packageInfo.version} build ${packageInfo.buildNumber} ($osFriendlyName)';
 
 String get osFriendlyName => switch (Platform.operatingSystem) {

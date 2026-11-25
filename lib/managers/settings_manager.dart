@@ -5,6 +5,8 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
+import 'package:momento_booth/repositories/serializable/toml_backup_repository.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 
 part 'settings_manager.g.dart';
@@ -31,9 +33,10 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
         await save();
         if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "No existing settings data found, a new file is created.");
       } else {
+        String? backupMessage = await _backUpOnStartup();
         _settings = await settingsRepository.get();
         _blockSaving = false;
-        reportSubsystemOk();
+        reportSubsystemOk(message: backupMessage);
       }
     } catch (e, s) {
       String message = 'Could not read existing settings';
@@ -44,6 +47,22 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
         actions: {'Accept current settings': unblockSavingAndSave, 'Retry': initialize},
       );
       _blockSaving = true;
+    }
+  }
+
+  /// Backs up the settings file before it is loaded when needed, see [TomlBackupRepository.backUpOnStartup]. Returns
+  /// a message for the subsystem status when settings will be lost. A failing backup does not stop the startup.
+  Future<String?> _backUpOnStartup() async {
+    try {
+      final result = await getIt<TomlBackupRepository<Settings>>().backUpOnStartup(appVersion: appVersionWithBuild);
+      if (result.unsupportedPaths.isEmpty) return null;
+
+      logWarning("Settings not used by this version: ${result.unsupportedPaths.join(', ')}");
+      return "${result.unsupportedPaths.length} settings are not used by this version and are removed on the next save. "
+          "A backup has been made, see the Import page.";
+    } catch (e, s) {
+      logError("Could not back up the settings", e, s);
+      return null;
     }
   }
 

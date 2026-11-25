@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
@@ -85,10 +86,13 @@ abstract class AppInitManagerBase with Store {
       // ///////////////// //
 
       _status = 'Instantiating TOML repositories';
+      var settingsRepository = TomlSerializableRepository(path.join(appDataPath, "Settings.toml"), Settings.fromJson);
       getIt
-        ..registerSingleton<SerialiableRepository<Settings>>(
-          TomlSerializableRepository(path.join(appDataPath, "Settings.toml"), Settings.fromJson),
-        )
+        ..registerSingleton<SerialiableRepository<Settings>>(settingsRepository)
+        ..registerSingleton(TomlBackupRepository(
+          source: settingsRepository,
+          directory: Directory(path.join(appDataPath, "Backups", "Settings")),
+        ))
         ..registerSingleton<SerialiableRepository<Stats>>(
           TomlSerializableRepository(path.join(appDataPath, "Stats.toml"), Stats.fromJson),
         )
