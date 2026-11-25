@@ -223,10 +223,9 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
       return;
     }
 
-    late final Settings settings;
-    late final List<UpdateRecord> updates;
+    late final OverlayResult<Settings> overlay;
     try {
-      (settings, updates) = await settingsRepo.overlayWithMap(overlayMap);
+      overlay = await settingsRepo.overlayWithMap(overlayMap);
     } on Exception catch (e) {
       processError("Error applying overlay: $e");
       return;
@@ -240,7 +239,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
       builder: (dialogContext) => SettingsImportDialog(
         onAccept: () {
           // Save the settings using the settings manager
-          getIt<SettingsManager>().updateAndSave(settings);
+          getIt<SettingsManager>().updateAndSave(overlay.data);
           setState(() {
             imported = true;
             error = null;
@@ -249,7 +248,8 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
           Navigator.of(dialogContext).pop();
         },
         onCancel: () => Navigator.of(dialogContext).pop(),
-        updates: updates,
+        updates: overlay.updates,
+        unsupportedPaths: overlay.unsupportedPaths,
       ),
     );
   }
