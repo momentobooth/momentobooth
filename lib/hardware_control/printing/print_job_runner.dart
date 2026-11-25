@@ -61,7 +61,8 @@ class PrintJobRunner {
 
   const PrintJobRunner({required this.sendSheet, required this.countPrint, required this.logError});
 
-  /// Prints [copies] copies of [image] at [size]. Every copy follows its own route through [router].
+  /// Prints [copies] copies of [image] at [size]. Every copy follows its own route through [router]. The photo has a
+  /// [bleed] on every side, as a fraction of its height, see [renderPrintPdf].
   ///
   /// A printer that fails is skipped where the routing offers another one: a round-robin node tries its next output, a
   /// duplicate node still prints on its other outputs. Printing stops when no printer takes a copy.
@@ -76,6 +77,7 @@ class PrintJobRunner {
     required Uint8List image,
     required PrintSize size,
     required int copies,
+    double bleed = 0,
     StackCollector? collector,
   }) async {
     final bool split = size == PrintSize.split;
@@ -97,7 +99,7 @@ class PrintJobRunner {
           log: {'copies': [copy]},
           counts: [size],
           renderKey: route.renderKey,
-          render: () => renderPrintPdf(image, route, split: split),
+          render: () => renderPrintPdf(image, route, split: split, bleed: bleed),
         );
       });
       if (!printed) {
@@ -132,6 +134,7 @@ class PrintJobRunner {
             size: size,
             image: image,
             aspectRatio: aspectRatio,
+            bleed: bleed,
             count: collectedCopies.length,
           ));
           await session.printCollected(collector, route, stackNodeId);

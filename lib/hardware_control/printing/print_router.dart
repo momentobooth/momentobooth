@@ -29,7 +29,7 @@ class PrintRoute {
   });
 
   /// What the rendered sheet depends on besides the photo. Routes with the same key can share one rendering.
-  Object get renderKey => (printer.media.widthMm, printer.media.heightMm, margins, layout);
+  Object get renderKey => (printer.media.widthMm, printer.media.heightMm, margins, printer.borderless, layout);
 
   @override
   bool operator ==(Object other) =>

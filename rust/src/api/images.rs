@@ -14,6 +14,10 @@ pub fn get_momento_booth_exif_tags_from_file(image_file_path: String) -> Vec<Mom
     jpeg::get_momento_booth_exif_tags_from_file(&image_file_path)
 }
 
+pub fn get_momento_booth_exif_tags_from_jpeg(jpeg_data: Vec<u8>) -> Vec<MomentoBoothExifTag> {
+    jpeg::get_momento_booth_exif_tags_from_jpeg(&jpeg_data)
+}
+
 pub fn static_image_write_to_texture(raw_image: RawImage, texture_ptr: usize) {
     let renderer_main = FlutterTexture::new(texture_ptr, raw_image.width, raw_image.height);
     renderer_main.on_rgba(&raw_image);

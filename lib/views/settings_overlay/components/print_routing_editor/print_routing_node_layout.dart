@@ -136,8 +136,8 @@ class RoutingNodeLayout {
     TileLayoutNodeData() => 2,
     // Mode, direction, lanes, gap.
     StackNodeData(:final mode) => mode == StackMode.collect ? 5 : 4,
-    // Label, backend, queue, (media,) size.
-    PrinterNodeData(:final backend) => backend == PrinterBackend.cups || canListNativeMedia ? 5 : 4,
+    // Label, backend, queue, (media,) size, borderless.
+    PrinterNodeData(:final backend) => backend == PrinterBackend.cups || canListNativeMedia ? 6 : 5,
   };
 
   /// A caption row tells what an arbiter carries, or heads a margins section.

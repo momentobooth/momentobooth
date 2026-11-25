@@ -9,6 +9,7 @@ import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/hardware_control/printing/flutter_printing_client.dart';
 import 'package:momento_booth/hardware_control/printing/print_job_runner.dart';
+import 'package:momento_booth/hardware_control/printing/print_renderer.dart';
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
 import 'package:momento_booth/hardware_control/printing/stack_collector.dart';
@@ -16,10 +17,13 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/repositories/collected_copies/directory_collected_copy_repository.dart';
+import 'package:momento_booth/src/rust/api/images.dart';
+import 'package:momento_booth/utils/collage_geometry.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
@@ -192,12 +196,37 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   /// be printed with a later sheet. Throws a [PrintingException] when not every copy was printed or is waiting. The
   /// rendered sheets are kept in any case.
   Future<int> printPhoto({required String jobName, required Uint8List image, required PrintSize size, int copies = 1}) async {
-    final report = await _jobRunner.run(_router, jobName: jobName, image: image, size: size, copies: copies, collector: _collector);
+    final report = await _jobRunner.run(
+      _router,
+      jobName: jobName,
+      image: image,
+      size: size,
+      copies: copies,
+      bleed: await _bleedOf(image),
+      collector: _collector,
+    );
     _failedPrinters = report.failedPrinters;
     _updateWaitingCopies();
     await _keepPrintedPdfs(jobName, size, report.renderings, report.sheets);
     if (report.failure case final failure?) throw failure;
     return report.waitingCopies;
+  }
+
+  /// The bleed of [image]: the collage padding stored in the maker note of a collage. Collages from before it was
+  /// stored use the current collage padding; other photos have no bleed.
+  Future<double> _bleedOf(Uint8List image) async {
+    try {
+      final makerNote = MakerNoteData.fromExifTags(await getMomentoBoothExifTagsFromJpeg(jpegData: image));
+      if (makerNote == null) return 0;
+      return makerNote.bleed ?? collageBleed(
+        padding: getIt<SettingsManager>().settings.collagePadding,
+        photoCount: makerNote.sourcePhotos.length,
+        aspectRatio: photoAspectRatio(image),
+      );
+    } catch (error, stackTrace) {
+      logWarning("Could not read the bleed of the photo, printing it without", error, stackTrace);
+      return 0;
+    }
   }
 
   /// Prints the sheets of every copy that waits on a stack, also the sheets that are not full. Never throws; sheets

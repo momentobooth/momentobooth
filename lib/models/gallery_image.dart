@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -22,13 +21,6 @@ abstract class GalleryImage with _$GalleryImage {
     .whereType<MomentoBoothExifTag_CreateDate>()
     .firstOrNull?.field0 ?? file.lastModifiedSync();
 
-  MakerNoteData? get makerNoteData {
-    String? json = exifTags
-      .whereType<MomentoBoothExifTag_MakerNote>()
-      .firstOrNull?.field0;
-
-    var trimmedJson = json?.replaceAll(String.fromCharCode(0), "");
-    return trimmedJson == null ? null : MakerNoteData.fromJson(jsonDecode(trimmedJson));
-  }
+  MakerNoteData? get makerNoteData => MakerNoteData.fromExifTags(exifTags);
 
 }

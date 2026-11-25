@@ -89,8 +89,9 @@ void main() {
       const layout = RoutingNodeLayout(RoutingNodeData.printer(), marginsWired: false, noteRows: 1, canListNativeMedia: false);
       final marginsPort = const RoutingNodeData.printer().port(RoutingPorts.margins)!;
 
-      // Header, the job port row and four field rows (label, backend, printer, size) precede the caption row.
-      const captionTop = RoutingNodeMetrics.headerHeight + RoutingNodeMetrics.portRowHeight + 4 * RoutingNodeMetrics.fieldRowHeight;
+      // Header, the job port row and five field rows (label, backend, printer, size, borderless) precede the caption
+      // row.
+      const captionTop = RoutingNodeMetrics.headerHeight + RoutingNodeMetrics.portRowHeight + 5 * RoutingNodeMetrics.fieldRowHeight;
       expect(layout.portCenter(marginsPort), captionTop + RoutingNodeMetrics.captionRowHeight / 2);
       expect(
         layout.height,
@@ -107,9 +108,9 @@ void main() {
         canListNativeMedia: canListNativeMedia,
       );
 
-      expect(layout(PrinterBackend.native, canListNativeMedia: false).fieldRows, 4);
-      expect(layout(PrinterBackend.native, canListNativeMedia: true).fieldRows, 5);
-      expect(layout(PrinterBackend.cups, canListNativeMedia: false).fieldRows, 5);
+      expect(layout(PrinterBackend.native, canListNativeMedia: false).fieldRows, 5);
+      expect(layout(PrinterBackend.native, canListNativeMedia: true).fieldRows, 6);
+      expect(layout(PrinterBackend.cups, canListNativeMedia: false).fieldRows, 6);
     });
   });
 

@@ -216,7 +216,7 @@ class RoutingNodeCard extends StatelessWidget {
           ],
           // The queues and media of one backend mean nothing to the other.
           onChanged: (value) {
-            if (value != null && value != data.backend) update(RoutingNodeData.printer(label: data.label, backend: value, margins: data.margins));
+            if (value != null && value != data.backend) update(RoutingNodeData.printer(label: data.label, backend: value, margins: data.margins, borderless: data.borderless));
           },
         ),
       ),
@@ -272,6 +272,19 @@ class RoutingNodeCard extends StatelessWidget {
                   ),
                 ],
               ),
+      ),
+      _FieldRow(
+        key: const ValueKey('borderless'),
+        label: 'Borderless',
+        child: Tooltip(
+          message: 'Turn on when the printer prints up to the edge of the paper and cuts off what lies beyond the margins. '
+              'The bleed of a photo (the collage padding) is then printed beyond the margins, so it is cut off. '
+              'Turned off, the whole photo is printed within the margins, and its bleed is cut off by hand.',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: ToggleSwitch(checked: data.borderless, onChanged: (value) => update(data.copyWith(borderless: value))),
+          ),
+        ),
       ),
       // The margins port sits on this row. Like an unconnected socket in Blender, the value is editable inline until a
       // margins node supplies it.

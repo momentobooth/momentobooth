@@ -58,6 +58,7 @@ class StackCollector {
     required PrintSize size,
     required Uint8List image,
     required double aspectRatio,
+    double bleed = 0,
     required int count,
   }) async {
     final now = _now();
@@ -75,6 +76,7 @@ class StackCollector {
           size: size,
           imageFile: imageFile,
           aspectRatio: aspectRatio,
+          bleed: bleed,
           addedAt: now,
         ),
     ]);
