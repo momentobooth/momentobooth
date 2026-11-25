@@ -165,19 +165,22 @@ Make sure to set the default settings of the printer to **portrait mode**, **bor
 
 Another photo printer that has been used is the Kodak 6850. This printer can handle a lot larger volume with its higher paper/ink capacity and speed.
 
-The Kodak has been tested with CUPS printer nodes, where the following settings work well.
+The Kodak has been tested with native printer nodes (with the Kodak driver on Windows) and with CUPS printer nodes, where the following settings work well.
 
-| Property | Value |
-|---|---|
-| [Collage aspect ratio](settings_templating.md#collage-aspect-ratio) | 1.49 |
-| [Collage padding](settings_templating.md#collage-padding) | 10 |
-| Printer node: Backend | CUPS |
-| Printer node: Media | 4×6 |
-| Printer node: Borderless | On |
-| Printer node: Margins | Measured with a [calibration page](settings_print_routing.md#calibration-page) |
+| Property | Native | CUPS |
+|---|---|---|
+| [Collage aspect ratio](settings_templating.md#collage-aspect-ratio) | 1.49 | 1.49 |
+| [Collage padding](settings_templating.md#collage-padding) | 10 | 10 |
+| Printer node: Media | 4x6 in | 4x6 |
+| Printer node: Borderless | On | On |
+| Printer node: Margins | Top 3.4, Right 1.5, Bottom 0.9, Left 1.5 | Top 0.7, Right 1.5, Bottom 3.6, Left 1.5 |
+
+The margins were measured with a [calibration page](settings_print_routing.md#calibration-page) on one printer. Another printer of the same type should be close, but it is recommended to print a calibration page to check them. The two backends feed the paper the other way round: with the Kodak driver on Windows the larger margin is at the top, with CUPS at the bottom. So when you switch backends, the margins change as well.
 
 For the other print sizes, add a printer node per media size, all with the Kodak's queue:
 
-- **Small:** a tile layout with 1 column and 2 rows, to a printer node with 4×6 media.
-- **Tiny:** a tile layout with 1 column and 2 rows, to a printer node with 2×6 media.
-- **Split:** directly to a printer node with 2×6 media.
+- **Small:** a tile layout with 1 column and 2 rows, to a printer node with 4x6 media.
+- **Tiny:** a tile layout with 1 column and 2 rows, to a printer node with 2x6 media.
+- **Split:** directly to a printer node with 2x6 media.
+
+The 2x6 media have the same margins as the 4x6 media, so all printer nodes can share one [margins node](settings_print_routing.md#margins).
