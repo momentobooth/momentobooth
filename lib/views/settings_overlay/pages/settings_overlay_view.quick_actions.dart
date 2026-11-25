@@ -59,7 +59,12 @@ Widget _getQuickActions(SettingsOverlayViewModel viewModel, SettingsOverlayContr
                 icon: LucideIcons.refreshCcw,
                 iconColor: Colors.orange,
                 onPressed: () async {
-                  await Process.start(Platform.resolvedExecutable, ['--wait-for-pid', '$pid'], mode: ProcessStartMode.detached);
+                  String? dataDir = getIt<ArgResults>().option('data-dir');
+                  await Process.start(
+                    Platform.resolvedExecutable,
+                    ['--wait-for-pid', '$pid', if (dataDir != null) '--data-dir=$dataDir'],
+                    mode: ProcessStartMode.detached,
+                  );
                   exit(0);
                 },
               ),

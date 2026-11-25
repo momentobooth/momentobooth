@@ -34,7 +34,7 @@ void main() {
         ],
       };
 
-      expect(leafPaths(map), ['a', 'b.c', 'e', 'f[0].g', 'f[1].h']);
+      expect(leafPaths(map), ['a', 'b.c', 'e', 'f[].g', 'f[].h']);
     });
   });
 
@@ -51,6 +51,15 @@ void main() {
       map['removedSection'] = {'value': 'x'};
 
       expect(repository.findUnsupportedPaths(map), unorderedEquals(['hardware.removedSetting', 'removedSection.value']));
+    });
+
+    test('does not match array elements by position', () async {
+      // Loading adds a source node in front of a print routing graph without one, shifting the other nodes.
+      final map = await repository.getMapFromFile(repository.file);
+      final graph = (map['hardware'] as Map<String, dynamic>)['printRoutingGraph'] as Map<String, dynamic>;
+      graph['nodes'] = (graph['nodes'] as List).skip(1).toList();
+
+      expect(repository.findUnsupportedPaths(map), isEmpty);
     });
   });
 

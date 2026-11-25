@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
@@ -82,6 +83,9 @@ class TomlBackupRepository<TData extends TomlEncodableValue> with Logger {
   /// How many backups are kept. When a new backup is made, the oldest ones beyond this number are removed.
   final int maxBackups;
 
+  /// Increases whenever a backup is added or removed, so views can refresh their list.
+  final ValueNotifier<int> revision = ValueNotifier(0);
+
   TomlBackupRepository({required this.source, required this.directory, this.maxBackups = 30});
 
   /// Returns all backups, newest first.
@@ -106,11 +110,16 @@ class TomlBackupRepository<TData extends TomlEncodableValue> with Logger {
     logInfo("Backed up ${path.basename(source.file.path)} to ${target.path} (${reason.description})");
 
     await _removeOldBackups();
+    revision.value++;
     return ConfigBackup.fromFile(target);
   }
 
   /// Makes a backup before the file of [source] is loaded, when the file contains values that this version does not
   /// use (they would be lost on the next save), cannot be read, or was last backed up by another version.
+  ///
+  /// When a backup is made of a readable file, the caller should save the loaded data, so the file is in the format of
+  /// this version and the same backup is not made again on the next start. An unreadable file cannot be saved, so it
+  /// is not backed up again while it is identical to the newest backup.
   Future<StartupBackupResult> backUpOnStartup({required String appVersion}) async {
     if (!source.file.existsSync()) return (backup: null, unsupportedPaths: const <String>[]);
 
@@ -125,18 +134,28 @@ class TomlBackupRepository<TData extends TomlEncodableValue> with Logger {
       reason = ConfigBackupReason.unreadable;
     }
 
-    if (reason == null) {
-      ConfigBackup? latest = (await list()).firstOrNull;
-      if (latest?.appVersion != appVersion) reason = ConfigBackupReason.newVersion;
+    ConfigBackup? latest = (await list()).firstOrNull;
+    if (reason == null && latest?.appVersion != appVersion) reason = ConfigBackupReason.newVersion;
+    if (reason == ConfigBackupReason.unreadable && latest != null && await _hasSameContent(latest.file, source.file)) {
+      reason = null;
     }
 
     ConfigBackup? backup = reason != null ? await create(reason, appVersion: appVersion) : null;
     return (backup: backup, unsupportedPaths: unsupportedPaths);
   }
 
+  static Future<bool> _hasSameContent(File a, File b) async {
+    return const ListEquality<int>().equals(await a.readAsBytes(), await b.readAsBytes());
+  }
+
+  /// Removes the oldest backups beyond [maxBackups]. Failing to remove one does not fail the backup that was just made.
   Future<void> _removeOldBackups() async {
     for (ConfigBackup backup in (await list()).skip(maxBackups)) {
-      await backup.file.delete();
+      try {
+        await backup.file.delete();
+      } catch (e) {
+        logWarning("Could not remove old backup ${backup.file.path}: $e");
+      }
     }
   }
 

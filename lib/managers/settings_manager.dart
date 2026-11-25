@@ -33,10 +33,12 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
         await save();
         if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "No existing settings data found, a new file is created.");
       } else {
-        String? backupMessage = await _backUpOnStartup();
+        StartupBackupResult? backup = await _backUpOnStartup();
         _settings = await settingsRepository.get();
         _blockSaving = false;
-        reportSubsystemOk(message: backupMessage);
+        // Store the settings in the format of this version, so the same backup is not made again on the next start.
+        if (backup?.backup != null) await save();
+        reportSubsystemOk(message: _unsupportedSettingsMessage(backup));
       }
     } catch (e, s) {
       String message = 'Could not read existing settings';
@@ -50,20 +52,23 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
     }
   }
 
-  /// Backs up the settings file before it is loaded when needed, see [TomlBackupRepository.backUpOnStartup]. Returns
-  /// a message for the subsystem status when settings will be lost. A failing backup does not stop the startup.
-  Future<String?> _backUpOnStartup() async {
+  /// Backs up the settings file before it is loaded when needed, see [TomlBackupRepository.backUpOnStartup]. A failing
+  /// backup does not stop the startup, and returns null.
+  Future<StartupBackupResult?> _backUpOnStartup() async {
     try {
-      final result = await getIt<TomlBackupRepository<Settings>>().backUpOnStartup(appVersion: appVersionWithBuild);
-      if (result.unsupportedPaths.isEmpty) return null;
-
-      logWarning("Settings not used by this version: ${result.unsupportedPaths.join(', ')}");
-      return "${result.unsupportedPaths.length} settings are not used by this version and are removed on the next save. "
-          "A backup has been made, see the Import page.";
+      return await getIt<TomlBackupRepository<Settings>>().backUpOnStartup(appVersion: appVersionWithBuild);
     } catch (e, s) {
       logError("Could not back up the settings", e, s);
       return null;
     }
+  }
+
+  String? _unsupportedSettingsMessage(StartupBackupResult? backup) {
+    if (backup == null || backup.backup == null || backup.unsupportedPaths.isEmpty) return null;
+
+    logWarning("Removed settings not used by this version: ${backup.unsupportedPaths.join(', ')}");
+    return "${backup.unsupportedPaths.length} settings were not used by this version and have been removed. "
+        "A backup has been made, see the Import & backups page.";
   }
 
   // /////////// //

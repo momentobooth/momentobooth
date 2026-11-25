@@ -82,11 +82,12 @@ class TomlSerializableRepository<TData extends TomlEncodableValue> with Logger i
   /// Returns the paths of the values in [map] that get lost when the map is deserialized and serialized again, e.g.
   /// because they belong to a setting that this version of the application no longer has.
   ///
-  /// Paths are dot separated, with an index for tables in an array, e.g. `hardware.printers[1].name`.
+  /// Paths are dot separated, with `[]` for tables in an array, e.g. `hardware.printRoutingGraph.nodes[].id`. Array
+  /// elements are not matched by position, as deserialization may add, remove or reorder them.
   List<String> findUnsupportedPaths(Map<String, dynamic> map) {
     Map<String, dynamic> roundTripped = getMapFromString(_encode(deserializer(map)));
     Set<String> supportedPaths = leafPaths(roundTripped).toSet();
-    return leafPaths(map).where((p) => !supportedPaths.contains(p)).toList();
+    return leafPaths(map).toSet().where((p) => !supportedPaths.contains(p)).toList();
   }
 
   /// Applies [overlayTomlMap] on the stored data, see [overlayMaps], and reports which values it sets.
@@ -155,8 +156,8 @@ class TomlSerializableRepository<TData extends TomlEncodableValue> with Logger i
 
 /// Returns the paths of all leaf values in [value], prefixed with [prefix].
 ///
-/// Tables (maps) and arrays of tables are descended into; any other value, including an array of other values, is a
-/// leaf. Empty tables have no leaves.
+/// Tables (maps) and arrays of tables are descended into, with `[]` in the path for the elements of an array of tables
+/// (so paths can repeat); any other value, including an array of other values, is a leaf. Empty tables have no leaves.
 List<String> leafPaths(dynamic value, [String prefix = '']) {
   if (value is Map<String, dynamic>) {
     return [
@@ -166,8 +167,8 @@ List<String> leafPaths(dynamic value, [String prefix = '']) {
   }
   if (value is List && value.isNotEmpty && value.every((e) => e is Map<String, dynamic>)) {
     return [
-      for (final (index, element) in value.indexed)
-        ...leafPaths(element, '$prefix[$index]'),
+      for (final element in value)
+        ...leafPaths(element, '$prefix[]'),
     ];
   }
   return [prefix];

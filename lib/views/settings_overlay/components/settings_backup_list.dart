@@ -27,11 +27,40 @@ class _SettingsBackupListState extends State<SettingsBackupList> with Logger {
 
   late Future<List<ConfigBackup>> _backups = _repository.list();
 
-  void _reload() => setState(() => _backups = _repository.list());
+  @override
+  void initState() {
+    super.initState();
+    // Refresh when a backup is made elsewhere too, e.g. before an import from the drop region on the same page.
+    _repository.revision.addListener(_reload);
+  }
+
+  @override
+  void dispose() {
+    _repository.revision.removeListener(_reload);
+    super.dispose();
+  }
+
+  void _reload() {
+    if (mounted) setState(() => _backups = _repository.list());
+  }
 
   Future<void> _createBackup() async {
-    await _repository.create(ConfigBackupReason.manual, appVersion: appVersionWithBuild);
-    _reload();
+    try {
+      await _repository.create(ConfigBackupReason.manual, appVersion: appVersionWithBuild);
+    } catch (e, s) {
+      logError("Could not create a backup", e, s);
+      await _showError("Could not create a backup", e);
+    }
+  }
+
+  Future<void> _showError(String title, Object error) async {
+    if (!mounted) return;
+    await displayInfoBar(context, builder: (context, close) => InfoBar(
+      title: Text(title),
+      content: Text(error.toString()),
+      severity: InfoBarSeverity.error,
+      onClose: close,
+    ));
   }
 
   Future<void> _openFolder() async {
@@ -46,15 +75,8 @@ class _SettingsBackupListState extends State<SettingsBackupList> with Logger {
       await reviewAndApplySettings(context, map, title: "Restore backup from ${_dateFormat.format(backup.createdAt)}");
     } catch (e, s) {
       logError("Could not restore backup ${backup.file.path}", e, s);
-      if (!mounted) return;
-      await displayInfoBar(context, builder: (context, close) => InfoBar(
-        title: const Text("Could not restore the backup"),
-        content: Text(e.toString()),
-        severity: InfoBarSeverity.error,
-        onClose: close,
-      ));
+      await _showError("Could not restore the backup", e);
     }
-    _reload();
   }
 
   @override

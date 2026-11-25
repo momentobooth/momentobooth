@@ -87,7 +87,7 @@ rust/src/
 
 ### Running the App During Development
 
-When you run the app (e.g. to verify a change), give it its own data directory with `--data-dir=.dev-data` (e.g. `fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"`), or set `MOMENTOBOOTH_DATA_DIR`. Without it, every branch and worktree shares the user's real `Settings.toml`, and a build that lacks a setting drops it on the next save. `.dev-data/` is gitignored and relative to the working directory, so each worktree gets its own. On first start, `Settings.toml` and `Projects.toml` are copied from the default data directory, so the app starts with the user's configuration (including hardware and MQTT settings). See "Using a separate data directory per branch or worktree" in `documentation/src/dev_setup.md`.
+When you run the app (e.g. to verify a change), give it its own data directory with `--data-dir=.dev-data` (e.g. `fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"`), or set `MOMENTOBOOTH_DATA_DIR`. Without it, every branch and worktree shares the user's real `Settings.toml`, and a build that lacks a setting drops it on the next save. `.dev-data/` is gitignored and relative to the working directory, so each worktree gets its own. On first start, `Settings.toml` and `Projects.toml` are copied from the default data directory, so the app starts with the user's configuration (including hardware and MQTT settings, so do not run it next to the user's own instance with the same MQTT client ID). Projects are not copied: the app still opens the user's real project folders. See "Using a separate data directory per branch or worktree" in `documentation/src/dev_setup.md`.
 
 ## Key Patterns
 

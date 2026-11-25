@@ -127,7 +127,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
 
   void processError(String msg) {
     logError(msg);
-    setState(() => error = msg);
+    if (mounted) setState(() => error = msg);
   }
 
   Future<void> _onPerformDrop(PerformDropEvent event) async {
@@ -169,6 +169,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
            value = String.fromCharCodes(valueBytes);
         } on Exception catch (e) {
           processError('Error reading virtual file: $e');
+          return;
         }
         final name = f.fileName ?? "unknown";
         unawaited(_processFile(name, value));
@@ -212,18 +213,19 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     late final Map<String, dynamic> overlayMap;
     try {
       overlayMap = TomlDocument.parse(content).toMap();
-    } on Exception catch (e) {
+    } catch (e) {
       processError("Error parsing overlay file: $e");
       return;
     }
 
-    setState(() => _isDragOver = false);
     if (!mounted) return;
+    setState(() => _isDragOver = false);
 
     late final bool applied;
     try {
       applied = await reviewAndApplySettings(context, overlayMap);
-    } on Exception catch (e) {
+    } catch (e) {
+      // Not only exceptions: e.g. a value of the wrong type causes a TypeError when deserializing.
       processError("Error applying overlay: $e");
       return;
     }

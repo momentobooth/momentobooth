@@ -72,6 +72,15 @@ void main() {
 
       expect(result.backup?.reason, ConfigBackupReason.unreadable);
     });
+
+    test('does not back up an unchanged unreadable file again', () async {
+      await source.file.writeAsString('this is = = not toml');
+      await backups.backUpOnStartup(appVersion: '1.0.0+1');
+
+      expect((await backups.backUpOnStartup(appVersion: '1.0.0+1')).backup, isNull);
+      await source.file.writeAsString('this is = = still not toml');
+      expect((await backups.backUpOnStartup(appVersion: '1.0.0+1')).backup?.reason, ConfigBackupReason.unreadable);
+    });
   });
 
   test('keeps only the newest backups', () async {

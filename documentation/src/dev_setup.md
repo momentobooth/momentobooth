@@ -342,6 +342,8 @@ All builds share the same application data directory by default, which holds `Se
 
 To keep the data of a branch or worktree apart, point the application to another directory, either with the `--data-dir` argument or the `MOMENTOBOOTH_DATA_DIR` environment variable. The argument takes precedence. If the directory does not contain `Settings.toml` or `Projects.toml` yet, these are copied from the default directory on startup, so you start with your current configuration.
 
+The projects themselves are not copied: a build with another data directory still opens and saves the same project folders (the project settings are backed up when needed, see the settings import page). The copied settings also include your MQTT connection, so if the application with your normal data directory runs at the same time, change the MQTT client ID of one of them, otherwise they disconnect each other from the broker.
+
 ```sh
 fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"
 ```

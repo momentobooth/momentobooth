@@ -15,9 +15,11 @@ The same UI is also presented in the onboarding wizard.
 MomentoBooth makes a backup of your settings in the following cases:
 
 * When a new version of MomentoBooth is started for the first time
-* When your settings contain values that this version does not use, as these are removed the next time the settings are saved
+* When your settings contain values that this version does not use, before these are removed
 * When your settings file cannot be read (before you choose to continue with the default settings)
 * Before settings are imported or a backup is restored
 * When you press *Create backup now*
 
 The backups are listed on this page, newest first. Press *Restore…* to see what restoring a backup would change, using the same pop-up as for an import. The newest 30 backups are kept, older ones are removed automatically. *Open backup folder* shows the backup files themselves, these are plain `.toml` files, so you can also open them in a text editor or import a part of one.
+
+The settings of a project (`ProjectSettings.toml`) are backed up in the same cases when the project is opened, into the `Backups/ProjectSettings` folder of the project. There is no restore option in the app for these; to restore one, copy it back to `ProjectSettings.toml` while MomentoBooth is closed.
