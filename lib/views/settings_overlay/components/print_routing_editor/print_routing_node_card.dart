@@ -490,6 +490,16 @@ class _MarginsCaptionRow extends StatelessWidget {
             style: theme.typography.caption?.copyWith(color: routingPortTypeColor(RoutingPortType.margins)),
           ),
           Expanded(child: _SecondaryCaption(wired ? 'from the connected node' : 'in mm')),
+          if (!wired)
+            Tooltip(
+              message: 'Move these margins to a new margins node, to share them with other printers',
+              child: IconButton(
+                key: const ValueKey('moveMarginsToNode'),
+                icon: Icon(RoutingNodeKind.margins.icon, size: 14),
+                style: const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(4))),
+                onPressed: () => viewModel.moveMarginsToNode(nodeId),
+              ),
+            ),
           Tooltip(
             message: PrintRoutingEditorViewModelBase.canCalibrate(data)
                 ? 'Print a calibration page, to measure the margins'

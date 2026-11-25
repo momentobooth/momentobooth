@@ -316,6 +316,35 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     editor.updateNode(nodeId, (node) => node.withData({routingDataKey: data}));
   }
 
+  /// The space between a printer and the margins node [moveMarginsToNode] puts beside it.
+  static const double movedMarginsGap = 60;
+
+  /// Moves the margins of printer node [printerNodeId] to a new margins node beside it, which is connected to the
+  /// printer, so other printers can use the same margins. The printer keeps its own margins for when the node is
+  /// disconnected. One undo step.
+  void moveMarginsToNode(String printerNodeId) {
+    final printerNode = editor.graph.nodes[printerNodeId];
+    if (printerNode?.field<RoutingNodeData>(routingDataKey) case final PrinterNodeData printer?) {
+      final marginsData = RoutingNodeData.margins(margins: printer.margins);
+      // The output of the margins node lines up with the margins input of the printer.
+      double portCenter(RoutingNodeData data, String portId, {required int noteRows}) =>
+          RoutingNodeLayout(data, marginsWired: false, noteRows: noteRows, canListNativeMedia: canListNativeMedia)
+              .portCenter(data.port(portId)!);
+      final position = printerNode!.position + Offset(
+        -RoutingNodeKind.margins.width - movedMarginsGap,
+        portCenter(printer, RoutingPorts.margins, noteRows: noteRows(printerNodeId)) -
+            portCenter(marginsData, RoutingPorts.margins, noteRows: 0),
+      );
+
+      final id = editor.nextId(RoutingNodeKind.margins.name);
+      editor.history.beginTransaction();
+      editor
+        ..addNode(routingGraphNode(id: id, position: position, data: marginsData))
+        ..connect(PortRef(id, RoutingPorts.margins), PortRef(printerNodeId, RoutingPorts.margins));
+      editor.history.commitTransaction();
+    }
+  }
+
   // ////////////////// //
   // Printers and media //
   // ////////////////// //

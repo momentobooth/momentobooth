@@ -238,7 +238,7 @@ The `fl_nodes_v2` node editor for the print routing graph on the "Print routing"
 
 - `print_calibration_dialog.dart` — `PrintCalibrationDialog` (with `showPrintCalibrationDialog`) — asks for the ruler length and prints a calibration page on a printer node, to measure its margins.
 - `print_routing_editor.dart` — `PrintRoutingEditor` — node canvas with toolbar, Fluent context menus and keyboard shortcuts, a side panel listing the routes per print size and the problems, and a status line explaining refused connections.
-- `print_routing_node_card.dart` — `RoutingNodeCard` — body of one node: header, port labels coloured by type, Fluent fields (incl. queue and media combo boxes for CUPS queues and for native printers that list their papers, inline printer margins with a button for the calibration page, a borderless switch) and notes; its rows follow `RoutingNodeLayout`.
+- `print_routing_node_card.dart` — `RoutingNodeCard` — body of one node: header, port labels coloured by type, Fluent fields (incl. queue and media combo boxes for CUPS queues and for native printers that list their papers, inline printer margins with buttons to print a calibration page and to move them to a new margins node, a borderless switch) and notes; its rows follow `RoutingNodeLayout`.
 
 <a id="lib-views-settings-overlay-components-settings"></a>
 

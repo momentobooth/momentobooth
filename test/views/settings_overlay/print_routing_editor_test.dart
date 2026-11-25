@@ -140,6 +140,29 @@ void main() {
       expect(saved, isEmpty);
     });
 
+    test('moves the margins of a printer to a new margins node beside it, as one undo step', () {
+      viewModel.updateNodeData('canon', const RoutingNodeData.printer(
+        label: 'Canon',
+        queueId: 'canon',
+        media: PrintMedia(widthMm: 100, heightMm: 148),
+        margins: PrintMargins(top: 3.5, right: 1.5, bottom: 1.5, left: 1.5),
+      ));
+      final before = viewModel.graph;
+      viewModel.moveMarginsToNode('canon');
+
+      final added = viewModel.graph.nodes.singleWhere((node) => !before.nodes.any((old) => old.id == node.id));
+      expect(added.data, const RoutingNodeData.margins(margins: PrintMargins(top: 3.5, right: 1.5, bottom: 1.5, left: 1.5)));
+      expect(
+        viewModel.graph.edges,
+        contains(RoutingEdge(fromNode: added.id, fromPort: RoutingPorts.margins, toNode: 'canon', toPort: RoutingPorts.margins)),
+      );
+      // To the left of the printer, which is at x 600.
+      expect(added.x, 600 - RoutingNodeKind.margins.width - PrintRoutingEditorViewModelBase.movedMarginsGap);
+
+      editor().history.undo();
+      expect(viewModel.graph, before);
+    });
+
     test('refuses incompatible connections and explains the ones the port colours do not', () async {
       // Checked by the library: margins into a photo input.
       expect(editor().canConnect(const PortRef('margins', 'margins'), const PortRef('tile', 'in')), isFalse);
@@ -416,6 +439,18 @@ void main() {
       // The size of this printer is set by hand.
       expect(hardware.calibrationPages.single.$2, 'set by hand');
       expect(hardware.calibrationPages.single.$3, 30);
+    });
+
+    testWidgets('moves the margins of a printer to a new margins node from its margins row', (tester) async {
+      await pumpEditor(tester);
+      expect(inNode('dnp', find.byKey(const ValueKey('moveMarginsToNode'))), findsNothing);
+
+      await tester.tap(inNode('canon', find.byKey(const ValueKey('moveMarginsToNode'))));
+      await tester.pumpAndSettle();
+
+      expect(inNode('canon', find.text('from the connected node')), findsOneWidget);
+      expect(inNode('canon', find.byKey(const ValueKey('moveMarginsToNode'))), findsNothing);
+      expect(tester.takeException(), isNull);
     });
 
     testWidgets('adds nodes from the toolbar', (tester) async {
