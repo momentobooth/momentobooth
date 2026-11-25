@@ -1,7 +1,42 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:momento_booth/app_localizations.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/settings_manager.dart';
+import 'package:momento_booth/models/settings.dart';
+import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
+import 'package:momento_booth/repositories/serializable/toml_backup_repository.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart';
+
+/// Shows which settings [overlayMap] changes in a [SettingsImportDialog] and, when the user accepts, backs up the
+/// current settings and applies them. Returns whether the settings were applied.
+///
+/// Throws when [overlayMap] cannot be applied on the current settings.
+Future<bool> reviewAndApplySettings(BuildContext context, Map<String, dynamic> overlayMap, {String title = "Import settings"}) async {
+  final settingsRepository = getIt<SerialiableRepository<Settings>>() as TomlSerializableRepository<Settings>;
+  // Ensure the settings file exists and is up to date, as the overlay is applied on it.
+  await getIt<SettingsManager>().save();
+  final overlay = await settingsRepository.overlayWithMap(overlayMap);
+  if (!context.mounted) return false;
+
+  bool? accepted = await showDialog<bool>(
+    context: context,
+    barrierDismissible: true,
+    builder: (dialogContext) => SettingsImportDialog(
+      title: title,
+      onAccept: () => Navigator.of(dialogContext).pop(true),
+      onCancel: () => Navigator.of(dialogContext).pop(false),
+      updates: overlay.updates,
+      unsupportedPaths: overlay.unsupportedPaths,
+    ),
+  );
+  if (accepted != true) return false;
+
+  await getIt<TomlBackupRepository<Settings>>().create(ConfigBackupReason.beforeImport, appVersion: appVersionWithBuild);
+  await getIt<SettingsManager>().updateAndSave(overlay.data);
+  return true;
+}
 
 /// Shows which settings an import (or a backup restore) changes, before applying them.
 class SettingsImportDialog extends StatelessWidget {

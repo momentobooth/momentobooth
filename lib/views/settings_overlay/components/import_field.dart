@@ -6,14 +6,12 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/models/_all.dart';
-import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
-import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_import_dialog.dart';
 import 'package:path/path.dart' as path;
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+import 'package:toml/toml.dart';
 
 class MyDropRegion extends StatefulWidget {
 
@@ -207,51 +205,35 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   }
 
   Future<void> _processFile(String filename, String content) async {
-    final settingsRepo = TomlSerializableRepository(path.join(appDataPath, "Settings.toml"), Settings.fromJson);
-    // Ensure settings file exists
-    await getIt<SettingsManager>().save();
-
     if (!filename.toLowerCase().endsWith(".toml")) {
       logWarning("Filename $filename does not end with .toml, trying to use anyway.");
     }
 
     late final Map<String, dynamic> overlayMap;
     try {
-      overlayMap = settingsRepo.getMapFromString(content);
+      overlayMap = TomlDocument.parse(content).toMap();
     } on Exception catch (e) {
       processError("Error parsing overlay file: $e");
       return;
     }
 
-    late final OverlayResult<Settings> overlay;
+    setState(() => _isDragOver = false);
+    if (!mounted) return;
+
+    late final bool applied;
     try {
-      overlay = await settingsRepo.overlayWithMap(overlayMap);
+      applied = await reviewAndApplySettings(context, overlayMap);
     } on Exception catch (e) {
       processError("Error applying overlay: $e");
       return;
     }
 
-    setState(() => _isDragOver = false);
-    if (!mounted) return;
-    await showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (dialogContext) => SettingsImportDialog(
-        onAccept: () {
-          // Save the settings using the settings manager
-          getIt<SettingsManager>().updateAndSave(overlay.data);
-          setState(() {
-            imported = true;
-            error = null;
-          });
-          widget.onAccept?.call();
-          Navigator.of(dialogContext).pop();
-        },
-        onCancel: () => Navigator.of(dialogContext).pop(),
-        updates: overlay.updates,
-        unsupportedPaths: overlay.unsupportedPaths,
-      ),
-    );
+    if (!applied || !mounted) return;
+    setState(() {
+      imported = true;
+      error = null;
+    });
+    widget.onAccept?.call();
   }
 
   void _onDropLeave(DropEvent event) {

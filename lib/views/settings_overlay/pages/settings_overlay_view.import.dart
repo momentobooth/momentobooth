@@ -13,6 +13,10 @@ Widget _getImportSettings(SettingsOverlayViewModel viewModel, SettingsOverlayCon
       ),
       SizedBox(height: 16.0),
       MyDropRegion(),
+      SettingsSection(
+        title: "Backups",
+        settings: [SettingsBackupList()],
+      ),
     ],
   );
 }

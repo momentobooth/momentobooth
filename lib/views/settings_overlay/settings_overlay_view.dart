@@ -51,6 +51,7 @@ import 'package:momento_booth/views/settings_overlay/components/settings/setting
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_toggle_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_tree_view_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_value_chip.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings_backup_list.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_list_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_section.dart';
