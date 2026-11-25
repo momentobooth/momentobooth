@@ -34,92 +34,122 @@ double photoAspectRatio(Uint8List image) {
   return photo.width! / photo.height!;
 }
 
-/// A copy to put on a stack: a photo, or both its halves for a split print.
+/// A copy to put on a stack: a photo, or both its halves for a split print. The photo has a [bleed] on every side, as
+/// a fraction of its height, see [renderPrintPdf].
 class StackedCopy {
 
   final Uint8List image;
   final bool split;
+  final double bleed;
 
-  const StackedCopy(this.image, {required this.split});
+  const StackedCopy(this.image, {required this.split, this.bleed = 0});
 
 }
 
-/// Renders [copies] stacked on the media of [route], within its margins, see [packStack]. Every sheet the copies fill
-/// is a page. The halves of a split print are stacked as separate items.
+/// Which part of a photo an item of a stack shows.
+enum _StackItemPart { whole, leftHalf, rightHalf }
+
+/// Renders [copies] stacked on the media of [route], see [packStackOn]. Every sheet the copies fill is a page. The
+/// halves of a split print are stacked as separate items.
+///
+/// Every item fills its place without its bleed. The bleed shows up to half the gap of the stack around it, and on
+/// borderless media beyond the edges of the viewport the item reaches, see [stackItemVisibleRect].
 Future<Uint8List> renderStackPdf(List<StackedCopy> copies, PrintRoute route) {
+  const mm = PdfPageFormat.mm;
   final doc = pw.Document(title: "MomentoBooth image");
-  final format = _pageFormat(route);
+  final mmViewport = stackViewport(route);
+  final viewport = PageRect(mmViewport.left * mm, mmViewport.top * mm, mmViewport.width * mm, mmViewport.height * mm);
 
   // Every distinct photo is embedded once.
   final Map<Uint8List, pw.MemoryImage> photos = {};
-  final List<(pw.MemoryImage photo, pw.Alignment? half)> items = [];
+  final List<(pw.MemoryImage photo, double bleed, _StackItemPart part)> items = [];
   final List<double> aspectRatios = [];
   for (final copy in copies) {
     final photo = photos[copy.image] ??= pw.MemoryImage(copy.image);
     final aspectRatio = photo.width! / photo.height!;
     if (copy.split) {
-      items.addAll([(photo, pw.Alignment.centerLeft), (photo, pw.Alignment.centerRight)]);
+      items.addAll([(photo, copy.bleed, _StackItemPart.leftHalf), (photo, copy.bleed, _StackItemPart.rightHalf)]);
     } else {
-      items.add((photo, null));
+      items.add((photo, copy.bleed, _StackItemPart.whole));
     }
-    aspectRatios.addAll(stackItemsOf(aspectRatio, split: copy.split));
+    aspectRatios.addAll(stackItemsOf(aspectRatio, split: copy.split, bleed: copy.bleed));
   }
-  final sheets = packStackOn(route, aspectRatios, unit: PdfPageFormat.mm);
+  final sheets = packStackOn(route, aspectRatios, unit: mm);
 
   for (final sheet in sheets) {
-    doc.addPage(pw.Page(
-      pageFormat: format,
-      build: (_) => pw.Align(
-        alignment: pw.Alignment.topLeft,
-        child: pw.SizedBox(
-          width: format.availableWidth,
-          height: format.availableHeight,
-          child: pw.Stack(
-            children: [
-              for (final placement in sheet)
-                pw.Positioned(
-                  left: placement.left,
-                  top: placement.top,
-                  child: switch (items[placement.item]) {
-                    (final photo, null) => _fittedPhoto(photo, placement.width, placement.height),
-                    (final photo, final half?) => _halfPhoto(photo, half, placement),
-                  },
-                ),
-            ],
-          ),
-        ),
-      ),
-    ));
+    doc.addPage(_positionedPage(route, [
+      for (final placement in sheet)
+        _stackItem(items[placement.item], placement, gap: route.stack!.gap * mm, viewport: viewport, borderless: route.printer.borderless),
+    ]));
   }
   return doc.save();
 }
 
-/// The half of the photo at [half] (left or right), filling [placement].
-pw.Widget _halfPhoto(pw.MemoryImage photo, pw.Alignment half, StackPlacement placement) {
-  // Laid out in the photo's own orientation, and turned as a whole.
+/// An item of a stack at [placement], with as much of its bleed as [stackItemVisibleRect] allows.
+pw.Widget _stackItem(
+  (pw.MemoryImage, double, _StackItemPart) item,
+  StackPlacement placement, {
+  required double gap,
+  required PageRect viewport,
+  required bool borderless,
+}) {
+  final (photo, bleed, part) = item;
+  // The item without its bleed, in the photo's own orientation.
   final width = placement.turned ? placement.height : placement.width;
   final height = placement.turned ? placement.width : placement.height;
-  final pw.Widget part = pw.SizedBox(
-    width: width,
-    height: height,
-    child: pw.ClipRect(
-      child: pw.Image(photo, fit: pw.BoxFit.fitHeight, width: width, height: height, alignment: half),
+  // The whole photo, as drawn, and its bleed.
+  final photoHeight = height / (1 - 2 * bleed);
+  final photoWidth = photoHeight * photo.width! / photo.height!;
+  final bleedSize = bleed * photoHeight;
+
+  // The item with its bleed on every side, laid out in the photo's own orientation and turned as a whole. A half has
+  // no bleed where the halves meet, so that side stays empty: then the item is centred on its place either way it is
+  // turned.
+  final pw.Widget withBleed = pw.SizedBox(
+    width: width + 2 * bleedSize,
+    height: height + 2 * bleedSize,
+    child: pw.Stack(
+      children: [
+        // The part of the photo to show, its bleed included. For the right half, that starts in the middle of the photo.
+        pw.Positioned(
+          left: part == _StackItemPart.rightHalf ? bleedSize : 0,
+          top: 0,
+          child: pw.SizedBox(
+            width: part == _StackItemPart.whole ? width + 2 * bleedSize : width + bleedSize,
+            height: height + 2 * bleedSize,
+            child: pw.Stack(
+              children: [
+                pw.Positioned(
+                  left: part == _StackItemPart.rightHalf ? -photoWidth / 2 : 0,
+                  top: 0,
+                  child: pw.Image(photo, fit: pw.BoxFit.fill, width: photoWidth, height: photoHeight),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     ),
   );
-  return placement.turned ? pw.Transform.rotateBox(angle: 0.5 * pi, child: part) : part;
-}
 
-PdfPageFormat _pageFormat(PrintRoute route) {
-  const mm = PdfPageFormat.mm;
-  final media = route.printer.media;
-  final margins = route.margins;
-  return PdfPageFormat(
-    media.widthMm * mm,
-    media.heightMm * mm,
-    marginTop: margins.top * mm,
-    marginRight: margins.right * mm,
-    marginBottom: margins.bottom * mm,
-    marginLeft: margins.left * mm,
+  final visible = stackItemVisibleRect(placement, bleedSize: bleedSize, gap: gap, viewport: viewport, borderless: borderless);
+  // The pdf Stack clips what lies beyond it, which limits the item to its visible part.
+  return pw.Positioned(
+    left: visible.left,
+    top: visible.top,
+    child: pw.SizedBox(
+      width: visible.width,
+      height: visible.height,
+      child: pw.Stack(
+        children: [
+          pw.Positioned(
+            left: placement.left - bleedSize - visible.left,
+            top: placement.top - bleedSize - visible.top,
+            child: placement.turned ? pw.Transform.rotateBox(angle: 0.5 * pi, child: withBleed) : withBleed,
+          ),
+        ],
+      ),
+    ),
   );
 }
 
@@ -159,17 +189,6 @@ pw.Widget _placedPhoto(pw.MemoryImage photo, PhotoPlacement placement) {
         ? pw.Transform.rotateBox(angle: 0.5 * pi, child: pw.Image(photo, fit: pw.BoxFit.fill, width: rect.height, height: rect.width))
         : pw.Image(photo, fit: pw.BoxFit.fill, width: rect.width, height: rect.height),
   );
-}
-
-bool _isLandscape(double width, double height) => width > height;
-
-/// The photo, fitted in a box of [width] by [height] and turned a quarter when that fits its orientation better.
-pw.Widget _fittedPhoto(pw.MemoryImage photo, double width, double height) {
-  final bool turn = _isLandscape(photo.width!.toDouble(), photo.height!.toDouble()) != _isLandscape(width, height);
-  // When turned, the size must be given in the photo's own orientation, or it ends up too small.
-  return turn
-      ? pw.Transform.rotateBox(angle: 0.5 * pi, child: pw.Image(photo, fit: pw.BoxFit.contain, width: height, height: width))
-      : pw.Image(photo, fit: pw.BoxFit.contain, width: width, height: height);
 }
 
 /// A page with the photo in every cell of a grid of [rows] by [columns] that fills the viewport. Without a tile

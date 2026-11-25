@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
+import 'package:momento_booth/hardware_control/printing/photo_placement.dart';
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 
@@ -48,24 +49,89 @@ class StackPlacement {
 }
 
 /// The aspect ratios of the items a copy of a photo with [aspectRatio] takes on a stack: the photo, or its two halves
-/// for a split print.
-List<double> stackItemsOf(double aspectRatio, {required bool split}) =>
-    split ? [aspectRatio / 2, aspectRatio / 2] : [aspectRatio];
+/// for a split print. Without the [bleed] of the photo (a fraction of its height on every side), as the items are
+/// packed without it: their bleed lies in the gap around them, see [packStackOn]. A half has no bleed where the halves
+/// meet.
+List<double> stackItemsOf(double aspectRatio, {required bool split, double bleed = 0}) {
+  final withoutBleed = (aspectRatio - 2 * bleed) / (1 - 2 * bleed);
+  return split ? [withoutBleed / 2, withoutBleed / 2] : [withoutBleed];
+}
 
-/// Packs items with [aspectRatios] on the printable area of [route] with the settings of its stack, see [packStack].
-/// Lengths are in mm, times [unit].
+/// Packs items with [aspectRatios] (without their bleed, see [stackItemsOf]) in the viewport of [route] with the
+/// settings of its stack, see [packStack]. The placements are measured from the top left corner of the page, in mm
+/// times [unit].
+///
+/// The gap of the stack works like a margin around every item: the item fills its place without its bleed, and the
+/// bleed may take up half the gap on every side, see [stackItemVisibleRect]. So half a gap is also kept free within the
+/// viewport at its edges, except where the printer cuts on borderless media. The far end of the lanes (the bottom for
+/// columns, the right for rows) is never cut, as the rest of the sheet may be fed again.
 List<List<StackPlacement>> packStackOn(PrintRoute route, List<double> aspectRatios, {double unit = 1}) {
   final stack = route.stack!;
-  final media = route.printer.media;
-  final margins = route.margins;
-  return packStack(
+  final viewport = stackViewport(route);
+  final rows = stack.direction == StackDirection.rows;
+  final halfGap = stack.gap / 2;
+  final edge = route.printer.borderless ? 0.0 : halfGap;
+  final left = edge, top = edge;
+  final right = rows ? halfGap : edge, bottom = rows ? edge : halfGap;
+
+  final sheets = packStack(
     aspectRatios,
-    width: (media.widthMm - margins.left - margins.right) * unit,
-    height: (media.heightMm - margins.top - margins.bottom) * unit,
+    width: (viewport.width - left - right) * unit,
+    height: (viewport.height - top - bottom) * unit,
     lanes: stack.lanes,
     gap: stack.gap * unit,
-    rows: stack.direction == StackDirection.rows,
+    rows: rows,
   );
+  final offsetX = (viewport.left + left) * unit, offsetY = (viewport.top + top) * unit;
+  return [
+    for (final sheet in sheets)
+      [
+        for (final placement in sheet)
+          StackPlacement(
+            item: placement.item,
+            left: placement.left + offsetX,
+            top: placement.top + offsetY,
+            width: placement.width,
+            height: placement.height,
+            turned: placement.turned,
+          ),
+      ],
+  ];
+}
+
+/// The viewport of [route] in mm: the media minus the margins.
+PageRect stackViewport(PrintRoute route) {
+  final media = route.printer.media;
+  final margins = route.margins;
+  return PageRect(
+    margins.left,
+    margins.top,
+    media.widthMm - margins.left - margins.right,
+    media.heightMm - margins.top - margins.bottom,
+  );
+}
+
+/// The part of the page an item of a stack at [placement] shows: its place, plus its bleed of [bleedSize] on every
+/// side, up to half the [gap]. Where the place reaches the edge of the [viewport] of borderless media, the whole bleed
+/// shows, as the printer cuts it off.
+PageRect stackItemVisibleRect(
+  StackPlacement placement, {
+  required double bleedSize,
+  required double gap,
+  required PageRect viewport,
+  required bool borderless,
+}) {
+  // Leaves room for rounding errors in the positions.
+  const tolerance = 1e-6;
+  final inGap = bleedSize < gap / 2 ? bleedSize : gap / 2;
+  double extent(double edge, double viewportEdge) =>
+      borderless && (edge - viewportEdge).abs() <= tolerance ? bleedSize : inGap;
+
+  final left = placement.left - extent(placement.left, viewport.left);
+  final top = placement.top - extent(placement.top, viewport.top);
+  final right = placement.left + placement.width + extent(placement.left + placement.width, viewport.right);
+  final bottom = placement.top + placement.height + extent(placement.top + placement.height, viewport.bottom);
+  return PageRect(left, top, right - left, bottom - top);
 }
 
 /// Packs items with the given [aspectRatios] (width / height) on sheets with an area of [width] by [height], and

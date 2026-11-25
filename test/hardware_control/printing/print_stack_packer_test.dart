@@ -1,5 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:momento_booth/hardware_control/printing/photo_placement.dart';
+import 'package:momento_booth/hardware_control/printing/print_router.dart';
 import 'package:momento_booth/hardware_control/printing/print_stack_packer.dart';
+import 'package:momento_booth/models/print_routing_graph.dart';
+
+/// A stack with a gap of 4 mm on media of 100 × 200 mm with margins of 10 mm, so a viewport of 80 × 180 mm.
+PrintRoute _route({required bool borderless, StackDirection direction = StackDirection.columns}) => PrintRoute(
+  printerNodeId: 'printer',
+  printer: PrinterNodeData(queueId: 'printer', media: const PrintMedia(widthMm: 100, heightMm: 200), borderless: borderless),
+  margins: const PrintMargins(top: 10, right: 10, bottom: 10, left: 10),
+  stackNodeId: 'stack',
+  stack: StackNodeData(gap: 4, direction: direction),
+);
 
 /// The items on each sheet, as (item, column left, top) per placement.
 List<List<(int, double, double)>> _positions(List<List<StackPlacement>> sheets) => [
@@ -81,6 +93,55 @@ void main() {
     test('refuses columns that leave no room', () {
       expect(() => packStack([1], width: 10, height: 100, lanes: 2, gap: 10), throwsArgumentError);
       expect(() => packStack([1], width: 100, height: 100, lanes: 0, gap: 0), throwsArgumentError);
+    });
+  });
+
+  test('stackItemsOf leaves out the bleed, which a half does not have where the halves meet', () {
+    // A photo of 0.6 with a bleed of 0.1 of its height is 0.4 × 0.8 without its bleed.
+    expect(stackItemsOf(0.6, split: false, bleed: 0.1).single, closeTo(0.5, 1e-9));
+    expect(stackItemsOf(0.6, split: true, bleed: 0.1), [closeTo(0.25, 1e-9), closeTo(0.25, 1e-9)]);
+  });
+
+  group('packStackOn', () {
+    test('keeps half the gap free within the viewport, for the bleed', () {
+      final placement = packStackOn(_route(borderless: false), [1]).single.single;
+
+      expect(placement, const StackPlacement(item: 0, left: 12, top: 12, width: 76, height: 76, turned: false));
+    });
+
+    test('lets items reach the edges of the viewport of borderless media, except at the far end of the lanes', () {
+      final columns = packStackOn(_route(borderless: true), [1, 1, 1]);
+      expect(columns.first.first, const StackPlacement(item: 0, left: 10, top: 10, width: 80, height: 80, turned: false));
+      // Two fit in the 178 mm above the half gap at the bottom, with a gap between them; a third does not.
+      expect(columns.first, hasLength(2));
+
+      // For rows, the far end is at the right: the row is 180 high, and the room 78 wide. The item is centred in its
+      // row.
+      final rows = packStackOn(_route(borderless: true, direction: StackDirection.rows), [1]).single.single;
+      expect(rows, const StackPlacement(item: 0, left: 10, top: 61, width: 78, height: 78, turned: false));
+    });
+  });
+
+  group('stackItemVisibleRect', () {
+    const placement = StackPlacement(item: 0, left: 10, top: 10, width: 80, height: 80, turned: false);
+    const viewport = PageRect(10, 10, 80, 180);
+
+    test('shows the bleed up to half the gap', () {
+      expect(
+        stackItemVisibleRect(placement, bleedSize: 3, gap: 4, viewport: viewport, borderless: false),
+        const PageRect(8, 8, 84, 84),
+      );
+      expect(
+        stackItemVisibleRect(placement, bleedSize: 1, gap: 4, viewport: viewport, borderless: false),
+        const PageRect(9, 9, 82, 82),
+      );
+    });
+
+    test('shows the whole bleed where the item reaches the edge of borderless media', () {
+      expect(
+        stackItemVisibleRect(placement, bleedSize: 3, gap: 4, viewport: viewport, borderless: true),
+        const PageRect(7, 7, 86, 85),
+      );
     });
   });
 }

@@ -156,12 +156,12 @@ class StackCollector {
     return shapes.length / (shapes.length + mostMore);
   }
 
-  static bool _fitsOnOneSheet(PrintRoute route, Iterable<(double, bool)> shapes) => packStackOn(route, [
-    for (final (aspectRatio, split) in shapes) ...stackItemsOf(aspectRatio, split: split),
+  static bool _fitsOnOneSheet(PrintRoute route, Iterable<(double, double, bool)> shapes) => packStackOn(route, [
+    for (final (aspectRatio, bleed, split) in shapes) ...stackItemsOf(aspectRatio, split: split, bleed: bleed),
   ]).length <= 1;
 
-  /// What decides the room a copy takes on a stack: its aspect ratio, and whether it is printed in halves.
-  static (double, bool) _shapeOf(CollectedCopy copy) => (copy.aspectRatio, copy.size == PrintSize.split);
+  /// What decides the room a copy takes on a stack: its aspect ratio and bleed, and whether it is printed in halves.
+  static (double, double, bool) _shapeOf(CollectedCopy copy) => (copy.aspectRatio, copy.bleed, copy.size == PrintSize.split);
 
   String _newId(DateTime now) {
     // Unique within this list, also for prints added in the same microsecond.

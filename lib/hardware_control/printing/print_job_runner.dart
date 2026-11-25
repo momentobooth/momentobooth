@@ -117,7 +117,7 @@ class PrintJobRunner {
         log: {'copies': stackedCopies},
         counts: [for (final _ in stackedCopies) size],
         renderKey: (stack: stackNodeId),
-        render: () => renderStackPdf([for (final _ in stackedCopies) StackedCopy(image, split: split)], route),
+        render: () => renderStackPdf([for (final _ in stackedCopies) StackedCopy(image, split: split, bleed: bleed)], route),
       );
       if (!printed) stacksPrinted = false;
     }
@@ -284,7 +284,7 @@ class _PrintSession {
         counts: [for (final copy in printable) copy.size],
         renderKey: (collected: printable.first.id),
         render: () => renderStackPdf([
-          for (final copy in printable) StackedCopy(images[copy.imageFile]!, split: copy.size == PrintSize.split),
+          for (final copy in printable) StackedCopy(images[copy.imageFile]!, split: copy.size == PrintSize.split, bleed: copy.bleed),
         ], route),
       );
       if (printed) await collector.remove(printable);
