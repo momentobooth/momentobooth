@@ -20,10 +20,11 @@ MomentoBooth supports two ways of printing, and you can combine them in one set-
    1. Choose the **Backend**: _Native_ or _CUPS_.
    1. Select the **Printer** (native) or **Queue** (CUPS).
    1. For a CUPS printer, select the **Media**; the size follows from it. For a native printer on Windows, select the **Paper** in the same way. For a native printer on macOS or Linux, enter the **Size** of the paper in mm.
-   1. Leave the **Margins** at 0 for now.
+   1. Turn on **Borderless** when the printer prints up to the edge of the paper, e.g. a photo printer with borderless paper. Leave it off for a printer that leaves a white border.
 1. Check the **Routes** in the side panel: _Normal_ should list your printer, and the **Problems** list should be empty.
 1. Make sure the project setting [Enable printing](settings_project.md#enable-printing) is on.
-1. Take a photo and print it. Tune the margins of the printer node until the print shows the full collage without white borders: increase a margin when the printer cuts off part of the photo on that side, decrease it when a white border remains. The last printed sheet is also saved as `latest-print.pdf` in the `Prints` folder of the project.
+1. Measure the margins: click the ruler button in the margins row of the printer node to print a calibration page. On every side, the first ruler mark you can see on the print is the margin of that side. Enter these values as the **Margins** of the printer node. See [calibration page](settings_print_routing.md#calibration-page).
+1. Take a photo and print it, and check that the collage comes out in full. On borderless media, its [collage padding](settings_templating.md#collage-padding) is cut off by the printer; otherwise the padding is printed around the collage, to cut off by hand. The last printed sheet is also saved as `latest-print.pdf` in the `Prints` folder of the project.
 
 Print sizes that are not routed to a printer are not offered in the print dialog. So with the basic set-up, users can only choose the normal print size.
 
@@ -53,7 +54,7 @@ graph LR
     M -.-> P2
 ```
 
-When both printers are of the same type, connect a margins node to the margins input of both printers, so you only have to tune the margins once. If one of the printers is not configured yet, it is skipped and the other one prints everything.
+When both printers are of the same type, connect a margins node to the margins input of both printers, so you only have to measure the margins once. If one of the printers is not configured yet, it is skipped and the other one prints everything.
 
 ### Small prints, tiled 2×2
 
@@ -154,7 +155,8 @@ Here are settings that are known to be approximately right for using this type o
 | [Collage padding](settings_templating.md#collage-padding) | 10 |
 | Printer node: Backend | Native |
 | Printer node: Size (mm) | W 100 × H 148 |
-| Printer node: Margins | Top 0.0, Right 1.6, Bottom 0.5, Left 1.6 |
+| Printer node: Borderless | On |
+| Printer node: Margins | Measured with a [calibration page](settings_print_routing.md#calibration-page) |
 | [Use printer settings for native printers](settings_hardware.md#use-printer-settings-for-native-printers) | On |
 
 Make sure to set the default settings of the printer to **portrait mode**, **borderless**, and the right paper-size.
@@ -171,7 +173,8 @@ The Kodak has been tested with CUPS printer nodes, where the following settings 
 | [Collage padding](settings_templating.md#collage-padding) | 10 |
 | Printer node: Backend | CUPS |
 | Printer node: Media | 4×6 |
-| Printer node: Margins | Top 0.0, Right 0.0, Bottom 1.5, Left 0.0 |
+| Printer node: Borderless | On |
+| Printer node: Margins | Measured with a [calibration page](settings_print_routing.md#calibration-page) |
 
 For the other print sizes, add a printer node per media size, all with the Kodak's queue:
 

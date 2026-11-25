@@ -67,7 +67,7 @@ A tile layout node places a photo several times on one sheet, in a grid. It take
 | Columns | The number of columns of the grid, at least 1. |
 | Rows | The number of rows of the grid, at least 1. |
 
-A tile layout has no size of its own. The grid is laid out on the media of the printer the sheet ends up at, within the margins of that printer: the printable area is divided into _columns_ × _rows_ tiles of equal size. The photo is fitted in each tile as a whole, centred and without cropping, so a tile only shows white space where its shape differs from that of the photo. There is no extra space between the tiles; the [collage padding](settings_templating.md#collage-padding) leaves room to cut them apart.
+A tile layout has no size of its own. The grid is laid out on the media of the printer the sheet ends up at, within the margins of that printer: the [viewport](#how-prints-are-laid-out) is divided into _columns_ × _rows_ tiles of equal size. The photo is fitted in each tile as a whole, centred and without cropping, so a tile only shows white space where its shape differs from that of the photo. There is no extra space between the tiles; the [collage padding](settings_templating.md#collage-padding) leaves room to cut them apart, see [bleed](#bleed).
 
 Each photo is **turned to fill its tile best**: a landscape photo in a portrait tile is turned a quarter turn, a landscape photo in a landscape tile is not. So the grid decides how the photos lie, together with the media. Take, for example, a landscape collage on portrait 4×6" media (about 100 × 148 mm):
 
@@ -116,15 +116,15 @@ It takes a **Photo** and turns it into a **Stack**. The **Photo** input accepts 
 |---|---|
 | Print | When the sheets are printed. _Right away_ prints the copies of each print on sheets of their own. _When full_ collects the copies of several prints on the same sheets, see [collecting copies](#collecting-copies). |
 | Idle (min) | Only shown for _When full_. A sheet that is not full is printed as well once no copy was added to the stack for this many minutes. 0 (the default) waits for a full sheet. |
-| Fill | _Columns_ divides the printable area into columns, which fill from the top. _Rows_ divides it into rows, which fill from the left. |
+| Fill | _Columns_ divides the viewport into columns, which fill from the top. _Rows_ divides it into rows, which fill from the left. |
 | Columns / Rows | The number of columns or rows, at least 1. |
-| Gap (mm) | The space between the copies, to cut them apart. 3 mm by default. |
+| Gap (mm) | The space between the copies, to cut them apart. It works like a margin around every copy, which holds its bleed, see [bleed](#bleed). 3 mm by default. |
 
-Like a tile layout, a stack has no size of its own. In columns, each copy gets the width of a column and the height that follows from its own shape, and is **turned to use the least height**: a portrait photo lies sideways. The copies go on the sheets in their order: a sheet takes copies until the next one does not fit, and that copy starts a new sheet. Within a sheet, the copies are divided over the columns so the longest column is as short as possible, and each column is filled from the top down. So the copies on a sheet may be rearranged to make room for the next one, and the rest of the sheet stays as large as possible. With _Right away_, all sheets of a print are sent to the printer as a single job.
+Like a tile layout, a stack has no size of its own. In columns, each copy gets the width of a column and the height that follows from its own shape (both without its collage padding, see [bleed](#bleed)), and is **turned to use the least height**: a portrait photo lies sideways. The copies go on the sheets in their order: a sheet takes copies until the next one does not fit, and that copy starts a new sheet. Within a sheet, the copies are divided over the columns so the longest column is as short as possible, and each column is filled from the top down. So the copies on a sheet may be rearranged to make room for the next one, and the rest of the sheet stays as large as possible. With _Right away_, all sheets of a print are sent to the printer as a single job.
 
 In rows, the same happens sideways: each copy gets the height of a row, is **turned to use the least width**, and the rows fill from the left. The rest of the sheet is then a strip along its full length, which most printers cannot take again, so rows are mostly useful when [collecting copies](#collecting-copies).
 
-Take, for example, three copies of a landscape collage (3:2) on A4 media (210 × 297 mm) with margins of 5 mm and 2 columns. Each column is about 98 mm wide, so each copy is about 98 × 66 mm. The first two copies lie side by side at the top of the sheet, and the third one below the first:
+Take, for example, three copies of a landscape collage (3:2 without its padding) on A4 media (210 × 297 mm) with margins of 5 mm, a gap of 3 mm and 2 columns. Half a gap stays free along the edges, so each column is 97 mm wide, and each copy is about 97 × 65 mm plus its bleed. The first two copies lie side by side at the top of the sheet, and the third one below the first:
 
 ```mermaid
 ---
@@ -135,8 +135,8 @@ config:
 block-beta
     block:sheet
         columns 2
-        copy1["Copy 1<br>98 × 66 mm"] copy2["Copy 2<br>98 × 66 mm"]
-        copy3["Copy 3<br>98 × 66 mm"] space
+        copy1["Copy 1<br>97 × 65 mm"] copy2["Copy 2<br>97 × 65 mm"]
+        copy3["Copy 3<br>97 × 65 mm"] space
         rest["<br>Rest of the sheet:<br>cut off and fed again<br>for the next print<br><br>"]:2
     end
     style rest fill:none,stroke-dasharray:4 4
@@ -148,7 +148,7 @@ The halves of a split print are stacked as two separate copies, so each half lie
 
 Only the copies that end up at the same stack share sheets. Behind a round-robin node with a stack per printer, the copies alternate between the stacks, and each stack fills its own sheets. The sheets of a stack are sent once all copies of the print are routed, so when its printer fails, no other printer can take over these copies, and the print fails.
 
-A stack with fewer than 1 column or row, a negative gap or a negative idle time is an error; its connections are ignored. So is a stack whose gaps between the columns or rows take up the whole printable width or height of its printer.
+A stack with fewer than 1 column or row, a negative gap or a negative idle time is an error; its connections are ignored. So is a stack whose gaps between the columns or rows take up the whole width or height of the viewport of its printer.
 
 #### Collecting copies
 
@@ -174,7 +174,9 @@ Collected copies are counted in the [statistics](settings_debug.md#statistics) w
 
 ### Margins
 
-A margins node holds a set of margins (top, right, bottom and left, in mm) that can be shared between printer nodes. Its **Margins** output can be connected to the margins input of any number of printers, so you only have to tune the margins of, say, three identical printers once.
+A margins node holds a set of margins (top, right, bottom and left, in mm) that can be shared between printer nodes. Its **Margins** output can be connected to the margins input of any number of printers, so you only have to measure the margins of, say, three identical printers once.
+
+A printer node can also move its own margins to a new margins node, with the button in its margins row. The new node is placed beside the printer and connected to it. The printer keeps its own margins, which apply again when the margins node is disconnected.
 
 ### Printer
 
@@ -187,7 +189,8 @@ A printer node is one printer configuration: one printer or CUPS queue with one 
 | Printer / Queue | The printer (native) or CUPS queue to print to. The options are listed when the page opens, see [Refresh printers](#routes-problems-and-printers). A saved printer that is not available at the moment is shown with _(not found)_. |
 | Media / Paper | The media to print on. For a CUPS printer (_Media_), chosen from the media the selected queue supports. For a native printer on Windows (_Paper_), chosen from the papers the printer driver supports, e.g. _4x6 (borderless)_; prints then use exactly that paper and keep the other settings of the driver, such as borderless printing. Papers that share a size, such as with and without border, are told apart. Changing the queue or printer clears the media, as media differ per printer. On macOS and Linux native printers have no _Paper_ field. |
 | Size (mm) | The width and height of the media. For CUPS printers and native printers on Windows they follow from the selected media. For native printers on macOS and Linux you enter these yourself; set them to the paper size you print on. |
-| Margins | The margins (top, right, bottom and left, in mm) for this printer, see [margins](#how-prints-are-laid-out). These fields are hidden when a margins node is connected to the margins input; the caption then reads _from the connected node_. |
+| Borderless | Whether the printer prints up to the edge of the paper and cuts off what lies beyond the margins, so the bleed of a photo can be printed beyond them, see [bleed](#bleed). Turn it on for borderless printing, e.g. on a photo printer; leave it off for a printer that leaves a white border, such as most A4 printers. Off by default. |
+| Margins | The margins (top, right, bottom and left, in mm) for this printer: the part of the media that does not end up visible on the print, see [how prints are laid out](#how-prints-are-laid-out). The ruler button in the margins row prints a [calibration page](#calibration-page) to measure them, and the other button moves them to a new [margins node](#margins). These fields are hidden when a margins node is connected to the margins input; the caption then reads _from the connected node_. |
 
 A printer node has two inputs. The **Job** input accepts photos, sheets and stacks, and takes any number of connections. A photo that is connected directly, without a tile layout, is fitted on the sheet as a whole. The **Margins** input sits next to the margins fields and takes a single margins node.
 
@@ -235,7 +238,7 @@ Connections with errors are ignored, while the rest of the routing keeps working
 | There is no source node. | The routing has no source, so nothing can be printed. |
 | Columns and rows must be at least 1. | A tile layout has an invalid grid. Its connections are ignored. |
 | There must be at least 1 column or row, and the gap and idle time cannot be negative. | A stack has invalid fields. Its connections are ignored. |
-| The gaps between the columns or rows do not fit on the media of the printer. | The gaps of a stack take up the whole printable width or height of its printer, so no room is left for the copies. The stack is skipped. |
+| The gaps between the columns or rows do not fit on the media of the printer. | The gaps of a stack take up the whole width or height of the viewport of its printer, so no room is left for the copies. The stack is skipped. |
 | A stored connection is invalid and is ignored. / A connection is stored twice. / Two nodes share the ID "…". | The saved routing is damaged, for example after editing the settings file by hand or importing settings. |
 
 ## Editing
@@ -271,11 +274,36 @@ The shortcuts do not apply while you are typing in a field of a node. The source
 
 ## How prints are laid out
 
-The printable area of a sheet is the media size of the printer minus its margins. The margins describe the part of the media that ends up visible on the print: increase a margin when the printer cuts off part of the photo on that side, and decrease it when a white border remains.
+The **viewport** of a sheet is the part of the media that ends up visible on the print: the media size of the printer minus its margins. Beyond the viewport, a borderless printer cuts the paper off, and a printer with a border cannot print. So the margins belong to the printer and its media, and you measure them once with a [calibration page](#calibration-page).
 
-- **Without a tile layout**, the photo is fitted in the printable area as a whole, centred and without cropping. It is turned a quarter turn when its orientation does not match that of the area, so a landscape collage on portrait media is printed sideways to use the paper well.
-- **With a tile layout**, the printable area is divided into equal tiles, and the photo is fitted in each tile, turned to fill the tile best, see [tile layout](#tile-layout).
-- **With a stack**, the copies are placed in columns from the top of the printable area down, each turned to use the least height, or in rows from the left, each turned to use the least width, see [stack](#stack).
-- **Split prints** are printed as two pages: the left half of the collage on the first page and the right half on the second. Each half fills the height of the printable area. The margins between the halves (the right margin of the first page and the left margin of the second) are left out, so the halves line up when put together. Tile layouts are not used for split prints.
+- **Without a tile layout**, the photo is fitted in the viewport as a whole, centred and without cropping. It is turned a quarter turn when its orientation does not match that of the viewport, so a landscape collage on portrait media is printed sideways to use the paper well.
+- **With a tile layout**, the viewport is divided into equal tiles, and the photo is fitted in each tile, turned to fill the tile best, see [tile layout](#tile-layout).
+- **With a stack**, the copies are placed in columns from the top of the viewport down, each turned to use the least height, or in rows from the left, each turned to use the least width, see [stack](#stack).
+- **Split prints** are printed as two pages: the left half of the collage on the first page and the right half on the second. Each half fills the height of the viewport. The margins between the halves (the right margin of the first page and the left margin of the second) are left out, so the halves line up when put together. Tile layouts are not used for split prints.
 
 The last printed sheet is saved as `latest-print.pdf` in the `Prints` folder of the project, which is handy to check the layout without wasting paper. For more detail, turn on _Enable extensive print job logging_ in the [debug settings](settings_debug.md), which keeps the PDFs and details of every print job in a `PrintJobs` folder inside the `Prints` folder. To test the routing without printing at all, turn on _Skip sending print jobs to printers_ in the same settings: prints are routed and rendered as usual, but not sent to a printer, and not counted in the statistics.
+
+### Bleed
+
+The [collage padding](settings_templating.md#collage-padding) around a collage is its **bleed**: a border that is meant to be cut off, so a cut that is slightly off does not leave a white edge. Where the bleed ends up depends on the _Borderless_ setting of the printer node:
+
+- **Borderless**: where the photo reaches the edge of the viewport, its bleed lies beyond it, and the printer cuts it off. The collage without its padding then ends exactly where the printer cuts.
+- **With a border** (_Borderless_ off): the whole photo, bleed included, is printed within the viewport, and you cut off the bleed by hand along the collage.
+
+![A collage with bleed on borderless media and on media with a border](imgs/print-bleed.svg)
+
+Where the printer does not cut, the bleed stays inside, to be cut off by hand: between the tiles of a tile layout, and on the sides where a photo does not fill the viewport because its shape differs from that of the viewport. On a borderless printer, the printer then cuts cleanly in one direction, and in the other direction a strip remains that you cut off yourself.
+
+In a stack, the gap works like a margin around every copy. Each copy fills its place without its padding, and its bleed reaches up to halfway into the gap. With a gap of at least twice the bleed, the whole bleed is printed; with a gap of 0, the copies touch without bleed between them. Along the edges of the viewport, half a gap is kept free for the bleed as well, except where a borderless printer cuts. The far end of the columns (the bottom) or rows (the right) always keeps half a gap, as the rest of the sheet may be fed again. The halves of a split print have no bleed where they meet.
+
+![The bleed of stacked copies on borderless media and on media with a border](imgs/print-bleed-stack.svg)
+
+The padding is stored with every collage, so a collage that is printed later, from the gallery or as a copy waiting on a stack, uses the padding it was made with. Collages made with an older version use the current collage padding, and photos that are not a collage have no bleed.
+
+### Calibration page
+
+The ruler button in the margins row of a printer node prints a calibration page on that printer and its media. It first asks for the length of the rulers, 25 mm by default. The button is available once the printer and its media are chosen.
+
+The page has a frame on the edge of the media and a ruler from the middle of every edge inwards, with a mark every millimetre and a number every 5 mm. On every side, the first mark you can see on the print is the margin of that side. Enter these four values as the margins of the printer node, or of the margins node it uses. The page also shows the printer, the media and, for native printers on Windows, the margins the printer driver reports for the page, which are a good first guess.
+
+Choose rulers that are longer than the largest margin you expect, e.g. 25 mm for a photo printer. On small media, such as 2×6" strips, shorter rulers leave more room for the rest of the page. Rulers that do not fit are shortened to half the media.

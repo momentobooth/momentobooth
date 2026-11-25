@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="440" viewBox="0 0 680 440" font-family="sans-serif" font-size="13">
+  <title>The bleed of stacked copies on borderless media and on media with a border</title>
+  <style>svg { fill: #2C2C2A; } @media (prefers-color-scheme: dark) { svg { fill: #E8E6DF; } }</style>
+  <text x="180" y="24" text-anchor="middle" font-weight="bold" font-size="14">Borderless</text>
+  <text x="500" y="24" text-anchor="middle" font-weight="bold" font-size="14">With a border</text>
+
+  <rect x="60" y="40" width="240" height="280" fill="#ffffff" stroke="#888780"/>
+  <rect x="64" y="52" width="116" height="72" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <rect x="72" y="60" width="100" height="56" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+  <rect x="180" y="52" width="116" height="72" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <rect x="188" y="60" width="100" height="56" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+  <rect x="64" y="124" width="116" height="72" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <rect x="72" y="132" width="100" height="56" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+  <rect x="72" y="60" width="216" height="248" fill="none" stroke="#A32D2D" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <rect x="380" y="40" width="240" height="280" fill="#ffffff" stroke="#888780"/>
+  <rect x="392" y="60" width="216" height="248" fill="none" stroke="#5F5E5A" stroke-dasharray="2 3"/>
+  <rect x="392" y="60" width="108" height="68" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <rect x="400" y="68" width="92" height="52" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+  <rect x="500" y="60" width="108" height="68" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <rect x="508" y="68" width="92" height="52" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+  <rect x="392" y="128" width="108" height="68" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+  <rect x="400" y="136" width="92" height="52" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+
+  <text x="180" y="344" text-anchor="middle" font-size="12">The bleed reaches halfway into the gap,</text>
+  <text x="180" y="362" text-anchor="middle" font-size="12">and beyond the edges the printer cuts</text>
+  <text x="500" y="344" text-anchor="middle" font-size="12">Half a gap stays free in the viewport,</text>
+  <text x="500" y="362" text-anchor="middle" font-size="12">so the bleed is printed there as well</text>
+
+  <g font-size="12">
+    <rect x="40" y="388" width="14" height="14" fill="#ffffff" stroke="#888780"/>
+    <text x="62" y="400">Page (media)</text>
+    <rect x="200" y="388" width="14" height="14" fill="#ffffff" stroke="#5F5E5A" stroke-dasharray="2 3"/>
+    <text x="222" y="400">Viewport</text>
+    <line x1="340" y1="395" x2="362" y2="395" stroke="#A32D2D" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <text x="370" y="400">Cut by the printer</text>
+    <rect x="40" y="412" width="14" height="14" fill="#F5C4B3" stroke="#993C1D" stroke-width="0.5"/>
+    <text x="62" y="424">Bleed (collage padding)</text>
+    <rect x="200" y="412" width="14" height="14" fill="#9FE1CB" stroke="#0F6E56" stroke-width="0.5"/>
+    <text x="222" y="424">Collage without padding, cut along its edge by hand</text>
+  </g>
+</svg>
