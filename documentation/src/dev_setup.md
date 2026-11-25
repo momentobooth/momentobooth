@@ -348,6 +348,43 @@ The projects themselves are not copied: a build with another data directory stil
 fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"
 ```
 
+### Driving the running app from agents and tools
+
+A running debug build can be controlled from outside the app: tap widgets, enter text, read the widget tree and take screenshots. This is mainly meant for coding agents (such as Claude Code), so they can check a UI change themselves instead of asking you to look at it. It consists of two parts:
+
+* **`test_driver/app.dart`**: a debug entrypoint that enables the [Flutter Driver](https://api.flutter.dev/flutter/flutter_driver/flutter_driver-library.html) extension and then calls the normal `main`. Since it lives outside `lib/`, `flutter_driver` stays a dev dependency and release builds do not contain it.
+* **The Dart MCP server** (`dart mcp-server`, part of the Dart SDK): it connects to the running app through the Dart Tooling Daemon (DTD) and offers the driver commands, the widget inspector, runtime errors and hot reload as tools. `.mcp.json` registers it for Claude Code (which asks you to approve it on first use).
+
+Start the app with the driver entrypoint and its own data directory. `--print-dtd` prints the URI of the Tooling Daemon:
+
+```sh
+fvm flutter run -d windows -t test_driver/app.dart --dart-entrypoint-args=--data-dir=.dev-data --print-dtd
+```
+
+Then, from the MCP client:
+
+1. Connect with the `dtd` tool, using `connect` and the URI from the line `The Dart Tooling Daemon is available at: ws://…`. Or, use `listDtdUris` and pick the instance whose workspace root is your checkout.
+2. Turn off frame sync with `flutter_driver_command`, command `set_frame_sync` and `enabled: "false"`. By default, the driver waits until no frames are scheduled before it runs a command, and the start screen animates continuously, so every command would time out.
+3. Use `widget_inspector` (`get_widget_tree`, preferably with `summaryOnly: true`) to see which widgets are present, and `flutter_driver_command` to `tap`, `enter_text`, `waitFor` or take a `screenshot`. Widgets are found by text (`ByText`), type (`ByType`), key (`ByValueKey`), tooltip, or a combination (`Descendant`, `Ancestor`).
+
+Take, for example, opening the import page of the settings and taking a screenshot of it:
+
+```json
+{"command": "set_frame_sync", "enabled": "false"}
+{"command": "tap", "finderType": "ByText", "text": "File"}
+{"command": "tap", "finderType": "ByText", "text": "Settings"}
+{"command": "tap", "finderType": "ByText", "text": "Import & backups"}
+{"command": "screenshot"}
+```
+
+There are a few limitations to keep in mind:
+
+* The driver cannot send key presses, so hotkeys (Ctrl+S etc.) do not work. Most of them are also available in the menu bar.
+* `enter_text` replaces the whole content of the focused text field, so tap the field first. The driver extension replaces text input by an emulation, which means typing on the real keyboard into a text field does not work in this build (use the `set_text_entry_emulation` command to switch that off).
+* It only works with debug builds started through `flutter run`. Linux and macOS (`-d linux`, `-d macos`) should work the same, but are untested.
+
+On Windows, building from a Claude Code worktree (or another deep directory) needs Cargo's `build-dir` setting, which Claude Code sessions get from `.claude/settings.json`. See [Building from a deep directory on Windows](#building-from-a-deep-directory-on-windows).
+
 ### Adding a new screen using the VS Code extension Template
 
 1. Make sure to have the [Template extension](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) installed

@@ -89,6 +89,17 @@ rust/src/
 
 When you run the app (e.g. to verify a change), give it its own data directory with `--data-dir=.dev-data` (e.g. `fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"`), or set `MOMENTOBOOTH_DATA_DIR`. Without it, every branch and worktree shares the user's real `Settings.toml`, and a build that lacks a setting drops it on the next save. `.dev-data/` is gitignored and relative to the working directory, so each worktree gets its own. On first start, `Settings.toml` and `Projects.toml` are copied from the default data directory, so the app starts with the user's configuration (including hardware and MQTT settings, so do not run it next to the user's own instance with the same MQTT client ID). Projects are not copied: the app still opens the user's real project folders. See "Using a separate data directory per branch or worktree" in `documentation/src/dev_setup.md`.
 
+### Verifying UI Changes Yourself
+
+You can drive the running app to check a UI change (tap, enter text, read the widget tree, take screenshots) through the `dart` MCP server from `.mcp.json` (`fvm dart mcp-server`):
+
+1. Start the debug entrypoint `test_driver/app.dart`, which enables the Flutter Driver extension, as a background command: `fvm flutter run -d windows -t test_driver/app.dart --dart-entrypoint-args=--data-dir=.dev-data --print-dtd` (`-d linux` or `-d macos` on those platforms).
+2. Wait for the line `The Dart Tooling Daemon is available at: ws://…` and connect with the `dtd` tool (`connect` with that URI). `listDtdUris` also finds it; pick the instance whose workspace root is your working directory.
+3. Call `flutter_driver_command` with `set_frame_sync` and `enabled: "false"` first. The start screen animates continuously, so with frame sync on, every driver command times out.
+4. Use `widget_inspector` (`get_widget_tree`, `summaryOnly: true`) to find widgets, `flutter_driver_command` to `tap`, `enter_text`, `waitFor` and take a `screenshot`, and `get_runtime_errors` to check for exceptions.
+
+The driver cannot send key presses, so hotkeys like Ctrl+S do not work: open the settings overlay with `tap` on `File` and then `Settings` (both `ByText`). `enter_text` replaces the whole content of the focused text field; tap the field first. Stop the background `flutter run` when you are done. If a Windows build in a worktree fails with `LNK1104` or `sccache: failed to persist temporary file`, `CARGO_BUILD_BUILD_DIR` is missing from your environment (see "Building from a deep directory on Windows" in `documentation/src/dev_setup.md`). See "Driving the running app from agents and tools" in the same file.
+
 ## Key Patterns
 
 **Adding a new Dart model:** Create a Freezed class in `lib/models/`, run `just gen-code` to generate `.freezed.dart` and `.g.dart`.
