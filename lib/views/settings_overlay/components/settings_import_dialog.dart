@@ -1,10 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/app_localizations.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
-import 'package:momento_booth/views/components/buttons/photo_booth_filled_button.dart';
-import 'package:momento_booth/views/components/buttons/photo_booth_outlined_button.dart';
-import 'package:momento_booth/views/components/dialogs/modal_dialog.dart';
 
 class SettingsImportDialog extends StatelessWidget {
 
@@ -23,20 +19,23 @@ class SettingsImportDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     AppLocalizations localizations = AppLocalizations.of(context)!;
 
-    return ModalDialog(
-      title: "Import settings",
-      body: Column(
+    return ContentDialog(
+      title: const Text("Import settings"),
+      constraints: const BoxConstraints(maxWidth: 800, maxHeight: 600),
+      content: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             "Do you want to apply the following settings?",
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          Text("Items in bold are different from your current settings"),
-          SizedBox(height: 20.0,),
+          const Text("Items in bold are different from your current settings"),
+          const SizedBox(height: 20.0),
           Flexible(
             child: Container(
-              padding: EdgeInsets.all(8.0),
+              width: double.infinity,
+              padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.grey[30],
@@ -49,29 +48,27 @@ class SettingsImportDialog extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     for (final update in updates)
-                    if (update.newValue != update.oldValue)
-                      Text("${update.path}: old=${update.oldValue} new=${update.newValue}", style: TextStyle(fontWeight: FontWeight.bold))
-                    else
-                      Text("${update.path}: value=${update.newValue}")
+                      if (update.newValue != update.oldValue)
+                        Text("${update.path}: old=${update.oldValue} new=${update.newValue}", style: const TextStyle(fontWeight: FontWeight.bold))
+                      else
+                        Text("${update.path}: value=${update.newValue}")
                   ],
                 ),
               ),
             ),
-          )
+          ),
         ],
       ),
       actions: [
-        PhotoBoothOutlinedButton(
-          title: localizations.genericCancelButton,
+        Button(
           onPressed: onCancel,
+          child: Text(localizations.genericCancelButton),
         ),
-        PhotoBoothFilledButton(
-          title: "Accept",
-          icon: LucideIcons.check,
+        FilledButton(
           onPressed: onAccept,
+          child: const Text("Accept"),
         ),
       ],
-      dialogType: ModalDialogType.input,
     );
   }
 

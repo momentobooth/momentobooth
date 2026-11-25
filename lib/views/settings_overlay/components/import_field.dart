@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
@@ -11,8 +10,7 @@ import 'package:momento_booth/models/_all.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/views/base/photo_booth_dialog_page.dart';
-import 'package:momento_booth/views/components/dialogs/settings_import_dialog.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings_import_dialog.dart';
 import 'package:path/path.dart' as path;
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
@@ -235,12 +233,12 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
     }
 
     setState(() => _isDragOver = false);
-    // BuildContextAbstractor is not available, so neither is showUserDialog
     if (!mounted) return;
-    await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Center(child: SettingsImportDialog(onAccept: () {
+    await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (dialogContext) => SettingsImportDialog(
+        onAccept: () {
           // Save the settings using the settings manager
           getIt<SettingsManager>().updateAndSave(settings);
           setState(() {
@@ -248,13 +246,12 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
             error = null;
           });
           widget.onAccept?.call();
-          GoRouter.of(context).pop();
-        }, onCancel: () {
-          GoRouter.of(context).pop();
-        }, updates: updates)),
+          Navigator.of(dialogContext).pop();
+        },
+        onCancel: () => Navigator.of(dialogContext).pop(),
+        updates: updates,
       ),
-      barrierDismissible: true,
-    ).createRoute());
+    );
   }
 
   void _onDropLeave(DropEvent event) {
