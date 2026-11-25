@@ -292,7 +292,7 @@ The [collage padding](settings_templating.md#collage-padding) around a collage i
 
 ![A collage with bleed on borderless media and on media with a border](imgs/print-bleed.svg)
 
-Where the printer does not cut, the bleed stays inside, to be cut off by hand: between the tiles of a tile layout, and on the sides where a photo does not fill the viewport because its shape differs from that of the viewport. On a borderless printer, the printer then cuts cleanly in one direction, and in the other direction a strip remains that you cut off yourself.
+Where the printer does not cut, the bleed stays inside, to be cut off by hand: between the tiles of a tile layout, and on the sides where a photo does not fill the viewport because its shape differs from that of the viewport. On a borderless printer, the printer then cuts cleanly in one direction, and in the other direction a strip remains that you cut off yourself. In a tile layout on a borderless printer, the photos lie against the edges of the viewport, so the space they leave is between them: with two rows, the printer cuts the outer edges and two cuts in the middle separate the photos.
 
 In a stack, the gap works like a margin around every copy. Each copy fills its place without its padding, and its bleed reaches up to halfway into the gap. With a gap of at least twice the bleed, the whole bleed is printed; with a gap of 0, the copies touch without bleed between them. Along the edges of the viewport, half a gap is kept free for the bleed as well, except where a borderless printer cuts. The far end of the columns (the bottom) or rows (the right) always keeps half a gap, as the rest of the sheet may be fed again. The halves of a split print have no bleed where they meet.
 

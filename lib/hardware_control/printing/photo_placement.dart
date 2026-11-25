@@ -77,8 +77,11 @@ class PhotoPlacement {
 /// The photo is [aspectRatio] (width divided by height) and has a bleed of [bleed] on every side, as a fraction of its
 /// height: the collage padding. The photo is as large as possible, such that it fits the area except for its bleed on
 /// the [cut] sides it reaches. There, the bleed lies beyond the area, so the visible part of the photo ends exactly
-/// where the printer cuts. Without cut sides, the whole photo fits the area. In the direction where the photo does not
-/// fill the area, it is centred.
+/// where the printer cuts. Without cut sides, the whole photo fits the area.
+///
+/// In a direction where only one side is cut, the photo lies against that side, with its bleed beyond it, so the space
+/// it leaves is all on the other side. In a grid, the photos then lie against the edges of the viewport and the space
+/// between them is in one strip, which saves cuts. In other directions, the photo is centred.
 PhotoPlacement placePhoto(PageRect area, {required double aspectRatio, double bleed = 0, CutSides cut = CutSides.none}) {
   final turned = (aspectRatio > 1) != (area.width > area.height);
   // The size of the photo and its bleed, relative to its height and in the orientation of the page.
@@ -91,15 +94,16 @@ PhotoPlacement placePhoto(PageRect area, {required double aspectRatio, double bl
     area.height / (height - bleed * count(cut.top, cut.bottom)),
   ].reduce((a, b) => a < b ? a : b);
 
-  // Where the photo starts in one direction: centred, unless it is larger than the area and only one side is cut. The
-  // part that is too large then lies beyond that side.
+  final w = width * scale, h = height * scale, bleedSize = bleed * scale;
+
+  // Where the photo starts in one direction: against the cut side with its bleed beyond it when only one side is cut,
+  // and otherwise centred. The scale makes sure the photo without its bleed on the cut side fits the area.
   double start(double areaStart, double areaSize, double size, bool cutStart, bool cutEnd) {
-    final excess = size - areaSize;
-    if (excess > 0 && cutStart != cutEnd) return cutStart ? areaStart - excess : areaStart;
-    return areaStart - excess / 2;
+    if (cutStart && !cutEnd) return areaStart - bleedSize;
+    if (cutEnd && !cutStart) return areaStart + areaSize + bleedSize - size;
+    return areaStart - (size - areaSize) / 2;
   }
 
-  final w = width * scale, h = height * scale;
   return PhotoPlacement(
     PageRect(
       start(area.left, area.width, w, cut.left, cut.right),

@@ -40,6 +40,21 @@ void main() {
       const cut = CutSides(left: true, top: true, bottom: true);
       _expectRect(placePhoto(_area, aspectRatio: 0.6, bleed: 0.1, cut: cut), const PageRect(-20, 0, 120, 200));
     });
+
+    // A square photo with a bleed of 0.1 fills the width of the area without its bleed (125 with it), and leaves
+    // space in the height.
+    test('puts a photo that does not fill the area against the only cut side of that direction', () {
+      // The top and bottom cells of a grid of two rows: their photos lie against the edges of the viewport, so the
+      // space between them is in one strip.
+      _expectRect(
+        placePhoto(_area, aspectRatio: 1, bleed: 0.1, cut: const CutSides(left: true, top: true, right: true)),
+        const PageRect(-12.5, -12.5, 125, 125),
+      );
+      _expectRect(
+        placePhoto(_area, aspectRatio: 1, bleed: 0.1, cut: const CutSides(left: true, right: true, bottom: true)),
+        const PageRect(-12.5, 87.5, 125, 125),
+      );
+    });
   });
 
   test('CutSides.ofCell cuts the sides of a cell on the edge of the grid', () {
