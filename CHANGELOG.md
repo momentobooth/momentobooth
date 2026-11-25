@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.18.0
+
 ### Breaking changes
 - The printer, media size, grid and margin settings on the Hardware page are replaced by print routing. They are not migrated and have to be set up again on the Print routing page
 
