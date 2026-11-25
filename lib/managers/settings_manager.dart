@@ -25,6 +25,7 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
 
   @override
   Future<void> initialize() async {
+    StartupBackupResult? backup;
     try {
       SerialiableRepository<Settings> settingsRepository = getIt<SerialiableRepository<Settings>>();
       bool hasExistingSettings = await settingsRepository.hasExistingData();
@@ -33,7 +34,7 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
         await save();
         if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "No existing settings data found, a new file is created.");
       } else {
-        StartupBackupResult? backup = await _backUpOnStartup();
+        backup = await _backUpOnStartup();
         _settings = await settingsRepository.get();
         _blockSaving = false;
         // Store the settings in the format of this version, so the same backup is not made again on the next start.
@@ -43,8 +44,9 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
     } catch (e, s) {
       String message = 'Could not read existing settings';
       logError(message, e, s);
+      String backupNote = backup?.backup != null ? " A backup of the file has been made, see the Import & backups page." : "";
       reportSubsystemError(
-        message: "Could not read existing settings. Open the details view for details and solutions.",
+        message: "Could not read existing settings.$backupNote Open the details view for details and solutions.",
         exception: e.toString(),
         actions: {'Accept current settings': unblockSavingAndSave, 'Retry': initialize},
       );

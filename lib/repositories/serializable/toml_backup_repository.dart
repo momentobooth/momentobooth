@@ -65,7 +65,8 @@ class ConfigBackup {
 
 /// The outcome of [TomlBackupRepository.backUpOnStartup].
 typedef StartupBackupResult = ({
-  /// The backup that was made, if any.
+  /// The backup of the file as it was on startup, if one was needed: a new one, or for an unreadable file that did
+  /// not change, the newest existing one.
   ConfigBackup? backup,
 
   /// The paths of values in the configuration file that this version of the application does not use. These are
@@ -137,7 +138,7 @@ class TomlBackupRepository<TData extends TomlEncodableValue> with Logger {
     ConfigBackup? latest = (await list()).firstOrNull;
     if (reason == null && latest?.appVersion != appVersion) reason = ConfigBackupReason.newVersion;
     if (reason == ConfigBackupReason.unreadable && latest != null && await _hasSameContent(latest.file, source.file)) {
-      reason = null;
+      return (backup: latest, unsupportedPaths: unsupportedPaths);
     }
 
     ConfigBackup? backup = reason != null ? await create(reason, appVersion: appVersion) : null;
