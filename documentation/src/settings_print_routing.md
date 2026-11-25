@@ -302,7 +302,7 @@ The padding is stored with every collage, so a collage that is printed later, fr
 
 ### Calibration page
 
-The ruler button in the margins row of a printer node prints a calibration page on that printer and its media. It first asks for the length of the rulers, 25 mm by default. The button is available once the printer and its media are chosen.
+The ruler button in the margins row of a printer node prints a calibration page on that printer and its media. It first asks for the length of the rulers, 25 mm by default. The button is available once the printer and its media are chosen. The page is always sent to the printer, also when _Skip sending print jobs to printers_ is on, and the last one is saved as `latest-calibration.pdf` in the `Prints` folder of the project. With _Enable extensive print job logging_, every calibration page is also kept in its `PrintJobs` folder, like the print jobs.
 
 The page has a frame on the edge of the media and a ruler from the middle of every edge inwards, with a mark every millimetre and a number every 5 mm. On every side, the first mark you can see on the print is the margin of that side. Enter these four values as the margins of the printer node, or of the margins node it uses. The page also shows the printer, the media and, for native printers on Windows, the margins the printer driver reports for the page, which are a good first guess.
 

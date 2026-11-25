@@ -3,6 +3,8 @@ import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/hardware_control/printing/flutter_printing_client.dart';
 import 'package:momento_booth/hardware_control/printing/print_calibration.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
+import 'package:momento_booth/main.dart';
+import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/src/rust/utils/ipp_client.dart';
@@ -53,14 +55,26 @@ class SystemPrintRoutingHardware implements PrintRoutingHardware {
       printer.queueId,
       'MomentoBooth calibration page',
       media: printer.media,
-      render: (driverMargins) => renderCalibrationPdf(
-        printer: printer,
-        mediaLabel: mediaLabel,
-        rulerLength: rulerLength,
-        driverMargins: driverMargins,
-        logoSvg: logo,
-        printedAt: DateTime.now(),
-      ),
+      render: (driverMargins) async {
+        final pdf = await renderCalibrationPdf(
+          printer: printer,
+          mediaLabel: mediaLabel,
+          rulerLength: rulerLength,
+          driverMargins: driverMargins,
+          logoSvg: logo,
+          printedAt: DateTime.now(),
+        );
+        await getIt<PrintingManager>().keepCalibrationPdf(pdf, {
+          'printer': printer.label,
+          'backend': printer.backend.name,
+          'queue': printer.queueId,
+          'media': printer.media.toJson(),
+          'borderless': printer.borderless,
+          'rulerLength': rulerLength,
+          'driverMargins': driverMargins?.toJson(),
+        });
+        return pdf;
+      },
     );
   }
 

@@ -286,21 +286,41 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   /// Keeps the sheets that could be rendered. Never throws, so it does not hide why a print failed.
   Future<void> _keepPrintedPdfs(String jobName, PrintSize? size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
     try {
-      await _writePrintedPdfs(jobName, size, renderings, printedSheets);
+      final pdfs = [
+        for (final rendering in renderings) ?await rendering.then<Uint8List?>((pdf) => pdf, onError: (_) => null),
+      ];
+      await _writePrintedPdfs('latest-print.pdf', pdfs, {
+        'taskName': jobName,
+        'printSize': size?.name,
+        'sheets': printedSheets,
+      });
     } catch (error, stackTrace) {
       logError("Could not keep the PDFs of print job $jobName", error, stackTrace);
     }
   }
 
-  Future<void> _writePrintedPdfs(String jobName, PrintSize? size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
-    final pdfs = [
-      for (final rendering in renderings) ?await rendering.then<Uint8List?>((pdf) => pdf, onError: (_) => null),
-    ];
+  /// Keeps [pdf], a calibration page that is printed with the details in [sheet], like the sheets of a print job: as
+  /// 'latest-calibration.pdf', and with extensive print job logging also in the print job log. Never throws, so the
+  /// page is printed either way.
+  Future<void> keepCalibrationPdf(Uint8List pdf, Map<String, Object?> sheet) async {
+    try {
+      await _writePrintedPdfs('latest-calibration.pdf', [pdf], {
+        'taskName': 'Calibration page',
+        'sheets': [sheet],
+      });
+    } catch (error, stackTrace) {
+      logError("Could not keep the PDF of the calibration page", error, stackTrace);
+    }
+  }
+
+  /// Writes the last of [pdfs] as [latestName] in the prints folder of the project. With extensive print job logging,
+  /// it also writes every PDF, and [details] as JSON, in its 'PrintJobs' folder.
+  Future<void> _writePrintedPdfs(String latestName, List<Uint8List> pdfs, Map<String, Object?> details) async {
     if (pdfs.isEmpty) return;
 
     final printsDir = getIt<ProjectManager>().getPrintsDir();
     await printsDir.create(recursive: true);
-    await writeBytesToFileLocked(path.join(printsDir.path, 'latest-print.pdf'), pdfs.last);
+    await writeBytesToFileLocked(path.join(printsDir.path, latestName), pdfs.last);
 
     if (!getIt<SettingsManager>().settings.debug.enableExtensivePrintJobLog) return;
     final printJobDirectory = Directory(path.join(printsDir.path, 'PrintJobs'));
@@ -310,11 +330,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     for (final (index, pdf) in pdfs.indexed) {
       await File('${printJobPath}_$index.pdf').writeAsBytes(pdf);
     }
-    await File('$printJobPath.json').writeAsString(jsonEncode({
-      'taskName': jobName,
-      'printSize': size?.name,
-      'sheets': printedSheets,
-    }));
+    await File('$printJobPath.json').writeAsString(jsonEncode(details));
   }
 
 }

@@ -237,7 +237,7 @@ Widget _getDebugTab(SettingsOverlayViewModel viewModel, SettingsOverlayControlle
           SettingsToggleTile(
             icon: LucideIcons.logs,
             title: "Enable extensive print job logging",
-            subtitle: "Store every print job and meta data (e.g. requested paper size) in a folder named 'PrintJobs' inside the 'Prints' folder of the project.",
+            subtitle: "Store every print job and calibration page and its meta data (e.g. requested paper size) in a folder named 'PrintJobs' inside the 'Prints' folder of the project.",
             value: () => viewModel.enableExtensivePrintJobLog,
             onChanged: controller.onEnableExtensivePrintJobLogChanged,
           ),
