@@ -3,19 +3,15 @@ import 'dart:io';
 
 import 'package:file_selector/file_selector.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/_all.dart';
-import 'package:momento_booth/models/_all.dart';
-import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
-import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
-import 'package:momento_booth/views/base/photo_booth_dialog_page.dart';
-import 'package:momento_booth/views/components/dialogs/settings_import_dialog.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings_import_dialog.dart';
 import 'package:path/path.dart' as path;
 import 'package:super_clipboard/super_clipboard.dart';
 import 'package:super_drag_and_drop/super_drag_and_drop.dart';
+import 'package:toml/toml.dart';
 
 class MyDropRegion extends StatefulWidget {
 
@@ -131,7 +127,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
 
   void processError(String msg) {
     logError(msg);
-    setState(() => error = msg);
+    if (mounted) setState(() => error = msg);
   }
 
   Future<void> _onPerformDrop(PerformDropEvent event) async {
@@ -173,6 +169,7 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
            value = String.fromCharCodes(valueBytes);
         } on Exception catch (e) {
           processError('Error reading virtual file: $e');
+          return;
         }
         final name = f.fileName ?? "unknown";
         unawaited(_processFile(name, value));
@@ -209,52 +206,36 @@ class _MyDropRegionState extends State<MyDropRegion> with Logger, TickerProvider
   }
 
   Future<void> _processFile(String filename, String content) async {
-    final settingsRepo = TomlSerializableRepository(path.join(appDataPath, "Settings.toml"), Settings.fromJson);
-    // Ensure settings file exists
-    await getIt<SettingsManager>().save();
-
     if (!filename.toLowerCase().endsWith(".toml")) {
       logWarning("Filename $filename does not end with .toml, trying to use anyway.");
     }
 
     late final Map<String, dynamic> overlayMap;
     try {
-      overlayMap = settingsRepo.getMapFromString(content);
-    } on Exception catch (e) {
+      overlayMap = TomlDocument.parse(content).toMap();
+    } catch (e) {
       processError("Error parsing overlay file: $e");
       return;
     }
 
-    late final Settings settings;
-    late final List<UpdateRecord> updates;
+    if (!mounted) return;
+    setState(() => _isDragOver = false);
+
+    late final bool applied;
     try {
-      (settings, updates) = await settingsRepo.overlayWithMap(overlayMap);
-    } on Exception catch (e) {
+      applied = await reviewAndApplySettings(context, overlayMap);
+    } catch (e) {
+      // Not only exceptions: e.g. a value of the wrong type causes a TypeError when deserializing.
       processError("Error applying overlay: $e");
       return;
     }
 
-    setState(() => _isDragOver = false);
-    // BuildContextAbstractor is not available, so neither is showUserDialog
-    if (!mounted) return;
-    await Navigator.of(context, rootNavigator: true).push(PhotoBoothDialogPage(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Center(child: SettingsImportDialog(onAccept: () {
-          // Save the settings using the settings manager
-          getIt<SettingsManager>().updateAndSave(settings);
-          setState(() {
-            imported = true;
-            error = null;
-          });
-          widget.onAccept?.call();
-          GoRouter.of(context).pop();
-        }, onCancel: () {
-          GoRouter.of(context).pop();
-        }, updates: updates)),
-      ),
-      barrierDismissible: true,
-    ).createRoute());
+    if (!applied || !mounted) return;
+    setState(() {
+      imported = true;
+      error = null;
+    });
+    widget.onAccept?.call();
   }
 
   void _onDropLeave(DropEvent event) {

@@ -103,7 +103,6 @@ Generic modal dialogs used across the app.
 - `print_dialog.dart` — `PrintDialog` — choose print size (only those the photo can be printed at) and copy count; also exports `PrintSizeChoice`.
 - `qr_share_dialog.dart` — `QrShareDialog` — upload progress + QR code for sharing photos.
 - `retake_dialog.dart` — `RetakeDialog` — confirm delete/keep a photo before retaking.
-- `settings_import_dialog.dart` — `SettingsImportDialog` — preview settings-import diffs before applying.
 
 > Note: `ModalDialog` vs `PhotoBoothDialog` — two layered generic dialog shells. `ModalDialog` is the one most feature dialogs should build on; `PhotoBoothDialog` is the lower-level shell it wraps.
 
@@ -226,6 +225,8 @@ Chrome for the settings overlay (pages, sections, dialogs).
 - `import_field.dart` — `MyDropRegion` — drag-and-drop / clipboard-paste region for importing a TOML settings file. *(Placeholder-style name — actually settings-import specific, not a generic drop region.)*
 - `settings_list_page.dart` — `SettingsListPage` — settings page variant rendering a scrollable list of setting "blocks".
 - `settings_page.dart` — `SettingsPage` — base settings-page chrome (title, scroll-shadowed body, "auto-saved" info bar); `SettingsPage.fixed` fills the space with a non-scrolling body instead.
+- `settings_backup_list.dart` — `SettingsBackupList` — table of settings backups with restore, create and open-folder actions (Import page).
+- `settings_import_dialog.dart` — `SettingsImportDialog` — preview settings-import or backup-restore diffs (changed, ignored, unchanged) before applying; `reviewAndApplySettings` shows it and applies the result.
 - `settings_section.dart` — `SettingsSection` — titled vertical group wrapper for a list of setting widgets.
 - `update_secret_dialog.dart` — `UpdateSecretDialog` — enter/save a new secret value (API key/password).
 

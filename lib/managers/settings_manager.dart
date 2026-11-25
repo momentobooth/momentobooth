@@ -5,6 +5,8 @@ import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/subsystem_status.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
+import 'package:momento_booth/repositories/serializable/toml_backup_repository.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 
 part 'settings_manager.g.dart';
@@ -23,6 +25,7 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
 
   @override
   Future<void> initialize() async {
+    StartupBackupResult? backup;
     try {
       SerialiableRepository<Settings> settingsRepository = getIt<SerialiableRepository<Settings>>();
       bool hasExistingSettings = await settingsRepository.hasExistingData();
@@ -31,20 +34,43 @@ abstract class SettingsManagerBase extends Subsystem with Store, Logger {
         await save();
         if (subsystemStatus is SubsystemStatusOk) reportSubsystemOk(message: "No existing settings data found, a new file is created.");
       } else {
+        backup = await _backUpOnStartup();
         _settings = await settingsRepository.get();
         _blockSaving = false;
-        reportSubsystemOk();
+        // Store the settings in the format of this version, so the same backup is not made again on the next start.
+        if (backup?.backup != null) await save();
+        reportSubsystemOk(message: _unsupportedSettingsMessage(backup));
       }
     } catch (e, s) {
       String message = 'Could not read existing settings';
       logError(message, e, s);
+      String backupNote = backup?.backup != null ? " A backup of the file has been made, see the Import & backups page." : "";
       reportSubsystemError(
-        message: "Could not read existing settings. Open the details view for details and solutions.",
+        message: "Could not read existing settings.$backupNote Open the details view for details and solutions.",
         exception: e.toString(),
         actions: {'Accept current settings': unblockSavingAndSave, 'Retry': initialize},
       );
       _blockSaving = true;
     }
+  }
+
+  /// Backs up the settings file before it is loaded when needed, see [TomlBackupRepository.backUpOnStartup]. A failing
+  /// backup does not stop the startup, and returns null.
+  Future<StartupBackupResult?> _backUpOnStartup() async {
+    try {
+      return await getIt<TomlBackupRepository<Settings>>().backUpOnStartup(appVersion: appVersionWithBuild);
+    } catch (e, s) {
+      logError("Could not back up the settings", e, s);
+      return null;
+    }
+  }
+
+  String? _unsupportedSettingsMessage(StartupBackupResult? backup) {
+    if (backup == null || backup.backup == null || backup.unsupportedPaths.isEmpty) return null;
+
+    logWarning("Removed settings not used by this version: ${backup.unsupportedPaths.join(', ')}");
+    return "${backup.unsupportedPaths.length} settings were not used by this version and have been removed. "
+        "A backup has been made, see the Import & backups page.";
   }
 
   // /////////// //

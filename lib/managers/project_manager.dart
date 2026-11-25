@@ -18,7 +18,9 @@ import 'package:momento_booth/models/stats.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/repositories/serializable/serializable_repository.dart';
+import 'package:momento_booth/repositories/serializable/toml_backup_repository.dart';
 import 'package:momento_booth/repositories/serializable/toml_serializable_repository.dart';
+import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' hide context;
 
@@ -60,7 +62,7 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
   @readonly
   late ProjectsList _projectsList;
 
-  SerialiableRepository<ProjectSettings>? getRepo(){
+  TomlSerializableRepository<ProjectSettings>? getRepo(){
     if (!_isOpen) return null;
     return TomlSerializableRepository(join(_path!.path, "ProjectSettings.toml"), ProjectSettings.fromJson);
   }
@@ -191,7 +193,10 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
         _settings = const ProjectSettings();
         reportSubsystemOk(message: "No existing ProjectsList data found, a new file will be created.");
       } else {
+        bool backedUp = await _backUpProjectSettings(repo);
         _settings = await repo.get();
+        // Store the settings in the format of this version, so the same backup is not made again on the next open.
+        if (backedUp && !_blockSaving) await repo.write(_settings);
         reportSubsystemOk();
       }
     } catch (e) {
@@ -219,6 +224,20 @@ abstract class ProjectManagerBase extends Subsystem with Store, Logger {
 
     // Update available localizations
     await setAvailableLocalizations();
+  }
+
+  /// Backs up the project settings in the project's `Backups` folder before they are loaded when needed, see
+  /// [TomlBackupRepository.backUpOnStartup]. There is no restore UI, the files can be copied back by hand. Returns
+  /// whether a backup was made; a failing backup does not stop opening the project.
+  Future<bool> _backUpProjectSettings(TomlSerializableRepository<ProjectSettings> repo) async {
+    try {
+      final backups = TomlBackupRepository(source: repo, directory: Directory(join(_path!.path, "Backups", "ProjectSettings")));
+      final result = await backups.backUpOnStartup(appVersion: appVersionWithBuild);
+      return result.backup != null;
+    } catch (e, s) {
+      logError("Could not back up the project settings", e, s);
+      return false;
+    }
   }
 
   /// Applies the given mutation to the currently open project's statistics, if any project is open.

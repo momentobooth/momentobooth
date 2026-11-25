@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:flutter/services.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/app_version_info.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart' as lib_init_api;
 import 'package:momento_booth/src/rust/models/version_info.dart' as lib_version_info_models;
+import 'package:momento_booth/utils/app_data_directory.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:talker/talker.dart';
 
@@ -13,6 +16,9 @@ AppVersionInfo? _appVersionInfo;
 late final PackageInfo packageInfo;
 late final String appDataPath;
 late final lib_version_info_models.VersionInfo helperLibraryVersionInfo;
+
+/// The application version including its build number, e.g. `0.17.0+123`.
+String get appVersionWithBuild => '${packageInfo.version}+${packageInfo.buildNumber}';
 
 String get exifSoftwareName => '${packageInfo.appName} ${packageInfo.version} build ${packageInfo.buildNumber} ($osFriendlyName)';
 
@@ -26,9 +32,12 @@ String get osFriendlyName => switch (Platform.operatingSystem) {
       _ => 'Unknown',
     };
 
+/// Environment variable that overrides the application data directory, see [_resolveAppDataPath].
+const String appDataDirEnvironmentVariable = 'MOMENTOBOOTH_DATA_DIR';
+
 Future<void> initializeEnvironmentInfo() async {
   packageInfo = await PackageInfo.fromPlatform();
-  appDataPath = (await getApplicationSupportDirectory()).path;
+  appDataPath = await _resolveAppDataPath();
   helperLibraryVersionInfo = await lib_init_api.getVersionInfo();
 
   getIt<Talker>().info({
@@ -41,6 +50,27 @@ Future<void> initializeEnvironmentInfo() async {
     "libgphoto2 version": helperLibraryVersionInfo.libgphoto2Version,
     "libusb version": helperLibraryVersionInfo.libusbVersion,
   });
+}
+
+/// Resolves the directory for settings and other application data.
+///
+/// The `--data-dir` argument takes precedence over the [appDataDirEnvironmentVariable] environment variable, which
+/// takes precedence over the platform default. An override allows e.g. separate configurations per development
+/// branch or worktree. An overridden directory is seeded from the default one, see [seedAppDataDirectory].
+Future<String> _resolveAppDataPath() async {
+  String defaultPath = (await getApplicationSupportDirectory()).path;
+  String? overridePath = getIt<ArgResults>().option('data-dir') ?? Platform.environment[appDataDirEnvironmentVariable];
+  if (overridePath == null || overridePath.trim().isEmpty) return defaultPath;
+
+  String resolvedOverridePath = path.normalize(path.absolute(overridePath.trim()));
+  if (path.equals(resolvedOverridePath, defaultPath)) return defaultPath;
+
+  getIt<Talker>().info("Using application data directory override: $resolvedOverridePath");
+  for (String fileName in await seedAppDataDirectory(from: defaultPath, to: resolvedOverridePath)) {
+    getIt<Talker>().info("Seeded $fileName from the default application data directory");
+  }
+
+  return resolvedOverridePath;
 }
 
 AppVersionInfo get appVersionInfo => _appVersionInfo ??= AppVersionInfo(

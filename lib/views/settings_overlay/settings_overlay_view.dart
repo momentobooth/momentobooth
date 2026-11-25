@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' show ScaffoldMessenger;
@@ -51,6 +52,7 @@ import 'package:momento_booth/views/settings_overlay/components/settings/setting
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_toggle_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_tree_view_tile.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings/settings_value_chip.dart';
+import 'package:momento_booth/views/settings_overlay/components/settings_backup_list.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_list_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_page.dart';
 import 'package:momento_booth/views/settings_overlay/components/settings_section.dart';
@@ -139,7 +141,7 @@ class SettingsOverlayView extends ScreenViewBase<SettingsOverlayViewModel, Setti
                 PaneItem(
                   key: ValueKey(SettingsPageKey.import),
                   icon: const Icon(LucideIcons.import),
-                  title: const Text("Import"),
+                  title: const Text("Import & backups"),
                   body: Builder(builder: (_) => _getImportSettings(viewModel, controller)),
                 ),
                 PaneItem(

@@ -336,6 +336,18 @@ On CI, the workflow `pr-ci-cups.yml` runs the tests on pull requests that change
   * You can also run `dart run build_runner watch --delete-conflicting-outputs` or `just watch-code` to automatically regenerate the code when you save a file
 * If you have changed any code related to the **localization**, you should re-run the `flutter gen-l10n` of `just gen-l10n` command
 
+### Using a separate data directory per branch or worktree
+
+All builds share the same application data directory by default, which holds `Settings.toml`, `Projects.toml`, `Stats.toml` and `VersionHistory.toml`. When you switch between branches that add or remove settings, a build that does not know a setting drops it on the next save (a backup is made when that happens, see the settings import page).
+
+To keep the data of a branch or worktree apart, point the application to another directory, either with the `--data-dir` argument or the `MOMENTOBOOTH_DATA_DIR` environment variable. The argument takes precedence. If the directory does not contain `Settings.toml` or `Projects.toml` yet, these are copied from the default directory on startup, so you start with your current configuration.
+
+The projects themselves are not copied: a build with another data directory still opens and saves the same project folders (the project settings are backed up when needed, see the settings import page). The copied settings also include your MQTT connection, so if the application with your normal data directory runs at the same time, change the MQTT client ID of one of them, otherwise they disconnect each other from the broker.
+
+```sh
+fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"
+```
+
 ### Adding a new screen using the VS Code extension Template
 
 1. Make sure to have the [Template extension](https://marketplace.visualstudio.com/items?itemName=yongwoo.templateplate) installed

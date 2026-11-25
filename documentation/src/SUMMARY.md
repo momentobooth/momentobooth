@@ -21,7 +21,7 @@
 
 - [Settings panel](./settings_panel.md)
   - [Project settings](./settings_project.md)
-  - [Settings import](./settings_import.md)
+  - [Settings import & backups](./settings_import.md)
   - [General settings](./settings_general.md)
   - [Hardware settings](./settings_hardware.md)
   - [Print routing settings](./settings_print_routing.md)
