@@ -22,6 +22,9 @@ sealed class CollectedCopy with _$CollectedCopy {
 
     /// The width of the photo divided by its height.
     required double aspectRatio,
+
+    /// The collage padding of the photo on every side, as a fraction of its height: the bleed when printing.
+    @Default(0) double bleed,
     required DateTime addedAt,
   }) = _CollectedCopy;
 

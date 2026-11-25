@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:momento_booth/hardware_control/printing/photo_placement.dart';
 import 'package:momento_booth/hardware_control/printing/print_routing_analysis.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/settings.dart';
@@ -28,8 +29,19 @@ class PrintRoute {
     this.stack,
   });
 
+  /// The part of the media that ends up visible on the print: the media minus the margins. In mm, times [unit].
+  PageRect viewport({double unit = 1}) {
+    final media = printer.media;
+    return PageRect(
+      margins.left * unit,
+      margins.top * unit,
+      (media.widthMm - margins.left - margins.right) * unit,
+      (media.heightMm - margins.top - margins.bottom) * unit,
+    );
+  }
+
   /// What the rendered sheet depends on besides the photo. Routes with the same key can share one rendering.
-  Object get renderKey => (printer.media.widthMm, printer.media.heightMm, margins, layout);
+  Object get renderKey => (printer.media.widthMm, printer.media.heightMm, margins, printer.borderless, layout);
 
   @override
   bool operator ==(Object other) =>
@@ -65,7 +77,6 @@ class PrintRouter {
 
   final Map<String, RoutingNode> _nodes = {};
   final Map<String, List<RoutingEdge>> _jobEdgesFrom = {};
-  final Map<String, String> _marginsNodeOf = {};
   final Map<String, int> _roundRobinPositions = {};
   final Map<(PrintSize, String), bool> _reachesPrinter = {};
 
@@ -77,8 +88,6 @@ class PrintRouter {
     for (final edge in analysis.routableEdges) {
       if (_nodes[edge.toNode]!.data.port(edge.toPort)!.types.any(jobPortTypes.contains)) {
         (_jobEdgesFrom[edge.fromNode] ??= []).add(edge);
-      } else if (edge.toPort == RoutingPorts.margins) {
-        _marginsNodeOf[edge.toNode] = edge.fromNode;
       }
     }
   }
@@ -118,7 +127,7 @@ class PrintRouter {
         return printSheet(PrintRoute(
           printerNodeId: nodeId,
           printer: printer,
-          margins: _marginsOf(nodeId, printer),
+          margins: analysis.printerMargins[nodeId]!,
           layout: layout,
           stackNodeId: stackNodeId,
           stack: _nodes[stackNodeId]?.data as StackNodeData?,
@@ -167,7 +176,7 @@ class PrintRouter {
           return PrintRoute(
             printerNodeId: edge.toNode,
             printer: printer,
-            margins: _marginsOf(edge.toNode, printer),
+            margins: analysis.printerMargins[edge.toNode]!,
             stackNodeId: stackNodeId,
             stack: stack,
           );
@@ -209,11 +218,6 @@ class PrintRouter {
     PrinterNodeData() => analysis.reachablePrinterIds[size]!.contains(nodeId),
     null => false,
     _ => (_jobEdgesFrom[nodeId] ?? const <RoutingEdge>[]).any((edge) => _reaches(size, edge.toNode)),
-  };
-
-  PrintMargins _marginsOf(String printerNodeId, PrinterNodeData printer) => switch (_nodes[_marginsNodeOf[printerNodeId]]?.data) {
-    MarginsNodeData(:final margins) => margins,
-    _ => printer.margins,
   };
 
 }

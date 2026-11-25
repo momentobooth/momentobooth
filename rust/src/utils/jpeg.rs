@@ -51,14 +51,27 @@ pub fn decode_jpeg_to_rgba(jpeg_data: &[u8]) -> RawImage {
 /// Reads the EXIF tags MomentoBooth uses from an image file. Files without (readable) EXIF data, such as
 /// PNG exports or images from other sources, yield no tags, and tags that cannot be converted are skipped.
 pub fn get_momento_booth_exif_tags_from_file(image_file_path: &str) -> Vec<MomentoBoothExifTag> {
-    let metadata = match Metadata::new_from_path(Path::new(image_file_path)) {
-        Ok(metadata) => metadata,
+    match Metadata::new_from_path(Path::new(image_file_path)) {
+        Ok(metadata) => read_momento_booth_exif_tags(&metadata, &format!("'{image_file_path}'")),
         Err(error) => {
             warn!("Could not read EXIF data from '{image_file_path}': {error}");
-            return Vec::new();
+            Vec::new()
         }
-    };
+    }
+}
 
+/// Reads the EXIF tags MomentoBooth uses from JPEG data, see [get_momento_booth_exif_tags_from_file].
+pub fn get_momento_booth_exif_tags_from_jpeg(jpeg_data: &Vec<u8>) -> Vec<MomentoBoothExifTag> {
+    match Metadata::new_from_vec(jpeg_data, FileExtension::JPEG) {
+        Ok(metadata) => read_momento_booth_exif_tags(&metadata, "JPEG data"),
+        Err(error) => {
+            warn!("Could not read EXIF data from JPEG data: {error}");
+            Vec::new()
+        }
+    }
+}
+
+fn read_momento_booth_exif_tags(metadata: &Metadata, source: &str) -> Vec<MomentoBoothExifTag> {
     let tags_to_read = [
         ExifTag::ImageDescription(String::new()),
         ExifTag::Software(String::new()),
@@ -72,7 +85,7 @@ pub fn get_momento_booth_exif_tags_from_file(image_file_path: &str) -> Vec<Momen
         .filter_map(|tag| match MomentoBoothExifTag::try_from(tag) {
             Ok(tag) => Some(tag),
             Err(error) => {
-                warn!("Skipping EXIF tag {tag:?} of '{image_file_path}': {error}");
+                warn!("Skipping EXIF tag {tag:?} of {source}: {error}");
                 None
             }
         })

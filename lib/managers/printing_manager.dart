@@ -3,12 +3,15 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/hardware_control/printing/flutter_printing_client.dart';
+import 'package:momento_booth/hardware_control/printing/print_calibration.dart';
 import 'package:momento_booth/hardware_control/printing/print_job_runner.dart';
+import 'package:momento_booth/hardware_control/printing/print_renderer.dart';
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
 import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
 import 'package:momento_booth/hardware_control/printing/stack_collector.dart';
@@ -16,10 +19,13 @@ import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/project_manager.dart';
 import 'package:momento_booth/managers/settings_manager.dart';
 import 'package:momento_booth/managers/stats_manager.dart';
+import 'package:momento_booth/models/maker_note_data.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
 import 'package:momento_booth/models/settings.dart';
 import 'package:momento_booth/models/subsystem.dart';
 import 'package:momento_booth/repositories/collected_copies/directory_collected_copy_repository.dart';
+import 'package:momento_booth/src/rust/api/images.dart';
+import 'package:momento_booth/utils/collage_geometry.dart';
 import 'package:momento_booth/utils/file_utils.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:path/path.dart' as path;
@@ -192,12 +198,37 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   /// be printed with a later sheet. Throws a [PrintingException] when not every copy was printed or is waiting. The
   /// rendered sheets are kept in any case.
   Future<int> printPhoto({required String jobName, required Uint8List image, required PrintSize size, int copies = 1}) async {
-    final report = await _jobRunner.run(_router, jobName: jobName, image: image, size: size, copies: copies, collector: _collector);
+    final report = await _jobRunner.run(
+      _router,
+      jobName: jobName,
+      image: image,
+      size: size,
+      copies: copies,
+      bleed: await _bleedOf(image),
+      collector: _collector,
+    );
     _failedPrinters = report.failedPrinters;
     _updateWaitingCopies();
     await _keepPrintedPdfs(jobName, size, report.renderings, report.sheets);
     if (report.failure case final failure?) throw failure;
     return report.waitingCopies;
+  }
+
+  /// The bleed of [image]: the collage padding stored in the maker note of a collage. Collages from before it was
+  /// stored use the current collage padding; other photos have no bleed.
+  Future<double> _bleedOf(Uint8List image) async {
+    try {
+      final makerNote = MakerNoteData.fromExifTags(await getMomentoBoothExifTagsFromJpeg(jpegData: image));
+      if (makerNote == null) return 0;
+      return makerNote.bleed ?? collageBleed(
+        padding: getIt<SettingsManager>().settings.collagePadding,
+        photoCount: makerNote.sourcePhotos.length,
+        aspectRatio: photoAspectRatio(image),
+      );
+    } catch (error, stackTrace) {
+      logWarning("Could not read the bleed of the photo, printing it without", error, stackTrace);
+      return 0;
+    }
   }
 
   /// Prints the sheets of every copy that waits on a stack, also the sheets that are not full. Never throws; sheets
@@ -257,21 +288,81 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
   /// Keeps the sheets that could be rendered. Never throws, so it does not hide why a print failed.
   Future<void> _keepPrintedPdfs(String jobName, PrintSize? size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
     try {
-      await _writePrintedPdfs(jobName, size, renderings, printedSheets);
+      final pdfs = [
+        for (final rendering in renderings) ?await rendering.then<Uint8List?>((pdf) => pdf, onError: (_) => null),
+      ];
+      await _writePrintedPdfs('latest-print.pdf', pdfs, {
+        'taskName': jobName,
+        'printSize': size?.name,
+        'sheets': printedSheets,
+      });
     } catch (error, stackTrace) {
       logError("Could not keep the PDFs of print job $jobName", error, stackTrace);
     }
   }
 
-  Future<void> _writePrintedPdfs(String jobName, PrintSize? size, Iterable<Future<Uint8List>> renderings, List<Map<String, Object?>> printedSheets) async {
-    final pdfs = [
-      for (final rendering in renderings) ?await rendering.then<Uint8List?>((pdf) => pdf, onError: (_) => null),
-    ];
+  /// Prints a calibration page on [printer], with its media named [mediaLabel] and the [margins] that apply to it, see
+  /// [renderCalibrationPdf]. Unlike print jobs, the page is also sent when sending print jobs is skipped in the debug
+  /// settings (see [_sendSheet]), as its only purpose is to come out of the printer. Logs and throws when printing
+  /// fails.
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins}) async {
+    try {
+      final logo = await rootBundle.loadString('assets/svg/logo_color.svg');
+      await _clients[printer.backend]!.printLayoutToQueue(
+        printer.queueId,
+        'MomentoBooth calibration page',
+        media: printer.media,
+        render: (driverMargins) async {
+          final pdf = await renderCalibrationPdf(
+            printer: printer,
+            mediaLabel: mediaLabel,
+            rulerLength: rulerLength,
+            margins: margins,
+            driverMargins: driverMargins,
+            logoSvg: logo,
+            printedAt: DateTime.now(),
+          );
+          await _keepCalibrationPdf(pdf, {
+            'printer': printer.label,
+            'backend': printer.backend.name,
+            'queue': printer.queueId,
+            'media': printer.media.toJson(),
+            'borderless': printer.borderless,
+            'rulerLength': rulerLength,
+            'margins': margins.toJson(),
+            'driverMargins': driverMargins?.toJson(),
+          });
+          return pdf;
+        },
+      );
+    } catch (error, stackTrace) {
+      logError("Could not print a calibration page with [${printer.label}] (${printer.backend.name} queue [${printer.queueId}])", error, stackTrace);
+      rethrow;
+    }
+  }
+
+  /// Keeps [pdf], a calibration page that is printed with the details in [sheet], like the sheets of a print job: as
+  /// 'latest-calibration.pdf', and with extensive print job logging also in the print job log. Never throws, so the
+  /// page is printed either way.
+  Future<void> _keepCalibrationPdf(Uint8List pdf, Map<String, Object?> sheet) async {
+    try {
+      await _writePrintedPdfs('latest-calibration.pdf', [pdf], {
+        'taskName': 'Calibration page',
+        'sheets': [sheet],
+      });
+    } catch (error, stackTrace) {
+      logError("Could not keep the PDF of the calibration page", error, stackTrace);
+    }
+  }
+
+  /// Writes the last of [pdfs] as [latestName] in the prints folder of the project. With extensive print job logging,
+  /// it also writes every PDF, and [details] as JSON, in its 'PrintJobs' folder.
+  Future<void> _writePrintedPdfs(String latestName, List<Uint8List> pdfs, Map<String, Object?> details) async {
     if (pdfs.isEmpty) return;
 
     final printsDir = getIt<ProjectManager>().getPrintsDir();
     await printsDir.create(recursive: true);
-    await writeBytesToFileLocked(path.join(printsDir.path, 'latest-print.pdf'), pdfs.last);
+    await writeBytesToFileLocked(path.join(printsDir.path, latestName), pdfs.last);
 
     if (!getIt<SettingsManager>().settings.debug.enableExtensivePrintJobLog) return;
     final printJobDirectory = Directory(path.join(printsDir.path, 'PrintJobs'));
@@ -281,11 +372,7 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     for (final (index, pdf) in pdfs.indexed) {
       await File('${printJobPath}_$index.pdf').writeAsBytes(pdf);
     }
-    await File('$printJobPath.json').writeAsString(jsonEncode({
-      'taskName': jobName,
-      'printSize': size?.name,
-      'sheets': printedSheets,
-    }));
+    await File('$printJobPath.json').writeAsString(jsonEncode(details));
   }
 
 }

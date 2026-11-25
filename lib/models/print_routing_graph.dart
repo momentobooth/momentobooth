@@ -174,6 +174,10 @@ sealed class RoutingNodeData with _$RoutingNodeData {
 
     /// Used when no margins node is connected.
     @Default(PrintMargins()) PrintMargins margins,
+
+    /// Whether the printer cuts the paper at the edges of the viewport, so the bleed of a photo can lie beyond them.
+    /// Otherwise, the whole photo is printed within the viewport, and its bleed is cut off by hand.
+    @Default(false) bool borderless,
   }) = PrinterNodeData;
 
   factory RoutingNodeData.fromJson(Map<String, Object?> json) => _$RoutingNodeDataFromJson(json);

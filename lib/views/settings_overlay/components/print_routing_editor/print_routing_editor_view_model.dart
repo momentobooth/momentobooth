@@ -316,6 +316,35 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     editor.updateNode(nodeId, (node) => node.withData({routingDataKey: data}));
   }
 
+  /// The space between a printer and the margins node [moveMarginsToNode] puts beside it.
+  static const double movedMarginsGap = 60;
+
+  /// Moves the margins of printer node [printerNodeId] to a new margins node beside it, which is connected to the
+  /// printer, so other printers can use the same margins. The printer keeps its own margins for when the node is
+  /// disconnected. One undo step.
+  void moveMarginsToNode(String printerNodeId) {
+    final printerNode = editor.graph.nodes[printerNodeId];
+    if (printerNode?.field<RoutingNodeData>(routingDataKey) case final PrinterNodeData printer?) {
+      final marginsData = RoutingNodeData.margins(margins: printer.margins);
+      // The output of the margins node lines up with the margins input of the printer.
+      double portCenter(RoutingNodeData data, String portId, {required int noteRows}) =>
+          RoutingNodeLayout(data, marginsWired: false, noteRows: noteRows, canListNativeMedia: canListNativeMedia)
+              .portCenter(data.port(portId)!);
+      final position = printerNode!.position + Offset(
+        -RoutingNodeKind.margins.width - movedMarginsGap,
+        portCenter(printer, RoutingPorts.margins, noteRows: noteRows(printerNodeId)) -
+            portCenter(marginsData, RoutingPorts.margins, noteRows: 0),
+      );
+
+      final id = editor.nextId(RoutingNodeKind.margins.name);
+      editor.history.beginTransaction();
+      editor
+        ..addNode(routingGraphNode(id: id, position: position, data: marginsData))
+        ..connect(PortRef(id, RoutingPorts.margins), PortRef(printerNodeId, RoutingPorts.margins));
+      editor.history.commitTransaction();
+    }
+  }
+
   // ////////////////// //
   // Printers and media //
   // ////////////////// //
@@ -382,5 +411,28 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
       logWarning('Could not list the media of ${backend.name} queue $queueId', error, stackTrace);
     }
   }
+
+  // ////////////////// //
+  // Calibration        //
+  // ////////////////// //
+
+  /// Whether the printer of [data] is set up far enough to print a calibration page on.
+  static bool canCalibrate(PrinterNodeData data) => data.queueId.isNotEmpty && data.media.widthMm > 0 && data.media.heightMm > 0;
+
+  /// The name of the media of [printer], as its printer or queue lists it.
+  String mediaLabelOf(PrinterNodeData printer) {
+    final listed = media[(printer.backend, printer.queueId)]?.firstWhereOrNull((dimension) => dimension.keyword == printer.media.name);
+    return listed?.name ?? (printer.media.name.isEmpty ? 'set by hand' : printer.media.name);
+  }
+
+  /// Prints a calibration page on the printer of node [nodeId], see [PrintRoutingHardware.printCalibrationPage]. Throws
+  /// when printing fails.
+  Future<void> printCalibrationPage(String nodeId, {required double rulerLength}) async {
+    final printer = graph.nodes.firstWhere((node) => node.id == nodeId).data as PrinterNodeData;
+    await hardware.printCalibrationPage(printer, mediaLabel: mediaLabelOf(printer), rulerLength: rulerLength, margins: marginsOf(nodeId));
+  }
+
+  /// The margins that apply to the printer of node [nodeId], see [PrintRoutingAnalysis.printerMargins].
+  PrintMargins marginsOf(String nodeId) => analysis.printerMargins[nodeId]!;
 
 }

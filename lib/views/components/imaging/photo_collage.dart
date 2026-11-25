@@ -22,6 +22,7 @@ import 'package:momento_booth/models/template_kind.dart';
 import 'package:momento_booth/src/rust/api/images.dart';
 import 'package:momento_booth/src/rust/models/image_operations.dart';
 import 'package:momento_booth/src/rust/models/images.dart';
+import 'package:momento_booth/utils/collage_geometry.dart';
 import 'package:momento_booth/utils/environment_info.dart';
 import 'package:momento_booth/utils/logger.dart';
 import 'package:momento_booth/views/components/imaging/image_with_loader_fallback.dart';
@@ -70,7 +71,7 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
   ObservableList<PhotoCapture> get photos => getIt<PhotosManager>().photos;
   Iterable<PhotoCapture> get chosenPhotos => getIt<PhotosManager>().chosenPhotos;
   int get nChosen => widget.debug ?? chosen.length;
-  int get rotation => [0, 1, 4].contains(nChosen) ? 1 : 0;
+  int get rotation => isCollageTurned(nChosen) ? 1 : 0;
   List<bool> imagesDecoded = List.filled(4, false);
 
   bool decodeCallbackCalled = false;
@@ -335,6 +336,12 @@ class PhotoCollageState extends State<PhotoCollage> with Logger {
             ),
           ).toList(),
           captureMode: createdByMode,
+          bleed: collageBleed(
+            padding: widget.padding,
+            photoCount: nChosen,
+            // The aspect ratio of the exported image, so after turning.
+            aspectRatio: rotation == 1 ? image.height / image.width : image.width / image.height,
+          ),
         ).toJson())),
       ],
       operationsBeforeEncoding: operationsBeforeEncoding,

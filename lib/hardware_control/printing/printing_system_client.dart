@@ -12,4 +12,13 @@ abstract class PrintingSystemClient with Logger {
 
   Future<void> printPdfToQueue(String queueId, String jobName, Uint8List pdfData, {required PrintMedia media});
 
+  /// Prints the PDF [render] makes, given the margins the printer driver reports for the page in mm. Backends that do
+  /// not know these margins pass null.
+  Future<void> printLayoutToQueue(
+    String queueId,
+    String jobName, {
+    required PrintMedia media,
+    required Future<Uint8List> Function(PrintMargins? driverMargins) render,
+  }) async => printPdfToQueue(queueId, jobName, await render(null), media: media);
+
 }

@@ -32,6 +32,12 @@ class _FakeHardware implements PrintRoutingHardware {
   @override
   Future<bool> canListNativeMedia() async => listsNativeMedia;
 
+  final List<(PrinterNodeData, String, double, PrintMargins)> calibrationPages = [];
+
+  @override
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins}) async =>
+      calibrationPages.add((printer, mediaLabel, rulerLength, margins));
+
   @override
   Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId) async {
     mediaListings++;
@@ -89,8 +95,9 @@ void main() {
       const layout = RoutingNodeLayout(RoutingNodeData.printer(), marginsWired: false, noteRows: 1, canListNativeMedia: false);
       final marginsPort = const RoutingNodeData.printer().port(RoutingPorts.margins)!;
 
-      // Header, the job port row and four field rows (label, backend, printer, size) precede the caption row.
-      const captionTop = RoutingNodeMetrics.headerHeight + RoutingNodeMetrics.portRowHeight + 4 * RoutingNodeMetrics.fieldRowHeight;
+      // Header, the job port row and five field rows (label, backend, printer, size, borderless) precede the caption
+      // row.
+      const captionTop = RoutingNodeMetrics.headerHeight + RoutingNodeMetrics.portRowHeight + 5 * RoutingNodeMetrics.fieldRowHeight;
       expect(layout.portCenter(marginsPort), captionTop + RoutingNodeMetrics.captionRowHeight / 2);
       expect(
         layout.height,
@@ -107,9 +114,9 @@ void main() {
         canListNativeMedia: canListNativeMedia,
       );
 
-      expect(layout(PrinterBackend.native, canListNativeMedia: false).fieldRows, 4);
-      expect(layout(PrinterBackend.native, canListNativeMedia: true).fieldRows, 5);
-      expect(layout(PrinterBackend.cups, canListNativeMedia: false).fieldRows, 5);
+      expect(layout(PrinterBackend.native, canListNativeMedia: false).fieldRows, 5);
+      expect(layout(PrinterBackend.native, canListNativeMedia: true).fieldRows, 6);
+      expect(layout(PrinterBackend.cups, canListNativeMedia: false).fieldRows, 6);
     });
   });
 
@@ -131,6 +138,40 @@ void main() {
       expect(viewModel.graph, _graph);
       expect(toPrintRoutingGraph(editor().graph), _graph);
       expect(saved, isEmpty);
+    });
+
+    test('moves the margins of a printer to a new margins node beside it, as one undo step', () {
+      viewModel.updateNodeData('canon', const RoutingNodeData.printer(
+        label: 'Canon',
+        queueId: 'canon',
+        media: PrintMedia(widthMm: 100, heightMm: 148),
+        margins: PrintMargins(top: 3.5, right: 1.5, bottom: 1.5, left: 1.5),
+      ));
+      final before = viewModel.graph;
+      viewModel.moveMarginsToNode('canon');
+
+      final added = viewModel.graph.nodes.singleWhere((node) => !before.nodes.any((old) => old.id == node.id));
+      expect(added.data, const RoutingNodeData.margins(margins: PrintMargins(top: 3.5, right: 1.5, bottom: 1.5, left: 1.5)));
+      expect(
+        viewModel.graph.edges,
+        contains(RoutingEdge(fromNode: added.id, fromPort: RoutingPorts.margins, toNode: 'canon', toPort: RoutingPorts.margins)),
+      );
+      // To the left of the printer, which is at x 600.
+      expect(added.x, 600 - RoutingNodeKind.margins.width - PrintRoutingEditorViewModelBase.movedMarginsGap);
+
+      editor().history.undo();
+      expect(viewModel.graph, before);
+    });
+
+    test('uses the margins of a connected margins node for a printer, and otherwise its own', () {
+      const ownMargins = PrintMargins(top: 3.5, right: 1.5, bottom: 1.5, left: 1.5);
+      const nodeMargins = PrintMargins(top: 2, right: 2, bottom: 2, left: 2);
+      viewModel
+        ..updateNodeData('canon', const RoutingNodeData.printer(label: 'Canon', queueId: 'canon', margins: ownMargins))
+        ..updateNodeData('margins', const RoutingNodeData.margins(margins: nodeMargins));
+
+      expect(viewModel.marginsOf('canon'), ownMargins);
+      expect(viewModel.marginsOf('dnp'), nodeMargins);
     });
 
     test('refuses incompatible connections and explains the ones the port colours do not', () async {
@@ -391,6 +432,36 @@ void main() {
       final printer = editorOf(tester).graph.nodes['canon']!.field<RoutingNodeData>(routingDataKey)! as PrinterNodeData;
       expect(printer.media, const PrintMedia(name: '273', widthMm: 101.6, heightMm: 152.4));
       expect(inNode('canon', find.text('W 101.6 × H 152.4')), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('prints a calibration page on a printer with the chosen ruler length', (tester) async {
+      await pumpEditor(tester);
+
+      await tester.tap(inNode('canon', find.byKey(const ValueKey('calibrate'))));
+      await tester.pumpAndSettle();
+      expect(find.text('Print calibration page'), findsOneWidget);
+      await tester.enterText(find.descendant(of: find.byType(ContentDialog), matching: find.byType(TextBox)), '30');
+      await tester.tap(find.text('Print'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ContentDialog), findsNothing);
+      expect(hardware.calibrationPages.single.$1.queueId, 'canon');
+      // The size of this printer is set by hand.
+      expect(hardware.calibrationPages.single.$2, 'set by hand');
+      expect(hardware.calibrationPages.single.$3, 30);
+      expect(hardware.calibrationPages.single.$4, const PrintMargins());
+    });
+
+    testWidgets('moves the margins of a printer to a new margins node from its margins row', (tester) async {
+      await pumpEditor(tester);
+      expect(inNode('dnp', find.byKey(const ValueKey('moveMarginsToNode'))), findsNothing);
+
+      await tester.tap(inNode('canon', find.byKey(const ValueKey('moveMarginsToNode'))));
+      await tester.pumpAndSettle();
+
+      expect(inNode('canon', find.text('from the connected node')), findsOneWidget);
+      expect(inNode('canon', find.byKey(const ValueKey('moveMarginsToNode'))), findsNothing);
       expect(tester.takeException(), isNull);
     });
 

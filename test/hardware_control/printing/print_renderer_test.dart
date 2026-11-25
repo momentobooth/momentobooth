@@ -51,15 +51,46 @@ void main() {
     );
 
     test('puts the copies on as few pages as they fit on', () async {
-      // The square photo is 100 mm high in one column, so one fits on 148 mm; in two columns of 48.5 mm, two rows fit.
+      // Half the gap stays free at the edges. The square photo is 97 mm high in one column, so one fits on 148 mm; in
+      // two columns of 47 mm, two rows fit.
       expect(_pageCount(await renderStackPdf(_copies(3, split: false), stackRoute(1))), 3);
       expect(_pageCount(await renderStackPdf(_copies(5, split: false), stackRoute(2))), 2);
     });
 
     test('stacks the halves of a split print separately', () async {
-      // Each half is turned to 100 by 50 mm: two fit on a page with a gap.
+      // Each half is turned to 97 by 48.5 mm: two fit on a page with a gap.
       expect(_pageCount(await renderStackPdf(_copies(1, split: true), stackRoute(1))), 1);
       expect(_pageCount(await renderStackPdf(_copies(2, split: true), stackRoute(1))), 2);
     });
   });
+
+  for (final borderless in [false, true]) {
+    group(borderless ? 'With bleed on borderless media' : 'With bleed on media with a border', () {
+      PrintRoute route({TileLayoutNodeData? layout, StackNodeData? stack}) => PrintRoute(
+        printerNodeId: 'printer',
+        printer: _printer.copyWith(borderless: borderless),
+        margins: const PrintMargins(top: 3.5, right: 1.5, bottom: 1.5, left: 1.5),
+        layout: layout,
+        stackNodeId: stack == null ? null : 'stack',
+        stack: stack,
+      );
+
+      test('renders a photo alone, tiled and split', () async {
+        expect(_pageCount(await renderPrintPdf(_photo, route(), split: false, bleed: 0.05)), 1);
+        final tiled = route(layout: const TileLayoutNodeData(columns: 2, rows: 2));
+        expect(_pageCount(await renderPrintPdf(_photo, tiled, split: false, bleed: 0.05)), 1);
+        expect(_pageCount(await renderPrintPdf(_photo, route(), split: true, bleed: 0.05)), 2);
+      });
+
+      test('renders a stack of whole and split copies, in columns and in rows', () async {
+        for (final direction in StackDirection.values) {
+          final pdf = await renderStackPdf([
+            StackedCopy(_photo, split: false, bleed: 0.05),
+            StackedCopy(_photo, split: true, bleed: 0.05),
+          ], route(stack: StackNodeData(lanes: 2, direction: direction)));
+          expect(_pageCount(pdf), 1);
+        }
+      });
+    });
+  }
 }

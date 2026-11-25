@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/hardware_control/printing/print_routing_analysis.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
+import 'package:momento_booth/views/settings_overlay/components/print_routing_editor/print_calibration_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/components/print_routing_editor/print_routing_editor_view_model.dart';
 import 'package:momento_booth/views/settings_overlay/components/print_routing_editor/print_routing_node_layout.dart';
 
@@ -216,7 +217,7 @@ class RoutingNodeCard extends StatelessWidget {
           ],
           // The queues and media of one backend mean nothing to the other.
           onChanged: (value) {
-            if (value != null && value != data.backend) update(RoutingNodeData.printer(label: data.label, backend: value, margins: data.margins));
+            if (value != null && value != data.backend) update(RoutingNodeData.printer(label: data.label, backend: value, margins: data.margins, borderless: data.borderless));
           },
         ),
       ),
@@ -272,6 +273,19 @@ class RoutingNodeCard extends StatelessWidget {
                   ),
                 ],
               ),
+      ),
+      _FieldRow(
+        key: const ValueKey('borderless'),
+        label: 'Borderless',
+        child: Tooltip(
+          message: 'Turn on when the printer prints up to the edge of the paper and cuts off what lies beyond the margins. '
+              'The bleed of a photo (the collage padding) is then printed beyond the margins, so it is cut off. '
+              'Turned off, the whole photo is printed within the margins, and its bleed is cut off by hand.',
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: ToggleSwitch(checked: data.borderless, onChanged: (value) => update(data.copyWith(borderless: value))),
+          ),
+        ),
       ),
       // The margins port sits on this row. Like an unconnected socket in Blender, the value is editable inline until a
       // margins node supplies it.
@@ -475,7 +489,30 @@ class _MarginsCaptionRow extends StatelessWidget {
             'Margins',
             style: theme.typography.caption?.copyWith(color: routingPortTypeColor(RoutingPortType.margins)),
           ),
-          Flexible(child: _SecondaryCaption(wired ? 'from the connected node' : 'in mm')),
+          Expanded(child: _SecondaryCaption(wired ? 'from the connected node' : 'in mm')),
+          if (!wired)
+            Tooltip(
+              message: 'Move these margins to a new margins node, to share them with other printers',
+              child: IconButton(
+                key: const ValueKey('moveMarginsToNode'),
+                icon: Icon(RoutingNodeKind.margins.icon, size: 14),
+                style: const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(4))),
+                onPressed: () => viewModel.moveMarginsToNode(nodeId),
+              ),
+            ),
+          Tooltip(
+            message: PrintRoutingEditorViewModelBase.canCalibrate(data)
+                ? 'Print a calibration page, to measure the margins'
+                : 'Choose a printer and media first, to print a calibration page',
+            child: IconButton(
+              key: const ValueKey('calibrate'),
+              icon: const Icon(LucideIcons.ruler, size: 14),
+              style: const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(4))),
+              onPressed: PrintRoutingEditorViewModelBase.canCalibrate(data)
+                  ? () => showPrintCalibrationDialog(context, viewModel: viewModel, nodeId: nodeId)
+                  : null,
+            ),
+          ),
         ],
       ),
     );
