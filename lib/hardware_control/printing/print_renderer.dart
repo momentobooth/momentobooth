@@ -57,8 +57,7 @@ enum _StackItemPart { whole, leftHalf, rightHalf }
 Future<Uint8List> renderStackPdf(List<StackedCopy> copies, PrintRoute route) {
   const mm = PdfPageFormat.mm;
   final doc = pw.Document(title: "MomentoBooth image");
-  final mmViewport = stackViewport(route);
-  final viewport = PageRect(mmViewport.left * mm, mmViewport.top * mm, mmViewport.width * mm, mmViewport.height * mm);
+  final viewport = route.viewport(unit: mm);
 
   // Every distinct photo is embedded once.
   final Map<Uint8List, pw.MemoryImage> photos = {};
@@ -153,19 +152,6 @@ pw.Widget _stackItem(
   );
 }
 
-/// The part of the page that ends up visible on the print, in points: the media minus the margins.
-PageRect _viewport(PrintRoute route) {
-  const mm = PdfPageFormat.mm;
-  final media = route.printer.media;
-  final margins = route.margins;
-  return PageRect(
-    margins.left * mm,
-    margins.top * mm,
-    (media.widthMm - margins.left - margins.right) * mm,
-    (media.heightMm - margins.top - margins.bottom) * mm,
-  );
-}
-
 /// A page of the media of [route] that shows [children], positioned on the whole page. What lies beyond the page is
 /// left out.
 pw.Page _positionedPage(PrintRoute route, List<pw.Widget> children) {
@@ -195,7 +181,7 @@ pw.Widget _placedPhoto(pw.MemoryImage photo, PhotoPlacement placement) {
 /// layout, the grid is a single cell. On borderless media, the cells on the edge of the grid are cut by the printer on
 /// that edge.
 void _addPhotoPage(pw.Document doc, pw.MemoryImage photo, PrintRoute route, double bleed, {required int rows, required int columns}) {
-  final viewport = _viewport(route);
+  final viewport = route.viewport(unit: PdfPageFormat.mm);
   final cellWidth = viewport.width / columns;
   final cellHeight = viewport.height / rows;
   final aspectRatio = photo.width! / photo.height!;
@@ -224,7 +210,7 @@ void _addPhotoPage(pw.Document doc, pw.MemoryImage photo, PrintRoute route, doub
 /// On borderless media, the bleed lies beyond the top, bottom and outer edge of the viewport, so the printer cuts it
 /// off.
 void _addSplitPages(pw.Document doc, pw.MemoryImage photo, PrintRoute route, double bleed) {
-  final viewport = _viewport(route);
+  final viewport = route.viewport(unit: PdfPageFormat.mm);
   final cut = route.printer.borderless;
   final height = viewport.height / (cut ? 1 - 2 * bleed : 1);
   final width = height * photo.width! / photo.height!;

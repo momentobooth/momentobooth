@@ -10,7 +10,7 @@
 - Windows: native printers offer the papers of their driver, such as 4x6 with and without border
 - A project can now disable printing, also with a quick action
 - Print routing: a stack node puts the copies of a print together on as few sheets as possible, so a regular A4 or Letter printer can be used and the prints cut apart afterwards
-- Print routing: margins describe the visible part of the paper, and a _Borderless_ switch per printer decides what happens with the collage padding. On a borderless printer the padding is printed beyond the margins, so the printer cuts it off; otherwise the collage is printed with its padding within the margins, to cut out by hand. In a stack, the padding of each copy lies in the gap around it
+- Print routing: margins describe the visible part of the paper, and a _Borderless_ switch per printer decides what happens with the collage padding. On a borderless printer the padding is printed beyond the margins, so the printer cuts it off; otherwise the collage is printed with its padding within the margins, to cut out by hand. In a stack, the padding of each copy lies in the gap around it. This holds for every print size: small and tiny prints no longer compensate the padding separately
 - Print routing: a ruler button on a printer node prints a calibration page, with a ruler from every edge to read the margins from, and control lines to check the margins that are set. On Windows, the page also shows the margins the printer driver reports
 - Print routing: a printer node can move its margins to a new margins node, to share them with other printers
 - Print routing: a stack can fill its sheets in rows from the left instead of columns from the top
@@ -19,7 +19,6 @@
 
 ### Changes
 - Photos are now turned to match the orientation of the media or tile they are printed on, instead of assuming portrait media
-- Small and tiny prints no longer compensate the collage padding
 - `latest-print.pdf` and the `PrintJobs` folder of the extensive print job log moved from the `Output` folder to a new `Prints` folder in the project
 - The Import settings page is renamed to Import & backups
 - The settings import dialog lists changed settings with their old and new value, warns about settings that this version does not use and ignores, and collapses unchanged settings

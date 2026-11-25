@@ -1,8 +1,5 @@
-import 'package:flutter/services.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/hardware_control/printing/flutter_printing_client.dart';
-import 'package:momento_booth/hardware_control/printing/print_calibration.dart';
-import 'package:momento_booth/hardware_control/printing/printing_system_client.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/managers/printing_manager.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
@@ -21,7 +18,7 @@ abstract interface class PrintRoutingHardware {
   Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId);
 
   /// Prints a calibration page on [printer], with its media named [mediaLabel] and the [margins] that apply to it, see
-  /// [renderCalibrationPdf].
+  /// [PrintingManager.printCalibrationPage].
   Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins});
 
 }
@@ -46,39 +43,7 @@ class SystemPrintRoutingHardware implements PrintRoutingHardware {
   };
 
   @override
-  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins}) async {
-    final logo = await rootBundle.loadString('assets/svg/logo_color.svg');
-    final PrintingSystemClient client = switch (printer.backend) {
-      PrinterBackend.native => FlutterPrintingClient(),
-      PrinterBackend.cups => CupsClient(),
-    };
-    await client.printLayoutToQueue(
-      printer.queueId,
-      'MomentoBooth calibration page',
-      media: printer.media,
-      render: (driverMargins) async {
-        final pdf = await renderCalibrationPdf(
-          printer: printer,
-          mediaLabel: mediaLabel,
-          rulerLength: rulerLength,
-          margins: margins,
-          driverMargins: driverMargins,
-          logoSvg: logo,
-          printedAt: DateTime.now(),
-        );
-        await getIt<PrintingManager>().keepCalibrationPdf(pdf, {
-          'printer': printer.label,
-          'backend': printer.backend.name,
-          'queue': printer.queueId,
-          'media': printer.media.toJson(),
-          'borderless': printer.borderless,
-          'rulerLength': rulerLength,
-          'margins': margins.toJson(),
-          'driverMargins': driverMargins?.toJson(),
-        });
-        return pdf;
-      },
-    );
-  }
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins}) =>
+      getIt<PrintingManager>().printCalibrationPage(printer, mediaLabel: mediaLabel, rulerLength: rulerLength, margins: margins);
 
 }

@@ -67,7 +67,7 @@ List<double> stackItemsOf(double aspectRatio, {required bool split, double bleed
 /// columns, the right for rows) is never cut, as the rest of the sheet may be fed again.
 List<List<StackPlacement>> packStackOn(PrintRoute route, List<double> aspectRatios, {double unit = 1}) {
   final stack = route.stack!;
-  final viewport = stackViewport(route);
+  final viewport = route.viewport();
   final rows = stack.direction == StackDirection.rows;
   final halfGap = stack.gap / 2;
   final edge = route.printer.borderless ? 0.0 : halfGap;
@@ -97,18 +97,6 @@ List<List<StackPlacement>> packStackOn(PrintRoute route, List<double> aspectRati
           ),
       ],
   ];
-}
-
-/// The viewport of [route] in mm: the media minus the margins.
-PageRect stackViewport(PrintRoute route) {
-  final media = route.printer.media;
-  final margins = route.margins;
-  return PageRect(
-    margins.left,
-    margins.top,
-    media.widthMm - margins.left - margins.right,
-    media.heightMm - margins.top - margins.bottom,
-  );
 }
 
 /// The part of the page an item of a stack at [placement] shows: its place, plus its bleed of [bleedSize] on every

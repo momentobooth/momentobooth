@@ -94,6 +94,10 @@ class PrintRoutingAnalysis {
   /// up on this computer.
   final bool hasConfiguredPrinter;
 
+  /// The margins that apply to each printer node: those of the margins node connected to it by a routable edge, or
+  /// else its own.
+  final Map<String, PrintMargins> printerMargins;
+
   const PrintRoutingAnalysis._(
     this.issues,
     this.reachablePrinterIds,
@@ -101,6 +105,7 @@ class PrintRoutingAnalysis {
     this.sourceId,
     this.routableEdges,
     this.hasConfiguredPrinter,
+    this.printerMargins,
   );
 
   bool get hasErrors => issues.any((issue) => issue.severity == RoutingIssueSeverity.error);
@@ -144,7 +149,19 @@ class _Analyzer {
       final PrinterNodeData printer => _isComplete(printer),
       _ => false,
     });
-    return PrintRoutingAnalysis._(issues, reachable, arbiterTypes, sourceId, routableEdges, hasConfiguredPrinter);
+    return PrintRoutingAnalysis._(issues, reachable, arbiterTypes, sourceId, routableEdges, hasConfiguredPrinter, _printerMargins(routableEdges));
+  }
+
+  Map<String, PrintMargins> _printerMargins(List<RoutingEdge> routableEdges) {
+    final connected = {
+      for (final edge in routableEdges)
+        if (edge.toPort == RoutingPorts.margins)
+          if (nodes[edge.fromNode]?.data case MarginsNodeData(:final margins)) edge.toNode: margins,
+    };
+    return {
+      for (final node in nodes.values)
+        if (node.data case final PrinterNodeData printer) node.id: connected[node.id] ?? printer.margins,
+    };
   }
 
   void _collectNodes() {

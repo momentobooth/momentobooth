@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
 import 'package:mobx/mobx.dart';
 import 'package:momento_booth/exceptions/printing_exception.dart';
 import 'package:momento_booth/hardware_control/printing/cups_client.dart';
 import 'package:momento_booth/hardware_control/printing/flutter_printing_client.dart';
+import 'package:momento_booth/hardware_control/printing/print_calibration.dart';
 import 'package:momento_booth/hardware_control/printing/print_job_runner.dart';
 import 'package:momento_booth/hardware_control/printing/print_renderer.dart';
 import 'package:momento_booth/hardware_control/printing/print_router.dart';
@@ -299,10 +301,50 @@ abstract class PrintingManagerBase extends Subsystem with Store, Logger {
     }
   }
 
+  /// Prints a calibration page on [printer], with its media named [mediaLabel] and the [margins] that apply to it, see
+  /// [renderCalibrationPdf]. Unlike print jobs, the page is also sent when sending print jobs is skipped in the debug
+  /// settings (see [_sendSheet]), as its only purpose is to come out of the printer. Logs and throws when printing
+  /// fails.
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins}) async {
+    try {
+      final logo = await rootBundle.loadString('assets/svg/logo_color.svg');
+      await _clients[printer.backend]!.printLayoutToQueue(
+        printer.queueId,
+        'MomentoBooth calibration page',
+        media: printer.media,
+        render: (driverMargins) async {
+          final pdf = await renderCalibrationPdf(
+            printer: printer,
+            mediaLabel: mediaLabel,
+            rulerLength: rulerLength,
+            margins: margins,
+            driverMargins: driverMargins,
+            logoSvg: logo,
+            printedAt: DateTime.now(),
+          );
+          await _keepCalibrationPdf(pdf, {
+            'printer': printer.label,
+            'backend': printer.backend.name,
+            'queue': printer.queueId,
+            'media': printer.media.toJson(),
+            'borderless': printer.borderless,
+            'rulerLength': rulerLength,
+            'margins': margins.toJson(),
+            'driverMargins': driverMargins?.toJson(),
+          });
+          return pdf;
+        },
+      );
+    } catch (error, stackTrace) {
+      logError("Could not print a calibration page with [${printer.label}] (${printer.backend.name} queue [${printer.queueId}])", error, stackTrace);
+      rethrow;
+    }
+  }
+
   /// Keeps [pdf], a calibration page that is printed with the details in [sheet], like the sheets of a print job: as
   /// 'latest-calibration.pdf', and with extensive print job logging also in the print job log. Never throws, so the
   /// page is printed either way.
-  Future<void> keepCalibrationPdf(Uint8List pdf, Map<String, Object?> sheet) async {
+  Future<void> _keepCalibrationPdf(Uint8List pdf, Map<String, Object?> sheet) async {
     try {
       await _writePrintedPdfs('latest-calibration.pdf', [pdf], {
         'taskName': 'Calibration page',
