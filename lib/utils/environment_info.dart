@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
 import 'package:flutter/services.dart';
 import 'package:momento_booth/main.dart';
 import 'package:momento_booth/models/app_version_info.dart';
 import 'package:momento_booth/src/rust/api/initialization.dart' as lib_init_api;
 import 'package:momento_booth/src/rust/models/version_info.dart' as lib_version_info_models;
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:talker/talker.dart';
 
@@ -26,9 +28,16 @@ String get osFriendlyName => switch (Platform.operatingSystem) {
       _ => 'Unknown',
     };
 
+/// Environment variable that overrides the application data directory, see [_resolveAppDataPath].
+const String appDataDirEnvironmentVariable = 'MOMENTOBOOTH_DATA_DIR';
+
+/// Files that are copied from the default data directory into an overridden one that does not have them yet, so a
+/// new data directory starts from the current configuration instead of from scratch.
+const List<String> _seededAppDataFileNames = ['Settings.toml', 'Projects.toml'];
+
 Future<void> initializeEnvironmentInfo() async {
   packageInfo = await PackageInfo.fromPlatform();
-  appDataPath = (await getApplicationSupportDirectory()).path;
+  appDataPath = await _resolveAppDataPath();
   helperLibraryVersionInfo = await lib_init_api.getVersionInfo();
 
   getIt<Talker>().info({
@@ -41,6 +50,35 @@ Future<void> initializeEnvironmentInfo() async {
     "libgphoto2 version": helperLibraryVersionInfo.libgphoto2Version,
     "libusb version": helperLibraryVersionInfo.libusbVersion,
   });
+}
+
+/// Resolves the directory for settings and other application data.
+///
+/// The `--data-dir` argument takes precedence over the [appDataDirEnvironmentVariable] environment variable, which
+/// takes precedence over the platform default. An override allows e.g. separate configurations per development
+/// branch or worktree. Files from [_seededAppDataFileNames] missing in an overridden directory are copied from the
+/// default directory.
+Future<String> _resolveAppDataPath() async {
+  String defaultPath = (await getApplicationSupportDirectory()).path;
+  String? overridePath = getIt<ArgResults>().option('data-dir') ?? Platform.environment[appDataDirEnvironmentVariable];
+  if (overridePath == null || overridePath.trim().isEmpty) return defaultPath;
+
+  String resolvedOverridePath = path.normalize(path.absolute(overridePath.trim()));
+  if (path.equals(resolvedOverridePath, defaultPath)) return defaultPath;
+
+  await Directory(resolvedOverridePath).create(recursive: true);
+  getIt<Talker>().info("Using application data directory override: $resolvedOverridePath");
+
+  for (String fileName in _seededAppDataFileNames) {
+    File source = File(path.join(defaultPath, fileName));
+    File target = File(path.join(resolvedOverridePath, fileName));
+    if (target.existsSync() || !source.existsSync()) continue;
+
+    await source.copy(target.path);
+    getIt<Talker>().info("Seeded $fileName from the default application data directory");
+  }
+
+  return resolvedOverridePath;
 }
 
 AppVersionInfo get appVersionInfo => _appVersionInfo ??= AppVersionInfo(

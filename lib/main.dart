@@ -20,7 +20,8 @@ void main(List<String> arguments) async {
   var parser = ArgParser()
     ..addFlag('fullscreen', abbr: 'f', help: 'Run in fullscreen mode', defaultsTo: false)
     ..addOption('wait-for-pid', abbr: 'w', help: 'Wait for a previous instance to be closed before starting')
-    ..addOption('open', abbr: 'o', help: 'Open given directory as a project');
+    ..addOption('open', abbr: 'o', help: 'Open given directory as a project')
+    ..addOption('data-dir', help: 'Use the given directory for settings and other application data instead of the default one');
   getIt
     ..registerSingleton(parser.parse(arguments))
     ..registerSingleton(AppInitManager());
