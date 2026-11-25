@@ -429,7 +429,19 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
   /// when printing fails.
   Future<void> printCalibrationPage(String nodeId, {required double rulerLength}) async {
     final printer = graph.nodes.firstWhere((node) => node.id == nodeId).data as PrinterNodeData;
-    await hardware.printCalibrationPage(printer, mediaLabel: mediaLabelOf(printer), rulerLength: rulerLength);
+    await hardware.printCalibrationPage(printer, mediaLabel: mediaLabelOf(printer), rulerLength: rulerLength, margins: marginsOf(nodeId));
+  }
+
+  /// The margins that apply to the printer of node [nodeId]: those of the margins node connected to it, or else its
+  /// own.
+  PrintMargins marginsOf(String nodeId) {
+    final nodes = {for (final node in graph.nodes) node.id: node.data};
+    for (final edge in graph.edges) {
+      if (edge.toNode == nodeId && edge.toPort == RoutingPorts.margins) {
+        if (nodes[edge.fromNode] case MarginsNodeData(:final margins)) return margins;
+      }
+    }
+    return (nodes[nodeId]! as PrinterNodeData).margins;
   }
 
 }

@@ -306,4 +306,6 @@ The ruler button in the margins row of a printer node prints a calibration page 
 
 The page has a frame on the edge of the media and a ruler from the middle of every edge inwards, with a mark every millimetre and a number every 5 mm. On every side, the first mark you can see on the print is the margin of that side. Enter these four values as the margins of the printer node, or of the margins node it uses. The page also shows the printer, the media and, for native printers on Windows, the margins the printer driver reports for the page, which are a good first guess.
 
+To check the margins that are set, the page has a pink line on them, with a dashed line 0.5 mm inside it and another 0.5 mm outside it. These are the margins of the connected margins node, if there is one. The margins are right to within 0.5 mm when, on every side, the inner dashed line is visible and the outer one is not. So after entering the measured margins, print another calibration page to check them.
+
 Choose rulers that are longer than the largest margin you expect, e.g. 25 mm for a photo printer. On small media, such as 2×6" strips, shorter rulers leave more room for the rest of the page. Rulers that do not fit are shortened to half the media.

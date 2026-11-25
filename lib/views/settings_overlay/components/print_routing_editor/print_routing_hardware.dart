@@ -20,8 +20,9 @@ abstract interface class PrintRoutingHardware {
   /// The media of queue [queueId], with their size in mm. The keyword identifies a media, see [PrintMedia.name].
   Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId);
 
-  /// Prints a calibration page on [printer], with its media named [mediaLabel], see [renderCalibrationPdf].
-  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength});
+  /// Prints a calibration page on [printer], with its media named [mediaLabel] and the [margins] that apply to it, see
+  /// [renderCalibrationPdf].
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins});
 
 }
 
@@ -45,8 +46,8 @@ class SystemPrintRoutingHardware implements PrintRoutingHardware {
   };
 
   @override
-  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength}) async {
-    final logo = await rootBundle.loadString('assets/svg/logo.svg');
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins}) async {
+    final logo = await rootBundle.loadString('assets/svg/logo_color.svg');
     final PrintingSystemClient client = switch (printer.backend) {
       PrinterBackend.native => FlutterPrintingClient(),
       PrinterBackend.cups => CupsClient(),
@@ -60,6 +61,7 @@ class SystemPrintRoutingHardware implements PrintRoutingHardware {
           printer: printer,
           mediaLabel: mediaLabel,
           rulerLength: rulerLength,
+          margins: margins,
           driverMargins: driverMargins,
           logoSvg: logo,
           printedAt: DateTime.now(),
@@ -71,6 +73,7 @@ class SystemPrintRoutingHardware implements PrintRoutingHardware {
           'media': printer.media.toJson(),
           'borderless': printer.borderless,
           'rulerLength': rulerLength,
+          'margins': margins.toJson(),
           'driverMargins': driverMargins?.toJson(),
         });
         return pdf;

@@ -32,11 +32,11 @@ class _FakeHardware implements PrintRoutingHardware {
   @override
   Future<bool> canListNativeMedia() async => listsNativeMedia;
 
-  final List<(PrinterNodeData, String, double)> calibrationPages = [];
+  final List<(PrinterNodeData, String, double, PrintMargins)> calibrationPages = [];
 
   @override
-  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength}) async =>
-      calibrationPages.add((printer, mediaLabel, rulerLength));
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength, required PrintMargins margins}) async =>
+      calibrationPages.add((printer, mediaLabel, rulerLength, margins));
 
   @override
   Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId) async {
@@ -161,6 +161,17 @@ void main() {
 
       editor().history.undo();
       expect(viewModel.graph, before);
+    });
+
+    test('uses the margins of a connected margins node for a printer, and otherwise its own', () {
+      const ownMargins = PrintMargins(top: 3.5, right: 1.5, bottom: 1.5, left: 1.5);
+      const nodeMargins = PrintMargins(top: 2, right: 2, bottom: 2, left: 2);
+      viewModel
+        ..updateNodeData('canon', const RoutingNodeData.printer(label: 'Canon', queueId: 'canon', margins: ownMargins))
+        ..updateNodeData('margins', const RoutingNodeData.margins(margins: nodeMargins));
+
+      expect(viewModel.marginsOf('canon'), ownMargins);
+      expect(viewModel.marginsOf('dnp'), nodeMargins);
     });
 
     test('refuses incompatible connections and explains the ones the port colours do not', () async {
@@ -439,6 +450,7 @@ void main() {
       // The size of this printer is set by hand.
       expect(hardware.calibrationPages.single.$2, 'set by hand');
       expect(hardware.calibrationPages.single.$3, 30);
+      expect(hardware.calibrationPages.single.$4, const PrintMargins());
     });
 
     testWidgets('moves the margins of a printer to a new margins node from its margins row', (tester) async {
