@@ -32,6 +32,12 @@ class _FakeHardware implements PrintRoutingHardware {
   @override
   Future<bool> canListNativeMedia() async => listsNativeMedia;
 
+  final List<(PrinterNodeData, String, double)> calibrationPages = [];
+
+  @override
+  Future<void> printCalibrationPage(PrinterNodeData printer, {required String mediaLabel, required double rulerLength}) async =>
+      calibrationPages.add((printer, mediaLabel, rulerLength));
+
   @override
   Future<List<PrintDimension>> listMedia(PrinterBackend backend, String queueId) async {
     mediaListings++;
@@ -393,6 +399,23 @@ void main() {
       expect(printer.media, const PrintMedia(name: '273', widthMm: 101.6, heightMm: 152.4));
       expect(inNode('canon', find.text('W 101.6 × H 152.4')), findsOneWidget);
       expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('prints a calibration page on a printer with the chosen ruler length', (tester) async {
+      await pumpEditor(tester);
+
+      await tester.tap(inNode('canon', find.byKey(const ValueKey('calibrate'))));
+      await tester.pumpAndSettle();
+      expect(find.text('Print calibration page'), findsOneWidget);
+      await tester.enterText(find.descendant(of: find.byType(ContentDialog), matching: find.byType(TextBox)), '30');
+      await tester.tap(find.text('Print'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ContentDialog), findsNothing);
+      expect(hardware.calibrationPages.single.$1.queueId, 'canon');
+      // The size of this printer is set by hand.
+      expect(hardware.calibrationPages.single.$2, 'set by hand');
+      expect(hardware.calibrationPages.single.$3, 30);
     });
 
     testWidgets('adds nodes from the toolbar', (tester) async {

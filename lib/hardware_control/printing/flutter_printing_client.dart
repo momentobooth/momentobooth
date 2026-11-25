@@ -34,14 +34,36 @@ class FlutterPrintingClient extends PrintingSystemClient {
   /// the papers of the printer, the job is printed on that paper with the other settings of the driver, e.g.
   /// borderless printing.
   @override
-  Future<void> printPdfToQueue(String queueId, String jobName, Uint8List pdfData, {required PrintMedia media}) async {
+  Future<void> printPdfToQueue(String queueId, String jobName, Uint8List pdfData, {required PrintMedia media}) =>
+      _directPrint(queueId, jobName, media: media, onLayout: (pageFormat) async => pdfData);
+
+  /// The driver lays out the page before it is rendered, and reports its margins with it (Windows).
+  @override
+  Future<void> printLayoutToQueue(
+    String queueId,
+    String jobName, {
+    required PrintMedia media,
+    required Future<Uint8List> Function(PrintMargins? driverMargins) render,
+  }) => _directPrint(queueId, jobName, media: media, onLayout: (pageFormat) => render(PrintMargins(
+    top: pageFormat.marginTop / PdfPageFormat.mm,
+    right: pageFormat.marginRight / PdfPageFormat.mm,
+    bottom: pageFormat.marginBottom / PdfPageFormat.mm,
+    left: pageFormat.marginLeft / PdfPageFormat.mm,
+  )));
+
+  Future<void> _directPrint(
+    String queueId,
+    String jobName, {
+    required PrintMedia media,
+    required Future<Uint8List> Function(PdfPageFormat pageFormat) onLayout,
+  }) async {
     final printer = await _printer(queueId);
     final paper = await _paperOf(printer, media);
 
     bool success = await Printing.directPrintPdf(
       printer: printer,
       name: jobName,
-      onLayout: (pageFormat) => pdfData,
+      onLayout: onLayout,
       // The orientation of the paper follows the format. Without a paper, the driver is asked for a paper of this size.
       format: PdfPageFormat(media.widthMm * PdfPageFormat.mm, media.heightMm * PdfPageFormat.mm),
       usePrinterSettings: getIt<SettingsManager>().settings.hardware.usePrinterSettings,

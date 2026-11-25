@@ -5,6 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:momento_booth/hardware_control/printing/print_routing_analysis.dart';
 import 'package:momento_booth/models/print_queue_info.dart';
 import 'package:momento_booth/models/print_routing_graph.dart';
+import 'package:momento_booth/views/settings_overlay/components/print_routing_editor/print_calibration_dialog.dart';
 import 'package:momento_booth/views/settings_overlay/components/print_routing_editor/print_routing_editor_view_model.dart';
 import 'package:momento_booth/views/settings_overlay/components/print_routing_editor/print_routing_node_layout.dart';
 
@@ -488,7 +489,20 @@ class _MarginsCaptionRow extends StatelessWidget {
             'Margins',
             style: theme.typography.caption?.copyWith(color: routingPortTypeColor(RoutingPortType.margins)),
           ),
-          Flexible(child: _SecondaryCaption(wired ? 'from the connected node' : 'in mm')),
+          Expanded(child: _SecondaryCaption(wired ? 'from the connected node' : 'in mm')),
+          Tooltip(
+            message: PrintRoutingEditorViewModelBase.canCalibrate(data)
+                ? 'Print a calibration page, to measure the margins'
+                : 'Choose a printer and media first, to print a calibration page',
+            child: IconButton(
+              key: const ValueKey('calibrate'),
+              icon: const Icon(LucideIcons.ruler, size: 14),
+              style: const ButtonStyle(padding: WidgetStatePropertyAll(EdgeInsets.all(4))),
+              onPressed: PrintRoutingEditorViewModelBase.canCalibrate(data)
+                  ? () => showPrintCalibrationDialog(context, viewModel: viewModel, nodeId: nodeId)
+                  : null,
+            ),
+          ),
         ],
       ),
     );

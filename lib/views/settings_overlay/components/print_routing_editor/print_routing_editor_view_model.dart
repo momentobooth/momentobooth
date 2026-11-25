@@ -383,4 +383,24 @@ abstract class PrintRoutingEditorViewModelBase with Store, Logger implements Rou
     }
   }
 
+  // ////////////////// //
+  // Calibration        //
+  // ////////////////// //
+
+  /// Whether the printer of [data] is set up far enough to print a calibration page on.
+  static bool canCalibrate(PrinterNodeData data) => data.queueId.isNotEmpty && data.media.widthMm > 0 && data.media.heightMm > 0;
+
+  /// The name of the media of [printer], as its printer or queue lists it.
+  String mediaLabelOf(PrinterNodeData printer) {
+    final listed = media[(printer.backend, printer.queueId)]?.firstWhereOrNull((dimension) => dimension.keyword == printer.media.name);
+    return listed?.name ?? (printer.media.name.isEmpty ? 'set by hand' : printer.media.name);
+  }
+
+  /// Prints a calibration page on the printer of node [nodeId], see [PrintRoutingHardware.printCalibrationPage]. Throws
+  /// when printing fails.
+  Future<void> printCalibrationPage(String nodeId, {required double rulerLength}) async {
+    final printer = graph.nodes.firstWhere((node) => node.id == nodeId).data as PrinterNodeData;
+    await hardware.printCalibrationPage(printer, mediaLabel: mediaLabelOf(printer), rulerLength: rulerLength);
+  }
+
 }
