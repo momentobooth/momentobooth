@@ -12,7 +12,7 @@ void main() {
 
   // The repository logs through the application logger.
   setUpAll(() => getIt.registerSingleton(Talker(settings: TalkerSettings(useConsoleLogs: false))));
-  tearDownAll(() => getIt.reset());
+  tearDownAll(getIt.reset);
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('toml_repository_test');

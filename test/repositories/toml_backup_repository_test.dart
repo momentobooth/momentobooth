@@ -14,7 +14,7 @@ void main() {
 
   // The repositories log through the application logger.
   setUpAll(() => getIt.registerSingleton(Talker(settings: TalkerSettings(useConsoleLogs: false))));
-  tearDownAll(() => getIt.reset());
+  tearDownAll(getIt.reset);
 
   setUp(() async {
     directory = await Directory.systemTemp.createTemp('toml_backup_test');
