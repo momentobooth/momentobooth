@@ -38,10 +38,15 @@
   * [Multi-language support](#translations)
     * Per project, a fixed language or a choice of languages for guests at multilingual events
   * Different UI themes available
-* **Photo printing**
-  * Visual print routing editor to decide which printer prints which print size, on what media and in which layout
-  * Combine multiple printers, e.g. to share the work or to print a photo in several ways at once
-  * Support for native printing method and dispatch to CUPS server
+* **Photo printing on almost any printer set-up**
+  * Visual print routing editor
+    * ... to decide which printer prints which print size, on what media, and in which layout
+    * Tile several photos per sheet, duplicate, load-balance your printers, etc.
+  * Support for native printing method (Windows, Linux, macOS) and dispatch to a CUPS server
+    * Mix different back-ends and queues
+  * Optimize for any printer
+    * Print margin calibration to get perfect positioning
+    * Options for *photo printers* (borderless prints) and *regular A4 or Letter printers* (copies stacked on as few sheets as possible)
 * **Photo sharing using QR code** with [`ffsend`](https://github.com/timvisee/ffsend)
 * **Theming with collage template images** (background and foreground) and a live view overlay image
 * **Rich live view and capture options**
