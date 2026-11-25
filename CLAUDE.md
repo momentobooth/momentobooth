@@ -85,6 +85,10 @@ rust/src/
 - To add a new Rust function callable from Dart: add it to a file under `rust/src/api/`, then run `just gen-bridge`
 - Generated Dart bindings land in `lib/src/rust/api/` and `lib/src/rust/frb_generated.dart`
 
+### Running the App During Development
+
+When you run the app (e.g. to verify a change), give it its own data directory with `--data-dir=.dev-data` (e.g. `fvm flutter run --dart-entrypoint-args="--data-dir=.dev-data"`), or set `MOMENTOBOOTH_DATA_DIR`. Without it, every branch and worktree shares the user's real `Settings.toml`, and a build that lacks a setting drops it on the next save. `.dev-data/` is gitignored and relative to the working directory, so each worktree gets its own. On first start, `Settings.toml` and `Projects.toml` are copied from the default data directory, so the app starts with the user's configuration (including hardware and MQTT settings). See "Using a separate data directory per branch or worktree" in `documentation/src/dev_setup.md`.
+
 ## Key Patterns
 
 **Adding a new Dart model:** Create a Freezed class in `lib/models/`, run `just gen-code` to generate `.freezed.dart` and `.g.dart`.
